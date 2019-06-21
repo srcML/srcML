@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="interface" filename="interface_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="interface" filename="interface_cs">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <interface_decl>interface <name>A</name>;</interface_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <interface_decl>interface <name>A</name>, <name>B</name>;</interface_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <interface>interface <name>I</name> 
 <block>{}</block></interface>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <interface>interface <name>I</name> 
 <block>{
   <function_decl><type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>

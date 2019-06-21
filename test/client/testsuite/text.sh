@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # text flag with empty input
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
 	STDOUT
 
 # requires a GNU echo, for macOS, gecho
@@ -28,7 +28,7 @@ srcml --text="" -l "C++"
 check "$srcml"
 
 srcml --text -l "C++"
-check_exit 7
+check_exit 1
 
 echo -n "" | srcml -l "C++"
 check "$srcml"
@@ -54,21 +54,21 @@ srcml -l C++ --text="" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$srcml"
 
 srcml --text -l "C++" -o sub/a.cpp.xml
-check_exit 7
+check_exit 1
 
 srcml -l C++ --text -o sub/a.cpp.xml
-check_exit 7
+check_exit 1
 
 # simple input
 define asrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 	STDOUT
 
 # input with ?
 define srcml_question <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></unit>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></unit>
 	STDOUT
 
 xmlcheck "$asrcml"
@@ -120,7 +120,7 @@ check sub/a.cpp.xml "$asrcml"
 # escaped newline
 define ansrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
@@ -163,44 +163,42 @@ check sub/a.cpp.xml "$ansrcml"
 # on the man page
 
 # escaped \a
-text="\aa;\a"
 srcml -l C++ --text="\aa;\a" | srcml
-message "$($ECHO -en "\aa;\a")"
+check "\aa;\a"
 
 # escaped \b
-text="\bb;\b"
 srcml -l C++ --text="\bb;\b" | srcml
-check "$($ECHO -en "\bb;\b")"
+check "\bb;\b"
 
 # escaped \f
 srcml -l C++ --text="\ff;\f" | srcml
-check "$($ECHO -en "\ff;\f")"
+check "\ff;\f"
 
 # escaped \t
 srcml -l C++ --text="\tt;\t" | srcml
-check "$($ECHO -en "\tt;\t")"
+check "\tt;\t"
 
 # escaped \v
 srcml -l C++ --text="\vv;\v" | srcml
-check "$($ECHO -en "\vv;\v")"
+check "\vv;\v"
 
 # hex characters
 srcml -l C++ --text="\x68;" | srcml
-check "$($ECHO -en "\x68;")"
+check "\x68;"
 
-srcml -l C++ --text="\10;" | srcml
-check "$($ECHO -en "\10;")"
+srcml -l C++ --text="\010;" | srcml
+check "\010;"
 
 # octal characters
 srcml -l C++ --text="\0150;" | srcml
-check "$($ECHO -en "\0150;")"
+check "\0150;"
 
 srcml -l C++ --text="\03;" | srcml
-check "$($ECHO -en "\03;")"
+check "\03;"
 
 # escaped \e
 srcml -l C++ --text="\ee;\e" | srcml
-check "$($ECHO -en "\ee;\e")"
+check "\x1be;\x1b"
 
 exit 0
 

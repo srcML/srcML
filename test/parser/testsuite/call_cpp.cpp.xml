@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="call_cpp">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="call_cpp">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name>~<name>f</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>.</operator><name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>-&gt;</operator><name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>-&gt;*</operator><name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>.*</operator><name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>.</operator><operator>(</operator><operator>*</operator><name>b</name><operator>)</operator><operator>-&gt;</operator><operator>(</operator><operator>*</operator><name>c</name><operator>)</operator><operator>-&gt;*</operator><operator>(</operator><operator>*</operator><name>d</name><operator>)</operator><operator>.*</operator><name>e</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>.</operator><operator>(</operator><operator>*</operator><name>b</name><operator>)</operator><operator>-&gt;</operator><operator>(</operator><operator>*</operator><name>c</name><operator>)</operator><operator>-&gt;*</operator><operator>(</operator><operator>*</operator><name>d</name><operator>)</operator><operator>.*</operator><name>e</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name>Date_t</name><argument_list>{}</argument_list></call></expr>;</expr_stmt>
 </unit>
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <if_stmt><if>if <condition>(<expr><name><name>cbState</name><operator>-&gt;</operator><name>readyDate</name></name> <operator>!=</operator> <call><name>Date_t</name><argument_list>{}</argument_list></call></expr>)</condition> <block>{}</block></if></if_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name>a</name><argument_list>{<argument><expr><literal type="number">0</literal></expr></argument>}</argument_list></call></expr>;</expr_stmt>
 </unit>
 

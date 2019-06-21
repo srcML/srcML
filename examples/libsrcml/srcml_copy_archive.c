@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -24,28 +24,25 @@
   Copy an archive.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 
 int main(int argc, char* argv[]) {
-    int i;
-    struct srcml_archive* iarchive;
-    struct srcml_archive* oarchive;
-    struct srcml_unit* unit;
 
     /* open up an existing archive */
-    iarchive = srcml_archive_create();
+    struct srcml_archive* iarchive = srcml_archive_create();
     srcml_archive_read_open_filename(iarchive, "project.xml");
 
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
        the original archive */
-    oarchive = srcml_archive_clone(iarchive);
+    struct srcml_archive* oarchive = srcml_archive_clone(iarchive);
 
     /* open a srcML archive for output */
-    srcml_archive_write_open_filename(oarchive, "project2.xml", 0);
+    srcml_archive_write_open_filename(oarchive, "project2.xml");
 
     /* copy the files from the input archive to the output archive */
-    while ((unit = srcml_archive_read_unit_header(iarchive))) {
+    struct srcml_unit* unit = 0;
+    while ((unit = srcml_archive_read_unit(iarchive))) {
 
         /* Translate to srcml and append to the archive */
         srcml_archive_write_unit(oarchive, unit);

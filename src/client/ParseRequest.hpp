@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef PARSE_REQUEST_HPP
@@ -26,7 +26,8 @@
 #include <srcml.h>
 #include <string>
 #include <vector>
-
+#include <srcml_utilities.hpp>
+#include <memory>
 #include <boost/optional.hpp>
 
 struct ParseRequest {
@@ -39,16 +40,19 @@ struct ParseRequest {
     boost::optional<std::string> version;
     std::vector<char> buffer;
     srcml_archive* srcml_arch = nullptr;
-    srcml_unit* unit = nullptr;
+    std::unique_ptr<srcml_unit> unit;
     boost::optional<std::string> disk_filename;
     boost::optional<std::string> disk_dir;
+    std::string parsertest_filename;
     int position = 0;
     int status = 0;
-    long loc = 0;
-    long runtime = 0;
+    size_t loc = 0;
+    double runtime = 0;
     boost::optional<std::string> time_stamp;
-    unsigned long total_num_inputs = 0;
     boost::optional<std::string> errormsg;
+    bool needsparsing = true;
+    srcml_transformation_result_t results;
+    std::shared_ptr<srcml_archive> input_archive;
 };
 
 #endif

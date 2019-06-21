@@ -15,29 +15,26 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-addUnitTest(srcml_convenient srcml_convenient.c)
-addUnitTest(srcml_copy_archive srcml_copy_archive.c)
-addUnitTest(srcml_create_archive_fd srcml_create_archive_fd.c)
-addUnitTest(srcml_create_archive_file srcml_create_archive_file.c)
-addUnitTest(srcml_create_archive_filename srcml_create_archive_filename.c)
-addUnitTest(srcml_create_archive_full srcml_create_archive_full.c)
-addUnitTest(srcml_create_archive_memory srcml_create_archive_memory.c)
-addUnitTest(srcml_direct_language srcml_direct_language.c)
-addUnitTest(srcml_direct_language_list srcml_direct_language_list.c)
-addUnitTest(srcml_direct_language_xml srcml_direct_language_xml.c)
-addUnitTest(srcml_direct_src2srcml srcml_direct_src2srcml.c)
-addUnitTest(srcml_direct_srcml2src srcml_direct_srcml2src.c)
-addUnitTest(srcml_list srcml_list.c)
-addUnitTest(srcml_read_archive_fd srcml_read_archive_fd.c)
-addUnitTest(srcml_read_archive_file srcml_read_archive_file.c)
-addUnitTest(srcml_read_archive_filename srcml_read_archive_filename.c)
-addUnitTest(srcml_read_archive_full srcml_read_archive_full.c)
-addUnitTest(srcml_read_archive_memory srcml_read_archive_memory.c)
-addUnitTest(srcml_relaxng srcml_relaxng.c)
-addUnitTest(srcml_sort_archive srcml_sort_archive.c)
-addUnitTest(srcml_split_archive srcml_split_archive.c)
-addUnitTest(srcml_transform srcml_transform.c)
-addUnitTest(srcml_xpath srcml_xpath.c)
-addUnitTest(srcml_xslt srcml_xslt.c)
+# add cli tests
+file(GLOB EXAMPLES "srcml_*.c")
+
+install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
+
+if(BUILD_EXAMPLES)
+
+	set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c99")
+
+	foreach(EXAMPLE ${EXAMPLES})
+	    get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
+	    add_executable(${EXAMPLE_NAME} ${EXAMPLE})
+	    target_include_directories(${EXAMPLE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/libsrcml)
+	    target_link_libraries(${EXAMPLE_NAME} libsrcml_link)
+	    # @TODO Do we need these as a test?
+	#    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+	    set_target_properties(${EXAMPLE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+	endforeach()
+
+endif()
+

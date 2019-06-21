@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="class_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="class_cs">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <super_list>: <super><name>B</name></super>, <super><name>C</name></super></super_list> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>public</specifier> class <name>A</name> <super_list>: <super><name>B</name></super>, <super><name>C</name></super></super_list> <block>{}</block></class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
   <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
     <expr_stmt><expr><call><name>~<name>d</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
@@ -21,11 +21,11 @@
 }</block></class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <block>{ <typedef>typedef <type><name>a</name></type> <name>b</name>;</typedef> }</block></class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>D</name> <super_list>: <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></super_list> <block>{ }</block></class><empty_stmt>;</empty_stmt>
 </unit>
 

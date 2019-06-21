@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -25,32 +25,28 @@
   Not especially useful, but does show how units can be rearranged.
 */
 
-#include "srcml.h"
+#include <srcml.h>
 #include <string.h>
 
 int main(int argc, char* argv[]) {
-    struct srcml_archive* iarchive;
-    struct srcml_archive* oarchive;
+
     int num_units = 0;
     struct srcml_unit* units[10];
-    const char* inputfile;
-    const char* outputfile;
-
-    inputfile = "project.xml";
-    outputfile = "project_tmp.xml";
+    const char* inputfile = "project.xml";
+    const char* outputfile = "project_tmp.xml";
 
     /* open up an existing archive */
-    iarchive = srcml_archive_create();
+    struct srcml_archive* iarchive = srcml_archive_create();
 
     /* create a new srcml archive structure */
     /* options and attributes of cloned archive start the same as
        the original archive */
-    oarchive = srcml_archive_clone(iarchive);
+    struct srcml_archive* oarchive = srcml_archive_clone(iarchive);
     srcml_archive_read_open_filename(iarchive, inputfile);
     while (1) {
 
 
-        units[num_units] = srcml_archive_read_unit_header(iarchive);
+        units[num_units] = srcml_archive_read_unit(iarchive);
         if (units[num_units] == 0)
             break;
         ++num_units;
@@ -64,7 +60,7 @@ int main(int argc, char* argv[]) {
 
             if(strcmp(srcml_unit_get_filename(units[j]), srcml_unit_get_filename(units[j - 1])) < 0) {
 
-                struct srcml_unit * tmp_unit = units[j];
+                struct srcml_unit* tmp_unit = units[j];
                 units[j] = units[j - 1];
                 units[j - 1] = tmp_unit;
 
@@ -76,7 +72,7 @@ int main(int argc, char* argv[]) {
     }
 
     /* open a srcML archive for output */
-    srcml_archive_write_open_filename(oarchive, outputfile, 0);
+    srcml_archive_write_open_filename(oarchive, outputfile);
 
     for(i = 0; i < num_units; ++i) {
 

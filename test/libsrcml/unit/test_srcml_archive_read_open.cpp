@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -23,11 +23,10 @@
   Test cases for read open for archives
 */
 
+#include <srcml.h>
+    
 #include <srcml_macros.hpp>
 
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 #include <fstream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -37,35 +36,62 @@
 #endif
 #include <fcntl.h>
 
-#include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
+#include <dassert.hpp>
 
-#include <unit_tests.hpp>
-
-ssize_t read_callback(void * context, void * buffer, size_t len) {
-
-    return (int)fread(buffer, 1, len, (FILE *)context);
+int read_callback(void * context, char* buffer, int len) {
+    return (int)fread(buffer, 1, len, (FILE*)context);
 
 }
 
 int close_callback(void * context UNUSED) {
-
     return 0;
-
 }
 
-int main() {
+int main(int, char* argv[]) {
+    const std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" url="test" filename="project" version="1">
 
-    const std::string srcml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" url=\"test\" filename=\"project\" version=\"1\">\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n</unit>\n\n</unit>\n";
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
 
-    const std::string srcml_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n</unit>\n";
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="b.cpp"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+</unit>
 
-    const std::string srcml_ns = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<s:unit xmlns:s=\"http://www.srcML.org/srcML/src\">\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n<s:unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"b.cpp\"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n</s:unit>\n\n</s:unit>\n";
+</unit>
+)";
 
-    const std::string srcml_macro = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" url=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/>\n\n<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" filename=\"a.cpp\"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>\n\n</unit>\n";
+    const std::string srcml_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="test" filename="project" version="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
 
-    const std::string srcml_macro_single = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" language=\"C++\" url=\"test\" filename=\"project\" version=\"1\"><macro-list token=\"MACRO1\" type=\"src:macro\"/><macro-list token=\"MACRO2\" type=\"src:macro\"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>\n<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>\n</unit>\n";
+    const std::string srcml_ns = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.srcML.org/srcML/src">
+
+<s:unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="a.cpp"><s:expr_stmt><s:expr><s:name>a</s:name></s:expr>;</s:expr_stmt>
+</s:unit>
+
+<s:unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="b.cpp"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
+</s:unit>
+
+</s:unit>
+)";
+
+    const std::string srcml_macro = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="a.cpp"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
+<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
+</unit>
+
+</unit>
+)";
+
+    const std::string srcml_macro_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
+<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
+</unit>
+)";
 
     std::ofstream srcml_file("project.xml");
     srcml_file << srcml;
@@ -92,107 +118,98 @@ int main() {
     */
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_single.xml");
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_ns.xml");
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->prefixes.at(0), "s");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro.xml");
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_macro_single.xml");
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_filename(archive, "foobar.xml"), SRCML_STATUS_IO_ERROR);
 
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_filename(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
-
     }
 
     {
@@ -204,107 +221,98 @@ int main() {
     */
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml.c_str(), srcml.size());
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_single.c_str(), srcml_single.size());
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_ns.c_str(), srcml_ns.size());
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->prefixes.at(0), "s");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_macro.c_str(), srcml_macro.size());
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_memory(archive, srcml_macro_single.c_str(), srcml_macro_single.size());
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_memory(archive, 0, 1), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_memory(archive, srcml.c_str(), 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
-
     }
 
     {
@@ -316,115 +324,110 @@ int main() {
     */
 
     {
-        FILE * file = fopen("project.xml", "r");
+        FILE* file = fopen("project.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
-        FILE * file = fopen("project_single.xml", "r");
+        FILE* file = fopen("project_single.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
+        FILE* file = fopen("project_ns.xml", "r");
 
-        FILE * file = fopen("project_ns.xml", "r");
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->prefixes.at(0), "s");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
+        FILE* file = fopen("project_macro.xml", "r");
 
-        FILE * file = fopen("project_macro.xml", "r");
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
+        FILE* file = fopen("project_macro_single.xml", "r");
 
-        FILE * file = fopen("project_macro_single.xml", "r");
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_FILE(archive, file);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_FILE(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
-
     }
 
     {
-        FILE * file = fopen("project_ns.xml", "r");
+        FILE* file = fopen("project_ns.xml", "r");
         dassert(srcml_archive_read_open_FILE(0, file), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
     }
@@ -436,109 +439,104 @@ int main() {
     {
         int fd = OPEN("project.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         CLOSE(fd);
-
     }
 
     {
         int fd = OPEN("project_single.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         CLOSE(fd);
-
     }
 
     {
-
         int fd = OPEN("project_ns.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->prefixes.at(0), "s");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         CLOSE(fd);
-
     }
 
     {
-
         int fd = OPEN("project_macro.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         CLOSE(fd);
-
     }
 
     {
-
         int fd = OPEN("project_macro_single.xml", O_RDONLY, 0);
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_fd(archive, fd);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         CLOSE(fd);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
-
     }
 
     {
@@ -552,125 +550,119 @@ int main() {
     */
 
     {
-        FILE * file = fopen("project.xml", "r");
+        FILE* file = fopen("project.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
-        FILE * file = fopen("project_single.xml", "r");
+        FILE* file = fopen("project_single.xml", "r");
 
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
+        FILE* file = fopen("project_ns.xml", "r");
 
-        FILE * file = fopen("project_ns.xml", "r");
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->prefixes.at(0), "s");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
+        FILE* file = fopen("project_macro.xml", "r");
 
-        FILE * file = fopen("project_macro.xml", "r");
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
+        FILE* file = fopen("project_macro_single.xml", "r");
 
-        FILE * file = fopen("project_macro_single.xml", "r");
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
-        dassert(archive->type, SRCML_ARCHIVE_READ);
-        dassert(!archive->reader, 0);
-        dassert(archive->user_macro_list.size(), 4);
-        dassert(archive->user_macro_list.at(0), "MACRO1");
-        dassert(archive->user_macro_list.at(1), "src:macro");
-        dassert(archive->user_macro_list.at(2), "MACRO2");
-        dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_PSEUDO_BLOCK | SRCML_OPTION_TERNARY));
+        // @todo change to blackbox test
+        // dassert(archive->type, SRCML_ARCHIVE_READ);
+        // dassert(!archive->reader, 0);
+        // dassert(archive->user_macro_list.size(), 4);
+        // dassert(archive->user_macro_list.at(0), "MACRO1");
+        // dassert(archive->user_macro_list.at(1), "src:macro");
+        // dassert(archive->user_macro_list.at(2), "MACRO2");
+        // dassert(archive->user_macro_list.at(3), "src:macro");
+//        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
-
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_io(archive, 0, read_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
-
     }
 
     {
-        FILE * file = fopen("project_ns.xml", "r");
-        srcml_archive * archive = srcml_archive_create();
+        FILE* file = fopen("project_ns.xml", "r");
+        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_io(archive, (void *)file, 0, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
         srcml_archive_free(archive);
         fclose(file);
-
     }
 
     {
-        FILE * file = fopen("project_ns.xml", "r");
+        FILE* file = fopen("project_ns.xml", "r");
         dassert(srcml_archive_read_open_io(0, (void *)file, read_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
         fclose(file);
     }
@@ -684,5 +676,4 @@ int main() {
     srcml_cleanup_globals();
 
     return 0;
-
 }

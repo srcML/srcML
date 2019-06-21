@@ -17,13 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <src_output_filesystem.hpp>
 #include <srcml.h>
 #include <iostream>
-#include <boost/filesystem.hpp>
+#include <srcml_utilities.hpp>
+#include <mkDir.hpp>
 
 void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
 
@@ -32,23 +33,37 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
     if (output_dir != "." && output_dir != "./")
         prefix = output_dir;
 
+    // create output directory structure as needed
+    mkDir dir;
+
     int count = 0;
-    while (srcml_unit* unit = srcml_archive_read_unit_header(srcml_arch)) {
+    std::string last;
+    while (std::unique_ptr<srcml_unit> unit{srcml_archive_read_unit(srcml_arch)}) {
 
-        // construct the relative directory
-        boost::filesystem::path out(prefix);
-        if (const char* filename = srcml_unit_get_filename(unit))
-            out /= filename;
+        const char* cfilename = srcml_unit_get_filename(unit.get());
+        // @todo What do we do with no filename?
+        if (!cfilename)
+            continue;
 
-        // create the path
-        if (out.has_parent_path() && !is_directory(out.parent_path()))
-            boost::filesystem::create_directories(out.parent_path());
+        std::string filename = cfilename;
+
+        // separate pathname from filename
+        std::string path = prefix;
+        path += '/';
+        auto pos = filename.rfind('/');
+        path += pos != std::string::npos ? filename.substr(0, pos) : "";
+
+        std::string fullfilename = prefix;
+        fullfilename += "/";
+        fullfilename += filename;
+
+        // use libarchive to create the file path
+        // @todo Can we get away with no permission on final file?
+        dir.mkdir(path);
 
         // unparse directory to filename
-        log << ++count << (const char *)out.c_str();
+        log << ++count << fullfilename;
 
-        srcml_unit_unparse_filename(unit, (const char *)out.c_str(), 0);
-
-        srcml_unit_free(unit);
+        srcml_unit_unparse_filename(unit.get(), fullfilename.c_str());
     }
 }

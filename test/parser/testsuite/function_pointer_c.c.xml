@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="function_pointer" filename="function_pointer_c">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C" url="function_pointer" filename="function_pointer_c">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function_decl><type><name>int</name></type> (<modifier>*</modifier><name>minus</name>)<parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list> <init>= <expr><literal type="number">0</literal></expr></init>;</function_decl>
 </unit>
 

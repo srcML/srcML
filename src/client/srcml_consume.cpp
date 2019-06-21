@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * Thread-designed function to parse and create a unit.
  * Output is scheduled for writing on the write queue
@@ -27,7 +27,6 @@
 #include <srcml.h>
 #include <ParseRequest.hpp>
 #include <WriteQueue.hpp>
-#include <boost/static_assert.hpp>
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
 #include <string>
@@ -35,113 +34,94 @@
 #include <Timer.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
-void srcml_consume(ParseRequest* request, WriteQueue* write_queue) {
+void srcml_consume(int /* thread_pool_id */, std::shared_ptr<ParseRequest> request, WriteQueue* write_queue) {
 
     // error passthrough to output for proper output in trace
     if (request->status) {
-        request->unit = 0;
+        request->unit.reset(0);
         write_queue->schedule(request);
         return;
-    }
-
-    // NOTE: thread task cannot throw exception
-
-    // a clone of the intended srcML archive is created
-    // the only purpose is to allow files to be parsed, without opening
-    // the real destination archive
-    srcml_archive* srcml_arch = srcml_archive_clone(request->srcml_arch);
-
-    if (option(SRCML_COMMAND_NOARCHIVE)) {
-        request->srcml_arch = srcml_arch;
-
-        srcml_archive_disable_full_archive(srcml_arch);
-        srcml_archive_enable_hash(srcml_arch);
-
-        // build the output filename mirroring input filesystem
-        // ensure that the directory path has a final "/" when appended to filename
-        std::string xml_filename;
-        if (request->disk_dir) {
-            xml_filename += *request->disk_dir;
-            if (request->disk_dir->back() != '/')
-                xml_filename += '/';
-        }
-        xml_filename += *request->filename + ".xml";
-
-        srcml_archive_write_open_filename(srcml_arch, xml_filename.c_str(), 0);
-
-    } else {
-        char buffer[100];
-        size_t size;
-        srcml_archive_write_open_memory(srcml_arch, (char**) &buffer, &size);
     }
 
     std::string original_filename;
 
     // construct and parse the unit
-    srcml_unit* unit = request->unit;
-    int status = SRCML_STATUS_OK;
-    try {
+    request->status = SRCML_STATUS_OK;
 
-        // create the unit start tag
-        if (!unit) {
-            if (!(unit = srcml_unit_create(srcml_arch)))
-                throw SRCML_STATUS_ERROR;
+    // create the unit if needed
+    if (!request->unit) {
+        request->unit.reset(srcml_unit_create(request->srcml_arch));
+        if (!request->unit) {
+            request->status = SRCML_STATUS_ERROR;
+            write_queue->schedule(request);
+            return;
+        }
+    }
+
+    // language attribute, required if from memory
+    // @todo if request has a language different from input, need to srcml->src->srcml 
+    if (srcml_unit_get_language(request->unit.get()) == 0 || srcml_unit_get_language(request->unit.get())[0] == '\0')
+        if ((request->status = srcml_unit_set_language(request->unit.get(), request->language.c_str())) != SRCML_STATUS_OK) {
+            request->unit.reset();
+            write_queue->schedule(request);
+            return;
         }
 
-        // language attribute, required if from memory
-        if ((status = srcml_unit_set_language(unit, request->language.c_str())) != SRCML_STATUS_OK)
-            throw status;
+    // (optional) filename attribute
+    if (request->filename) {
 
-        // (optional) filename attribute
-        if (request->filename) {
-
-            original_filename = *request->filename;
-            
-            // Cleanup filename
-            while ((*request->filename)[0] == '.' || (*request->filename)[0] == '/') {
-                request->filename->erase(0,1);
-            }
-            
-            if ((status = srcml_unit_set_filename(unit, request->filename->c_str())) != SRCML_STATUS_OK)
-                throw status;
+        original_filename = *request->filename;
+        
+        // Cleanup filename
+        auto it = request->filename->begin();
+        while (*it == '.' && std::next(it) != request->filename->end() && *std::next(it) == '/') {
+            request->filename->erase(it, std::next(std::next(it)));
+            it = request->filename->begin();
         }
-
-        // (optional) version attribute
-        if (request->version && ((status = srcml_unit_set_version(unit, request->version->c_str())) != SRCML_STATUS_OK))
-            throw status;
-
-        if (request->time_stamp)
-            srcml_unit_set_timestamp(unit, request->time_stamp->c_str());
-
-        // parse the buffer/file
-        Timer parsetime;
-        if (request->disk_filename)
-            status = srcml_unit_parse_filename(unit, request->disk_filename->c_str());
-        else if (!request->unit)
-            status = srcml_unit_parse_memory(unit, &request->buffer.front(), request->buffer.size());
-        if (status != SRCML_STATUS_OK) {
-            throw status;
+        
+        if ((request->status = srcml_unit_set_filename(request->unit.get(), request->filename->c_str())) != SRCML_STATUS_OK) {
+            request->unit.reset();
+            write_queue->schedule(request);
+            return;
         }
+    }
 
-        request->runtime = parsetime.cpu_time_elapsed();
-
-    } catch (...) {
-
-        request->errormsg = "srcml: Unable to open file " + original_filename;
-
-        SRCMLstatus(WARNING_MSG, *request->errormsg);
-
-        if (unit)
-            srcml_unit_free(unit);
-        unit = 0;
-        if (request)
-            delete request;
-        request = 0;
+    // (optional) version attribute
+    if (request->version && ((request->status = srcml_unit_set_version(request->unit.get(), request->version->c_str())) != SRCML_STATUS_OK)) {
+        request->unit.reset();
+        write_queue->schedule(request);
         return;
     }
 
+    // (optional) timestamp attribute
+    if (request->time_stamp)
+        srcml_unit_set_timestamp(request->unit.get(), request->time_stamp->c_str());
+
+    // parse the buffer/file, timing as we go
+    Timer parsetime;
+
+    if (request->disk_filename) {
+        request->status = srcml_unit_parse_filename(request->unit.get(), request->disk_filename->c_str());
+    }
+    else if (request->needsparsing) {
+        request->status = srcml_unit_parse_memory(request->unit.get(), request->buffer.data(), request->buffer.size());
+    }
+    if (request->status != SRCML_STATUS_OK) {
+        request->errormsg = "srcml: Unable to open file " + original_filename;
+        request->unit.reset();
+        write_queue->schedule(request);
+        return;
+    }
+
+    request->runtime = parsetime.cpu_time_elapsed();
+    request->results.type = SRCML_RESULTS_UNITS;
+
+    // perform any transformations and add them to the request
+    srcml_unit_apply_transforms(request->srcml_arch, request->unit.get(), &(request->results));
+    if (request->results.type == SRCML_RESULTS_NONE) {
+        request->unit.reset();
+    }
+
     // schedule unit for output
-    request->unit = unit;
-    request->status = status;
     write_queue->schedule(request);
 }

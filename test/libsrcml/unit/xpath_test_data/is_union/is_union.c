@@ -1,2 +1,0 @@
-union x;
-union x { };

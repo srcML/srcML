@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <WriteQueue.hpp>
@@ -25,50 +25,41 @@
 
 WriteQueue::WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered)
        : log(log), destination(destination), ordered(ordered), maxposition(0), q(
-            [](ParseRequest* r1, ParseRequest* r2) {
+            [](std::shared_ptr<ParseRequest> r1, std::shared_ptr<ParseRequest> r2) {
                 return r1->position > r2->position;
             }) {
+
+    write_thread = std::thread(&WriteQueue::process, this);
 }
 
 /* writes out the current srcml */
-void WriteQueue::schedule(ParseRequest* pvalue) {
+void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
 
     // push the value on the priority queue
-	{
-		std::lock_guard<std::mutex> lock(qmutex);
+    {
+        std::lock_guard<std::mutex> lock(qmutex);
 
         // record max position for eos()
         if (pvalue->position > maxposition)
             maxposition = pvalue->position;
 
-		// put this request into the queue
-		q.push(pvalue);
-	}
+        // put this request into the queue
+        q.push(pvalue);
+    }
 
     // let the write processing know there is something
     cv.notify_one();
 }
 
-void WriteQueue::eos() {
-
-	// schedule the last one
-    ParseRequest* pvalue = new ParseRequest;
-	pvalue->position = maxposition + 1;
-    pvalue->status = 1000;
-    schedule(pvalue);
-}
-
-void WriteQueue::start() {
-
-    // actual thread created here (and not in constructor) because
-    // at this point we know all object data members are created
-    // and initialized correctly
-    write_thread = std::thread(&WriteQueue::process, this);
-}
-
 void WriteQueue::stop() {
 
-    eos();
+    {
+        std::unique_lock<std::mutex> lock(qmutex);
+
+        completed = true;
+    }
+
+    cv.notify_one();
 
     write_thread.join();
 }
@@ -79,11 +70,13 @@ void WriteQueue::process() {
     while (1) {
 
         // get a parse request to handle
-        ParseRequest* pvalue = 0;
+        std::shared_ptr<ParseRequest> pvalue(0);
         {
             std::unique_lock<std::mutex> lock(qmutex);
 
             while (q.empty() || (ordered && (q.top()->position != position + 1))) {
+                if (q.empty() && completed)
+                    return;
                 cv.wait(lock);
             }
 
@@ -91,9 +84,6 @@ void WriteQueue::process() {
             q.pop();
         }
         ++position;
-
-        if (pvalue->status == 1000)
-            break;
 
         // record real units written
         if (pvalue->status == SRCML_STATUS_OK)

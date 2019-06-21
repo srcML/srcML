@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="throws" filename="throws_java">
 
-<unit>
+<unit language="Java">
 <throws>throws <argument><expr><name>foo</name></expr></argument></throws>
 </unit>
 
-<unit>
+<unit language="Java">
 <throws>throws <argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument></throws>
 </unit>
 

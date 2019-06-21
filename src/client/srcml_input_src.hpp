@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef SRCML_INPUT_SRC_HPP
@@ -42,9 +42,11 @@
 #define STDOUT_FILENO   1       /* standard output file descriptor */
 #define STDERR_FILENO   2       /* standard error file descriptor */
 #endif
-#ifdef _MSC_BUILD
-#define ssize_t long
-#endif
+
+//#ifdef _MSC_BUILD
+//#include <BaseTsd.h>
+//typedef SSIZE_T ssize_t;
+//#endif
 
 class srcml_input_src;
 
@@ -73,8 +75,6 @@ public:
     bool operator!=(const char* other) const { return filename != other; }
 
     const char* c_str() const { return resource.c_str(); }
-
-    void swap(srcml_input_src& other);
 
     std::string filename;
     std::string protocol;
@@ -109,8 +109,6 @@ inline bool contains<FILE*>(const srcml_input_src& input) { return bool(input.fi
 
 template <>
 inline bool contains<int>(const srcml_input_src& input) { return bool(input.fd); }
-
-inline bool is_src(const srcml_input_src& input) { return input.state == SRC; }
 
 inline std::ostream& operator<<(std::ostream& out, const srcml_input_src& input) {
 

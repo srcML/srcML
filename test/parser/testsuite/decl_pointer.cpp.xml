@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="decl_simple">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="decl_simple">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <modifier>*</modifier><name>int</name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><specifier>extern</specifier> <type><name>int</name><modifier>*</modifier></type> <name>foo</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>a</name></type> <name>b</name><argument_list>(<argument><expr><operator>*</operator><name>c</name></expr></argument>)</argument_list></decl>,<decl><type ref="prev"/><name>d</name><argument_list>(<argument><expr><operator>*</operator><name>e</name></expr></argument>)</argument_list></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>int</name> <modifier>*</modifier></type> <name>a</name> <init>= <expr><name>foo</name></expr></init></decl>;</decl_stmt>
 </unit>
 

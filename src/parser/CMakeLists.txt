@@ -15,41 +15,83 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-file(GLOB PARSER_HEADERS *.hpp)
-file(GLOB PARSER_SOURCE *.cpp)
+# Finding antlr binary.
+find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
 
-set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/generated_src)
+file(GLOB PARSER_SOURCE *.hpp *.cpp)
+
+# 
+# RunAntlr
+# Executes ANTLR executable on the provided files.
+# 
+# Takes 3 parameters OUTPUT_FILES INPUT_FILES DEPENDENCIES and 
+#    1 optional parameter INCLUDE_GRAMMAR
+# Use with named arguments.
+#
+macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
+
+    if("${INCLUDE_GRAMMAR}" STREQUAL "")
+        if(WIN32)
+            # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES}
+            )
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
+            )
+        endif()
+    else()
+        if(WIN32)
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
+            )
+        else()
+            add_custom_command(OUTPUT  ${OUTPUT_FILES}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+                COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
+            )
+        endif()
+    endif()
+endmacro(RunAntlr)
+
+macro(lexerFiles LEXER)
+    set(${LEXER}LexerOutputFiles
+        ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}Lexer.cpp
+        ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}Lexer.hpp
+        ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}LexerTokenTypes.hpp
+        ${CMAKE_GENERATED_SOURCE_DIR}/${LEXER}LexerTokenTypes.txt
+        ${CMAKE_GENERATED_SOURCE_DIR}/expanded${LEXER}Lexer.g
+    )
+endmacro()
 
 # Running ANTLR on CommentTextLexer.g
-set(CommentTextLexerOutputFiles
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexerTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexerTokenTypes.txt
-    ${CMAKE_GENERATED_SOURCE_DIR}/expandedCommentTextLexer.g
+lexerFiles(CommentText)
+RunAntlr("${CommentTextLexerOutputFiles}"
+    CommentTextLexer.g
+    ""
+    ""
 )
-RunAntlr("${CommentTextLexerOutputFiles}" CommentTextLexer.g "" "")
 
 # Running ANTLR on TextLexer.g
-set(TextLexerOutputFiles
-    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexerTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/TextLexerTokenTypes.txt
-    ${CMAKE_GENERATED_SOURCE_DIR}/expandedTextLexer.g
+lexerFiles(Text)
+RunAntlr("${TextLexerOutputFiles}"
+    TextLexer.g
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
+    ""
 )
-RunAntlr("${TextLexerOutputFiles}" TextLexer.g ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp "")
 
 # Running ANTLR on OperatorLexer.g
-set(OperatorLexerOutputFiles
-    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexerTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexerTokenTypes.txt
-    ${CMAKE_GENERATED_SOURCE_DIR}/expandedOperatorLexer.g
-)
+lexerFiles(Operator)
 RunAntlr("${OperatorLexerOutputFiles}"
     OperatorLexer.g
     ${CMAKE_GENERATED_SOURCE_DIR}/TextLexer.cpp
@@ -57,14 +99,7 @@ RunAntlr("${OperatorLexerOutputFiles}"
 )
 
 # Running ANTLR on KeywordLexer.g
-set(KeywordLexerOutputFiles
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexerTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexerTokenTypes.txt
-    ${CMAKE_GENERATED_SOURCE_DIR}/expandedKeywordLexer.g
-)
-
+lexerFiles(Keyword)
 RunAntlr("${KeywordLexerOutputFiles}"
     KeywordLexer.g
     ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.cpp
@@ -76,7 +111,7 @@ set(srcMLParserOutputFiles
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.hpp
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.txt	
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.txt 
 )
 RunAntlr("${srcMLParserOutputFiles}"
     srcMLParser.g
@@ -84,52 +119,11 @@ RunAntlr("${srcMLParserOutputFiles}"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
-# Running SED/GREP macro for token extraction.
-# @todo this breaks mingw32 build.
-if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-    add_custom_command(
-        OUTPUT ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
-        WORKING_DIRECTORY ${CMAKE_GENERATED_SOURCE_DIR}
-        DEPENDS ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
-        COMMAND ${GREP_EXE} -e "=" ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp > PhaseOne.txt
-        COMMAND ${SED_EXE} -e "s/,//g" -e "s/= //g" -e "s/^[ \\t]*//" -e "s/^/\#define TOKEN_/g" PhaseOne.txt > ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp 
-    )
-else()
-    add_custom_command(
-        OUTPUT ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
-        DEPENDS ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
-        COMMAND ${GREP_EXE} '=' ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp | ${SED_EXE} -e 's/,//g' -e 's/= //g' -e 's/^[ \t]*//' -e "s/^/\#define TOKEN_/g" > ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp)
-
-endif()
-
-
-set(updatedRemoveList "")
-foreach(itemToRemove ${KeywordLexerOutputFiles} ${srcMLParserOutputFiles} ${OperatorLexerOutputFiles} ${TextLexerOutputFiles} ${CommentTextLexerOutputFiles} srcMLParserTokenTypesMacro.hpp)
-    get_filename_component(absPath ${itemToRemove} ABSOLUTE)
-    list(APPEND updatedRemoveList ${absPath})
-endforeach()
-
-
-# Removing generated files from file list.
-list(REMOVE_ITEM PARSER_HEADERS ${updatedRemoveList})
-list(REMOVE_ITEM PARSER_SOURCE ${updatedRemoveList})
-
-if(WIN32)
 add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
-    ${PARSER_HEADERS}
     ${PARSER_SOURCE}
 )
-else()
-add_library(parser OBJECT
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypesMacro.hpp
-    ${PARSER_HEADERS}
-    ${PARSER_SOURCE}
-)
-endif()
+
+target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})

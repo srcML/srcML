@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef SRC_INPUT_FILESYSTEM_HPP
@@ -28,8 +28,8 @@
 #include <ParseQueue.hpp>
 
 int src_input_filesystem(ParseQueue& queue,
-  						  srcml_archive* srcml_arch,
-  						  const srcml_request_t& srcml_request,
-						  const std::string& input_filename);
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const std::string& input_filename);
 
 #endif

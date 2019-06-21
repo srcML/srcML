@@ -13,42 +13,36 @@ xmlcheck "$input"
 createfile sub/a.xml "$input"
 
 # from file
-srcml -p "http://www.srcML.org/srcML/src" sub/a.xml
+srcml --prefix "http://www.srcML.org/srcML/src" sub/a.xml
 check ""
 
-srcml sub/a.xml -p "http://www.srcML.org/srcML/src"
+srcml sub/a.xml --prefix "http://www.srcML.org/srcML/src"
 check ""
 
-srcml -p "http://www.srcML.org/srcML/cpp" sub/a.xml
+srcml --prefix "http://www.srcML.org/srcML/cpp" sub/a.xml
 check "cpp"
 
-srcml sub/a.xml -p "http://www.srcML.org/srcML/cpp"
+srcml sub/a.xml --prefix "http://www.srcML.org/srcML/cpp"
 check "cpp"
 
-srcml -p "foo.com" sub/a.xml
+srcml --prefix "foo.com" sub/a.xml
 check "foo"
 
-srcml sub/a.xml -p "foo.com"
+srcml sub/a.xml --prefix "foo.com"
 check "foo"
 
-srcml -p "nonexistent.com" sub/a.xml
+srcml --prefix "nonexistent.com" sub/a.xml
 check
 
-srcml sub/a.xml -p "nonexistent.com"
+srcml sub/a.xml --prefix "nonexistent.com"
 check
 
 # standard input
-srcml -p "http://www.srcML.org/srcML/src" <<< "$input"
-check ""
-
 srcml --prefix "http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
 srcml --prefix="http://www.srcML.org/srcML/src" <<< "$input"
 check ""
-
-srcml -p "http://www.srcML.org/srcML/cpp" <<< "$input"
-check "cpp"
 
 srcml --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
@@ -58,9 +52,6 @@ check "cpp"
 
 srcml --prefix "http://www.srcML.org/srcML/cpp" <<< "$input"
 check "cpp"
-
-srcml -p "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
-check
 
 srcml --prefix "http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 check

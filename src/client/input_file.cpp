@@ -17,18 +17,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <pipe.hpp>
+#include <srcml_pipe.hpp>
 #include <input_file.hpp>
 #include <decompress_srcml.hpp>
 
 void input_file(srcml_input_src& input) {
 
-    if (!input.compressions.empty() /* &&
-       (input.compressions.size() > 1 || input.compressions.front() != ".gz")*/) {
+    if (!input.compressions.empty()) {
 
-        input_pipe(input, decompress_srcml);
+        srcml_pipe(input, decompress_srcml);
     }
 }

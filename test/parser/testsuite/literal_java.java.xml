@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="literal" filename="literal_java">
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><literal type="boolean">false</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><literal type="boolean">true</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><literal type="number">1_0</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><literal type="number">10_</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><literal type="number">0._1</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><literal type="number">0.1_</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><literal type="number">1_1.1_1</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit language="Java">
 <expr_stmt><expr><literal type="null">null</literal></expr>;</expr_stmt>
 </unit>
 

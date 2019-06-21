@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml.h>
@@ -26,33 +26,71 @@
 #include <create_srcml.hpp>
 #include <compress_srcml.hpp>
 #include <create_src.hpp>
-#include <transform_srcml.hpp>
 #include <srcml_display_metadata.hpp>
 #include <srcml_execute.hpp>
-#include <isxml.hpp>
 #include <Timer.hpp>
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
+#include <input_stdin.hpp>
 #include <boost/version.hpp>
-#include <archive.h>
 #include <iostream>
-#include <unistd.h>
 #include <csignal>
+#include <cmath>
 #include <TraceLog.hpp>
 
-// decide if a step is needed
+#ifndef _MSC_BUILD
+#include <sys/uio.h>
+#include <unistd.h>
+#endif
+
 namespace {
+    // decide if a step is needed
     bool request_create_srcml      (const srcml_request_t&);
-    bool request_transform_srcml   (const srcml_request_t&);
     bool request_display_metadata  (const srcml_request_t&);
     bool request_output_compression(const srcml_request_t&);
     bool request_create_src        (const srcml_request_t&);
 }
 
-// stdin timeout message
-void timeout(int) {
+int main(int argc, char * argv[]) {
 
-    fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
+    Timer runtime = Timer();
+
+    // parse the command line
+    auto srcml_request = parseCLI11(argc, argv);
+
+ //   std::cout << srcml_request;
+
+    // global access to options
+    SRCMLOptions::set(srcml_request.command);
+
+    // version
+    if (option(SRCML_COMMAND_VERSION)) {
+        std::cout << "srcml " << srcml_version_string() << '\n'
+                  << "libsrcml " << srcml_version_string() << '\n'
+                  << archive_version_string() << '\n';
+        return 0;
+    }
+
+    // debug info
+    if (srcml_request.command & SRCML_DEBUG_MODE) {
+        SRCMLstatus(DEBUG_MSG) << "Library Versions: " << '\n'
+                               << "srcml " << srcml_version_string() << '\n'
+                               << "libsrcml " << srcml_version_string() << '\n'
+                               <<  archive_version_string() << '\n'
+                               << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n'
+                               << "libboost " << BOOST_LIB_VERSION << '\n';
+    }
+
+    // for a single file request, copy the unit number to that input source
+    if (srcml_request.input_sources.size() == 1 && srcml_request.unit != 0)
+        srcml_request.input_sources[0].unit = srcml_request.unit;
+
+    // determine if stdin is srcML or src
+    if (srcml_request.stdindex) {
+
+        // stdin from a terminal is not allowed
+        if (isatty(0)) {
+            fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
 Typical usage includes:
 
     # convert from a source file to srcML
@@ -71,49 +109,19 @@ Consider using the --text option for direct entry of text.
 
 See `srcml --help` for more information.
 )");
-    exit(1);
-}
+            exit(1);
+        }
 
-namespace {
-    void set_state_stdin(srcml_request_t& srcml_request);
-}
-
-int main(int argc, char * argv[]) {
-
-    Timer runtime = Timer();
-
-    // parse the command line
-    auto srcml_request = parseCLI(argc, argv);
-
-    // global access to options
-    SRCMLOptions::set(srcml_request.command);
-
-    // version
-    if (option(SRCML_COMMAND_VERSION)) {
-        std::cout << "libsrcml " << srcml_version_string() << '\n'
-                  << "srcml " << srcml_version_string() << '\n'
-                  << archive_version_string() << '\n';
-        return 0;
+        input_stdin(srcml_request);
     }
-
-    // debug info
-    if (srcml_request.command & SRCML_DEBUG_MODE) {
-        SRCMLstatus(DEBUG_MSG) << "Library Versions: " << '\n'
-                               << "libsrcml " << srcml_version_string() << '\n'
-                               << "srcml " << srcml_version_string() << '\n'
-                               <<  archive_version_string() << '\n'
-                               << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n'
-                               << "libboost " << BOOST_LIB_VERSION << '\n';
-    }
-
-    // for a single file request, copy the unit number to that input source
-    if (srcml_request.input_sources.size() == 1 && srcml_request.unit != 0)
-        srcml_request.input_sources[0].unit = srcml_request.unit;
-
-    // determine if stdin is srcML or src
-    if (srcml_request.stdindex)
-        set_state_stdin(srcml_request);
-
+ 
+    /*
+        Setup the internal pipeline of possible steps:
+        * creating srcml from src files and input srcml files, and transforming srcml
+        * displaying metadata about a srcml file
+        * creating src from srcml
+        * compressing output (compressing input performed on an individual input source)
+    */
     // steps in the internal pipeline
     processing_steps_t pipeline;
 
@@ -121,12 +129,6 @@ int main(int argc, char * argv[]) {
     if (request_create_srcml(srcml_request)) {
 
         pipeline.push_back(create_srcml);
-    }
-
-    // step srcml->srcml
-    if (request_transform_srcml(srcml_request)) {
-
-        pipeline.push_back(transform_srcml);
     }
 
     // step srcml->metadata
@@ -143,12 +145,10 @@ int main(int argc, char * argv[]) {
 
     // step (srcml|src)->compressed
     if (request_output_compression(srcml_request)) {
-
-#if ARCHIVE_VERSION_NUMBER > 3001002
+#if ARCHIVE_VERSION_NUMBER >= 3002000
         pipeline.push_back(compress_srcml);
 #else
-        SRCMLstatus(ERROR_MSG, "srcml: Unsupported output compression");
-        exit(1);
+    SRCMLstatus(ERROR_MSG, "srcml: Unable to compress output with the libraries on this platform");
 #endif
     }
 
@@ -164,11 +164,17 @@ int main(int argc, char * argv[]) {
     srcml_cleanup_globals();
 
     // debugging information
-    SRCMLstatus(DEBUG_MSG, "CPU Time: %l ms", runtime.cpu_time_elapsed());
-    auto realtime = runtime.real_world_elapsed();
-    SRCMLstatus(DEBUG_MSG, "Real Time: %l ms", realtime);
-    SRCMLstatus(DEBUG_MSG, "LOC: %l", TraceLog::totalLOC());
-    SRCMLstatus(DEBUG_MSG, "KLOC/s: %l", realtime > 0 ? (TraceLog::totalLOC() / realtime) : 0);
+    if (srcml_request.command & SRCML_DEBUG_MODE || srcml_request.command & SRCML_TIMING_MODE) {
+        auto realtime = runtime.real_world_elapsed();
+        SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
+                               << "Real Time: " << realtime << "ms\n";
+        if (TraceLog::totalLOC() > 0) {
+            SRCMLstatus(DEBUG_MSG) << "LOC: " << TraceLog::totalLOC() << '\n'
+                                   << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
+        }
+
+        SRCMLstatus(DEBUG_MSG) << "Status: " << (SRCMLStatus::errors() ? 1 : 0) << '\n';
+    }
 
     // error status is 0 unless a critical, error, or warning
     return SRCMLStatus::errors() ? 1 : 0;
@@ -178,33 +184,29 @@ namespace {
 
     /*
         Create srcML
-
         * One of the input sources is source code
-        * More than one input, and the destination is srcML
-        * One input, a specific unit, and the output is srcML
+        * Destination is srcML
     */
     bool request_create_srcml(const srcml_request_t& request) {
 
-        return std::find_if(request.input_sources.begin(), request.input_sources.end(), is_src) != request.input_sources.end() ||
-        (request.input_sources.size() > 1 && request.output_filename.state == SRCML) /*||
-        (input_sources.size() == 1 && input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML)) */;
+        if (!request.transformations.empty()) {
+            enable(SRCML_COMMAND_XML);
+        }
+
+        if (option(SRCML_COMMAND_PARSER_TEST))
+            return true;
+
+        if (option(SRCML_COMMAND_CAT_XML))
+            return true;
+
+        return std::find_if(request.input_sources.begin(), request.input_sources.end(), [](const srcml_input_src& input) { return input.state == SRC; }) != request.input_sources.end() ||
+        (request.output_filename.state == SRCML || option(SRCML_COMMAND_XML)) ||
+        !request.transformations.empty();
     }
 
     /*
-        Transform srcml
-
-        * Transformations requested
-    */
-    bool request_transform_srcml(const srcml_request_t& request) {
-
-        return !request.transformations.empty();
-    }
-
-    /*
-        Extract out of srcML
-
-        * ?
-        * 
+        Extract from srcML
+        * Request any sort of metadata
     */
     bool request_display_metadata(const srcml_request_t& request) {
 
@@ -213,7 +215,6 @@ namespace {
 
     /*
         Output is compressed
-
         * Format of output includes compression
     */
     bool request_output_compression(const srcml_request_t& request) {
@@ -223,7 +224,6 @@ namespace {
 
     /*
         Creating source code
-
         * Specific option for source output
         * The destination is not a srcML file and we are not creating srcML, asking for metadata, or performing a transformation
     */
@@ -231,32 +231,6 @@ namespace {
 
         return (option(SRCML_COMMAND_SRC) || (request.output_filename.state != SRCML &&
             !request_create_srcml(request) &&
-            !request_display_metadata(request) &&
-            !request_transform_srcml(request))) ||
-            (request.input_sources.size() == 1 && request.input_sources[0].unit >= 0 && option(SRCML_COMMAND_XML));
-        ;
-    }
-
-    void set_state_stdin(srcml_request_t& request) {
-
-        // stdin input source
-        auto& rstdin = request.input_sources[*request.stdindex];
-
-        // stdin accessed as FILE*
-        rstdin.fileptr = fdopen(STDIN_FILENO, "r");
-        if (!rstdin.fileptr) {
-            SRCMLstatus(ERROR_MSG, "srcml: Unable to open stdin");
-            exit(1);
-        }
-        rstdin.fd = boost::none;
-
-        // setup a 5 second timeout for stdin from the terminal
-        if (isatty(0)) {
-            alarm(5);
-            signal(SIGALRM, timeout);
-        }
-
-        // determine if the input is srcML or src
-        rstdin.state = isxml(*(rstdin.fileptr)) ? SRCML : SRC;
+            !request_display_metadata(request)));
     }
 }

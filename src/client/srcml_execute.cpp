@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml_execute.hpp>
@@ -30,11 +30,6 @@
 
 #include <thread>
 #include <list>
-
-void join(std::thread& t)
-{
-    t.join();
-}
 
 void srcml_execute(const srcml_request_t& srcml_request,
                    processing_steps_t& pipeline,
@@ -55,11 +50,14 @@ void srcml_execute(const srcml_request_t& srcml_request,
         fds[0] = fds[1] = -1;
         if (pipeline.size() > 1 && !last) {
 #if !defined(_MSC_BUILD) && !defined(__MINGW32__)
-            pipe(fds);
+            if (pipe(fds) == -1) {
+                perror("srcml");
+                return;
+            }
 #else
             HANDLE read_pipe;
             HANDLE write_pipe;
-            CreatePipe(&read_pipe,&write_pipe, NULL, 0);
+            CreatePipe(&read_pipe,&write_pipe, nullptr, 0);
 
             fds[1] = _open_osfhandle((intptr_t)write_pipe, 0);
             fds[0] = _open_osfhandle((intptr_t)read_pipe, _O_RDONLY);
@@ -78,5 +76,5 @@ void srcml_execute(const srcml_request_t& srcml_request,
     }
 
     // wait on all threads
-    std::for_each(pipethreads.begin(), pipethreads.end(), join);
+    std::for_each(pipethreads.begin(), pipethreads.end(), [](std::thread& t) { t.join(); });
 }

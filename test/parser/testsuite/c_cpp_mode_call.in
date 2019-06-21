@@ -1,0 +1,23 @@
+<unit language="C++">
+<expr_stmt><expr><call><name>${NAME}</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>${NAME}</name><argument_list>(<argument><expr><name>${NAME}</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>${NAME}</name><argument_list>(<argument><expr><name>${NAME}</name></expr></argument>, <argument><expr><name>${NAME}</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><call><name>${NAME}</name><argument_list>(<argument><expr><name>${NAME}</name></expr></argument>, <argument><expr><name>${NAME}</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>${NAME}</name><argument_list>(<argument><expr><name>${NAME}</name></expr></argument>, <argument><expr><name>${NAME}</name></expr></argument>)</argument_list></call><index>[<expr><literal type="number">0</literal></expr>]</index></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>${NAME}</name><argument_list>(<argument><expr><name>${NAME}</name></expr></argument>, <argument><expr><name>${NAME}</name></expr></argument>)</argument_list></call><index>[<expr><name>${NAME}</name></expr>]</index></expr>;</expr_stmt>
+</unit>

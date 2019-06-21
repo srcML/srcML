@@ -7,7 +7,7 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit revision="REVISION" language="C++" filename="a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -27,6 +27,11 @@ createfile sub/a.cpp.xml "$srcml"
 srcml --list sub/a.cpp.xml
 check "$output"
 
+srcml -L sub/a.cpp.xml
+check "$output"
+
 srcml --list < sub/a.cpp.xml
 check "$output"
 
+srcml -L < sub/a.cpp.xml
+check "$output"

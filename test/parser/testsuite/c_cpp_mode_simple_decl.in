@@ -1,0 +1,27 @@
+<unit language="C++"> 
+<decl_stmt><decl><type><name>${NAME}</name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++"> 
+<decl_stmt><decl><type><name>a</name></type> <name>${NAME}</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++"> 
+<decl_stmt><decl><type><name>${NAME}</name></type> <name>${NAME}</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>${NAME}</name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>${NAME}</name></type> <name>${NAME}</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>${NAME}</name> <modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>${NAME}</name> <modifier>*</modifier></type> <name>${NAME}</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>

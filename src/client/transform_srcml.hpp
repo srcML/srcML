@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef TRANSFORM_SRCML_HPP
@@ -26,10 +26,10 @@
 #include <srcml_cli.hpp>
 #include <srcml_input_src.hpp>
 
-// transform srcml with query or transformation
-void transform_srcml(const srcml_request_t& srcml_request,
-				     const srcml_input_t& input_sources,
-                     const srcml_output_dest& output);
+int apply_xslt(srcml_archive* in_arch, const std::string& transform_input);
+
+int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces);
+
+int apply_relaxng(srcml_archive* in_arch, const std::string& transform_input);
 
 #endif
-

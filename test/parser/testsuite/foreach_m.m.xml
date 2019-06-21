@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="foreach" filename="foreach_m">
+<unit xmlns="http://www.srcML.org/srcML/src" language="Objective-C" url="foreach" filename="foreach_m">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <for>for <control>(<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)</control><block type="pseudo">
 <empty_stmt>;</empty_stmt></block></for>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <for>for <control>(<init><decl><type><name>int</name></type> <name>p</name> <range>in <expr><name>arr</name></expr></range></decl></init>)</control>
 <block>{}</block></for>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><name>a</name></expr></range></decl></init>)</control><block type="pseudo">
         <empty_stmt>;</empty_stmt></block></for>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>in <expr><call><name>a</name><argument_list>()</argument_list></call></expr></range></decl></init>)</control><block type="pseudo">
         <empty_stmt>;</empty_stmt></block></for>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <for>for<control>(<init><expr><name>i</name> in <name>a</name></expr></init>)</control><block type="pseudo">
         <empty_stmt>;</empty_stmt></block></for>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <for>for<control>(<init><expr><name>i</name> in <call><name>a</name><argument_list>()</argument_list></call></expr></init>)</control><block type="pseudo">
         <empty_stmt>;</empty_stmt></block></for>
 </unit>

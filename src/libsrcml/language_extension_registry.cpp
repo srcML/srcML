@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <language_extension_registry.hpp>
@@ -28,7 +28,30 @@
 *
 * Constructor.
 */
-language_extension_registry::language_extension_registry() : use_cpp_for_c(false) {}
+language_extension_registry::language_extension_registry() : registered_languages({
+
+    { "c",    Language::LANGUAGE_C },
+    { "h",    Language::LANGUAGE_C },
+    { "i",    Language::LANGUAGE_C },
+    { "cpp",  Language::LANGUAGE_CXX },
+    { "CPP",  Language::LANGUAGE_CXX },
+    { "cp",   Language::LANGUAGE_CXX },
+    { "hpp",  Language::LANGUAGE_CXX },
+    { "cxx",  Language::LANGUAGE_CXX },
+    { "hxx",  Language::LANGUAGE_CXX },
+    { "cc",   Language::LANGUAGE_CXX },
+    { "hh",   Language::LANGUAGE_CXX },
+    { "c++",  Language::LANGUAGE_CXX },
+    { "h++",  Language::LANGUAGE_CXX },
+    { "C",    Language::LANGUAGE_CXX },
+    { "H",    Language::LANGUAGE_CXX },
+    { "tcc",  Language::LANGUAGE_CXX },
+    { "ii",   Language::LANGUAGE_CXX },
+    { "java", Language::LANGUAGE_JAVA },
+    { "aj",   Language::LANGUAGE_JAVA },
+    { "cs",   Language::LANGUAGE_CSHARP },
+    /* { "m",    Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C } */ }), use_cpp_for_c(false)
+    {}
 
 /**
 * ~LanguageExtensionRegistery
@@ -76,13 +99,13 @@ bool get_language_extension(const char * const inpath, std::string & extension)
  */
 bool language_extension_registry::register_user_ext(const char* ext, int language) {
 
-    if(!language) return false;
+    if (!language)
+        return false;
 
     language_extension apair = language_extension(ext, language);
     registered_languages.push_back(apair);
 
- return true;
-
+    return true;
 }
 
 /** 
@@ -163,7 +186,7 @@ void language_extension_registry::register_standard_file_extensions()
 
     register_user_ext("cs",   Language::LANGUAGE_CSHARP);
 
-    register_user_ext("m",   Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C);
+    /* register_user_ext("m",   Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C); */
 }
 
 /**

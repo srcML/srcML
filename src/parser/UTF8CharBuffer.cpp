@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
@@ -275,7 +275,7 @@ ssize_t UTF8CharBuffer::readChars() {
         ssize_t insize = sio.read_callback ? (int) sio.read_callback(sio.context, raw.data() + inbytesleft, raw.size() - inbytesleft) : 0;
         if (insize == -1) {
             fprintf(stderr, "Error reading: %s", strerror(errno));
-            exit(1);
+            return 0;
         }
 
         // EOF
@@ -317,7 +317,7 @@ ssize_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
             if (encoding.empty()) {
                 encoding = "UTF-8";
-            } else if (!compatibleEncodings(encoding.c_str(), "UTF-8")) {
+            } else if (encoding != "UTF-8" && !compatibleEncodings(encoding.c_str(), "UTF-8")) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.c_str());
             }
         }
@@ -330,7 +330,7 @@ ssize_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
             if (encoding.empty()) {
                 encoding = "UTF-16";
-            } else if (!compatibleEncodings(encoding.c_str(), "UTF-16")) {
+            } else if (encoding != "UTF-16" && !compatibleEncodings(encoding.c_str(), "UTF-16")) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.c_str());
             }
         }
@@ -343,7 +343,7 @@ ssize_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
             if (encoding.empty()) {
                 encoding = "UTF-32";
-            } else if (!compatibleEncodings(encoding.c_str(), "UTF-32")) {
+            } else if (encoding != "UTF-32" && !compatibleEncodings(encoding.c_str(), "UTF-32")) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.c_str());
             }
         }
@@ -356,8 +356,8 @@ ssize_t UTF8CharBuffer::readChars() {
         ic = iconv_open("UTF-8", encoding.c_str());
         if (ic == (iconv_t) -1) {
             if (errno == EINVAL) {
-                fprintf(stderr, "Conversion from encoding '%s' not supported\n\n", encoding.c_str());
-                exit(4);
+                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.c_str());
+                return 0;
             }
         }
 
@@ -375,7 +375,7 @@ ssize_t UTF8CharBuffer::readChars() {
 
         // raw input characters
         // after call to iconv(), linbuf will point to start of any 
-        // incomplete multibyte sequences that were not cooked
+        // incomplete multibyte sequences that were not cooked     
         char* linbuf = raw.data();
         inbytesleft = raw.size();
 
@@ -389,7 +389,7 @@ ssize_t UTF8CharBuffer::readChars() {
         size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
         if (binsize == (size_t) -1) {
             fprintf(stderr, "%s\n", strerror(errno));
-            exit(1);
+            return 0;
         }
 
         // number of bytes cooked is the total size minus the bytes that were "left", i.e., not used, by iconv()
@@ -420,6 +420,7 @@ ssize_t UTF8CharBuffer::readChars() {
  */
 int UTF8CharBuffer::getChar() {
 
+    // has to be int to handle -1 return value
     unsigned char c = 0;
 
     // may need more characters
@@ -427,7 +428,7 @@ int UTF8CharBuffer::getChar() {
 
         insize = readChars();
         if (insize == 0) {
-                // EOF
+            // EOF
             return -1;
         }
     }
@@ -442,8 +443,9 @@ int UTF8CharBuffer::getChar() {
     // so start over
     if (lastcr && c == '\n') {
         lastcr = false;
-        getChar();
+        return getChar();
     }
+    lastcr = false;
 
     // convert carriage returns to a line feed
     if (c == '\r') {
@@ -473,6 +475,9 @@ const std::string& UTF8CharBuffer::getEncoding() const {
  * place in buffer if requested.
  */
 UTF8CharBuffer::~UTF8CharBuffer() {
+    if(sio.context) {
+        sio.close_callback(sio.context);
+    }
 
     if (ic)
         iconv_close(ic);
@@ -482,8 +487,8 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
 #ifdef _MSC_BUILD
         DWORD        SHA_DIGEST_LENGTH;
-        DWORD        hash_length_size = insizeof(DWORD);
-        CryptGetHashParam(crypt_hash, HP_HASHinSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
+        DWORD        hash_length_size = sizeof(DWORD);
+        CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
         CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
         CryptDestroyHash(crypt_hash);
         CryptReleaseContext(crypt_provider, 0);

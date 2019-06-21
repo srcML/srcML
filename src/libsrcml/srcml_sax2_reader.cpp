@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml_sax2_reader.hpp>
@@ -26,25 +26,7 @@
 #include <stdlib.h>
 #include <cstring>
 
-#ifdef _MSC_BUILD
-#define strdup _strdup
-#endif
-
-/**
- * thread_args
- *
- * Structure to hold information to pass
- * to thread function.
- */
-struct thread_args {
-
-    /** control for sax processing */
-    srcSAXController * control;
-
-    /** handler with hooks for sax processing */
-    srcml_reader_handler * handler;
-
-};
+#include <iostream>
 
 /**
  * start_routine
@@ -52,9 +34,7 @@ struct thread_args {
  *
  * Starts the parsing of the document.
  */
-void * start_routine(void * arguments) {
-
-    thread_args * args = (thread_args *)arguments;
+static void* start_routine(thread_args* args) {
 
     try {
 
@@ -62,48 +42,19 @@ void * start_routine(void * arguments) {
 
     } catch(SAXError error) {
 
-        if(!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END)) {
+        if (!(error.error_code == XML_ERR_EXTRA_CONTENT || error.error_code == XML_ERR_DOCUMENT_END)) {
 
             // TODO: Make sure error code is passed back, so that SRCML_STATUS_OK is not returned
             // See #1218
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
-            // This is not necessary on certain errors (such as missing '>'), as
-            // the thread will finish on its own. But if the document is empty it will
-            // freeze up until it is shut down here.
-            if (error.error_code == XML_ERR_DOCUMENT_EMPTY)
-                args->handler->done();
+            args->handler->done();
         }
 
         // might have to release a lock here or set is_done;
     }
 
     return 0;
-
-}
-
-void srcml_sax2_reader::init_constructor() {
-
-
-    thread_args args = { &control, &handler };
-
-    thread = new boost::thread(start_routine, &args);
-    handler.wait();
-
-}
-
-/**
- * srcml_sax2_reader
- * @param filename name of a file
- * @param encoding the character encoding
- *
- * Construct a srcml_sax2_reader using a filename
- */
-srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encoding, const boost::optional<size_t> & revision_number)
-    : control(filename, encoding), read_root(false), handler(revision_number) {
-
-    init_constructor();
-
 }
 
 /**
@@ -112,11 +63,16 @@ srcml_sax2_reader::srcml_sax2_reader(const char * filename, const char * encodin
  *
  * Construct a srcml_sax2_reader using a parser input buffer
  */
-srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input, const boost::optional<size_t> & revision_number)
-    : control(input), read_root(false), handler(revision_number) {
+srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input)
+    : control(std::move(input)), handler() {
 
-    init_constructor();
+    handler.archive = archive;
 
+    // Setup thread here after things are created and settled
+    // Do not put in member initialization list as it can cause random crashes
+    thread = std::thread(start_routine, &args);
+
+    handler.wait();
 }
 
 /**
@@ -126,75 +82,19 @@ srcml_sax2_reader::srcml_sax2_reader(xmlParserInputBufferPtr input, const boost:
  */
 srcml_sax2_reader::~srcml_sax2_reader() {
 
-    stop();
-
-}
-
-void srcml_sax2_reader::stop() {
-
-    if(thread != nullptr) {
-
-        handler.stop();
-        thread->join();
-        delete thread;
-        thread = nullptr;
-
+    handler.stop();
+    
+    if (thread.joinable()) {
+        try {
+            thread.join();
+        } catch(const std::system_error& e) {
+            std::cerr << "srcml: Internal error " << e.code() << " meaning " << e.what() << '\n';
+        }
     }
-
 }
 
 /**
- * read_root_unit_attributes
- * @param language a location to store the language attribute
- * @param url a location to store the url attribute
- * @param version a location to store the version attribute
- * @param attributes array to store other attributes gathered
- * @param prefixes an array to store gathered XML namespace prefixes
- * @param namespaces an array to store gathered XML naamespaces
- * @param processing_instruction a location to store the pre-root processing-instruction
- * @param options a variable to set used options
- * @param tabstop a variable to set the tabstop
- * @param user_macro_list a variable to set the list of user defined macros
- *
- * Read attributes and namespace information fromt the root unit,
- * setting the necessary options.
- *
- * @returns 1 on success and 0 on failure.
- */
-int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & encoding,
-                                                 boost::optional<std::string> & language,
-                                                 boost::optional<std::string> & url, boost::optional<std::string> & version,
-                                                 std::vector<std::string> & attributes,
-                                                 std::vector<std::string> & prefixes,
-                                                 std::vector<std::string> & namespaces,
-                                                 boost::optional<std::pair<std::string, std::string> > & processing_instruction,
-                                                 OPTION_TYPE & options,
-                                                 size_t & tabstop,
-                                                 std::vector<std::string> & user_macro_list) {
-
-    if(thread == nullptr) return 0;
-
-    if(read_root || handler.read_root) return 0;
-
-    encoding.swap(handler.archive->encoding);
-    language.swap(handler.archive->language);
-    url.swap(handler.archive->url);
-    version.swap(handler.archive->version);
-    attributes.swap(handler.archive->attributes);
-    prefixes.swap(handler.archive->prefixes);
-    namespaces.swap(handler.archive->uris);
-    processing_instruction.swap(handler.archive->processing_instruction);
-    options = handler.archive->options;
-    tabstop = handler.archive->tabstop;
-    user_macro_list.swap(handler.archive->user_macro_list);
-
-    read_root = true;
-
-    return 1;
-}
-
-/**
- * read_unit_attributes
+ * read_header
  * @param language a location to store the language attribute
  * @param filename a location to store the filename attribute
  * @param url a location to store the url attribute
@@ -204,61 +104,70 @@ int srcml_sax2_reader::read_root_unit_attributes(boost::optional<std::string> & 
  *
  * @returns 1 on success and 0 on failure.
  */
-int srcml_sax2_reader::read_unit_attributes(boost::optional<std::string> & language, boost::optional<std::string> & filename,
-                                            boost::optional<std::string> & url, boost::optional<std::string> & version,
-                                            boost::optional<std::string> & timestamp, boost::optional<std::string> & hash,
-                                            std::vector<std::string> & attributes) {
+int srcml_sax2_reader::read_header(srcml_unit* unit) {
 
-    if(thread == nullptr) return 0;
-    if(handler.is_done) return 0;
+    handler.unit = unit;
+
+    if (handler.is_done)
+        return 0;
+
     handler.skip = true;
-    handler.collect_unit_attributes = true;
+    handler.collect_unit_header = true;
+    handler.collect_unit_body = false;
     handler.resume_and_wait();
-    handler.collect_unit_attributes = false;
+    handler.collect_unit_body = false;
+    handler.collect_unit_header = false;
     handler.skip = false;
-    if(handler.is_done) return 0;
 
-    language.swap(handler.unit->language);
-    filename.swap(handler.unit->filename);
-    url.swap(handler.unit->url);
-    version.swap(handler.unit->version);
-    hash.swap(handler.unit->hash);
-    timestamp.swap(handler.unit->timestamp);
-    attributes.swap(handler.unit->attributes);
+    if (handler.is_done)
+        return 0;
+
+    handler.unit = 0;
+
+    unit->read_header = true;
 
     return 1;
-
 }
 
-
 /**
- * read_srcml
- * @param unit location in which to read srcML unit.
+ * read
+ * @param language a location to store the language attribute
+ * @param filename a location to store the filename attribute
+ * @param url a location to store the url attribute
+ * @param version a location to store the version attribute
  *
- * Read the next unit from a srcML Archive
- * and return in the passed string parameter.
+ * Read attributes from next unit.
  *
- * @returns 1 on success and 0 if done
+ * @returns 1 on success and 0 on failure.
  */
-int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
+int srcml_sax2_reader::read(srcml_unit* unit) {
 
-    if(thread == nullptr) return 0;
+    handler.unit = unit;
 
-    if(unit) unit = boost::optional<std::string>();
+    if (handler.is_done)
+        return 0;
 
-    if(handler.is_done) return 0;
-    handler.collect_srcml = true;
+    handler.skip = true;
+    handler.collect_unit_header = true;
+    handler.collect_unit_body = true;
     handler.resume_and_wait();
-    handler.collect_srcml = false;
-    if(handler.is_done) return 0;
+    handler.collect_unit_body = false;
+    handler.collect_unit_header = false;
+    handler.skip = false;
 
-    unit.swap(handler.unit->unit);
+    if (handler.is_done)
+        return 0;
 
-    return unit ? 1 : 0;
+    handler.unit = 0;
+
+    unit->read_header = true;
+    unit->read_body = true;
+
+    return 1;
 }
 
 /**
- * read_src
+ * read_body
  * @param output_buffer output buffer to write text
  *
  * Read the next unit from a srcML Archive
@@ -266,20 +175,20 @@ int srcml_sax2_reader::read_srcml(boost::optional<std::string> & unit) {
  *
  * @returns 1 on success and 0 if done
  */
-int srcml_sax2_reader::read_src(xmlOutputBufferPtr output_buffer) {
+int srcml_sax2_reader::read_body(srcml_unit* unit) {
 
-    if(thread == nullptr) return 0;
-    if(handler.is_done) return 0;
-    control.enable_comment(false);
-    control.enable_cdataBlock(false);
-    handler.output_buffer = output_buffer;
-    handler.collect_src = true;
+    if (handler.is_done)
+        return 0;
+
+    handler.unit = unit;
+    handler.collect_unit_body = true;
     handler.resume_and_wait();
-    handler.collect_src = false;
-    handler.output_buffer = 0;
-    control.enable_comment(true);
-    control.enable_cdataBlock(true);
-    if(handler.is_done) return 0;
+    handler.collect_unit_body = false;
+
+    if (handler.is_done)
+        return 0;
+
+    unit->read_body = true;
 
     return 1;
 }

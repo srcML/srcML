@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -31,65 +31,7 @@
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
 #include <srcml_types.hpp>
-
-/** 
- * srcml_translator
- * @param str_buf buffer to assign output srcML
- * @param size integer to assign size of resulting srcML
- * @param xml_encoding output srcML encoding
- * @param op translator options
- * @param prefix namespace prefix array
- * @param uri namespace uri array
- * @param processing_instruciton a pre-root processing instuction
- * @param tabsize size of tabstop
- * @param language what language to parse in
- * @param revision what version of srcML
- * @param url unit url attribute
- * @param filename unit url attribute
- * @param version unit url attribute
- * @param timestamp unit timestamp attribute
- * @param hash unit hash attribute
- * @param encoding unit source encoding
- * 
- * Constructor for output to memory.
- */
-srcml_translator::srcml_translator(char** str_buf,
-                                 size_t* size,
-                                 const char* xml_encoding,
-                                 OPTION_TYPE& op,
-                                 std::vector<std::string>& prefix,
-                                 std::vector<std::string>& uri,
-                                 boost::optional<std::pair<std::string, std::string> > processing_instruction,
-                                 size_t tabsize,
-                                 int language,
-                                 const char* revision,
-                                 const char* url,
-                                 const char* filename,
-                                 const char* version,
-                                 const std::vector<std::string>& attributes,
-                                 const char* timestamp,
-                                 const char* hash,
-                                 const char* encoding)
-    :  Language(language),
-       revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
-       options(op),
-       out(0, 0, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize),
-       str_buffer(str_buf), size(size) {
-
-    buffer = xmlBufferCreate();
-    xmlOutputBufferPtr obuffer = xmlOutputBufferCreateBuffer(buffer, xmlFindCharEncodingHandler(xml_encoding));
-
-    if (xml_encoding) {
-
-#ifdef LIBXML2_NEW_BUFFER
-        xmlBufShrink(obuffer->conv, xmlBufUse(obuffer->conv));
-#else
-        obuffer->conv->use = 0;
-#endif
-    }
-
-    out.setOutputBuffer(obuffer);
-}
+#include <unit_utilities.hpp>
 
 /** 
  * srcml_translator
@@ -114,8 +56,7 @@ srcml_translator::srcml_translator(char** str_buf,
 srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* xml_encoding,
                                  OPTION_TYPE& op,
-                                 std::vector<std::string>& prefix,
-                                 std::vector<std::string>& uri,
+                                 const Namespaces& namespaces,
                                  boost::optional<std::pair<std::string, std::string> > processing_instruction,
                                  size_t tabsize,
                                  int language,
@@ -128,10 +69,12 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* hash,
                                  const char* encoding)
     : Language(language),
-      revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), prefix(prefix), uri(uri),
+      revision(revision), url(url), filename(filename), version(version), timestamp(timestamp), hash(hash), encoding(encoding), attributes(attributes), namespaces(namespaces),
       options(op),
       out(0, output_buffer, getLanguageString(), xml_encoding, options, attributes, processing_instruction, tabsize), tabsize(tabsize)
-{}
+{
+    out.initNamespaces(namespaces);
+}
 
 /**
  * set_macro_list
@@ -152,19 +95,14 @@ void srcml_translator::set_macro_list(std::vector<std::string>& list) {
  */
 void srcml_translator::close() {
 
+    if (!first && (options & SRCML_OPTION_ARCHIVE) > 0)
+        out.outputUnitSeparator();
+
     // @todo Is this needed? Is this why we have to clone the archive, because this
     // is always created?
     if (first && !text_only && (options & SRCML_OPTION_ARCHIVE) > 0) {
 
-        // Open for write;
-        out.initWriter();
-        out.initNamespaces(prefix, uri);
-
-        out.outputXMLDecl();
-        out.outputProcessingInstruction();
-
-        // root unit for compound srcML documents
-        out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
+        prepareOutput();
     }
     first = false;
 
@@ -173,14 +111,6 @@ void srcml_translator::close() {
 
     /* FIXME: Crashes when deleted */
     out.close();
-
-    if (str_buffer && buffer->use) {
-
-        (*str_buffer) = (char *)malloc(buffer->use * sizeof(char));
-        memcpy(*str_buffer, buffer->content, (size_t)buffer->use);
-        if (size && *str_buffer)
-            *size = (size_t)buffer->use;
-    }
 }
 
 /**
@@ -190,17 +120,12 @@ void srcml_translator::close() {
  */
 void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
-    if (first) {
-  
-        // Open for write;
-        out.initWriter();
-        out.initNamespaces(prefix, uri);
-    }
     first = false;
 
-    // output as inner unit
-    if (isoption(options, SRCML_OPTION_ARCHIVE))
-        out.setDepth(1);
+    const int lang = getLanguage();
+    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
+      lang & Language::LANGUAGE_OBJECTIVE_C)
+        options |= SRCML_OPTION_CPP;
 
     try {
 
@@ -239,18 +164,15 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
     catch (...) {
         fprintf(stderr, "srcML translator error\n");
     }
-
-    // set back to root
-    out.setDepth(0);
 }
 
 void srcml_translator::prepareOutput() {
 
     bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
-    // Open for write;
-    out.initWriter();
-    out.initNamespaces(prefix, uri);
+    if (!first)
+        return;
+    first = false;
 
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();
@@ -261,7 +183,6 @@ void srcml_translator::prepareOutput() {
 
     if (is_archive) {
         out.startUnit(0, revision, url, filename, version, 0, 0, 0, attributes, true);
-        out.outputUnitSeparator();
     }
 }
 
@@ -277,177 +198,69 @@ void srcml_translator::prepareOutput() {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_unit(const srcml_unit * unit, const char* xml) {
+bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     if (is_outputting_unit)
         return false;
 
-    if (first)
-        prepareOutput();
-    first = false;
+    prepareOutput();
 
-    const char* end_start_unit = (char *)strchr(xml, '>');
-    if (!end_start_unit)
-        return false;
-
-    /** extract language */
-    const char* lang = "language";
-    const char* language_start_name = std::search(xml, end_start_unit, lang, lang + strlen(lang));
-
-    char* language_start_value = 0;
-    char* language_end_value = 0;
-    if (language_start_name) {
-
-        language_start_value = (char *)strchr(language_start_name, '"');
-        language_end_value = (char *)strchr(language_start_value + 1, '"');
-        (*language_end_value) = '\0';
-
-    } 
-
-    /** is there a cpp namespace */
-    bool is_cpp = false;
-    for (auto& prefix : SRCML_URI_PREFIX) {
-
-        std::string cpp_uri = prefix + "srcML/cpp";
-
-        is_cpp = std::search(xml, end_start_unit, cpp_uri.begin(), cpp_uri.end()) != end_start_unit;
-        if (is_cpp)
-            break;
+    // space between the previous unit and this one
+    if ((options & SRCML_OPTION_ARCHIVE) > 0) {
+        out.outputUnitSeparator();
     }
 
-    OPTION_TYPE save_options = options;
-    if (is_cpp)
-        options |= SRCML_OPTION_CPP;
+    // if the unit has namespaces, then use those
+    Namespaces mergedns = unit->archive->namespaces;
 
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
-
-    out.startUnit(language_start_value ? language_start_value + 1 : 0, is_archive && unit->revision ? unit->revision->c_str() : revision, unit->url ? unit->url->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                       unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, 
-                       unit->encoding ? unit->encoding->c_str() : 0, unit->attributes, false);
-
-    if (language_start_name)
-        (*language_end_value) = '"';
-
-    options = save_options;
-
-    size_t size = strlen(end_start_unit);
-
-    if(size > 1) {
-
-        while(end_start_unit[--size] != '<')
-            ;
-
-        xmlTextWriterWriteRawLen(out.getWriter(), (xmlChar *)end_start_unit + 1, (int)size - 1);
+    if (unit->namespaces) {
+        mergedns += *unit->namespaces;
     }
 
+    // if a srcdiff revision, remove the srcdiff namespace
+    if (unit->archive->revision_number) {
+        auto&& view = mergedns.get<nstags::uri>();
+        auto it = view.find(SRCML_DIFF_NS_URI);
+        if (it != view.end()) {
+            view.erase(it);
+        }
+    }
+
+    std::string language = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
+
+    // create a new unit start tag with all new info (hash value, namespaces actually used, etc.)
+    out.initNamespaces(mergedns);
+    auto nrevision = unit->archive->revision_number;
+    out.startUnit(language.c_str(),
+            (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->c_str() : revision,
+            !unit->url       ? 0 : (nrevision ? attribute_revision(*unit->url, (int) *nrevision).c_str() : unit->url->c_str()),
+            !unit->filename  ? 0 : (nrevision ? attribute_revision(*unit->filename, (int) *nrevision).c_str() : unit->filename->c_str()),
+            !unit->version   ? 0 : (nrevision ? attribute_revision(*unit->version, (int) *nrevision).c_str() : unit->version->c_str()),
+            !unit->timestamp ? 0 : (nrevision ? attribute_revision(*unit->timestamp, (int) *nrevision).c_str() : unit->timestamp->c_str()),
+            !unit->hash      ? 0 : (nrevision ? attribute_revision(*unit->hash, (int) *nrevision).c_str() : unit->hash->c_str()),
+            !unit->encoding  ? 0 : (nrevision ? attribute_revision(*unit->encoding, (int) *nrevision).c_str() : unit->encoding->c_str()),
+            unit->attributes,
+            false);
+
+    // write out the contents, excluding the start and end unit tags
+    int size = unit->content_end - unit->content_begin - 1;
+
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+
+        std::string s = extract_revision(unit->srcml.c_str() + unit->content_begin, size, (int) *unit->archive->revision_number);
+
+        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST s.c_str(), (int) s.size());
+
+    } else if (size > 0) {
+        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->srcml.c_str() + unit->content_begin), size);
+    }
+
+    // end the unit 
     xmlTextWriterEndElement(out.getWriter());
 
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.outputUnitSeparator();
-
     return true;
 }
 
-/**
- * add_unit
- * @param unit srcML to add to archive/non-archive with configuration options
- * @param xml the xml to output
- *
- * Add a unit as string directly to the archive.  If not an archive
- * and supplied unit does not have src namespace add it.  Also, write out
- * a supplied hash as part of output unit if specified.
- * Can not be in by element mode.
- *
- * @returns if succesfully added.
- */
-bool srcml_translator::add_unit_content(const srcml_unit * unit, const char* xml, int size) {
-
-    if (is_outputting_unit)
-        return false;
-
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
-
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-      : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
-        options |= SRCML_OPTION_CPP;
-
-    if (first)
-        prepareOutput();
-    first = false;
-
-    out.startUnit(unit->language->c_str(), is_archive && unit->revision ? unit->revision->c_str() : revision, unit->url ? unit->url->c_str() : 0, unit->filename ? unit->filename->c_str() : 0,
-                       unit->version ? unit->version->c_str() : 0, unit->timestamp ? unit->timestamp->c_str() : 0, unit->hash ? unit->hash->c_str() : 0, 
-                       unit->encoding ? unit->encoding->c_str() : 0, unit->attributes, false);
-
-    if (size)
-        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
-
-    xmlTextWriterEndElement(out.getWriter());
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.outputUnitSeparator();
-
-    return true;
-}
-
-/**
- * add_unit
- * @param unit srcML to add to archive/non-archive with configuration options
- * @param xml the xml to output
- *
- * Add a unit as string directly to the archive.  If not an archive
- * and supplied unit does not have src namespace add it.  Also, write out
- * a supplied hash as part of output unit if specified.
- * Can not be in by element mode.
- *
- * @returns if succesfully added.
- */
-bool srcml_translator::add_unit_raw(const char* xml, int size) {
-
-    if(is_outputting_unit) return false;
-
-    if (first)
-        prepareOutput();
-    first = false;
-
-    if (size)
-        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST xml, size);
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-          out.outputUnitSeparator();
-
-    return true;
-}
-
-/**
- * add_unit
- * @param unit srcML to add to archive/non-archive with configuration options
- * @param xml the xml to output
- *
- * Add a unit as string directly to the archive.  If not an archive
- * and supplied unit does not have src namespace add it.  Also, write out
- * a supplied hash as part of output unit if specified.
- * Can not be in by element mode.
- *
- * @returns if succesfully added.
- */
-bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
-
-    if (is_outputting_unit)
-        return false;
-
-    if (first)
-        prepareOutput();
-    first = false;
-
-    xmlNodeDumpOutput(out.output_buffer, doc, node, 0, 0, 0);
-
-    if ((options & SRCML_OPTION_ARCHIVE) > 0)
-        out.outputUnitSeparator();
-
-    return true;
-}
 
 /**
  * add_start_unit
@@ -461,41 +274,34 @@ bool srcml_translator::add_unit_raw_node(xmlNodePtr node, xmlDocPtr doc) {
  */
 bool srcml_translator::add_start_unit(const srcml_unit * unit){
 
-    if (first) {
-        out.initWriter();
-        out.initNamespaces(prefix, uri);
-    }
-    first = false;
-
     if (is_outputting_unit)
         return false;
     is_outputting_unit = true;
 
+    first = false;
+ 
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-    if(lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP)
+    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
+      lang & Language::LANGUAGE_OBJECTIVE_C) {
         options |= SRCML_OPTION_CPP;
-
-    if (isoption(options, SRCML_OPTION_ARCHIVE))
-        out.setDepth(1);
+    }
 
     // @todo Why are we saving the options then restoring them?
     OPTION_TYPE save_options = options;
 
-    out.startUnit(unit->language ? unit->language->c_str() : (unit->archive->language ? unit->archive->language->c_str() : 0),
+    out.startUnit(optional_to_c_str(unit->language, optional_to_c_str(unit->archive->language)),
                   revision,
-                  unit->url ? unit->url->c_str() : 0,
-                  unit->filename ? unit->filename->c_str() : 0,
-                  unit->version ? unit->version->c_str() : 0,
-                  unit->timestamp ? unit->timestamp->c_str() : 0,
-                  unit->hash ? unit->hash->c_str() : 0,
-                  unit->encoding ? unit->encoding->c_str() : 0,
+                  optional_to_c_str(unit->url),
+                  optional_to_c_str(unit->filename),
+                  optional_to_c_str(unit->version),
+                  optional_to_c_str(unit->timestamp),
+                  optional_to_c_str(unit->hash),
+                  optional_to_c_str(unit->encoding),
                   unit->attributes,
                   false);
 
     options = save_options;
-
-    out.setDepth(0);
 
     return true;
 }
@@ -513,8 +319,11 @@ bool srcml_translator::add_end_unit() {
     if (!is_outputting_unit)
         return false;
 
-    while (output_unit_depth--)
+    while (output_unit_depth > 0) {
+        --output_unit_depth;
+
         xmlTextWriterEndElement(out.getWriter());
+    }
 
     is_outputting_unit = false;
 
@@ -534,7 +343,7 @@ bool srcml_translator::add_end_unit() {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* uri) {
+bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* /* uri */) {
 
     if (!is_outputting_unit || name == 0)
         return false;
@@ -544,7 +353,8 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
 
     ++output_unit_depth;
 
-    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST uri) != -1;
+    /** @todo figure out how to register namespaces so this actualy works */
+    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, /*BAD_CAST uri*/0) != -1;
 }
 
 /**

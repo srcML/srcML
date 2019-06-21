@@ -1,6 +1,10 @@
 #ifndef INCLUDED_SRCML_MACROS_HPP
 #define INCLUDED_SRCML_MACROS_HPP
 
+#ifdef _MSC_BUILD
+#include <io.h>
+#endif
+
 /**
  * isoption
  * @param options the set options
@@ -41,8 +45,6 @@
 
 #define UNLINK(FILE) unlink(FILE)
 
-#define STRDUP strdup
-
 #define MKTEMP mktemp
 
 #define UNUSED __attribute__ ((unused))
@@ -57,8 +59,6 @@
 #define WRITE(FILE, BUF, NUM) _write(FILE, BUF, NUM)
 
 #define UNLINK(FILE) _unlink(FILE)
-
-#define STRDUP _strdup
 
 #define MKTEMP _mktemp
 

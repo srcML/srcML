@@ -1,144 +1,144 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="class">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="class">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name><name>class</name> <name>A</name></name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name><name>class</name> <name>A</name></name><modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class_decl>class <name>A</name>;</class_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <friend>friend <class_decl>class <name>A</name>;</class_decl></friend>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class_decl>class <name><name>A</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name>;</class_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <macro><name>M</name></macro> <name>A</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default"> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><private>private:
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><protected>protected:
 </protected>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>public</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>private</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>protected</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>virtual</specifier> <specifier>public</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>public</specifier> <specifier>virtual</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>virtual</specifier> <specifier>private</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>private</specifier> <specifier>virtual</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>virtual</specifier> <specifier>protected</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <super_list>: <super><specifier>protected</specifier> <specifier>virtual</specifier> <name>B</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>a</name> <block>{<private>private:
     <function_decl><type><name>void</name></type> <name>b</name><parameter_list>()</parameter_list>;</function_decl>
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>a</name> <block>{<private>private:
     <constructor_decl><name>a</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list>;</constructor_decl>
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>a</name> <block>{<private>private:
     <constructor_decl><name>a</name><parameter_list>(<parameter><decl><type><name>int</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list>;</constructor_decl>
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>a</name> <block>{<private>private:
     <constructor_decl><name>a</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name> <init>= <expr><call><name>b</name><argument_list>()</argument_list></call></expr></init></decl></parameter>)</parameter_list>;</constructor_decl>
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>a</name> <block>{<private>private:
     <constructor_decl><name>a</name><parameter_list>(<parameter><decl><type><name>int</name></type> <init>= <expr><call><name>b</name><argument_list>()</argument_list></call></expr></init></decl></parameter>)</parameter_list>;</constructor_decl>
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>a</name> <block>{<private>private:
     <function_decl><type><name>int</name></type> <name>main</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>argc</name></decl></parameter>, <parameter><decl><type><name><name>int</name><modifier>*</modifier><index>[]</index></name></type> <name>argv</name></decl></parameter>)</parameter_list>;</function_decl>
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>a</name> <block>{<private>private:
     <function><type><name>int</name></type> <name>main</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>argc</name></decl></parameter>, <parameter><decl><type><name><name>int</name><modifier>*</modifier><index>[]</index></name></type> <name>argv</name></decl></parameter>)</parameter_list>
     <block>{}</block></function>
 </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>D</name> <super_list>: <super><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></super></super_list> <block>{<private type="default"> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>foobar</name> <super_list>: <super><specifier>public</specifier> <name>foo</name></super>, <super><specifier>private</specifier> <name>bar</name></super></super_list> <block>{<private type="default"/>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>foo</name> <super_list>: <super><attribute>[[<expr><name>bar</name></expr>]]</attribute> <specifier>virtual</specifier> <specifier>public</specifier> <name>bar</name></super></super_list>  <block>{<private type="default"/>}</block>;</class>
 </unit>
 

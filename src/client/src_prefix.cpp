@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <src_prefix.hpp>
@@ -49,17 +49,15 @@ std::string src_prefix_add_uri(const std::string& input_file) {
     return input_file;
 }
 
-void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource){
+std::tuple<std::string, std::string> src_prefix_split_uri(const std::string& input_file){
     // Extract function split_uri(input_file, protocol, resource)
     size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
 
     if (prefixPos == std::string::npos) {
-        protocol = "";
-        resource = input_file;
-        return;
+        return std::tuple<std::string, std::string>("", input_file);
     }
-    protocol = input_file.substr(0, prefixPos);
-    resource = input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR));
+
+    return std::tuple<std::string, std::string>(input_file.substr(0, prefixPos), input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR)));
 }
 
 std::string src_prefix_resource(const std::string& input_file) {

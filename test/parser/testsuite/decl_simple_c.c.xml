@@ -1,79 +1,79 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="decl_simple" filename="decl_simple_c">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C" url="decl_simple" filename="decl_simple_c">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><alignas>_Alignas<argument_list>(<argument><expr><name>float</name></expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><alignas>_Alignas<argument_list>(<argument><expr><operator>(</operator><name>float</name><operator>)</operator></expr></argument>)</argument_list></alignas> <name>unsigned</name> <name>char</name></type> <name><name>c</name><index>[]</index></name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>_Complex</specifier> <name>float</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name>float</name> <specifier>_Complex</specifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>_Imaginary</specifier> <name>float</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name>float</name> <specifier>_Imaginary</specifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>_Thread_local</specifier> <name>float</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name>float</name> <specifier>_Thread_local</specifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>__block</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name>a</name> <specifier>__block</specifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>__weak</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name>a</name> <specifier>__weak</specifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>__strong</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name>a</name> <specifier>__strong</specifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name> <range>: <expr><literal type="number">0</literal></expr></range></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name><name>struct</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name><name>union</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><name><name>enum</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <decl_stmt><decl><type><specifier>register</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 

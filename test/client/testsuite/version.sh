@@ -5,8 +5,8 @@ source $(dirname "$0")/framework_test.sh
 
 # test
 define output <<- 'STDOUT'
-	libsrcml REVISION
 	srcml REVISION
+	libsrcml REVISION
 	STDOUT
 
 srcml -V | head -n 2

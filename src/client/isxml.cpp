@@ -17,24 +17,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <isxml.hpp>
 #include <cstdint>
-#include <peek4char.hpp>
-
-// determine if XML from first four bytes in almost any encoding
-bool isxml(unsigned char ar[], int size);
-
-// determine if XML
-bool isxml(FILE* infd) {
-
-    // determine if the input is srcML or src from the first up-to 4 bytes
-    unsigned char data[4];
-
-    return isxml(data, peek4char(infd, data));
-}
 
 // determine if XML from first four bytes in almost any encoding
 bool isxml(unsigned char ar[], int size) {
@@ -50,7 +37,6 @@ bool isxml(unsigned char ar[], int size) {
 
     // treat unsigned int field as just 4 bytes regardless of endianness
     union { unsigned char d[4]; uint32_t i; } data = { { ar[0], ar[1], ar[2], ar[3] } };
-    // data.d[0] = ar[0]; data.d[1] = ar[1]; data.d[2] = ar[2]; data.d[3] = ar[3];
 
     // determine if XML by looking for xml declaration (i.e., '<?xm')
     // in first four bytes in almost any encoding

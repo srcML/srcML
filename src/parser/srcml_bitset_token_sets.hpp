@@ -17,13 +17,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML translator; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
  
 #ifndef SRCML_BITSET_TOKEN_SETS_HPP
 #define SRCML_BITSET_TOKEN_SETS_HPP
 
-#include <bitset_bucket_sorter.hpp>
+template <typename T>
+constexpr unsigned long convert(const T /* base */) {
+    return 0;
+}
+
+template<typename T, typename... Args>
+constexpr unsigned long convert(const int pos, T value, Args... args) {
+    return ((value < 32 * (pos + 1)) && (value >= 32 * pos) ? (1 << (value - 32 * pos)) : 0UL) | convert(pos, args...);
+}
+
+#define token_set(CLASS, MEMBER, ...) const unsigned long MEMBER ## _foo[] = { convert(0, __VA_ARGS__), convert(1, __VA_ARGS__), convert(2, __VA_ARGS__), convert(3, __VA_ARGS__), convert(4, __VA_ARGS__), convert(5, __VA_ARGS__), convert(6, __VA_ARGS__), convert(7, __VA_ARGS__), \
+convert(8, __VA_ARGS__), convert(9, __VA_ARGS__), convert(10, __VA_ARGS__), convert(11, __VA_ARGS__), convert(12, __VA_ARGS__), convert(13, __VA_ARGS__), convert(14, __VA_ARGS__), convert(15, __VA_ARGS__) }; const antlr::BitSet CLASS::MEMBER(MEMBER ## _foo, 16);
 
 token_set(srcMLParser, keyword_name_token_set, 
     srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
@@ -96,8 +107,8 @@ token_set(srcMLParser, modifier_tokens_set,
 )
 
 token_set(srcMLParser, skip_tokens_set,
-    srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::COMMENT_START, srcMLParser::COMMENT_END, srcMLParser::LINECOMMENT_END, srcMLParser::COMMENT_TEXT, 
-    srcMLParser::LINECOMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL
+    srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::BLOCK_COMMENT_START, srcMLParser::BLOCK_COMMENT_END, srcMLParser::LINE_COMMENT_END, srcMLParser::COMMENT_TEXT, 
+    srcMLParser::LINE_COMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL, srcMLParser::WHOLE_COMMENT
 )
 
 token_set(srcMLParser, class_tokens_set,
@@ -135,6 +146,24 @@ token_set(srcMLParser, identifier_list_tokens_set,
     //Qt
     srcMLParser::EMIT
 
+)
+
+token_set(srcMLParser, whitespace_token_set,
+    srcMLParser::WS,
+    srcMLParser::CONTROL_CHAR,
+    srcMLParser::EOL_BACKSLASH,
+    srcMLParser::WHOLE_COMMENT,
+    srcMLParser::BLOCK_COMMENT_START,
+    srcMLParser::BLOCK_COMMENT_END,
+    srcMLParser::JAVADOC_COMMENT_END,
+    srcMLParser::DOXYGEN_COMMENT_END,
+    srcMLParser::LINE_COMMENT_START,
+    srcMLParser::LINE_COMMENT_END,
+    srcMLParser::LINE_DOXYGEN_COMMENT_START,
+    srcMLParser::LINE_DOXYGEN_COMMENT_END,
+    srcMLParser::COMMENT_TEXT,
+    srcMLParser::JAVADOC_COMMENT_START,
+    srcMLParser::DOXYGEN_COMMENT_START
 )
 
 #endif

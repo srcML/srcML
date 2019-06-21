@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="destructor">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="destructor">
 
 <!-- external destructor definitions -->
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <throw>throw<argument_list>()</argument_list></throw> <block>{}</block></destructor>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list> <block>{}</block></destructor>
 </unit>
 
 <!-- internal destructor declarations -->
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default"> <destructor_decl><name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default"> <destructor_decl><name>~<name>A</name></name><parameter_list>()</parameter_list> <throw>throw <argument_list>()</argument_list></throw>;</destructor_decl> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
     <destructor_decl><name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
     <destructor_decl><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
     <destructor_decl><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list>;</destructor_decl>
@@ -46,49 +46,49 @@
 
 <!-- internal destructor definitions -->
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
 <destructor><name>~<name>A</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
     <destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list> <block>{}</block></destructor>
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
 <destructor><name>~<name>A</name></name><parameter_list>()</parameter_list> <throw>throw<argument_list>()</argument_list></throw> <block>{}</block></destructor>
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
     <destructor><name>~<name>A</name></name><parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list> <throw>throw<argument_list>()</argument_list></throw> <block>{}</block></destructor>
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
     <destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <throw>throw<argument_list>()</argument_list></throw> <block>{}</block></destructor>
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
 </private><public>public:
     <destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>(<parameter><decl><type><name>void</name></type></decl></parameter>)</parameter_list> <throw>throw<argument_list>()</argument_list></throw> <block>{}</block></destructor>
 </public>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default">
     <destructor_decl><name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
 </private>}</block>;</class>

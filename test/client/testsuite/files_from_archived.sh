@@ -5,7 +5,7 @@ source $(dirname "$0")/framework_test.sh
 
 # files from an archived file list
 define error <<- 'STDOUT'
-	INFO srcml: filelist requires a non-archived file format
+	srcml: filelist requires a non-archived file format
 	STDOUT
 
 createfile archive/a.cpp "a;"
@@ -13,6 +13,7 @@ createfile list.txt "archive/a.cpp"
 
 
 # cpio
+#define archive_output ""
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.cpio"/>
@@ -27,6 +28,7 @@ srcml --files-from list.txt.cpio -o archive/list.xml
 check archive/list.xml "$archive_output" "$error"
 
 # cpio.bz2
+#define archive_output ""
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.cpio.bz2"/>

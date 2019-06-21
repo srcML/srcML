@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="yield" filename="yield_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="yield" filename="yield_cs">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <return><specifier>yield</specifier> return <expr><name>result</name></expr>;</return>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <break><specifier>yield</specifier> break;</break>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>yield</name></decl>;</decl_stmt>
 </unit>
 

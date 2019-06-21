@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -23,23 +23,22 @@
   Test cases for global functions
 */
 
+#include <srcml.h>
+
 #include <srcml_macros.hpp>
 
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 #include <string>
 #include <fstream>
 
-#include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
+#if defined(__GNUC__) && !defined(__MINGW32__)
+#include <unistd.h>
+#else
+#include <io.h>
+#endif
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
-extern srcml_archive global_archive;
-
-int main() {
+int main(int, char* argv[]) {
 
     /*
       srcml_check_language
@@ -159,5 +158,4 @@ int main() {
     UNLINK("project_full.cpp.xml");
 
     return 0;
-
 }

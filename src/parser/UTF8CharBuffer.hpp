@@ -1,7 +1,7 @@
 /**
- * UTF8CharBuffer.hpp
+ * @file UTF8CharBuffer.hpp
  *
- * Copyright (C) 2008-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
@@ -37,8 +37,10 @@
 #include <sha1utilities.hpp>
 
 #ifdef _MSC_BUILD
-#include <windows.h>
-#include <Wincrypt.h>
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#include <wincrypt.h>
+#include <Windows.h>
 #elif defined(__MACH__)
 #include <CommonCrypto/CommonDigest.h>
 
@@ -104,7 +106,7 @@ class UTF8CharBuffer : public antlr::CharBuffer {
 public:
 
     /** size of the original character buffer */
-    static const size_t SRCBUFSIZE = 1024;
+    static constexpr size_t SRCBUFSIZE = 1024;
     typedef void * (*srcml_open_callback)(const char * filename);
 
     // Create a character buffer

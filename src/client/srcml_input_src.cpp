@@ -17,10 +17,17 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml_input_src.hpp>
+
+#if defined(WIN32) || defined(WIN64)
+#include <sys/stat.h>
+ // Copied from linux libc sys/stat.h:
+#define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
+#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
 
 namespace {
     std::string cur_extension(const std::string& filename) {
@@ -49,7 +56,7 @@ srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDE
     filename = src_prefix_add_uri(other);
 
     // filename into protocol and resource
-    src_prefix_split_uri(filename, protocol, resource);
+    std::tie(protocol, resource) = src_prefix_split_uri(filename);
 
     // remove any query string
     if (protocol != "text" && protocol != "filelist" && protocol != "stdin") {
@@ -105,7 +112,7 @@ srcml_input_src::srcml_input_src(const std::string& other, int fds) : unit(0) {
     srcml_input_src s(other);
     s = fds;
 
-    swap(s);
+    *this = std::move(s);
 }
 
 srcml_input_src::srcml_input_src(int fds) : unit(0) {
@@ -113,33 +120,14 @@ srcml_input_src::srcml_input_src(int fds) : unit(0) {
     srcml_input_src s("-");
     s = fds;
 
-    swap(s);
+    *this = std::move(s);
 }
 
-srcml_input_src& srcml_input_src::operator=(const std::string& other) { srcml_input_src t(other); swap(t); return *this; }
+srcml_input_src& srcml_input_src::operator=(const std::string& other) { srcml_input_src t(other); *this = std::move(t); return *this; }
 srcml_input_src& srcml_input_src::operator=(FILE* other) { fileptr = other; return *this; }
 srcml_input_src& srcml_input_src::operator=(int other) { fd = other; return *this; }
 
-void srcml_input_src::swap(srcml_input_src& other) {
-
-    std::swap(filename, other.filename);
-    std::swap(protocol, other.protocol);
-    std::swap(resource, other.resource);
-    std::swap(plainfile, other.plainfile);
-    std::swap(extension, other.extension);
-    std::swap(fileptr, other.fileptr);
-    std::swap(fd, other.fd);
-    std::swap(arch, other.arch);
-    std::swap(state, other.state);
-    std::swap(compressions, other.compressions);
-    std::swap(archives, other.archives);
-    std::swap(isdirectory, other.isdirectory);
-    std::swap(exists, other.exists);
-    std::swap(isdirectoryform, other.isdirectoryform);
-    std::swap(unit, other.unit);
-}
-
-ssize_t srcml_read_callback(void* context, void * buffer, size_t len) {
+int srcml_read_callback(void* context, char* buffer, int len) {
     archive* libarchive_srcml = (archive*) context;
 
     ssize_t status = archive_read_data(libarchive_srcml, buffer, len);
@@ -151,11 +139,7 @@ int srcml_close_callback(void* context) {
     archive* libarchive_srcml = (archive*) context;
 
     archive_read_close(libarchive_srcml);
-#if ARCHIVE_VERSION_NUMBER >= 3000000
     archive_read_free(libarchive_srcml);
-#else
-    archive_read_finish(libarchive_srcml);
-#endif
 
     return 0;
 }

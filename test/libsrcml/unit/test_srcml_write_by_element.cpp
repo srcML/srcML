@@ -15,35 +15,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
 
   Test cases for srcml_archive_check_extension
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
 
 #include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
-#include <unit_tests.hpp>
+#include <string>
+#include <dassert.hpp>
 
-int main() {
+int main(int, char* argv[]) {
 
-    std::string xml_decl ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n";
-    std::string empty_unit = "<unit xmlns=\"http://www.srcML.org/srcML/src\" xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
-    std::string empty_inner_unit = "<unit xmlns:cpp=\"http://www.srcML.org/srcML/cpp\" revision=\"" SRCML_VERSION_STRING "\" language=\"C++\" filename=\"a.cpp\" version=\"1\" timestamp=\"today\" hash=\"0123456789abcdef\"/>\n";
-    std::string start_root_unit_tag = "<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\" url=\"url\">\n\n";
-    std::string end_root_unit_tag = "\n</unit>\n";
+    std::string xml_decl =R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+)";
+    std::string empty_unit = R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" version="1" timestamp="today"/>
+)";
+    std::string empty_inner_unit = R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" version="1" timestamp="today"/>
+)";
+    std::string start_root_unit_tag = R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" url="url">
 
-    std::string start_unit = "<unit xmlns=\"http://www.srcML.org/srcML/src\" revision=\"" SRCML_VERSION_STRING "\">";
-    std::string end_unit = "</unit>\n";
+)";
+    std::string end_root_unit_tag = R"(
+</unit>
+)";
 
-
+    std::string start_unit = R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">")";
+    std::string end_unit = R"(</unit>
+)";
 
     /*
       srcml_write_start_unit
@@ -52,16 +54,17 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_disable_hash(archive);
         srcml_archive_set_url(archive, "url");
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
-        srcml_unit_set_hash(unit, "0123456789abcdef");
+//        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
         srcml_archive_write_unit(archive, unit);
@@ -76,15 +79,15 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_url(archive, "url");
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
-        srcml_unit_set_hash(unit, "0123456789abcdef");
+//        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
         srcml_archive_write_unit(archive, unit);
@@ -99,15 +102,15 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_url(archive, "url");
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
-        srcml_unit_set_hash(unit, "0123456789abcdef");
+//        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
         srcml_archive_write_unit(archive, unit);
@@ -125,9 +128,9 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
+        srcml_archive* archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_solitary_unit(archive);
         dassert(srcml_write_start_unit(0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -140,10 +143,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_write_end_unit(unit), SRCML_STATUS_INVALID_INPUT);
         srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
@@ -162,10 +165,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
@@ -175,17 +178,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_unit(unit);
@@ -194,17 +197,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, "foo", "element", 0);
         srcml_write_end_element(unit);
@@ -214,17 +217,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<foo:element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<foo:element/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", "bar");
         srcml_write_end_element(unit);
@@ -234,18 +237,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element xmlns="bar"/>)" + end_unit);
         free(s);
     }
-
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, "foo", "element", "bar");
         srcml_write_end_element(unit);
@@ -255,17 +257,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<foo:element xmlns:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<foo:element xmlns:foo="bar"/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
@@ -277,17 +279,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element/><element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element/><element/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
@@ -298,17 +300,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element/><element/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element/><element/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
@@ -320,17 +322,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element><element/></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element><element/></element>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
@@ -340,17 +342,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element><element/></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element><element/></element>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         dassert(srcml_write_start_element(unit, 0, 0, 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_unit_free(unit);
@@ -362,10 +364,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);      
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_write_start_element(unit, 0, "element", 0), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -383,10 +385,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_write_end_element(unit), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -404,10 +406,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_namespace(unit, "foo", "bar");
@@ -418,17 +420,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element xmlns:foo="bar"/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_namespace(unit, 0, "bar");
@@ -439,17 +441,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element xmlns=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element xmlns="bar"/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         dassert(srcml_write_namespace(unit, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
@@ -461,10 +463,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_write_namespace(unit, "foo", "bar"), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -482,10 +484,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", 0, "bar");
@@ -496,17 +498,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element foo="bar"/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, "f", "foo", 0, "bar");
@@ -517,17 +519,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element f:foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element f:foo="bar"/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", "b", "bar");
@@ -538,17 +540,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\" xmlns=\"b\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element foo="bar" xmlns="b"/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, "f", "foo", "b", "bar");
@@ -559,17 +561,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element f:foo=\"bar\" xmlns:f=\"b\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element f:foo="bar" xmlns:f="b"/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", 0, "bar");
@@ -580,17 +582,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element foo=\"bar\"/>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element foo="bar"/>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         dassert(srcml_write_attribute(unit, "f", 0, "b", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
@@ -602,10 +604,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_write_attribute(unit, 0, "foo", 0, "bar"), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -623,10 +625,10 @@ int main() {
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_string(unit, "foo");
@@ -637,17 +639,17 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element>foo</element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element>foo</element>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
@@ -660,31 +662,30 @@ int main() {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), xml_decl + start_unit + "<element><element>foo</element></element>" + end_unit);
+        dassert(std::string(s, size), xml_decl + start_unit + R"(<element><element>foo</element></element>)" + end_unit);
         free(s);
     }
 
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_write_string(unit, "foo"), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
     }
 
-
     {
         char * s = 0;
         size_t size;
-        srcml_archive * archive = srcml_archive_create();
-        srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit * unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         dassert(srcml_write_string(unit, 0), SRCML_STATUS_INVALID_ARGUMENT);
@@ -700,5 +701,4 @@ int main() {
     srcml_cleanup_globals();
 
     return 0;
-
 }

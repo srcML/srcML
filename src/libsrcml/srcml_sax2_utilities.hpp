@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_SRCML_SAX2_UTILITIES_HPP
@@ -27,15 +27,28 @@
 
 #include <libxml/parserInternals.h>
 
-int srcml_extract_text(const char * input_buffer, size_t size, xmlOutputBufferPtr output_buffer, OPTION_TYPE options, const boost::optional<size_t> & revision_number, int unit = 0);
-/// @todo needs test cases
-int srcml_extract_text_filename(const char * ifilename, const char * ofilename, const char * encoding, unsigned short compression, const boost::optional<size_t> & revision_number, int unit = 0);
+/**
+ * dlopen_libxslt
+ *
+ * Get a handle to libxslt dynamically loaded
+ *
+ * @returns Return handle on success and NULL on failure
+ */
+void* dlopen_libxslt();
+
+/**
+ * dlopen_libexslt
+ *
+ * Get a handle to libexslt dynamically loaded
+ *
+ * @returns Return handle on success and NULL on failure
+ */
+void* dlopen_libexslt();
+
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
-				const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
-				OPTION_TYPE options, srcml_archive* out_archive);
-#ifdef WITH_LIBXSLT
-int srcml_xslt(xmlParserInputBufferPtr input_buffer, const char* context_element, xmlDocPtr xslt, const char* params[], int paramcount, OPTION_TYPE options, srcml_archive* out_archive);
-#endif
-int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* out_archive);
+                const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
+                OPTION_TYPE options, srcml_archive* oarchive);
+
+int srcml_relaxng(xmlParserInputBufferPtr input_buffer, xmlDocPtr relaxng, OPTION_TYPE options, srcml_archive* oarchive);
 
 #endif

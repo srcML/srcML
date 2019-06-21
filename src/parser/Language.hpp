@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef LANGUAGE_HPP
@@ -81,37 +81,37 @@ public:
      */
     enum Languages {
 
-        /** Interger Constant for No language */
+        /** No language */
         LANGUAGE_NONE = 0,
 
-        /** Interger Constant for C language */
+        /** C language */
         LANGUAGE_C = 1,
 
-        /** Interger Constant for C++ language */
+        /** C++ language */
         LANGUAGE_CXX = 2,
 
-        /** Interger Constant for Java language */
+        /** Java language */
         LANGUAGE_JAVA = 4,
 
-        /** Interger Constant for C# language */
+        /** C# language */
         LANGUAGE_CSHARP = 8,
 
-        /** Interger Constant for Objective-C language */
+        /** Objective-C language */
         LANGUAGE_OBJECTIVE_C = 16,
 
-        /** Interger Constant for languages in C++ family i.e. C++/C#  */
+        /** C++ family i.e. C++/C#  */
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
 
-        /** Interger Constant for languages in C family i.e. C/C++/C# */
-        LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY | Language::LANGUAGE_OBJECTIVE_C,
+        /** C family i.e. C/C++/C# */
+        LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY | LANGUAGE_OBJECTIVE_C,
 
-        /** Interger Constant for languages in Java family i.e. Java/AspectJ */
+        /** Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA,
 
-        /** Interger Constant for Object-Oriented languages i.e. C++/C#/Java */
+        /** Object-Oriented languages i.e. C++/C#/Java */
         LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
 
-        /** Interger Constant for all languages */
+        /** All languages */
         LANGUAGE_ALL = ~0
     };
 

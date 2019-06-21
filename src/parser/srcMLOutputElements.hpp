@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -27,8 +27,6 @@
 */
 
 const std::unordered_map<int, Element> srcMLOutput::process = {
-
-//    { SUNIT, { "unit",SRC, 0, 0, 0, 0, [](params) { pout->processUnit(token); }}},
 
     { SCOMMENT,                    { "comment",           SRC, "type",   "block",        0,      0 }},
     { SLINECOMMENT,                { "comment",           SRC, "type",    "line",        0,      0 }},
@@ -101,10 +99,10 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { SFOR_STATEMENT,              { "for",               SRC,      0,         0,     0,      0 }},
     { SFOREACH_STATEMENT,          { "foreach",           SRC,      0,         0,     0,      0 }},
-    { SFOR_CONTROL,                { "control",           SRC,      0,         0,     0,      0 }},
-    { SFOR_INITIALIZATION,         { "init",              SRC,      0,         0,     0,      0 }},
-    { SFOR_CONDITION,              { "condition",         SRC,      0,         0,     0,      0 }},
-    { SFOR_INCREMENT,              { "incr",              SRC,      0,         0,     0,      0 }},
+    { SCONTROL,                    { "control",           SRC,      0,         0,     0,      0 }},
+    { SCONTROL_INITIALIZATION,     { "init",              SRC,      0,         0,     0,      0 }},
+    { SCONTROL_CONDITION,          { "condition",         SRC,      0,         0,     0,      0 }},
+    { SCONTROL_INCREMENT,          { "incr",              SRC,      0,         0,     0,      0 }},
     { SFOR_LIKE_CONTROL,           { "init",              SRC,      0,         0,     0,      0 }},
 
     // functions
@@ -326,5 +324,4 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     //
     { SEMPTY,                      { "empty_stmt",        SRC,      0,         0,     0,      0 }},
-
 };

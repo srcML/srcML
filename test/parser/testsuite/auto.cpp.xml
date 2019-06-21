@@ -1,68 +1,68 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="auto" filename="auto">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="auto" filename="auto">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>auto</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><specifier>auto</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><specifier>const</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><specifier>auto</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><specifier>auto</specifier> <specifier>auto</specifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>auto</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><specifier>auto</specifier> <name>a</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><specifier>const</specifier> <specifier>auto</specifier> <name>a</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><specifier>auto</specifier> <specifier>auto</specifier> <name>a</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><specifier>auto</specifier> <specifier>auto</specifier></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>auto</name></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>auto</name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>auto</specifier> <specifier>auto</specifier> <name>a</name></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>auto</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>auto</specifier> <specifier>auto</specifier></type> <name>b</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 

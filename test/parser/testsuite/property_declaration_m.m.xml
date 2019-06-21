@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C" url="property_declaration" filename="property_declaration_m">
+<unit xmlns="http://www.srcML.org/srcML/src" language="Objective-C" url="property_declaration" filename="property_declaration_m">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <property>@property <decl><type><name>foo</name></type> <name>bar</name></decl>;</property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <property>@property <decl><type><name>foo</name></type> <name>bar</name></decl>, <decl><type ref="prev"/><name>foobar</name></decl>;</property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <property>@property<attribute_list>()</attribute_list> <decl><type><name>foo</name></type> <name>bar</name></decl>;</property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <property>@property<attribute_list>(<attribute><name>readwrite</name></attribute>)</attribute_list> <decl><type><name>foo</name></type> <name>bar</name></decl>;</property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <property>@property<attribute_list>(<attribute><name>getter</name>=<name>bar</name></attribute>, <attribute><name>setter</name>=<name>setBar</name></attribute>)</attribute_list> <decl><type><name>foo</name></type> <name>bar</name></decl>;</property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
 <property>@property<attribute_list>(<attribute><name>getter</name>=<name>bar</name></attribute>, <attribute><name>setter</name>=<name>setBar</name></attribute>)</attribute_list> <decl><type><name>foo</name></type> <name>bar</name></decl>, <decl><type ref="prev"/><name>foobar</name></decl>;</property>
 </unit>
 

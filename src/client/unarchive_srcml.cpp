@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <unarchive_srcml.hpp>
@@ -26,71 +26,57 @@
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
 #include <cstring>
+#include <libarchive_utilities.hpp>
+#include <memory>
 
 void unarchive_srcml(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
 
-    archive* libarchive_srcml = archive_read_new();
+    std::unique_ptr<archive> libarchive_srcml(archive_read_new());
 
-    archive_read_support_format_ar(libarchive_srcml);
-    archive_read_support_format_cpio(libarchive_srcml);
-    archive_read_support_format_gnutar(libarchive_srcml);
-    archive_read_support_format_iso9660(libarchive_srcml);
-    archive_read_support_format_tar(libarchive_srcml);
-    archive_read_support_format_xar(libarchive_srcml);
-    archive_read_support_format_zip(libarchive_srcml);
-    archive_read_support_format_raw(libarchive_srcml);
-    archive_read_support_format_empty(libarchive_srcml);
+    archive_read_support_format_ar(libarchive_srcml.get());
+    archive_read_support_format_cpio(libarchive_srcml.get());
+    archive_read_support_format_gnutar(libarchive_srcml.get());
+    archive_read_support_format_iso9660(libarchive_srcml.get());
+    archive_read_support_format_tar(libarchive_srcml.get());
+    archive_read_support_format_xar(libarchive_srcml.get());
+    archive_read_support_format_zip(libarchive_srcml.get());
+    archive_read_support_format_raw(libarchive_srcml.get());
+    archive_read_support_format_empty(libarchive_srcml.get());
 
     // just a bunch of bytes
-    archive_read_support_format_raw(libarchive_srcml);
+    archive_read_support_format_raw(libarchive_srcml.get());
 
-    /* Check libarchive version enable version specific features/syntax */
-#if ARCHIVE_VERSION_NUMBER < 3000000
-    // V2 Only Settings
-    // Compressions
-    archive_read_support_compression_all(libarchive_srcml);
-
-#else
-    // V3 Only Settings
     // File Formats
-    archive_read_support_format_7zip(libarchive_srcml);
-    archive_read_support_format_cab(libarchive_srcml);
-    archive_read_support_format_lha(libarchive_srcml);
-    archive_read_support_format_rar(libarchive_srcml);
+    archive_read_support_format_7zip(libarchive_srcml.get());
+    archive_read_support_format_cab(libarchive_srcml.get());
+    archive_read_support_format_lha(libarchive_srcml.get());
+    archive_read_support_format_rar(libarchive_srcml.get());
 
     // Compressions
-    archive_read_support_filter_all(libarchive_srcml);
-#endif    // setup unarchiveions
+    archive_read_support_filter_all(libarchive_srcml.get());
 
     int status = ARCHIVE_OK;
     const int buffer_size = 16384;
 
     if (contains<int>(input_sources[0])) {
 
-        status = archive_read_open_fd(libarchive_srcml, input_sources[0], buffer_size);
+        status = archive_read_open_fd(libarchive_srcml.get(), input_sources[0], buffer_size);
     } else {
-        status = archive_read_open_filename(libarchive_srcml, input_sources[0].resource.c_str(), buffer_size);
+        status = archive_read_open_filename(libarchive_srcml.get(), input_sources[0].resource.c_str(), buffer_size);
     }
     if (status != ARCHIVE_OK) {
         SRCMLstatus(ERROR_MSG, std::to_string(status));
         exit(1);
     }
     archive_entry *entry;
-    status = archive_read_next_header(libarchive_srcml, &entry);
+    status = archive_read_next_header(libarchive_srcml.get(), &entry);
 
     // copy from the libarchive unarchiveed data into the destination file descriptor
     // for the next stage in the pipeline
-    archive_read_data_into_fd(libarchive_srcml, *destination.fd);
+    archive_read_data_into_fd(libarchive_srcml.get(), *destination.fd);
 
     // important to close, since this is how the file descriptor reader get an EOF
     close(*destination.fd);
-
-    archive_read_close(libarchive_srcml);
-#if ARCHIVE_VERSION_NUMBER >= 3000000
-    archive_read_free(libarchive_srcml);
-#else
-    archive_read_finish(libarchive_srcml);
-#endif
 }

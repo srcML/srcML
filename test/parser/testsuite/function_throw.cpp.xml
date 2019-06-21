@@ -1,103 +1,103 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="function_throw">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="function_throw">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><specifier>static</specifier> <type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>()</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><specifier>const</specifier> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>()</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><call><name>a</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></throw>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><specifier>static</specifier> <type><name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><specifier>const</specifier> <name>int</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><specifier>virtual</specifier> <type><name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><specifier>virtual</specifier> <type><name>int</name><modifier>*</modifier></type> <name><name>f</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list><throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list><throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>)</parameter_list><throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>int</name></type> <name>a</name></decl></parameter>)</parameter_list><throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list><throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list><throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list> <specifier>const</specifier> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list> <throw>throw <argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></throw> <specifier>const</specifier>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list><throw>throw <argument_list>()</argument_list></throw> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list><throw>throw <argument_list>()</argument_list></throw> ;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list><throw>throw <argument_list>()</argument_list></throw> <block>{}</block></function>
 </unit>
 

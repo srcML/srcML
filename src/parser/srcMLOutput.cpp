@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -35,6 +35,37 @@
 
 // @todo Why is this here?
 #define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
+
+namespace {
+    void srcMLTextWriterWriteNamespace(xmlTextWriterPtr xout, const Namespace& ns) {
+
+        std::string prefix = "xmlns";
+        if (!ns.prefix.empty()) {
+            prefix += ':';
+            prefix += ns.prefix;
+        }
+
+        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns.uri.c_str());
+    }
+
+    // itoa-type function
+    inline const char* positoa(int n) {
+
+        // enough space to store int as string
+        static constexpr int SIZE = sizeof(int) * 4;
+        thread_local char s[SIZE] = { 0 };
+
+        // create string backwards from 1's place
+        char* p = s + SIZE - 1;
+        do {
+            *--p = '0' + (n % 10);
+            n /= 10;
+        } while (n);
+
+        // end of string that we are using
+        return p;
+    }
+}
 
 /**
  * srcMLOutput
@@ -60,31 +91,8 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
-    std::string SEP;
-    //if(isoption(options, SRCML_OPTION_XML_DECL))        { soptions = "XMLDECL"; }
-    //if(isoption(options, SRCML_OPTION_NAMESPACE_DECL))  { if(soptions != "") SEP = ","; soptions += SEP + "NAMESPACEDECL"; }
-    if(isoption(options, SRCML_OPTION_CPP_TEXT_ELSE))  { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_TEXT_ELSE"; }
-    if(isoption(options, SRCML_OPTION_CPP_MARKUP_IF0)) { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPP_MARKUP_IF0"; }
-    if(isoption(options, SRCML_OPTION_LINE))           { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "LINE"; }
-    if(isoption(options, SRCML_OPTION_CPPIF_CHECK))    { if(SEP.empty() && soptions != "") SEP = ","; soptions += SEP + "CPPIF_CHECK"; }
-}
-
-/**
- * initWriter
- *
- * Initializes output xmlWriter.  Supports delayed initialization.
- */
-int srcMLOutput::initWriter() {
-
     // open the output text writer stream
     xout = xmlNewTextWriter(output_buffer);
-    if (!xout) {
-
-        fprintf(stderr, "srcml: " "Unable to open output buffer\n");
-        return SRCML_STATUS_ERROR;
-    }
-
-    return SRCML_STATUS_OK;
 }
 
 /**
@@ -92,45 +100,13 @@ int srcMLOutput::initWriter() {
  *
  * Initialize the output namespaces.
  */
-void srcMLOutput::initNamespaces(const std::vector<std::string>& prefix, const std::vector<std::string>& uri) {
+void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
-    namespaces = {
-        { SRCML_SRC_NS_PREFIX_DEFAULT,          SRCML_SRC_NS_URI,                     false },
-        { SRCML_CPP_NS_PREFIX_DEFAULT,          SRCML_CPP_NS_URI,                     false },
-        { SRCML_ERR_NS_PREFIX_DEFAULT,          SRCML_ERR_NS_URI,                     false },
-        { SRCML_EXT_POSITION_NS_PREFIX_DEFAULT, SRCML_EXT_POSITION_NS_URI,            false },
-        { SRCML_EXT_OPENMP_NS_PREFIX_DEFAULT,   SRCML_EXT_OPENMP_NS_URI,              false },
-    };
+    // start with the default
+    namespaces = default_namespaces;
 
-    for (std::vector<std::string>::size_type outer_pos = 0; outer_pos < uri.size(); ++outer_pos) {
-
-        const std::string& value = uri[outer_pos];
-
-        // find where the new URI is in the default URI list, or not
-        auto posit = std::find_if(namespaces.begin(), namespaces.end(), [value](const Namespace& n) { return n.uri == value; });
-        if (posit != namespaces.end()) {
-
-            // update the default prefix
-            posit->prefix = prefix[outer_pos];
-
-        } else {
-
-            // create a new entry for this URI
-            namespaces.push_back({ prefix[outer_pos], uri[outer_pos], false });
-        }
-    }
-
-    // now that we have the prefixes, can setup the main tag
-    maintag = !namespaces[0].prefix.empty() ? namespaces[0].prefix : "";
-    if (!maintag.empty())
-        maintag += ":";
-    maintag += "unit";
-
-    // setting up for tabs, even if not used
-    tabattribute = namespaces[POS].prefix;
-    if (!tabattribute.empty())
-    	tabattribute.append(":");
-    tabattribute.append("tabs");
+    // merge in the other namespaces
+    namespaces += otherns;
 }
 
 /**
@@ -152,7 +128,8 @@ void srcMLOutput::close() {
 
     if (xout) {
 
-        xmlTextWriterEndDocument(xout);
+        if (didwrite)
+            xmlTextWriterEndDocument(xout);
         xmlFreeTextWriter(xout);
         xout = 0;
         output_buffer = 0;
@@ -251,6 +228,8 @@ void srcMLOutput::outputProcessingInstruction() {
 
     if (depth == 0 && processing_instruction) {
 
+        didwrite = true;
+
         xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.c_str());
         xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.c_str());
         xmlTextWriterEndPI(xout);
@@ -269,60 +248,45 @@ void srcMLOutput::outputProcessingInstruction() {
  */
 void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth) {
 
-    // figure out which namespaces are needed
-    char const * const ns[] = {
+    // based on options, turn on specific namespaces (i.e., mark as used)
+    auto& view = namespaces.get<nstags::uri>();
 
-        // main srcML namespace declaration always used
-        (depth == 0) ? SRCML_SRC_NS_URI : 0,
-
-        // main cpp namespace declaration
-        isoption(options, SRCML_OPTION_CPP) && (isoption(options, SRCML_OPTION_ARCHIVE) == !(depth == 0)) ? SRCML_CPP_NS_URI : 0,
-
-        // optional debugging xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_DEBUG)    ? SRCML_ERR_NS_URI : 0,
-
-        // optional position xml namespace
-        (depth == 0) && isoption(options, SRCML_OPTION_POSITION) ? SRCML_EXT_POSITION_NS_URI : 0,
-
-        // optional position xml namespace
-        (false && depth == 0) && isoption(options, SRCML_OPTION_OPENMP) ? SRCML_EXT_OPENMP_NS_URI : 0,
-    };
-
-    // output the namespaces
-    // record length of namespaces list
-    ns_list_size = 0;
-    for (unsigned int i = 0; i < sizeof(ns) / sizeof(ns[0]); ++i) {
-
-        if (i == 0 && depth > 0)
-            continue;
-
-        if (!ns[i])
-            continue;
-
-        std::string prefix = "xmlns";
-        if (namespaces[i].prefix[0] != '\0') {
-            prefix += ':';
-            prefix += namespaces[i].prefix;
-        }
-
-        ns_list_size += prefix.size();
-        ns_list_size += strlen(ns[i]);
-        ns_list_size += 4;
-
-        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns[i]);
+    if (isoption(options, SRCML_OPTION_CPP_DECLARED)) {
+//        view.find(SRCML_CPP_NS_URI)->flags |= NS_USED;
     }
 
-    if(depth == 0) {
+    if (isoption(options, SRCML_OPTION_POSITION))
+        view.find(SRCML_POSITION_NS_URI)->flags |= NS_USED;
 
-        for(std::vector<std::string>::size_type pos =  OMP + 1; pos < namespaces.size(); ++pos) {
+    if (isoption(options, SRCML_OPTION_DEBUG))
+        view.find(SRCML_ERROR_NS_URI)->flags |= NS_USED;
 
-            std::string prefix = "xmlns";
-            if (namespaces[pos].prefix[SRC] != '\0') {
-                prefix += ':';
-                prefix += namespaces[pos].prefix;
-         }
+    for (const auto& ns : namespaces) {
+        
+        // output standard namespaces for outer unit or non-archive unit
+        if (depth == 0 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
 
-            xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST namespaces[pos].uri.c_str());
+            // must be required, or on the root and used
+            if ((ns.flags & NS_STANDARD) && ((ns.flags & NS_REQUIRED) || ((ns.flags & NS_ROOT) && (ns.flags & NS_USED)))) {
+                srcMLTextWriterWriteNamespace(xout, ns);
+                continue;
+            }
+
+            // must be user registered
+            if (ns.flags & NS_REGISTERED && !(ns.flags & NS_STANDARD)) {
+                srcMLTextWriterWriteNamespace(xout, ns);
+                continue;
+            }
+        }
+
+        // output standard namespaces for inner unit or non-archive unit
+        if (depth == 1 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
+
+            // must be required, must not be on the root, and must be used
+            if ((ns.flags & NS_STANDARD) && !(ns.flags & NS_ROOT) && !(ns.flags & NS_REQUIRED) && (ns.flags & NS_USED)) {
+                srcMLTextWriterWriteNamespace(xout, ns);
+                continue;
+            }
         }
     }
 }
@@ -349,20 +313,41 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
 
-    // recording which namespaces are used on this unit
-    for (auto& ns : namespaces)
-        ns.used = false;
+    didwrite = true;
 
     // start of main tag
-    xmlTextWriterStartElement(xout, BAD_CAST maintag.c_str());
+    std::string unitprefix = namespaces[SRC].getPrefix();
+    xmlTextWriterStartElementNS(xout, BAD_CAST (!unitprefix.empty() ? unitprefix.c_str() : 0), BAD_CAST "unit", 0);
     ++openelementcount;
 
-    // record where unit start tag name ends
-    start_ns_pos = 1 + (int) maintag.size() + 1;
-
-    // outer units have namespaces
-    if (/* outer && */ isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
+    // output namespaces for root and nested units
+    if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
         outputNamespaces(xout, options, depth);
+    }
+
+    // setup for tabs if used
+    std::string tabattribute;
+    if (isoption(options, SRCML_OPTION_POSITION)) {
+        tabattribute = namespaces[POS].getPrefix();
+        if (!tabattribute.empty())
+            tabattribute += ":";
+        tabattribute += "tabs";
+    }
+
+    // setup for storing options in output
+    // @todo how much of this do we test, or need?
+    std::array<std::pair<int, const char*>, 4> sep = {{
+        { SRCML_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
+        { SRCML_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
+        { SRCML_OPTION_LINE,           "LINE" },
+    }};
+    std::string soptions;
+    for (const auto& pair : sep) {
+        if (isoption(options, pair.first)) {
+            if (!soptions.empty())
+                soptions += ",";
+            soptions += pair.second;
+        }
     }
 
     // list of attributes
@@ -394,7 +379,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         // source encoding attribute
         { UNIT_ATTRIBUTE_SOURCE_ENCODING, isoption(options, SRCML_OPTION_STORE_ENCODING) ? encoding : 0 },
 
-        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && isoption(options, SRCML_OPTION_CPPIF_CHECK) ? soptions.c_str() : 0 },
+        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && !soptions.empty() ? soptions.c_str() : 0 },
 
     };
 
@@ -413,7 +398,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     if (output_macrolist)
         outputMacroList();
 
-    ++depth;
+    if (depth == 0)
+        depth = 1;
 }
 
 /**
@@ -444,51 +430,6 @@ void srcMLOutput::outputMacroList() {
 }
 
 /**
- * processUnit
- * @param token token to output
- *
- * Callback to process/output unit token.
- */
-void srcMLOutput::processUnit(const antlr::RefToken& token) {
-
-    if (isstart(token)) {
-
-        // keep track of number of open elements
-        openelementcount = 0;
-        startUnit(unit_language, unit_revision, unit_url, unit_filename, unit_version, unit_timestamp, unit_hash, unit_encoding, unit_attributes, !isoption(options, SRCML_OPTION_ARCHIVE));
-
-    } else {
-
-        // end anything still open, including the unit
-        while (openelementcount > 0) {
-            xmlTextWriterEndElement(xout);
-            --openelementcount;
-        }
-
-        // output the namespaces
-        // record length of namespaces list
-        reduced_ns = "";
-        // Note: Skipping first namespace (srcML)
-        for (unsigned int i = 1; i < namespaces.size(); ++i) {
-
-            if (!namespaces[i].used)
-                continue;
-
-            std::string prefix = "xmlns";
-            if (namespaces[i].prefix[SRC] != '\0') {
-                prefix += ':';
-                prefix += namespaces[i].prefix;
-            }
-
-            reduced_ns += prefix;
-            reduced_ns += "=\"";
-            reduced_ns += namespaces[i].uri;
-            reduced_ns += "\" ";
-        }
-    }
-}
-
-/**
  * processText
  * @param str text to output
  *
@@ -496,7 +437,30 @@ void srcMLOutput::processUnit(const antlr::RefToken& token) {
  */
 inline void srcMLOutput::processText(const std::string& str) {
 
-    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
+    if (strpbrk(str.c_str(), "<>&") == nullptr) {
+
+        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
+
+    } else {
+
+        // delimiter is not limited to chars, and must be escaped
+        std::string s;
+        for (char c : str) {
+
+            if (c == '<') {
+                s += "&lt;";
+            } else if (c == '>') {
+                s += "&gt;";
+            } else if (c == '&') {
+                s += "&amp;";
+            } else {
+                s += c;
+            }
+        }
+
+        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s.data(), (int)s.size());
+
+    }
 }
 
 /**
@@ -522,24 +486,6 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
     processText(token->getText());
 }
 
-// itoa-type function
-static inline const char* positoa(int n) {
-
-	// enough space to store int as string
-	static constexpr int SIZE = sizeof(int) * 4;
-	static char s[SIZE] = { 0 };
-
-	// create string backwards from 1's place
-	char* p = s + SIZE - 1;
-	do {
-		*--p = '0' + (n % 10);
-		n /= 10;
-	} while (n);
-
-	// end of string that we are using
-	return p;
-}
-
 /**
  * processTextPosition
  * @param token token to output as text
@@ -548,46 +494,50 @@ static inline const char* positoa(int n) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
-	// highly optimized code as this is output for every start tag
+    thread_local const std::string& prefix = namespaces[POS].prefix;
+    thread_local const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
+    thread_local const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 
-	static std::string startAttribute = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "start=\"";
-	static std::string endAttribute   = " " + namespaces[POS].prefix + (namespaces[POS].prefix.size() > 0 ? ":" : "") + "end=\"";
+    // highly optimized as this is output for every start tag
 
-    const char* s = 0;
+    // position start attribute, e.g. pos:start="1:4"
+    xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
+    xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
+    xmlOutputBufferWrite(output_buffer, 1, ":");
+    xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
+    xmlOutputBufferWrite(output_buffer, 1, "\"");
 
-	xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
-    s = positoa(token->getLine());
-	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
-	xmlOutputBufferWrite(output_buffer, 1, ":");
-    s = positoa(token->getColumn());
-	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
-	xmlOutputBufferWrite(output_buffer, 1, "\"");
-
-	srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
-	xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
-    s = positoa(stoken->endline);
-	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
-	xmlOutputBufferWrite(output_buffer, 1, ":");
-    s = positoa(stoken->endcolumn);
-	xmlOutputBufferWrite(output_buffer, (int) strlen(s), s);
-	xmlOutputBufferWrite(output_buffer, 1, "\"");
+    // position end attribute, e.g. pos:end="2:1"
+    srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
+    xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
+    if (token->getLine() > stoken->endline) {
+        xmlOutputBufferWriteString(output_buffer, "INVALID_POS(");
+    }
+    xmlOutputBufferWriteString(output_buffer, positoa(stoken->endline));
+    if (token->getLine() > stoken->endline) {
+        xmlOutputBufferWriteString(output_buffer, ")");
+    }
+    xmlOutputBufferWrite(output_buffer, 1, ":");
+    xmlOutputBufferWriteString(output_buffer, positoa(stoken->endcolumn));
+    xmlOutputBufferWrite(output_buffer, 1, "\"");
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2) {
 
-	if (name[0] == 0)
-		return;
-	
-	static bool isposition = isoption(options, SRCML_OPTION_POSITION);
+    // no name, no token
+    if (name[0] == 0)
+        return;
+
+    thread_local bool isposition = isoption(options, SRCML_OPTION_POSITION);
 
     if (isstart(token) || isempty(token)) {
 
-        if (prefix[0] == 0)
-            xmlTextWriterStartElement(xout, BAD_CAST name);
-        else {
-            xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
-        }
+        // empty prefixes have to be null for output
+        if (prefix[0] == '\0')
+            prefix = 0;
+
+        xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
         ++openelementcount;
 
         if (attr_name1)
@@ -596,14 +546,16 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
-        if (isposition)
+        // if position attributes for non-empty start elements
+        // @todo Should <escape../> have a position?
+        if (isposition && !isempty(token))
             addPosition(token);
     } 
 
     if (!isstart(token) || isempty(token)) {
 
-        xmlTextWriterEndElement(xout);
         --openelementcount;
+        xmlTextWriterEndElement(xout);
     }
 }
 
@@ -616,44 +568,27 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
     // unit element is handled specially
-    if (SUNIT == token->getType()) {
-        processUnit(token);
+    if (SUNIT == token->getType())
         return;
-    }
 
     // find the token in the element map. If found and it has a name, then process the token
     auto search = process.find(token->getType());
     if (search != process.end() && search->second.name) {
         const Element& eparts = search->second;
-        processToken(token, eparts.name, namespaces[eparts.prefix].prefix.c_str(), eparts.attr_name, 
-            eparts.attr_name && !eparts.attr_value ? token->getText().c_str() : eparts.attr_value,
-            eparts.attr2_name, eparts.attr2_value);
+
+        // process the token using the fields in the element
+        processToken(token, eparts.name,
+                    // use getPrefix() to record that this prefix was used
+                    namespaces[eparts.prefix].getPrefix().c_str(),
+                    eparts.attr_name, 
+                    // if attribute name and no value, then take text from token
+                    eparts.attr_name && eparts.attr_value ? eparts.attr_value : token->getText().c_str(),
+                    eparts.attr2_name,
+                    eparts.attr2_value);
 
         return;
     }
 
     // remainder are treated as text tokens
     processText(token);
-}
-
-/**
- * setOutputBuffer
- * @param output_buffer an output buffer
- *
- * Set to output to output_buffer.  Should be called before initWriter.
- */
-void srcMLOutput::setOutputBuffer(xmlOutputBufferPtr output_buffer) {
-
-    this->output_buffer = output_buffer;
-}
-
-/**
- * setDepth
- * @param thedepth depth to set to
- *
- * Set the current depth to thedepth
- */
-void srcMLOutput::setDepth(int thedepth) {
-
-    depth = thedepth;
 }

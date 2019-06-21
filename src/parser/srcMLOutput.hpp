@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
@@ -77,9 +77,7 @@ public:
                 const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                 size_t tabsize);
 
-    void setOutputBuffer(xmlOutputBufferPtr output_buffer);
-    int initWriter();
-    void initNamespaces(const std::vector<std::string> & prefix, const std::vector<std::string> & uri);
+    void initNamespaces(const Namespaces& namespaces);
 
      /**
      * getWriter
@@ -90,8 +88,6 @@ public:
         return xout;
     }
 
-    void setDepth(int thedepth);
-
     // same srcml file can be generated from multiple input token streams
     void setTokenStream(TokenStream& ints);
 
@@ -100,6 +96,8 @@ public:
     void outputProcessingInstruction();
 
     void outputUnitSeparator();
+
+    const Namespaces& getNamespaces() const { return namespaces; }
 
     // start a unit element with the passed metadata
     void startUnit(const char* unit_language, const char* revision,
@@ -172,13 +170,7 @@ public:
     const char* xml_encoding = nullptr;
 
     /* namespaces declared and used */
-    std::vector<Namespace> namespaces;
-
-    std::string maintag;
-
-    std::string soptions;
-
-    std::string tabattribute;
+    Namespaces namespaces;
 
     /** an array of name-value attribute pairs */
     const std::vector<std::string> unit_attributes;
@@ -198,26 +190,13 @@ public:
     /** user defined macro list */
     std::vector<std::string> user_macro_list;
 
-    /**
-        Info needed to rewrite srcML so that only the actually-used
-        namespaces are listed. This is done external to the translator
-        since the string produced here is copied to a std::string in libsrcml
-    */
-
-    /** first position of namespaces on unit */
-    int start_ns_pos;
-
-    int ns_list_size;
-
-    /** reduced set of namespace declarations to those actually used */
-    std::string reduced_ns;
-
-    void processUnit(const antlr::RefToken& token);
-
     void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth);
 
     void setMacroList(std::vector<std::string> & list);
+
     void outputMacroList();
+
+    bool didwrite = false;
 
 private:
 

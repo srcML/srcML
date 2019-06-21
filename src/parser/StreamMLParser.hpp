@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * Adds markup language capabilities and stream parsing to a Parser
  * class.  The stream parsing is added by the srcMLParser class, StreamParser.
@@ -123,7 +123,9 @@ public:
     void emptyElement(int id) final {
 
         // push a empty element token
-        pushTokenFlush(antlr::RefToken(EmptyTokenFactory(id)));
+        auto gentoken = antlr::RefToken(EmptyTokenFactory(id));
+
+        pushTokenFlush(gentoken);
     }
 
     /**
@@ -149,43 +151,21 @@ private:
      */
     bool isSkipToken(int token_type) {
 
-        switch (token_type) {
-
-            // Always handled as white space and hidden from
-            // parsing
-        case srcMLParser::WS:
-        case srcMLParser::CONTROL_CHAR:
-        case srcMLParser::EOL_BACKSLASH:
-        case srcMLParser::COMMENT_START:
-        case srcMLParser::COMMENT_END:
-        case srcMLParser::JAVADOC_COMMENT_END:
-        case srcMLParser::DOXYGEN_COMMENT_END:
-        case srcMLParser::LINECOMMENT_START:
-        case srcMLParser::LINECOMMENT_END:
-        case srcMLParser::LINE_DOXYGEN_COMMENT_START:
-        case srcMLParser::LINE_DOXYGEN_COMMENT_END:
-        case srcMLParser::COMMENT_TEXT:
-        case srcMLParser::JAVADOC_COMMENT_START:
-        case srcMLParser::DOXYGEN_COMMENT_START:
+        // Always handled as white space and hidden from
+        // parsing
+        if (srcMLParser::whitespace_token_set.member(token_type))
             return true;
-            break;
 
-            // whether to handle a line comment start or an EOL
-            // depends on whether we are in preprocssing handling or not
-            // where the detection of the end of the preprocessing line
-            // is needed (preprocessing lines end at EOL, or the start of
-            // a line comment)
-        case srcMLParser::EOL:
-
+        // whether to handle a line comment start or an EOL
+        // depends on whether we are in preprocssing handling or not
+        // where the detection of the end of the preprocessing line
+        // is needed (preprocessing lines end at EOL, or the start of
+        // a line comment)
+        if (token_type == srcMLParser::EOL)
             return !inskip;
-            break;
 
-            // anything else is passed to the parser
-        default:
-
-            return false;
-            break;
-        }
+        // anything else is passed to the parser
+        return false;
     }
 
     /**
@@ -260,6 +240,18 @@ private:
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
 
+        // save the start position of a full type for any following previous types
+        if (token == srcMLParser::STYPE) {
+            lasttypestartline = LT(1)->getLine();
+            lasttypestartcolumn = LT(1)->getColumn();
+        }
+
+        // previous type get start positions from previous, well type
+        if (token == srcMLParser::STYPEPREV) {
+            ntoken->setLine(lasttypestartline);
+            ntoken->setColumn(lasttypestartcolumn);
+        }
+
         if (isoption(options, SRCML_OPTION_POSITION)) {
             ends.emplace(ntoken);
         }
@@ -285,6 +277,17 @@ private:
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
             qetoken->endline = lastline;
             qetoken->endcolumn = lastcolumn;
+
+            if (token == srcMLParser::STYPE) {
+                lasttypeendline = lastline;
+                lasttypeendcolumn = lastcolumn;
+            }
+
+            if (token == srcMLParser::STYPEPREV) {
+                qetoken->endline = lasttypeendline;
+                qetoken->endcolumn = lasttypeendcolumn;
+            }
+
             ends.pop();
         }
     }
@@ -298,8 +301,8 @@ private:
         // that was enqueued
         if (isoption(options, SRCML_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
-            qetoken->endline = lastline;
-            qetoken->endcolumn = lastcolumn;
+            qetoken->endline = slastline;
+            qetoken->endcolumn = slastcolumn;
             ends.pop();
         }
      }
@@ -346,20 +349,15 @@ private:
                 snprintf(outar, 22, "0x%02x", n);
                 controlElement->setText(outar);
                 pushSkipToken(controlElement);
+                srcMLParser::consume();
 
                 break;
             }
-            case srcMLParser::COMMENT_START:
+            case srcMLParser::BLOCK_COMMENT_START:
 
                 pushSSkipToken(srcMLParser::SCOMMENT);
                 pushSkipToken();
-
-                break;
-
-            case srcMLParser::COMMENT_END:
-
-                pushSkipToken();
-                pushESkipToken(srcMLParser::SCOMMENT);
+                srcMLParser::consume();
 
                 break;
 
@@ -367,6 +365,7 @@ private:
 
                 pushSSkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 pushSkipToken();
+                srcMLParser::consume();
 
                 break;
 
@@ -374,10 +373,16 @@ private:
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
+                    srcMLParser::consume();
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
+                    srcMLParser::consume();
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                 }
 
                 break;
@@ -386,13 +391,47 @@ private:
 
                 pushSSkipToken(srcMLParser::SDOXYGEN_COMMENT);
                 pushSkipToken();
+                srcMLParser::consume();
+
+                break;
+
+            case srcMLParser::WHOLE_COMMENT:
+
+                pushSSkipToken(srcMLParser::SCOMMENT);
+                pushSkipToken();
+                srcMLParser::consume();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
+                pushESkipToken(srcMLParser::SCOMMENT);
+
+                break;
+
+            case srcMLParser::BLOCK_COMMENT_END:
+                pushSkipToken();
+                srcMLParser::consume();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
+                pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
 
             case srcMLParser::DOXYGEN_COMMENT_END:
 
                 pushSkipToken();
+                srcMLParser::consume();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SDOXYGEN_COMMENT);
+
+                break;
+
+            case srcMLParser::JAVADOC_COMMENT_END:
+
+                pushSkipToken();
+                srcMLParser::consume();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
+                pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
 
                 break;
 
@@ -400,31 +439,32 @@ private:
 
                 pushSSkipToken(srcMLParser::SJAVADOC_COMMENT);
                 pushSkipToken();
+                srcMLParser::consume();
 
                 break;
 
-            case srcMLParser::JAVADOC_COMMENT_END:
-
-                pushSkipToken();
-                pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
-
-                break;
-
-            case srcMLParser::LINECOMMENT_START:
+            case srcMLParser::LINE_COMMENT_START:
 
                 pushSSkipToken(srcMLParser::SLINECOMMENT);
                 pushSkipToken();
+                srcMLParser::consume();
 
                 break;
 
-            case srcMLParser::LINECOMMENT_END:
+            case srcMLParser::LINE_COMMENT_END:
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
+                    srcMLParser::consume();
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                     pushSkipToken();
+                    srcMLParser::consume();
                 }
 
                 break;
@@ -432,13 +472,18 @@ private:
             default:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
+                srcMLParser::consume();
 
                 break;
             }
-
+/*
             // rest of consume process
             srcMLParser::consume();
 
+            srcMLToken* qetoken = static_cast<srcMLToken*>(&(skiptb->front()));
+            qetoken->endline = LT(1)->getLine();
+            qetoken->endcolumn = LT(1)->getColumn();
+*/
             return true;
         }
 
@@ -605,8 +650,19 @@ private:
         while (paused)
             fillTokenBuffer();
 
-        while (isoption(options, SRCML_OPTION_POSITION) && ends.size() > 1) {
-            fillTokenBuffer();
+        // to calculate end position, need to buffer until end token in reached
+        // to prevent infinite loops, consume is called if no progress is made on the
+        // current token, e.g., double max const(); 
+        if (isoption(options, SRCML_OPTION_POSITION)) {
+            auto curline = LT(1)->getLine();
+            auto curcolumn = LT(1)->getColumn();
+            while (ends.size() > 1) {
+                fillTokenBuffer();
+                if (LT(1)->getLine() == curline && LT(1)->getColumn() == curcolumn)
+                    consume();
+                curline = LT(1)->getLine();
+                curcolumn = LT(1)->getColumn();
+            }
         }
 
         // pop and send back the top token
@@ -776,6 +832,10 @@ private:
         // find the first element token
         // may have some text/spaces before
         auto loc = tb.begin();
+
+        if ((*loc)->getType() == SUNIT)
+            ++loc;
+
         while (!isstart(*loc)) {
             ++loc;
         }
@@ -790,8 +850,19 @@ private:
 
 private:
 
+    // record position of text elements
     int lastline = 0;
     int lastcolumn = 0;
+
+    // record position for comment elements
+    int slastline = 0;
+    int slastcolumn = 0;
+
+    // record position for <type prev=""/>
+    int lasttypeendline = 0;
+    int lasttypeendcolumn = 0;
+    int lasttypestartline = 0;
+    int lasttypestartcolumn = 0;
 
     /** parser options */
     OPTION_TYPE & options;

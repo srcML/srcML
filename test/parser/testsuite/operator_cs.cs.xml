@@ -1,108 +1,108 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="operator" filename="operator_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="operator" filename="operator_cs">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>as</operator> <name>int</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <if_stmt><if>if<condition>(<expr><name>a</name> <operator>is</operator> <name>int</name></expr>)</condition><block type="pseudo">
 <empty_stmt>;</empty_stmt></block></if></if_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name>int</name> <modifier>*</modifier></type> <name>i</name> <init>= <expr><operator>stackalloc</operator> <name>int</name></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>i</name> <operator>=</operator> <operator>await</operator> <call><name>M</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name>int</name></type> <name>y</name> <init>= <expr><name>x</name> <operator>??</operator> <operator>-</operator><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><call><name><name>const_cast</name><argument_list type="generic">&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><call><name><name>static_cast</name><argument_list type="generic">&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><call><name><name>dynamic_cast</name><argument_list type="generic">&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><call><name><name>reinterpret_cast</name><argument_list type="generic">&lt;<argument><name>type</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name><name><name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name><operator>::</operator><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name><name><name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name><operator>::</operator><modifier>*</modifier><name>b</name></name></type> <name>c</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">0</literal></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><literal type="number">1</literal> <operator>.*</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>+=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>-=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>*=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>/=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>%=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>&amp;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>|=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>^=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator><operator>.*</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name>a</name> <operator>=</operator> <name>a</name> <operator>*</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <if_stmt><if>if <condition>(<expr><operator>(</operator><operator>(</operator><name><name>this</name><operator>.</operator><name>Adapter</name><operator>.</operator><name>DeleteCommand</name><operator>.</operator><name>Connection</name><operator>.</operator><name>State</name></name> <operator>&amp;</operator> <name><name>global</name><operator>::</operator><name>System</name><operator>.</operator><name>Data</name><operator>.</operator><name>ConnectionState</name><operator>.</operator><name>Open</name></name><operator>)</operator>
         <operator>!=</operator> <name><name>global</name><operator>::</operator><name>System</name><operator>.</operator><name>Data</name><operator>.</operator><name>ConnectionState</name><operator>.</operator><name>Open</name></name><operator>)</operator></expr>)</condition> <block>{
     <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>Adapter</name><operator>.</operator><name>DeleteCommand</name><operator>.</operator><name>Connection</name><operator>.</operator><name>Open</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>

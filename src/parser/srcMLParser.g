@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML translator; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*!
@@ -117,7 +117,10 @@
  */
 
 header "pre_include_hpp" {
-#pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+    #pragma GCC diagnostic ignored "-Wunknown-warning-option"
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma GCC diagnostic ignored "-Wcatch-value"
 }
 
 // Included in the generated srcMLParser.hpp file after antlr includes
@@ -339,7 +342,7 @@ void srcMLParser::endAllModes() {
 } /* end include */
 
 options {
-	language="Cpp";
+    language="Cpp";
     namespaceAntlr="antlr";
     namespaceStd="std";
 }
@@ -348,7 +351,7 @@ class srcMLParser extends Parser;
 
 options {
     classHeaderSuffix="public Language, public ModeStack";
-	k=1;
+    k=1;
     importVocab=KeywordLexer;
     defaultErrorHandler=false;
     noConstructors=true;
@@ -385,100 +388,100 @@ tokens {
     SCNAME;
     STYPE;
     STYPEPREV;
-	SCONDITION;
-	SBLOCK;
+    SCONDITION;
+    SBLOCK;
     SPSEUDO_BLOCK;
     SCONTENT;
     SINDEX;
 
     // statements
-	SENUM;
+    SENUM;
     SENUM_DECLARATION;
 
-	SIF_STATEMENT;
+    SIF_STATEMENT;
     SIF;
     STERNARY;
-	STHEN;
-	SELSE;
-	SELSEIF;
+    STHEN;
+    SELSE;
+    SELSEIF;
 
     SWHILE_STATEMENT;
-	SDO_STATEMENT;
+    SDO_STATEMENT;
 
-	SFOR_STATEMENT;
-	SFOREACH_STATEMENT;
-    SFOR_CONTROL;
-	SFOR_INITIALIZATION;
-	SFOR_CONDITION;
-	SFOR_INCREMENT;
+    SFOR_STATEMENT;
+    SFOREACH_STATEMENT;
+    SCONTROL;
+    SCONTROL_INITIALIZATION;
+    SCONTROL_CONDITION;
+    SCONTROL_INCREMENT;
     SFOR_LIKE_CONTROL;
 
-	SEXPRESSION_STATEMENT;
-	SEXPRESSION;
-	SFUNCTION_CALL;
+    SEXPRESSION_STATEMENT;
+    SEXPRESSION;
+    SFUNCTION_CALL;
 
-	SDECLARATION_STATEMENT;
-	SDECLARATION;
-	SDECLARATION_INITIALIZATION;
-	SDECLARATION_RANGE;
+    SDECLARATION_STATEMENT;
+    SDECLARATION;
+    SDECLARATION_INITIALIZATION;
+    SDECLARATION_RANGE;
 
-	SGOTO_STATEMENT;
-	SCONTINUE_STATEMENT;
-	SBREAK_STATEMENT;
-	SLABEL_STATEMENT;
+    SGOTO_STATEMENT;
+    SCONTINUE_STATEMENT;
+    SBREAK_STATEMENT;
+    SLABEL_STATEMENT;
 
-	SSWITCH;
-	SCASE;
-	SDEFAULT;
+    SSWITCH;
+    SCASE;
+    SDEFAULT;
 
     // functions
     SFUNCTION_DEFINITION;
-	SFUNCTION_DECLARATION;
+    SFUNCTION_DECLARATION;
     SFUNCTION_LAMBDA;
-	SFUNCTION_SPECIFIER;
-	SRETURN_STATEMENT;
-	SPARAMETER_LIST;
-	SPARAMETER;
-	SKRPARAMETER_LIST;
-	SKRPARAMETER;
-	SARGUMENT_LIST;
-	SARGUMENT;
+    SFUNCTION_SPECIFIER;
+    SRETURN_STATEMENT;
+    SPARAMETER_LIST;
+    SPARAMETER;
+    SKRPARAMETER_LIST;
+    SKRPARAMETER;
+    SARGUMENT_LIST;
+    SARGUMENT;
     SPSEUDO_PARAMETER_LIST;
     SINDEXER_PARAMETER_LIST;
 
     // class, struct, union
-	SCLASS;
-	SCLASS_DECLARATION;
-	SSTRUCT;
-	SSTRUCT_DECLARATION;
-	SUNION;
-	SUNION_DECLARATION;
+    SCLASS;
+    SCLASS_DECLARATION;
+    SSTRUCT;
+    SSTRUCT_DECLARATION;
+    SUNION;
+    SUNION_DECLARATION;
     SDERIVATION_LIST;
     SDERIVATION;
-	SPUBLIC_ACCESS;
-	SPUBLIC_ACCESS_DEFAULT;
-	SPRIVATE_ACCESS;
-	SPRIVATE_ACCESS_DEFAULT;
-	SPROTECTED_ACCESS;
+    SPUBLIC_ACCESS;
+    SPUBLIC_ACCESS_DEFAULT;
+    SPRIVATE_ACCESS;
+    SPRIVATE_ACCESS_DEFAULT;
+    SPROTECTED_ACCESS;
     SPROTECTED_ACCESS_DEFAULT;
     SMEMBER_INITIALIZATION_LIST;
     SMEMBER_INITIALIZATION;
-	SCONSTRUCTOR_DEFINITION;
-	SCONSTRUCTOR_DECLARATION;
-	SDESTRUCTOR_DEFINITION;
-	SDESTRUCTOR_DECLARATION;
-	SFRIEND;
-	SCLASS_SPECIFIER;
+    SCONSTRUCTOR_DEFINITION;
+    SCONSTRUCTOR_DECLARATION;
+    SDESTRUCTOR_DEFINITION;
+    SDESTRUCTOR_DECLARATION;
+    SFRIEND;
+    SCLASS_SPECIFIER;
 
     // exception handling
-	STRY_BLOCK;
-	SCATCH_BLOCK;
-	SFINALLY_BLOCK;
-	STHROW_STATEMENT;
-	STHROW_SPECIFIER;
-	STHROW_SPECIFIER_JAVA;
+    STRY_BLOCK;
+    SCATCH_BLOCK;
+    SFINALLY_BLOCK;
+    STHROW_STATEMENT;
+    STHROW_SPECIFIER;
+    STHROW_SPECIFIER_JAVA;
 
-	STEMPLATE;
+    STEMPLATE;
     SGENERIC_ARGUMENT;
     SGENERIC_ARGUMENT_LIST;
     STEMPLATE_PARAMETER;
@@ -487,13 +490,13 @@ tokens {
     SGENERIC_PARAMETER_LIST;
 
     // C Family elements
-	STYPEDEF;
-	SASM;
-	SMACRO_CALL;
-	SSIZEOF_CALL;
+    STYPEDEF;
+    SASM;
+    SMACRO_CALL;
+    SSIZEOF_CALL;
     SEXTERN;
-	SNAMESPACE;
-	SUSING_DIRECTIVE;
+    SNAMESPACE;
+    SUSING_DIRECTIVE;
 
     // C
     SATOMIC;
@@ -519,32 +522,32 @@ tokens {
     SREF_QUALIFIER;
 
     // Qt
-	SSIGNAL_ACCESS;
+    SSIGNAL_ACCESS;
     SFOREVER_STATEMENT;
     SEMIT_STATEMENT;
 
     // cpp directive internal elements
-	SCPP_DIRECTIVE;
+    SCPP_DIRECTIVE;
     SCPP_FILENAME;
     SCPP_NUMBER;
     SCPP_LITERAL;
-	SCPP_MACRO_DEFN;
-	SCPP_MACRO_VALUE;
+    SCPP_MACRO_DEFN;
+    SCPP_MACRO_VALUE;
 
     // cpp directives
-	SCPP_ERROR;
+    SCPP_ERROR;
     SCPP_WARNING;
-	SCPP_PRAGMA;
-	SCPP_INCLUDE;
-	SCPP_DEFINE;
-	SCPP_UNDEF;
-	SCPP_LINE;
-	SCPP_IF;
-	SCPP_IFDEF;
-	SCPP_IFNDEF;
-	SCPP_THEN;
-	SCPP_ELSE;
-	SCPP_ELIF;
+    SCPP_PRAGMA;
+    SCPP_INCLUDE;
+    SCPP_DEFINE;
+    SCPP_UNDEF;
+    SCPP_LINE;
+    SCPP_IF;
+    SCPP_IFDEF;
+    SCPP_IFNDEF;
+    SCPP_THEN;
+    SCPP_ELSE;
+    SCPP_ELIF;
     SCPP_EMPTY;
 
     // C# cpp directives
@@ -555,7 +558,7 @@ tokens {
     SCPP_IMPORT;
 
     // This HAS to mark the end of the CPP directives
-	SCPP_ENDIF;
+    SCPP_ENDIF;
 
     // Debug elements
     SMARKER;
@@ -704,6 +707,7 @@ public:
     static const antlr::BitSet class_tokens_set;
     static const antlr::BitSet decl_specifier_tokens_set;
     static const antlr::BitSet identifier_list_tokens_set;
+    static const antlr::BitSet whitespace_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -771,7 +775,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         eof |
 
         // end of line
-        line_continuation | EOL | LINECOMMENT_START | LINE_DOXYGEN_COMMENT_START |
+        line_continuation | EOL | LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START |
 
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
@@ -1144,7 +1148,7 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
 // beginning function declaration/header
 function_declaration[int type_count, int token = SFUNCTION_DECLARATION] { ENTRY_DEBUG } :
-		{
+        {
             startNewMode(MODE_STATEMENT);
 
             startElement(token);
@@ -1412,7 +1416,7 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // handle a C# lambda expression
 lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
-		{
+        {
 
             startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS | MODE_END_AT_COMMA);      
 
@@ -1426,7 +1430,7 @@ lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 
 // handle a C++11 lambda expression
 lambda_expression_cpp[] { ENTRY_DEBUG } :
-		{
+        {
 
             bool iscall = look_past_rule(&srcMLParser::lambda_expression_full_cpp) == LPAREN;
             if (iscall) {
@@ -1579,7 +1583,7 @@ lambda_java[] { ENTRY_DEBUG } :
 
 // handle the beginning of a function definition
 function_definition[int type_count, int token = SFUNCTION_DEFINITION] { ENTRY_DEBUG } :
-		{
+        {
             startNewMode(MODE_STATEMENT);
 
             startElement(token);
@@ -1648,7 +1652,7 @@ complete_noexcept_list[] { ENTRY_DEBUG } :
 
 // C# property method GET/SET/ADD/REMOVE
 property_method[int element] { ENTRY_DEBUG } :
-		{
+        {
             // function definitions have a "nested" block statement
             startNewMode(MODE_STATEMENT);
 
@@ -1661,7 +1665,7 @@ property_method[int element] { ENTRY_DEBUG } :
 
 // handle the name portion of a property method
 property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
-		{
+        {
             startElement(SNAME);
         }
         (GET | SET | ADD | REMOVE)
@@ -2095,7 +2099,7 @@ do_while[] { ENTRY_DEBUG } :
 // start of for statement
 for_statement[] { ENTRY_DEBUG } :
         {
-            // statement with nested statement after the for group
+            // statement with nested statement after the control group
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start the for statement
@@ -2103,15 +2107,15 @@ for_statement[] { ENTRY_DEBUG } :
         }
         FOR
         {
-            // statement with nested statement after the for group
-            startNewMode(MODE_EXPECT | MODE_FOR_CONTROL);
+            // statement with nested statement after the control group
+            startNewMode(MODE_EXPECT | MODE_CONTROL);
         }
 ;
 
 // start of foreach statement (C#/Qt)
 foreach_statement[] { ENTRY_DEBUG } :
         {
-            // statement with nested statement after the for group
+            // statement with nested statement after the control group
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start the for statement
@@ -2119,51 +2123,118 @@ foreach_statement[] { ENTRY_DEBUG } :
         }
         FOREACH
         {
-            // statement with nested statement after the for group
+            // statement with nested statement after the control group
             if (inLanguage(LANGUAGE_CSHARP))
-                startNewMode(MODE_EXPECT | MODE_FOR_CONTROL);
+                startNewMode(MODE_EXPECT | MODE_CONTROL);
             else
-                startNewMode(MODE_EXPECT | MODE_FOR_CONTROL | MODE_END_AT_COMMA);
+                startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
         }
 ;
 
-// start of for group, i.e., initialization, test, increment
-for_control[] { ENTRY_DEBUG } :
+// start of control group, i.e., initialization, test, increment
+control_group[] { ENTRY_DEBUG } :
         {
-            // start the for group mode that will end at the next matching
+            // start the control group mode that will end at the next matching
             // parentheses
-            replaceMode(MODE_FOR_CONTROL, MODE_TOP | MODE_FOR_INITIALIZATION | MODE_IGNORE_TERMINATE |
+            replaceMode(MODE_CONTROL, MODE_TOP | MODE_CONTROL_INITIALIZATION | MODE_IGNORE_TERMINATE |
                         MODE_INTERNAL_END_PAREN | MODE_LIST);
 
             // start the for heading group element
-            startElement(SFOR_CONTROL);
+            if(inPrevMode(MODE_IF)) {
+                startElement(SCONDITION);
+            } else {
+                startElement(SCONTROL);
+            }
         }
         LPAREN
 ;
 
-// for parameter list initialization.  used in multiple places
-for_initialization_action[] { ENTRY_DEBUG } :
-        {
-            assertMode(MODE_FOR_INITIALIZATION | MODE_EXPECT);
+is_control_terminate[] returns [bool is_terminate = false] {
 
-            // setup next stage for condition in the for group mode
-            replaceMode(MODE_FOR_INITIALIZATION, MODE_FOR_CONDITION);
+    int state = mark();
+    ++inputState->guessing;
+
+    int parencount = 0;
+    int bracecount = 0;
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+
+        if (LA(1) == RPAREN)
+            --parencount;
+        else if (LA(1) == LPAREN)
+            ++parencount;
+
+        if (LA(1) == RCURLY)
+            --bracecount;
+        else if (LA(1) == LCURLY)
+            ++bracecount;
+
+        if (parencount < 0 || bracecount < 0) {
+            break;
+        }
+
+        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0) {
+            is_terminate = true;
+            break;
+        }
+
+        consume();
+    }
+    --inputState->guessing;
+    rewind(state);
+
+} :
+;
+
+control_initialization_pre[] { ENTRY_DEBUG } :
+
+        {
+            // check for ; in if control
+            if(inMode(MODE_CONTROL_INITIALIZATION) && inPrevMode(MODE_IF) && !is_control_terminate()) {
+                replaceMode(MODE_CONTROL_INITIALIZATION, MODE_CONTROL_CONDITION);
+            }
+
+        }
+
+        (
+        // inside of control group expecting initialization
+        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }?
+        control_initialization |
+
+        // inside of control group expecting initialization
+        { inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
+        control_condition
+        )
+;
+
+// for parameter list initialization.  used in multiple places
+control_initialization_action[] { ENTRY_DEBUG } :
+        {
+            assertMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT);
+
+            // setup next stage for condition in the control group mode
+            replaceMode(MODE_CONTROL_INITIALIZATION, MODE_CONTROL_CONDITION);
+
+            bool in_if_mode = inPrevMode(MODE_IF);
 
             // setup a mode for initialization that will end with a ";"
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
 
-            startElement(SFOR_INITIALIZATION);
+            if(!in_if_mode) {
+                startElement(SCONTROL_INITIALIZATION);
+            } else {
+                startElement(SDECLARATION_STATEMENT);
+            }
         }
 ;
 
 // handle initilization portion of a for.
-for_initialization[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
-        for_initialization_action
+control_initialization[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+        control_initialization_action
         (
             // explicitly check for a variable declaration since it can easily
             // be confused with an expression
             { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
-            for_initialization_variable_declaration[type_count] |
+            control_initialization_variable_declaration[type_count] |
 
             { if (secondtoken == COLON) setMode(MODE_RANGED_FOR); } expression
         )
@@ -2171,7 +2242,7 @@ for_initialization[] { int type_count = 0;  int secondtoken = 0; int after_token
 
 // Statement for the declaration of a variable or group of variables
 // in a for initialization
-for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
+control_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
             // start a new mode for the expression which will end
             // inside of the terminate
@@ -2182,43 +2253,53 @@ for_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
 
 
 // for parameter list condition setup.  Used in multiple places.
-for_condition_action[] { ENTRY_DEBUG } :
+control_condition_action[] { ENTRY_DEBUG } :
         {
-            assertMode(MODE_FOR_CONDITION | MODE_EXPECT);
+            assertMode(MODE_CONTROL_CONDITION | MODE_EXPECT);
 
-            // setup next stage for condition
-            replaceMode(MODE_FOR_CONDITION, MODE_FOR_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+            bool in_if_mode = inPrevMode(MODE_IF);
 
-            // setup a mode for initialization that will end with a ";"
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST );
+            // setup next stage control condition
+            if(in_if_mode) {
+                // switch back to if-processing
+                replaceMode(MODE_TOP | MODE_CONTROL_CONDITION  | MODE_IGNORE_TERMINATE | MODE_INTERNAL_END_PAREN, 
+                            MODE_LIST | MODE_EXPRESSION);
+            } else {
+                replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+                // setup a mode for initialization that will end with a ";"
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_STATEMENT);
+                startElement(SCONTROL_CONDITION);
+            }
 
-            startElement(SFOR_CONDITION);
         }
 ;
 
 // for condition
-for_condition[] { ENTRY_DEBUG } :
-        for_condition_action
-
+control_condition[] { bool in_if_condition = inPrevMode(MODE_IF); ENTRY_DEBUG } :
+        control_condition_action
+        (
         // non-empty condition
-        expression
+        { in_if_condition }? condition_inner |
+        { LA(1) != RPAREN }? expression |
+        rparen[false]
+        )
 ;
 
 // increment in for parameter list
-for_increment[] { ENTRY_DEBUG } :
+control_increment[] { ENTRY_DEBUG } :
         {
-            assertMode(MODE_EXPECT | MODE_FOR_INCREMENT);
+            assertMode(MODE_EXPECT | MODE_CONTROL_INCREMENT);
 
-            clearMode(MODE_EXPECT | MODE_FOR_INCREMENT);
+            clearMode(MODE_EXPECT | MODE_CONTROL_INCREMENT);
 
             // setup a mode for initialization that will end with a ";"
-            startNewMode(MODE_FOR_INCREMENT | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
+            startNewMode(MODE_CONTROL_INCREMENT | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
 
             if (LA(1) == RPAREN)
                 // empty increment issued as single element
-                emptyElement(SFOR_INCREMENT);
+                emptyElement(SCONTROL_INCREMENT);
             else
-                startElement(SFOR_INCREMENT);
+                startElement(SCONTROL_INCREMENT);
         }
         expression
 ;
@@ -2247,9 +2328,14 @@ if_statement[] { ENTRY_DEBUG } :
 
             // expect a condition
             // start THEN after condition
-            startNewMode(MODE_CONDITION | MODE_EXPECT);
+            startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_CONDITION);
         }
         IF
+        {
+            if (LA(1) == CONSTEXPR) {
+                constexpr_specifier();
+            }
+        }
 ;
 
 /*
@@ -2299,9 +2385,14 @@ elseif_statement[] { ENTRY_DEBUG } :
 
             // expect a condition
             // start THEN after condition
-            startNewMode(MODE_CONDITION | MODE_EXPECT);
+            startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_CONDITION);
         }
         IF
+        {
+            if (LA(1) == CONSTEXPR) {
+                constexpr_specifier();
+            }
+        }
 ;
 
 //  start of switch statement
@@ -3350,10 +3441,10 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
         {
             if (inMode(MODE_IGNORE_TERMINATE)) {
 
-                if (inMode(MODE_FOR_INITIALIZATION | MODE_EXPECT))
-                    for_initialization_action();
+                if (inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT))
+                    control_initialization_action();
                 else
-                    for_condition_action();
+                    control_condition_action();
             }
         }
         terminate_pre
@@ -3649,11 +3740,6 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         /*
           MODE_VARIABLE_NAME
         */
-
-        // special case for type modifiers
-        { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
-        multops |
-
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
         tripledotop |
 
@@ -3701,24 +3787,19 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         goto_case | 
 
         /*
-          Check for MODE_FOR_CONDITION before template stuff, since it can conflict
+          Check for MODE_CONTROL_CONDITION before template stuff, since it can conflict
         */
 
-        // inside of for group expecting initialization
-        { inMode(MODE_FOR_CONTROL | MODE_EXPECT) }?
-        for_control |
+        // inside of control group expecting initialization
+        { inMode(MODE_CONTROL | MODE_EXPECT) }?
+        control_group |
 
-        // inside of for group expecting initialization
-        { inMode(MODE_FOR_INITIALIZATION | MODE_EXPECT) }?
-        for_initialization |
+        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) || inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
+        control_initialization_pre |
 
-        // inside of for group expecting initialization
-        { inMode(MODE_FOR_CONDITION | MODE_EXPECT) }?
-        for_condition |
-
-        // inside of for group expecting initialization
-        { inMode(MODE_FOR_INCREMENT | MODE_EXPECT) }?
-        for_increment |
+        // inside of control group expecting initialization
+        { inMode(MODE_CONTROL_INCREMENT | MODE_EXPECT) }?
+        control_increment |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) && !inMode(MODE_TEMPLATE_PARAMETER_LIST)}?
         class_declaration |
@@ -3748,7 +3829,7 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         { inMode(MODE_EXTERN) }?
         extern_name |
 
-        // sometimes end up here, as when for group ends early, or with for-each
+        // sometimes end up here, as when control group ends early, or with for-each
         rparen |
 
         // seem to end up here for colon in ternary operator
@@ -3792,19 +3873,19 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
 
-            if (inMode(MODE_LOCAL | MODE_VARIABLE_NAME) && !inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+            if (inMode(MODE_LOCAL | MODE_VARIABLE_NAME) && !inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA))
                 endMode();
 
             if (inMode(MODE_INIT | MODE_EXPECT | MODE_ENUM))
                 endDownToModeSet(MODE_ENUM | MODE_TOP);
 
-            if (inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+            if (inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA))
                 markup_comma = false;
 
         }
         comma_marked[markup_comma]
         {
-            if (inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA)) {
+            if (inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA)) {
 
                 startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
                 startNoSkipElement(SDECLARATION_RANGE);
@@ -3902,17 +3983,22 @@ condition[] { ENTRY_DEBUG } :
         }
         LPAREN
 
-        {
+        condition_inner
+;
+
+condition_inner[] { ENTRY_DEBUG 
             int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; 
             pattern_check(stmt_type, secondtoken, type_count, after_token);
             if (stmt_type == VARIABLE) {
                 startNewMode(MODE_INTERNAL_END_PAREN);
-                for_initialization_variable_declaration(type_count);
             }
 
-        }
-;
+} :
 
+    { stmt_type == VARIABLE }? control_initialization_variable_declaration[type_count] |
+    { LA(1) != RPAREN }? expression |
+    rparen[false]
+;
 // perform an arbitrary look ahead looking for a pattern
 pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bool inparam = false] returns [bool isdecl] {
 
@@ -4085,7 +4171,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         */
         (
         ({ ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0)) || (LA(1) != LBRACKET || next_token() == LBRACKET))
-         && (LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)) }?
+         && (LA(1) != IN || !inTransparentMode(MODE_CONTROL_CONDITION)) }?
 
             set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
@@ -4294,7 +4380,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_type[type, VARIABLE, ((((type_count - specifier_count - template_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == 1 || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || LA(1) == IN
-                                              || ((inTransparentMode(MODE_FOR_CONDITION) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && LA(1) == COLON)
+                                              || ((inTransparentMode(MODE_CONTROL_CONDITION) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && LA(1) == COLON)
                                               || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET)))) ||
                                                 (inparam && (LA(1) == RPAREN || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET || LA(1) == EQUAL || LA(1) == IN
                                                     || (inLanguage(LANGUAGE_CSHARP) && LA(1) == RBRACKET))))]
@@ -4808,7 +4894,7 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
             iscomplex = true;
 
             // start a mode to end at right bracket with expressions inside
-            if (inLanguage(LANGUAGE_CSHARP) || (LA(1) == ATLBRACKET && LANGUAGE_OBJECTIVE_C))
+            if (inLanguage(LANGUAGE_CSHARP) || (LA(1) == ATLBRACKET && inLanguage(LANGUAGE_OBJECTIVE_C)))
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_END_AT_COMMA);
             else
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
@@ -5113,7 +5199,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
         }
         push_namestack identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-            (generic_argument_list)=>
+            { generic_argument_list_check() }? (generic_argument_list)=>
                 generic_argument_list /* (options { greedy = true; } : generic_type_constraint)*  */ |
 
             (cuda_argument_list) => cuda_argument_list |
@@ -5139,7 +5225,8 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
         }
         push_namestack (template_specifier { is_nop = false; })* identifier
     (
-        (generic_argument_list)=> generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
+        { generic_argument_list_check() }? (generic_argument_list)=>
+            generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
 
         (cuda_argument_list) => cuda_argument_list |
 
@@ -5568,6 +5655,14 @@ template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         TEMPLATE
 ;
 
+// match a single word specifier
+constexpr_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+        CONSTEXPR
+;
+
 // C++11 specifier
 alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -5886,7 +5981,7 @@ expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1
 
         expression_part_no_ternary[type, call_count]
 ;
-expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_for_incr = false; ENTRY_DEBUG } :
+expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_control_incr = false; ENTRY_DEBUG } :
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -5957,7 +6052,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         {
 
-            end_for_incr = inTransparentMode(MODE_FOR_INCREMENT);
+            end_control_incr = inTransparentMode(MODE_CONTROL_INCREMENT);
 
             // stop at this matching paren, or a preprocessor statement
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
@@ -5965,12 +6060,12 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                 endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
 
-            end_for_incr = end_for_incr && !inTransparentMode(MODE_FOR_INCREMENT);
+            end_control_incr = end_control_incr && !inTransparentMode(MODE_CONTROL_INCREMENT);
 
         }
 
         // treat as operator for operator markup
-        rparen[!end_for_incr, end_for_incr] |
+        rparen[!end_control_incr, end_control_incr] |
 
         // left curly brace
         {
@@ -6533,7 +6628,13 @@ try_statement[] { ENTRY_DEBUG } :
 
 // try statement with resources
 try_statement_with_resource[] { ENTRY_DEBUG } :
-        for_like_statement_pre[STRY_BLOCK]
+        {
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
+
+            // start of the try statement
+            startElement(STRY_BLOCK);
+        }
 
         TRY
 
@@ -6613,7 +6714,7 @@ for_like_statement_post[] { ENTRY_DEBUG } :
 
         startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
 
-        //startElement(SFOR_INITIALIZATION);
+        //startElement(SCONTROL_INITIALIZATION);
     }
     for_like_list_item
 ;
@@ -6623,7 +6724,7 @@ for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token 
     // explicitly check for a variable declaration since it can easily
     // be confused with an expression
     { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
-    for_initialization_variable_declaration[type_count] |
+    control_initialization_variable_declaration[type_count] |
 
     {
         // use a new mode without the expect so we don't nest expression parts
@@ -6958,7 +7059,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
             // declaration
             startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
-            if (inTransparentMode(MODE_FOR_CONDITION | MODE_END_AT_COMMA))
+            if (inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA))
                 setMode(MODE_LIST);
 
             if (output_decl)
@@ -7084,7 +7185,7 @@ class_type_identifier_keyword[]  { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 // Variable declaration name and optional initialization
-variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
+variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev = false;
         ENTRY_DEBUG } :
         {
             if (!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
@@ -7096,10 +7197,19 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS;
 
                 // start the declaration
                 startElement(SDECLARATION);
-                emptyElement(STYPEPREV);
+
+                startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+
+                startElement(STYPEPREV);
+
+                instypeprev = true;
             }
         }
-
+        (multops)*
+        {
+            if (instypeprev)
+                endMode();
+        }
         // Mark as name before mark without name
         (options { generateAmbigWarnings = false;} :  { inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[!isthis] | compound_name | keyword_name)
         {
@@ -7242,13 +7352,13 @@ pure_expression_block[] { ENTRY_DEBUG } :
 // All possible operators
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if ((LA(1) != IN || !inTransparentMode(MODE_FOR_CONDITION)))
+            if ((LA(1) != IN || !inTransparentMode(MODE_CONTROL_CONDITION)))
                 startElement(SOPERATOR);
         }
         (
             OPERATORS | ASSIGNMENT | TEMPOPS |
             TEMPOPE (options { greedy = true;  } : ({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
-             | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == "&gt;&gt;=" }? ASSIGNMENT))? |
+             | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == ">>=" }? ASSIGNMENT))? |
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
@@ -7289,7 +7399,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
     ;
 
 //processing on )
-rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
+rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         {
 
             if (isempty) {
@@ -7298,8 +7408,8 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                 endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE);
 
                 // special case:  Get to here, in for-initalization.  Need an extra end mode
-                if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_FOR_CONDITION))
-                    endDownToModeSet(MODE_FOR_CONDITION);
+                if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_CONTROL_CONDITION))
+                    endDownToModeSet(MODE_CONTROL_CONDITION);
 
                 // don't markup since not a normal operator
                 markup = false;
@@ -7311,8 +7421,8 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
             if (inMode(MODE_ASSOCIATION_LIST))
                 endMode(MODE_ASSOCIATION_LIST);
 
-            if (end_for_incr || inMode(MODE_LIST | MODE_FOR_CONDITION))
-                setMode(MODE_END_FOR_CONTROL);
+            if (end_control_incr || inMode(MODE_LIST | MODE_CONTROL_CONDITION))
+                setMode(MODE_END_CONTROL);
 
         }
         rparen_operator[markup]
@@ -7371,8 +7481,8 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
                     cppif_duplicate = false;
 
 
-                // end for group and output pseudo block @todo make sure does not hid other things that use for grammar
-                } else if (end_for_incr) {
+                // end control group and output pseudo block @todo make sure does not hid other things that use for grammar
+                } else if (end_control_incr) {
 
                     if (inMode(MODE_LIST))
                         endMode(MODE_LIST);
@@ -7392,9 +7502,9 @@ rparen[bool markup = true, bool end_for_incr = false] { bool isempty = getParen(
 
                     cppif_duplicate = false;
 
-                } else if (inMode(MODE_LIST | MODE_FOR_CONDITION)) {
+                } else if (inMode(MODE_LIST | MODE_CONTROL_CONDITION)) {
 
-                    endMode(MODE_FOR_CONDITION);
+                    endMode(MODE_CONTROL_CONDITION);
                     if (LA(1) != LCURLY)
                         startNoSkipElement(SPSEUDO_BLOCK);
 
@@ -7516,7 +7626,7 @@ expression_process[] { ENTRY_DEBUG } :
         {
             // if expecting an expression start one. except if you are at a right curly brace
             if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY &&
-                !(inMode(MODE_FOR_INCREMENT) && LA(1) == RPAREN)) {
+                !(inMode(MODE_CONTROL_INCREMENT) && LA(1) == RPAREN)) {
 
                 // use a new mode without the expect so we don't nest expression parts
                 startNewMode(MODE_EXPRESSION);
@@ -7556,7 +7666,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 ;
 
 // the expression part
-expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_for_incr = false; ENTRY_DEBUG } :
+expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_control_incr = false; ENTRY_DEBUG } :
 
        { !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
@@ -7639,7 +7749,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         {
 
-            end_for_incr = inTransparentMode(MODE_FOR_INCREMENT);
+            end_control_incr = inTransparentMode(MODE_CONTROL_INCREMENT);
 
             // stop at this matching paren, or a preprocessor statement
             endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
@@ -7647,12 +7757,12 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                 endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
 
-            end_for_incr = end_for_incr && !inTransparentMode(MODE_FOR_INCREMENT);
+            end_control_incr = end_control_incr && !inTransparentMode(MODE_CONTROL_INCREMENT);
 
         }
 
         // treat as operator for operator markup
-        rparen[!end_for_incr, end_for_incr] |
+        rparen[!end_control_incr, end_control_incr] |
 
         // left curly brace
         {
@@ -7697,7 +7807,7 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
             if (markup)
                 startElement(SSTRING);
         }
-        (STRING_START STRING_END)
+        (STRING_START (STRING_END | RAW_STRING_END))
 ;
 
 // Only start and end of character are put directly through the parser.
@@ -7924,7 +8034,7 @@ kr_parameter_type[int type_count] { ENTRY_DEBUG} :
 
 // k& r C parameter name
 kr_parameter_name[] { ENTRY_DEBUG } :
-        ((comma)* (multops)* variable_declaration_nameinit)*
+        ((comma)* variable_declaration_nameinit)*
 ;
 
 // k& r C terminate
@@ -8230,6 +8340,60 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
         }
         EQUAL expression
 ;
+
+// generic argument list
+generic_argument_list_check[] returns [bool is_generic_argument_list] {
+
+    is_generic_argument_list = false;
+
+    int start = mark();
+    inputState->guessing++;
+
+    int parencount = 0;
+    int bracecount = 0;
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+
+        if (LA(1) == RPAREN)
+            --parencount;
+        else if (LA(1) == LPAREN)
+            ++parencount;
+
+        if (parencount < 0) {
+            break;
+        }
+
+        if (LA(1) == TEMPOPE) {
+            is_generic_argument_list = true;
+            break;
+        }
+
+        if (LA(1) == RCURLY)
+            --bracecount;
+        else if (LA(1) == LCURLY)
+            ++bracecount;
+
+        if (bracecount < 0)
+            break;
+
+        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0)
+            break;
+
+        consume();
+    }
+
+    inputState->guessing--;
+    rewind(start);
+
+    ENTRY_DEBUG
+
+}:;
+/*
+        savenamestack[namestack_save]
+
+        tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])* tempope
+
+        restorenamestack[namestack_save]
+*/
 
 // generic argument list
 generic_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save;  bool in_function_type = false; ENTRY_DEBUG } :
@@ -8599,7 +8763,10 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
                 startElement(STYPE);
 
             // statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL);
+            auto mode = MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL;
+            if (inLanguage(LANGUAGE_CSHARP))
+                mode |= MODE_END_AT_BLOCK_NO_TERMINATE;
+            startNewMode(mode);
 
             // start the enum definition
             if (inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
@@ -8865,7 +9032,7 @@ preprocessor[] { ENTRY_DEBUG
             endMode();
 
             tp.setType(SCPP_PRAGMA);
-        } ({ isoption(parser_options, SRCML_OPTION_OPENMP) }? omp_directive | (options { generateAmbigWarnings = false; } : cpp_literal | cpp_symbol)*) |
+        } ((OMP_OMP)=> omp_directive | (CHAR_START | STRING_START | TEMPOPS)=> cpp_literal | cpp_symbol)* |
 
         ERRORPREC
         {
@@ -8918,13 +9085,13 @@ catch[...] {
 // do all the cpp garbage
 cpp_garbage[] :
 
- ~(EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START) /* @todo re-add EOF antlr is generating 1 for EOF but EOF hold -1 there is token
+ ~(EOL | LINE_COMMENT_START | BLOCK_COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START) /* @todo re-add EOF antlr is generating 1 for EOF but EOF hold -1 there is token
  with 1 EOF_ however, adding fails to generate */
 ;
 
 cpp_check_end[] returns[bool is_end = false] {
 
- if (LA(1) == EOL || LA(1) == LINECOMMENT_START || LA(1) == COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF || LA(1) == 1)  /* EOF */
+ if (LA(1) == EOL || LA(1) == LINE_COMMENT_START || LA(1) == BLOCK_COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF || LA(1) == 1)  /* EOF */
      return true;
 
  return false;
@@ -8935,8 +9102,8 @@ cpp_check_end[] returns[bool is_end = false] {
 eol_skip[int directive_token, bool markblockzero] {
 
     while (LA(1) != EOL &&
-           LA(1) != LINECOMMENT_START &&
-           LA(1) != COMMENT_START &&
+           LA(1) != LINE_COMMENT_START &&
+           LA(1) != BLOCK_COMMENT_START &&
            LA(1) != JAVADOC_COMMENT_START &&
            LA(1) != DOXYGEN_COMMENT_START &&
            LA(1) != LINE_DOXYGEN_COMMENT_START &&
@@ -8983,7 +9150,7 @@ ENTRY_DEBUG } :
 
         }
 
-        (EOL | LINECOMMENT_START | COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | eof)
+        (EOL | LINE_COMMENT_START | BLOCK_COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | eof)
         eol_post[directive_token, markblockzero]
 ;
 
@@ -9036,7 +9203,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
-        if (LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_FOR_CONTROL))) {
+        if (LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_CONTROL))) {
             end_order.push_back(TERMINATE);
 
         }
@@ -9081,7 +9248,8 @@ eol_post[int directive_token, bool markblockzero] {
 
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
-                if (isoption(parser_options, SRCML_OPTION_CPPIF_CHECK) && !inputState->guessing) {
+                // @todo Leaving off for now, with no option. Test thoroughly, and then turn on by default
+                if (false && !inputState->guessing) {
 
                     for (auto& item : cppif_end_count_check()) {
 
@@ -9118,7 +9286,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                                 cppif_duplicate = true;
 
-                            } else if (inMode(MODE_END_FOR_CONTROL) || inMode(MODE_LIST | MODE_FOR_CONDITION)) {
+                            } else if (inMode(MODE_END_CONTROL) || inMode(MODE_LIST | MODE_CONTROL_CONDITION)) {
 
                                 cppif_duplicate = true;
 

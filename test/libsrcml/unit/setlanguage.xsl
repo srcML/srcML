@@ -1,17 +1,17 @@
 <xsl:stylesheet
-	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:src="http://www.srcML.org/srcML/src"
-	xmlns="http://www.srcML.org/srcML/src"
-	xmlns:cpp="http://www.srcML.org/srcML/cpp"
-	version="1.0">
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:src="http://www.srcML.org/srcML/src"
+    xmlns="http://www.srcML.org/srcML/src"
+    xmlns:cpp="http://www.srcML.org/srcML/cpp"
+    version="1.0">
 
 <!--
-	setlanguage.xsl
+    setlanguage.xsl
 
-	Converts srcML if statement test cases to while statement test cases
+    Converts srcML if statement test cases to while statement test cases
 
-	Michael L. Collard
-	collard@cs.kent.edu
+    Michael L. Collard
+    collard@cs.kent.edu
 
     Modified for testing by:
     Michael John Decker
@@ -28,9 +28,9 @@
 
 <!-- default identity copy -->
 <xsl:template match="@*|node()">
-	<xsl:copy>
-	  <xsl:apply-templates select="@*|node()"/>
-	</xsl:copy>
+    <xsl:copy>
+      <xsl:apply-templates select="@*|node()"/>
+    </xsl:copy>
 </xsl:template>
 
 </xsl:stylesheet>

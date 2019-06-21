@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef MODE_HPP
@@ -105,17 +105,17 @@ const static srcMLState::MODE_TYPE MODE_CALL;
  */
  const static srcMLState::MODE_TYPE MODE_TOP_SECTION;
 
-/** in a for heading group i.e. for init/condition/increment */
- const static srcMLState::MODE_TYPE MODE_FOR_CONTROL;
+/** in a for heading group i.e. for init/condition/increment & if init/condition */
+ const static srcMLState::MODE_TYPE MODE_CONTROL;
 
 /** for initialization (in header) */
- const static srcMLState::MODE_TYPE MODE_FOR_INITIALIZATION;
+ const static srcMLState::MODE_TYPE MODE_CONTROL_INITIALIZATION;
 
 /** for condition (in header) */
- const static srcMLState::MODE_TYPE MODE_FOR_CONDITION;
+ const static srcMLState::MODE_TYPE MODE_CONTROL_CONDITION;
 
 /** for increment (in header) */
- const static srcMLState::MODE_TYPE MODE_FOR_INCREMENT;
+ const static srcMLState::MODE_TYPE MODE_CONTROL_INCREMENT;
 
 /** preprocessor mode */
  const static srcMLState::MODE_TYPE MODE_PREPROC;
@@ -253,7 +253,7 @@ const static srcMLState::MODE_TYPE MODE_FUNCTION_BODY;
 const static srcMLState::MODE_TYPE MODE_FUNCTION_TYPE;
 
 /** mode to mark end of for control for cppif duplication */
-const static srcMLState::MODE_TYPE MODE_END_FOR_CONTROL;
+const static srcMLState::MODE_TYPE MODE_END_CONTROL;
 
 /** mode for for-like statement */
 const static srcMLState::MODE_TYPE MODE_FOR_LIKE_LIST;

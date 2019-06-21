@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="using" filename="using_directive_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="using" filename="using_directive_cs">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <using>using <name><name>System</name><operator>.</operator><name>Text</name></name>;</using>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <using>using <name>Project</name> <init>= <expr><name><name>PC</name><operator>.</operator><name>MyCompony</name><operator>.</operator><name>Project</name></name></expr></init>;</using>
 </unit>
 

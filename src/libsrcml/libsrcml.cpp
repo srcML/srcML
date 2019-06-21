@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -43,43 +43,20 @@
 #endif
 
 /**
- * @var srcml_error
- *
- * Global structure to hold error string.
- */
-#ifdef STATIC_GLOBALS
-static
-#endif
-std::string srcml_error;
-
-/**
  * @var global_archive
  *
  * global archive for use with srcml() function.  Defaulted values.
  * Archive is used for both read and write first call to srcml()
  * initializes other parameters.
  */
-#ifdef STATIC_GLOBALS
-static
-#endif
-srcml_archive global_archive = { SRCML_ARCHIVE_RW, boost::optional<std::string>(), boost::optional<std::string>(),
-                                 std::string(SRCML_VERSION_STRING), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
-                                 std::vector<std::string>(),
-                                 SRCML_OPTION_XML_DECL | SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_HASH,
-                                 8, std::vector<std::string>(), std::vector<std::string>(), boost::optional<std::pair<std::string, std::string> >(),
-                                 language_extension_registry(), std::vector<std::string>(), 0, 0, 0, std::vector<transform>(), boost::any(), boost::optional<size_t>() };
+static srcml_archive global_archive;
 
 /**
  * @var global_unit
  *
  * global unit for use with srcml() function.  Defaulted values.
  */
-#ifdef STATIC_GLOBALS
-static
-#endif
-srcml_unit global_unit = { &global_archive, boost::optional<std::string>(), std::string(SRCML_VERSION_STRING), boost::optional<std::string>(),
-                           boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(), boost::optional<std::string>(),
-                           boost::optional<std::string>(), std::vector<std::string>(), 0, 0, 0, 0, boost::optional<std::string>(), boost::any() };
+static srcml_unit global_unit;
 
 /**
  * @var register_languages
@@ -105,7 +82,6 @@ void srcml_cleanup_globals() {
     xmlCleanupGlobals();
     xmlDictCleanup();
     xmlCleanupParser();
-
 }
 
 /******************************************************************************
@@ -122,7 +98,6 @@ void srcml_cleanup_globals() {
 const char * srcml_version_string() {
 
     return SRCML_VERSION_STRING;
-
 }
 
 /**
@@ -133,7 +108,6 @@ const char * srcml_version_string() {
 int srcml_version_number() {
 
     return SRCML_VERSION_NUMBER;
-
 }
 
 /******************************************************************************
@@ -155,16 +129,16 @@ int srcml_version_number() {
  */
 int srcml(const char* input_filename, const char* output_filename) {
 
-    if(!input_filename || !output_filename) {
+    if (!input_filename || !output_filename) {
 
-        srcml_error = "No input file provided";
+        global_archive.error_string = "No input file provided";
         return  SRCML_STATUS_INVALID_ARGUMENT;
 
     }
 
     xmlInitParser();
 
-    if(register_languages) {
+    if (register_languages) {
 
         register_languages = false;
         language_extension_registry registry = global_archive.registered_languages;
@@ -175,35 +149,31 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         global_archive.registered_languages.append(registry);
 
-        std::vector<std::string> save_prefix = global_archive.prefixes;
-        std::vector<std::string> save_ns = global_archive.uris;
+        decltype(global_archive.namespaces) save_namespaces = global_archive.namespaces;
 
-        srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_PREFIX_DEFAULT, SRCML_SRC_NS_URI);
+        srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_DEFAULT_PREFIX, SRCML_SRC_NS_URI);
 
-        for(decltype(save_prefix)::size_type i = 0; i < save_prefix.size(); ++i) {
-            try {
-                srcml_archive_register_namespace(&global_archive, save_prefix.at(i).c_str(), save_ns.at(i).c_str());
-            } catch(...) {
-                return SRCML_STATUS_ERROR;
-            }
+        for (const auto& ns : save_namespaces) {
+            srcml_archive_register_namespace(&global_archive, ns.prefix.c_str(), ns.uri.c_str());
         }
-
     }
 
-    if(srcml_check_extension(input_filename)) {
+    if (srcml_check_extension(input_filename)) {
 
-        srcml_archive_write_open_filename(&global_archive, output_filename, 0);
+        srcml_archive_write_open_filename(&global_archive, output_filename);
         srcml_unit * unit = srcml_unit_create(&global_archive);
 
+        srcml_archive_enable_solitary_unit(&global_archive);
+
         int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
-        if(status != SRCML_STATUS_OK) {
+        if (status != SRCML_STATUS_OK) {
 
             srcml_unit_free(unit);
             return status;
 
         }
         
-        if(srcml_unit_get_filename(&global_unit) != 0)
+        if (srcml_unit_get_filename(&global_unit) != 0)
             srcml_unit_set_filename(unit, srcml_unit_get_filename(&global_unit));
         else
             srcml_unit_set_filename(unit, input_filename);
@@ -213,7 +183,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
 
         status = srcml_unit_parse_filename(unit, input_filename);
-        if(status != SRCML_STATUS_OK) {
+        if (status != SRCML_STATUS_OK) {
 
             srcml_unit_free(unit);
             return status;
@@ -229,28 +199,30 @@ int srcml(const char* input_filename, const char* output_filename) {
 
         bool is_xml = false;
         size_t len = strlen(input_filename);
-        if((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
+        if ((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
             && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
              || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
            || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
             is_xml = true;
 
         // not xml or handled language
-        if(!is_xml) {
+        if (!is_xml) {
 
-            if(global_archive.language) {
-                srcml_error = "Language '";
-                srcml_error += global_archive.language->c_str();
-                srcml_error += "' is not supported.";
+            if (global_archive.language) {
+                global_archive.error_string = "Language '";
+                global_archive.error_string += global_archive.language->c_str();
+                global_archive.error_string += "' is not supported.";
             } else
-                srcml_error = "No language provided.";
+                global_archive.error_string = "No language provided.";
 
             return SRCML_STATUS_INVALID_INPUT;
 
         }
 
-        srcml_extract_text_filename(input_filename, output_filename, global_archive.encoding ? global_archive.encoding->c_str() : "ISO-8859-1", 0, global_archive.revision_number);
-
+        srcml_archive_read_open_filename(&global_archive, input_filename);
+        auto unit = srcml_archive_read_unit(&global_archive);
+        srcml_unit_unparse_filename(unit, output_filename);
+        srcml_unit_free(unit);
     }
 
     return SRCML_STATUS_OK;
@@ -273,7 +245,6 @@ int srcml(const char* input_filename, const char* output_filename) {
 int srcml_set_src_encoding(const char* encoding) {
 
     return srcml_archive_set_src_encoding(&global_archive, encoding);
-
 }
 
 /**
@@ -287,7 +258,6 @@ int srcml_set_src_encoding(const char* encoding) {
 int srcml_set_xml_encoding(const char* encoding) {
 
     return srcml_archive_set_xml_encoding(&global_archive, encoding);
-
 }
 
 /**
@@ -301,7 +271,6 @@ int srcml_set_xml_encoding(const char* encoding) {
 int srcml_set_language(const char* language) {
 
     return srcml_archive_set_language(&global_archive, language);
-
 }
 
 /**
@@ -315,7 +284,6 @@ int srcml_set_language(const char* language) {
 int srcml_set_filename(const char* filename) {
 
     return srcml_unit_set_filename(&global_unit, filename);
-
 }
 
 /**
@@ -329,7 +297,6 @@ int srcml_set_filename(const char* filename) {
 int srcml_set_url(const char* url) {
 
     return srcml_archive_set_url(&global_archive, url);
-
 }
 
 /**
@@ -343,7 +310,6 @@ int srcml_set_url(const char* url) {
 int srcml_set_version(const char* version) {
 
     return srcml_archive_set_version(&global_archive, version);
-
 }
 
 /**
@@ -357,7 +323,6 @@ int srcml_set_version(const char* version) {
 int srcml_set_timestamp(const char* timestamp) {
 
     return srcml_unit_set_timestamp(&global_unit, timestamp);
-
 }
 
 /**
@@ -371,7 +336,6 @@ int srcml_set_timestamp(const char* timestamp) {
 int srcml_set_options(unsigned long long option) {
 
     return srcml_archive_set_options(&global_archive, option);
-
 }
 
 /**
@@ -385,7 +349,6 @@ int srcml_set_options(unsigned long long option) {
 int srcml_enable_option(unsigned long long option) {
 
     return srcml_archive_enable_option(&global_archive, option);
-
 }
 
 /**
@@ -399,7 +362,6 @@ int srcml_enable_option(unsigned long long option) {
 int srcml_disable_option(unsigned long long option) {
 
     return srcml_archive_disable_option(&global_archive, option);
-
 }
 
 /**
@@ -413,7 +375,6 @@ int srcml_disable_option(unsigned long long option) {
 int srcml_set_tabstop(size_t tabstop) {
 
     return srcml_archive_set_tabstop(&global_archive, tabstop);
-
 }
 
 /**
@@ -428,7 +389,6 @@ int srcml_set_tabstop(size_t tabstop) {
 int srcml_register_file_extension(const char* extension, const char* language) {
 
     return srcml_archive_register_file_extension(&global_archive, extension, language);
-
 }
 
 /**
@@ -443,7 +403,6 @@ int srcml_register_file_extension(const char* extension, const char* language) {
 int srcml_register_namespace(const char* prefix, const char* ns) {
 
     return srcml_archive_register_namespace(&global_archive, prefix, ns);
-
 }
 
 /**
@@ -458,7 +417,6 @@ int srcml_register_namespace(const char* prefix, const char* ns) {
 int srcml_set_processing_instruction(const char* target, const char* data) {
 
     return srcml_archive_set_processing_instruction(&global_archive, target, data);
-
 }
 
 /**
@@ -473,7 +431,6 @@ int srcml_set_processing_instruction(const char* target, const char* data) {
 int srcml_register_macro(const char* token, const char* type) {
 
     return srcml_archive_register_macro(&global_archive, token, type);
-
 }
 
 /**
@@ -488,7 +445,6 @@ int srcml_register_macro(const char* token, const char* type) {
 int srcml_unparse_set_eol(size_t eol) {
 
     return srcml_unit_unparse_set_eol(&global_unit, eol);
-
 }
 
 /**
@@ -502,7 +458,6 @@ int srcml_unparse_set_eol(size_t eol) {
 int srcml_set_srcdiff_revision(size_t revision_number) {
 
     return srcml_archive_set_srcdiff_revision(&global_archive, revision_number);
-
 }
 
 /******************************************************************************
@@ -519,7 +474,6 @@ int srcml_set_srcdiff_revision(size_t revision_number) {
 const char* srcml_get_src_encoding() {
 
     return srcml_archive_get_src_encoding(&global_archive);
-
 }
 
 /**
@@ -530,7 +484,6 @@ const char* srcml_get_src_encoding() {
 const char* srcml_get_xml_encoding() {
 
     return srcml_archive_get_xml_encoding(&global_archive);
-
 }
 
 /**
@@ -541,7 +494,6 @@ const char* srcml_get_xml_encoding() {
 const char* srcml_get_revision() {
 
     return srcml_archive_get_revision(&global_archive);
-
 }
 
 /**
@@ -552,7 +504,6 @@ const char* srcml_get_revision() {
 const char* srcml_get_language() {
 
     return srcml_archive_get_language(&global_archive);
-
 }
 
 /**
@@ -564,7 +515,6 @@ const char* srcml_get_language() {
 const char* srcml_get_filename() {
 
     return srcml_unit_get_filename(&global_unit);
-
 }
 
 /**
@@ -576,7 +526,6 @@ const char* srcml_get_filename() {
 const char* srcml_get_url() {
 
     return srcml_archive_get_url(&global_archive);
-
 }
 
 /**
@@ -587,7 +536,6 @@ const char* srcml_get_url() {
 const char* srcml_get_version() {
 
     return srcml_archive_get_version(&global_archive);
-
 }
 
 /**
@@ -598,7 +546,6 @@ const char* srcml_get_version() {
 const char* srcml_get_timestamp() {
 
     return srcml_unit_get_timestamp(&global_unit);
-
 }
 
 /**
@@ -609,7 +556,6 @@ const char* srcml_get_timestamp() {
 const char* srcml_get_hash() {
 
     return srcml_unit_get_hash(&global_unit);
-
 }
 
 /**
@@ -620,7 +566,6 @@ const char* srcml_get_hash() {
 unsigned long long srcml_get_options() {
 
     return srcml_archive_get_options(&global_archive);
-
 }
 
 /**
@@ -631,7 +576,6 @@ unsigned long long srcml_get_options() {
 size_t srcml_get_tabstop() {
 
     return srcml_archive_get_tabstop(&global_archive);
-
 }
 
 /**
@@ -642,7 +586,6 @@ size_t srcml_get_tabstop() {
 size_t srcml_get_namespace_size() {
 
     return srcml_archive_get_namespace_size(&global_archive);
-
 }
 
 /**
@@ -655,7 +598,6 @@ size_t srcml_get_namespace_size() {
 const char* srcml_get_namespace_prefix(size_t pos) {
 
     return srcml_archive_get_namespace_prefix(&global_archive, pos);
-
 }
 
 /**
@@ -668,7 +610,6 @@ const char* srcml_get_namespace_prefix(size_t pos) {
 const char* srcml_get_prefix_from_uri(const char* namespace_uri) {
 
     return srcml_archive_get_prefix_from_uri(&global_archive, namespace_uri);
-
 }
 
 /**
@@ -681,7 +622,6 @@ const char* srcml_get_prefix_from_uri(const char* namespace_uri) {
 const char* srcml_get_namespace_uri(size_t pos) {
 
     return srcml_archive_get_namespace_uri(&global_archive, pos);
-
 }
 
 /**
@@ -694,7 +634,6 @@ const char* srcml_get_namespace_uri(size_t pos) {
 const char* srcml_get_uri_from_prefix(const char* prefix) {
 
     return srcml_archive_get_uri_from_prefix(&global_archive, prefix);
-
 }
 
 /**
@@ -705,7 +644,6 @@ const char* srcml_get_uri_from_prefix(const char* prefix) {
 const char* srcml_get_processing_instruction_target() {
 
     return srcml_archive_get_processing_instruction_target(&global_archive);
-
 }
 
 /**
@@ -717,7 +655,6 @@ const char* srcml_get_processing_instruction_target() {
 const char* srcml_get_processing_instruction_data() {
 
     return srcml_archive_get_processing_instruction_data(&global_archive);
-
 }
 
 /**
@@ -728,7 +665,6 @@ const char* srcml_get_processing_instruction_data() {
 size_t srcml_get_macro_list_size() {
 
     return srcml_archive_get_macro_list_size(&global_archive);
-
 }
 
 /**
@@ -741,7 +677,6 @@ size_t srcml_get_macro_list_size() {
 const char* srcml_get_macro_token(size_t pos) {
 
     return srcml_archive_get_macro_token(&global_archive, pos);
-
 }
 
 /**
@@ -755,7 +690,6 @@ const char* srcml_get_macro_token_type(const char* token) {
 
     return srcml_archive_get_macro_token_type(&global_archive, token
                                               );
-
 }
 
 /**
@@ -768,7 +702,6 @@ const char* srcml_get_macro_token_type(const char* token) {
 const char* srcml_get_macro_type(size_t pos) {
 
     return srcml_archive_get_macro_type(&global_archive, pos);
-
 }
 
 /**
@@ -781,7 +714,6 @@ const char* srcml_get_macro_type(size_t pos) {
 size_t srcml_get_srcdiff_revision() {
 
     return srcml_archive_get_srcdiff_revision(&global_archive);
-
 }
 
 /******************************************************************************
@@ -837,7 +769,7 @@ size_t srcml_get_language_list_size() {
  */
 const char * srcml_get_language_list(size_t pos) {
 
-    if(pos >= srcml_get_language_list_size()) return NULL;
+    if (pos >= srcml_get_language_list_size()) return NULL;
 
     return langs[pos];
 }
@@ -865,7 +797,6 @@ const char * srcml_check_extension(const char* filename) {
     }
 
     return srcml_archive_check_extension(&global_archive, filename);
-
 }
 
 /**
@@ -878,7 +809,6 @@ const char * srcml_check_extension(const char* filename) {
 int srcml_check_encoding(const char* encoding) {
 
     return xmlParseCharEncoding(encoding) > 0;
-
 }
 
 /**
@@ -889,22 +819,14 @@ int srcml_check_encoding(const char* encoding) {
  */
 int srcml_check_xslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    void * handle = dlopen("libxslt.so", RTLD_LAZY);
-    if (!handle) {
-        handle = dlopen("libxslt.so.1", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libxslt.dylib", RTLD_LAZY);
-            if (!handle) return 0;
-
-        }
-    }
+    void* handle = dlopen_libxslt();
+    if (!handle)
+        return 0;
 
     dlclose(handle);
-    return 1;
-#else
-    return 1;
 #endif
 
+    return 1;
 }
 
 /**
@@ -915,20 +837,14 @@ int srcml_check_xslt() {
  */
 int srcml_check_exslt() {
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    void* handle = dlopen("libexslt.so", RTLD_LAZY);
-    if (!handle) {
-        handle = dlopen("libexslt.so.0", RTLD_LAZY);
-        if (!handle) {
-            handle = dlopen("libexslt.dylib", RTLD_LAZY);
-            if (!handle) return 0;
-        }
-    }
+    void* handle = dlopen_libexslt();
+    if (!handle)
+        return 0;
 
     dlclose(handle);
-    return 1;
-#else
-    return 1;
 #endif
+
+    return 1;
 }
 
 /******************************************************************************
@@ -940,9 +856,9 @@ int srcml_check_exslt() {
 /**
  * srcml_error_string
  *
- * @returns Return a string describing last recorded error.
+ * @returns Return a string describing last recorded error for convenience functions.
  */
-const char* srcml_error_string() { return srcml_error.c_str(); }
+const char* srcml_error_string() { return global_archive.error_string.c_str(); }
 
 
 /******************************************************************************
@@ -958,8 +874,8 @@ const char* srcml_error_string() { return srcml_error.c_str(); }
  */
 void srcml_memory_free(char * buffer) {
 
-    if(buffer == 0) return;
+    if (buffer == nullptr)
+        return;
 
-    free((void*)buffer);
-
+    free(buffer);
 }

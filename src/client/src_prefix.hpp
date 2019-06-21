@@ -17,19 +17,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef SRC_PREFIX_HPP
 #define SRC_PREFIX_HPP
 
 #include <string>
+#include <tuple>
 
 std::string src_prefix_add_uri(const std::string& protocol, const std::string& resource);
 
 std::string src_prefix_add_uri(const std::string& input_file);
 
-void src_prefix_split_uri(const std::string& input_file, std::string& protocol, std::string& resource);
+std::tuple<std::string, std::string> src_prefix_split_uri(const std::string& input_file);
 
 std::string src_prefix_protocol(const std::string& input_file);
 

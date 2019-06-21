@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="expression_pointer">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="expression_pointer">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>a</name> <modifier>*</modifier></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><operator>*</operator><operator>(</operator><name>a</name><operator>)</operator><name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><name><name>CodeSeqData</name><index>[<expr><literal type="number">0u</literal></expr>]</index></name> <operator>=</operator> <operator>(</operator><name>uint8_t</name><operator>)</operator><operator>(</operator><operator>(</operator><name>CodeSequence</name> <operator>&gt;&gt;</operator> <literal type="number">24u</literal><operator>)</operator> <operator>&amp;</operator> <literal type="number">0xFu</literal><operator>)</operator></expr>;</expr_stmt>
 </unit>
 

@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C" url="function" filename="function_c">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C" url="function" filename="function_c">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><specifier>static</specifier> <specifier>inline</specifier> <type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>void</name></type> <name>foo</name><parameter_list>(<parameter><function_decl><type><name>int</name></type> (<modifier>*</modifier><name>a</name>)<parameter_list>(<parameter><decl><type><name>char</name></type> <name>i</name></decl></parameter>)</parameter_list></function_decl></parameter>, <parameter><decl><type><name>char</name></type> <name>b</name></decl></parameter>)</parameter_list>
 <block>{
 }</block></function> 
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name></type> <name>main</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>argc</name></decl></parameter>, <parameter><decl><type><name><name>int</name><modifier>*</modifier><index>[]</index></name></type> <name>argv</name></decl></parameter>)</parameter_list>
 <block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list><block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><specifier>_Noreturn</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name><name>struct</name> <name>foo</name></name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name><name>union</name> <name>foo</name></name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <function><type><name><name>enum</name> <name>foo</name></name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{ <return>return <expr><literal type="number">0</literal></expr>;</return>}</block></function>
 </unit>
 

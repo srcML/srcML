@@ -10,11 +10,11 @@
       <zeroOrMore>
       <choice>
         <attribute>
-	    <anyName/>
-	      </attribute>
-	        <text/>
-		  <ref name="anyElement"/>
-		  </choice>
+      <anyName/>
+        </attribute>
+          <text/>
+      <ref name="anyElement"/>
+      </choice>
       </zeroOrMore>
     </element>
   </define>

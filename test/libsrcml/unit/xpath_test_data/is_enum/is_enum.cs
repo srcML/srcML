@@ -1,2 +1,0 @@
-enum x;
-enum x { }

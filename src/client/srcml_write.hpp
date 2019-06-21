@@ -17,17 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef SRCML_WRITE_HPP
 #define SRCML_WRITE_HPP
 
 #include <srcml_input_src.hpp>
+#include <memory>
 
 struct ParseRequest;
 class TraceLog;
 
-void srcml_write_request(ParseRequest*, TraceLog&, const srcml_output_dest& destination);
+void srcml_write_request(std::shared_ptr<ParseRequest>, TraceLog&, const srcml_output_dest& destination);
 
 #endif

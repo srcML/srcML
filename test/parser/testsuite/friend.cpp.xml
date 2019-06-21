@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="friend">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="friend">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default"> 
     <friend>friend <function_decl><type><name>int</name></type> <name>A</name><parameter_list>()</parameter_list>;</function_decl></friend> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default"> 
     <friend>friend <function_decl><type><name>int</name><modifier>*</modifier></type> <name>A</name><parameter_list>()</parameter_list>;</function_decl></friend> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <class>class <name>A</name> <block>{<private type="default"> 
     <friend>friend <decl_stmt><decl><type><name>int</name></type> <name>f</name><argument_list>()</argument_list></decl>, <decl><type ref="prev"/><name>g</name><argument_list>()</argument_list></decl>;</decl_stmt></friend> </private>}</block>;</class>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <friend>friend <class_decl>class <name>foo</name>;</class_decl></friend>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <friend>friend <class_decl>class <name>foo</name>, <name>bar</name>;</class_decl></friend>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <friend>friend <name>T</name>;</friend>
 </unit>
 

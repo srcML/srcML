@@ -15,38 +15,32 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
 
   Test cases for srcml_archive_check_extension
 */
-#include <stdio.h>
-#include <string.h>
-#include <cassert>
-
 #include <srcml.h>
-#include <srcml_types.hpp>
-#include <srcmlns.hpp>
 
-#include <unit_tests.hpp>
+#include <dassert.hpp>
 
-int main() {
+int main(int, char* argv[]) {
 
     /*
       srcml_check_extension
     */
 
-    srcml_archive * archive = srcml_archive_create();
-    srcml_archive_register_file_extension(archive, "cpp", "C++");
+    srcml_archive* archive = srcml_archive_create();
+    srcml_archive_register_file_extension(archive, "h", "C++");
 
     {
-        dassert(srcml_archive_check_extension(archive, "a.cpp"), std::string("C++"));
+        dassert(srcml_archive_check_extension(archive, "a.h"), std::string("C++"));
     }
 
     {
-        dassert(srcml_archive_check_extension(archive, "a.cpp.gz"), std::string("C++"));
+        dassert(srcml_archive_check_extension(archive, "a.h.gz"), std::string("C++"));
     }
 
     {
@@ -58,11 +52,10 @@ int main() {
     }
 
     {
-        dassert(srcml_archive_check_extension(0, "a.cpp"), 0);
+        dassert(srcml_archive_check_extension(0, "a.h"), 0);
     }
 
     srcml_archive_free(archive);
 
     return 0;
-
 }

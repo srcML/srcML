@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -24,24 +24,18 @@
   Gather info from an archive from a given unit.
 */
 
-#include <stdio.h>
-#include "srcml.h"
+#include <srcml.h>
 
 int main(int argc, char* argv[]) {
 
-    struct srcml_archive * archive;
-    struct srcml_unit * unit;
-
-    archive = srcml_archive_create();
+    struct srcml_archive* archive = srcml_archive_create();
     srcml_archive_read_open_filename(archive, "project.xml");
 
-    while((unit = srcml_archive_read_unit_header(archive))) {
-
+    struct srcml_unit* unit = 0;
+    while ((unit = srcml_archive_read_unit(archive))) {
         puts(srcml_unit_get_filename(unit));
         srcml_unit_free(unit);
-
     }
-
 
     srcml_archive_close(archive);
     srcml_archive_free(archive);

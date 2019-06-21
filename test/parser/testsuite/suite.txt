@@ -21,33 +21,39 @@ LANGUAGE_ALL_BASE continue
 LANGUAGE_ALL_BASE ternary
 
 LANGUAGE_ALL_GEN while
-LANGUAGE_ALL_GEN ifnestcond 
-LANGUAGE_ALL_GEN return 
-LANGUAGE_ALL_GEN function_decl 
-LANGUAGE_ALL_GEN ifblock 
+LANGUAGE_ALL_GEN ifnestcond
+# LANGUAGE_ALL_GEN return
+LANGUAGE_ALL_GEN function_decl
+LANGUAGE_ALL_GEN ifblock
 
-LANGUAGE_CXX_FAMILY constructor_explicit 
-LANGUAGE_CXX_FAMILY destructor_virtual
-LANGUAGE_CXX_FAMILY function_const
-LANGUAGE_CXX_FAMILY struct
-LANGUAGE_CXX_FAMILY union
+#LANGUAGE_CXX_FAMILY constructor_explicit
+LANGUAGE_CXX_GEN constructor_explicit
+LANGUAGE_CXX_GEN destructor_virtual
+#LANGUAGE_CXX_FAMILY function_const
+#LANGUAGE_CXX_FAMILY struct
+#LANGUAGE_C_FAMILY_NO_SHARP union
 
 LANGUAGE_C_FAMILY asm
-LANGUAGE_C_FAMILY macro
+#LANGUAGE_C_FAMILY macro
+LANGUAGE_C_FAMILY_NO_SHARP macro
 LANGUAGE_C_FAMILY extern
 LANGUAGE_C_FAMILY main
-LANGUAGE_C_FAMILY function_pointer
+LANGUAGE_C_FAMILY_NO_SHARP function_pointer
 LANGUAGE_C_FAMILY decl_struct
-LANGUAGE_C_FAMILY typedef
+LANGUAGE_C_FAMILY_NO_SHARP typedef
 LANGUAGE_C_FAMILY decl_pointer
 LANGUAGE_C_FAMILY expression_pointer
 LANGUAGE_C_FAMILY sizeof
-LANGUAGE_C_FAMILY modifier_base
-LANGUAGE_C_FAMILY enum
+#LANGUAGE_C_FAMILY_NO_SHARP modifier_base
+#LANGUAGE_C_FAMILY enum
+LANGUAGE_CXX enum
 LANGUAGE_C_FAMILY for
-LANGUAGE_C_FAMILY auto
-LANGUAGE_C_FAMILY block_lambda
-LANGUAGE_C_FAMILY cuda
+#LANGUAGE_C_FAMILY auto
+LANGUAGE_CXX auto
+#LANGUAGE_C_FAMILY block_lambda
+LANGUAGE_CXX block_lambda
+#LANGUAGE_C_FAMILY cuda
+LANGUAGE_C_FAMILY_NO_SHARP cuda
 
 LANGUAGE_C_ONLY function_c
 LANGUAGE_C_ONLY cast_c
@@ -68,7 +74,7 @@ LANGUAGE_C_ONLY function_decl_c
 LANGUAGE_C_ONLY operator_c
 
 LANGUAGE_CXX friend
-LANGUAGE_CXX namespace
+LANGUAGE_CXX_FAMILY namespace
 LANGUAGE_CXX template
 LANGUAGE_CXX typedef_template
 LANGUAGE_CXX constructor
@@ -85,7 +91,7 @@ LANGUAGE_CXX typedef_struct
 LANGUAGE_CXX operator
 LANGUAGE_CXX function_cpp
 LANGUAGE_CXX call_ns
-LANGUAGE_CXX expression_pointer
+#LANGUAGE_CXX expression_pointer
 LANGUAGE_CXX enum_cpp
 LANGUAGE_CXX operator_cpp
 LANGUAGE_CXX call_cpp
@@ -96,7 +102,6 @@ LANGUAGE_CXX decl_simple_cpp
 LANGUAGE_CXX cast_cpp
 LANGUAGE_CXX function_decl_cpp
 LANGUAGE_CXX constructor_cpp
-LANGUAGE_CXX enum_cpp
 LANGUAGE_CXX expression_cpp
 LANGUAGE_CXX attributes_cpp
 LANGUAGE_CXX lambda_cpp
@@ -121,12 +126,13 @@ LANGUAGE_CXX emit
 LANGUAGE_CXX macro_cpp
 LANGUAGE_CXX destructor_cpp
 LANGUAGE_CXX static_assert_cpp
+LANGUAGE_CXX if_cpp
 
-LANGUAGE_CXX_GEN c_cpp_mode.restrict
-LANGUAGE_CXX_GEN c_cpp_mode.mutable
-LANGUAGE_CXX_GEN c_cpp_mode.try
-LANGUAGE_CXX_GEN c_cpp_mode.catch
-LANGUAGE_CXX_GEN c_cpp_mode.class
+LANGUAGE_CXX_GEN c_cpp_mode_restrict
+LANGUAGE_CXX_GEN c_cpp_mode_mutable
+LANGUAGE_CXX_GEN c_cpp_mode_try
+LANGUAGE_CXX_GEN c_cpp_mode_catch
+LANGUAGE_CXX_GEN c_cpp_mode_class
 
 LANGUAGE_CSHARP_GEN asm
 LANGUAGE_CSHARP_GEN extern
@@ -135,7 +141,7 @@ LANGUAGE_CSHARP_GEN decl_pointer
 LANGUAGE_CSHARP_GEN goto
 LANGUAGE_CSHARP_GEN namespace
 LANGUAGE_CSHARP_GEN try
-LANGUAGE_CSHARP_GEN operator
+#LANGUAGE_CSHARP_GEN operator
 LANGUAGE_CSHARP_GEN expression_pointer
 LANGUAGE_CSHARP_GEN sizeof
 LANGUAGE_CSHARP_GEN for
@@ -175,7 +181,6 @@ LANGUAGE_CSHARP string_cs
 LANGUAGE_CSHARP lambda_cs
 LANGUAGE_CSHARP enum_cs
 LANGUAGE_CSHARP call_cs
-LANGUAGE_CSHARP class_cs
 LANGUAGE_CSHARP using_directive_cs
 LANGUAGE_CSHARP using_statement_cs
 LANGUAGE_CSHARP specifier_cs
@@ -220,7 +225,7 @@ LANGUAGE_OBJECTIVE_C_GEN dynamic_m
 LANGUAGE_JAVA class_java
 LANGUAGE_JAVA constructor_java
 LANGUAGE_JAVA keyword_java
-LANGUAGE_JAVA interface_java
+LANGUAGE_JAVA_GEN interface_java
 LANGUAGE_JAVA package_java
 LANGUAGE_JAVA finally_java
 LANGUAGE_JAVA generics_java
@@ -236,7 +241,6 @@ LANGUAGE_JAVA catch_form_java
 LANGUAGE_JAVA try_java
 LANGUAGE_JAVA decl_java
 LANGUAGE_JAVA specifier_java
-LANGUAGE_JAVA foreach
 LANGUAGE_JAVA enum_java
 LANGUAGE_JAVA import_java
 LANGUAGE_JAVA assert_java
@@ -250,3 +254,53 @@ LANGUAGE_OO try
 LANGUAGE_OO specifier_oo
 LANGUAGE_OO throw_base
 LANGUAGE_OO throw
+
+
+# class -> struct
+LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl
+LANGUAGE_TRANSFORM struct_cpp.cpp.xml class_cpp.cpp.xml struct class2struct.xsl
+LANGUAGE_TRANSFORM struct_cs.cs.xml class_cs.cs.xml struct class2struct.xsl
+
+# struct -> union
+LANGUAGE_TRANSFORM union.cpp.xml struct.cpp.xml union struct2union.xsl
+LANGUAGE_TRANSFORM union_cpp.cpp.xml struct_cpp.cpp.xml union struct2union.xsl
+LANGUAGE_TRANSFORM union_c.c.xml struct_c.c.xml union struct2union.xsl
+
+# if -> while
+LANGUAGE_TRANSFORM while.cpp.xml if.cpp.xml while if2while.xsl
+
+# C++ special transformations
+LANGUAGE_TRANSFORM function_const.cpp.xml function.cpp.xml const addconst.xsl
+LANGUAGE_TRANSFORM constructor_explicit.cpp.xml constructor.cpp.xml constructor addexplicit.xsl
+LANGUAGE_TRANSFORM ifnestcond.cpp.xml if.cpp.xml if nestcond.xsl
+LANGUAGE_TRANSFORM destructor_virtual.cpp.xml destructor.cpp.xml destructor.virtual addvirtual.xsl
+LANGUAGE_TRANSFORM throw.cpp.xml throw_base.cpp.xml throw insertexpr.xsl
+LANGUAGE_TRANSFORM interface_java.java.xml class_java.java.xml interface class2interface.xsl
+LANGUAGE_TRANSFORM ifblock.cpp.xml if.cpp.xml if.block if2ifblock.xsl
+
+LANGUAGE_TRANSFORM function_decl.cpp.xml function.cpp.xml function defn2decl.xsl
+
+# Was in Makefile.gen, but cannot find the file
+#LANGUAGE_TRANSFORM function_asterisk.cpp.xml function_asterisk_decl.cpp.xml function defn2decl.xsl
+
+# Objective-C special transformations
+LANGUAGE_TRANSFORM class_implementation_m.m.xml class_interface_m.m.xml function interface2implementation.xsl
+LANGUAGE_TRANSFORM try_m.m.xml try.cpp.xml try keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM catch_m.m.xml catch_form.cpp.xml catch keyword2mkeyword.xsl
+
+# Objective-C try, catch, finally, throw from C++
+LANGUAGE_TRANSFORM try_m.m.xml try.cpp.xml try keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM catch_m.m.xml catch_form.cpp.xml catch keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM finally_m.m.xml finally_cs.cs.xml finally keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM throw_m.m.xml throw.cpp.xml throw keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM throw_base_m.m.xml throw_base.cpp.xml throw keyword2mkeyword.xsl
+LANGUAGE_TRANSFORM dynamic_m.m.xml synthesize_m.m.xml dynamic synthesize2dynamic.xsl
+
+LANGUAGE_TRANSFORM return.cpp.xml return_base.cpp.xml return insertexpr.xsl expr_filename=\"${CMAKE_CURRENT_BINARY_DIR}/expression.cpp.xml\"
+
+LANGUAGE_TEMPLATE c_cpp_mode_restrict.cpp.xml restrict c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
+LANGUAGE_TEMPLATE c_cpp_mode_mutable.cpp.xml mutable c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_enum.in c_cpp_mode_specifier.in c_cpp_mode_call.in c_cpp_mode_footer.in
+LANGUAGE_TEMPLATE c_cpp_mode_try.cpp.xml try c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_call.in c_cpp_mode_footer.in
+LANGUAGE_TEMPLATE c_cpp_mode_catch.cpp.xml catch c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_simple_decl.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_enum.in c_cpp_mode_footer.in
+LANGUAGE_TEMPLATE c_cpp_mode_class.cpp.xml class c_cpp_mode_header.in c_cpp_mode_basic.in c_cpp_mode_decl.in c_cpp_mode_single.in c_cpp_mode_call.in c_cpp_mode_footer.in
+

@@ -1,103 +1,103 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="lambda" filename="lambda_cpp">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="lambda" filename="lambda_cpp">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>call</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>auto</name></type> <name>f</name> <init>= <expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>auto</name></type> <name>ret</name> <init>= <expr><call><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> -&gt; <type><name>int</name></type> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <specifier>mutable</specifier> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <noexcept>noexcept<argument_list>()</argument_list></noexcept> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <attribute>[[]]</attribute> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <specifier>mutable</specifier> <noexcept>noexcept<argument_list>()</argument_list></noexcept> <attribute>[[]]</attribute> -&gt; <type><name>int</name></type> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[]</capture> <block>{ <return>return <expr><literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><call><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><name>a</name></argument>]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier><name>a</name></argument>]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><name>a</name></argument>, <argument><modifier>&amp;</modifier><name>b</name></argument>]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><name>a</name></argument>, <argument><name>b</name></argument>, <argument><name>c</name></argument>]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><lambda><capture>[<argument><modifier>=</modifier></argument>]</capture><parameter_list>(<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{ <return>return <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr>;</return>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>value</name> <init>= <expr><literal type="number">1</literal></expr></init></argument>]</capture> <block>{<return>return <expr><name>value</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>ptr</name> <init>= <expr><call><name><name>std</name><operator>::</operator><name>move</name></name><argument_list>(<argument><expr><name>ptr</name></expr></argument>)</argument_list></call></expr></init></argument>]</capture> <block>{<return>return <expr><operator>*</operator><name>ptr</name></expr>;</return>}</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>auto</name></type> <name>lambda</name> <init>= <expr><lambda><capture>[<argument><name>a</name> <init>= <expr><name><name>b</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></init></argument>]</capture> <block>{ <return>return <expr><name>a</name></expr>;</return> }</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><ternary><condition><expr><lambda><capture>[]</capture><block>{ <return>return <expr><literal type="number">1</literal></expr>;</return> }</block></lambda></expr> ?</condition><then> <expr><lambda><capture>[]</capture><block>{ <return>return <expr><literal type="number">1</literal></expr>;</return> }</block></lambda></expr> </then><else>: <expr><lambda><capture>[]</capture><block>{ <return>return <expr><literal type="number">1</literal></expr>;</return> }</block></lambda></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><ternary><condition><expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><literal type="number">1</literal></expr>;</return> }</block></lambda></expr> ?</condition><then> <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><literal type="number">1</literal></expr>;</return> }</block></lambda></expr> </then><else>: <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><literal type="number">1</literal></expr>;</return> }</block></lambda></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><ternary><condition><expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr> ?</condition><then> <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr> </then><else>: <expr><lambda><capture>[]</capture><parameter_list>()</parameter_list><block>{ <return>return <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</return> }</block></lambda></expr></else></ternary></expr>;</expr_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><lambda><capture>[]</capture><parameter_list>(<parameter><decl><type><name>thingy</name><modifier>*</modifier></type></decl></parameter>)</parameter_list> -&gt;<type><specifier>const</specifier> <name>int</name></type> <block>{ }</block></lambda><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 

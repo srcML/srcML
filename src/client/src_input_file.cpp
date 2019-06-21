@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <src_input_file.hpp>
@@ -35,7 +35,7 @@ int src_input_file(ParseQueue& queue,
     }
 
     // form the parsing request
-    ParseRequest* prequest = new ParseRequest;
+    std::shared_ptr<ParseRequest> prequest(new ParseRequest);
    
     if (option(SRCML_COMMAND_NOARCHIVE)) {
         prequest->disk_dir = srcml_request.output_filename;
@@ -50,11 +50,10 @@ int src_input_file(ParseQueue& queue,
     prequest->version = srcml_request.att_version;
     prequest->srcml_arch = srcml_arch;
     prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
-    prequest->total_num_inputs = srcml_request.input_sources.size();
 
     if (prequest->language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
-                prequest->language = l;
+        if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
+            prequest->language = l;
     
     prequest->disk_filename = input.resource;
 

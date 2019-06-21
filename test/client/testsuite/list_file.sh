@@ -5,7 +5,7 @@ source $(dirname "$0")/framework_test.sh
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
@@ -23,9 +23,17 @@ createfile sub/a.cpp.xml "$srcml"
 srcml sub/a.cpp.xml --list
 check "$output"
 
+srcml sub/a.cpp.xml -L
+check "$output"
+
 srcml --list sub/a.cpp.xml
+check "$output"
+
+srcml -L sub/a.cpp.xml
 check "$output"
 
 srcml --list < sub/a.cpp.xml
 check "$output"
 
+srcml -L < sub/a.cpp.xml
+check "$output"

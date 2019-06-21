@@ -15,14 +15,16 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-if(BUILD_UNIT_TESTS)
-    add_subdirectory(libsrcml)
-endif()
+include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src/libsrcml)
 
 if(BUILD_CLIENT_TESTS)
     add_subdirectory(client)
+endif()
+
+if(BUILD_LIBSRCML_TESTS)
+    add_subdirectory(libsrcml)
 endif()
 
 if(BUILD_PARSER_TESTS)

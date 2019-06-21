@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -30,14 +30,16 @@
   parameter.
 */
 
-#include "srcml.h"
+#include <stdio.h>
+#include <srcml.h>
 
 int main(int argc, char* argv[]) {
 
     /* Translate from a source-code file to a srcML file */
     int error = srcml("a.cpp", "a.cpp.xml");
 
-    if(error) puts(srcml_error_string());
+    if (error)
+      puts(srcml_error_string());
 
     return 0;
 }

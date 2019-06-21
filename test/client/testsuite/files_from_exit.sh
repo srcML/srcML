@@ -10,55 +10,55 @@ check_exit 1
 srcml --files-from nonexistent_list.txt -o nonexistent_list.xml
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt -o nonexistent_list.xml
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt -o nonexistent_list.xml
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.bz2.gz
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.bz2.gz
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.bz2
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.bz2
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.cpio.bz2
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.cpio.bz2
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.cpio.gz
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.cpio.gz
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.cpio
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.cpio
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.gz.bz2
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.gz.bz2
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.gz
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.gz
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.tar.bz2
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.tar.bz2
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.tar.gz
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.tar.gz
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.tar
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.tar
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.tbz2
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.tbz2
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.tgz
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.tgz
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.zip.bz2
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.zip.bz2
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.zip.gz
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.zip.gz
 check_exit 1
 
-srcml --files-from https://raw.githubusercontent.com/srcML/test-data/master/nonexistent_list.txt.zip
+srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/nonexistent_list.txt.zip
 check_exit 1
 
 # file list contains nonexistent srcml file

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * Source input from local files, stdin, and source archives for srcml parsing queue
  */
@@ -36,7 +36,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file);
 
 int src_input_libarchive(ParseQueue& queue,
                           srcml_archive* srcml_arch,
-						  const srcml_request_t& srcml_request,
+                          const srcml_request_t& srcml_request,
                           const srcml_input_src& input);
 
 #endif

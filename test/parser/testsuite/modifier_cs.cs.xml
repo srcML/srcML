@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="modifier" filename="modifier_cs.cs">
-<unit>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="modifier" filename="modifier_cs.cs">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name>int</name><modifier>*</modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name>int</name><modifier>*</modifier><modifier>*</modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name>int</name><modifier>*</modifier><modifier>*</modifier><modifier>*</modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name>refrence</name><modifier>&amp;</modifier></type> <name>t</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><specifier>public</specifier> <type><name>void</name></type> <name>func</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>reference</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> <block>{ }</block></function>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <decl_stmt><decl><type><name>int</name><modifier>&amp;&amp;</modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>public</specifier> <type><name>int</name><modifier>?</modifier></type> <name>Prop</name> <block>{
     <function_decl><name>get</name>;</function_decl>
     <function_decl><name>set</name>;</function_decl>
 }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function_decl><type><name>void</name></type> <name>foo</name><parameter_list>(<parameter><decl><type><modifier>ref</modifier> <name>bar</name></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function_decl><type><name>void</name></type> <name>foo</name><parameter_list>(<parameter><decl><type><modifier>out</modifier> <name>bar</name></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 

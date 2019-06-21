@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#" url="accessor" filename="accessor_cs">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="accessor" filename="accessor_cs">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <event>event <type><name>E</name></type> <name>e</name> <block>{
     <function><name>add</name> <block>{}</block></function>
 }</block></event>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <event>event <type><name>E</name></type> <name>e</name> <block>{
     <function><name>remove</name> <block>{}</block></function>
 }</block></event>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>private</specifier> <type><name>E</name></type> <name>e</name> <block>{
     <function><name>add</name> <block>{}</block></function>
 }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>private</specifier> <type><name>E</name></type> <name>e</name> <block>{
     <function><name>remove</name> <block>{}</block></function>
 }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>private</specifier> <type><name>E</name></type> <name>e</name> <block>{
     <function><name>get</name> <block>{}</block></function>
 }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>private</specifier> <type><name>E</name></type> <name>e</name> <block>{
     <function><name>set</name> <block>{}</block></function>
 }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>public</specifier> <specifier>abstract</specifier> <type><name>double</name></type> <name>Area</name> 
   <block>{
      <function_decl><name>get</name>;</function_decl>
@@ -45,7 +45,7 @@
   }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>public</specifier> <specifier>abstract</specifier> <type><name>double</name></type> <name>Area</name> 
   <block>{
      <function_decl><name>get</name>;</function_decl>
@@ -53,7 +53,7 @@
   }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>public</specifier> <specifier>abstract</specifier> <type><name>double</name></type> <name>Area</name> 
   <block>{
      <function_decl><specifier>private</specifier> <name>get</name>;</function_decl>
@@ -61,14 +61,14 @@
   }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>private</specifier> <type><name>E</name></type> <name>e</name> <block>{
     <function><name>get</name> <block>{}</block></function>
     <function><specifier>private</specifier> <name>set</name> <block>{}</block></function>
 }</block></property>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><specifier>private</specifier> <type><name>E</name></type> <name>e</name> <block>{
     <function><specifier>private</specifier> <name>get</name> <block>{}</block></function>
     <function><specifier>private</specifier> <name>set</name> <block>{}</block></function>

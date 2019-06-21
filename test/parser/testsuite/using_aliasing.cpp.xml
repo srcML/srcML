@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="using_aliasing">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="using_aliasing">
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <using>using <name>a</name> <init>= <type><specifier>const</specifier> <name>int</name></type></init>;</using>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <using>using <name>FunctionType</name> <init>= <type><function_decl><type><name>void</name></type> (<modifier>*</modifier>)<parameter_list>(<parameter><decl><type><name>double</name></type></decl></parameter>)</parameter_list>;</function_decl></type></init></using>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <using><template>template<parameter_list>&lt;&gt;</parameter_list></template> using <name>foo</name> <init>= <type><name><name>bar</name><argument_list type="generic">&lt;&gt;</argument_list></name></type></init>;</using>
 </unit>
 
-<unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <using><template>template<parameter_list>&lt;<parameter><type><name>class</name></type> <name>T</name></parameter>&gt;</parameter_list></template> using <name>Vec</name> <init>= <type><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name><name>Alloc</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></type></init>;</using>
 </unit>
 
