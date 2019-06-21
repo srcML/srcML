@@ -9,7 +9,7 @@ source $(dirname "$0")/framework_test.sh
 # filename flag
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="foo.cpp"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="foo.cpp"/>
 	STDOUT
 
 xmlcheck "$output"

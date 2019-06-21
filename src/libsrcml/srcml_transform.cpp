@@ -41,6 +41,8 @@
 
 #include <algorithm>
 
+#include <srcmlns.hpp>
+
 /**
  * srcml_append_transform_xpath_internal( * @param archive a srcml archive
  * @param xpath_string an XPath expression
@@ -455,6 +457,32 @@ int srcml_clear_transforms(srcml_archive* archive) {
     return SRCML_STATUS_OK;
 }
 
+static bool usesURI(xmlNode* cur_node, const std::string& URI);
+
+static bool usesURIChildren(xmlNode* a_node, const std::string& URI) {
+
+    for (xmlNode* cur_node = a_node; cur_node; cur_node = cur_node->next) {
+
+        if (cur_node->ns && cur_node->ns->prefix && URI == (const char*) cur_node->ns->href) {
+            return true;
+        }
+
+        if (usesURIChildren(cur_node->children, URI))
+            return true;
+    }
+
+    return false;
+}
+
+static bool usesURI(xmlNode* cur_node, const std::string& URI) {
+
+    if (cur_node->ns && cur_node->ns->prefix && URI == (const char*) cur_node->ns->href) {
+        return true;
+    }
+
+    return usesURIChildren(cur_node->children, URI);
+}
+
 /**
  * srcml_unit_apply_transforms
  * @param iarchive an input srcml archive
@@ -608,6 +636,31 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // very important to flush to make sure the unit contents are all present
             // also performs a free of resources
             xmlOutputBufferClose(output);
+
+            if (!nunit->namespaces)
+                nunit->namespaces = starting_namespaces;
+
+            if (usesURI(xmlDocGetRootElement(doc.get()), SRCML_CPP_NS_URI)) {
+
+                auto& view = nunit->namespaces->get<nstags::uri>();
+                auto it = view.find(SRCML_CPP_NS_URI);
+                if (it != view.end()) {
+                    view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                } else {
+                    nunit->namespaces->push_back({ SRCML_CPP_NS_DEFAULT_PREFIX, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+                }
+            }
+
+            if (usesURI(xmlDocGetRootElement(doc.get()), SRCML_OPENMP_NS_URI)) {
+
+                auto& view = nunit->namespaces->get<nstags::uri>();
+                auto it = view.find(SRCML_OPENMP_NS_URI);
+                if (it != view.end()) {
+                    view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                } else {
+                    nunit->namespaces->push_back({ SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD });
+                }
+            }
 
             break;
         }

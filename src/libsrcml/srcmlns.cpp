@@ -26,7 +26,7 @@
 // * Update prefixes
 // * Add an new uri's
 // * Or flags
-Namespaces& operator +=(Namespaces& namespaces, const Namespaces& otherns) {
+Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
 
     for (const auto& ns : otherns) {
 

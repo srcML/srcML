@@ -10,7 +10,6 @@ source $(dirname "$0")/framework_test.sh
 
 define info <<- 'STDOUT'
 	xmlns="http://www.srcML.org/srcML/src"
-	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
 	url="test"
@@ -19,7 +18,6 @@ define info <<- 'STDOUT'
 
 define longinfo <<- 'STDOUT'
 	xmlns="http://www.srcML.org/srcML/src"
-	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
 	url="test"
@@ -29,7 +27,7 @@ define longinfo <<- 'STDOUT'
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="test" filename="sub/unit.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="test" filename="sub/unit.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 	STDOUT
 
 xmlcheck "$srcml"
