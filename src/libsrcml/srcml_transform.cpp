@@ -651,6 +651,17 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 }
             }
 
+            if (usesURI(xmlDocGetRootElement(doc.get()), SRCML_OPENMP_NS_URI)) {
+
+                auto& view = nunit->namespaces->get<nstags::uri>();
+                auto it = view.find(SRCML_OPENMP_NS_URI);
+                if (it != view.end()) {
+                    view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                } else {
+                    nunit->namespaces->push_back({ SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD });
+                }
+            }
+
             break;
         }
 

@@ -91,3 +91,42 @@ check sub/b.cpp.xml "$output_empty"
 
 srcml --xpath=src:name -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$output_empty"
+
+# test for omp
+define ompsrcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="REVISION" language="C">
+	<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name></omp:directive></cpp:pragma>
+	</unit>
+	STDOUT
+
+define xpathout <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+	<unit xmlns:omp="http://www.srcML.org/srcML/openmp" revision="1.0.0" language="C" item="1"><omp:directive>omp <omp:name>parallel</omp:name></omp:directive></unit>
+
+	<unit xmlns:omp="http://www.srcML.org/srcML/openmp" revision="1.0.0" language="C" item="2"><omp:name>parallel</omp:name></unit>
+
+	</unit>
+	STDOUT
+
+define xpathoutcpp <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="REVISION" language="C" item="1"><cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name></omp:directive></cpp:pragma></unit>
+
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C" item="2"><cpp:directive>pragma</cpp:directive></unit>
+
+	</unit>
+	STDOUT
+
+createfile ompsrcml.xml "$ompsrcml"
+
+srcml --xpath="//omp:*" ompsrcml.xml
+check "$xpathout"
+
+
+srcml --xpath="//cpp:*" ompsrcml.xml
+check "$xpathoutcpp"
