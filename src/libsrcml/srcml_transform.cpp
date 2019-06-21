@@ -630,8 +630,14 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 nunit->namespaces = starting_namespaces;
 
             if (usesURI(fullresults->nodeTab[i], SRCML_CPP_NS_URI)) {
+
                 auto& view = nunit->namespaces->get<nstags::uri>();
-                view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                auto it = view.find(SRCML_CPP_NS_URI);
+                if (it != view.end()) {
+                    view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                } else {
+                    nunit->namespaces->push_back({ SRCML_CPP_NS_DEFAULT_PREFIX, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+                }
             }
 
             break;

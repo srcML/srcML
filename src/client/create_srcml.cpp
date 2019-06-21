@@ -309,16 +309,13 @@ void create_srcml(const srcml_request_t& srcml_request,
             }
 
             srcml_append_transform_param(srcml_arch.get(), name.c_str(), value.c_str());
-        }
-/*
-        // @todo Why is this not required?
+
         } else if (protocol == "relaxng") {
-            if (apply_relaxng(in_arch, resource) != SRCML_STATUS_OK) {
+            if (apply_relaxng(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
                 exit(-1);
             }
         }
-*/
     }
 
     // start tracing
