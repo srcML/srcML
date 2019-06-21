@@ -457,19 +457,30 @@ int srcml_clear_transforms(srcml_archive* archive) {
     return SRCML_STATUS_OK;
 }
 
+static bool usesURI(xmlNode* cur_node, const std::string& URI);
 
-static bool usesURI(xmlNode* a_node, const std::string& URI) {
+static bool usesURIChildren(xmlNode* a_node, const std::string& URI) {
 
     for (xmlNode* cur_node = a_node; cur_node; cur_node = cur_node->next) {
+
         if (cur_node->ns && cur_node->ns->prefix && URI == (const char*) cur_node->ns->href) {
             return true;
         }
 
-        if (usesURI(cur_node->children, URI))
+        if (usesURIChildren(cur_node->children, URI))
             return true;
     }
 
     return false;
+}
+
+static bool usesURI(xmlNode* cur_node, const std::string& URI) {
+
+    if (cur_node->ns && cur_node->ns->prefix && URI == (const char*) cur_node->ns->href) {
+        return true;
+    }
+
+    return usesURIChildren(cur_node->children, URI);
 }
 
 /**
@@ -629,7 +640,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             if (!nunit->namespaces)
                 nunit->namespaces = starting_namespaces;
 
-            if (usesURI(fullresults->nodeTab[i], SRCML_CPP_NS_URI)) {
+            if (usesURI(xmlDocGetRootElement(doc.get()), SRCML_CPP_NS_URI)) {
 
                 auto& view = nunit->namespaces->get<nstags::uri>();
                 auto it = view.find(SRCML_CPP_NS_URI);

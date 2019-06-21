@@ -45,17 +45,6 @@ Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
         }
     }
 
-    // @FIXME A total hack
-    if (otherns.get<nstags::uri>().find(SRCML_CPP_NS_URI) != otherns.get<nstags::uri>().end()) {
-        if (otherns.get<nstags::uri>().find(SRCML_CPP_NS_URI)->flags & NS_USED) {
-            auto& view = namespaces.get<nstags::uri>();
-            view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
-        } else {
-            auto& view = namespaces.get<nstags::uri>();
-            view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
-        }
-    }
-
     return namespaces;
 }
 
