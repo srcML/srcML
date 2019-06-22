@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML translator; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * Handles comments as separate tokens in the character stream.
  */
@@ -173,7 +173,7 @@ COMMENT_TEXT {
 
     '\042' /* '\"' */
         { dquote_count = 1; }
-        (options { greedy = true; } : '\042' { ++dquote_count; })*
+        (options { greedy = true; } : { prevLA != '\\' }? '\042' { ++dquote_count; })*
     {
         if ((noescape && (dquote_count % 2 == 1)) ||
             (!noescape && (prevLA != '\\') && (mode == STRING_END))) {

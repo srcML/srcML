@@ -6,12 +6,12 @@ source $(dirname "$0")/framework_test.sh
 # test encoding flag on a unit
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
 	STDOUT
 
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="sub/a.cpp"/>
 	STDOUT
 
 xmlcheck "$srcml"

@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_SRCML_UTILTIES_HPP
@@ -23,7 +23,18 @@
 
 #include <archive.h>
 #include <archive_entry.h>
+#include <srcml.h>
 #include <memory>
+#include <OpenFileLimiter.hpp>
+
+// std::shared_ptr deleter for srcml archive
+// some compilers will not use the default_delete<srcml_archive> for std::shared_ptr
+inline void srcml_archive_deleter(srcml_archive* arch) { 
+    srcml_archive_close(arch);
+    srcml_archive_free(arch);
+
+    OpenFileLimiter::close();
+}
 
 // std::unique_ptr deleter functions for srcml
 // usage: std::unique<srcml_archive> p(srcml_archive_create());
@@ -35,6 +46,8 @@ namespace std {
         void operator()(srcml_archive* arch) { 
             srcml_archive_close(arch);
             srcml_archive_free(arch);
+
+            OpenFileLimiter::close();
         }
     };
 

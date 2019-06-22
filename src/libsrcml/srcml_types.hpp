@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_SRCML_TYPES_HPP
@@ -221,8 +221,12 @@ struct srcml_unit {
 
     /** srcml from read and after parsing */
     std::string srcml;
+    boost::optional<std::string> srcml_revision;
+    int currevision = -1;
     boost::optional<std::string> srcml_fragment;
+    boost::optional<std::string> srcml_fragment_revision;
     boost::optional<std::string> srcml_raw;
+    boost::optional<std::string> srcml_raw_revision;
 
     /** src from read */
     boost::optional<std::string> src;

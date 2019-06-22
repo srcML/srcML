@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include <srcsax.hpp>
 #include <sax2_srcsax_handler.hpp>
@@ -52,7 +52,7 @@ static xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buf
  *
  * @returns srcsax_context context to be used for srcML parsing.
  */
-srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input) {
+srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlParserInputBuffer> input) {
 
     if (input == 0)
         return 0;
@@ -66,15 +66,13 @@ srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPt
     try {
         context = new srcsax_context();
     } catch (...) {
-        xmlFreeParserInputBuffer(input);
         return 0;
     }
 
-    context->input = input;
+    context->input = std::move(input);
 
-    xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input.get(), encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
     if (libxml2_context == nullptr) {
-        xmlFreeParserInputBuffer(input);
         delete context;
         return 0;
     }

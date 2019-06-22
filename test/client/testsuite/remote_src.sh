@@ -5,7 +5,7 @@ source $(dirname "$0")/framework_test.sh
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 	STDOUT
 
@@ -13,7 +13,7 @@ define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	<unit revision="REVISION" language="C++" filename="raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>

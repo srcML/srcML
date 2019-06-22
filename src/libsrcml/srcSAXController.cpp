@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcSAXController.hpp>
@@ -33,9 +33,9 @@
  *
  * Constructor
  */
-srcSAXController::srcSAXController(xmlParserInputBufferPtr input) {
+srcSAXController::srcSAXController(std::unique_ptr<xmlParserInputBuffer> input) {
 
-    context = srcsax_create_context_parser_input_buffer(input);
+    context = srcsax_create_context_parser_input_buffer(std::move(input));
     if (context == NULL)
         throw std::string("File does not exist");
 }

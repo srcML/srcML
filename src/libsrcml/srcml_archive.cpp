@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml.h>
@@ -386,8 +386,9 @@ int srcml_archive_enable_option(struct srcml_archive* archive, unsigned long lon
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (archive->options & SRCML_OPTION_CPP)
-        archive->options |= SRCML_OPTION_CPP_DECLARED;
+    if (archive->options & SRCML_OPTION_CPP) {
+//        archive->options |= SRCML_OPTION_CPP_DECLARED;
+    }
 
     archive->options |= option;
 
@@ -483,17 +484,12 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
     std::string suri = uri;
     if (suri == SRCML_CPP_NS_URI) {
         archive->options |= SRCML_OPTION_CPP;
-        archive->options |= SRCML_OPTION_CPP_DECLARED;
+//        archive->options |= SRCML_OPTION_CPP_DECLARED;
     } else if (suri == SRCML_ERROR_NS_URI) {
         archive->options |= SRCML_OPTION_DEBUG;
     } else if (suri == SRCML_POSITION_NS_URI) {
         archive->options |= SRCML_OPTION_POSITION;
     }
-/*
-    // @todo could this be set elsewhere?
-    else if (uri == SRCML_DIFF_NS_URI)
-        issrcdiff = true;
-*/
 
     return SRCML_STATUS_OK;
 }
@@ -1040,11 +1036,11 @@ int srcml_archive_write_open_io(struct srcml_archive* archive, void * context, i
  * Reads and sets the open type as well as gathers the attributes
  * and sets the options from the opened srcML Archive.
  */
-static int srcml_archive_read_open_internal(struct srcml_archive* archive, xmlParserInputBufferPtr input) {
+static int srcml_archive_read_open_internal(struct srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input) {
 
     try {
 
-        archive->reader = new srcml_sax2_reader(archive, input, archive->revision_number);
+        archive->reader = new srcml_sax2_reader(archive, std::move(input));
 
     } catch(...) {
 
@@ -1071,9 +1067,9 @@ int srcml_archive_read_open_filename(struct srcml_archive* archive, const char* 
     if (archive == nullptr || srcml_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    auto input = xmlParserInputBufferCreateFilename(srcml_filename, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateFilename(srcml_filename, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE));
 
-    return srcml_archive_read_open_internal(archive, input);
+    return srcml_archive_read_open_internal(archive, std::move(input));
 }
 
 /**
@@ -1093,18 +1089,19 @@ int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* bu
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlCharEncoding encoding = archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE;
-    auto input = xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding);
+    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding));
 
     // @todo Really do not think this is needed. xmlAllocParserInputBuffer() is called inside of xmlParserInputBufferCreateMem()
     if (encoding != XML_CHAR_ENCODING_NONE && input && input->encoder) {
 
 #ifdef LIBXML2_NEW_BUFFER
-        xmlParserInputBufferPtr temp_parser = xmlAllocParserInputBuffer(encoding);
-        xmlBufPtr save_buf = input->raw;
-        input->raw = input->buffer;
-        input->buffer = temp_parser->buffer;
-        temp_parser->buffer = save_buf;
-        xmlFreeParserInputBuffer(temp_parser);
+        {
+            std::unique_ptr<xmlParserInputBuffer> temp_parser(xmlAllocParserInputBuffer(encoding));
+            xmlBufPtr save_buf = input->raw;
+            input->raw = input->buffer;
+            input->buffer = temp_parser.get()->buffer;
+            temp_parser.get()->buffer = save_buf;
+        }
 #else
         if (input->raw)
             xmlBufferFree(input->raw);
@@ -1113,10 +1110,10 @@ int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* bu
         input->buffer = xmlBufferCreate();
 #endif
 
-        xmlParserInputBufferGrow(input, buffer_size > 4096 ? (int)buffer_size : 4096);
+        xmlParserInputBufferGrow(input.get(), buffer_size > 4096 ? (int)buffer_size : 4096);
     }
 
-    return srcml_archive_read_open_internal(archive, input);
+    return srcml_archive_read_open_internal(archive, std::move(input));
 }
 
 /**
@@ -1134,9 +1131,9 @@ int srcml_archive_read_open_FILE(struct srcml_archive* archive, FILE* srcml_file
     if (archive == nullptr || srcml_file == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    auto input = xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE));
 
-    return srcml_archive_read_open_internal(archive, input);
+    return srcml_archive_read_open_internal(archive, std::move(input));
 }
 
 /**
@@ -1154,10 +1151,9 @@ int srcml_archive_read_open_fd(struct srcml_archive* archive, int srcml_fd) {
     if (archive == nullptr || srcml_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    auto input = xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
-    input->closecallback = nullptr;
+    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE));
 
-    return srcml_archive_read_open_internal(archive, input);
+    return srcml_archive_read_open_internal(archive, std::move(input));
 }
 
 /**
@@ -1177,9 +1173,9 @@ int srcml_archive_read_open_io(struct srcml_archive* archive, void * context, in
     if (archive == nullptr || context == nullptr || read_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    auto input = xmlParserInputBufferCreateIO(read_callback, close_callback, context, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE);
+    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateIO(read_callback, close_callback, context, archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE));
 
-    return srcml_archive_read_open_internal(archive, input);
+    return srcml_archive_read_open_internal(archive, std::move(input));
 }
 
 /******************************************************************************
@@ -1328,7 +1324,7 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
  ******************************************************************************/
 
 /**
- * srcml_archive_close
+ * 3bf7e136e0a6c7494c6f0030a5d0e42502989ae7
  * @param archive an open srcml archive
  *
  * Close a srcML archive opened using srcml_archive_read_open_*

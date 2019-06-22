@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml_pretty.hpp>
@@ -25,6 +25,7 @@
 #include <vector>
 #include <cstring>
 #include <SRCMLStatus.hpp>
+#include <srcml_utilities.hpp>
 
 std::string expand_namespace(const std::string& separator, size_t ns_size) {
     std::string ns = "";
@@ -235,7 +236,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     if (output_template.header) {
         for (const auto& arg : output_template.header_args) {
 
-            const char* param = acquire_metadata(srcml_arch, NULL, arg);
+            const char* param = acquire_metadata(srcml_arch, nullptr, arg);
             if (param) {
                 header_params.push_back(std::string(param));
             }
@@ -249,7 +250,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
             pretty_print(*output_template.header, header_params);
     }
 
-    srcml_unit* unit = 0;
+    std::unique_ptr<srcml_unit> unit;
 
     if (unit_num > 0 && !(xml)) {
         while (unit_count != unit_num) {
@@ -259,7 +260,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
         }
     }
     else {
-        unit = srcml_archive_read_unit(srcml_arch);
+        unit.reset(srcml_archive_read_unit(srcml_arch));
     }
 
     if (output_template.body) {
@@ -300,7 +301,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                     }
                 }
                 else {
-                    const char* param = acquire_metadata(srcml_arch, unit, arg);
+                    const char* param = acquire_metadata(srcml_arch, unit.get(), arg);
                     if (param) {
                         body_params.push_back(std::string(param));
                     }
@@ -315,7 +316,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 pretty_print(*output_template.body, body_params);
 
             body_params.clear();
-            unit = srcml_archive_read_unit(srcml_arch);
+            unit.reset(srcml_archive_read_unit(srcml_arch));
 
             // When you want to print only the information from a specific unit
             if (unit_num > 0 && unit_num == unit_count && !(xml)) {
@@ -333,7 +334,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 footer_params.push_back(std::to_string(unit_count + 1));
             }
             else {
-                const char* param = acquire_metadata(srcml_arch, NULL, arg);
+                const char* param = acquire_metadata(srcml_arch, nullptr, arg);
                 if (param) {
                     footer_params.push_back(std::string(param));
                 }

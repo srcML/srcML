@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #ifndef INCLUDED_SRCSAX_HPP
 #define INCLUDED_SRCSAX_HPP
@@ -23,6 +23,7 @@
 #include <srcsax_handler.hpp>
 
 #include <libxml/parser.h>
+#include <libxml2_utilities.hpp>
 
 /**
  * srcsax_context
@@ -49,14 +50,14 @@ public:
     /* Internal context handling NOT FOR PUBLIC USE */
 
     /** xml parser input buffer */
-    xmlParserInputBufferPtr input = nullptr;
+    std::unique_ptr<xmlParserInputBuffer> input;
 
     /** internally used libxml2 context */
     xmlParserCtxtPtr libxml2_context = nullptr;
 };
 
 /* srcSAX context creation/open functions */
-srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input);
+srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlParserInputBuffer> input);
 
 /* srcSAX free function */
 void srcsax_free_context(srcsax_context * context);

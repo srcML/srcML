@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <create_src.hpp>
@@ -33,16 +33,17 @@
 #include <libarchive_utilities.hpp>
 #include <srcml_utilities.hpp>
 
-static srcml_archive* srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
+static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
 
-    srcml_archive* arch = srcml_archive_create();
+    OpenFileLimiter::open();
+    std::unique_ptr<srcml_archive> arch(srcml_archive_create());
     if (!arch)
         return 0;
 
     int status = SRCML_STATUS_OK;
 
     if (revision) {
-        status = srcml_archive_set_srcdiff_revision(arch, *revision);
+        status = srcml_archive_set_srcdiff_revision(arch.get(), *revision);
         if (status != SRCML_STATUS_OK)
             return 0;
     }
@@ -73,9 +74,9 @@ static srcml_archive* srcml_read_open_internal(const srcml_input_src& input_sour
 
     // open input source
     if (curinput.fd) {
-        status = srcml_archive_read_open_fd(arch, *curinput.fd);
+        status = srcml_archive_read_open_fd(arch.get(), *curinput.fd);
     } else {
-        status = srcml_archive_read_open(arch, input_source);
+        status = srcml_archive_read_open(arch.get(), input_source);
     }
     if (status != SRCML_STATUS_OK) {
         SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
@@ -97,7 +98,7 @@ void create_src(const srcml_request_t& srcml_request,
         TraceLog log;
 
         for (const auto& input_source : input_sources) {
-            std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_source, srcml_request.revision));
+            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
 
             src_output_filesystem(arch.get(), destination, log);
         }
@@ -107,7 +108,7 @@ void create_src(const srcml_request_t& srcml_request,
 
         // srcml->src extract to stdout
 
-        std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
+        auto arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
 
         // move to the correct unit
         for (int i = 1; i < srcml_request.unit; ++i) {
@@ -156,7 +157,7 @@ void create_src(const srcml_request_t& srcml_request,
 
     } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
 
-        std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
+        auto arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
 
         // move to the correct unit
         for (int i = 1; i < srcml_request.unit; ++i) {
@@ -218,7 +219,7 @@ void create_src(const srcml_request_t& srcml_request,
         // extract all the srcml archives to this libarchive
         for (const auto& input_source : input_sources) {
 
-            std::unique_ptr<srcml_archive> arch(srcml_read_open_internal(input_source, srcml_request.revision));
+            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
 
             // extract this srcml archive to the source archive
             src_output_libarchive(arch.get(), ar.get());

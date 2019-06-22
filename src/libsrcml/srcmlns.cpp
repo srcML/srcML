@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcmlns.hpp>
@@ -26,7 +26,7 @@
 // * Update prefixes
 // * Add an new uri's
 // * Or flags
-Namespaces& operator +=(Namespaces& namespaces, const Namespaces& otherns) {
+Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
 
     for (const auto& ns : otherns) {
 
@@ -97,3 +97,10 @@ std::string& srcml_uri_normalize(std::string& uri) {
 
     return uri;
 }
+
+
+bool issrcdiff(const Namespaces& namespaces) {
+   auto& view = namespaces.get<nstags::uri>();
+   return view.find(SRCML_DIFF_NS_URI) != view.end();
+}
+

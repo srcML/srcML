@@ -15,9 +15,10 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # set icons
+install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION .)
 set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 
@@ -275,7 +275,7 @@ ssize_t UTF8CharBuffer::readChars() {
         ssize_t insize = sio.read_callback ? (int) sio.read_callback(sio.context, raw.data() + inbytesleft, raw.size() - inbytesleft) : 0;
         if (insize == -1) {
             fprintf(stderr, "Error reading: %s", strerror(errno));
-            exit(1);
+            return 0;
         }
 
         // EOF
@@ -357,7 +357,7 @@ ssize_t UTF8CharBuffer::readChars() {
         if (ic == (iconv_t) -1) {
             if (errno == EINVAL) {
                 fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.c_str());
-                exit(1);
+                return 0;
             }
         }
 
@@ -389,7 +389,7 @@ ssize_t UTF8CharBuffer::readChars() {
         size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
         if (binsize == (size_t) -1) {
             fprintf(stderr, "%s\n", strerror(errno));
-            exit(1);
+            return 0;
         }
 
         // number of bytes cooked is the total size minus the bytes that were "left", i.e., not used, by iconv()

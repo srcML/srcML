@@ -15,7 +15,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #
 # This is the function used for building exeucables for srcML.
@@ -26,6 +26,9 @@
 # - All subsequent arguments are linked as libraries.
 #
 
+# strip executables
+set(CPACK_STRIP_FILES ON)
+ 
 set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
 
 file(DOWNLOAD https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp ${CMAKE_EXTERNAL_SOURCE_DIR}/CLI11.hpp)
@@ -72,11 +75,7 @@ else()
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-if(APPLE)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"-u\" \"-r\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
-elseif(NOT WIN32)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
-endif()
+# strip for release mode
+set_target_properties(srcml PROPERTIES LINK_FLAGS_RELEASE -s)
 
-install(TARGETS srcml)
-message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+install(TARGETS srcml COMPONENT SRCML)

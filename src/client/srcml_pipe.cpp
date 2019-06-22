@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml_pipe.hpp>
@@ -46,7 +46,7 @@ void srcml_pipe(srcml_input_src& input, srcml_pipe_process process, srcml_reques
 #else
     HANDLE read_pipe;
     HANDLE write_pipe;
-    CreatePipe(&read_pipe,&write_pipe, NULL, 0);
+    CreatePipe(&read_pipe,&write_pipe, nullptr, 0);
 
     fds[1] = _open_osfhandle((intptr_t)write_pipe, 0);
     fds[0] = _open_osfhandle((intptr_t)read_pipe, _O_RDONLY);

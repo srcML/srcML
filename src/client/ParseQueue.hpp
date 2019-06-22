@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef PARSE_QUEUE_HPP
@@ -29,6 +29,7 @@
 #include <mutex>
 #include <srcml_consume.hpp>
 #include <memory>
+#include <srcml_utilities.hpp>
 
 class ParseQueue {
 public:
