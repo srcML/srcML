@@ -53,6 +53,21 @@ std::string normalize_xpath(std::string nxpath) {
             if (nxpath[6] != '/')
                 nxpath.insert(6, "//");
         }
+
+    } else if (nxpath.substr(0, 6) == "string") {
+
+        while (nxpath[6] == ' ')
+            nxpath.erase(6, 1);
+
+        if (nxpath[6] == '(') {
+
+            while (nxpath[7] == ' ')
+                nxpath.erase(7, 1);
+
+            if (nxpath[7] != '/')
+                nxpath.insert(7, "//");
+        }
+
     } else if (nxpath[0] != '/' && nxpath[0] != '(') {
         nxpath.insert(0, "//");
     }
