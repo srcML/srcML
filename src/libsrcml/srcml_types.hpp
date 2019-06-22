@@ -48,10 +48,12 @@ const unsigned int SRCML_OPTION_DEBUG             = 1<<10;
 const unsigned int SRCML_OPTION_FRAGMENT          = 1<<11;
 /** User requested cpp */
 const unsigned int SRCML_OPTION_CPP_DECLARED      = 1<<12;
- /** Create an archive */
+/** Create an archive */
 const unsigned int SRCML_OPTION_ARCHIVE           = 1<<13;
- /** Output hash attribute on each unit (default: on) */
+/** Output hash attribute on each unit (default: on) */
 const unsigned int SRCML_OPTION_HASH              = 1<<14;
+/** Expand tabs into spaces on input */
+const unsigned int SRCML_OPTION_EXPAND_TABS       = 1<<15;
 
 /** All default enabled options */
 const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_NAMESPACE_DECL);

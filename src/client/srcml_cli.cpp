@@ -214,6 +214,10 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
         });
 
+    app.add_flag_callback("--no-tabs",      [&]() { /* *srcml_request.markup_options |= SRCML_HASH; */},
+        "Expand tabs on input")
+        ->group("CREATING SRCML");
+
     auto language =
     app.add_option("--language,-l", srcml_request.att_language,
         "Set the source-code language to C, C++, C#, or Java. Required for --text option")
