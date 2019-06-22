@@ -114,6 +114,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
     // @todo This doesn't make sense in all cases, and should be revisited
     srcml_archive_disable_solitary_unit(out_arch);
 
+    // normalize the path so that it is "//"
     std::string nxpath = normalize_xpath(transform_input.c_str());
 
     // Call appropriate XPath transform
