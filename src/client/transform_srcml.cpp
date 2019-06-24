@@ -39,7 +39,7 @@
 std::string normalize_xpath(std::string nxpath) {
 
     // match function call to adjust where "//" is inserted
-    static std::regex funcstart("^\\s*[a-zA-Z:-_]*\\s*\\(\\s*");
+    static std::regex funcstart("^\\s*[[:alnum:]:-_]*\\s*\\(\\s*");
     static std::regex funcend("\\)\\s*$");
     std::smatch start;
     std::regex_search(nxpath, start, funcstart);
