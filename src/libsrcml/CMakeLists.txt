@@ -96,7 +96,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 if(NOT APPLE)
-	set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+    set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
 endif()
 
 if(APPLE)
