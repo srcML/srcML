@@ -28,6 +28,12 @@
   <xsl:copy-of select="."/>
 </xsl:template>
 
+<xsl:template match="src:unit">
+    <unit xmlns:cpp="http://www.srcML.org/srcML/cpp">
+        <xsl:apply-templates select="@*|node()"/>
+    </unit>
+</xsl:template>
+
 <xsl:template match="text()[contains(., ' ')]">
   <xsl:value-of select="substring-before(., ' ')"/>
   <xsl:copy-of select="$cmt"/>

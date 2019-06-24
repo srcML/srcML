@@ -21,6 +21,7 @@
  */
 
 #include <sax2_srcsax_handler.hpp>
+#include <srcmlns.hpp>
 #include <string>
 #include <algorithm>
 #include <cstring>
@@ -468,6 +469,15 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto state = (sax2_srcsax_handler*) ctxt->_private;
     if (state == nullptr)
         return;
+
+    // collect cpp prefix
+    // @todo Generalize this
+    for (int i = 0; i < nb_namespaces; ++i) {
+
+        if (std::string((const char*) namespaces[i * 2 + 1]) == SRCML_CPP_NS_URI) {
+            state->cpp_prefix = namespaces[i * 2] ? "" : (const char*) namespaces[i * 2];
+        }
+    }
 
     update_ctx(ctx);
 
