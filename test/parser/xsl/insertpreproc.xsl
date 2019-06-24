@@ -3,7 +3,7 @@
     xmlns:src="http://www.srcML.org/srcML/src"
     xmlns="http://www.srcML.org/srcML/src"
     xmlns:cpp="http://www.srcML.org/srcML/cpp"
-    exclude-result-prefixes="src cpp"
+    exclude-result-prefixes="src"
     version="1.0">
 
 <!--
@@ -20,6 +20,12 @@
 
 <xsl:template match="src:name | src:comment | src:literal | cpp:*">
   <xsl:copy-of select="."/>
+</xsl:template>
+
+<xsl:template match="src:unit">
+    <unit xmlns:cpp="http://www.srcML.org/srcML/cpp">
+        <xsl:apply-templates select="@*|node()"/>
+    </unit>
 </xsl:template>
 
 <xsl:template match="text()[contains(., ' ')]">
