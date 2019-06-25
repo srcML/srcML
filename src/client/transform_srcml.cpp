@@ -39,15 +39,18 @@
 std::string normalize_xpath(std::string nxpath) {
 
     // match function call to adjust where "//" is inserted
-    static std::regex funcstart("^\\s*[[:alnum:]:-_]*\\s*\\(\\s*");
-    static std::regex funcend("\\)\\s*$");
-    std::smatch start;
-    std::regex_search(nxpath, start, funcstart);
-    std::smatch end;
-    std::regex_search(nxpath, end, funcend);
+    static std::regex funcstart("^\\s*[a-zA-Z0-9:-_]*\\s*\\(\\s*");
+
+    // just check if the start looks like a function call
     size_t axispos = 0;
-    if (start.size() == 1 && end.size() == 1) {
-        axispos = start.str(0).size();
+    while (true) {
+
+        std::smatch start;
+        std::regex_search(nxpath.substr(axispos), start, funcstart);
+        if (start.size() == 0)
+            break;
+
+        axispos += start.str(0).size();
     }
 
     // check axis part for starting context
