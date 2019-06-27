@@ -682,6 +682,7 @@ public:
     bool is_qmark = false;
     bool notdestructor = false;
     bool operatorname = false;
+    std::stack<std::string> class_namestack;
 
     bool skip_ternary = false;
 
@@ -3224,18 +3225,15 @@ class_header[] { ENTRY_DEBUG } :
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
     {
-
         setMode(MODE_CLASS_NAME);
 
+        class_namestack.push(LT(1)->getText());
     }
-
         // suppress ()* warning
         ({ LA(1) != FINAL }? compound_name | keyword_name)
 
     {
-
         clearMode(MODE_CLASS_NAME);
-
     }
 
         (options { greedy = true; } : { LA(1) == FINAL }? specifier)*
@@ -3416,7 +3414,17 @@ rcurly[] { ENTRY_DEBUG } :
         {
 
             // end any elements inside of the block
-            endDownToMode(MODE_TOP);
+            // basically, endDownToMode(MODE_TOP), but checking for class ending
+            if (inTransparentMode(MODE_TOP)) {
+                while (size() > 1 && !inMode(MODE_TOP)) {
+                    if (inMode(MODE_CLASS))
+                        if (!class_namestack.empty()) {
+                            class_namestack.pop();
+                        }
+
+                    endMode();
+                }
+            }
 
             // flush any whitespace tokens since sections should
             // end at the last possible place
@@ -4401,8 +4409,9 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  (type_count == (specifier_count + attribute_count + template_count)) &&
 
                  (
-                    // inside of a C++ class definition
-                    inMode(MODE_ACCESS_REGION) ||
+                    // inside of a C++ class definition must match class name
+                    // @todo Shouldn't this also be the case for Java? Or is no return type the only rule needed for Java
+                    (inMode(MODE_ACCESS_REGION) && !class_namestack.empty() && !namestack[0].empty() && class_namestack.top() == namestack[0]) ||
 
                     (inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE)) ||
 
