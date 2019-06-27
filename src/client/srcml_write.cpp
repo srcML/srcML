@@ -208,7 +208,8 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         }
 
     } else if (request->errormsg) {
-        SRCMLstatus(WARNING_MSG, *(request->errormsg));
+        if (!request->errormsg->empty())
+            SRCMLstatus(WARNING_MSG, *(request->errormsg));
 
     } else {
         SRCMLstatus(WARNING_MSG, "Internal error " + std::to_string(request->status));

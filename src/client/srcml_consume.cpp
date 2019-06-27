@@ -104,7 +104,16 @@ void srcml_consume(int /* thread_pool_id */, std::shared_ptr<ParseRequest> reque
         request->status = srcml_unit_parse_filename(request->unit.get(), request->disk_filename->c_str());
     }
     else if (request->needsparsing) {
+
         request->status = srcml_unit_parse_memory(request->unit.get(), request->buffer.data(), request->buffer.size());
+
+    }
+    if (request->status == SRCML_STATUS_INVALID_ARGUMENT) {
+        request->status = SRCML_STATUS_IO_ERROR;
+        request->errormsg = "";
+        request->unit.reset();
+        write_queue->schedule(request);
+        exit(1);
     }
     if (request->status != SRCML_STATUS_OK) {
         request->errormsg = "srcml: Unable to open file " + original_filename;

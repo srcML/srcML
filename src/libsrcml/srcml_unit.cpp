@@ -450,10 +450,24 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
     //        unit->archive->options |= SRCML_OPTION_CPP;
 
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
+
+    // verify encoding here instead of later, when more difficult to handle errors
+    if (src_encoding) {
+        auto ic = iconv_open("UTF-8", src_encoding);
+        if (ic == (iconv_t) -1) {
+            if (errno == EINVAL) {
+                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n", src_encoding);
+                return SRCML_STATUS_INVALID_ARGUMENT;
+            }
+        }
+        iconv_close(ic);
+    }
+
     bool output_hash = !unit->hash && unit->archive->options & SRCML_OPTION_HASH;
 
     UTF8CharBuffer* input = 0;
     try {
+
         input = createUTF8CharBuffer(src_encoding, output_hash, unit->hash);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
