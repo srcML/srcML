@@ -46,7 +46,8 @@ std::string normalize_xpath(std::string nxpath) {
     while (true) {
 
         std::smatch start;
-        std::regex_search(nxpath.substr(axispos), start, funcstart);
+        std::string rest = nxpath.substr(axispos);
+        std::regex_search(rest, start, funcstart);
         if (start.size() == 0)
             break;
 
