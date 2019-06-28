@@ -27,6 +27,8 @@
 #include <string>
 #include <SRCMLStatus.hpp>
 
+#include <regex>
+
 /*
     normalize the xpath 
     src:function -> //src:function
@@ -36,40 +38,25 @@
 */
 std::string normalize_xpath(std::string nxpath) {
 
-    // trim any leading whitespace
-    while (nxpath[0] == ' ')
-        nxpath.erase(0, 1);
+    // match function call to adjust where "//" is inserted
+    static std::regex funcstart("^\\s*[a-zA-Z0-9:-_]*\\s*\\(\\s*");
 
-    if (nxpath.substr(0, 5) == "count") {
+    // just check if the start looks like a function call
+    size_t axispos = 0;
+    while (true) {
 
-        while (nxpath[5] == ' ')
-            nxpath.erase(5, 1);
+        std::smatch start;
+        std::string rest = nxpath.substr(axispos);
+        std::regex_search(rest, start, funcstart);
+        if (start.size() == 0)
+            break;
 
-        if (nxpath[5] == '(') {
+        axispos += start.str(0).size();
+    }
 
-            while (nxpath[6] == ' ')
-                nxpath.erase(6, 1);
-
-            if (nxpath[6] != '/')
-                nxpath.insert(6, "//");
-        }
-
-    } else if (nxpath.substr(0, 6) == "string") {
-
-        while (nxpath[6] == ' ')
-            nxpath.erase(6, 1);
-
-        if (nxpath[6] == '(') {
-
-            while (nxpath[7] == ' ')
-                nxpath.erase(7, 1);
-
-            if (nxpath[7] != '/')
-                nxpath.insert(7, "//");
-        }
-
-    } else if (nxpath[0] != '/' && nxpath[0] != '(') {
-        nxpath.insert(0, "//");
+    // check axis part for starting context
+    if (nxpath[axispos] != '/') {
+        nxpath.insert(axispos, "//");
     }
 
     return nxpath;

@@ -76,6 +76,9 @@ else()
 endif()
 
 # strip for release mode
-set_target_properties(srcml PROPERTIES LINK_FLAGS_RELEASE -s)
+if(NOT APPLE)
+    set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+endif()
+
 
 install(TARGETS srcml COMPONENT SRCML)
