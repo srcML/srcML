@@ -869,28 +869,6 @@ LIBSRCML_DECL int srcml_archive_set_url(struct srcml_archive* archive, const cha
  */
 LIBSRCML_DECL int srcml_archive_set_version(struct srcml_archive* archive, const char* version);
 
-/** Whether the archive is an xml fragment, i.e., does not contain <unit> element
- * @param archive A srcml_archive opened for reading or writing
- * @retval 1 Is a full archive
- * @retval 0 Is just a single unit
- */
-LIBSRCML_DECL int srcml_archive_is_fragment(const struct srcml_archive* archive);
-
-/** Enable the output xml as a fragment, i.e., does not contain <unit> element
- * @param archive A srcml_archive opened for writing
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_archive_enable_fragment(struct srcml_archive* archive);
-
-/** Disable the output xml as a fragment, i.e., will contain a <unit> element
-  This is the default
- * @param archive A srcml_archive opened for writing
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_archive_disable_fragment(struct srcml_archive* archive);
-
 /**@}*/
 
 /**@{ @name Get Configuration */
