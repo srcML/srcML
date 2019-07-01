@@ -233,7 +233,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
     auto nrevision = unit->archive->revision_number;
     out.startUnit(language.c_str(),
             (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->c_str() : revision,
-            !unit->url       ? 0 : (nrevision ? attribute_revision(*unit->url, (int) *nrevision).c_str() : unit->url->c_str()),
+            (options & SRCML_OPTION_ARCHIVE) || !unit->url       ? 0 : (nrevision ? attribute_revision(*unit->url, (int) *nrevision).c_str() : unit->url->c_str()),
             !unit->filename  ? 0 : (nrevision ? attribute_revision(*unit->filename, (int) *nrevision).c_str() : unit->filename->c_str()),
             !unit->version   ? 0 : (nrevision ? attribute_revision(*unit->version, (int) *nrevision).c_str() : unit->version->c_str()),
             !unit->timestamp ? 0 : (nrevision ? attribute_revision(*unit->timestamp, (int) *nrevision).c_str() : unit->timestamp->c_str()),
