@@ -57,33 +57,33 @@ int main(int, char* argv[]) {
     const std::string latin_src = "/* \xfe\xff */\n";
     const std::string src_macro = "MACRO1;\nMACRO2;\n";
     const std::string srcml =
-R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
     const std::string srcml_full = 
-R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
     const std::string utf8_srcml = 
-R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><comment type="block">/* ✓ */</comment>
+R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><comment type="block">/* ✓ */</comment>
 </unit>)";
     const std::string latin_srcml = 
-R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><comment type="block">/* þÿ */</comment>
+R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><comment type="block">/* þÿ */</comment>
 </unit>)";
     const std::string srcml_macro = 
-R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
+R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
 <macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
 </unit>)";
     const std::string srcml_timestamp = 
-R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C" timestamp="today"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" timestamp="today"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
     const std::string srcml_hash = 
-R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
     const std::string srcml_hash_generated = 
-R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
     const std::string srcml_encoding = 
-R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
     std::ofstream src_file_c("project.c");
@@ -701,7 +701,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C");
         dassert(srcml_unit_parse_memory(unit, src.c_str(), 0), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_srcml_outer(unit), std::string(R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C"/>)"));
+        dassert(srcml_unit_get_srcml_outer(unit), std::string(R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C"/>)"));
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -714,7 +714,7 @@ R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_S
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C");
         dassert(srcml_unit_parse_memory(unit, 0, 0), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_srcml_outer(unit), std::string(R"(<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C"/>)"));
+        dassert(srcml_unit_get_srcml_outer(unit), std::string(R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C"/>)"));
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
