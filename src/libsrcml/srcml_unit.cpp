@@ -972,7 +972,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri) {
 
     // prefix can be default
-    if (unit == nullptr || name == nullptr || uri == nullptr)
+    if (unit == nullptr || name == nullptr /* || uri == nullptr */)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, uri))
