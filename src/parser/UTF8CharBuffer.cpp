@@ -207,7 +207,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded
     sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
         return fread(buf, 1, insize, (FILE*) context);
     };
-    sio.close_callback = 0;
+    sio.close_callback = [](void*) -> int { return 0; };
 }
 
 /**
