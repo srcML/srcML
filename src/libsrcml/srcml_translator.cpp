@@ -100,11 +100,7 @@ void srcml_translator::close() {
 
     // @todo Is this needed? Is this why we have to clone the archive, because this
     // is always created?
-    if (first && !text_only && (options & SRCML_OPTION_ARCHIVE) > 0) {
-
-        prepareOutput();
-    }
-    first = false;
+    prepareOutput();
 
     if (is_outputting_unit)
         add_end_unit();
