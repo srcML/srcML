@@ -176,7 +176,7 @@ int main(int, char* argv[]) {
       srcml_archive_write_unit
     */
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -192,12 +192,14 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
         dassert(std::string(s, size), srcml_a_single);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -212,12 +214,14 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
         dassert(std::string(s, size), srcml_a_archive);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -245,11 +249,12 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_ns);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -273,12 +278,14 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
         dassert(std::string(s, size), srcml);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -298,11 +305,12 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_b_single);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -322,11 +330,12 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_b_single);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -347,11 +356,12 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_b_archive);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -375,11 +385,12 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), utf8_srcml);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -403,11 +414,12 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), utf8_srcml_latin);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -423,18 +435,21 @@ int main(int, char* argv[]) {
         srcml_unit_set_version(unit, "1");
         const char* code = "/* þÿ */\n";
         srcml_unit_parse_memory(unit, code, strlen(code));
+
         dassert(srcml_unit_get_srcml_outer(unit), latin_srcml_no_xmldecl);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), latin_srcml);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -448,18 +463,21 @@ int main(int, char* argv[]) {
         srcml_unit_set_version(unit, "1");
         const char* code = "/* þÿ */\n";
         srcml_unit_parse_memory(unit, code, strlen(code));
+
         dassert(srcml_unit_get_srcml_outer(unit), latin_srcml_no_xmldecl);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), latin_srcml_latin);
+
         free(s);
     }
 #if 0
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_language(archive, "C++");
@@ -470,18 +488,21 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "a.cpp");
+
         dassert(srcml_unit_get_srcml_outer(unit), srcml_macro_no_xmldecl);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_macro);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -494,24 +515,28 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "project");
         srcml_unit_set_version(unit, "1");
+
         dassert(srcml_unit_get_srcml_outer(unit), srcml_macro_single_no_xmldecl);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_macro_single);
+
         free(s);
     }
 #endif
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_a_archive.c_str(), srcml_a_archive.size());
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(iarchive);
@@ -520,11 +545,12 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_a_archive);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -533,19 +559,22 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_language(unit, "C++");
+
         dassert(srcml_unit_parse_memory(unit, "a;\n", 3), SRCML_STATUS_OK);
 //        dassert(srcml_unit_get_srcml(unit), srcml_old_uri_a_single_no_xmldecl);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_a_single);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -556,17 +585,19 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
 //        dassert(srcml_unit_get_srcml(unit), srcml_first_old_uri_a_single_no_xmldecl);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_a_single);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -577,17 +608,19 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
 //        dassert(srcml_unit_get_srcml(unit), srcml_second_old_uri_a_single_no_xmldecl);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_a_single);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_disable_hash(archive);
@@ -597,6 +630,7 @@ int main(int, char* argv[]) {
         srcml_unit_parse_memory(unit, "a;\n", 3);
         srcml_unit_set_filename(unit, "a.cpp");
 //        dassert(srcml_unit_get_srcml_outer(unit), srcml_old_uri_a);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         unit = srcml_unit_create(archive);
@@ -604,25 +638,29 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
 //        dassert(srcml_unit_get_srcml_outer(unit), srcml_old_uri_a);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml);
+
         free(s);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_UNINITIALIZED_UNIT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
         free(s);
     }
 
@@ -632,13 +670,15 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "", 0);
     //    dassert(srcml_unit_get_srcml_outer(unit), std::string("<unit/>"));
+
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_INVALID_IO_OPERATION);
+
         srcml_unit_free(unit);
         srcml_archive_free(archive);
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_language(archive, "C++");
@@ -646,16 +686,21 @@ int main(int, char* argv[]) {
         srcml_archive_set_version(archive, "1");
         srcml_archive_register_namespace(archive, "s", "http://www.srcML.org/srcML/src");
         srcml_archive_write_open_memory(archive, &s, &size);
+
         dassert(srcml_archive_write_unit(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
+
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
         free(s);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
+
         dassert(srcml_archive_write_unit(0, unit), SRCML_STATUS_INVALID_ARGUMENT);
+
         srcml_unit_free(unit);
         srcml_archive_free(archive);
     }

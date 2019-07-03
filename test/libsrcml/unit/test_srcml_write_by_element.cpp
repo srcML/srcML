@@ -52,7 +52,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -77,7 +77,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_url(archive, "url");
@@ -100,7 +100,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_url(archive, "url");
@@ -126,7 +126,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -141,7 +141,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -163,7 +163,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -184,7 +184,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -204,7 +204,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -225,7 +225,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -246,7 +246,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -267,7 +267,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -290,7 +290,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -312,7 +312,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -335,7 +335,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -356,7 +356,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -372,7 +372,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -393,7 +393,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -414,7 +414,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -436,7 +436,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -458,7 +458,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -474,7 +474,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -495,7 +495,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -517,7 +517,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -539,7 +539,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -561,7 +561,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -583,7 +583,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -605,7 +605,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -620,7 +620,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -641,7 +641,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -663,7 +663,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -687,7 +687,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
@@ -700,7 +700,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
