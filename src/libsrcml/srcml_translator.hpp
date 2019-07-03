@@ -128,9 +128,6 @@ private:
     /** translation options */
     OPTION_TYPE options;
 
-    /** buffer to hold output to memory */
-    xmlBuffer* buffer = nullptr;
-
 public:
     /** member for handling output */
     srcMLOutput out;

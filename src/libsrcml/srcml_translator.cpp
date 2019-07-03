@@ -98,8 +98,6 @@ void srcml_translator::close() {
     if (!first && (options & SRCML_OPTION_ARCHIVE) > 0)
         out.outputUnitSeparator();
 
-    // @todo Is this needed? Is this why we have to clone the archive, because this
-    // is always created?
     prepareOutput();
 
     if (is_outputting_unit)
@@ -164,11 +162,11 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
 void srcml_translator::prepareOutput() {
 
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
-
     if (!first)
         return;
     first = false;
+
+    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
     if ((options & SRCML_OPTION_XML_DECL) > 0)
       out.outputXMLDecl();
@@ -275,16 +273,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     is_outputting_unit = true;
 
     first = false;
- 
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
-      lang & Language::LANGUAGE_OBJECTIVE_C) {
-        options |= SRCML_OPTION_CPP;
-    }
-
-    // @todo Why are we saving the options then restoring them?
-    OPTION_TYPE save_options = options;
 
     out.startUnit(optional_to_c_str(unit->language, optional_to_c_str(unit->archive->language)),
                   revision,
@@ -296,8 +284,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
                   optional_to_c_str(unit->encoding),
                   unit->attributes,
                   false);
-
-    options = save_options;
 
     return true;
 }
@@ -428,7 +414,7 @@ bool srcml_translator::add_string(const char *content) {
         return false;
 
     char* text = (char *)content;
-    for(char * pos = text; *pos; ++pos) {
+    for (char * pos = text; *pos; ++pos) {
 
         if (*pos != '"')
             continue;
@@ -438,15 +424,13 @@ bool srcml_translator::add_string(const char *content) {
             return false;
 
         *pos = '\"';
-        if ( xmlTextWriterWriteRaw(out.getWriter(), BAD_CAST "\"") == -1)
+        if (xmlTextWriterWriteRaw(out.getWriter(), BAD_CAST "\"") == -1)
             return false;
 
         text = pos + 1;
     }
 
-    int ret = xmlTextWriterWriteString(out.getWriter(), BAD_CAST text);
-
-    return ret != -1;
+    return xmlTextWriterWriteString(out.getWriter(), BAD_CAST text) != -1;
 }
 
 /**
@@ -454,8 +438,4 @@ bool srcml_translator::add_string(const char *content) {
  *
  * Destructor.
  */
-srcml_translator::~srcml_translator() {
-
-    if (buffer)
-        xmlBufferFree(buffer);
-}
+srcml_translator::~srcml_translator() {}
