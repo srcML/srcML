@@ -348,10 +348,36 @@ const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
 
     // construct the fragment from the full srcML, excluding the inserted root tag stuff (including namespaces)
     if (!unit->srcml_fragment) {
+
+        // find end of unit tag, e.g., end of "<unit ...>" or "<src:unit ...>"
+        std::string prefix = "";
+        auto pos = unit->srcml.find(">");
+
+        int insert_attr_begin = 0;
+        int insert_attr_end = 0;
+
+        if (pos >= 0) {
+            // find url attribute
+            std::string s(unit->srcml, 0, pos);
+            auto pos2 = s.find(" url=");
+            if (pos2 != std::string::npos) {
+                insert_attr_begin = (int) pos2;
+                pos2 += 6;
+                auto pos3 = s.find("\"", pos2);
+                pos3 += 1;
+                insert_attr_end = (int) pos3;
+            }
+        }
+
         unit->srcml_fragment = "";
         unit->srcml_fragment->reserve(rawsize);
         unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
-        unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
+        if (insert_attr_begin == 0) {
+            unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size() - unit->insert_end);
+        } else {
+            unit->srcml_fragment->append(unit->srcml, unit->insert_end, insert_attr_begin - unit->insert_end);
+            unit->srcml_fragment->append(unit->srcml, insert_attr_end, unit->srcml.size() - insert_attr_end);
+        }
     }
 
     // if srcdiff versioned, then use that
@@ -474,9 +500,8 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
 
     unit->encoding = input->getEncoding();
 
-    // if this is just a solitary unit (i.e., no archive), the url attribute is on the unit
-    if (srcml_archive_is_solitary_unit(unit->archive))
-        unit->url = unit->archive->url;
+    // unit url is just that of the archive
+    unit->url = unit->archive->url;
 
     // create the unit start tag (start_unit and end_unit must be called together)
     int status = srcml_write_start_unit(unit);
@@ -880,12 +905,16 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     if (unit->unit_translator == nullptr)
         return SRCML_STATUS_INVALID_INPUT;
 
+    // end any open content
+    while (unit->unit_translator->output_unit_depth)
+        unit->unit_translator->add_end_element();
+
     // record end of content (before the unit end tag)
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
     unit->content_end = unit->unit_translator->output_buffer()->written + 1;
 
     // end the unit (and any open elements)
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
+    if (!unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
 
     // flush before detaching
@@ -947,7 +976,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri) {
 
     // prefix can be default
-    if (unit == nullptr || name == nullptr || uri == nullptr)
+    if (unit == nullptr || name == nullptr /* || uri == nullptr */)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, uri))

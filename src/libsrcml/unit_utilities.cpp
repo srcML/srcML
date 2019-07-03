@@ -46,6 +46,8 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
             unit->revision = value;
         else if (attribute == "filename")
             srcml_unit_set_filename(unit, value.c_str());
+        else if (attribute == "url")
+            unit->url = value;
         else if (attribute == "version")
             srcml_unit_set_version(unit, value.c_str());
         else if (attribute == "tabs" || attribute == "options" || attribute == "hash")

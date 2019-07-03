@@ -280,14 +280,6 @@ int srcml_archive_is_solitary_unit(const struct srcml_archive* archive) {
 /**
  * @param archive a srcml_archive
  */
-int srcml_archive_is_fragment(const struct srcml_archive* archive) {
-
-    return (archive->options & SRCML_OPTION_FRAGMENT) != 0;
-}
-
-/**
- * @param archive a srcml_archive
- */
 int srcml_archive_has_hash(const struct srcml_archive* archive) {
 
     return (archive->options & SRCML_OPTION_HASH) != 0;
@@ -302,32 +294,6 @@ int srcml_archive_disable_solitary_unit(struct srcml_archive* archive) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options |= (unsigned long long)(SRCML_OPTION_ARCHIVE);
-
-    return SRCML_STATUS_OK;
-}
-
-/**
- * @param archive a srcml_archive
- */
-int srcml_archive_disable_fragment(struct srcml_archive* archive) {
-
-    if (archive == nullptr)
-        return SRCML_STATUS_INVALID_ARGUMENT;
-
-    archive->options &= ~(unsigned long long)(SRCML_OPTION_FRAGMENT);
-
-    return SRCML_STATUS_OK;
-}
-
-/**
- * @param archive a srcml_archive
- */
-int srcml_archive_enable_fragment(struct srcml_archive* archive) {
-
-    if (archive == nullptr)
-        return SRCML_STATUS_INVALID_ARGUMENT;
-
-    archive->options |= (unsigned long long)(SRCML_OPTION_FRAGMENT);
 
     return SRCML_STATUS_OK;
 }

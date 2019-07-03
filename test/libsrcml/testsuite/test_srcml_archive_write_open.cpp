@@ -39,24 +39,20 @@
 #include <dassert.hpp>
 
 int write_callback(void * context, const char * buffer, int len) {
-
     return (int)fwrite(buffer, 1, len, (FILE*)context);
 
 }
 
 int close_callback(void * context UNUSED) {
-
     return 0;
 }
 
 int main(int, char* argv[]) {
-
     /*
       srcml_archive_write_open_filename
     */
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_write_open_filename(archive, "project.xml");
 
@@ -75,7 +71,6 @@ int main(int, char* argv[]) {
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_filename(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -92,8 +87,7 @@ int main(int, char* argv[]) {
     */
 
     {
-
-        char * s = 0;
+        char* s = 0;
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_write_open_memory(archive, &s, &size);
@@ -111,7 +105,6 @@ int main(int, char* argv[]) {
     }
 
     {
-
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_memory(archive, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
@@ -120,8 +113,7 @@ int main(int, char* argv[]) {
     }
 
     {
-
-        char * s = 0;
+        char* s = 0;
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_memory(archive, &s, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -130,7 +122,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        char * s = 0;
+        char* s = 0;
         size_t size;
         dassert(srcml_archive_write_open_memory(0, &s, &size), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_memory_free(s);
@@ -164,7 +156,6 @@ int main(int, char* argv[]) {
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_FILE(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -205,7 +196,6 @@ int main(int, char* argv[]) {
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -247,7 +237,6 @@ int main(int, char* argv[]) {
     }
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_io(archive, 0, write_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -256,7 +245,6 @@ int main(int, char* argv[]) {
     }
 
     {
-
         FILE* file = fopen("project_ns.xml", "w");
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_io(archive, (void *)file, 0, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
