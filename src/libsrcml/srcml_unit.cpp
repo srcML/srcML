@@ -905,12 +905,16 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     if (unit->unit_translator == nullptr)
         return SRCML_STATUS_INVALID_INPUT;
 
+    // end any open content
+    while (unit->unit_translator->output_unit_depth)
+        unit->unit_translator->add_end_element();
+
     // record end of content (before the unit end tag)
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
     unit->content_end = unit->unit_translator->output_buffer()->written + 1;
 
     // end the unit (and any open elements)
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
+    if (!unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
 
     // flush before detaching

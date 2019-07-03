@@ -319,11 +319,8 @@ bool srcml_translator::add_end_unit() {
     if (!is_outputting_unit)
         return false;
 
-    while (output_unit_depth > 0) {
-        --output_unit_depth;
-
-        xmlTextWriterEndElement(out.getWriter());
-    }
+    while (output_unit_depth > 0)
+        add_end_element();
 
     is_outputting_unit = false;
 
@@ -343,7 +340,7 @@ bool srcml_translator::add_end_unit() {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* /* uri */) {
+bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* uri) {
 
     if (!is_outputting_unit || name == 0)
         return false;
@@ -354,7 +351,7 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
     ++output_unit_depth;
 
     /** @todo figure out how to register namespaces so this actualy works */
-    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, /*BAD_CAST uri*/0) != -1;
+    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST uri) != -1;
 }
 
 /**

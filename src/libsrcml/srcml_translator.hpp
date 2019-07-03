@@ -149,10 +149,12 @@ private:
 
     /** mark if have outputted starting unit tag for by element writing */
     bool is_outputting_unit = false;
-
+    
+public:
     /** track depth for by element writing */
     int output_unit_depth = 0;
 
+private:
     /** text-only mode (no XML) */
     bool text_only = false;
 

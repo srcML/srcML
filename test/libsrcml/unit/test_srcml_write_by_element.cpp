@@ -193,7 +193,6 @@ int main(int, char* argv[]) {
         srcml_write_start_unit(unit);
         srcml_unit_set_language(unit, "C++");
         srcml_write_start_element(unit, 0, "element", 0);
-        srcml_write_start_element(unit, 0, "element2", 0);
         srcml_write_end_unit(unit);
         srcml_archive_write_unit(archive, unit);
         srcml_unit_free(unit);
@@ -253,6 +252,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, "foo", "element", "bar");
         srcml_write_end_element(unit);
@@ -273,6 +273,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
@@ -295,6 +296,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_end_element(unit);
@@ -316,6 +318,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
@@ -338,6 +341,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
@@ -358,6 +362,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         dassert(srcml_write_start_element(unit, 0, 0, 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_unit_free(unit);
@@ -415,6 +420,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_namespace(unit, "foo", "bar");
@@ -436,6 +442,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_namespace(unit, 0, "bar");
@@ -457,6 +464,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         dassert(srcml_write_namespace(unit, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
@@ -493,6 +501,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", 0, "bar");
@@ -514,6 +523,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, "f", "foo", 0, "bar");
@@ -535,6 +545,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", "b", "bar");
@@ -556,6 +567,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, "f", "foo", "b", "bar");
@@ -577,6 +589,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_attribute(unit, 0, "foo", 0, "bar");
@@ -634,6 +647,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_string(unit, "foo");
@@ -655,6 +669,7 @@ int main(int, char* argv[]) {
         srcml_archive_enable_solitary_unit(archive);
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
         srcml_write_start_element(unit, 0, "element", 0);
         srcml_write_start_element(unit, 0, "element", 0);
