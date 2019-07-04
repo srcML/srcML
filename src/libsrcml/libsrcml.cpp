@@ -434,7 +434,7 @@ int srcml_register_macro(const char* token, const char* type) {
 }
 
 /**
- * srcml_unparse_set_eol
+ * srcml_set_eol
  * @param eol the kind of eol to use for unparse
  *
  * Set the eol to be used for unparse.
@@ -442,9 +442,9 @@ int srcml_register_macro(const char* token, const char* type) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unparse_set_eol(size_t eol) {
+int srcml_set_eol(size_t eol) {
 
-    return srcml_unit_unparse_set_eol(&global_unit, eol);
+    return srcml_unit_set_eol(&global_unit, eol);
 }
 
 /**

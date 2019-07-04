@@ -273,24 +273,24 @@ int main(int argc, char* argv[]) {
     }
 
     /*
-      srcml_unparse_set_eol
+      srcml_set_eol
     */
 
     {
-        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF);
+        srcml_set_eol(SOURCE_OUTPUT_EOL_CRLF);
 
  //       dassert(global_unit.eol, SOURCE_OUTPUT_EOL_CRLF);
     }
 
     {
-        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF);
-        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_AUTO);
+        srcml_set_eol(SOURCE_OUTPUT_EOL_CRLF);
+        srcml_set_eol(SOURCE_OUTPUT_EOL_AUTO);
 
 //        dassert(global_unit.eol, SOURCE_OUTPUT_EOL_AUTO);
     }
 
     {
-        dassert(srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_set_eol(SOURCE_OUTPUT_EOL_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*

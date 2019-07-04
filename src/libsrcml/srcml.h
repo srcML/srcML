@@ -397,7 +397,7 @@ LIBSRCML_DECL int srcml_register_macro(const char* token, const char* type);
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_unparse_set_eol(size_t eol);
+LIBSRCML_DECL int srcml_set_eol(size_t eol);
 
 /** Set what revision in a srcDiff document to operate with
  * @param revision_number The revision to operate with
@@ -1296,7 +1296,7 @@ LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit* unit, const char* 
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_unit_unparse_set_eol(struct srcml_unit* unit, size_t eol);
+LIBSRCML_DECL int srcml_unit_set_eol(struct srcml_unit* unit, size_t eol);
 
 /**
  * @param unit A srcml_unit

@@ -156,7 +156,7 @@ int srcml_unit_set_hash(struct srcml_unit* unit, const char* hash) {
 }
 
 /**
- * srcml_unit_unparse_set_eol
+ * srcml_unit_set_eol
  * @param unit a srcml unit
  * @param eol the kind of eol to use for unparse
  *
@@ -165,7 +165,7 @@ int srcml_unit_set_hash(struct srcml_unit* unit, const char* hash) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_unparse_set_eol(struct srcml_unit* unit, size_t eol) {
+int srcml_unit_set_eol(struct srcml_unit* unit, size_t eol) {
 
     if (unit == nullptr || eol > SOURCE_OUTPUT_EOL_CRLF)
         return SRCML_STATUS_INVALID_ARGUMENT;
