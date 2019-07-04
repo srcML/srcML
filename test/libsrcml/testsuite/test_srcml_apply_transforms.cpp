@@ -1181,7 +1181,7 @@ int main(int, char* argv[]) {
         fclose(f);
         int fd = OPEN("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
-     //   CLOSE(fd);
+        CLOSE(fd);
         srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
         srcml_append_transform_relaxng_memory(iarchive, schema.c_str(), schema.size());
         f = fopen("schema.rng", "r");

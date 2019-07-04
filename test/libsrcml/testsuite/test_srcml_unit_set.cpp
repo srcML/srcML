@@ -39,22 +39,22 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_src_encoding(unit, 0);
 
-//        dassert(unit->encoding, boost::none);
+        dassert(srcml_unit_get_src_encoding(unit), 0);
 
         srcml_unit_free(unit);
     }
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_src_encoding(unit, "foo");
+        srcml_unit_set_src_encoding(unit, "ISO-8859-1");
 
-//        dassert(*unit->encoding, "foo");
+        dassert(srcml_unit_get_src_encoding(unit), std::string("ISO-8859-1"));
 
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_set_src_encoding(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_set_src_encoding(0, "ISO-8859-1"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -65,22 +65,22 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, 0);
 
-//        dassert(unit->language, boost::none);
+        dassert(srcml_unit_get_language(unit), 0);
 
         srcml_unit_free(unit);
     }
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_language(unit, "foo");
+        srcml_unit_set_language(unit, "C++");
 
-//        dassert(*unit->language, "foo");
+        dassert(srcml_unit_get_language(unit), std::string("C++"));
 
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_set_language(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_set_language(0, "C++"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -91,22 +91,22 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, 0);
 
-//        dassert(unit->filename, boost::none);
+        dassert(srcml_unit_get_filename(unit), 0);
 
         srcml_unit_free(unit);
     }
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_filename(unit, "foo");
+        srcml_unit_set_filename(unit, "main.cpp");
 
-//        dassert(*unit->filename, "foo");
+        dassert(srcml_unit_get_filename(unit), std::string("main.cpp"));
 
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_set_filename(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_set_filename(0, "main.cpp"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -117,53 +117,42 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_version(unit, 0);
 
-//        dassert(unit->version, boost::none);
+        dassert(srcml_unit_get_version(unit), 0);
 
         srcml_unit_free(unit);
     }
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_version(unit, "foo");
+        srcml_unit_set_version(unit, "0.9.5");
 
-//        dassert(*unit->version, "foo");
+        dassert(srcml_unit_get_version(unit), std::string("0.9.5"));
 
         srcml_unit_free(unit);
     }
 
     {
-        const char * v1 = "version1";
-        const char * v2 = "version2";
-
         srcml_unit* unit1 = srcml_unit_create(archive);
-        int status = srcml_unit_set_version(unit1, v1);
-        dassert(status, SRCML_STATUS_OK);
-       // dassert(*unit1->version, v1);
-        assert(strcmp(srcml_unit_get_version(unit1), v1) == 0);
+
+        dassert(srcml_unit_set_version(unit1, "v1"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_version(unit1), std::string("v1"));
 
         srcml_unit* unit2 = srcml_unit_create(archive);
-        status = srcml_unit_set_version(unit2, v2);
-        dassert(status, SRCML_STATUS_OK);
 
-//        dassert(*unit2->version, v2);
-
-        assert(strcmp(srcml_unit_get_version(unit2), v2) == 0);
+        dassert(srcml_unit_set_version(unit2, "v2"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_version(unit2), std::string("v2"));
 
         srcml_archive_set_version(archive, "archiveVersion");
 
-//        dassert(*unit1->version, v1);
-        assert(strcmp(srcml_unit_get_version(unit1), v1) == 0);
-
-//        dassert(*unit2->version, v2);
-
-        assert(strcmp(srcml_unit_get_version(unit2), v2) == 0);
+        dassert(srcml_unit_get_version(unit1), std::string("v1"));
+        dassert(srcml_unit_get_version(unit2), std::string("v2"));
 
         srcml_unit_free(unit1);
         srcml_unit_free(unit2);
     }
 
     {
-        dassert(srcml_unit_set_version(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_set_version(0, "v1"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -174,22 +163,22 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_timestamp(unit, 0);
 
-//        dassert(unit->timestamp, boost::none);
+        dassert(srcml_unit_get_timestamp(unit), 0);
 
         srcml_unit_free(unit);
     }
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_timestamp(unit, "foo");
+        srcml_unit_set_timestamp(unit, "Wed Jul  3 16:38:14 EDT 2019");
 
-//        dassert(*unit->timestamp, "foo");
+        dassert(srcml_unit_get_timestamp(unit), std::string("Wed Jul  3 16:38:14 EDT 2019"));
 
         srcml_unit_free(unit);
     }
 
     {
-        dassert(srcml_unit_set_timestamp(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_set_timestamp(0, "Wed Jul  3 16:38:14 EDT 2019"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -216,7 +205,9 @@ int main(int, char* argv[]) {
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
+
         dassert(srcml_unit_unparse_set_eol(unit, SOURCE_OUTPUT_EOL_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
+
         srcml_unit_free(unit);
     }
 
