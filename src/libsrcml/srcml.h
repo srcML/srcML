@@ -461,6 +461,12 @@ LIBSRCML_DECL const char* srcml_get_timestamp();
 LIBSRCML_DECL const char* srcml_get_hash();
 
 /**
+ * @return The eol for to-src output (unparse)
+ * @return NULL on failure
+ */
+LIBSRCML_DECL size_t srcml_get_eol();
+
+/**
  * @return The currently set options on success
  * @return NULL on failure
  */
@@ -1339,6 +1345,12 @@ LIBSRCML_DECL const char* srcml_unit_get_timestamp(const struct srcml_unit* unit
  * @return The hash attribute on the unit on success, or NULL
  */
 LIBSRCML_DECL const char* srcml_unit_get_hash(const struct srcml_unit* unit);
+
+/**
+ * @param unit A srcml unit
+ * @return The eol for to-src output (unparse), or NULL
+ */
+LIBSRCML_DECL size_t srcml_unit_get_eol(struct srcml_unit* unit);
 
 /** Get a complete, valid XML of the srcML from this unit
  * The XML returned is a complete solo srcML unit

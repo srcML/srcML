@@ -294,6 +294,22 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
 }
 
 /**
+ * srcml_unit_get_eol
+ * @param unit a srcml unit
+ *
+ * Get the eol for the srcml unit.
+ *
+ * @returns eol on success and NULL on failure.
+ */
+size_t srcml_unit_get_eol(struct srcml_unit* unit) {
+
+    if (unit == nullptr)
+        return 0;
+
+    return unit->eol;
+}
+
+/**
  * srcml_unit_get_srcml
  * @param unit a srcml unit
  *
@@ -675,7 +691,35 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
         unit->src = extract_src(unit->srcml);
     }
 
-    xmlOutputBufferWrite(output_handler.get(), (int) unit->src->size(), unit->src->c_str());
+    // if EOL is not auto, then need to convert for 
+    if (unit->eol == SOURCE_OUTPUT_EOL_AUTO) {
+        xmlOutputBufferWrite(output_handler.get(), (int) unit->src->size(), unit->src->c_str());
+    } else {
+
+        // convert to the given eol
+        std::string neol(0, ' ');
+        neol.reserve(unit->src->size());
+
+        const std::string& src = *unit->src;
+        for (int i = 0; i < src.size(); ++i) {
+            if (src[i] != '\n') {
+                neol += src[i];
+            }
+            else if (unit->eol == SOURCE_OUTPUT_EOL_LF) {
+                neol += '\n';
+            }
+            else if (unit->eol == SOURCE_OUTPUT_EOL_CR) {
+                neol += '\r';
+            }
+            else if (unit->eol == SOURCE_OUTPUT_EOL_CRLF) {
+                neol += "\r\n";
+            } else {
+                neol += src[i];
+            }
+        }
+
+        xmlOutputBufferWrite(output_handler.get(), (int) neol.size(), neol.c_str());
+    }
 
     return SRCML_STATUS_OK;
 }

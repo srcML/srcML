@@ -448,6 +448,18 @@ int srcml_set_eol(size_t eol) {
 }
 
 /**
+ * srcml_get_eol
+ *
+ * Set the eol to be used for unparse.
+ *
+ * @returns Returns eol for unparse, or NULL
+ */
+size_t srcml_get_eol() {
+
+    return srcml_unit_get_eol(&global_unit);
+}
+
+/**
  * srcml_set_srcdiff_revision
  * @param revision_number
  *

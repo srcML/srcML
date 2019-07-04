@@ -187,18 +187,36 @@ int main(int, char* argv[]) {
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_AUTO);
 
-//        dassert(unit->eol, SOURCE_OUTPUT_EOL_AUTO);
+        dassert(srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_AUTO), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_eol(unit), SOURCE_OUTPUT_EOL_AUTO);
 
         srcml_unit_free(unit);
     }
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_CRLF);
 
-//        dassert(unit->eol, SOURCE_OUTPUT_EOL_CRLF);
+        dassert(srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_LF), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_eol(unit), SOURCE_OUTPUT_EOL_LF);
+
+        srcml_unit_free(unit);
+    }
+
+    {
+        srcml_unit* unit = srcml_unit_create(archive);
+
+        dassert(srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_CR), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_eol(unit), SOURCE_OUTPUT_EOL_CR);
+
+        srcml_unit_free(unit);
+    }
+
+    {
+        srcml_unit* unit = srcml_unit_create(archive);
+
+        dassert(srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_CRLF), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_eol(unit), SOURCE_OUTPUT_EOL_CRLF);
 
         srcml_unit_free(unit);
     }
@@ -213,6 +231,39 @@ int main(int, char* argv[]) {
 
     {
         dassert(srcml_unit_set_eol(0, SOURCE_OUTPUT_EOL_AUTO), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    {
+        std::string text = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C++">
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+</unit>
+)";
+
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_read_open_memory(archive, text.c_str(), text.size());
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+
+        char* buf;
+        size_t size;
+
+        srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_LF);
+        srcml_unit_unparse_memory(unit, &buf, &size);
+        dassert(buf, std::string("\na;\n"));
+        free(buf);
+
+        srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_CRLF);
+        srcml_unit_unparse_memory(unit, &buf, &size);
+        dassert(buf, std::string("\r\na;\r\n"));
+        free(buf);
+
+        srcml_unit_set_eol(unit, SOURCE_OUTPUT_EOL_CR);
+        srcml_unit_unparse_memory(unit, &buf, &size);
+        dassert(buf, std::string("\ra;\r"));
+        free(buf);
+
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
     }
 
     srcml_archive_free(archive);
