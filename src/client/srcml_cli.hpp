@@ -129,7 +129,7 @@ struct srcml_request_t {
 
     boost::optional<std::string> src_encoding;
     
-    boost::optional<std::string> line_ending;
+    boost::optional<int> eol;
 
     boost::optional<std::string> external;
 
@@ -195,7 +195,7 @@ inline std::ostream& operator<<(std::ostream& out, const srcml_request_t srcml_r
 
     // boost::optional<std::string> src_encoding;
     
-    // boost::optional<std::string> line_ending;
+    // boost::optional<std::string> eol;
 
     // boost::optional<std::string> external;
 

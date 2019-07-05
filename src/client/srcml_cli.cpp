@@ -24,6 +24,7 @@
 #include <src_prefix.hpp>
 #include <stdlib.h>
 #include <SRCMLStatus.hpp>
+#include <algorithm>
 
 // tell cli11 to use boost optional
 #define CLI11_BOOST_OPTIONAL 1
@@ -421,6 +422,28 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("NUM")
         ->group("EXTRACTING SOURCE CODE");
 
+    app.add_option_function<std::string>("--eol", [&](std::string value) {
+
+        std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+
+        if (value == "auto") {
+            srcml_request.eol = SOURCE_OUTPUT_EOL_AUTO;
+        } else if (value == "lf" || value == "unix") {
+            srcml_request.eol = SOURCE_OUTPUT_EOL_LF;
+        } else if (value == "cr") {
+            srcml_request.eol = SOURCE_OUTPUT_EOL_CR;
+        } else if (value == "crlf" || value == "windows") {
+            srcml_request.eol = SOURCE_OUTPUT_EOL_CRLF;
+        } else {
+            SRCMLstatus(ERROR_MSG, "srcml: eol must be (default) AUTO, UNIX or LF, Windows or CRLF, or CR");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
+
+        return true;
+    },
+        "Set the output source EOL: auto (default), lf, cr, crlf")->type_name("EOL")
+        ->group("EXTRACTING SOURCE CODE");
+
     auto output_src =
     app.add_flag_callback("--output-src,-S",  [&]() { srcml_request.command |= SRCML_COMMAND_SRC; },
         "Output source code instead of srcML")
@@ -588,10 +611,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     
     app.add_flag("--external", srcml_request.external,
         "Run a user defined external script or application on srcml client output")
-        ->group("");
-    
-    app.add_flag("--line-ending", srcml_request.line_ending,
-        "Set the line endings for a desired environment \"Windows\" or \"Unix\"")
         ->group("");
     
     app.add_flag_callback("--parser-test",      [&]() {
