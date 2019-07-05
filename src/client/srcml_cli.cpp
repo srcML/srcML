@@ -228,7 +228,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
             return "";
         });
-    text->needs(language);
 
     app.add_option("--files-from", 
         "Input source-code filenames from FILE")
@@ -393,6 +392,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("URI")
         ->group("METADATA OPTIONS");
 
+    auto filename =
     app.add_option("--filename,-f", srcml_request.att_filename,
         "Set the filename attribute")
         ->type_name("FILENAME")
@@ -633,7 +633,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     output_xml->excludes(output_xml_inner);
     output_xml->excludes(output_xml_outer);
     output_xml_outer->excludes(output_xml_inner);
-    
+
     try {
         app.parse(commandline);
     } catch (const CLI::CallForHelp &e) {
@@ -647,6 +647,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         exit(CLI_STATUS_ERROR);
     }
 
+    // make sure --text has an indication of language
+    if (!text->empty() && language->empty() && filename->empty()) {
+        SRCMLstatus(ERROR_MSG, "srcml: --text requires --language or --filename to determine source language");
+        exit(CLI_STATUS_ERROR);
+    }
+    
     if (srcml_request.output_filename == "")
         srcml_request.output_filename = "stdout://-";
 
