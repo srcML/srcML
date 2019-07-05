@@ -284,7 +284,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Set tab stop at every NUM characters, default of 8")
         ->type_name("NUM")
         ->group("MARKUP OPTIONS")
-        ->check(CLI::Number)
+        ->check(CLI::Range(1, 8))
         ->each([&](std::string){ *srcml_request.markup_options |= SRCML_OPTION_POSITION; });
 
 #if 0
