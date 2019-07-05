@@ -435,13 +435,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         } else if (value == "crlf" || value == "windows") {
             srcml_request.eol = SOURCE_OUTPUT_EOL_CRLF;
         } else {
-            SRCMLstatus(ERROR_MSG, "srcml: eol must be (default) AUTO, UNIX or LF, Windows or CRLF, or CR");
+            SRCMLstatus(ERROR_MSG, "srcml: EOL must be (default) AUTO, UNIX or LF, Windows or CRLF, or CR");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
         return true;
     },
-        "Set the output source EOL: auto (default), lf, cr, crlf")->type_name("EOL")
+        "Set the output source EOL: AUTO (default), UNIX or LF, Windows or CRLF, or CR")->type_name("EOL")
         ->group("EXTRACTING SOURCE CODE");
 
     auto output_src =
