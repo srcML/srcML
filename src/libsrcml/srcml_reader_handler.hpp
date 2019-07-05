@@ -487,6 +487,8 @@ public :
             cond.wait(lock);
         }
 
+        state->loc = 0;
+        
         state->collect_unit_body = collect_unit_body;
 
         if (terminate)
