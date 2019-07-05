@@ -165,12 +165,10 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Output version number and exit")
         ->group("GENERAL OPTIONS");
 
-    auto verbose =
     app.add_flag_callback("--verbose,-v", [&]() { srcml_request.command |= SRCML_COMMAND_VERBOSE; },
         "Conversion and status information to stderr")
         ->group("GENERAL OPTIONS");
 
-    auto quiet =
     app.add_flag_callback("--quiet,-q",   [&]() { srcml_request.command |= SRCML_COMMAND_QUIET; },
         "Suppress status messages")
         ->group("GENERAL OPTIONS");
@@ -625,7 +623,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Suppress colorization of output")
         ->group("");
 
-    quiet->excludes(verbose);
     output_src->excludes(output_xml);
     output_src->excludes(output_xml_inner);
     output_src->excludes(output_xml_outer);

@@ -45,9 +45,11 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
         if (option(SRCML_COMMAND_VERBOSE)) {
-            std::ostringstream outs;
-            outs << std::setw(53) << ' ' << (request->filename ? *request->filename : "");
-            log << '-' << outs.str();
+            if (!option(SRCML_COMMAND_QUIET)) {
+                std::ostringstream outs;
+                outs << std::setw(53) << ' ' << (request->filename ? *request->filename : "");
+                log << '-' << outs.str();
+            }
         } else if (request->disk_filename) {
             SRCMLstatus(WARNING_MSG, "srcml: Extension not supported %s", *(request->disk_filename));
         } else {
