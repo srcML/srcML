@@ -12,7 +12,7 @@ define srcml <<- 'STDOUT'
 define output <<- 'STDOUT'
 	Source encoding: (null)
 	XML encoding: UTF-8
-	    1 a.cpp	C++	
+	    1  C++     1  a.cpp
 	Total: 1
 	STDOUT
 

@@ -571,6 +571,16 @@ const char* srcml_get_hash() {
 }
 
 /**
+ * srcml_get_loc
+ *
+ * @returns Get the loc of source, and -1 on failure.
+ */
+int srcml_get_loc() {
+
+    return srcml_unit_get_loc(&global_unit);
+}
+
+/**
  * srcml_get_options
  *
  * @returns Get the currently set options on success and NULL on failure.

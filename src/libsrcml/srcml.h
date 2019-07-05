@@ -461,6 +461,12 @@ LIBSRCML_DECL const char* srcml_get_timestamp();
 LIBSRCML_DECL const char* srcml_get_hash();
 
 /**
+ * @return The loc of the source code on success
+ * @return -1 on failure
+ */
+LIBSRCML_DECL int srcml_get_loc();
+
+/**
  * @return The eol for to-src output (unparse)
  * @return NULL on failure
  */
@@ -1345,6 +1351,12 @@ LIBSRCML_DECL const char* srcml_unit_get_timestamp(const struct srcml_unit* unit
  * @return The hash attribute on the unit on success, or NULL
  */
 LIBSRCML_DECL const char* srcml_unit_get_hash(const struct srcml_unit* unit);
+
+/**
+ * @param unit A srcml_unit
+ * @return The loc of the source code in the unit, or -1 on failure
+ */
+LIBSRCML_DECL int srcml_unit_get_loc(const struct srcml_unit* unit);
 
 /**
  * @param unit A srcml unit

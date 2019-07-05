@@ -64,7 +64,7 @@ namespace {
                       // << value(srcml_unit_get_hash(unit.get())) << '\n';
 
             std::cout << std::setw(5) << std::right << value(srcml_unit_get_language(unit.get())) ;
-//            std::cout << ' ' << std::setw(5) << std::right << request->loc;
+            std::cout << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(unit.get());
             std::cout << ' ' << value(srcml_unit_get_hash(unit.get()));
             if (option(SRCML_DEBUG_MODE)) {
 //                std::cout << '\t' << request->runtime << " ms";

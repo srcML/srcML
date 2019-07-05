@@ -238,7 +238,7 @@ struct srcml_unit {
     int insert_begin = 0;
     int insert_end = 0;
 
-    int loc = 0;
+    int loc = -1;
 
     /** error reporting */
     std::string error_string;

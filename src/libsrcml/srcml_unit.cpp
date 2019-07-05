@@ -294,6 +294,22 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
 }
 
 /**
+ * srcml_unit_get_loc
+ * @param unit a srcml unit
+ *
+ * Get the loc for the sourec code in the srcml unit.
+ *
+ * @returns loc on success and -1 on failure.
+ */
+int srcml_unit_get_loc(const struct srcml_unit* unit) {
+
+    if (unit == nullptr)
+        return -1;
+
+    return unit->loc;
+}
+
+/**
  * srcml_unit_get_eol
  * @param unit a srcml unit
  *
