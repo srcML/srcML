@@ -81,8 +81,6 @@ int src_input_text(ParseQueue& queue,
     
         prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
-        prequest->loc = 0;
-
         // fill up the parse request buffer
         if (!prequest->status) {
             // copy from the text directly into a buffer
@@ -105,7 +103,6 @@ int src_input_text(ParseQueue& queue,
                 switch (*epos) {
                 case 'n':
                     prequest->buffer.push_back('\n');
-                    ++prequest->loc;
                     break;
                 case 't':
                     prequest->buffer.push_back('\t');
@@ -153,8 +150,7 @@ int src_input_text(ParseQueue& queue,
                     }
 
                     prequest->buffer.push_back(value);
-                    if (value == '\n')
-                        ++prequest->loc;
+
                     epos += offset;
                     break;
                 }
@@ -206,8 +202,7 @@ int src_input_text(ParseQueue& queue,
                     }
 
                     prequest->buffer.push_back(value);
-                    if (value == '\n')
-                        ++prequest->loc;
+
                     epos += offset - 1;
                     break;
                 }

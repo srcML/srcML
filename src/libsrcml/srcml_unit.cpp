@@ -543,6 +543,9 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
     // parse the input
     unit->unit_translator->translate(input);
 
+    // record the loc
+    unit->loc = input->getLOC();
+
     // namespaces were updated during translation, may now include 
     // namespaces that were optional
     unit->namespaces = unit->unit_translator->out.getNamespaces();

@@ -66,10 +66,6 @@ namespace {
             std::cout << std::setw(5) << std::right << value(srcml_unit_get_language(unit.get())) ;
             std::cout << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(unit.get());
             std::cout << ' ' << value(srcml_unit_get_hash(unit.get()));
-            if (option(SRCML_DEBUG_MODE)) {
-//                std::cout << '\t' << request->runtime << " ms";
-//                std::cout << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
-            }
             std::cout << ' ' << value(srcml_unit_get_filename(unit.get()));
             std::cout << '\n';
             // TODO: Other parts of verbose here. Have to collect.

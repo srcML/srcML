@@ -122,6 +122,8 @@ public:
     // Get the used encoding
     const std::string& getEncoding() const;
 
+    int getLOC() { if (lastchar == '\n') return loc; else return loc + 1; }
+
     ~UTF8CharBuffer();
 
 private:
@@ -141,6 +143,10 @@ private:
     /** where to place computed hash */
     bool hashneeded = false;
     boost::optional<std::string>& hash;
+
+    int loc = 0;
+
+    int lastchar = 0;
 
 #ifdef _MSC_BUILD
     /** msvc hash provider object */

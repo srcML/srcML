@@ -549,6 +549,9 @@ public :
 
         if (collect_unit_body) {
 
+            if (!state->unitsrc.empty() && state->unitsrc.back() != '\n')
+                ++state->loc;
+
             unit->content_begin = state->content_begin;
             unit->content_end = state->content_end;
             unit->insert_begin = state->insert_begin;

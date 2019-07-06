@@ -250,13 +250,6 @@ int src_input_libarchive(ParseQueue& queue,
             while (status == ARCHIVE_OK && archive_read_data_block(arch.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
             }
-
-            // LOC count
-            // @todo can't we get this from parsing?
-            // or at least only do for verbose?
-            prequest->loc = (long) std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
-            if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
-                ++prequest->loc;
         }
 
         // schedule for parsing

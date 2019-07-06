@@ -46,7 +46,6 @@ struct ParseRequest {
     std::string parsertest_filename;
     int position = 0;
     int status = 0;
-    size_t loc = 0;
     double runtime = 0;
     boost::optional<std::string> time_stamp;
     boost::optional<std::string> errormsg;

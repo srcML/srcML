@@ -453,6 +453,10 @@ int UTF8CharBuffer::getChar() {
         c = '\n';
     }
 
+    lastchar = c;
+    if (lastchar == '\n')
+        ++loc;
+
     return c;
 }
 

@@ -35,6 +35,7 @@
 #include <OpenFileLimiter.hpp>
 #include <srcml_utilities.hpp>
 #include <mkDir.hpp>
+#include <cmath>
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& /* destination */) {
@@ -135,7 +136,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
-        log.totalLOC(request->loc);
+        log.totalLOC(srcml_unit_get_loc(request->unit.get()));
 
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive
@@ -201,13 +202,15 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         if (option(SRCML_COMMAND_VERBOSE)) {
             std::ostringstream outs;
             outs << std::setw(5) << std::right << request->language;
-            outs << ' ' << std::setw(5) << std::right << request->loc;
+            outs << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(request->unit.get());
             const char* hash = srcml_unit_get_hash(request->unit.get());
             if (hash)
                 outs << ' ' << hash;
             if (option(SRCML_DEBUG_MODE)) {
-                outs << '\t' << request->runtime << " ms";
-                outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
+                auto runtime = std::round(request->runtime * 10) / 10;
+                outs << ' ' << std::setw(6) << std::right << runtime << "ms";
+                auto kloc = std::round(request->runtime > 0 ? (10 * srcml_unit_get_loc(request->unit.get()) / request->runtime) : 0) / 10;
+                outs << ' ' << std::setw(4) << std::right << std::fixed << std::setprecision(1) << kloc;
             }
             outs << ' ' << (request->filename ? *request->filename : "");
 
