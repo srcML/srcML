@@ -37,21 +37,21 @@
 /** Private options */
 
 /** Include any XML namespace declarations */
-const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<7;
+const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<8;
 /** Not sure what this used for */
-const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<8;
+const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<9;
 /** Extra processing of @code#line@endcode for position information */
-const unsigned int SRCML_OPTION_LINE              = 1<<9;
+const unsigned int SRCML_OPTION_LINE              = 1<<10;
 /** Parser output special tokens for debugging the parser */
-const unsigned int SRCML_OPTION_DEBUG             = 1<<10;
+const unsigned int SRCML_OPTION_DEBUG             = 1<<11;
 /** Is a fragment, i.e., no unit element */
-const unsigned int SRCML_OPTION_FRAGMENT          = 1<<11;
+const unsigned int SRCML_OPTION_FRAGMENT          = 1<<12;
 /** User requested cpp */
-const unsigned int SRCML_OPTION_CPP_DECLARED      = 1<<12;
+const unsigned int SRCML_OPTION_CPP_DECLARED      = 1<<13;
  /** Create an archive */
-const unsigned int SRCML_OPTION_ARCHIVE           = 1<<13;
+const unsigned int SRCML_OPTION_ARCHIVE           = 1<<14;
  /** Output hash attribute on each unit (default: on) */
-const unsigned int SRCML_OPTION_HASH              = 1<<14;
+const unsigned int SRCML_OPTION_HASH              = 1<<15;
 
 /** All default enabled options */
 const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_NAMESPACE_DECL);

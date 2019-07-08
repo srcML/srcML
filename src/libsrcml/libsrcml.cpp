@@ -333,7 +333,7 @@ int srcml_set_timestamp(const char* timestamp) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_set_options(unsigned long long option) {
+int srcml_set_options(size_t option) {
 
     return srcml_archive_set_options(&global_archive, option);
 }
@@ -346,7 +346,7 @@ int srcml_set_options(unsigned long long option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_enable_option(unsigned long long option) {
+int srcml_enable_option(size_t option) {
 
     return srcml_archive_enable_option(&global_archive, option);
 }
@@ -359,7 +359,7 @@ int srcml_enable_option(unsigned long long option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_disable_option(unsigned long long option) {
+int srcml_disable_option(size_t option) {
 
     return srcml_archive_disable_option(&global_archive, option);
 }
@@ -585,7 +585,7 @@ int srcml_get_loc() {
  *
  * @returns Get the currently set options on success and NULL on failure.
  */
-unsigned long long srcml_get_options() {
+int srcml_get_options() {
 
     return srcml_archive_get_options(&global_archive);
 }

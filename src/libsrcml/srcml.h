@@ -336,21 +336,21 @@ LIBSRCML_DECL int srcml_set_timestamp(const char* timestamp);
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_set_options(unsigned long long option);
+LIBSRCML_DECL int srcml_set_options(size_t option);
 
 /** Enable (set) a specific option on the srcML
  * @param option The srcML option(s)
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_enable_option(unsigned long long option);
+LIBSRCML_DECL int srcml_enable_option(size_t option);
 
 /** Disable (unset) a specific option on the srcML
  * @param option The srcML option(s)
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_disable_option(unsigned long long option);
+LIBSRCML_DECL int srcml_disable_option(size_t option);
 
 /** Set the size of the tabstop on the srcML
  * @param tabstop Tabstop size
@@ -476,7 +476,7 @@ LIBSRCML_DECL size_t srcml_get_eol();
  * @return The currently set options on success
  * @return NULL on failure
  */
-LIBSRCML_DECL unsigned long long srcml_get_options();
+LIBSRCML_DECL int srcml_get_options();
 
 /**
  * @return The tabstop size on success
@@ -793,7 +793,7 @@ LIBSRCML_DECL int srcml_archive_set_language(struct srcml_archive* archive, cons
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_archive_set_options(struct srcml_archive* archive, unsigned long long option);
+LIBSRCML_DECL int srcml_archive_set_options(struct srcml_archive* archive, size_t option);
 
 /** Enable/set an option or options on an archive
  * @param archive A srcml_archive to enable options on
@@ -801,7 +801,7 @@ LIBSRCML_DECL int srcml_archive_set_options(struct srcml_archive* archive, unsig
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_archive_enable_option(struct srcml_archive* archive, unsigned long long option);
+LIBSRCML_DECL int srcml_archive_enable_option(struct srcml_archive* archive, size_t option);
 
 /** Remove an option or options from an archive
  * @param archive A srcml_archive to remove options from
@@ -809,7 +809,7 @@ LIBSRCML_DECL int srcml_archive_enable_option(struct srcml_archive* archive, uns
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_archive_disable_option(struct srcml_archive* archive, unsigned long long option);
+LIBSRCML_DECL int srcml_archive_disable_option(struct srcml_archive* archive, size_t option);
 
 /** Set the tabstop size for position and column calculation
  * @param archive A srcml_archive
@@ -925,7 +925,7 @@ LIBSRCML_DECL const char* srcml_archive_get_version(const struct srcml_archive* 
  * @param archive A srcml_archive
  * @return The currently set options
  */
-LIBSRCML_DECL unsigned long long srcml_archive_get_options(const struct srcml_archive* archive);
+LIBSRCML_DECL int srcml_archive_get_options(const struct srcml_archive* archive);
 
 /**
  * @param archive A srcml_archive

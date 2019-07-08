@@ -223,7 +223,8 @@ public :
      * Constructor.  Sets up mutex, conditions and state.
      */
     srcml_reader_handler() {
-//        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+
+//          archive->options &= ~SRCML_OPTION_HASH;
     }
 
     /**
@@ -353,7 +354,7 @@ public :
 #endif
 
         if (!is_archive)
-            srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+            archive->options &= ~SRCML_OPTION_ARCHIVE;
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
