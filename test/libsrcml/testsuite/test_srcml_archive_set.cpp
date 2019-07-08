@@ -36,19 +36,19 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_src_encoding(archive, 0);
-//        dassert(archive->src_encoding, boost::none);
+        dassert(srcml_archive_get_src_encoding(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_src_encoding(archive, "foo");
-//        dassert(*archive->src_encoding, "foo");
+        srcml_archive_set_src_encoding(archive, "ISO-8859-1");
+        dassert(srcml_archive_get_src_encoding(archive), std::string("ISO-8859-1"));
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_set_src_encoding(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_set_src_encoding(0, "ISO-8859-1"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -58,19 +58,19 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_xml_encoding(archive, 0);
-//        dassert(archive->encoding, boost::none);
+        dassert(srcml_archive_get_xml_encoding(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_xml_encoding(archive, "foo");
-//        dassert(*archive->encoding, "foo");
+        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
+        dassert(srcml_archive_get_xml_encoding(archive), std::string("ISO-8859-1"));
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_set_xml_encoding(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_set_xml_encoding(0, "ISO-8859-1"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -80,19 +80,19 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_language(archive, 0);
-//        dassert(archive->language, boost::none);
+        dassert(srcml_archive_get_language(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_language(archive, "foo");
-//        dassert(*archive->language, "foo");
+        srcml_archive_set_language(archive, "Java");
+        dassert(srcml_archive_get_language(archive), std::string("Java"));
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_set_language(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_set_language(0, "Java"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -102,19 +102,19 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_set_url(archive, 0);
-//        dassert(archive->url, boost::none);
+        dassert(srcml_archive_get_url(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_url(archive, "foo");
-        dassert(srcml_archive_get_url(archive), std::string("foo"));
+        srcml_archive_set_url(archive, "https://srcML.org");
+        dassert(srcml_archive_get_url(archive), std::string("https://srcML.org"));
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_set_url(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_set_url(0, "https://srcML.org"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -138,34 +138,6 @@ int main(int, char* argv[]) {
     {
         dassert(srcml_archive_set_version(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }
-
-    /*
-
-      srcml_archive_set_attributes
-      {
-      srcml_archive* archive = srcml_archive_create();
-      const char * attr[3][2] = { "foo", "bar", "", "", 0, 0 };
-
-      srcml_archive_set_attributes(archive, attr);
-
-//      dassert(archive->attributes.size(), 4);
-//      dassert(archive->attributes.at(0), "foo");
-//      dassert(archive->attributes.at(1), "bar");
-//      dassert(archive->attributes.at(2), "");
-//      dassert(archive->attributes.at(3), "");
-      srcml_archive_free(archive);
-      }
-
-      {
-      srcml_archive* archive = srcml_archive_create();
-      const char * attr[3][2] = { "foo", "bar", "", 0, 0, 0 };
-
-      srcml_archive_set_attributes(archive, attr);
-
-//      dassert(archive->attributes.size(), 0);
-      srcml_archive_free(archive);
-      }
-    */
 
     /*
       srcml_archive_set_options
