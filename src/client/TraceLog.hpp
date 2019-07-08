@@ -41,6 +41,10 @@ public:
         return loc;
     }
 
+    inline void skip() {
+        ++num_skipped;
+    }
+
     ~TraceLog();
 
 private:

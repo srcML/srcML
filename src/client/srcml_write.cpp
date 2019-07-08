@@ -50,6 +50,8 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
                 std::ostringstream outs;
                 outs << std::setw(53) << ' ' << (request->filename ? *request->filename : "");
                 log << '-' << outs.str();
+            } else {
+                log.skip();
             }
         } else if (request->disk_filename) {
             SRCMLstatus(WARNING_MSG, "srcml: Extension not supported %s", *(request->disk_filename));
