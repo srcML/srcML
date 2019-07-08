@@ -20,8 +20,8 @@ define fsrcml <<- 'STDOUT'
 define foutput <<- 'STDERR'
 	Source encoding:  (null)
 	XML encoding:  UTF-8
-	    1   C++     1 a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8 sub/a.cpp
-	    2   C++     1 9a1e1d3d0e27715d29bcfbf72b891b3ece985b36 sub/b.cpp
+	    1  C++     1 a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8 sub/a.cpp
+	    2  C++     1 9a1e1d3d0e27715d29bcfbf72b891b3ece985b36 sub/b.cpp
 
 	Source Files: 2	Other Files: 0	Errors: 0	Total Files: 2
 	STDERR
