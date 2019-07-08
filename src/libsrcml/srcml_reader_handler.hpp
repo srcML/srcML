@@ -390,7 +390,7 @@ public :
                         value = value.substr(value.find(",") + 1);
 
                     if (option == "XMLDECL")
-                        archive->options |= SRCML_OPTION_XML_DECL;
+                        archive->options |= SRCML_OPTION_NO_XML_DECL;
                     else if (option == "NAMESPACEDECL")
                         archive->options |= SRCML_OPTION_NAMESPACE_DECL;
                     else if (option == "CPP_TEXT_ELSE")

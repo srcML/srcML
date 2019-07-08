@@ -123,7 +123,7 @@ int main(int, char* argv[]) {
 
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -136,7 +136,7 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -147,7 +147,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_ns.xml");
 
         dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -162,7 +162,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -177,7 +177,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -211,7 +211,7 @@ int main(int, char* argv[]) {
 
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -224,7 +224,7 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -235,7 +235,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_memory(archive, srcml_ns.c_str(), srcml_ns.size());
 
         dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -250,7 +250,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -265,7 +265,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -301,7 +301,7 @@ int main(int, char* argv[]) {
 
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -317,7 +317,7 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -331,7 +331,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_FILE(archive, file);
 
         dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -349,7 +349,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -367,7 +367,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -399,7 +399,7 @@ int main(int, char* argv[]) {
 
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -415,7 +415,7 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -429,7 +429,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_fd(archive, fd);
 
         dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -447,7 +447,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -465,7 +465,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -497,7 +497,7 @@ int main(int, char* argv[]) {
 
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -513,7 +513,7 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_language(archive), 0);
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_archive_get_version(archive), std::string("1"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -527,7 +527,7 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback);
 
         dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -545,7 +545,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -563,7 +563,7 @@ int main(int, char* argv[]) {
         // dassert(archive->user_macro_list.at(1), "src:macro");
         // dassert(archive->user_macro_list.at(2), "MACRO2");
         // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), SRCML_OPTION_XML_DECL);
+        dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);

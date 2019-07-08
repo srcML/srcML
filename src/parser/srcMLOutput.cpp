@@ -215,7 +215,7 @@ int srcMLOutput::consume_next() {
 void srcMLOutput::outputXMLDecl() {
 
     // issue the xml declaration, but only if we want to
-    if (depth == 0 && isoption(options, SRCML_OPTION_XML_DECL))
+    if (depth == 0 && !isoption(options, SRCML_OPTION_NO_XML_DECL))
         xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 

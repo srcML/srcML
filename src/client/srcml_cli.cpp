@@ -320,7 +320,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             return std::string("");
         });
 
-    app.add_flag_callback("--no-xml-declaration",[&]() { *srcml_request.markup_options |= SRCML_OPTION_XML_DECL; },
+    app.add_flag_callback("--no-xml-declaration",[&]() { *srcml_request.markup_options |= SRCML_OPTION_NO_XML_DECL; },
         "Do not output the XML declaration")
         ->type_name("XML")
         ->group("ENCODING");

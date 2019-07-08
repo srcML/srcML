@@ -183,20 +183,13 @@ void create_srcml(const srcml_request_t& srcml_request,
             srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_CPP_MARKUP_IF0);
         if (*srcml_request.markup_options & SRCML_OPTION_CPP_TEXT_ELSE)
             srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_CPP_TEXT_ELSE);
-//        if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
-//            srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_XML_DECL);
+        if (*srcml_request.markup_options & SRCML_OPTION_NO_XML_DECL)
+            srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_NO_XML_DECL);
         if (*srcml_request.markup_options & SRCML_HASH)
             srcml_archive_enable_hash(srcml_arch.get());
 
 //            SRCMLstatus(ERROR_MSG, "srcml: invalid options for srcml archive");
 //            exit(SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    // xml declaration
-    if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL) {
-        srcml_archive_disable_option(srcml_arch.get(), SRCML_OPTION_XML_DECL);
-    } else {
-        srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_XML_DECL);
     }
 
     // language

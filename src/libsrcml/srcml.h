@@ -104,8 +104,8 @@ typedef SSIZE_T ssize_t;
 /**@}*/
 
 /**@{ @name Options */
-/** Issue an XML declaration */
-const unsigned int SRCML_OPTION_XML_DECL          = 1<<1;
+/** Do not issue an XML declaration (default: include XML declaration */
+const unsigned int SRCML_OPTION_NO_XML_DECL       = 1<<1;
 /** Include line/column position attributes */
 const unsigned int SRCML_OPTION_POSITION          = 1<<2;
 /** Markup preprocessor elements (default for C, C++) */

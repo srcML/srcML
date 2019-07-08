@@ -168,7 +168,7 @@ void srcml_translator::prepareOutput() {
 
     bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
 
-    if ((options & SRCML_OPTION_XML_DECL) > 0)
+    if ((options & SRCML_OPTION_NO_XML_DECL) == 0)
       out.outputXMLDecl();
   
     out.outputProcessingInstruction();

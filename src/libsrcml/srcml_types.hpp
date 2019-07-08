@@ -54,7 +54,7 @@ const unsigned int SRCML_OPTION_ARCHIVE           = 1<<14;
 const unsigned int SRCML_OPTION_HASH              = 1<<15;
 
 /** All default enabled options */
-const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_NAMESPACE_DECL);
+const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH | SRCML_OPTION_NAMESPACE_DECL);
 
 #include <libxml/xmlwriter.h>
 
