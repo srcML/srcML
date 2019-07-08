@@ -543,9 +543,6 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
     // parse the input
     unit->unit_translator->translate(input);
 
-    // record the loc
-    unit->loc = input->getLOC();
-
     // namespaces were updated during translation, may now include 
     // namespaces that were optional
     unit->namespaces = unit->unit_translator->out.getNamespaces();
@@ -1011,6 +1008,15 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 
     free(start_tag);
     free(srcml);
+
+    // record the loc
+    if (!unit->src) {
+        unit->src = extract_src(unit->srcml);
+    }
+
+    unit->loc = (int) std::count(unit->src->begin(), unit->src->end(), '\n');
+    if (unit->src->back() != '\n')
+        ++unit->loc;
 
     // finished with any parsing
     delete unit->unit_translator;
