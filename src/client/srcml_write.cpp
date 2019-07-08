@@ -48,7 +48,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         if (option(SRCML_COMMAND_VERBOSE)) {
             if (!option(SRCML_COMMAND_QUIET)) {
                 std::ostringstream outs;
-                outs << std::setw(53) << ' ' << (request->filename ? *request->filename : "");
+                outs << std::setw(option(SRCML_DEBUG_MODE) ? 52 + 14 : 52) << ' ' << (request->filename ? *request->filename : "");
                 log << '-' << outs.str();
             } else {
                 log.skip();
@@ -203,17 +203,17 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         // logging
         if (option(SRCML_COMMAND_VERBOSE)) {
             std::ostringstream outs;
-            outs << std::setw(5) << std::right << request->language;
+            outs << std::setw(4) << std::right << request->language;
             outs << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(request->unit.get());
-            const char* hash = srcml_unit_get_hash(request->unit.get());
-            if (hash)
-                outs << ' ' << hash;
             if (option(SRCML_DEBUG_MODE)) {
                 auto runtime = std::round(request->runtime * 10) / 10;
-                outs << ' ' << std::setw(6) << std::right << runtime << "ms";
+                outs << ' ' << std::setw(6) << std::right << std::fixed << std::setprecision(1) << runtime << "ms";
                 auto kloc = std::round(request->runtime > 0 ? (10 * srcml_unit_get_loc(request->unit.get()) / request->runtime) : 0) / 10;
                 outs << ' ' << std::setw(4) << std::right << std::fixed << std::setprecision(1) << kloc;
             }
+            const char* hash = srcml_unit_get_hash(request->unit.get());
+            if (hash)
+                outs << ' ' << hash;
             outs << ' ' << (request->filename ? *request->filename : "");
 
             log << 'a' << outs.str();
