@@ -35,14 +35,14 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_src_encoding(archive, 0);
+        dassert(srcml_archive_set_src_encoding(archive, 0), SRCML_STATUS_OK);
         dassert(srcml_archive_get_src_encoding(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_src_encoding(archive, "ISO-8859-1");
+        dassert(srcml_archive_set_src_encoding(archive, "ISO-8859-1"), SRCML_STATUS_OK);
         dassert(srcml_archive_get_src_encoding(archive), std::string("ISO-8859-1"));
         srcml_archive_free(archive);
     }
@@ -57,14 +57,14 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_xml_encoding(archive, 0);
+        dassert(srcml_archive_set_xml_encoding(archive, 0), SRCML_STATUS_OK);
         dassert(srcml_archive_get_xml_encoding(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_xml_encoding(archive, "ISO-8859-1");
+        dassert(srcml_archive_set_xml_encoding(archive, "ISO-8859-1"), SRCML_STATUS_OK);
         dassert(srcml_archive_get_xml_encoding(archive), std::string("ISO-8859-1"));
         srcml_archive_free(archive);
     }
@@ -79,14 +79,14 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_language(archive, 0);
+        dassert(srcml_archive_set_language(archive, 0), SRCML_STATUS_OK);
         dassert(srcml_archive_get_language(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_language(archive, "Java");
+        dassert(srcml_archive_set_language(archive, "Java"), SRCML_STATUS_OK);
         dassert(srcml_archive_get_language(archive), std::string("Java"));
         srcml_archive_free(archive);
     }
@@ -101,14 +101,14 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_url(archive, 0);
+        dassert(srcml_archive_set_url(archive, 0), SRCML_STATUS_OK);
         dassert(srcml_archive_get_url(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_url(archive, "https://srcML.org");
+        dassert(srcml_archive_set_url(archive, "https://srcML.org"), SRCML_STATUS_OK);
         dassert(srcml_archive_get_url(archive), std::string("https://srcML.org"));
         srcml_archive_free(archive);
     }
@@ -123,14 +123,14 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_version(archive, 0);
+        dassert(srcml_archive_set_version(archive, 0), SRCML_STATUS_OK);
         dassert(srcml_archive_get_version(archive), 0);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_version(archive, "foo");
+        dassert(srcml_archive_set_version(archive, "foo"), SRCML_STATUS_OK);
         dassert(srcml_archive_get_version(archive), std::string("foo"));
         srcml_archive_free(archive);
     }
@@ -147,7 +147,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 //        archive->options = 0;
 
-        srcml_archive_set_options(archive, 1 | 2 | 4);
+        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
 
 //        dassert(archive->options, (1 | 2 | 4));
         srcml_archive_free(archive);
@@ -157,8 +157,8 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 //        archive->options = 0;
 
-        srcml_archive_set_options(archive, 1 | 2 | 4);
-        srcml_archive_set_options(archive, 1);
+        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
+        dassert(srcml_archive_set_options(archive, 1), SRCML_STATUS_OK);
 
 //        dassert(archive->options, 1);
         srcml_archive_free(archive);
@@ -186,7 +186,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 //        archive->options = 0;
 
-        srcml_archive_set_options(archive, 1 | 2);
+        dassert(srcml_archive_set_options(archive, 1 | 2), SRCML_STATUS_OK);
         srcml_archive_enable_option(archive, 4);
 
 //        dassert(archive->options, (1 | 2 | 4));
@@ -197,7 +197,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 //        archive->options = 0;
 
-        srcml_archive_set_options(archive, 1);
+        dassert(srcml_archive_set_options(archive, 1), SRCML_STATUS_OK);
         srcml_archive_enable_option(archive, 2 | 4);
 
 //        dassert(archive->options, (1 | 2 | 4));
@@ -226,7 +226,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 //        archive->options = 0;
 
-        srcml_archive_set_options(archive, 1 | 2 | 4);
+        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
         srcml_archive_disable_option(archive, 0);
 
 //        dassert(archive->options, (1 | 2 | 4));
@@ -237,7 +237,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 //        archive->options = 0;
 
-        srcml_archive_set_options(archive, 1 | 2 | 4);
+        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
         srcml_archive_disable_option(archive, 2);
 
 //        dassert(archive->options, (1 | 4));
@@ -248,7 +248,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 //        archive->options = 0;
 
-        srcml_archive_set_options(archive, 1 | 2 | 4);
+        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
         srcml_archive_disable_option(archive, 1 | 2);
 
 //        dassert(archive->options, 4);
@@ -266,7 +266,7 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
 
-        srcml_archive_set_tabstop(archive, 4);
+        dassert(srcml_archive_set_tabstop(archive, 4), SRCML_STATUS_OK);
 
 //        dassert(archive->tabstop, 4);
         srcml_archive_free(archive);
@@ -324,8 +324,10 @@ int main(int, char* argv[]) {
 
         srcml_archive_register_namespace(archive, "foo", "bar");
 
-//        dassert(archive->namespaces.back().prefix, "foo");
-//        dassert(archive->namespaces.back().uri, "bar");
+        int pos = srcml_archive_get_namespace_size(archive) - 1;
+        dassert(srcml_archive_get_namespace_prefix(archive, pos), std::string("foo"));
+        dassert(srcml_archive_get_namespace_uri(archive, pos) , std::string("bar"));
+
         srcml_archive_free(archive);
     }
 
@@ -334,8 +336,10 @@ int main(int, char* argv[]) {
 
         srcml_archive_register_namespace(archive, "foo", "http://www.srcML.org/srcML/src");
 
-        dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("foo"));
-        dassert(srcml_archive_get_namespace_uri(archive, 0) , std::string("http://www.srcML.org/srcML/src"));
+        int pos = srcml_archive_get_namespace_size(archive) - 1;
+        dassert(srcml_archive_get_namespace_prefix(archive, pos), std::string("foo"));
+        dassert(srcml_archive_get_namespace_uri(archive, pos) , std::string("http://www.srcML.org/srcML/src"));
+
         srcml_archive_free(archive);
     }
 
@@ -343,6 +347,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 
         dassert(srcml_archive_register_namespace(archive, 0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
+
         srcml_archive_free(archive);
     }
 
@@ -350,6 +355,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 
         dassert(srcml_archive_register_namespace(archive, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
+
         srcml_archive_free(archive);
     }
 
@@ -366,8 +372,6 @@ int main(int, char* argv[]) {
 
         srcml_archive_register_macro(archive, "foo", "bar");
 
-//        dassert(archive->user_macro_list.at(archive->user_macro_list.size() - 2), "foo");
-//        dassert(archive->user_macro_list.back(), "bar");
         srcml_archive_free(archive);
     }
 
@@ -377,8 +381,6 @@ int main(int, char* argv[]) {
         srcml_archive_register_macro(archive, "foo", "");
         srcml_archive_register_macro(archive, "foo", "bar");
 
-//        dassert(archive->user_macro_list.at(0), "foo");
-//        dassert(archive->user_macro_list.at(1) , "bar");
         srcml_archive_free(archive);
     }
 
@@ -407,18 +409,18 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
 
-        srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL);
-
+        dassert(srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_OK);
         dassert(srcml_archive_set_srcdiff_revision(0, SRCDIFF_REVISION_INVALID), SRCML_STATUS_INVALID_ARGUMENT);
+
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
 
-        srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL);
+        dassert(srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_OK);
+        dassert(srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_OK);
 
-//        dassert(*archive->revision_number, SRCDIFF_REVISION_ORIGINAL);
         srcml_archive_free(archive);
     }
 
