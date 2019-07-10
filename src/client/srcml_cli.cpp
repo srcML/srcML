@@ -599,6 +599,14 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Output and update existing srcml")
         ->group("");
 
+    app.add_option("--register-macro-name",
+        "Register the name of a macro")
+        ->group("")
+        ->each([&](std::string value) {
+            srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", value));
+        });
+
+
     app.add_flag("--xml-processing", srcml_request.xml_processing,
         "Add XML processing instruction")
         ->group("");

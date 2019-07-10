@@ -162,6 +162,8 @@ struct srcml_request_t {
 
     boost::optional<size_t> revision;
 
+    std::vector<std::string> macro_name;
+
     // pre-input
     char buf[4] = { 0 };
     size_t bufsize = 0;
