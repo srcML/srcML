@@ -230,7 +230,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         // if this is an archive, then no filename attribute is allowed
         if (srcml_request.att_filename) {
-            fprintf(stderr, "Attribute filename cannot be set for a srcML archive. Use attribute url instead.\n");
+            SRCMLstatus(ERROR_MSG, "srcml: --filename cannot be set for a srcML archive. Use --url instead");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
