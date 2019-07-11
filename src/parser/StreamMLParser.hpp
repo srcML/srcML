@@ -891,7 +891,7 @@ private:
     std::deque<antlr::RefToken>* pskiptb;
 
     /** any output is paused */
-    bool paused;
+    bool paused = false;
 };
 
 #endif
