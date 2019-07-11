@@ -58,8 +58,7 @@ public:
      * Constructor.  Set up parser and start unit.
      */
     StreamMLParser(antlr::TokenStream& lexer, int language, OPTION_TYPE & parsing_options)
-        : srcMLParser(lexer, language, parsing_options), options(parsing_options),
-          inskip(false) {
+        : srcMLParser(lexer, language, parsing_options), options(parsing_options) {
 
         pouttb = &tb;
         pskiptb = &skiptb;
@@ -869,7 +868,7 @@ private:
     OPTION_TYPE & options;
 
     /** if in a skip */
-    bool inskip;
+    bool inskip = false;
 
     std::stack<antlr::RefToken> ends;
 
