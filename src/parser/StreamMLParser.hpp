@@ -840,12 +840,13 @@ private:
             ++loc;
         }
 
-        if ((*loc)->getType() == SEXPRESSION_STATEMENT || (*loc)->getType() == SDECLARATION_STATEMENT)
-            (*loc)->setType(SNOP);
+        if ((*loc)->getType() == SEXPRESSION_STATEMENT || (*loc)->getType() == SDECLARATION_STATEMENT) {
 
-        auto& locend = tb.back();
-        if (locend->getType() == SEXPRESSION_STATEMENT || locend->getType() == SDECLARATION_STATEMENT)
-            locend->setType(SNOP);
+	        if (tb.back()->getType() == (*loc)->getType())
+	            tb.back()->setType(SNOP);
+
+            (*loc)->setType(SNOP);
+        }
     }
 
 private:
