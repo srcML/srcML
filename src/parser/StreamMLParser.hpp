@@ -810,13 +810,17 @@ private:
         return &(output().back());
     }
 
+    antlr::RefToken pausetoken = nullptr;
+
     /** abstract method for pausing the output of tokens */
     void pauseStream() final {
+        pausetoken = *CurrentToken();
         paused = true;
     }
 
     /** abstract method for resuming the output of tokens */
     void resumeStream() final {
+        pausetoken = nullptr;
         paused = false;
     }
 
@@ -828,27 +832,16 @@ private:
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() final {
 
-        // @todo Fix expression mode
-        return;
+        if (!paused)
+            return;
 
-        // find the first element token
-        // may have some text/spaces before
-        auto loc = tb.begin();
+        if (pausetoken->getType() != output().back()->getType())
+            return;
 
-        if ((*loc)->getType() == SUNIT)
-            ++loc;
+        pausetoken->setType(SNOP);
+        output().back()->setType(SNOP);
 
-        while (!isstart(*loc)) {
-            ++loc;
-        }
-
-        if ((*loc)->getType() == SEXPRESSION_STATEMENT || (*loc)->getType() == SDECLARATION_STATEMENT) {
-
-	        if (tb.back()->getType() == (*loc)->getType())
-	            tb.back()->setType(SNOP);
-
-            (*loc)->setType(SNOP);
-        }
+        resumeStream();
     }
 
 private:
