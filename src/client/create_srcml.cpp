@@ -314,6 +314,17 @@ void create_srcml(const srcml_request_t& srcml_request,
     // start tracing
     TraceLog log;
 
+    // if the user specified a source encoding, then show that
+    // but do not show default, as that depends on file contents
+    if (srcml_request.src_encoding) {
+        log.output("Source encoding:  ");
+        log.output(srcml_request.src_encoding->c_str());
+        log.output("\n");
+    }
+    log.output("XML encoding:  ");
+    log.output(srcml_archive_get_xml_encoding(srcml_arch.get()));
+    log.output("\n");
+
     // write queue for output of parsing
     WriteQueue write_queue(log, destination);
 

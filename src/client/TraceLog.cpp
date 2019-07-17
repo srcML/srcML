@@ -30,11 +30,14 @@ size_t TraceLog::loc = 0;
 
 TraceLog::TraceLog()
     : enabled(option(SRCML_COMMAND_VERBOSE)) {
+}
+
+void TraceLog::output(const char* s) {
 
     if (!enabled)
         return;
 
-    std::clog << "Source encoding:  (null)\nXML encoding:  UTF-8\n";
+    std::clog << s;
 }
 
 TraceLog& operator<<(TraceLog& tlog, char c) {
