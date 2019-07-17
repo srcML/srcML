@@ -33,6 +33,8 @@ public:
     friend TraceLog& operator<<(TraceLog& tlog, char c);
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
 
+    void output(const char* s);
+
     inline void totalLOC(size_t floc) {
         loc += floc;
     }
