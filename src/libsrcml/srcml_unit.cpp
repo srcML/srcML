@@ -1015,7 +1015,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     }
 
     unit->loc = (int) std::count(unit->src->begin(), unit->src->end(), '\n');
-    if (unit->src->back() != '\n')
+    if (!unit->src->empty() && unit->src->back() != '\n')
         ++unit->loc;
 
     // finished with any parsing
