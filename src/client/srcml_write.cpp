@@ -203,7 +203,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         // logging
         if (option(SRCML_COMMAND_VERBOSE)) {
             std::ostringstream outs;
-            outs << std::setw(4) << std::right << request->language;
+            outs << std::setw(4) << std::left << request->language;
             outs << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(request->unit.get());
             if (option(SRCML_DEBUG_MODE)) {
                 auto runtime = std::round(request->runtime * 10) / 10;
