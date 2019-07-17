@@ -89,7 +89,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
         if (!element_uri) {
             SRCMLstatus(WARNING_MSG, "srcml: no uri exists for prefix \"" + std::string(element->prefix->c_str()) + "\"");
             // @todo Can this be a return?
-            exit(2);
+            exit(1);
         }
     }
 
@@ -108,7 +108,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
         if (!attribute_uri) {
             SRCMLstatus(WARNING_MSG, "srcml: no uri exists for prefix \"" + std::string(attribute->prefix->c_str()) + "\"");
             // @todo Can this be a return?
-            exit(2);
+            exit(1);
         }
     }
 

@@ -277,7 +277,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         if (protocol == "xpath") {
             if (apply_xpath(srcml_arch.get(), srcml_arch.get(), resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with xpath transformation");
-                exit(-1);
+                exit(1);
             }
 
         }
@@ -285,7 +285,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         if (protocol == "xslt") {
             if (apply_xslt(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with xslt transformation");
-                exit(-1);
+                exit(1);
             }
         }
         
@@ -306,7 +306,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         } else if (protocol == "relaxng") {
             if (apply_relaxng(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
-                exit(-1);
+                exit(1);
             }
         }
     }
