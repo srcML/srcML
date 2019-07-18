@@ -403,7 +403,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     SRCSAX_DEBUG_START(localname);
 
     // if macros are found, then must return, process first
-    // @todo Not just first element, right?
+    // but stay in first_start_element, since this can be between root unit and nested unit
     if (localname == MACRO_LIST_ENTRY) {
 
         state->context->handler->meta_tag(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,

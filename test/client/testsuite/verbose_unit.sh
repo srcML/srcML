@@ -10,7 +10,6 @@ define fsrcml <<- 'STDOUT'
   STDOUT
 
 define output <<- 'STDERR'
-	Source encoding:  (null)
 	XML encoding:  UTF-8
 	    1 sub/a.cpp	C++	1	
 
@@ -41,7 +40,6 @@ define srcml <<- 'STDOUT'
   STDOUT
 
 define output <<- 'STDERR'
-	Source encoding:  (null)
 	XML encoding:  UTF-8
 	    1 	C++	1	
 

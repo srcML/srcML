@@ -318,7 +318,7 @@ void srcMLParser::endAllModes() {
     if (size() > 1 && isoption(parser_options, SRCML_OPTION_DEBUG))
          emptyElement(SERROR_MODE);
 
-    if (isPaused() && ((size() == 3) || (size() == 4))) {
+    if (isPaused()) {
         while (size() > 1)
            endMode();
         nopStreamStart();
@@ -3429,6 +3429,10 @@ rcurly[] { ENTRY_DEBUG } :
             // flush any whitespace tokens since sections should
             // end at the last possible place
             flushSkip();
+
+            if (isPaused()) {
+                nopStreamStart();
+            }
 
             // end any sections inside the mode
             endWhileMode(MODE_TOP_SECTION);
@@ -7017,8 +7021,7 @@ expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG 
         expression_statement_process
 
         { 
-            if (start_count == 1)
-                pauseStream();
+            pauseStream();
         }
 
         expression[type, call_count]
@@ -7034,8 +7037,7 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
                 // start the declaration statement
                 startElement(SDECLARATION_STATEMENT);
 
-                if (start_count == 1)
-                    pauseStream();
+                pauseStream();
             }
         }
 

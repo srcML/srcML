@@ -717,7 +717,7 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
         neol.reserve(unit->src->size());
 
         const std::string& src = *unit->src;
-        for (int i = 0; i < src.size(); ++i) {
+        for (size_t i = 0; i < src.size(); ++i) {
             if (src[i] != '\n') {
                 neol += src[i];
             }
@@ -1015,7 +1015,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     }
 
     unit->loc = (int) std::count(unit->src->begin(), unit->src->end(), '\n');
-    if (unit->src->back() != '\n')
+    if (!unit->src->empty() && unit->src->back() != '\n')
         ++unit->loc;
 
     // finished with any parsing

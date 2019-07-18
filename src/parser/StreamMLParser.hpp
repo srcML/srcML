@@ -58,8 +58,7 @@ public:
      * Constructor.  Set up parser and start unit.
      */
     StreamMLParser(antlr::TokenStream& lexer, int language, OPTION_TYPE & parsing_options)
-        : srcMLParser(lexer, language, parsing_options), options(parsing_options),
-          inskip(false) {
+        : srcMLParser(lexer, language, parsing_options), options(parsing_options) {
 
         pouttb = &tb;
         pskiptb = &skiptb;
@@ -811,13 +810,17 @@ private:
         return &(output().back());
     }
 
+    antlr::RefToken pausetoken = nullptr;
+
     /** abstract method for pausing the output of tokens */
     void pauseStream() final {
+        pausetoken = *CurrentToken();
         paused = true;
     }
 
     /** abstract method for resuming the output of tokens */
     void resumeStream() final {
+        pausetoken = nullptr;
         paused = false;
     }
 
@@ -829,23 +832,16 @@ private:
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() final {
 
-        // find the first element token
-        // may have some text/spaces before
-        auto loc = tb.begin();
+        if (!paused)
+            return;
 
-        if ((*loc)->getType() == SUNIT)
-            ++loc;
+        if (pausetoken->getType() != output().back()->getType())
+            return;
 
-        while (!isstart(*loc)) {
-            ++loc;
-        }
+        pausetoken->setType(SNOP);
+        output().back()->setType(SNOP);
 
-        if ((*loc)->getType() == SEXPRESSION_STATEMENT || (*loc)->getType() == SDECLARATION_STATEMENT)
-            (*loc)->setType(SNOP);
-
-        auto& locend = tb.back();
-        if (locend->getType() == SEXPRESSION_STATEMENT || locend->getType() == SDECLARATION_STATEMENT)
-            locend->setType(SNOP);
+        resumeStream();
     }
 
 private:
@@ -868,7 +864,7 @@ private:
     OPTION_TYPE & options;
 
     /** if in a skip */
-    bool inskip;
+    bool inskip = false;
 
     std::stack<antlr::RefToken> ends;
 
@@ -891,7 +887,7 @@ private:
     std::deque<antlr::RefToken>* pskiptb;
 
     /** any output is paused */
-    bool paused;
+    bool paused = false;
 };
 
 #endif

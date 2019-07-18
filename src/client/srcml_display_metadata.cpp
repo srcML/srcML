@@ -43,10 +43,6 @@ namespace {
     // display all files in srcml archive
     void srcml_list(srcml_archive* srcml_arch) {
 
-        std::cout << "Source encoding: ";
-        const char* src_encoding = srcml_archive_get_src_encoding(srcml_arch);
-        std::cout << (src_encoding ? src_encoding : "(null)") << '\n';
-
         std::cout << "XML encoding: ";
         const char* xml_encoding = srcml_archive_get_xml_encoding(srcml_arch);
         std::cout << (xml_encoding ? xml_encoding : "(null)") << '\n';
