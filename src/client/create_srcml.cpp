@@ -266,6 +266,12 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
     }
 
+    // declare all macros named
+    for (const auto& name : srcml_request.macro_name) {
+
+        srcml_archive_register_macro(srcml_arch.get(), name.c_str(), "src:macro");
+    }    
+
     // iterate through all transformations added during cli parsing
     int xpath_index = -1;
     for (const auto& trans : srcml_request.transformations) {

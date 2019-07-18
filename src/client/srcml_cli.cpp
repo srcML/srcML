@@ -304,6 +304,15 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Do not markup preprocessor #else/#elif regions")
         ->group("MARKUP OPTIONS");
 
+    app.add_option("--macro", "Declare that there is a macro NAME")
+        ->type_name("NAME")
+        ->group("ENCODING")
+        ->delimiter(',')
+        ->each([&](const std::string& value) {  
+
+            srcml_request.macro_name.push_back(value);
+        });
+
     // xml_form
     // @todo Why not check in the client?
     srcml_request.att_xml_encoding = "UTF-8";
