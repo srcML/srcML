@@ -139,9 +139,33 @@ header "post_include_hpp" {
 #include <srcml.h>
 
 // Macros to introduce trace statements
-#define ENTRY_DEBUG //RuleDepth rd(this); fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText().c_str() : "\\n"), ruledepth, "", __FUNCTION__, __LINE__);
-#ifdef ENTRY_DEBUG
+#ifdef DEBUG_PARSER
+class RuleTrace {
+public:
+	RuleTrace(int guessing, int token, int rd, std::string text, const char* fun, int line) :
+		guessing(guessing), token(token), rd(rd), text(text), fun(fun), line(line) {
+
+		fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.c_str(), rd, "", fun, line);
+	}
+
+	~RuleTrace() {
+		fprintf(stderr, "  END: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.c_str(), rd, "", fun, line);
+	}
+private:
+	int guessing;
+	int token;
+	int rd;
+	std::string text;
+	const char* fun;
+	int line;
+};
+
+// Macros to introduce RuleTrace statements
+#define ENTRY_DEBUG RuleDepth rd(this); RuleTrace tr(inputState->guessing, LA(1), ruledepth, (LA(1) != EOL ? LT(1)->getText() : std::string("\\n")), __FUNCTION__, __LINE__);
 #define ENTRY_DEBUG_START ruledepth = 0;
+#else
+#define ENTRY_DEBUG
+#define ENTRY_DEBUG_START
 #endif
 
 #define CATCH_DEBUG //marker();
