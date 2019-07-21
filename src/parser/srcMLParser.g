@@ -306,7 +306,9 @@ public:
         if (parent->inputState->guessing) return;
 
         // end last opened element.
-        parent->endElement(parent->currentState().openelements.top());
+        // @todo What to do when empty()?
+        if (!parent->currentState().openelements.empty())
+	        parent->endElement(parent->currentState().openelements.top());
     }
 
 private:
