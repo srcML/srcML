@@ -377,11 +377,11 @@ private:
                     slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
                 }
 
                 break;
