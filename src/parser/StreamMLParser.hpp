@@ -366,6 +366,13 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                // when EOF, not content or end token, so generate end token
+                if (LA(1) == 1) {
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
+                    pushESkipToken(srcMLParser::SLINECOMMENT);
+                }
+
                 break;
 
             case srcMLParser::LINE_DOXYGEN_COMMENT_END:
@@ -447,6 +454,13 @@ private:
                 pushSSkipToken(srcMLParser::SLINECOMMENT);
                 pushSkipToken();
                 srcMLParser::consume();
+
+                // when EOF, not content or end token, so generate end token
+                if (LA(1) == 1) {
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
+                    pushESkipToken(srcMLParser::SLINECOMMENT);
+                }
 
                 break;
 
