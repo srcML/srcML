@@ -54,9 +54,8 @@ else()
     # OpenSUSE does not generate per-version naming
     # Distribution version, e.g., 18.04
     file(STRINGS "/etc/os-release" OS_RELEASE)
-    string(REGEX MATCH "ID=\"\([a-z-]+\)\"" _ "${OS_RELEASE}")
-    set(RPM_VERSION "${CMAKE_MATCH_1}")
-
+    string(REGEX MATCH "VERSION_ID=\"\([^\"]+\)\"" _ "${OS_RELEASE}")
+    set(RPM_VERSION "opensuse-${CMAKE_MATCH_1}")
     # Package filenames
     set(BASE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}_${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}_${RPM_VERSION}")
     set(BASE_SRCMLDEV_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-dev_${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}_${RPM_VERSION}")
