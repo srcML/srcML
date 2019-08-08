@@ -81,14 +81,6 @@ int main(int, char* argv[]) {
 </unit>
 )";
 
-    const std::string srcml_macro_no_xmldecl = R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
-<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
-</unit>)";
-
-    const std::string srcml_macro_single_no_xmldecl = R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
-<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
-</unit>)";
-
     const std::string srcml_a_single_no_xmldecl = R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
@@ -154,22 +146,6 @@ int main(int, char* argv[]) {
 </s:unit>
 
 </s:unit>
-)";
-
-    const std::string srcml_macro = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" url="test" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/>
-
-<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
-<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
-</unit>
-
-</unit>
-)";
-
-    const std::string srcml_macro_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
-<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
-</unit>
 )";
 
     /*
@@ -475,59 +451,7 @@ int main(int, char* argv[]) {
 
         free(s);
     }
-#if 0
-    {
-        char* s = 0;
-        size_t size;
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_set_language(archive, "C++");
-        srcml_archive_set_url(archive, "test");
-        srcml_archive_set_version(archive, "1");
-        srcml_archive_register_macro(archive, "MACRO1", "src:macro");
-        srcml_archive_register_macro(archive, "MACRO2", "src:macro");
-        srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_filename(unit, "a.cpp");
 
-        dassert(srcml_unit_get_srcml_outer(unit), srcml_macro_no_xmldecl);
-
-        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-
-        dassert(std::string(s, size), srcml_macro);
-
-        free(s);
-    }
-
-    {
-        char* s = 0;
-        size_t size;
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_enable_solitary_unit(archive);
-        srcml_archive_set_language(archive, "C++");
-        srcml_archive_set_url(archive, "test");
-        srcml_archive_set_version(archive, "1");
-        srcml_archive_register_macro(archive, "MACRO1", "src:macro");
-        srcml_archive_register_macro(archive, "MACRO2", "src:macro");
-        srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit* unit = srcml_unit_create(archive);
-        srcml_unit_set_filename(unit, "project");
-        srcml_unit_set_version(unit, "1");
-
-        dassert(srcml_unit_get_srcml_outer(unit), srcml_macro_single_no_xmldecl);
-
-        dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-
-        dassert(std::string(s, size), srcml_macro_single);
-
-        free(s);
-    }
-#endif
     {
         char* s = 0;
         size_t size;
