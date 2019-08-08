@@ -86,10 +86,4 @@ class <name>Person</name> <super_list><implements>implements <super><name>Serial
 <annotation>@<name>Entity</name></annotation>
 </unit>
 
-<unit language="Java">
-<annotation>@<name>Entity</name></annotation>
-<annotation>@<name>Author</name><argument_list>( <argument><expr><name>name</name> <operator>=</operator> <name>Benjamin</name> <name>Franklin</name></expr></argument>, <argument><expr><name>date</name> <operator>=</operator> <literal type="number">3</literal><operator>/</operator><literal type="number">27</literal><operator>/</operator><literal type="number">2003</literal></expr></argument>)</argument_list></annotation>
-<annotation>@<name>Inventor</name><argument_list>(<argument><expr><name>Benjamin</name> <name>Franklin</name></expr></argument>)</argument_list></annotation>
-</unit>
-
 </unit>
