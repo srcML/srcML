@@ -166,6 +166,8 @@ foreach(GEN ${SUITE})
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
 
+    elseif(CATEGORY STREQUAL "LANGUAGE_NOP")
+
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
         list(APPEND TESTFILES "${URL}.cpp.xml")
