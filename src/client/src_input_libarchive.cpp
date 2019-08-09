@@ -186,7 +186,7 @@ int src_input_libarchive(ParseQueue& queue,
 
         // user specified a language, and is a file, text, or stdin
         // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
-        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin" || input_file.protocol == "file")
+        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin")
              || srcml_archive_check_extension(srcml_arch, filename.c_str())))
             language = *srcml_request.att_language;
 
