@@ -274,8 +274,15 @@ private:
         // that was enqueued
         if (isoption(options, SRCML_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
-            qetoken->endline = lastline;
-            qetoken->endcolumn = lastcolumn;
+
+            // verify the end position is valid to the start position
+            if (lastline > qetoken->getLine() || (lastline == qetoken->getLine() && lastcolumn >= qetoken->getColumn())) {
+                qetoken->endline = lastline;
+                qetoken->endcolumn = lastcolumn;
+            } else {
+                qetoken->endline = qetoken->getLine();
+                qetoken->endcolumn = qetoken->getColumn();
+            }
 
             if (token == srcMLParser::STYPE) {
                 lasttypeendline = lastline;
