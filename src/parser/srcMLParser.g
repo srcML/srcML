@@ -2377,6 +2377,19 @@ if_statement[] { ENTRY_DEBUG } :
 */
 else_statement[] { ENTRY_DEBUG } :
         {
+            // catchup for isolated else
+            if (!inMode(MODE_IF_STATEMENT)) {
+
+                // statement with nested statement
+                // detection of else
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
+
+                // start if sequence container
+                startElement(SIF_STATEMENT);
+
+                ++ifcount;
+            }
+
             // treat as a statement with a nested statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ELSE);
 
@@ -2401,6 +2414,19 @@ else_statement[] { ENTRY_DEBUG } :
 */
 elseif_statement[] { ENTRY_DEBUG } :
         {
+            // catchup for isolated else
+            if (!inMode(MODE_IF_STATEMENT)) {
+
+                // statement with nested statement
+                // detection of else
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
+
+                // start if sequence container
+                startElement(SIF_STATEMENT);
+
+                ++ifcount;
+            }
+
             // treat as a statement with a nested statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE);
 
