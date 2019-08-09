@@ -355,6 +355,10 @@ void srcMLParser::endAllModes() {
     while (size() > 1)
        endMode();
 
+    // process any skip tokens that are not ended properly
+    // e.g., "//" with EOF
+    completeSkip();
+
     // flush any skipped characters
     flushSkip();
 
