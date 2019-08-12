@@ -176,7 +176,7 @@ enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, ENUM_DEFN, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
-    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN, GLOBAL_TEMPLATE
+    USING_STMT, OPERATOR_FUNCTION, OPERATOR_FUNCTION_DECL, EVENT_STMT, PROPERTY_STMT, ANNOTATION_DEFN, GLOBAL_TEMPLATE, DELEGATE_TYPE
 };
 
 enum CALL_TYPE { NOCALL, CALL, MACRO };
@@ -1062,6 +1062,10 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
         // extern block as opposed to enum as part of declaration
         { stmt_type == NONE }?
         extern_definition |
+
+        // delegate type
+        { stmt_type == DELEGATE_TYPE }?
+        delegate_type[type_count] |
 
         // call
         { isoption(parser_options, SRCML_OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
@@ -4178,6 +4182,16 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
     if (type == NONE && LA(1) == TEMPLATE)
         type = GLOBAL_TEMPLATE;
 
+    if (inLanguage(LANGUAGE_CSHARP) && type == FUNCTION_DECL && fla == TERMINATE && LA(1) == DELEGATE) {
+        type_count -= 1;
+        type = DELEGATE_TYPE;
+    }
+
+    if (inLanguage(LANGUAGE_CSHARP) && type == FUNCTION_DECL && fla == TERMINATE && 
+        (token == DELEGATE && (LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED))) {
+        type_count -= 2;
+        type = DELEGATE_TYPE;
+    }
 } :;
 
 /*
@@ -6897,6 +6911,20 @@ lambda_anonymous[] { ENTRY_DEBUG } :
 
     /* completely parse a function until it is done */
     (options { greedy = true; } : { inputState->guessing }? curly_pair)*
+;
+
+// anonymous delegate
+delegate_type[int type_count] { ENTRY_DEBUG } :
+    {
+        // treat catch block as nested block statement
+        startNewMode(MODE_STATEMENT);
+
+        // start of the catch statement
+        startElement(SFUNCTION_DELEGATE);
+    }
+    (derive_access)*
+    DELEGATE
+    function_header[type_count]
 ;
 
 // anonymous delegate
