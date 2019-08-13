@@ -4485,7 +4485,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                  (
                     // inside of a C++ class definition must match class name
                     // @todo Shouldn`t this also be the case for Java? Or is no return type the only rule needed for Java
-                    (inMode(MODE_ACCESS_REGION) && !class_namestack.empty() && !namestack[0].empty() && class_namestack.top() == namestack[0]) ||
+                    (inMode(MODE_ACCESS_REGION) && !class_namestack.empty() && class_namestack.top() == namestack[0]) ||
 
                     (inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE)) ||
 
@@ -4496,7 +4496,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                     (specifier_count > 0 && (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP))) ||
 
                     // outside of a class definition in C++, but with properly prefixed name
-                    (inLanguage(LANGUAGE_CXX_FAMILY) && !namestack[0].empty() && namestack[0] == namestack[1])
+                    (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[0] == namestack[1])
                 )
         ]
 
@@ -5269,7 +5269,7 @@ variable_identifier[] { ENTRY_DEBUG } :
 ;
 
 // name including template argument list
-simple_name_optional_template[] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+simple_name_optional_template[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -5280,7 +5280,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
         }
-        push_namestack identifier (
+        push_namestack[push] identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
             { generic_argument_list_check() }? (generic_argument_list)=>
                 generic_argument_list /* (options { greedy = true; } : generic_type_constraint)*  */ |
@@ -5295,7 +5295,7 @@ simple_name_optional_template[] { CompleteElement element(this); TokenPosition t
 ;
 
 // name including template argument list
-simple_name_optional_template_optional_specifier[] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
+simple_name_optional_template_optional_specifier[bool push = true] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -5306,7 +5306,7 @@ simple_name_optional_template_optional_specifier[] { CompleteElement element(thi
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
         }
-        push_namestack (template_specifier { is_nop = false; })* identifier
+        push_namestack[push] (template_specifier { is_nop = false; })* identifier
     (
         { generic_argument_list_check() }? (generic_argument_list)=>
             generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
@@ -5511,7 +5511,7 @@ multops_star[] { ENTRY_DEBUG } :
 ;
 
 // C++ compound name handling
-compound_name_cpp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
+compound_name_cpp[bool& iscompound] { namestack.fill(""); bool iscolon = false; ENTRY_DEBUG } :
 
         (options { greedy = true; } : { !in_template_param }? typename_keyword { iscompound = true; })*
         (dcolon { iscompound = true; })*
@@ -5521,11 +5521,11 @@ compound_name_cpp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            ({ !modifier_tokens_set.member(last_consumed) }? dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
+            ({ !modifier_tokens_set.member(last_consumed) }? dcolon set_bool[iscolon, true] { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) clearnamestack { iscompound = true; })
             (options { greedy = true; } : dcolon)*
             (DESTOP set_bool[isdestructor])*
             (multops)*
-            (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
+            (simple_name_optional_template_optional_specifier[iscolon] | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
             //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
@@ -5852,7 +5852,7 @@ member_init[] { ENTRY_DEBUG } :
 ;
 
 // push name onto namestack
-push_namestack[] { namestack[1] = std::move(namestack[0]); namestack[0] = LT(1)->getText(); } :;
+push_namestack[bool push = true] { if (!push) return; namestack[1] = std::move(namestack[0]); namestack[0] = LT(1)->getText(); } :;
 
 // identifier stack
 identifier_stack[decltype(namestack)& s] { s[1] = std::move(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
@@ -8662,6 +8662,9 @@ savenamestack[decltype(namestack)& namestack_save] { namestack_save.swap(namesta
 
 // restore the namestack
 restorenamestack[decltype(namestack)& namestack_save] { namestack.swap(namestack_save); ENTRY_DEBUG } :;
+
+// clear the namestack
+clearnamestack[] { namestack.fill(""); ENTRY_DEBUG } :;
 
 // template argument
 template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :

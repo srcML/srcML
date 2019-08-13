@@ -62,4 +62,11 @@
 <constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<parameter><decl><type><name><typename>typename</typename> <name>foo</name></name></type> <name>bar</name> <init>= <expr><call><name><typename>typename</typename> <name>foo</name></name><argument_list>()</argument_list></call></expr></init></decl></parameter>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<constructor_decl><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>()</parameter_list>;</constructor_decl>
+<expr_stmt><expr><call><name><name>A</name><operator>.</operator><name>A</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><name>A</name><operator>::</operator><name>B</name><operator>.</operator><name>B</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
