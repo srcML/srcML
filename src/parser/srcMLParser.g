@@ -1213,14 +1213,12 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         (variable_identifier_array_grammar_sub[flag])*
 ;
 
-decl_pre_type[int& type_count] { ENTRY_DEBUG } :
+decl_pre_type_annotation[int& type_count] { ENTRY_DEBUG } :
 
         (
 
-        { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) |
-
         // special case only for functions.  Should only reach here for funciton in Java
-        { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
+    //    { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
 
         { inLanguage(LANGUAGE_JAVA) }? annotation |
 
@@ -1241,10 +1239,9 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1))
-            || (inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN || LA(1) == FINAL))
+        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN || LA(1) == FINAL))
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                decl_pre_type[type_count] |
+                decl_pre_type_annotation[type_count] |
 
         { inLanguage(LANGUAGE_JAVA) }? generic_parameter_list set_int[type_count, type_count - 1])*
 
@@ -1349,7 +1346,6 @@ function_rest[int& fla] { ENTRY_DEBUG } :
 // function type, including specifiers
 function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         {
-
             if (type_count == 0) {
 
                 setMode(MODE_FUNCTION_NAME);
@@ -1360,10 +1356,18 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
             // start a mode for the type that will end in this grammar rule
             startNewMode(MODE_EAT_TYPE | MODE_FUNCTION_TYPE);
 
-            setTypeCount(type_count);
-
             // type element begins
             startElement(STYPE);
+        }
+        (options { greedy = true; } : { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1])*
+        {
+            if (type_count == 0) {
+                endMode(MODE_EAT_TYPE);
+                setMode(MODE_FUNCTION_NAME);
+                return;
+            }
+
+            setTypeCount(type_count);
         }
         (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
 
@@ -7166,9 +7170,9 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
-            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                decl_pre_type[type_count])*
+        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+           || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+            decl_pre_type_annotation[type_count])*
 
         variable_declaration_type[type_count]
 ;
@@ -7189,10 +7193,18 @@ variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEB
         // start a mode for the type that will end in this grammar rule
         startNewMode(MODE_EAT_TYPE);
 
-        setTypeCount(type_count);
-
         // type element begins
         startElement(STYPE);
+    }
+
+    (options { greedy = true; } : { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1])*
+    {
+        if (type_count == 0) {
+            endMode(MODE_EAT_TYPE);
+            return;
+        }
+
+        setTypeCount(type_count);
     }
 
     // match auto keyword first as special case do no warn about ambiguity
@@ -7343,9 +7355,9 @@ property_statement[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
+        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                decl_pre_type[type_count])*
+                decl_pre_type_annotation[type_count])*
 
         variable_declaration_type[type_count]
 ;
@@ -7370,7 +7382,7 @@ event_statement[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                decl_pre_type[type_count])*
+                decl_pre_type_annotation[type_count])*
 
         EVENT set_int[type_count, type_count - 1]
 

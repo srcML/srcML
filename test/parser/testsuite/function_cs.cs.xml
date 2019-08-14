@@ -2,19 +2,19 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="function" filename="function_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><specifier>public</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><modifier>out</modifier> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><modifier>out</modifier> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><specifier>params</specifier> <name><name>int</name><index>[]</index></name></type> <name>list</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><specifier>params</specifier> <name><name>int</name><index>[]</index></name></type> <name>list</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><specifier>public</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><modifier>ref</modifier> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><modifier>ref</modifier> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><specifier>static</specifier> <specifier>inline</specifier> <type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>static</specifier> <specifier>inline</specifier> <name>int</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
@@ -35,11 +35,11 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><specifier>static</specifier> <type><name>int</name></type> <name>WordCount</name><parameter_list>(<parameter><decl><type><specifier>this</specifier> <name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>static</specifier> <name>int</name></type> <name>WordCount</name><parameter_list>(<parameter><decl><type><specifier>this</specifier> <name>String</name></type> <name>str</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><specifier>static</specifier> <type><name>int</name></type> <name>WordCount</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>this</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>static</specifier> <name>int</name></type> <name>WordCount</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>this</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>

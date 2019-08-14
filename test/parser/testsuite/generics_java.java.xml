@@ -26,7 +26,7 @@
 </unit>
 
 <unit language="Java">
-<function><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit language="Java">

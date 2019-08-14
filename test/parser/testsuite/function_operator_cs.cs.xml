@@ -2,99 +2,99 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="function_operator" filename="function_operator_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>+</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>+</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>-</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>-</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>!</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>!</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>~</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>~</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>++</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>++</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>--</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>--</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>true</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>true</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>false</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>false</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>+</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>+</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>-</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>-</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>*</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>*</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>/</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>/</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>%</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>%</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>&amp;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>&amp;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>|</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>|</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>^</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>^</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>&lt;&lt;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>&lt;&lt;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>Integer</name></type> <name>operator <name>&gt;&gt;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>Integer</name></type> <name>operator <name>&gt;&gt;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>bool</name></type> <name>operator <name>==</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator <name>==</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>bool</name></type> <name>operator <name>!=</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator <name>!=</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>bool</name></type> <name>operator <name>&gt;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator <name>&gt;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>bool</name></type> <name>operator <name>&lt;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator <name>&lt;</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>bool</name></type> <name>operator <name>&gt;=</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator <name>&gt;=</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function type="operator"><specifier>public</specifier> <specifier>static</specifier> <type><name>bool</name></type> <name>operator <name>&lt;=</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <name>bool</name></type> <name>operator <name>&lt;=</name></name><parameter_list>(<parameter><decl><type><name>Integer</name></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>Integer</name></type> <name>j</name></decl></parameter>)</parameter_list> <block>{}</block></function>
 </unit>
 
 </unit>

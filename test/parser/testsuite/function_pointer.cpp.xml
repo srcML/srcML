@@ -52,7 +52,7 @@
 -->
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><specifier>static</specifier> <type><name>void</name></type>
+<function><type><specifier>static</specifier> <name>void</name></type>
 <name>pass_state_graph</name> <parameter_list>(<parameter><decl><type><name>state_t</name></type> <name>start_state</name></decl></parameter>, <parameter><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>applied_func</name>) <parameter_list>(<parameter><decl><type><name>state_t</name></type> <name>state</name></decl></parameter>)</parameter_list></function_decl></parameter>)</parameter_list>
 <block>{
 
