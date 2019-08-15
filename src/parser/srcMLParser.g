@@ -8513,7 +8513,7 @@ generic_argument_list[] { CompleteElement element(this); decltype(namestack) nam
 
             in_function_type = inPrevMode(MODE_FUNCTION_TYPE);
 
-            if (!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
+            if (!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) /* && !in_function_type */))
                 startElement(SGENERIC_ARGUMENT_LIST);
             else
                 startElement(STEMPLATE_PARAMETER_LIST);
