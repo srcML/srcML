@@ -2,11 +2,11 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="extern">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<extern>extern <literal type="string">"C"</literal> <block>{}</block></extern>
+<extern>extern <literal type="string">"C"</literal> <block>{<block_content/>}</block></extern>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<extern>extern <literal type="string">"C"</literal> <block>{<break>break;</break>}</block></extern>
+<extern>extern <literal type="string">"C"</literal> <block>{<block_content><break>break;</break></block_content>}</block></extern>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

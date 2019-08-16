@@ -3,13 +3,13 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><attribute>[<expr><name>System</name></expr>]</attribute>
-<type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
         <function><attribute>[<expr><name>System</name></expr>]</attribute>
-        <type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>OperationsBaseData</name><parameter_list>()</parameter_list> <block>{
-        }</block></function>
+        <type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>OperationsBaseData</name><parameter_list>()</parameter_list> <block>{<block_content>
+        </block_content>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
@@ -29,27 +29,27 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><attribute>[<expr><name>System</name></expr>]</attribute> <type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><attribute>[<expr><name>System</name></expr>]</attribute> <type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><attribute>[<expr><name>System</name></expr>]</attribute> <type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>]</attribute><attribute>[<expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><attribute>[<expr><name>System</name></expr>]</attribute> <type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>]</attribute><attribute>[<expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><attribute>[<expr><name>System</name></expr>]</attribute> <type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><attribute>[<expr><name>System</name></expr>]</attribute> <type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><attribute>[<expr><name>System</name></expr>, <expr><name>System</name></expr>]</attribute> <type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><attribute>[<expr><name>System</name></expr>, <expr><name>System</name></expr>]</attribute> <type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><attribute>[<target>method</target>: <expr><name>SomeAttr</name></expr>]</attribute> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><attribute>[<target>method</target>: <expr><name>SomeAttr</name></expr>]</attribute> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><attribute>[<target>return</target>: <expr><name>SomeAttr</name></expr>]</attribute> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><attribute>[<target>return</target>: <expr><name>SomeAttr</name></expr>]</attribute> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
@@ -61,12 +61,12 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>( <parameter><decl><type><attribute>[<target>param</target>: <expr><name>SomeAttr</name></expr>]</attribute><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>( <parameter><decl><type><attribute>[<target>param</target>: <expr><name>SomeAttr</name></expr>]</attribute><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
-    <function><attribute>[<target>property</target>: <expr><name>SomeAttr</name></expr>]</attribute><name>get</name> <block>{}</block></function>
+    <function><attribute>[<target>property</target>: <expr><name>SomeAttr</name></expr>]</attribute><name>get</name> <block>{<block_content/>}</block></function>
 }</block></property>
 </unit>
 

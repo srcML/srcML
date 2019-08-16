@@ -2,17 +2,17 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="synchronized_specifier" filename="synchronzied_specifier_java">
 
 <unit language="Java">
-<function><type><specifier>synchronized</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>synchronized</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>public</specifier> <specifier>synchronized</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>synchronized</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>public</specifier> <specifier>synchronized</specifier> <name>void</name></type> <name>increment</name><parameter_list>()</parameter_list> <block>{
+<function><type><specifier>public</specifier> <specifier>synchronized</specifier> <name>void</name></type> <name>increment</name><parameter_list>()</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name>c</name><operator>++</operator></expr>;</expr_stmt>
-    }</block></function>
+    </block_content>}</block></function>
 </unit>
 
 </unit>

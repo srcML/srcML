@@ -2,35 +2,35 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="function" filename="function_java">
 
 <unit language="Java">
-<function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>private</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>private</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>protected</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>protected</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>default</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>default</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>public</specifier> <specifier>default</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <specifier>default</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>default</specifier> <specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>default</specifier> <specifier>public</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>final</specifier> <name>a</name></type> <name>b</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>final</specifier> <name>a</name></type> <name>b</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><type><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <specifier>static</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <specifier>static</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 </unit>

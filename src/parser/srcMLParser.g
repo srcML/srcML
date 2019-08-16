@@ -138,6 +138,8 @@ header "post_include_hpp" {
 #include <srcml_macros.hpp>
 #include <srcml.h>
 
+//#define DEBUG_PARSER
+
 // Macros to introduce trace statements
 #ifdef DEBUG_PARSER
 class RuleTrace {
@@ -818,6 +820,9 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         terminate |
 
         { inMode(MODE_ENUM) }? enum_block |
+
+        // namespace block does not have block content element
+        { inMode(MODE_NAMESPACE) }? lcurly[false] |
 
         // don't confuse with expression block
         { ((inTransparentMode(MODE_CONDITION) ||
@@ -1615,8 +1620,10 @@ lambda_java[] { ENTRY_DEBUG } :
             
         TRETURN
         {
-            if (LA(1) != LCURLY)
+            if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
+                startNoSkipElement(SCONTENT);
+            }
         }
 ;
 
@@ -2113,12 +2120,11 @@ do_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_NEST);
         }
         DO
-
         {
-
-            if (LA(1) != LCURLY)
+            if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
-
+                startNoSkipElement(SCONTENT);
+            }
         }
 ;
 
@@ -2407,10 +2413,10 @@ else_statement[] { ENTRY_DEBUG } :
         ELSE
 
         {
-
-            if (LA(1) != LCURLY)
+            if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
-
+                startNoSkipElement(SCONTENT);
+            }
         }
 ;
 
@@ -2810,7 +2816,7 @@ namespace_block[] { ENTRY_DEBUG } :
             // nest a block inside the namespace
             setMode(MODE_STATEMENT | MODE_NEST);
         }
-        lcurly
+        lcurly[false]
 ;
 
 // using directive
@@ -2990,7 +2996,7 @@ class_preamble[] { ENTRY_DEBUG } :
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble (CLASS | CXX_CLASS) class_post (class_header lcurly | lcurly)
+        class_preamble (CLASS | CXX_CLASS) class_post (class_header lcurly[false] | lcurly[false])
         {
 
             if (inLanguage(LANGUAGE_CXX))
@@ -3007,7 +3013,6 @@ class_post[] { ENTRY_DEBUG } :
 objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
     {
-
         startNewMode(MODE_STATEMENT | MODE_CLASS);
 
         if (LA(1) == ATINTERFACE)
@@ -3016,16 +3021,13 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
             startElement(SCLASS_IMPLEMENTATION);
 
         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
-
     }
 
     (ATINTERFACE | ATIMPLEMENTATION) ({ first }? objective_c_class_header set_bool[first, false])*
 
-    (lcurly
+    (lcurly[false]
         {
-
             class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
-
         }
     )*
 ;
@@ -3135,7 +3137,7 @@ enum_class_declaration[] { ENTRY_DEBUG } :
 anonymous_class_definition[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS | MODE_END_AT_BLOCK);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS | MODE_END_AT_BLOCK | MODE_NO_BLOCK_CONTENT);
 
             // start the class definition
             startElement(SCLASS);
@@ -3148,7 +3150,7 @@ anonymous_class_definition[] { ENTRY_DEBUG } :
         // argument list
         {
             // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST);
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_NO_BLOCK_CONTENT);
         }
         call_argument_list
 ;
@@ -3178,7 +3180,7 @@ interface_definition[] { ENTRY_DEBUG } :
             setMode(MODE_END_AT_BLOCK);
         }
 
-        class_preamble INTERFACE class_post class_header lcurly
+        class_preamble INTERFACE class_post class_header lcurly[false]
 ;
 
 
@@ -3214,7 +3216,7 @@ struct_declaration[] { ENTRY_DEBUG } :
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
 
-        class_preamble (STRUCT | UNION) class_post (class_header lcurly | lcurly)
+        class_preamble (STRUCT | UNION) class_post (class_header lcurly[false] | lcurly[false])
         {
            if (inLanguage(LANGUAGE_CXX))
                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
@@ -3245,7 +3247,7 @@ annotation_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble ATSIGN INTERFACE class_header lcurly
+        class_preamble ATSIGN INTERFACE class_header lcurly[false]
 ;
 
 // default private/public section for C++
@@ -3358,8 +3360,10 @@ access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
 
   Marks the start of a block.  End of the block is handled in right curly brace
 */
-lcurly[] { ENTRY_DEBUG } :
+lcurly[bool content = true] { ENTRY_DEBUG } :
         {
+            if (inMode(MODE_NO_BLOCK_CONTENT))
+                content = false;
 
             // special end for conditions
             if (inTransparentMode(MODE_CONDITION) && !inMode(MODE_ANONYMOUS)) {
@@ -3390,7 +3394,7 @@ lcurly[] { ENTRY_DEBUG } :
                 endMode();
             }
         }
-        lcurly_base
+        lcurly_base[content]
         {
 
 
@@ -3403,7 +3407,7 @@ lcurly[] { ENTRY_DEBUG } :
 ;
 
 // left curly brace.  Used in multiple places
-lcurly_base[] { ENTRY_DEBUG } :
+lcurly_base[bool content = true] { ENTRY_DEBUG } :
         {
             // need to pass on class mode to detect constructors for Java
             bool inclassmode = (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && inMode(MODE_CLASS);
@@ -3421,6 +3425,12 @@ lcurly_base[] { ENTRY_DEBUG } :
             startElement(SBLOCK);
         }
         LCURLY
+        {
+            if (content) {
+                startNewMode(MODE_BLOCK_CONTENT);
+                startNoSkipElement(SCONTENT);
+            }
+        }
         set_bool[skip_ternary, false]
 ;
 
@@ -3500,6 +3510,9 @@ rcurly[] { ENTRY_DEBUG } :
 
             // end any sections inside the mode
             endWhileMode(MODE_TOP_SECTION);
+
+            if (inMode(MODE_BLOCK_CONTENT))
+                endMode(MODE_BLOCK_CONTENT);
 
             if (getCurly() != 0)
                 decCurly();
@@ -6962,6 +6975,7 @@ lambda_csharp[] { ENTRY_DEBUG } :
         if (LA(1) != LCURLY) {
 
             startNoSkipElement(SPSEUDO_BLOCK);
+            startNoSkipElement(SCONTENT);
 
         } else if (LA(1) == LCURLY) {
 
@@ -7341,15 +7355,15 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev 
 property_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT);
+            startNewMode(MODE_STATEMENT | MODE_NO_BLOCK_CONTENT);
 
             startElement(SPROPERTY);
 
             // variable declarations may be in a list
-            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_NO_BLOCK_CONTENT);
 
             // declaration
-            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
+            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_NO_BLOCK_CONTENT);
 
         }
 
@@ -7549,9 +7563,10 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                     // start the then element
                     //startNoSkipElement(STHEN);
 
-                    if (LA(1) != LCURLY)
+                    if (LA(1) != LCURLY) {
                         startNoSkipElement(SPSEUDO_BLOCK);
-
+                        startNoSkipElement(SCONTENT);
+                    }
 
                     if (cppif_duplicate) {
 
@@ -7572,8 +7587,10 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                 if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
 
                     endMode(MODE_LIST);
-                    if (LA(1) != LCURLY)
+                    if (LA(1) != LCURLY) {
                         startNoSkipElement(SPSEUDO_BLOCK);
+                        startNoSkipElement(SCONTENT);
+                    }
 
                     if (cppif_duplicate) {
 
@@ -7594,8 +7611,10 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                     if (inMode(MODE_LIST))
                         endMode(MODE_LIST);
     
-                    if (LA(1) != LCURLY)
+                    if (LA(1) != LCURLY) {
                         startNoSkipElement(SPSEUDO_BLOCK);
+                        startNoSkipElement(SCONTENT);
+                    }
 
                     if (cppif_duplicate) {
 
@@ -7612,8 +7631,10 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                 } else if (inMode(MODE_LIST | MODE_CONTROL_CONDITION)) {
 
                     endMode(MODE_CONTROL_CONDITION);
-                    if (LA(1) != LCURLY)
+                    if (LA(1) != LCURLY) {
                         startNoSkipElement(SPSEUDO_BLOCK);
+                        startNoSkipElement(SCONTENT);
+                    }
 
                     if (cppif_duplicate) {
 
@@ -8984,7 +9005,7 @@ enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
 
 // enum block beginning and setup
 enum_block[] { ENTRY_DEBUG } :
-        lcurly_base
+        lcurly_base[false]
         {
             // nesting blocks, not statement
             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);

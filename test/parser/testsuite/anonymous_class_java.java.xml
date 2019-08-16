@@ -6,9 +6,9 @@
 <expr_stmt><expr><operator>new</operator> <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 
-      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{<block_content>
         <decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
-      }</block></function>
+      </block_content>}</block></function>
 }</block></class></expr>;</expr_stmt>
 </unit>
 
@@ -16,16 +16,16 @@
 <comment type="line">// anonymous class as an argument </comment>
 <expr_stmt><expr><call><name>addActionListener</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
-      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{<block_content>
         <decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
-      }</block></function>
+      </block_content>}</block></function>
     }</block></class></expr></argument>
 )</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit language="Java">
 <expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>Foo</name></super><argument_list>()</argument_list> <block>{ 
-  <function><type><name>void</name></type> <name>bar</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list> <block>{}</block></function>
+  <function><type><name>void</name></type> <name>bar</name><parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
@@ -33,9 +33,9 @@
 <comment type="line">// complex name on call with anonymous class as an argument </comment>
       <expr_stmt><expr><call><name><name>jbutton1</name><operator>.</operator><name>addActionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>ActionListener</name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
-      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{<block_content>
         <decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
-      }</block></function>
+      </block_content>}</block></function>
     }</block></class></expr></argument>
 )</argument_list></call></expr>;</expr_stmt>
 </unit>
@@ -44,9 +44,9 @@
 <comment type="line">// complex name on call with anonymous class with complex nameas an argument </comment>
 <expr_stmt><expr><call><name><name>jButton1</name><operator>.</operator><name>addActionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>java</name><operator>.</operator><name>awt</name><operator>.</operator><name>event</name><operator>.</operator><name>ActionListener</name></name></super><argument_list>()</argument_list> <block>{
       <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
-      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{
+      <function><type><specifier>public</specifier> <name>void</name></type> <name>a</name><parameter_list>()</parameter_list> <block>{<block_content>
         <decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
-      }</block></function>
+      </block_content>}</block></function>
     }</block></class></expr></argument>
 )</argument_list></call></expr>;</expr_stmt>
 </unit>
@@ -54,25 +54,25 @@
 <unit language="Java">
 <class><specifier>public</specifier> class <name>SysTray</name> <block>{ 
 
-    <function><type><specifier>public</specifier> <name>boolean</name></type> <name>init</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Shell</name></type> <name>aMainShell</name></decl></parameter>)</parameter_list> <block>{ 
+    <function><type><specifier>public</specifier> <name>boolean</name></type> <name>init</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name>Shell</name></type> <name>aMainShell</name></decl></parameter>)</parameter_list> <block>{<block_content> 
 
-        <if_stmt><if>if<condition>(<expr><literal type="boolean">true</literal></expr>)</condition><block>{ 
+        <if_stmt><if>if<condition>(<expr><literal type="boolean">true</literal></expr>)</condition><block>{<block_content> 
               <return>return <expr><literal type="boolean">false</literal></expr>;</return> 
-        }</block></if><else>else<block>{ 
+        </block_content>}</block></if><else>else<block>{<block_content> 
               
               <expr_stmt><expr><call><name><name>trayItem</name><operator>.</operator><name>addSelectionListener</name></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name>SelectionAdapter</name></super> <argument_list>()</argument_list> <block>{ 
                               
-                              <function><type><specifier>public</specifier> <name>void</name></type> <name>widgetDefaultSelected</name><parameter_list>(<parameter><decl><type><name>SelectionEvent</name></type> <name>anEvent</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+                              <function><type><specifier>public</specifier> <name>void</name></type> <name>widgetDefaultSelected</name><parameter_list>(<parameter><decl><type><name>SelectionEvent</name></type> <name>anEvent</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
  
               }</block></class></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 
               <return>return <expr><literal type="boolean">true</literal></expr>;</return>
 
-        }</block></else></if_stmt>
+        </block_content>}</block></else></if_stmt>
 
-    }</block></function>
+    </block_content>}</block></function>
     
-    <function><type><specifier>private</specifier> <name>void</name></type> <name>otherClassMethod</name><parameter_list>()</parameter_list> <block>{}</block></function> 
+    <function><type><specifier>private</specifier> <name>void</name></type> <name>otherClassMethod</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function> 
     
 }</block></class> 
 </unit>

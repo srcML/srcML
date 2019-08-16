@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="new" filename="new_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<class>class <name>Foo</name> <block>{ <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><operator>new</operator> <call><name>Foo</name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></function> }</block></class>
+<class>class <name>Foo</name> <block>{ <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><operator>new</operator> <call><name>Foo</name><argument_list>()</argument_list></call></expr>;</expr_stmt> </block_content>}</block></function> }</block></class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
@@ -31,7 +31,7 @@
 <class>class <name>Foo</name> <block>{ 
 
 	<property><type><specifier>new</specifier> <specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
-    	<function><name>get</name> <block>{}</block></function>
+    	<function><name>get</name> <block>{<block_content/>}</block></function>
 	}</block></property>
 
 }</block></class>
@@ -64,7 +64,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<constructor><specifier>public</specifier> <specifier>new</specifier> <name>A</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+<constructor><specifier>public</specifier> <specifier>new</specifier> <name>A</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">

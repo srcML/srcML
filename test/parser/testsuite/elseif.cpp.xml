@@ -2,120 +2,120 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="elseif" filename="elseif">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-  <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
-    <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt></block></if>
-    <else>else<block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">2</literal></expr>;</expr_stmt></block></else></if_stmt></block></if>
+  <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content>
+    <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo"><block_content>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt></block_content></block></if>
+    <else>else<block type="pseudo"><block_content>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">2</literal></expr>;</expr_stmt></block_content></block></else></if_stmt></block_content></block></if>
   <if type="elseif">else
-    if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">3</literal></expr>;</expr_stmt></block></if>
-    <else>else<block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block></else></if_stmt>
+    if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo"><block_content>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">3</literal></expr>;</expr_stmt></block_content></block></if>
+    <else>else<block type="pseudo"><block_content>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block_content></block></else></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-  <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
-    <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt></block></if>
+  <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content>
+    <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo"><block_content>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt></block_content></block></if>
   <if type="elseif">else
-    if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">3</literal></expr>;</expr_stmt></block></if>
-    <else>else<block type="pseudo">
-      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block></else></if_stmt></block></if></if_stmt>
+    if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo"><block_content>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">3</literal></expr>;</expr_stmt></block_content></block></if>
+    <else>else<block type="pseudo"><block_content>
+      <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr>;</expr_stmt></block_content></block></else></if_stmt></block_content></block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-  <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
-    <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
-      <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo">
-	<break>break;</break></block></if>
-      <else>else<block type="pseudo">
-	<break>break;</break></block></else></if_stmt></block></if>
+  <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content>
+    <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo"><block_content>
+      <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo"><block_content>
+	<break>break;</break></block_content></block></if>
+      <else>else<block type="pseudo"><block_content>
+	<break>break;</break></block_content></block></else></if_stmt></block_content></block></if>
     <if type="elseif">else
-      if <condition>(<expr><literal type="number">4</literal></expr>)</condition><block type="pseudo">
-	<break>break;</break></block></if>
-      <else>else<block type="pseudo">
-	<break>break;</break></block></else></if_stmt></block></if>
+      if <condition>(<expr><literal type="number">4</literal></expr>)</condition><block type="pseudo"><block_content>
+	<break>break;</break></block_content></block></if>
+      <else>else<block type="pseudo"><block_content>
+	<break>break;</break></block_content></block></else></if_stmt></block_content></block></if>
   <if type="elseif">else
-    if <condition>(<expr><literal type="number">5</literal></expr>)</condition><block type="pseudo">
-      <if_stmt><if>if <condition>(<expr><literal type="number">6</literal></expr>)</condition><block type="pseudo">
-	<break>break;</break></block></if>
-      <else>else<block type="pseudo">
-	<break>break;</break></block></else></if_stmt></block></if>
+    if <condition>(<expr><literal type="number">5</literal></expr>)</condition><block type="pseudo"><block_content>
+      <if_stmt><if>if <condition>(<expr><literal type="number">6</literal></expr>)</condition><block type="pseudo"><block_content>
+	<break>break;</break></block_content></block></if>
+      <else>else<block type="pseudo"><block_content>
+	<break>break;</break></block_content></block></else></if_stmt></block_content></block></if>
     <if type="elseif">else
-      if <condition>(<expr><literal type="number">7</literal></expr>)</condition><block type="pseudo">
-	<break>break;</break></block></if>
-      <else>else<block type="pseudo">
-	<break>break;</break></block></else></if_stmt>
+      if <condition>(<expr><literal type="number">7</literal></expr>)</condition><block type="pseudo"><block_content>
+	<break>break;</break></block_content></block></if>
+      <else>else<block type="pseudo"><block_content>
+	<break>break;</break></block_content></block></else></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-  <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
-    <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo">
-      <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo">
-	<continue>continue;</continue></block></if>
-      <else>else<block type="pseudo">
-	<continue>continue;</continue></block></else></if_stmt></block></if>
+  <if_stmt><if>if <condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content>
+    <if_stmt><if>if <condition>(<expr><literal type="number">2</literal></expr>)</condition><block type="pseudo"><block_content>
+      <if_stmt><if>if <condition>(<expr><literal type="number">3</literal></expr>)</condition><block type="pseudo"><block_content>
+	<continue>continue;</continue></block_content></block></if>
+      <else>else<block type="pseudo"><block_content>
+	<continue>continue;</continue></block_content></block></else></if_stmt></block_content></block></if>
     <if type="elseif">else
-      if <condition>(<expr><literal type="number">4</literal></expr>)</condition><block type="pseudo">
-	<continue>continue;</continue></block></if>
-      <else>else<block type="pseudo">
-	<continue>continue;</continue></block></else></if_stmt></block></if>
+      if <condition>(<expr><literal type="number">4</literal></expr>)</condition><block type="pseudo"><block_content>
+	<continue>continue;</continue></block_content></block></if>
+      <else>else<block type="pseudo"><block_content>
+	<continue>continue;</continue></block_content></block></else></if_stmt></block_content></block></if>
   <if type="elseif">else
-    if <condition>(<expr><literal type="number">5</literal></expr>)</condition><block type="pseudo">
-      <if_stmt><if>if <condition>(<expr><literal type="number">6</literal></expr>)</condition><block type="pseudo">
-	<continue>continue;</continue></block></if>
-      <else>else<block type="pseudo">
-	<continue>continue;</continue></block></else></if_stmt></block></if>
+    if <condition>(<expr><literal type="number">5</literal></expr>)</condition><block type="pseudo"><block_content>
+      <if_stmt><if>if <condition>(<expr><literal type="number">6</literal></expr>)</condition><block type="pseudo"><block_content>
+	<continue>continue;</continue></block_content></block></if>
+      <else>else<block type="pseudo"><block_content>
+	<continue>continue;</continue></block_content></block></else></if_stmt></block_content></block></if>
     <if type="elseif">else
-      if <condition>(<expr><literal type="number">7</literal></expr>)</condition><block type="pseudo">
-	<continue>continue;</continue></block></if>
-      <else>else<block type="pseudo">
-	<continue>continue;</continue></block></else></if_stmt>
+      if <condition>(<expr><literal type="number">7</literal></expr>)</condition><block type="pseudo"><block_content>
+	<continue>continue;</continue></block_content></block></if>
+      <else>else<block type="pseudo"><block_content>
+	<continue>continue;</continue></block_content></block></else></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><else>else<block>{}</block></else></if_stmt>
+<if_stmt><else>else<block>{<block_content/>}</block></else></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><if type="elseif">else if <specifier>constexpr</specifier> <condition>(<expr><name>emit</name></expr>)</condition> <block>{}</block></if></if_stmt>
+<if_stmt><if type="elseif">else if <specifier>constexpr</specifier> <condition>(<expr><name>emit</name></expr>)</condition> <block>{<block_content/>}</block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><if type="elseif">else if<condition>(<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt> <expr><name>a</name></expr>)</condition><block type="pseudo">
-<empty_stmt>;</empty_stmt></block></if></if_stmt>
+<if_stmt><if type="elseif">else if<condition>(<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt> <expr><name>a</name></expr>)</condition><block type="pseudo"><block_content>
+<empty_stmt>;</empty_stmt></block_content></block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><if type="elseif">else if<condition>(<decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>)</condition><block type="pseudo">
-<empty_stmt>;</empty_stmt></block></if></if_stmt>
+<if_stmt><if type="elseif">else if<condition>(<decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>)</condition><block type="pseudo"><block_content>
+<empty_stmt>;</empty_stmt></block_content></block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><if type="elseif">else if<condition>(<expr><name>a</name></expr>)</condition><block type="pseudo">
-<empty_stmt>;</empty_stmt></block></if></if_stmt>
+<if_stmt><if type="elseif">else if<condition>(<expr><name>a</name></expr>)</condition><block type="pseudo"><block_content>
+<empty_stmt>;</empty_stmt></block_content></block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><if type="elseif">else if<condition>(<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt> <expr><name>a</name></expr>)</condition><block>{
-}</block></if></if_stmt>
+<if_stmt><if type="elseif">else if<condition>(<decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt> <expr><name>a</name></expr>)</condition><block>{<block_content>
+</block_content>}</block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><if type="elseif">else if<condition>(<decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>)</condition><block>{
-}</block></if></if_stmt>
+<if_stmt><if type="elseif">else if<condition>(<decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>)</condition><block>{<block_content>
+</block_content>}</block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><if type="elseif">else if<condition>(<expr><name>a</name></expr>)</condition><block>{
-}</block></if></if_stmt>
+<if_stmt><if type="elseif">else if<condition>(<expr><name>a</name></expr>)</condition><block>{<block_content>
+</block_content>}</block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<if_stmt><if type="elseif">else if <specifier>constexpr</specifier> <condition>(<decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt> <expr><name>i</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>)</condition><block type="pseudo">
-<empty_stmt>;</empty_stmt></block></if></if_stmt>
+<if_stmt><if type="elseif">else if <specifier>constexpr</specifier> <condition>(<decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt> <expr><name>i</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>)</condition><block type="pseudo"><block_content>
+<empty_stmt>;</empty_stmt></block_content></block></if></if_stmt>
 </unit>
 
 </unit>
