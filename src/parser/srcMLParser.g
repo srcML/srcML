@@ -138,6 +138,8 @@ header "post_include_hpp" {
 #include <srcml_macros.hpp>
 #include <srcml.h>
 
+//#define DEBUG_PARSER
+
 // Macros to introduce trace statements
 #ifdef DEBUG_PARSER
 class RuleTrace {
@@ -1239,7 +1241,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN || LA(1) == FINAL))
+        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN /* || LA(1) == FINAL*/))
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
                 decl_pre_type_annotation[type_count] |
 
@@ -1359,7 +1361,8 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1])*
+        (options { greedy = true; } : { decl_specifier_tokens_set.member(LA(1)) }?
+            (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1])*
         {
             if (type_count == 0) {
                 endMode(MODE_EAT_TYPE);
@@ -4279,7 +4282,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                 { 
                     argument_token_set.member(LA(1))
-                    && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+                    && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON)) && (!inLanguage(LANGUAGE_CXX) || (/*LA(1) != FINAL &&*/ LA(1) != OVERRIDE))
                      && (LA(1) != TEMPLATE || next_token() != TEMPOPS) && (LA(1) != ATOMIC || next_token() != LPAREN)
                  }?
                 set_int[token, LA(1)]
@@ -8513,7 +8516,7 @@ generic_argument_list[] { CompleteElement element(this); decltype(namestack) nam
 
             in_function_type = inPrevMode(MODE_FUNCTION_TYPE);
 
-            if (!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) /* && !in_function_type */))
+            if (!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
                 startElement(SGENERIC_ARGUMENT_LIST);
             else
                 startElement(STEMPLATE_PARAMETER_LIST);
