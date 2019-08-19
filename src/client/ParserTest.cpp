@@ -49,6 +49,9 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
         previous_filename = request->parsertest_filename;
         count = 0;
 
+        if (!srcml_unit_get_language(unit))
+            return;
+
         unit_language = srcml_unit_get_language(unit);
 
         std::ostringstream sout;
