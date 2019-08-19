@@ -104,9 +104,6 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 # welcome message
 set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
 
-# icon
-set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
-
 # strip executables
 #set(CPACK_STRIP_FILES ON)
  
