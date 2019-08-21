@@ -15,9 +15,9 @@
 <comment type="line">// pre: pdu, target report  valid() == 1</comment>
 <comment type="line">// post: pdu sent out over the wire</comment>
 <function><type><specifier>inline</specifier> <name>void</name></type> <name>reset_receive_buffer</name><parameter_list>(<parameter><decl><type><name>iovec</name><modifier>&amp;</modifier></type> <name>io</name></decl></parameter>)</parameter_list>
-<block>{
+<block>{<block_content>
   <expr_stmt><expr><name><name>io</name><operator>.</operator><name>iov_base</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
   <expr_stmt><expr><name><name>io</name><operator>.</operator><name>iov_len</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
-}</block></function></unit>
+</block_content>}</block></function></unit>
 
 </unit>

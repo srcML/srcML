@@ -3,14 +3,14 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
   <function><type><specifier>public</specifier> <specifier>override</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
-<block>{}</block></function>
+<block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <property><type><specifier>public</specifier> <specifier>override</specifier> <name>int</name></type> <name>GetX</name> <block>{
-      <function><name>get</name> <block>{
+      <function><name>get</name> <block>{<block_content>
           <return>return <expr><name>x</name></expr>;</return>
-      }</block></function>
+      </block_content>}</block></function>
 }</block></property>
 </unit>
 

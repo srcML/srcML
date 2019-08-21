@@ -17,7 +17,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><type><specifier>public</specifier> <name>void</name></type> <name>func</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>reference</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> <block>{ }</block></function>
+<function><type><specifier>public</specifier> <name>void</name></type> <name>func</name><parameter_list>(<parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>i</name></decl></parameter>, <parameter><decl><type><name>reference</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">

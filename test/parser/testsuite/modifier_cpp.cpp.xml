@@ -59,19 +59,19 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>]</capture><parameter_list>()</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>]</capture><parameter_list>()</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>]</capture> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><modifier>&amp;</modifier><name>s</name></argument>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name> <modifier>*</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><modifier>&amp;</modifier><name>s</name></argument>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name> <modifier>*</modifier></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><modifier>&amp;</modifier><name>s</name></argument>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name> <specifier>const</specifier><modifier>*</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><modifier>&amp;</modifier><name>s</name></argument>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name> <specifier>const</specifier><modifier>*</modifier></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
@@ -92,27 +92,27 @@ These are the captures:
 So, I do not thing that const exists.
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><modifier>=</modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><modifier>=</modifier></argument>, const&amp; <name>i</name>]</capture> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><modifier>&amp;</modifier><name>s</name></argument>]</capture> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><name>x</name></argument>, <argument><modifier>&amp;</modifier><name>s</name></argument>]</capture> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><modifier>=</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><modifier>=</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name></type></decl></parameter>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name> <specifier>const</specifier><modifier>*</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></lambda></expr>;</expr_stmt>
+<expr_stmt><expr><lambda><capture>[<argument><modifier>&amp;</modifier></argument>, const&amp; <name>i</name>]</capture> <parameter_list>(<parameter><decl><type><name>delta</name> <specifier>const</specifier><modifier>*</modifier></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
  -->

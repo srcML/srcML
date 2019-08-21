@@ -2,15 +2,15 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="function_ns">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>B</name></name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name>int</name></type> <name><name>A</name><operator>::</operator><name>B</name></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><type><specifier>inline</specifier> <name><name>a</name><operator>::</operator><name>b</name><operator>::</operator><name>c</name></name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>s</name></name><modifier>&amp;</modifier></type> <name>a</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>inline</specifier> <name><name>a</name><operator>::</operator><name>b</name><operator>::</operator><name>c</name></name></type> <name>f</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>s</name></name><modifier>&amp;</modifier></type> <name>a</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><type><name><name>Iter</name><operator>::</operator><name>value_type</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name><name>Iter</name><operator>::</operator><name>value_type</name></name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 </unit>

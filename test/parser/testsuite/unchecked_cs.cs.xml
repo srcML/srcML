@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="unchecked" filename="unchecked_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<unchecked>unchecked <block>{<expr_stmt><expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>}</block></unchecked>
+<unchecked>unchecked <block>{<block_content><expr_stmt><expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt></block_content>}</block></unchecked>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
