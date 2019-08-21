@@ -16,9 +16,9 @@
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit">
 <xsl:copy>
-<block>{
+<block>{<block_content>
 <xsl:copy-of select="*|text()"/>
-}</block>
+</block_content>}</block>
 </xsl:copy>
 </xsl:template>
 
