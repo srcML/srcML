@@ -148,9 +148,9 @@ struct <name><name>CTest1</name><argument_list type="generic">&lt;<argument><exp
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type> <name>Args</name></parameter>&gt;</parameter_list></template> <type><specifier>inline</specifier> <name>void</name></type> <name>expand</name><parameter_list>(<parameter><decl><type><name>Args</name><modifier>&amp;&amp;</modifier><modifier>...</modifier></type> <name>args</name></decl></parameter>)</parameter_list> <block>{
+<function><template>template<parameter_list>&lt;<parameter><type><name>typename</name><modifier>...</modifier></type> <name>Args</name></parameter>&gt;</parameter_list></template> <type><specifier>inline</specifier> <name>void</name></type> <name>expand</name><parameter_list>(<parameter><decl><type><name>Args</name><modifier>&amp;&amp;</modifier><modifier>...</modifier></type> <name>args</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><call><name>pass</name><argument_list>( <argument><expr><call><name>g</name><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call><operator>...</operator></expr></argument> )</argument_list></call></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
