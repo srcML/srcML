@@ -83,10 +83,6 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<decl_stmt><decl><type><name>final</name></type> <name>signal</name></decl>;</decl_stmt>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>signal</name></type> <name>final</name></decl>;</decl_stmt>
 </unit>
 
