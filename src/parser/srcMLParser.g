@@ -1246,9 +1246,7 @@ function_header[int type_count] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN /* || LA(1) == FINAL*/))
             || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                decl_pre_type_annotation[type_count] |
-
-        { inLanguage(LANGUAGE_JAVA) }? generic_parameter_list set_int[type_count, type_count - 1])*
+                decl_pre_type_annotation[type_count])*
 
         function_type[type_count]
 ;
@@ -1364,8 +1362,13 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } : { decl_specifier_tokens_set.member(LA(1)) }?
-            (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1])*
+        (options { greedy = true; } :
+
+        		{ decl_specifier_tokens_set.member(LA(1)) }?
+	            (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1] | 
+
+                { inLanguage(LANGUAGE_JAVA) }? generic_parameter_list set_int[type_count, type_count - 1]
+        )*
         {
             if (type_count == 0) {
                 endMode(MODE_EAT_TYPE);
