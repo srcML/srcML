@@ -22,7 +22,7 @@
 </unit>
 
 <unit language="Java">
-<function><parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function><type><parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
@@ -66,7 +66,7 @@
 </unit>
 
 <unit language="Java">
-<decl_stmt><decl><type><name><name>SortedSet</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name></argument>,<argument><name>?</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></type> <name>sortedEntries</name> <init>= <expr><operator>new</operator> <call><name><name>TreeSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Comparator</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name></argument>,<argument><name>?</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{<block_content/>}</block></class></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>SortedSet</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name></argument>,<argument><name>?</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></type> <name>sortedEntries</name> <init>= <expr><operator>new</operator> <call><name><name>TreeSet</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>(<argument><expr><operator>new</operator> <class><super><name><name>Comparator</name><argument_list type="generic">&lt;<argument><name><name>Map</name><operator>.</operator><name><name>Entry</name><argument_list type="generic">&lt;<argument><name>?</name></argument>,<argument><name>?</name></argument>&gt;</argument_list></name></name></argument>&gt;</argument_list></name></super><argument_list>()</argument_list> <block>{}</block></class></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit language="Java">
