@@ -3,15 +3,15 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></destructor>
 }</block></class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{
-        <try>try <block>{}</block> <catch>catch<parameter_list>()</parameter_list><block>{}</block></catch></try>
-    }</block></destructor>
+    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{<block_content>
+        <try>try <block>{<block_content/>}</block> <catch>catch<parameter_list>()</parameter_list><block>{<block_content/>}</block></catch></try>
+    </block_content>}</block></destructor>
 }</block></class>
 </unit>
 
@@ -29,7 +29,7 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
-    <destructor><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~<name>A</name></name><parameter_list>()</parameter_list> <block>{}</block></destructor>
+    <destructor><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~<name>A</name></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></destructor>
 }</block></class>
 </unit>
 

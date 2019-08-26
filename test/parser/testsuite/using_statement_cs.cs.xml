@@ -3,21 +3,21 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <using_stmt>using <init>(<expr><name>font2</name></expr>)</init>
-<block>{}</block></using_stmt>
+<block>{<block_content/>}</block></using_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <using_stmt>using <init>(<decl><type><name>Font</name></type> <name>font1</name> <init>= <expr><operator>new</operator> <call><name>Font</name><argument_list>(<argument><expr><name>Arial</name></expr></argument>, <argument><expr><literal type="number">10.0f</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init>
-<block>{}</block></using_stmt>
+<block>{<block_content/>}</block></using_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <using_stmt>using <init>(<decl><type><name>Font</name></type> <name>font1</name> <init>= <expr><operator>new</operator> <call><name>Font</name><argument_list>(<argument><expr><name>Arial</name></expr></argument>, <argument><expr><literal type="number">10.0f</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init>
-<block>{
+<block>{<block_content>
 
   <decl_stmt><decl><type><name>byte</name></type> <name>charset</name> <init>= <expr><name><name>font1</name><operator>.</operator><name>GdiCharSet</name></name></expr></init></decl>;</decl_stmt>
 
-}</block></using_stmt>
+</block_content>}</block></using_stmt>
 </unit>
 
 </unit>

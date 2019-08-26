@@ -70,6 +70,9 @@ const static srcMLState::MODE_TYPE MODE_CALL;
 /** blocks that are not necessarily srcMLstatements */
  const static srcMLState::MODE_TYPE MODE_BLOCK;
 
+/** blocks that are not necessarily srcMLstatements */
+ const static srcMLState::MODE_TYPE MODE_BLOCK_CONTENT;
+
 /** mode for inititialization typically @code=<init>...</init>@endcode */
  const static srcMLState::MODE_TYPE MODE_INIT;
 
@@ -263,5 +266,7 @@ const static srcMLState::MODE_TYPE MODE_FUNCTION_CALL;
 
 /** mode for in function call */
 const static srcMLState::MODE_TYPE MODE_IF_STATEMENT;
+
+const static srcMLState::MODE_TYPE MODE_NO_BLOCK_CONTENT;
 
 #endif

@@ -17,24 +17,24 @@
 <xsl:template match="src:unit[.//cpp:*]">
     <unit xmlns:cpp="http://www.srcML.org/srcML/cpp">
         <xsl:apply-templates select="@*|node()"/><xsl:text>
-</xsl:text><if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition> <block>{<xsl:text>
+</xsl:text><if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition> <block>{<block_content><xsl:text>
 </xsl:text>    <xsl:copy-of select="*|text()"/><xsl:text>
-</xsl:text>}</block></if><xsl:text>
-</xsl:text><else>else <block>{<xsl:text>
+</xsl:text></block_content>}</block></if><xsl:text>
+</xsl:text><else>else <block>{<block_content><xsl:text>
 </xsl:text>    <xsl:copy-of select="*|text()"/><xsl:text>
-</xsl:text>}</block></else></if_stmt><xsl:text>
+</xsl:text></block_content>}</block></else></if_stmt><xsl:text>
 </xsl:text>           
     </unit>
 </xsl:template>
 
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit[not(.//cpp:*)]"><xsl:copy><xsl:copy-of select="@*"/><xsl:text>
-</xsl:text><if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition> <block>{<xsl:text>
+</xsl:text><if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition> <block>{<block_content><xsl:text>
 </xsl:text>    <xsl:copy-of select="*|text()"/><xsl:text>
-</xsl:text>}</block></if><xsl:text>
-</xsl:text><else>else <block>{<xsl:text>
+</xsl:text></block_content>}</block></if><xsl:text>
+</xsl:text><else>else <block>{<block_content><xsl:text>
 </xsl:text>    <xsl:copy-of select="*|text()"/><xsl:text>
-</xsl:text>}</block></else></if_stmt><xsl:text>
+</xsl:text></block_content>}</block></else></if_stmt><xsl:text>
 </xsl:text></xsl:copy>
 </xsl:template>
 

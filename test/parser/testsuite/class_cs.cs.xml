@@ -15,9 +15,9 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
-  <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
+  <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name>~<name>d</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-  }</block></function>
+  </block_content>}</block></function>
 }</block></class>
 </unit>
 
