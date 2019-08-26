@@ -251,12 +251,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
 
     auto output_xml =
-    app.add_flag_callback("--output-xml,-X",   [&]() { srcml_request.command |= SRCML_COMMAND_XML; },
+    app.add_flag_callback("--output-srcml,-X",   [&]() { srcml_request.command |= SRCML_COMMAND_XML; },
         "Output in XML instead of text")
         ->group("CREATING SRCML");
     
     auto output_xml_outer =
-    app.add_flag_callback("--output-xml-outer",[&]() { 
+    app.add_flag_callback("--output-srcml-outer",[&]() { 
         srcml_request.command |= SRCML_COMMAND_XML_FRAGMENT;
         srcml_request.command |= SRCML_COMMAND_XML;
     },
@@ -264,7 +264,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
     
     auto output_xml_inner =
-    app.add_flag_callback("--output-xml-inner",[&]() {
+    app.add_flag_callback("--output-srcml-inner",[&]() {
         srcml_request.command |= SRCML_COMMAND_XML_RAW;
         srcml_request.command |= SRCML_COMMAND_XML;
     },

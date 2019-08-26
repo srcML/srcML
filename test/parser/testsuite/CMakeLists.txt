@@ -59,7 +59,7 @@ macro(setlanguage INLANG URL)
         # set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
         set(OUTFILE "${URL}.${LANGEXT}.xml")
 
-        add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASEFILE} -o ${OUTFILE}
+        add_custom_command(COMMAND srcml --output-srcml --language=${LANG} ${BASEFILE} -o ${OUTFILE}
                     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${BASEFILE}
                     OUTPUT ${OUTFILE}
                     COMMENT "Generating parser testfile ${OUTFILE}"
@@ -81,7 +81,7 @@ macro(transform OUTFILE INFILE URL XSLT)
     # Passing xslt params is not working, so set here for insertexpr
     set(EXTRA --xslt-param=expr_filename=${CMAKE_CURRENT_BINARY_DIR}/expression.cpp.xml)
 
-    add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${INFILE} -o ${OUTFILE}
+    add_custom_command(COMMAND srcml --output-srcml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${INFILE} -o ${OUTFILE}
                        OUTPUT ${OUTFILE}
                        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${INFILE}
                        COMMENT "Generating parser testfile ${OUTFILE}"
@@ -95,7 +95,7 @@ message(STATUS "  Generating special transformation targets")
 
 configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
 
-add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
+add_custom_command(COMMAND srcml --language=Java --output-srcml finally_cs.cs.xml -o finally_java.java.xml
                    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/finally_cs.cs.xml
                    OUTPUT finally_java.java.xml
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -242,7 +242,7 @@ foreach(GENURL ${TESTFILES})
         endif()
 
         add_custom_command(
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
+            COMMAND srcml --output-srcml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
                      -o ${URL}.${VARIATION}.${LANGEXT}.xml
             COMMENT "Generating parser testfile ${URL}.${VARIATION}.${LANGEXT}.xml"
             DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
