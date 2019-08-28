@@ -84,11 +84,11 @@ struct <name><name>CTest1</name><argument_list type="generic">&lt;<argument><exp
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<class>class <block>{<private type="default"> <destructor_decl><specifier>template</specifier> <name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
+<class>class <block>{<private type="default"> <destructor_decl><specifier>template</specifier> <name><name>A</name><operator>::</operator><name>~A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<class>class <block>{<private type="default"> <destructor_decl><specifier>extern</specifier> <specifier>template</specifier> <name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
+<class>class <block>{<private type="default"> <destructor_decl><specifier>extern</specifier> <specifier>template</specifier> <name><name>A</name><operator>::</operator><name>~A</name></name><parameter_list>()</parameter_list>;</destructor_decl> </private>}</block>;</class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
