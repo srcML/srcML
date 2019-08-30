@@ -1116,7 +1116,7 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
  * Transformation result. Passed to srcml_unit_apply_transforms() to collect results of transformation
  */
 struct srcml_transformation_result_t {
-  /** Transformation result type */
+    /** Transformation result type */
     int type;
     /** Number of units for type SRCML_RESULTS_UNIT */
     int num_units;
