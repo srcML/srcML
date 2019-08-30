@@ -3,13 +3,13 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></destructor>
+    <destructor><name>~Class</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></destructor>
 }</block></class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <destructor><name>~<name>Class</name></name><parameter_list>()</parameter_list> <block>{<block_content>
+    <destructor><name>~Class</name><parameter_list>()</parameter_list> <block>{<block_content>
         <try>try <block>{<block_content/>}</block> <catch>catch<parameter_list>()</parameter_list><block>{<block_content/>}</block></catch></try>
     </block_content>}</block></destructor>
 }</block></class>
@@ -17,20 +17,22 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
-    <destructor_decl><name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
+    <destructor_decl><name>~A</name><parameter_list>()</parameter_list>;</destructor_decl>
 }</block></class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
-    <destructor_decl><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~<name>A</name></name><parameter_list>()</parameter_list>;</destructor_decl>
+    <destructor_decl><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~A</name><parameter_list>()</parameter_list>;</destructor_decl>
 }</block></class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class>class <name>A</name> <block>{
-    <destructor><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~<name>A</name></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></destructor>
+    <destructor><attribute>[<expr><name>MethodAttribute</name></expr>]</attribute> <name>~A</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></destructor>
 }</block></class>
 </unit>
+
+<unit language="C#"><destructor><name><name>A</name><operator>.</operator><name>~A</name></name><parameter_list>()</parameter_list><block>{<block_content/>}</block></destructor></unit>
 
 </unit>

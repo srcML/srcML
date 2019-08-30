@@ -4,7 +4,7 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
 <struct>struct <name>A</name> <block>{<public type="default">
   <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content>
-    <expr_stmt><expr><call><name>~<name>d</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+    <expr_stmt><expr><call><name>~d</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
   </block_content>}</block></function>
 </public>}</block>;</struct>
 </unit>

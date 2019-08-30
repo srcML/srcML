@@ -5316,6 +5316,32 @@ simple_name_optional_template[bool push = true] { CompleteElement element(this);
 ;
 
 // name including template argument list
+simple_name_optional_template_destop[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+        {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
+
+            // start outer name
+            startElement(SCNAME);
+
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
+        }
+        identifier_destop[push] (
+            { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            { generic_argument_list_check() }? (generic_argument_list)=>
+                generic_argument_list /* (options { greedy = true; } : generic_type_constraint)*  */ |
+
+            (cuda_argument_list) => cuda_argument_list |
+
+            {
+               // set the token to NOP since we did not find a template argument list
+               tp.setType(SNOP);
+            }
+       )
+;
+
+// name including template argument list
 simple_name_optional_template_optional_specifier[bool push = true] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
@@ -5340,6 +5366,49 @@ simple_name_optional_template_optional_specifier[bool push = true] { CompleteEle
                 tp.setType(SNOP);
         }
     )
+;
+
+// name including template argument list
+simple_name_optional_template_optional_specifier_destop[bool push = true] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
+        {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
+
+            // start outer name
+            startElement(SCNAME);
+
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
+        }
+        identifier_optional_specifier_destop[push, is_nop]
+    (
+        { generic_argument_list_check() }? (generic_argument_list)=>
+            generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
+
+        (cuda_argument_list) => cuda_argument_list |
+
+        {
+            // set the token to NOP since we did not find a template argument list
+            if (is_nop)
+                tp.setType(SNOP);
+        }
+    )
+;
+
+// a destructor identifier
+identifier_destop[bool push = true] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+                startElement(SNAME);
+        }
+        DESTOP push_namestack[push] identifier_list
+;
+
+// a destructor identifier
+identifier_optional_specifier_destop[bool push, bool& is_nop] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+                startElement(SNAME);
+        }
+        DESTOP push_namestack[push] (template_specifier { is_nop = false; })* identifier_list
 ;
 
 // an identifier
@@ -5536,17 +5605,17 @@ compound_name_cpp[bool& iscompound] { namestack.fill(""); bool iscolon = false; 
 
         (options { greedy = true; } : { !in_template_param }? typename_keyword { iscompound = true; })*
         (dcolon { iscompound = true; })*
-        (DESTOP set_bool[isdestructor] { iscompound = true; })*
-        (typename_keyword | simple_name_optional_template | push_namestack overloaded_operator)
+        (set_bool[isdestructor] { /* iscompound = true; */} simple_name_optional_template_destop |
+        typename_keyword | simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
             ({ !modifier_tokens_set.member(last_consumed) }? dcolon set_bool[iscolon, true] { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) clearnamestack { iscompound = true; })
             (options { greedy = true; } : dcolon)*
-            (DESTOP set_bool[isdestructor])*
+            (set_bool[isdestructor] simple_name_optional_template_optional_specifier_destop[iscolon] | 
             (multops)*
-            (simple_name_optional_template_optional_specifier[iscolon] | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
+            (simple_name_optional_template_optional_specifier[iscolon] | push_namestack overloaded_operator | function_identifier_main | keyword_identifier))
             //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
@@ -5561,17 +5630,17 @@ compound_name_csharp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         (modifiers_csharp)*
         (dcolon { iscompound = true; })*
-        (DESTOP set_bool[isdestructor] { iscompound = true; })*
-        (simple_name_optional_template | push_namestack overloaded_operator)
+        (set_bool[isdestructor] { /* iscompound = true; */} simple_name_optional_template_destop |
+        simple_name_optional_template | push_namestack overloaded_operator)
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
             ({ !modifier_tokens_set.member(last_consumed) }? dcolon { iscompound = true; } | (period | member_pointer) { iscompound = true; })
-            ( options { greedy = true; } : dcolon)*
+            (options { greedy = true; } : dcolon)*
+            (set_bool[isdestructor] simple_name_optional_template_destop | 
             (multops)*
-            (DESTOP set_bool[isdestructor])*
-            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main)
+            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main))
             //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 ;
