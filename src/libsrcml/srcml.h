@@ -51,6 +51,7 @@ extern "C" {
 #if defined(WIN32) && !defined(__MINGW32__)
 #define LIBSRCML_DECL __declspec(dllexport)
 #include <BaseTsd.h>
+typedef SSIZE_T ssize_t
 #else
 #define LIBSRCML_DECL
 #endif
