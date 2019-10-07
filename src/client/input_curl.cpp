@@ -36,6 +36,10 @@ bool curl_supported(const std::string& input_protocol) {
     return false;
 }
 
+void setCurlErrors();
+
+void clearCurlErrors();
+
 namespace {
 
     bool go = false;
