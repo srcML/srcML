@@ -36,7 +36,6 @@ typedef SSIZE_T ssize_t;
 #include <SRCMLStatus.hpp>
 #include <cstring>
 #include <libarchive_utilities.hpp>
-#include <curl_input_file.hpp>
 
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 

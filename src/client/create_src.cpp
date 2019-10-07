@@ -25,7 +25,6 @@
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
 #include <src_prefix.hpp>
-#include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <input_file.hpp>
 #include <input_archive.hpp>

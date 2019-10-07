@@ -30,7 +30,7 @@
 
 namespace {
 
-    bool curl_supported(const std::string& input_protocol) {
+    bool curl_supported_file(const std::string& input_protocol) {
         const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
         for (int i = 0; curl_types[i] != nullptr; ++i) {
             std::string curl(curl_types[i]);
@@ -66,7 +66,7 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
 
         status = archive_read_open_fd(libarchive_srcml.get(), input_sources[0], buffer_size);
 
-    } else if (curl_supported(input_sources[0].protocol)) {
+    } else if (curl_supported_file(input_sources[0].protocol)) {
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input_sources[0];
