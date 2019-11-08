@@ -77,22 +77,6 @@ int main(int, char* argv[]) {
 </s:unit>
 )";
 
-    const std::string srcml_macro = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/>
-
-<unit language="C++" filename="a.cpp"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
-<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
-</unit>
-
-</unit>
-)";
-
-    const std::string srcml_macro_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
-<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
-</unit>
-)";
-
     std::ofstream srcml_file("project.xml");
     srcml_file << srcml;
     srcml_file.close();
@@ -104,14 +88,6 @@ int main(int, char* argv[]) {
     std::ofstream srcml_file_ns("project_ns.xml");
     srcml_file_ns << srcml_ns;
     srcml_file_ns.close();
-
-    std::ofstream srcml_file_macro("project_macro.xml");
-    srcml_file_macro << srcml_macro;
-    srcml_file_macro.close();
-
-    std::ofstream srcml_file_macro_single("project_macro_single.xml");
-    srcml_file_macro_single << srcml_macro_single;
-    srcml_file_macro_single.close();
 
     /*
       srcml_archive_read_open_filename
@@ -147,36 +123,6 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_read_open_filename(archive, "project_ns.xml"), SRCML_STATUS_OK);
 
         dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_filename(archive, "project_macro.xml"), SRCML_STATUS_OK);
-
-        // dassert(archive->user_macro_list.size(), 4);
-        // dassert(archive->user_macro_list.at(0), "MACRO1");
-        // dassert(archive->user_macro_list.at(1), "src:macro");
-        // dassert(archive->user_macro_list.at(2), "MACRO2");
-        // dassert(archive->user_macro_list.at(3), "src:macro");
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_filename(archive, "project_macro_single.xml"), SRCML_STATUS_OK);
-
-        // dassert(archive->user_macro_list.size(), 4);
-        // dassert(archive->user_macro_list.at(0), "MACRO1");
-        // dassert(archive->user_macro_list.at(1), "src:macro");
-        // dassert(archive->user_macro_list.at(2), "MACRO2");
-        // dassert(archive->user_macro_list.at(3), "src:macro");
         dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
@@ -241,26 +187,6 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_memory(archive, srcml_macro.c_str(), srcml_macro.size()), SRCML_STATUS_OK);
-
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_memory(archive, srcml_macro_single.c_str(), srcml_macro_single.size()), SRCML_STATUS_OK);
-
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_memory(archive, 0, 1), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_archive_free(archive);
     }
@@ -314,30 +240,6 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_read_open_FILE(archive, file), SRCML_STATUS_OK);
 
         dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-        fclose(file);
-    }
-
-    {
-        FILE* file = fopen("project_macro.xml", "r");
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_FILE(archive, file), SRCML_STATUS_OK);
-
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-        fclose(file);
-    }
-
-    {
-        FILE* file = fopen("project_macro_single.xml", "r");
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_FILE(archive, file), SRCML_STATUS_OK);
-
         dassert(srcml_archive_get_options(archive), 0);
 
         srcml_archive_close(archive);
@@ -408,32 +310,6 @@ int main(int, char* argv[]) {
     }
 
     {
-        int fd = OPEN("project_macro.xml", O_RDONLY, 0);
-
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_fd(archive, fd), SRCML_STATUS_OK);
-
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-        CLOSE(fd);
-    }
-
-    {
-        int fd = OPEN("project_macro_single.xml", O_RDONLY, 0);
-
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_fd(archive, fd), SRCML_STATUS_OK);
-
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-        CLOSE(fd);
-    }
-
-    {
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -496,32 +372,6 @@ int main(int, char* argv[]) {
     }
 
     {
-        FILE* file = fopen("project_macro.xml", "r");
-
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback), SRCML_STATUS_OK);
-
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-        fclose(file);
-    }
-
-    {
-        FILE* file = fopen("project_macro_single.xml", "r");
-
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_read_open_io(archive, (void *)file, read_callback, close_callback), SRCML_STATUS_OK);
-
-        dassert(srcml_archive_get_options(archive), 0);
-
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-        fclose(file);
-    }
-
-    {
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_io(archive, 0, read_callback, close_callback), SRCML_STATUS_INVALID_ARGUMENT);
 
@@ -546,8 +396,6 @@ int main(int, char* argv[]) {
     UNLINK("project.xml");
     UNLINK("project_single.xml");
     UNLINK("project_ns.xml");
-    UNLINK("project_macro.xml");
-    UNLINK("project_macro_single.xml");
 
     srcml_cleanup_globals();
 

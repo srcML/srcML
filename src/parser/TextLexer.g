@@ -157,7 +157,7 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; } : '/'
                 $setType(JAVADOC_COMMENT_START);
                 mode = JAVADOC_COMMENT_END;
             } ('/' { $setType(WHOLE_COMMENT); mode = 0; })? |
-            { inLanguage(LANGUAGE_CXX) }? ('*' | '!')
+            { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CSHARP) }? ('*' | '!')
             {
                 $setType(DOXYGEN_COMMENT_START);
                 mode = DOXYGEN_COMMENT_END;

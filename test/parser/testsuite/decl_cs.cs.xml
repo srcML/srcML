@@ -2,27 +2,27 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="decl" filename="decl_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>private</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>private</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>protected</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>protected</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>public</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>public</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>public</specifier>  <type><specifier>readonly</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>public</specifier>  <specifier>readonly</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>public</specifier> <specifier>static</specifier> <type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>public</specifier> <type><specifier>volatile</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>public</specifier> <specifier>volatile</specifier> <name>int</name></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">

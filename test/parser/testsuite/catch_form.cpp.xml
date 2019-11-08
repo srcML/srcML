@@ -2,19 +2,19 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="catch">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></catch>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<parameter><decl><type><name>a</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></catch>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<catch>catch <parameter_list>(<parameter><decl><type><name>a</name> <name>b</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<parameter><decl><type><name>a</name> <name>b</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></catch>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<catch>catch <parameter_list>(<parameter><decl><type><modifier>...</modifier></type></decl></parameter>)</parameter_list> <block>{}</block></catch>
+<catch>catch <parameter_list>(<parameter><decl><type><modifier>...</modifier></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></catch>
 </unit>
 
 </unit>

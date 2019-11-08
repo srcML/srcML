@@ -50,7 +50,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { STYPEPREV,                   { "type",              SRC,  "ref",    "prev",     0,      0 }},
     { SCONDITION,                  { "condition",         SRC,      0,         0,     0,      0 }},
     { SBLOCK,                      { "block",             SRC,      0,         0,     0,      0 }},
-    { SCONTENT,                    { "content",           SRC,      0,         0,     0,      0 }},
+    { SCONTENT,                    { "block_content",     SRC,      0,         0,     0,      0 }},
     { SPSEUDO_BLOCK,               { "block",             SRC, "type",  "pseudo",     0,      0 }},
     { SINDEX,                      { "index",             SRC,      0,         0,     0,      0 }},
     { SDECLTYPE,                   { "decltype",          SRC,      0,         0,     0,      0 }},

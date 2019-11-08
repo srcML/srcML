@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+<unit revision="1.0.0" language="C">
+<comment type="line">//a</comment></unit>
+
+<unit revision="1.0.0" language="C">
+<comment type="line">//</comment></unit>
+
+<unit revision="1.0.0" language="C">
+<comment type="line" format="doxygen">///a</comment></unit>
+
+<unit revision="1.0.0" language="C">
+<comment type="line" format="doxygen">///</comment></unit>
+
+<unit revision="1.0.0" language="C">
+<comment type="block">/*a</comment></unit>
+
+<unit revision="1.0.0" language="C">
+<comment type="block">/*</comment></unit>
+
+<unit revision="1.0.0" language="C">
+<comment type="block" format="doxygen">/**a</comment></unit>
+
+<unit revision="1.0.0" language="C">
+<comment type="block" format="doxygen">/**</comment></unit>
+
+</unit>

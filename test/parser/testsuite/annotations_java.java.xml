@@ -3,7 +3,7 @@
 
 <unit language="Java">
 <function><annotation>@<name>Override</name></annotation>
-    <specifier>public</specifier> <type><name>void</name></type> <name>speak</name><parameter_list>()</parameter_list> <block>{}</block></function>
+    <type><specifier>public</specifier> <name>void</name></type> <name>speak</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
@@ -42,13 +42,13 @@ class <name>Person</name> <super_list><implements>implements <super><name>Serial
 <unit language="Java">
 <decl_stmt><decl><annotation>@<name>Id</name></annotation>
 <annotation>@<name>GeneratedValue</name><argument_list>(<argument><expr><name>strategy</name> <operator>=</operator> <name><name>GenerationType</name><operator>.</operator><name>AUTO</name></name></expr></argument>)</argument_list></annotation>
-<specifier>private</specifier> <type><name>Integer</name></type> <name>id</name></decl>;</decl_stmt>
+<type><specifier>private</specifier> <name>Integer</name></type> <name>id</name></decl>;</decl_stmt>
 </unit>
 
 <unit language="Java">
 <function><annotation>@<name>Id</name></annotation>
 <annotation>@<name>GeneratedValue</name><argument_list>(<argument><expr><name>strategy</name> <operator>=</operator> <name><name>GenerationType</name><operator>.</operator><name>AUTO</name></name></expr></argument>)</argument_list></annotation>
-<specifier>private</specifier> <type><name>Integer</name></type> <name>id</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<type><specifier>private</specifier> <name>Integer</name></type> <name>id</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
@@ -84,12 +84,6 @@ class <name>Person</name> <super_list><implements>implements <super><name>Serial
 
 <unit language="Java">
 <annotation>@<name>Entity</name></annotation>
-</unit>
-
-<unit language="Java">
-<annotation>@<name>Entity</name></annotation>
-<annotation>@<name>Author</name><argument_list>( <argument><expr><name>name</name> <operator>=</operator> <name>Benjamin</name> <name>Franklin</name></expr></argument>, <argument><expr><name>date</name> <operator>=</operator> <literal type="number">3</literal><operator>/</operator><literal type="number">27</literal><operator>/</operator><literal type="number">2003</literal></expr></argument>)</argument_list></annotation>
-<annotation>@<name>Inventor</name><argument_list>(<argument><expr><name>Benjamin</name> <name>Franklin</name></expr></argument>)</argument_list></annotation>
 </unit>
 
 </unit>

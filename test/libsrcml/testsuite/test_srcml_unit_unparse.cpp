@@ -52,7 +52,6 @@ int close_callback(void * context UNUSED) {
 int main(int, char* argv[]) {
 
     const std::string src = "a;\n";
-    const std::string src_macro = "MACRO1;\nMACRO2;\n";
     const std::string utf8_src = "/* ✓ */\n";
     const std::string latin_src = "/* \xfe\xff */\n";
 
@@ -85,22 +84,6 @@ int main(int, char* argv[]) {
 </unit>
 )";
 
-    const std::string srcml_macro = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/>
-
-<unit language="C++" filename="a.cpp"><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
-<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
-</unit>
-
-</unit>
-)";
-
-    const std::string srcml_macro_single = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><macro-list token="MACRO1" type="src:macro"/><macro-list token="MACRO2" type="src:macro"/><macro><name>MACRO1</name></macro><empty_stmt>;</empty_stmt>
-<macro><name>MACRO2</name></macro><empty_stmt>;</empty_stmt>
-</unit>
-)";
-
     std::ofstream srcml_file("project.xml");
     srcml_file << srcml;
     srcml_file.close();
@@ -120,14 +103,6 @@ int main(int, char* argv[]) {
     std::ofstream srcml_latin_from_latin_file("project_latin_from_latin.xml");
     srcml_latin_from_latin_file << latin_from_latin_srcml;
     srcml_latin_from_latin_file.close();
-
-    std::ofstream srcml_macro_file("project_macro.xml");
-    srcml_macro_file << srcml_macro;
-    srcml_macro_file.close();
-
-    std::ofstream srcml_macro_single_file("project_macro_single.xml");
-    srcml_macro_single_file << srcml_macro_single;
-    srcml_macro_single_file.close();
 
     /*
       srcml_unit_unparse_filename
@@ -206,36 +181,6 @@ int main(int, char* argv[]) {
         std::ifstream src_file("project_latin_from_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
 //        dassert(aunit, latin_src);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        srcml_unit_unparse_filename(unit, "project_macro.cpp");
-        std::ifstream src_file("project_macro.cpp");
-        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-        dassert(aunit, src_macro);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        srcml_unit_unparse_filename(unit, "project_macro_single.cpp");
-        std::ifstream src_file("project_macro_single.cpp");
-        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-        dassert(aunit, src_macro);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -384,38 +329,6 @@ int main(int, char* argv[]) {
         srcml_unit_unparse_memory(unit, &s, &size);
 
 //        dassert(s, latin_src);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-        srcml_memory_free(s);
-    }
-
-    {
-        char* s;
-        size_t size;
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        srcml_unit_unparse_memory(unit, &s, &size);
-
-        dassert(s, src_macro);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-        srcml_memory_free(s);
-    }
-
-    {
-        char* s;
-        size_t size;
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        srcml_unit_unparse_memory(unit, &s, &size);
-
-        dassert(s, src_macro);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -602,40 +515,6 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        FILE* file = fopen("project_macro.cpp", "w");
-        srcml_unit_unparse_FILE(unit, file);
-        fclose(file);
-        std::ifstream src_file("project_macro.cpp");
-        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-        dassert(aunit, src_macro);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        FILE* file = fopen("project_macro_single.cpp", "w");
-        srcml_unit_unparse_FILE(unit, file);
-        fclose(file);
-        std::ifstream src_file("project_macro_single.cpp");
-        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-        dassert(aunit, src_macro);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project.c", "w");
@@ -810,44 +689,6 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project_macro.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
-        srcml_unit_unparse_fd(unit, fd);
-        CLOSE(fd);
-        std::ifstream src_file("project_macro.cpp");
-        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-        dassert(aunit, src_macro);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-
-        UNLINK("project_macro.cpp");
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project_macro_single.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
-        srcml_unit_unparse_fd(unit, fd);
-        CLOSE(fd);
-        std::ifstream src_file("project_macro_single.cpp");
-        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-        dassert(aunit, src_macro);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-
-        UNLINK("project_macro_single.cpp");
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
@@ -1014,40 +855,6 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        FILE* file = fopen("project_macro.cpp", "w");
-        srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
-        fclose(file);
-        std::ifstream src_file("project_macro.cpp");
-        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-        dassert(aunit, src_macro);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        srcml_archive_read_open_filename(archive, "project_macro_single.xml");
-        srcml_unit* unit = srcml_archive_read_unit(archive);
-        FILE* file = fopen("project_macro_single.cpp", "w");
-        srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
-        fclose(file);
-        std::ifstream src_file("project_macro_single.cpp");
-        std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-        dassert(aunit, src_macro);
-
-        srcml_unit_free(unit);
-        srcml_archive_close(archive);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project.c", "w");
@@ -1141,10 +948,6 @@ int main(int, char* argv[]) {
     UNLINK("project_latin_from_utf8.xml");
     UNLINK("project_latin_from_latin.cpp");
     UNLINK("project_latin_from_latin.xml");
-    UNLINK("project_macro.cpp");
-    UNLINK("project_macro.xml");
-    UNLINK("project_macro_single.cpp");
-    UNLINK("project_macro_single.xml");
 
     srcml_cleanup_globals();
 

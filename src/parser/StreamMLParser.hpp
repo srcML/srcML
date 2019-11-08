@@ -274,6 +274,7 @@ private:
         // that was enqueued
         if (isoption(options, SRCML_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
+
             qetoken->endline = lastline;
             qetoken->endcolumn = lastcolumn;
 
@@ -358,6 +359,8 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                open_comments.push(srcMLParser::SCOMMENT);
+
                 break;
 
             case srcMLParser::LINE_DOXYGEN_COMMENT_START:
@@ -366,9 +369,13 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                open_comments.push(srcMLParser::SLINE_DOXYGEN_COMMENT);
+
                 break;
 
             case srcMLParser::LINE_DOXYGEN_COMMENT_END:
+
+                open_comments.pop();
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
@@ -377,11 +384,11 @@ private:
                     slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
                 }
 
                 break;
@@ -391,6 +398,8 @@ private:
                 pushSSkipToken(srcMLParser::SDOXYGEN_COMMENT);
                 pushSkipToken();
                 srcMLParser::consume();
+
+                open_comments.push(srcMLParser::SDOXYGEN_COMMENT);
 
                 break;
 
@@ -406,6 +415,9 @@ private:
                 break;
 
             case srcMLParser::BLOCK_COMMENT_END:
+
+                open_comments.pop();
+
                 pushSkipToken();
                 srcMLParser::consume();
                 slastcolumn = LT(1)->getColumn() - 1;
@@ -416,6 +428,8 @@ private:
 
             case srcMLParser::DOXYGEN_COMMENT_END:
 
+                open_comments.pop();
+
                 pushSkipToken();
                 srcMLParser::consume();
                 slastcolumn = LT(1)->getColumn() - 1;
@@ -425,6 +439,8 @@ private:
                 break;
 
             case srcMLParser::JAVADOC_COMMENT_END:
+
+                open_comments.pop();
 
                 pushSkipToken();
                 srcMLParser::consume();
@@ -440,6 +456,8 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                open_comments.push(srcMLParser::SJAVADOC_COMMENT);
+
                 break;
 
             case srcMLParser::LINE_COMMENT_START:
@@ -448,9 +466,13 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                open_comments.push(srcMLParser::SLINECOMMENT);
+
                 break;
 
             case srcMLParser::LINE_COMMENT_END:
+
+                open_comments.pop();
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
@@ -621,6 +643,16 @@ private:
 
         rf.insert(rf.end(), std::make_move_iterator(skip().begin()), std::make_move_iterator(skip().end()));
         skip().clear();
+    }
+
+    inline void completeSkip() {
+
+        if (!open_comments.empty()) {
+            slastcolumn = LT(1)->getColumn() - 1;
+            slastline = LT(1)->getLine();
+            pushESkipToken(open_comments.top());
+            open_comments.pop();
+        }
     }
 
     /*
@@ -866,8 +898,6 @@ private:
     /** if in a skip */
     bool inskip = false;
 
-    std::stack<antlr::RefToken> ends;
-
     /** token buffer */
     std::deque<antlr::RefToken> tb;
 
@@ -888,6 +918,12 @@ private:
 
     /** any output is paused */
     bool paused = false;
+
+    /** open position elements */
+    std::stack<antlr::RefToken> ends;
+
+    /** open comments */
+    std::stack<int> open_comments;
 };
 
 #endif

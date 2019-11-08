@@ -20,6 +20,9 @@
 # Turn ON/OFF internal CPackDeb debugging
 set(CPACK_DEBIAN_PACKAGE_DEBUG OFF)
 
+# icon
+set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
+
 # Generate user and SRCMLDEV rpms
 # Note: Yes, this is CPACK_DEB_, not CPACK_DEBIAN
 set(CPACK_DEB_COMPONENT_INSTALL ON)

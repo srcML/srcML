@@ -364,45 +364,6 @@ int main(int, char* argv[]) {
     }
 
     /*
-      srcml_archive_register_macro
-    */
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-
-        srcml_archive_register_macro(archive, "foo", "bar");
-
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-
-        srcml_archive_register_macro(archive, "foo", "");
-        srcml_archive_register_macro(archive, "foo", "bar");
-
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-
-        dassert(srcml_archive_register_macro(archive, 0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-
-        dassert(srcml_archive_register_macro(archive, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
-        srcml_archive_free(archive);
-    }
-
-    {
-        dassert(srcml_archive_register_macro(0, "foo", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    /*
       srcml_archive_set_srcdiff_revision
     */
 

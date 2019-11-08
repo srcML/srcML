@@ -494,6 +494,12 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
+    srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
+
+    // how we detect empty elements: the position is wrong
+    if (stoken->endline < stoken->getLine() || (stoken->endline == stoken->getLine() && stoken->endcolumn < stoken->getColumn()))
+            return;
+
     thread_local const std::string& prefix = namespaces[POS].prefix;
     thread_local const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
     thread_local const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
@@ -508,7 +514,6 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     xmlOutputBufferWrite(output_buffer, 1, "\"");
 
     // position end attribute, e.g. pos:end="2:1"
-    srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
     xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
     if (token->getLine() > stoken->endline) {
         xmlOutputBufferWriteString(output_buffer, "INVALID_POS(");

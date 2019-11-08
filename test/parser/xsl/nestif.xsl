@@ -16,10 +16,10 @@
 
 <!-- wrap the entire contents of the unit inside a block -->
 <xsl:template match="src:unit/src:unit"><xsl:copy><xsl:copy-of select="@*"/><xsl:text>
-</xsl:text><if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition> <block>{
-    <xsl:copy-of select="*|text()"/>}</block></if>
-<else>else <block>{
-    <xsl:copy-of select="*|text()"/>}</block></else></if_stmt><xsl:text>
+</xsl:text><if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition> <block>{<block_content>
+    <xsl:copy-of select="*|text()"/></block_content>}</block></if>
+<else>else <block>{<block_content>
+    <xsl:copy-of select="*|text()"/></block_content>}</block></else></if_stmt><xsl:text>
 </xsl:text></xsl:copy>
 </xsl:template>
 
