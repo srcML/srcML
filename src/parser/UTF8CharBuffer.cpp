@@ -205,7 +205,11 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded
     // setup callbacks, mainly wrappers around fread() for FILE* converted to file descriptor
     sio.context = (void*) file;
     sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
-        return fread(buf, 1, insize, (FILE*) context);
+        size_t result = fread(buf, 1, insize, (FILE*) context);
+        if (result == 0 && feof((FILE*) context) != 0)
+            return -1;
+        else
+            return (size_t) result;
     };
     sio.close_callback = [](void*) -> int { return 0; };
 }
@@ -290,7 +294,7 @@ ssize_t UTF8CharBuffer::readChars() {
     // hash only the read data, not the inbytesleft (from previous call)
     if (hashneeded) {
 #ifdef _MSC_BUILD
-        CryptHashData(crypt_hash, (BYTE *)raw.data() + inbytesleft, raw.size() - inbytesleft, 0);
+        CryptHashData(crypt_hash, (BYTE *)raw.data() + inbytesleft, (DWORD) (raw.size() - inbytesleft), 0);
 #else
         SHA1_Update(&ctx, raw.data() + inbytesleft, (SHA_LONG) (raw.size() - inbytesleft));
 #endif

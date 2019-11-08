@@ -3,96 +3,96 @@
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <block>{}</block></constructor>
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
 }</block></class>
 </unit>
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{}</block></constructor>
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{<block_content/>}</block></constructor>
 }</block></class>
 </unit>
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <block>{
-        <try>try <block>{}</block> <catch>catch<parameter_list>()</parameter_list><block>{}</block></catch></try>
-    }</block></constructor>
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <try>try <block>{<block_content/>}</block> <catch>catch<parameter_list>()</parameter_list><block>{<block_content/>}</block></catch></try>
+    </block_content>}</block></constructor>
 }</block></class>
 </unit>
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <try>try <block>{}</block><catch>catch<parameter_list>()</parameter_list><block>{}</block></catch></try>
-    }</block></constructor>
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{<block_content>
+        <try>try <block>{<block_content/>}</block><catch>catch<parameter_list>()</parameter_list><block>{<block_content/>}</block></catch></try>
+    </block_content>}</block></constructor>
 }</block></class>
 </unit>
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <try>try <block>{}</block> <catch>catch<parameter_list>()</parameter_list><block>{}</block></catch> <finally>finally <block>{}</block></finally></try>
-    }</block></constructor>
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{<block_content>
+        <try>try <block>{<block_content/>}</block> <catch>catch<parameter_list>()</parameter_list><block>{<block_content/>}</block></catch> <finally>finally <block>{<block_content/>}</block></finally></try>
+    </block_content>}</block></constructor>
 }</block></class>
 </unit>
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <try>try <block>{
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{<block_content>
+        <try>try <block>{<block_content>
             <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-        }</block> <catch>catch<parameter_list>()</parameter_list><block>{
+        </block_content>}</block> <catch>catch<parameter_list>()</parameter_list><block>{<block_content>
             <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-        }</block></catch> <finally>finally <block>{
+        </block_content>}</block></catch> <finally>finally <block>{<block_content>
             <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-        }</block></finally></try>
-    }</block></constructor>
+        </block_content>}</block></finally></try>
+    </block_content>}</block></constructor>
 }</block></class>
 </unit>
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo">
-          <try>try <block>{
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{<block_content>
+        <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo"><block_content>
+          <try>try <block>{<block_content>
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-          }</block> <catch>catch<parameter_list>()</parameter_list><block>{
+          </block_content>}</block> <catch>catch<parameter_list>()</parameter_list><block>{<block_content>
               <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-          }</block></catch> <finally>finally <block>{
+          </block_content>}</block></catch> <finally>finally <block>{<block_content>
               <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-        }</block></finally></try></block></for>
-    }</block></constructor>
+        </block_content>}</block></finally></try></block_content></block></for>
+    </block_content>}</block></constructor>
 }</block></class>
 </unit>
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
-          <try>try <block>{
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{<block_content>
+        <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content>
+          <try>try <block>{<block_content>
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-          }</block> <catch>catch<parameter_list>()</parameter_list><block>{
+          </block_content>}</block> <catch>catch<parameter_list>()</parameter_list><block>{<block_content>
               <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-          }</block></catch> <finally>finally <block>{
+          </block_content>}</block></catch> <finally>finally <block>{<block_content>
               <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-        }</block></finally></try></block></while>
-    }</block></constructor>
+        </block_content>}</block></finally></try></block_content></block></while>
+    </block_content>}</block></constructor>
 }</block></class>
 </unit>
 
 <unit language="Java">
 <class><specifier>public</specifier> class <name>Class</name> <block>{ 
-    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{
-        <if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
-          <try>try <block>{
+    <constructor><name>Class</name><parameter_list>()</parameter_list> <throws>throws <argument><expr><name>Exception</name></expr></argument></throws> <block>{<block_content>
+        <if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content>
+          <try>try <block>{<block_content>
               <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-          }</block> <catch>catch<parameter_list>()</parameter_list><block>{
+          </block_content>}</block> <catch>catch<parameter_list>()</parameter_list><block>{<block_content>
               <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-          }</block></catch> <finally>finally <block>{
+          </block_content>}</block></catch> <finally>finally <block>{<block_content>
               <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-        }</block></finally></try></block></if></if_stmt>
-    }</block></constructor>
+        </block_content>}</block></finally></try></block_content></block></if></if_stmt>
+    </block_content>}</block></constructor>
 }</block></class>
 </unit>
 

@@ -36,3 +36,7 @@ srcML.sublime-workspace
 
 # Windows Extra files/folders
 src/parser/PhaseOne.txt
+
+
+# Dependency Version File
+deps_version.txt

@@ -90,7 +90,7 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
-set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <bugs@srcML.org>")
+set(CPACK_PACKAGE_CONTACT "Software Development Laboratories srcML.org>")
  
 # package version
 # set as part of project()
@@ -103,9 +103,6 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
 
 # welcome message
 set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
-
-# icon
-set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 
 # strip executables
 #set(CPACK_STRIP_FILES ON)

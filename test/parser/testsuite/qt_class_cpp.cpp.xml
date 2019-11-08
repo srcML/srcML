@@ -26,7 +26,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><type><name>void</name></type> <name>signals</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name>void</name></type> <name>signals</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

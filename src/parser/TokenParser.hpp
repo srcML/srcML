@@ -75,6 +75,9 @@ public:
     /** abstract method for starting adding an element */
     virtual void addElement(int) = 0;
 
+    /** abstract method for completing any unended skipped elements */
+    virtual void completeSkip() = 0;
+
     /** abstract method for flushing skipped */
     virtual void flushSkip() = 0;
 

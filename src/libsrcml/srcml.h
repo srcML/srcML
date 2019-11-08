@@ -52,7 +52,6 @@ extern "C" {
 #define LIBSRCML_DECL __declspec(dllexport)
 #include <BaseTsd.h>
 typedef SSIZE_T ssize_t;
-//typedef LONG_PTR ssize_t;
 #else
 #define LIBSRCML_DECL
 #endif
@@ -384,14 +383,6 @@ LIBSRCML_DECL int srcml_register_namespace(const char* prefix, const char* ns);
  */
 LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const char* data);
 
-/** Register a macro (token) to be processed as a special type
- * @param token Name of macro
- * @param type Macro type
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_register_macro(const char* token, const char* type);
-
 /** Set the end of line characters to be used for unparse
  * @param eol The kind of eol to use for unparse
  * @retval SRCML_STATUS_OK on success
@@ -528,35 +519,6 @@ LIBSRCML_DECL const char* srcml_get_namespace_uri(size_t pos);
  * @return NULL on failure
  */
 LIBSRCML_DECL const char* srcml_get_uri_from_prefix(const char* prefix);
-/**@}*/
-
-/**@{ @name Macro Handling */
-/**
- * @return The number of currently defined macros.
- */
-LIBSRCML_DECL size_t srcml_get_macro_list_size();
-
-/**
- * @param pos Position in macr list
- * @return The registered token at the given pos on success
- * @return NULL on failure
- */
-LIBSRCML_DECL const char* srcml_get_macro_token(size_t pos);
-
-/**
- * @param token A macro token
- * @return The registered type for the given token on success
- * @return NULL on failure
- */
-LIBSRCML_DECL const char* srcml_get_macro_token_type(const char* token);
-
-/**
- * @param pos Position in macro list
- * @return The type at the given pos on succcess
- * @return NULL on failure
- */
-LIBSRCML_DECL const char* srcml_get_macro_type(size_t pos);
-/**@}*/
 
 /** Cleanup and free globally allocated items (usually by libxml2)
  */
@@ -845,22 +807,6 @@ LIBSRCML_DECL int srcml_archive_register_namespace(struct srcml_archive* archive
  * @return Status error code on failure.
  */
 LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive* archive, const char* target, const char* data);
-
-/** Register a macro (token) to be processed as a special type.
- * @details Here is a list of the currently supported special types:
- * - src:macro     -> Treat the token as a standalone macro (will be marked with a macro tag)
- * - src:type      -> Treat the token as an identifier (will still be marked as macro tag)
- * - src:name      -> Treat the token as an identifier (will still be marked as macro tag)
- * - src:specifier -> Treat the token as a specifier (will be marked with a specifier tag around macro tag)
- * - src:label     -> Treat the token as a label (a goto label, will be marked with a label tag around macro tag)
- * - src:case      -> Treat as a case label (mark with case tag) either case keyword or case keyword and label
- * @param archive A srcml_archive
- * @param token Name of macro
- * @param type Macro type
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure.
- */
-LIBSRCML_DECL int srcml_archive_register_macro(struct srcml_archive* archive, const char* token, const char* type);
 /**@}*/
 
 /**@{ @name Archive Optional Attributes */
@@ -978,35 +924,6 @@ LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_target(const 
  * @return The processing instruction data
  */
 LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_data(const struct srcml_archive* archive);
-
-/**
- * @param archive A srcml_archive
- * @return The number of currently defined macros, or 0 if archive is NULL
- */
-LIBSRCML_DECL size_t srcml_archive_get_macro_list_size(const struct srcml_archive* archive);
-
-/**
- * @param archive A srcml_archive
- * @param pos A macro position
- * @return Token for the given position, or NULL
- */
-LIBSRCML_DECL const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, size_t pos);
-
-/**
- * @param archive A srcml_archive
- * @param token A macro token
- *
- * @returns The registered type for the given token, or NULL
- */
-LIBSRCML_DECL const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archive, const char* token);
-
-/**
- * @param archive A srcml_archive
- * @param pos Position in macro list
- *
- * @returns The type at the given pos on succcess, or NULL
- */
-LIBSRCML_DECL const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, size_t pos);
 
 /** Retrieve the currently registered language for a file extension
  * @param archive A srcml_archive
@@ -1200,7 +1117,7 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
  * Transformation result. Passed to srcml_unit_apply_transforms() to collect results of transformation
  */
 struct srcml_transformation_result_t {
-  /** Transformation result type */
+    /** Transformation result type */
     int type;
     /** Number of units for type SRCML_RESULTS_UNIT */
     int num_units;

@@ -6,11 +6,11 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<decl_stmt><decl><specifier>inline</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>inline</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<decl_stmt><decl><specifier>extern</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>extern</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
@@ -18,11 +18,11 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<decl_stmt><decl><specifier>virtual</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>virtual</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<decl_stmt><decl><specifier>explicit</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>explicit</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <!-- final and override are contextual -->
@@ -35,7 +35,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<decl_stmt><decl><specifier>constexpr</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>constexpr</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

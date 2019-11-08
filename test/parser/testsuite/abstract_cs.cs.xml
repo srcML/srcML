@@ -9,7 +9,7 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <class><specifier>abstract</specifier> class <name>C</name>
 <block>{
-  <function_decl><specifier>public</specifier> <specifier>abstract</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><type><specifier>public</specifier> <specifier>abstract</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>;</function_decl>
 }</block></class>
 </unit>
 

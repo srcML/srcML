@@ -388,7 +388,7 @@ const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
         int insert_attr_begin = 0;
         int insert_attr_end = 0;
 
-        if (pos >= 0) {
+        if (pos != std::string::npos) {
             // find url attribute
             std::string s(unit->srcml, 0, pos);
             auto pos2 = s.find(" url=");

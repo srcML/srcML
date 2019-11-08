@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef INCLUDED_LIBXML2_UTILTIES_HPP
-#define INCLUDED_LIBXML2_UTILTIES_HPP
+#ifndef INCLUDED_LIBXML2_UTILITIES_HPP
+#define INCLUDED_LIBXML2_UTILITIES_HPP
 
 #include <libxml/xpath.h>
 #include <libxml/parser.h>

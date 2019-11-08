@@ -25,10 +25,6 @@ _srcml_archive_has_hash
 _srcml_archive_get_url
 _srcml_archive_get_xml_encoding
 _srcml_archive_get_language
-_srcml_archive_get_macro_list_size
-_srcml_archive_get_macro_token
-_srcml_archive_get_macro_token_type
-_srcml_archive_get_macro_type
 _srcml_archive_get_namespace_uri
 _srcml_archive_get_namespace_prefix
 _srcml_archive_get_namespace_size
@@ -43,7 +39,6 @@ _srcml_archive_get_tabstop
 _srcml_archive_get_version
 _srcml_archive_get_srcdiff_revision
 _srcml_archive_register_file_extension
-_srcml_archive_register_macro
 _srcml_archive_register_namespace
 _srcml_archive_set_url
 _srcml_archive_set_xml_encoding
@@ -79,10 +74,6 @@ _srcml_get_url
 _srcml_get_xml_encoding
 _srcml_get_filename
 _srcml_get_language
-_srcml_get_macro_list_size
-_srcml_get_macro_token
-_srcml_get_macro_token_type
-_srcml_get_macro_type
 _srcml_get_namespace_uri
 _srcml_get_uri_from_prefix
 _srcml_get_namespace_size
@@ -115,7 +106,6 @@ _srcml_archive_read_open_FILE
 _srcml_archive_read_unit
 _srcml_archive_skip_unit
 _srcml_register_file_extension
-_srcml_register_macro
 _srcml_register_namespace
 _srcml_set_url
 _srcml_set_xml_encoding
