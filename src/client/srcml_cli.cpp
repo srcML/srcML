@@ -24,6 +24,7 @@
 #include <src_prefix.hpp>
 #include <stdlib.h>
 #include <SRCMLStatus.hpp>
+#include <algorithm>
 
 // tell cli11 to use boost optional
 #define CLI11_BOOST_OPTIONAL 1
@@ -164,12 +165,10 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Output version number and exit")
         ->group("GENERAL OPTIONS");
 
-    auto verbose =
     app.add_flag_callback("--verbose,-v", [&]() { srcml_request.command |= SRCML_COMMAND_VERBOSE; },
         "Conversion and status information to stderr")
         ->group("GENERAL OPTIONS");
 
-    auto quiet =
     app.add_flag_callback("--quiet,-q",   [&]() { srcml_request.command |= SRCML_COMMAND_QUIET; },
         "Suppress status messages")
         ->group("GENERAL OPTIONS");
@@ -231,7 +230,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
             return "";
         });
-    text->needs(language);
 
     app.add_option("--files-from", 
         "Input source-code filenames from FILE")
@@ -257,12 +255,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
 
     auto output_xml =
-    app.add_flag_callback("--output-xml,-X",   [&]() { srcml_request.command |= SRCML_COMMAND_XML; },
+    app.add_flag_callback("--output-srcml,-X",   [&]() { srcml_request.command |= SRCML_COMMAND_XML; },
         "Output in XML instead of text")
         ->group("CREATING SRCML");
     
     auto output_xml_outer =
-    app.add_flag_callback("--output-xml-outer",[&]() { 
+    app.add_flag_callback("--output-srcml-outer",[&]() { 
         srcml_request.command |= SRCML_COMMAND_XML_FRAGMENT;
         srcml_request.command |= SRCML_COMMAND_XML;
     },
@@ -270,7 +268,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
     
     auto output_xml_inner =
-    app.add_flag_callback("--output-xml-inner",[&]() {
+    app.add_flag_callback("--output-srcml-inner",[&]() {
         srcml_request.command |= SRCML_COMMAND_XML_RAW;
         srcml_request.command |= SRCML_COMMAND_XML;
     },
@@ -288,7 +286,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Set tab stop at every NUM characters, default of 8")
         ->type_name("NUM")
         ->group("MARKUP OPTIONS")
-        ->check(CLI::Number)
+        ->check(CLI::Range(1, 8))
         ->each([&](std::string){ *srcml_request.markup_options |= SRCML_OPTION_POSITION; });
 
 #if 0
@@ -326,7 +324,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             return std::string("");
         });
 
-    app.add_flag_callback("--no-xml-declaration",[&]() { *srcml_request.markup_options |= SRCML_OPTION_XML_DECL; },
+    app.add_flag_callback("--no-xml-declaration",[&]() { *srcml_request.markup_options |= SRCML_OPTION_NO_XML_DECL; },
         "Do not output the XML declaration")
         ->type_name("XML")
         ->group("ENCODING");
@@ -396,6 +394,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("URI")
         ->group("METADATA OPTIONS");
 
+    auto filename =
     app.add_option("--filename,-f", srcml_request.att_filename,
         "Set the filename attribute")
         ->type_name("FILENAME")
@@ -423,6 +422,28 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     app.add_option("--unit,-U", srcml_request.unit, 
         "Extract the source code for an individual unit at position NUM in a srcML archive")
         ->type_name("NUM")
+        ->group("EXTRACTING SOURCE CODE");
+
+    app.add_option_function<std::string>("--eol", [&](std::string value) {
+
+        std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+
+        if (value == "auto") {
+            srcml_request.eol = SOURCE_OUTPUT_EOL_AUTO;
+        } else if (value == "lf" || value == "unix") {
+            srcml_request.eol = SOURCE_OUTPUT_EOL_LF;
+        } else if (value == "cr") {
+            srcml_request.eol = SOURCE_OUTPUT_EOL_CR;
+        } else if (value == "crlf" || value == "windows") {
+            srcml_request.eol = SOURCE_OUTPUT_EOL_CRLF;
+        } else {
+            SRCMLstatus(ERROR_MSG, "srcml: EOL must be (default) AUTO, UNIX or LF, Windows or CRLF, or CR");
+            exit(SRCML_STATUS_INVALID_ARGUMENT);
+        }
+
+        return true;
+    },
+        "Set the output source EOL: AUTO (default), UNIX or LF, Windows or CRLF, or CR")->type_name("EOL")
         ->group("EXTRACTING SOURCE CODE");
 
     auto output_src =
@@ -594,10 +615,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Run a user defined external script or application on srcml client output")
         ->group("");
     
-    app.add_flag("--line-ending", srcml_request.line_ending,
-        "Set the line endings for a desired environment \"Windows\" or \"Unix\"")
-        ->group("");
-    
     app.add_flag_callback("--parser-test",      [&]() {
 
         srcml_request.command |= SRCML_COMMAND_PARSER_TEST; 
@@ -610,7 +627,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Suppress colorization of output")
         ->group("");
 
-    quiet->excludes(verbose);
     output_src->excludes(output_xml);
     output_src->excludes(output_xml_inner);
     output_src->excludes(output_xml_outer);
@@ -618,7 +634,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     output_xml->excludes(output_xml_inner);
     output_xml->excludes(output_xml_outer);
     output_xml_outer->excludes(output_xml_inner);
-    
+
     try {
         app.parse(commandline);
     } catch (const CLI::CallForHelp &e) {
@@ -632,6 +648,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         exit(CLI_STATUS_ERROR);
     }
 
+    // make sure --text has an indication of language
+    if (!text->empty() && language->empty() && filename->empty()) {
+        SRCMLstatus(ERROR_MSG, "srcml: --text requires --language or --filename to determine source language");
+        exit(CLI_STATUS_ERROR);
+    }
+    
     if (srcml_request.output_filename == "")
         srcml_request.output_filename = "stdout://-";
 

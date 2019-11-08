@@ -1,6 +1,6 @@
 ##
 # @file CMakeLists.txt
-#
+# 
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
 
 if(NOT DYNAMIC_LOAD_ENABLED)
     add_definitions(-DNO_DLLOAD)
@@ -35,7 +37,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
 
     include_directories(${WINDOWS_DEP_PATH}/include)
-    link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
+    link_directories(${WINDOWS_DEP_PATH}/x64/$(ConfigurationName)/lib)
     
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)

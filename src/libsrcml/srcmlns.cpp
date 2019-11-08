@@ -35,8 +35,13 @@ Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
         auto it = view.find(ns.uri);
         if (it != view.end()) {
 
-            // update the default prefix
-            view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags |= ns.flags; });
+            // update the default prefix, but only the default prexi
+            auto&& default_view = default_namespaces.get<nstags::uri>();
+            auto default_it = default_view.find(ns.uri);
+            if (default_it == default_view.end() || it->prefix == default_it->prefix) {
+
+                view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags |= ns.flags; });
+            }
 
         } else {
 

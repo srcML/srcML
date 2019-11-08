@@ -14,7 +14,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function_decl type="operator"><specifier>virtual</specifier> <type><name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> = <literal type="number">0</literal>;</function_decl>
+<function_decl type="operator"><type><specifier>virtual</specifier> <name>NonCopyable</name> <modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>NonCopyable</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> = <literal type="number">0</literal>;</function_decl>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
@@ -22,11 +22,11 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function_decl><specifier>virtual</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>final</specifier>;</function_decl>
+<function_decl><type><specifier>virtual</specifier> <name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <specifier>final</specifier>;</function_decl>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function_decl><specifier>virtual</specifier> <type><name>void</name></type> <name>some_func</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list> <specifier>override</specifier>;</function_decl>
+<function_decl><type><specifier>virtual</specifier> <name>void</name></type> <name>some_func</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list> <specifier>override</specifier>;</function_decl>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

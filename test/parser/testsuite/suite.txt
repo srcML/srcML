@@ -34,8 +34,6 @@ LANGUAGE_CXX_GEN destructor_virtual
 #LANGUAGE_C_FAMILY_NO_SHARP union
 
 LANGUAGE_C_FAMILY asm
-#LANGUAGE_C_FAMILY macro
-LANGUAGE_C_FAMILY_NO_SHARP macro
 LANGUAGE_C_FAMILY extern
 LANGUAGE_C_FAMILY main
 LANGUAGE_C_FAMILY_NO_SHARP function_pointer
@@ -255,6 +253,7 @@ LANGUAGE_OO specifier_oo
 LANGUAGE_OO throw_base
 LANGUAGE_OO throw
 
+LANGUAGE_NOP comment_eof
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

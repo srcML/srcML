@@ -260,12 +260,14 @@ int srcml_archive_set_version(struct srcml_archive* archive, const char* version
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_archive_set_options(struct srcml_archive* archive, unsigned long long options) {
+int srcml_archive_set_options(struct srcml_archive* archive, size_t options) {
 
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->options = options;
+    int modoption = options % (1<<7);
+
+    archive->options = modoption;
 
     return SRCML_STATUS_OK;
 }
@@ -275,14 +277,6 @@ int srcml_archive_set_options(struct srcml_archive* archive, unsigned long long 
  */
 int srcml_archive_is_solitary_unit(const struct srcml_archive* archive) {
     return (archive->options & SRCML_OPTION_ARCHIVE) == 0;
-}
-
-/**
- * @param archive a srcml_archive
- */
-int srcml_archive_is_fragment(const struct srcml_archive* archive) {
-
-    return (archive->options & SRCML_OPTION_FRAGMENT) != 0;
 }
 
 /**
@@ -302,32 +296,6 @@ int srcml_archive_disable_solitary_unit(struct srcml_archive* archive) {
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     archive->options |= (unsigned long long)(SRCML_OPTION_ARCHIVE);
-
-    return SRCML_STATUS_OK;
-}
-
-/**
- * @param archive a srcml_archive
- */
-int srcml_archive_disable_fragment(struct srcml_archive* archive) {
-
-    if (archive == nullptr)
-        return SRCML_STATUS_INVALID_ARGUMENT;
-
-    archive->options &= ~(unsigned long long)(SRCML_OPTION_FRAGMENT);
-
-    return SRCML_STATUS_OK;
-}
-
-/**
- * @param archive a srcml_archive
- */
-int srcml_archive_enable_fragment(struct srcml_archive* archive) {
-
-    if (archive == nullptr)
-        return SRCML_STATUS_INVALID_ARGUMENT;
-
-    archive->options |= (unsigned long long)(SRCML_OPTION_FRAGMENT);
 
     return SRCML_STATUS_OK;
 }
@@ -381,7 +349,7 @@ int srcml_archive_disable_hash(struct srcml_archive* archive) {
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_archive_enable_option(struct srcml_archive* archive, unsigned long long option) {
+int srcml_archive_enable_option(struct srcml_archive* archive, size_t option) {
 
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -390,7 +358,9 @@ int srcml_archive_enable_option(struct srcml_archive* archive, unsigned long lon
 //        archive->options |= SRCML_OPTION_CPP_DECLARED;
     }
 
-    archive->options |= option;
+    int modoption = option % (1<<7);
+
+    archive->options |= modoption;
 
     return SRCML_STATUS_OK;
 }
@@ -405,12 +375,14 @@ int srcml_archive_enable_option(struct srcml_archive* archive, unsigned long lon
  *
  * @returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_archive_disable_option(struct srcml_archive* archive, unsigned long long option) {
+int srcml_archive_disable_option(struct srcml_archive* archive, size_t option) {
 
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->options &= ~option;
+    int modoption = option % (1<<7);
+
+    archive->options &= ~modoption;
 
     return SRCML_STATUS_OK;
 }
@@ -650,12 +622,13 @@ const char* srcml_archive_get_version(const struct srcml_archive* archive) {
 /**
  * srcml_archive_get_options
  * @param archive a srcml_archive
+ * Note: Only public options, as defined in srcml.h, are returned
  *
  * @returns Retrieve the currently set options.
  */
-unsigned long long srcml_archive_get_options(const struct srcml_archive* archive) {
+int srcml_archive_get_options(const struct srcml_archive* archive) {
 
-    return archive ? archive->options : 0;
+    return archive ? (archive->options % (1<<7)) : 0;
 }
 
 /**

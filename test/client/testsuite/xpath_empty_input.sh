@@ -10,7 +10,11 @@ define xpath_error <<- 'STDOUT'
 
 define xpath_empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit revision="1.0.0" language="C++"/>
+	
+	</unit>
 	STDOUT
 
 

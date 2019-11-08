@@ -31,7 +31,6 @@
 #include <Timer.hpp>
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
-#include <input_stdin.hpp>
 #include <boost/version.hpp>
 #include <iostream>
 #include <csignal>
@@ -112,7 +111,8 @@ See `srcml --help` for more information.
             exit(1);
         }
 
-        input_stdin(srcml_request);
+        // determine source or srcML input based on --language
+        srcml_request.input_sources[*srcml_request.stdindex].state = srcml_request.att_language ? SRC : SRCML;
     }
  
     /*

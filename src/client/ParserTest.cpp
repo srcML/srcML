@@ -35,7 +35,7 @@
 #include <srcml_options.hpp>
 #include <srcml_utilities.hpp>
 
-#define str2arg(s) s, strlen(s)
+#define str2arg(s) s, (int) strlen(s)
 
 void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcml_unit* unit) {
 
@@ -48,6 +48,9 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
 
         previous_filename = request->parsertest_filename;
         count = 0;
+
+        if (!srcml_unit_get_language(unit))
+            return;
 
         unit_language = srcml_unit_get_language(unit);
 

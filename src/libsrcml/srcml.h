@@ -52,7 +52,6 @@ extern "C" {
 #define LIBSRCML_DECL __declspec(dllexport)
 #include <BaseTsd.h>
 typedef SSIZE_T ssize_t;
-//typedef LONG_PTR ssize_t;
 #else
 #define LIBSRCML_DECL
 #endif
@@ -104,8 +103,8 @@ typedef SSIZE_T ssize_t;
 /**@}*/
 
 /**@{ @name Options */
-/** Issue an XML declaration */
-const unsigned int SRCML_OPTION_XML_DECL          = 1<<1;
+/** Do not issue an XML declaration (default: include XML declaration */
+const unsigned int SRCML_OPTION_NO_XML_DECL       = 1<<1;
 /** Include line/column position attributes */
 const unsigned int SRCML_OPTION_POSITION          = 1<<2;
 /** Markup preprocessor elements (default for C, C++) */
@@ -336,21 +335,21 @@ LIBSRCML_DECL int srcml_set_timestamp(const char* timestamp);
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_set_options(unsigned long long option);
+LIBSRCML_DECL int srcml_set_options(size_t option);
 
 /** Enable (set) a specific option on the srcML
  * @param option The srcML option(s)
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_enable_option(unsigned long long option);
+LIBSRCML_DECL int srcml_enable_option(size_t option);
 
 /** Disable (unset) a specific option on the srcML
  * @param option The srcML option(s)
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_disable_option(unsigned long long option);
+LIBSRCML_DECL int srcml_disable_option(size_t option);
 
 /** Set the size of the tabstop on the srcML
  * @param tabstop Tabstop size
@@ -384,20 +383,12 @@ LIBSRCML_DECL int srcml_register_namespace(const char* prefix, const char* ns);
  */
 LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const char* data);
 
-/** Register a macro (token) to be processed as a special type
- * @param token Name of macro
- * @param type Macro type
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_register_macro(const char* token, const char* type);
-
 /** Set the end of line characters to be used for unparse
  * @param eol The kind of eol to use for unparse
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_unparse_set_eol(size_t eol);
+LIBSRCML_DECL int srcml_set_eol(size_t eol);
 
 /** Set what revision in a srcDiff document to operate with
  * @param revision_number The revision to operate with
@@ -461,10 +452,22 @@ LIBSRCML_DECL const char* srcml_get_timestamp();
 LIBSRCML_DECL const char* srcml_get_hash();
 
 /**
+ * @return The loc of the source code on success
+ * @return -1 on failure
+ */
+LIBSRCML_DECL int srcml_get_loc();
+
+/**
+ * @return The eol for to-src output (unparse)
+ * @return NULL on failure
+ */
+LIBSRCML_DECL size_t srcml_get_eol();
+
+/**
  * @return The currently set options on success
  * @return NULL on failure
  */
-LIBSRCML_DECL unsigned long long srcml_get_options();
+LIBSRCML_DECL int srcml_get_options();
 
 /**
  * @return The tabstop size on success
@@ -516,35 +519,6 @@ LIBSRCML_DECL const char* srcml_get_namespace_uri(size_t pos);
  * @return NULL on failure
  */
 LIBSRCML_DECL const char* srcml_get_uri_from_prefix(const char* prefix);
-/**@}*/
-
-/**@{ @name Macro Handling */
-/**
- * @return The number of currently defined macros.
- */
-LIBSRCML_DECL size_t srcml_get_macro_list_size();
-
-/**
- * @param pos Position in macr list
- * @return The registered token at the given pos on success
- * @return NULL on failure
- */
-LIBSRCML_DECL const char* srcml_get_macro_token(size_t pos);
-
-/**
- * @param token A macro token
- * @return The registered type for the given token on success
- * @return NULL on failure
- */
-LIBSRCML_DECL const char* srcml_get_macro_token_type(const char* token);
-
-/**
- * @param pos Position in macro list
- * @return The type at the given pos on succcess
- * @return NULL on failure
- */
-LIBSRCML_DECL const char* srcml_get_macro_type(size_t pos);
-/**@}*/
 
 /** Cleanup and free globally allocated items (usually by libxml2)
  */
@@ -781,7 +755,7 @@ LIBSRCML_DECL int srcml_archive_set_language(struct srcml_archive* archive, cons
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_archive_set_options(struct srcml_archive* archive, unsigned long long option);
+LIBSRCML_DECL int srcml_archive_set_options(struct srcml_archive* archive, size_t option);
 
 /** Enable/set an option or options on an archive
  * @param archive A srcml_archive to enable options on
@@ -789,7 +763,7 @@ LIBSRCML_DECL int srcml_archive_set_options(struct srcml_archive* archive, unsig
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_archive_enable_option(struct srcml_archive* archive, unsigned long long option);
+LIBSRCML_DECL int srcml_archive_enable_option(struct srcml_archive* archive, size_t option);
 
 /** Remove an option or options from an archive
  * @param archive A srcml_archive to remove options from
@@ -797,7 +771,7 @@ LIBSRCML_DECL int srcml_archive_enable_option(struct srcml_archive* archive, uns
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_archive_disable_option(struct srcml_archive* archive, unsigned long long option);
+LIBSRCML_DECL int srcml_archive_disable_option(struct srcml_archive* archive, size_t option);
 
 /** Set the tabstop size for position and column calculation
  * @param archive A srcml_archive
@@ -833,22 +807,6 @@ LIBSRCML_DECL int srcml_archive_register_namespace(struct srcml_archive* archive
  * @return Status error code on failure.
  */
 LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive* archive, const char* target, const char* data);
-
-/** Register a macro (token) to be processed as a special type.
- * @details Here is a list of the currently supported special types:
- * - src:macro     -> Treat the token as a standalone macro (will be marked with a macro tag)
- * - src:type      -> Treat the token as an identifier (will still be marked as macro tag)
- * - src:name      -> Treat the token as an identifier (will still be marked as macro tag)
- * - src:specifier -> Treat the token as a specifier (will be marked with a specifier tag around macro tag)
- * - src:label     -> Treat the token as a label (a goto label, will be marked with a label tag around macro tag)
- * - src:case      -> Treat as a case label (mark with case tag) either case keyword or case keyword and label
- * @param archive A srcml_archive
- * @param token Name of macro
- * @param type Macro type
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure.
- */
-LIBSRCML_DECL int srcml_archive_register_macro(struct srcml_archive* archive, const char* token, const char* type);
 /**@}*/
 
 /**@{ @name Archive Optional Attributes */
@@ -868,28 +826,6 @@ LIBSRCML_DECL int srcml_archive_set_url(struct srcml_archive* archive, const cha
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_archive_set_version(struct srcml_archive* archive, const char* version);
-
-/** Whether the archive is an xml fragment, i.e., does not contain <unit> element
- * @param archive A srcml_archive opened for reading or writing
- * @retval 1 Is a full archive
- * @retval 0 Is just a single unit
- */
-LIBSRCML_DECL int srcml_archive_is_fragment(const struct srcml_archive* archive);
-
-/** Enable the output xml as a fragment, i.e., does not contain <unit> element
- * @param archive A srcml_archive opened for writing
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_archive_enable_fragment(struct srcml_archive* archive);
-
-/** Disable the output xml as a fragment, i.e., will contain a <unit> element
-  This is the default
- * @param archive A srcml_archive opened for writing
- * @retval SRCML_STATUS_OK on success
- * @retval SRCML_STATUS_INVALID_ARGUMENT
- */
-LIBSRCML_DECL int srcml_archive_disable_fragment(struct srcml_archive* archive);
 
 /**@}*/
 
@@ -935,7 +871,7 @@ LIBSRCML_DECL const char* srcml_archive_get_version(const struct srcml_archive* 
  * @param archive A srcml_archive
  * @return The currently set options
  */
-LIBSRCML_DECL unsigned long long srcml_archive_get_options(const struct srcml_archive* archive);
+LIBSRCML_DECL int srcml_archive_get_options(const struct srcml_archive* archive);
 
 /**
  * @param archive A srcml_archive
@@ -988,35 +924,6 @@ LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_target(const 
  * @return The processing instruction data
  */
 LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_data(const struct srcml_archive* archive);
-
-/**
- * @param archive A srcml_archive
- * @return The number of currently defined macros, or 0 if archive is NULL
- */
-LIBSRCML_DECL size_t srcml_archive_get_macro_list_size(const struct srcml_archive* archive);
-
-/**
- * @param archive A srcml_archive
- * @param pos A macro position
- * @return Token for the given position, or NULL
- */
-LIBSRCML_DECL const char* srcml_archive_get_macro_token(const struct srcml_archive* archive, size_t pos);
-
-/**
- * @param archive A srcml_archive
- * @param token A macro token
- *
- * @returns The registered type for the given token, or NULL
- */
-LIBSRCML_DECL const char* srcml_archive_get_macro_token_type(const struct srcml_archive* archive, const char* token);
-
-/**
- * @param archive A srcml_archive
- * @param pos Position in macro list
- *
- * @returns The type at the given pos on succcess, or NULL
- */
-LIBSRCML_DECL const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, size_t pos);
 
 /** Retrieve the currently registered language for a file extension
  * @param archive A srcml_archive
@@ -1210,7 +1117,7 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
  * Transformation result. Passed to srcml_unit_apply_transforms() to collect results of transformation
  */
 struct srcml_transformation_result_t {
-  /** Transformation result type */
+    /** Transformation result type */
     int type;
     /** Number of units for type SRCML_RESULTS_UNIT */
     int num_units;
@@ -1318,7 +1225,7 @@ LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit* unit, const char* 
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
-LIBSRCML_DECL int srcml_unit_unparse_set_eol(struct srcml_unit* unit, size_t eol);
+LIBSRCML_DECL int srcml_unit_set_eol(struct srcml_unit* unit, size_t eol);
 
 /**
  * @param unit A srcml_unit
@@ -1361,6 +1268,18 @@ LIBSRCML_DECL const char* srcml_unit_get_timestamp(const struct srcml_unit* unit
  * @return The hash attribute on the unit on success, or NULL
  */
 LIBSRCML_DECL const char* srcml_unit_get_hash(const struct srcml_unit* unit);
+
+/**
+ * @param unit A srcml_unit
+ * @return The loc of the source code in the unit, or -1 on failure
+ */
+LIBSRCML_DECL int srcml_unit_get_loc(const struct srcml_unit* unit);
+
+/**
+ * @param unit A srcml unit
+ * @return The eol for to-src output (unparse), or NULL
+ */
+LIBSRCML_DECL size_t srcml_unit_get_eol(struct srcml_unit* unit);
 
 /** Get a complete, valid XML of the srcML from this unit
  * The XML returned is a complete solo srcML unit

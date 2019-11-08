@@ -3,13 +3,13 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <function><attribute>[[<expr><name>System</name></expr>]]</attribute>
-<specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<type><specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
         <function><attribute>[[<expr><name>System</name></expr>]]</attribute>
-        <specifier>static</specifier> <type><name>void</name></type> <name>OperationsBaseData</name><parameter_list>()</parameter_list> <block>{
-        }</block></function>
+        <type><specifier>static</specifier> <name>void</name></type> <name>OperationsBaseData</name><parameter_list>()</parameter_list> <block>{<block_content>
+        </block_content>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
@@ -29,19 +29,19 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><attribute>[[<expr><name>System</name></expr>]]</attribute> <type><specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>]]</attribute><attribute>[[<expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><attribute>[[<expr><name>System</name></expr>]]</attribute> <type><specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>]]</attribute><attribute>[[<expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><attribute>[[<expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><attribute>[[<expr><name>System</name></expr>]]</attribute> <type><specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><attribute>[[<expr><name>System</name></expr>, <expr><name>System</name></expr>]]</attribute> <specifier>static</specifier> <type><name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><attribute>[[<expr><name>System</name></expr>, <expr><name>System</name></expr>]]</attribute> <type><specifier>static</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><attribute>[[<expr><name>In</name></expr>, <expr><name>Out</name></expr>]]</attribute> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 

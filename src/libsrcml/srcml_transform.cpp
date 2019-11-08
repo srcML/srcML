@@ -64,8 +64,6 @@ static int srcml_append_transform_xpath_internal (struct srcml_archive* archive,
                                                     const char* attr_name, const char* attr_value) {
     if (archive == NULL || xpath_string == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
-//    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-//        return SRCML_STATUS_INVALID_IO_OPERATION;
 
     archive->transformations.push_back(std::unique_ptr<Transformation>(new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
             attr_prefix, attr_namespace_uri, attr_name, attr_value)));
@@ -422,8 +420,6 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
 
     if (archive == NULL || xpath_param_name == NULL || xpath_param_value == NULL)
         return SRCML_STATUS_INVALID_ARGUMENT;
-    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
-        return SRCML_STATUS_INVALID_IO_OPERATION;
     if (archive->transformations.size() == 0)
         return SRCML_STATUS_NO_TRANSFORMATION;
 
@@ -598,6 +594,22 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             nunit->hash = boost::none;
         }
 
+        doc->children = fullresults->nodeTab[i];
+
+        if (!nunit->namespaces)
+            nunit->namespaces = starting_namespaces;
+
+        // mark unused cpp and omp until we examine the query result
+        auto& view = nunit->namespaces->get<nstags::uri>();
+        auto itcpp = view.find(SRCML_CPP_NS_URI);
+        if (itcpp != view.end()) {
+            view.modify(itcpp, [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
+        }
+        auto itomp = view.find(SRCML_OPENMP_NS_URI);
+        if (itomp != view.end()) {
+            view.modify(itomp, [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
+        }
+
         // special case for XML comment as it does not get written to the tree
         switch (fullresults->nodeTab[i]->type) {
         case XML_COMMENT_NODE:
@@ -637,15 +649,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // also performs a free of resources
             xmlOutputBufferClose(output);
 
-            if (!nunit->namespaces)
-                nunit->namespaces = starting_namespaces;
-
             if (usesURI(xmlDocGetRootElement(doc.get()), SRCML_CPP_NS_URI)) {
 
-                auto& view = nunit->namespaces->get<nstags::uri>();
-                auto it = view.find(SRCML_CPP_NS_URI);
-                if (it != view.end()) {
-                    view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                if (itcpp != view.end()) {
+                    view.modify(itcpp, [](Namespace& thisns){ thisns.flags |= NS_USED; });
                 } else {
                     nunit->namespaces->push_back({ SRCML_CPP_NS_DEFAULT_PREFIX, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
                 }
@@ -653,10 +660,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
             if (usesURI(xmlDocGetRootElement(doc.get()), SRCML_OPENMP_NS_URI)) {
 
-                auto& view = nunit->namespaces->get<nstags::uri>();
-                auto it = view.find(SRCML_OPENMP_NS_URI);
-                if (it != view.end()) {
-                    view.modify(view.find(SRCML_CPP_NS_URI), [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                if (itomp != view.end()) {
+                    view.modify(itomp, [](Namespace& thisns){ thisns.flags |= NS_USED; });
                 } else {
                     nunit->namespaces->push_back({ SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD });
                 }

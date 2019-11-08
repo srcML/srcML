@@ -27,6 +27,41 @@
 #include <string>
 #include <SRCMLStatus.hpp>
 
+#include <regex>
+
+/*
+    normalize the xpath 
+    src:function -> //src:function
+    count(src:function) -> count(//src:function)
+    //src:function -> //src:function
+    call(src:function) -> call(//src:function)
+*/
+std::string normalize_xpath(std::string nxpath) {
+
+    // match function call to adjust where "//" is inserted
+    static std::regex funcstart("^\\s*[a-zA-Z0-9:-_]*\\s*\\(\\s*");
+
+    // just check if the start looks like a function call
+    size_t axispos = 0;
+    while (true) {
+
+        std::smatch start;
+        std::string rest = nxpath.substr(axispos);
+        std::regex_search(rest, start, funcstart);
+        if (start.size() == 0)
+            break;
+
+        axispos += start.str(0).size();
+    }
+
+    // check axis part for starting context
+    if (nxpath[axispos] != '/') {
+        nxpath.insert(axispos, "//");
+    }
+
+    return nxpath;
+}
+
 int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
 
     auto element = xpath_support.first;
@@ -54,7 +89,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
         if (!element_uri) {
             SRCMLstatus(WARNING_MSG, "srcml: no uri exists for prefix \"" + std::string(element->prefix->c_str()) + "\"");
             // @todo Can this be a return?
-            exit(2);
+            exit(1);
         }
     }
 
@@ -73,7 +108,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
         if (!attribute_uri) {
             SRCMLstatus(WARNING_MSG, "srcml: no uri exists for prefix \"" + std::string(attribute->prefix->c_str()) + "\"");
             // @todo Can this be a return?
-            exit(2);
+            exit(1);
         }
     }
 
@@ -81,17 +116,20 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
     // @todo This doesn't make sense in all cases, and should be revisited
     srcml_archive_disable_solitary_unit(out_arch);
 
+    // normalize the path so that it is "//"
+    std::string nxpath = normalize_xpath(transform_input.c_str());
+
     // Call appropriate XPath transform
     if (element && attribute) {
 
-        int status = srcml_append_transform_xpath_element(in_arch, transform_input.c_str(),
+        int status = srcml_append_transform_xpath_element(in_arch, nxpath.c_str(),
             element->prefix->c_str(),
             element_uri,
             element->name->c_str());
         if (status != SRCML_STATUS_OK)
             return -1;
 
-        return srcml_append_transform_xpath_attribute(in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_attribute(in_arch, nxpath.c_str(),
             attribute->prefix->c_str(),
             attribute_uri,
             attribute->name->c_str(),
@@ -99,14 +137,14 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     } else if (element) {
 
-        return srcml_append_transform_xpath_element(in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_element(in_arch, nxpath.c_str(),
             element->prefix->c_str(),
             element_uri,
             element->name->c_str());
 
     } else if (attribute) {
 
-        return srcml_append_transform_xpath_attribute(in_arch, transform_input.c_str(),
+        return srcml_append_transform_xpath_attribute(in_arch, nxpath.c_str(),
             attribute->prefix->c_str(),
             attribute_uri,
             attribute->name->c_str(),
@@ -114,7 +152,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
     } else {
 
-        return srcml_append_transform_xpath(in_arch, transform_input.c_str());
+        return srcml_append_transform_xpath(in_arch, nxpath.c_str());
     }
 }
 

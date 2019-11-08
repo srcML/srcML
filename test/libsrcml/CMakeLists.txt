@@ -25,4 +25,4 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_definitions(-DWITH_LIBXSLT)
 
-add_subdirectory(unit)
+add_subdirectory(testsuite)

@@ -63,7 +63,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     add_custom_command(TARGET srcml POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${PROJECT_SOURCE_DIR}/deps/$<CONFIGURATION>/bin"
+    "${PROJECT_SOURCE_DIR}/deps/x64/$<CONFIGURATION>/bin"
     $<TARGET_FILE_DIR:srcml>)
 elseif(APPLE)
     # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
@@ -76,6 +76,9 @@ else()
 endif()
 
 # strip for release mode
-set_target_properties(srcml PROPERTIES LINK_FLAGS_RELEASE -s)
+if(NOT APPLE)
+    set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+endif()
+
 
 install(TARGETS srcml COMPONENT SRCML)

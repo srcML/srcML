@@ -246,51 +246,24 @@ int main(int argc, char* argv[]) {
     }
 
     /*
-      srcml_register_macro
+      srcml_set_eol
     */
 
     {
-        srcml_register_macro("foo", "bar");
-
-//        dassert(global_archive.user_macro_list.at(global_archive.user_macro_list.size() - 2), std::string("foo"));
-//        dassert(global_archive.user_macro_list.back(), "bar");
-    }
-
-    {
-        srcml_register_macro("foo", "");
-        srcml_register_macro("foo", "bar");
-
-//        dassert(global_archive.user_macro_list.at(0), std::string("foo"));
-//        dassert(global_archive.user_macro_list.at(1) , "bar");
-    }
-
-    {
-        dassert(srcml_register_macro(0, "bar"), SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    {
-        dassert(srcml_register_macro("foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    /*
-      srcml_unparse_set_eol
-    */
-
-    {
-        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF);
+        srcml_set_eol(SOURCE_OUTPUT_EOL_CRLF);
 
  //       dassert(global_unit.eol, SOURCE_OUTPUT_EOL_CRLF);
     }
 
     {
-        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF);
-        srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_AUTO);
+        srcml_set_eol(SOURCE_OUTPUT_EOL_CRLF);
+        srcml_set_eol(SOURCE_OUTPUT_EOL_AUTO);
 
 //        dassert(global_unit.eol, SOURCE_OUTPUT_EOL_AUTO);
     }
 
     {
-        dassert(srcml_unparse_set_eol(SOURCE_OUTPUT_EOL_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_set_eol(SOURCE_OUTPUT_EOL_CRLF + 1), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -532,68 +505,6 @@ int main(int argc, char* argv[]) {
 
     {
         dassert(srcml_get_uri_from_prefix(0), 0);
-    }
-
-    /*
-      srcml_get_macro_list_size
-    */
-
-    {
-        dassert(srcml_get_macro_list_size(), 1);
-    }
-
-    {
-        srcml_register_macro("foo2", "bar2");
-        srcml_register_macro("foo3", "bar3");
-        dassert(srcml_get_macro_list_size(), 3);
-    }
-
-    /*
-      srcml_get_macro_token
-    */
-
-    {
-        dassert(srcml_get_macro_token(0), std::string("foo"));
-    }
-
-    {
-        dassert(srcml_get_macro_token(-1), 0);
-    }
-
-    {
-        dassert(srcml_get_macro_token(3), 0);
-    }
-
-    /*
-      srcml_get_macro_token_type
-    */
-
-    {
-        dassert(srcml_get_macro_token_type("foo2"), std::string("bar2"));
-    }
-
-    {
-        dassert(srcml_get_macro_token_type("foo4"), 0);
-    }
-
-    {
-        dassert(srcml_get_macro_token_type(0), 0);
-    }
-
-    /*
-      srcml_get_macro_type
-    */
-
-    {
-        dassert(srcml_get_macro_type(0), std::string("bar"));
-    }
-
-    {
-        dassert(srcml_get_macro_type(-1), 0);
-    }
-
-    {
-        dassert(srcml_get_macro_type(3), 0);
     }
 
     /*

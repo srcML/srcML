@@ -21,6 +21,7 @@
  */
 
 #include <sax2_srcsax_handler.hpp>
+#include <srcmlns.hpp>
 #include <string>
 #include <algorithm>
 #include <cstring>
@@ -401,13 +402,12 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     SRCSAX_DEBUG_START(localname);
 
-    // if macros are found, then must return, but first save them if necessary
+    // if macros are found, then must return, process first
+    // but stay in first_start_element, since this can be between root unit and nested unit
     if (localname == MACRO_LIST_ENTRY) {
-/*
-        state->meta_tags.emplace_back(srcml_element(localname, prefix, URI,
-                                                    nb_namespaces, namespaces,
-                                                    nb_attributes, nb_defaulted, attributes));
-*/
+
+        state->context->handler->meta_tag(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
+                                          nb_namespaces, namespaces, nb_attributes, attributes);
         return;
     }
 
@@ -468,6 +468,15 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto state = (sax2_srcsax_handler*) ctxt->_private;
     if (state == nullptr)
         return;
+
+    // collect cpp prefix
+    // @todo Generalize this
+    for (int i = 0; i < nb_namespaces; ++i) {
+
+        if (std::string((const char*) namespaces[i * 2 + 1]) == SRCML_CPP_NS_URI) {
+            state->cpp_prefix = namespaces[i * 2] ? "" : (const char*) namespaces[i * 2];
+        }
+    }
 
     update_ctx(ctx);
 

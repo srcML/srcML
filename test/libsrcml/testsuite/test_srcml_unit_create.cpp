@@ -30,27 +30,24 @@
 int main(int, char* argv[]) {
 
     {
-
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
-/*
-        dassert(unit->archive, archive);
-        dassert(unit->language, boost::none);
-        dassert(unit->filename, boost::none);
-        dassert(unit->url, boost::none);
-        dassert(unit->version, boost::none);
-        dassert(unit->timestamp, boost::none);
-        dassert(unit->hash, boost::none);
-        dassert(unit->srcml, "");
-*/
+
+        dassert(srcml_unit_get_language(unit), 0);
+        dassert(srcml_unit_get_filename(unit), 0);
+        dassert(srcml_unit_get_version(unit), 0);
+        dassert(srcml_unit_get_timestamp(unit), 0);
+        dassert(srcml_unit_get_hash(unit), 0);
+        dassert(srcml_unit_get_srcml(unit), 0);
+        dassert(srcml_unit_get_srcml_outer(unit), 0);
+        dassert(srcml_unit_get_srcml_inner(unit), 0);
+
         srcml_unit_free(unit);
         srcml_archive_free(archive);
     }
 
     {
-
         dassert(srcml_unit_create(0), 0);
-
     }
 
     return 0;
