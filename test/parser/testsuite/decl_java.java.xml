@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="decl" filename="decl_java">
 
 <unit language="Java">
-<decl_stmt><decl><specifier>transient</specifier> <type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>transient</specifier> <name>int</name></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
 <unit language="Java">

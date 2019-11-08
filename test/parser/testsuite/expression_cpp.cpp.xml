@@ -54,10 +54,6 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><name>a</name> <operator>*</operator> <call><name><operator>::</operator><name>qPow</name></name><argument_list>(<argument><expr><literal type="number">2.0f</literal></expr></argument>, <argument><expr><literal type="number">10</literal> <operator>*</operator> <name>t_adj</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><operator>delete</operator><index>[]</index> <operator>(</operator><operator>*</operator><name>ptr</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 

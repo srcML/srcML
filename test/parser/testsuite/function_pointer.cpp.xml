@@ -26,7 +26,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<macro><name>A</name><argument_list>(<argument><literal type="number">1</literal></argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<macro><name>A</name><argument_list>(<argument><literal type="number">1</literal></argument>)</argument_list></macro> <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
@@ -52,13 +52,13 @@
 -->
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><specifier>static</specifier> <type><name>void</name></type>
+<function><type><specifier>static</specifier> <name>void</name></type>
 <name>pass_state_graph</name> <parameter_list>(<parameter><decl><type><name>state_t</name></type> <name>start_state</name></decl></parameter>, <parameter><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>applied_func</name>) <parameter_list>(<parameter><decl><type><name>state_t</name></type> <name>state</name></decl></parameter>)</parameter_list></function_decl></parameter>)</parameter_list>
-<block>{
+<block>{<block_content>
 
   <expr_stmt><expr><call>(<modifier>*</modifier><name>applied_func</name>) <argument_list>(<argument><expr><name>start_state</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

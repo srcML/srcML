@@ -186,8 +186,8 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
+<for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo"><block_content>
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></for>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

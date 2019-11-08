@@ -22,15 +22,15 @@
 </unit>
 
 <unit language="Java">
-<function><parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<function><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></function>
+<function><type><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit language="Java">
-<constructor><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>Class</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{}</block></constructor>
+<constructor><specifier>public</specifier> <parameter_list type="generic">&lt;<parameter><name>U</name></parameter>&gt;</parameter_list> <name>Class</name><parameter_list>(<parameter><decl><type><name>U</name></type> <name>u</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></constructor>
 </unit>
 
 <unit language="Java">
@@ -70,7 +70,7 @@
 </unit>
 
 <unit language="Java">
-<if_stmt><if>if<condition>(<expr><name>a</name><operator>&lt;</operator> <literal type="number">0</literal> <operator>||</operator> <name>a</name> <operator>&gt;</operator> <literal type="number">9</literal></expr>)</condition><block type="pseudo"><empty_stmt>;</empty_stmt></block></if></if_stmt>
+<if_stmt><if>if<condition>(<expr><name>a</name><operator>&lt;</operator> <literal type="number">0</literal> <operator>||</operator> <name>a</name> <operator>&gt;</operator> <literal type="number">9</literal></expr>)</condition><block type="pseudo"><block_content><empty_stmt>;</empty_stmt></block_content></block></if></if_stmt>
 </unit>
 
 </unit>

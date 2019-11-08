@@ -25,7 +25,7 @@ set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
 
 set(CPACK_NSIS_MODIFY_PATH ON)
 if(WIN32)
-    set(MSVC_REDIST ${WINDOWS_DEP_PATH}/tools/VC_redist.exe)
+    set(MSVC_REDIST ${PROJECT_SOURCE_DIR}/deps/tools/VC_redist.x64.exe)
     get_filename_component(vcredist_name "${MSVC_REDIST}" NAME)
     install(PROGRAMS ${MSVC_REDIST} DESTINATION bin)
     set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\${vcredist_name}\\\" /passive /norestart'")

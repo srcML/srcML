@@ -53,12 +53,12 @@
     <decl><name>URANUS</name>  <argument_list>(<argument><expr><literal type="number">8.686e+25</literal></expr></argument>, <argument><expr><literal type="number">2.5559e7</literal></expr></argument>)</argument_list></decl>,
     <decl><name>NEPTUNE</name> <argument_list>(<argument><expr><literal type="number">1.024e+26</literal></expr></argument>, <argument><expr><literal type="number">2.4746e7</literal></expr></argument>)</argument_list></decl>;
 
-    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>double</name></type> <name>mass</name></decl>;</decl_stmt>   <comment type="line">// in kilograms</comment>
-    <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>double</name></type> <name>radius</name></decl>;</decl_stmt> <comment type="line">// in meters</comment>
-    <constructor><name>Planet</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>mass</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{
+    <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>mass</name></decl>;</decl_stmt>   <comment type="line">// in kilograms</comment>
+    <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>double</name></type> <name>radius</name></decl>;</decl_stmt> <comment type="line">// in meters</comment>
+    <constructor><name>Planet</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>mass</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>radius</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>mass</name></name> <operator>=</operator> <name>mass</name></expr>;</expr_stmt>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>radius</name></name> <operator>=</operator> <name>radius</name></expr>;</expr_stmt>
-    }</block></constructor>
+    </block_content>}</block></constructor>
 
 }</block></enum>
 </unit>
@@ -66,7 +66,7 @@
 <unit language="Java">
 <enum><specifier>private</specifier> <specifier>static</specifier> enum <name>RelTypes</name> <super_list><implements>implements <super><name>RelationshipType</name></super></implements></super_list> <block>{}</block></enum>
 
-<function><specifier>public</specifier> <specifier>static</specifier> <type><name>void</name></type> <name>main</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{}</block></function></unit>
+<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>main</name><parameter_list>(<parameter><decl><type><specifier>final</specifier> <name><name>String</name><index>[]</index></name></type> <name>args</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></unit>
 
 <unit language="Java">
 <enum><specifier>public</specifier> enum <name>Policy</name> <block>{
@@ -76,15 +76,15 @@
   <decl><name>DEFAULT</name><argument_list>(<argument><expr><name><name>Condition</name><operator>.</operator><name>DEFAULT</name></name></expr></argument>)</argument_list></decl>,
   <decl><name>ALWAYS</name><argument_list>(<argument><expr><name><name>Condition</name><operator>.</operator><name>TRUE</name></name></expr></argument>)</argument_list></decl>;
 
-  <decl_stmt><decl><specifier>private</specifier> <type><specifier>final</specifier> <name>Condition</name></type> <name>condition</name></decl>;</decl_stmt>
+  <decl_stmt><decl><type><specifier>private</specifier> <specifier>final</specifier> <name>Condition</name></type> <name>condition</name></decl>;</decl_stmt>
 
-  <constructor><specifier>private</specifier> <name>Policy</name><parameter_list>(<parameter><decl><type><name>Condition</name></type> <name>condition</name></decl></parameter>)</parameter_list> <block>{
+  <constructor><specifier>private</specifier> <name>Policy</name><parameter_list>(<parameter><decl><type><name>Condition</name></type> <name>condition</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <expr_stmt><expr><name><name>this</name><operator>.</operator><name>condition</name></name> <operator>=</operator> <name>condition</name></expr>;</expr_stmt>
-  }</block></constructor>
+  </block_content>}</block></constructor>
 
-  <function><type><name>Condition</name></type> <name>getCondition</name><parameter_list>()</parameter_list> <block>{
+  <function><type><name>Condition</name></type> <name>getCondition</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><name>condition</name></expr>;</return>
-  }</block></function>
+  </block_content>}</block></function>
 
 }</block></enum>
 </unit>

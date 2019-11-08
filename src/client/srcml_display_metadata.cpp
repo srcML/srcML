@@ -43,10 +43,6 @@ namespace {
     // display all files in srcml archive
     void srcml_list(srcml_archive* srcml_arch) {
 
-        std::cout << "Source encoding: ";
-        const char* src_encoding = srcml_archive_get_src_encoding(srcml_arch);
-        std::cout << (src_encoding ? src_encoding : "(null)") << '\n';
-
         std::cout << "XML encoding: ";
         const char* xml_encoding = srcml_archive_get_xml_encoding(srcml_arch);
         std::cout << (xml_encoding ? xml_encoding : "(null)") << '\n';
@@ -58,10 +54,16 @@ namespace {
                 break;
 
             ++numUnits;
-            std::cout << std::setw(5) << numUnits << " " 
-                      << value(srcml_unit_get_filename(unit.get())) << '\t'
-                      << value(srcml_unit_get_language(unit.get())) << '\t'
-                      << value(srcml_unit_get_hash(unit.get())) << '\n';
+            std::cout << std::setw(5) << numUnits; // << " " 
+                      // << value(srcml_unit_get_filename(unit.get())) << '\t'
+                      // << value(srcml_unit_get_language(unit.get())) << '\t'
+                      // << value(srcml_unit_get_hash(unit.get())) << '\n';
+
+            std::cout << std::setw(5) << std::right << value(srcml_unit_get_language(unit.get())) ;
+            std::cout << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(unit.get());
+            std::cout << ' ' << value(srcml_unit_get_hash(unit.get()));
+            std::cout << ' ' << value(srcml_unit_get_filename(unit.get()));
+            std::cout << '\n';
             // TODO: Other parts of verbose here. Have to collect.
         }
         std::cout << "Total: " << numUnits << '\n';

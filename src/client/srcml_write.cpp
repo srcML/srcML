@@ -35,6 +35,7 @@
 #include <OpenFileLimiter.hpp>
 #include <srcml_utilities.hpp>
 #include <mkDir.hpp>
+#include <cmath>
 
 // Public consumption thread function
 void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, const srcml_output_dest& /* destination */) {
@@ -44,12 +45,19 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
     if (request->status == SRCML_STATUS_UNSET_LANGUAGE) {
 
-        if (option(SRCML_COMMAND_VERBOSE))
-            log << '-' << (request->filename ? *request->filename : "");
-        else if (request->disk_filename)
+        if (option(SRCML_COMMAND_VERBOSE)) {
+            if (!option(SRCML_COMMAND_QUIET)) {
+                std::ostringstream outs;
+                outs << std::setw(option(SRCML_DEBUG_MODE) ? 52 + 14 : 52) << ' ' << (request->filename ? *request->filename : "");
+                log << '-' << outs.str();
+            } else {
+                log.skip();
+            }
+        } else if (request->disk_filename) {
             SRCMLstatus(WARNING_MSG, "srcml: Extension not supported %s", *(request->disk_filename));
-        else
+        } else {
             SRCMLstatus(WARNING_MSG, "srcml: Extension not supported");
+        }
 
         return;
     }
@@ -130,7 +138,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
-        log.totalLOC(request->loc);
+        log.totalLOC(srcml_unit_get_loc(request->unit.get()));
 
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive
@@ -195,14 +203,18 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         // logging
         if (option(SRCML_COMMAND_VERBOSE)) {
             std::ostringstream outs;
-            outs << (request->filename ? *request->filename : "") << '\t' << request->language << '\t' << request->loc;
+            outs << std::setw(4) << std::left << request->language;
+            outs << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(request->unit.get());
+            if (option(SRCML_DEBUG_MODE)) {
+                auto runtime = std::round(request->runtime * 10) / 10;
+                outs << ' ' << std::setw(6) << std::right << std::fixed << std::setprecision(1) << runtime << "ms";
+                auto kloc = std::round(request->runtime > 0 ? (10 * srcml_unit_get_loc(request->unit.get()) / request->runtime) : 0) / 10;
+                outs << ' ' << std::setw(4) << std::right << std::fixed << std::setprecision(1) << kloc;
+            }
             const char* hash = srcml_unit_get_hash(request->unit.get());
             if (hash)
-                outs << '\t' << hash;
-            if (option(SRCML_DEBUG_MODE)) {
-                outs << '\t' << request->runtime << " ms";
-                outs << '\t' << (request->runtime > 0 ? (request->loc / request->runtime) : 0) << " KLOC/s";
-            }
+                outs << ' ' << hash;
+            outs << ' ' << (request->filename ? *request->filename : "");
 
             log << 'a' << outs.str();
         }

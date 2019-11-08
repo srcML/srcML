@@ -3,65 +3,75 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <expr_stmt><expr><name><name>button1</name><operator>.</operator><name>Click</name></name> <operator>+=</operator> <delegate><name>delegate</name><parameter_list>(<parameter><decl><type><name><name>System</name><operator>.</operator><name>Object</name></name></type> <name>o</name></decl></parameter>, <parameter><decl><type><name><name>System</name><operator>.</operator><name>EventArgs</name></name></type> <name>e</name></decl></parameter>)</parameter_list>
-                   <block>{ <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>Windows</name><operator>.</operator><name>Forms</name><operator>.</operator><name>MessageBox</name><operator>.</operator><name>Show</name></name><argument_list>(<argument><expr><literal type="string">"Click!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> }</block></delegate></expr>;</expr_stmt>
+                   <block>{<block_content> <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>Windows</name><operator>.</operator><name>Forms</name><operator>.</operator><name>MessageBox</name><operator>.</operator><name>Show</name></name><argument_list>(<argument><expr><literal type="string">"Click!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></delegate></expr>;</expr_stmt>
+</unit>
+
+<unit language="C#">
+<delegate>delegate <type><name>int</name></type> <name>PerformCalculation</name><parameter_list>()</parameter_list>;</delegate>
+</unit>
+
+<unit language="C#">
+<delegate><specifier>public</specifier> delegate <type><name>int</name></type> <name>PerformCalculation</name><parameter_list>()</parameter_list>;</delegate>
+</unit>
+
+<unit language="C#">
+<delegate><specifier>private</specifier> delegate <type><name>int</name></type> <name>PerformCalculation</name><parameter_list>()</parameter_list>;</delegate>
+</unit>
+
+<unit language="C#">
+<delegate><specifier>protected</specifier> delegate <type><name>int</name></type> <name>PerformCalculation</name><parameter_list>()</parameter_list>;</delegate>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function_decl><specifier>delegate</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function_decl><specifier>public</specifier> <specifier>delegate</specifier> <type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><type><name>Del</name></type> <name>d</name> <init>= <expr><delegate><name>delegate</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>k</name></decl></parameter>)</parameter_list> <block>{ <comment type="block">/* ... */</comment> }</block></delegate></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>Del</name></type> <name>d</name> <init>= <expr><delegate><name>delegate</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>k</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></delegate></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <function><type><name>void</name></type> <name>StartThread</name><parameter_list>()</parameter_list>
-<block>{
+<block>{<block_content>
     <decl_stmt><decl><type><name><name>System</name><operator>.</operator><name>Threading</name><operator>.</operator><name>Thread</name></name></type> <name>t1</name> <init>= <expr><operator>new</operator> <call><name><name>System</name><operator>.</operator><name>Threading</name><operator>.</operator><name>Thread</name></name>
       <argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list>
-            <block>{
+            <block>{<block_content>
                 <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>Console</name><operator>.</operator><name>Write</name></name><argument_list>(<argument><expr><literal type="string">"Hello,"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
                 <expr_stmt><expr><call><name><name>System</name><operator>.</operator><name>Console</name><operator>.</operator><name>WriteLine</name></name><argument_list>(<argument><expr><literal type="string">"World!"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-            }</block></delegate></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            </block_content>}</block></delegate></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
     <expr_stmt><expr><call><name><name>t1</name><operator>.</operator><name>Start</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{ }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
-                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></if></if_stmt>
- }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{<block_content>
+                <if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content>
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></if></if_stmt>
+ </block_content>}</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo">
-                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while>
- }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{<block_content>
+                <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content>
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></while>
+ </block_content>}</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{
-                <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo">
-                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></for>
- }</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>BeginInvoke</name><argument_list>(<argument><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{<block_content>
+                <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo"><block_content>
+                    <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></for>
+ </block_content>}</block></delegate></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<expr_stmt><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>b</name></expr></expr_stmt> }</block></delegate></expr>;</expr_stmt>
+<expr_stmt><expr><delegate><name>delegate</name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>b</name></expr></expr_stmt> </block_content>}</block></delegate></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<expr_stmt><expr><delegate><name>delegate</name> <block>{ <expr_stmt><expr><name>b</name></expr></expr_stmt> }</block></delegate></expr>;</expr_stmt>
+<expr_stmt><expr><delegate><name>delegate</name> <block>{<block_content> <expr_stmt><expr><name>b</name></expr></expr_stmt> </block_content>}</block></delegate></expr>;</expr_stmt>
 </unit>
+
+
 
 </unit>

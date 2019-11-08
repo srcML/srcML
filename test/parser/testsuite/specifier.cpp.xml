@@ -6,7 +6,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<decl_stmt><decl><specifier>static</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>static</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

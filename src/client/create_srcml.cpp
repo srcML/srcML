@@ -35,7 +35,6 @@
 #include <transform_srcml.hpp>
 #include <TraceLog.hpp>
 #include <input_file.hpp>
-#include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <iostream>
 #include <input_archive.hpp>
@@ -183,20 +182,13 @@ void create_srcml(const srcml_request_t& srcml_request,
             srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_CPP_MARKUP_IF0);
         if (*srcml_request.markup_options & SRCML_OPTION_CPP_TEXT_ELSE)
             srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_CPP_TEXT_ELSE);
-//        if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL)
-//            srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_XML_DECL);
+        if (*srcml_request.markup_options & SRCML_OPTION_NO_XML_DECL)
+            srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_NO_XML_DECL);
         if (*srcml_request.markup_options & SRCML_HASH)
             srcml_archive_enable_hash(srcml_arch.get());
 
 //            SRCMLstatus(ERROR_MSG, "srcml: invalid options for srcml archive");
 //            exit(SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    // xml declaration
-    if (*srcml_request.markup_options & SRCML_OPTION_XML_DECL) {
-        srcml_archive_disable_option(srcml_arch.get(), SRCML_OPTION_XML_DECL);
-    } else {
-        srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_XML_DECL);
     }
 
     // language
@@ -237,7 +229,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         // if this is an archive, then no filename attribute is allowed
         if (srcml_request.att_filename) {
-            fprintf(stderr, "Attribute filename cannot be set for a srcML archive. Use attribute uri instead.\n");
+            SRCMLstatus(ERROR_MSG, "srcml: --filename cannot be set for a srcML archive. Use --url instead");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
 
@@ -284,7 +276,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         if (protocol == "xpath") {
             if (apply_xpath(srcml_arch.get(), srcml_arch.get(), resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with xpath transformation");
-                exit(-1);
+                exit(1);
             }
 
         }
@@ -292,7 +284,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         if (protocol == "xslt") {
             if (apply_xslt(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with xslt transformation");
-                exit(-1);
+                exit(1);
             }
         }
         
@@ -313,13 +305,24 @@ void create_srcml(const srcml_request_t& srcml_request,
         } else if (protocol == "relaxng") {
             if (apply_relaxng(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
-                exit(-1);
+                exit(1);
             }
         }
     }
 
     // start tracing
     TraceLog log;
+
+    // if the user specified a source encoding, then show that
+    // but do not show default, as that depends on file contents
+    if (srcml_request.src_encoding) {
+        log.output("Source encoding:  ");
+        log.output(srcml_request.src_encoding->c_str());
+        log.output("\n");
+    }
+    log.output("XML encoding:  ");
+    log.output(srcml_archive_get_xml_encoding(srcml_arch.get()));
+    log.output("\n");
 
     // write queue for output of parsing
     WriteQueue write_queue(log, destination);

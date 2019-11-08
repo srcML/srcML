@@ -36,7 +36,6 @@ typedef SSIZE_T ssize_t;
 #include <SRCMLStatus.hpp>
 #include <cstring>
 #include <libarchive_utilities.hpp>
-#include <curl_input_file.hpp>
 
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
@@ -186,7 +185,7 @@ int src_input_libarchive(ParseQueue& queue,
 
         // user specified a language, and is a file, text, or stdin
         // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
-        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin" || input_file.protocol == "file")
+        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin")
              || srcml_archive_check_extension(srcml_arch, filename.c_str())))
             language = *srcml_request.att_language;
 
@@ -250,13 +249,6 @@ int src_input_libarchive(ParseQueue& queue,
             while (status == ARCHIVE_OK && archive_read_data_block(arch.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
             }
-
-            // LOC count
-            // @todo can't we get this from parsing?
-            // or at least only do for verbose?
-            prequest->loc = (long) std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
-            if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
-                ++prequest->loc;
         }
 
         // schedule for parsing

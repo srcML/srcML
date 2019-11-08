@@ -402,13 +402,12 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     SRCSAX_DEBUG_START(localname);
 
-    // if macros are found, then must return, but first save them if necessary
+    // if macros are found, then must return, process first
+    // but stay in first_start_element, since this can be between root unit and nested unit
     if (localname == MACRO_LIST_ENTRY) {
-/*
-        state->meta_tags.emplace_back(srcml_element(localname, prefix, URI,
-                                                    nb_namespaces, namespaces,
-                                                    nb_attributes, nb_defaulted, attributes));
-*/
+
+        state->context->handler->meta_tag(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
+                                          nb_namespaces, namespaces, nb_attributes, attributes);
         return;
     }
 

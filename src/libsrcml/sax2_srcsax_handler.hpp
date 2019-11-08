@@ -63,9 +63,6 @@ struct sax2_srcsax_handler {
     /** hooks for processing */
     srcsax_context* context = nullptr;
 
-    /** temporary storage of meta-tags */
-//    std::vector<srcml_element> meta_tags;
-
     int unit_count = 0;
 
     /** the current parsing mode */

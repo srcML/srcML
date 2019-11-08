@@ -66,10 +66,10 @@ xmlcheck "$sxmlfile2"
 srcml -X --unit "2" - <<< "$nestedfile"
 check "$sxmlfile2"
 
-srcml --unit "2" --output-xml-outer <<< "$nestedfile"
+srcml --unit "2" --output-srcml-outer <<< "$nestedfile"
 check "$sxmlfile2fragment"
 
-srcml --unit "2" --output-xml-inner <<< "$nestedfile"
+srcml --unit "2" --output-srcml-inner <<< "$nestedfile"
 check "$sxmlfile2raw"
 
 srcml --text="\nb;\n" --filename="sub/b.cpp" -l C++ --hash | srcml

@@ -112,106 +112,6 @@ private :
     /** skip internal unit elements */
     bool skip = false;
 
-    /**
-     * meta_tag
-     *
-     * Store a meta tag for later output.
-     */
-     struct meta_tag {
-
-        /** metatags localname */
-        std::string localname;
-
-        /** metatags prefix */
-       boost::optional<std::string> prefix;
-
-        /** meta tags attributes */
-        std::vector<const xmlChar*> attributes;
-
-        /**
-         * meta_tag
-         * @param localname the meta tag name
-         * @param prefix the meta tag prefix
-         * @param num_attributes the number attributes on the meta tag
-         * @param attributes the attributes on the meta tag
-         *
-         * Construct meta_tag from SAX data.
-         */
-        meta_tag(const char* localname, const char* prefix, int num_attributes, const xmlChar** attributes)
-            : localname(localname) {
-
-            if(prefix) this->prefix = std::string(prefix);
-
-            this->attributes.reserve(num_attributes * 5);
-            for (int pos = 0; pos < num_attributes * 5; ++pos) {
-                this->attributes[pos] = attributes[pos];
-            }
-        }
-
-        /**
-         * meta_tag
-         * @param other another meta_tag
-         *
-         * Copy constructor.
-         */
-        meta_tag(const meta_tag& other) {
-
-            localname = other.localname;
-            prefix = other.prefix;
-            attributes = other.attributes;
-        }
-
-        /**
-         * operator=
-         * @param other another meta_tag
-         *
-         * Overloaded assignment operator
-         * Returns the assigned to meta_tag
-         */
-        meta_tag& operator=(meta_tag& other) {
-
-            swap(other);
-
-            return *this;
-        }
-
-        /**
-         * swap
-         * @param other another meta_tag
-         *
-         * swap the contents of the meta tags.
-         */
-        void swap(meta_tag & other) {
-
-            std::swap(localname, other.localname);
-            std::swap(prefix, other.prefix);
-            std::swap(attributes, other.attributes);
-        }
-
-        /**
-         * ~meta_tag
-         *
-         * Destructor
-         */
-        ~meta_tag() {}
-
-        /**
-         * get_prefix
-         *
-         * Return prefix as c string.
-         */
-       const char * get_prefix() const {
-     if(prefix) return prefix->c_str();
-     return 0;
-
-       }
-
-
-     };
-
-    /** save meta tags to use when non-archive write unit */
-    std::vector<meta_tag> meta_tags;
-
 public :
 
     /** Give access to members for srcml_sax2_reader class */
@@ -223,7 +123,8 @@ public :
      * Constructor.  Sets up mutex, conditions and state.
      */
     srcml_reader_handler() {
-//        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+
+//          archive->options &= ~SRCML_OPTION_HASH;
     }
 
     /**
@@ -353,7 +254,7 @@ public :
 #endif
 
         if (!is_archive)
-            srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+            archive->options &= ~SRCML_OPTION_ARCHIVE;
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
@@ -389,7 +290,7 @@ public :
                         value = value.substr(value.find(",") + 1);
 
                     if (option == "XMLDECL")
-                        archive->options |= SRCML_OPTION_XML_DECL;
+                        archive->options |= SRCML_OPTION_NO_XML_DECL;
                     else if (option == "NAMESPACEDECL")
                         archive->options |= SRCML_OPTION_NAMESPACE_DECL;
                     else if (option == "CPP_TEXT_ELSE")
@@ -487,6 +388,8 @@ public :
             cond.wait(lock);
         }
 
+        state->loc = 0;
+        
         state->collect_unit_body = collect_unit_body;
 
         if (terminate)
@@ -546,6 +449,9 @@ public :
         auto state = (sax2_srcsax_handler*) ctxt->_private;
 
         if (collect_unit_body) {
+
+            if (!state->unitsrc.empty() && state->unitsrc.back() != '\n')
+                ++state->loc;
 
             unit->content_begin = state->content_begin;
             unit->content_end = state->content_end;
@@ -624,10 +530,8 @@ public :
                 archive->user_macro_list.push_back(token);
                 archive->user_macro_list.push_back(type);
             }
-        } else if (!is_archive) {
 
-            meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
-        }
+        } 
     }
 
     /**

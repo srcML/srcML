@@ -25,7 +25,6 @@
 #include <src_output_libarchive.hpp>
 #include <src_output_filesystem.hpp>
 #include <src_prefix.hpp>
-#include <curl_input_file.hpp>
 #include <input_curl.hpp>
 #include <input_file.hpp>
 #include <input_archive.hpp>
@@ -86,7 +85,7 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
     return arch;
 }
 
-// create srcml from the current request
+// create source from the current request
 void create_src(const srcml_request_t& srcml_request,
                 const srcml_input_t& input_sources,
                 const srcml_output_dest& destination) {
@@ -133,6 +132,10 @@ void create_src(const srcml_request_t& srcml_request,
             if (srcml_request.src_encoding)
                 srcml_archive_set_src_encoding(arch.get(), srcml_request.src_encoding->c_str());
 
+            // if requested eol, then use that
+            if (srcml_request.eol)
+                srcml_unit_set_eol(unit.get(), *srcml_request.eol);
+
             // null separator before every unit (except the first)
             if (count) {
                 if (write(1, "", 1) == -1) {
@@ -141,7 +144,7 @@ void create_src(const srcml_request_t& srcml_request,
                 }
             }
 
-            // unaparse directly to the destintation
+            // unparse directly to the destintation
             srcml_unit_unparse_fd(unit.get(), destination);
 
             // get out if only one unit
@@ -170,7 +173,7 @@ void create_src(const srcml_request_t& srcml_request,
         std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(arch.get()));
         if (!unit) {
             SRCMLstatus(ERROR_MSG, "Requested unit %s out of range.", srcml_request.unit);
-            exit(4);
+            exit(1);
         }
 
         // set encoding for source output
@@ -178,10 +181,14 @@ void create_src(const srcml_request_t& srcml_request,
         if (srcml_request.src_encoding)
             srcml_archive_set_src_encoding(arch.get(), srcml_request.src_encoding->c_str());
 
+        // if requested eol, then use that
+        if (srcml_request.eol)
+            srcml_unit_set_eol(unit.get(), *srcml_request.eol);
+
         int status = srcml_unit_unparse_filename(unit.get(), destination.c_str());
         if (status) {
             SRCMLstatus(ERROR_MSG, "srcml: unable to open output file " + destination.resource);
-            exit(4);
+            exit(1);
         }
 
         // don't go through regular closure as errors are generated
@@ -192,7 +199,7 @@ void create_src(const srcml_request_t& srcml_request,
         // srcml->src extract to libarchive file
         if (destination.archives.size() == 0) {
             SRCMLstatus(ERROR_MSG, "srcml: source output requires an archive format (tar, zip, etc.)");
-            exit(1); //TODO: Need an error code
+            exit(1);
         }
 
         std::unique_ptr<archive> ar(archive_write_new());

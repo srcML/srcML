@@ -333,7 +333,7 @@ int srcml_set_timestamp(const char* timestamp) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_set_options(unsigned long long option) {
+int srcml_set_options(size_t option) {
 
     return srcml_archive_set_options(&global_archive, option);
 }
@@ -346,7 +346,7 @@ int srcml_set_options(unsigned long long option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_enable_option(unsigned long long option) {
+int srcml_enable_option(size_t option) {
 
     return srcml_archive_enable_option(&global_archive, option);
 }
@@ -359,7 +359,7 @@ int srcml_enable_option(unsigned long long option) {
  *
  * @returns Return SRCML_STATUS_OK success and SRCML_STATUS_INVALID_ARGUMENT on failure.
  */
-int srcml_disable_option(unsigned long long option) {
+int srcml_disable_option(size_t option) {
 
     return srcml_archive_disable_option(&global_archive, option);
 }
@@ -428,13 +428,13 @@ int srcml_set_processing_instruction(const char* target, const char* data) {
  *
  * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_register_macro(const char* token, const char* type) {
+int srcml_register_macro(const char* /* token */, const char* /* type */) {
 
-    return srcml_archive_register_macro(&global_archive, token, type);
+    return 0; //srcml_archive_register_macro(&global_archive, token, type);
 }
 
 /**
- * srcml_unparse_set_eol
+ * srcml_set_eol
  * @param eol the kind of eol to use for unparse
  *
  * Set the eol to be used for unparse.
@@ -442,9 +442,21 @@ int srcml_register_macro(const char* token, const char* type) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unparse_set_eol(size_t eol) {
+int srcml_set_eol(size_t eol) {
 
-    return srcml_unit_unparse_set_eol(&global_unit, eol);
+    return srcml_unit_set_eol(&global_unit, eol);
+}
+
+/**
+ * srcml_get_eol
+ *
+ * Set the eol to be used for unparse.
+ *
+ * @returns Returns eol for unparse, or NULL
+ */
+size_t srcml_get_eol() {
+
+    return srcml_unit_get_eol(&global_unit);
 }
 
 /**
@@ -559,11 +571,21 @@ const char* srcml_get_hash() {
 }
 
 /**
+ * srcml_get_loc
+ *
+ * @returns Get the loc of source, and -1 on failure.
+ */
+int srcml_get_loc() {
+
+    return srcml_unit_get_loc(&global_unit);
+}
+
+/**
  * srcml_get_options
  *
  * @returns Get the currently set options on success and NULL on failure.
  */
-unsigned long long srcml_get_options() {
+int srcml_get_options() {
 
     return srcml_archive_get_options(&global_archive);
 }
@@ -664,7 +686,7 @@ const char* srcml_get_processing_instruction_data() {
  */
 size_t srcml_get_macro_list_size() {
 
-    return srcml_archive_get_macro_list_size(&global_archive);
+    return 0; //srcml_archive_get_macro_list_size(&global_archive);
 }
 
 /**
@@ -674,9 +696,9 @@ size_t srcml_get_macro_list_size() {
  * @returns Get token for the given position on success
  * and NULL on failure.
  */
-const char* srcml_get_macro_token(size_t pos) {
+const char* srcml_get_macro_token(size_t /* pos */) {
 
-    return srcml_archive_get_macro_token(&global_archive, pos);
+    return 0; //srcml_archive_get_macro_token(&global_archive, pos);
 }
 
 /**
@@ -686,10 +708,9 @@ const char* srcml_get_macro_token(size_t pos) {
  * @returns Get the registered type for the given token
  * on success and NULL on failure.
  */
-const char* srcml_get_macro_token_type(const char* token) {
+const char* srcml_get_macro_token_type(const char* /* token */) {
 
-    return srcml_archive_get_macro_token_type(&global_archive, token
-                                              );
+    return 0; // srcml_archive_get_macro_token_type(&global_archive, token);
 }
 
 /**
@@ -699,9 +720,9 @@ const char* srcml_get_macro_token_type(const char* token) {
  * @returns Get the type at the given pos on succcess
  * and NULL on failure.
  */
-const char* srcml_get_macro_type(size_t pos) {
+const char* srcml_get_macro_type(size_t /* pos */) {
 
-    return srcml_archive_get_macro_type(&global_archive, pos);
+    return 0; //srcml_archive_get_macro_type(&global_archive, pos);
 }
 
 /**

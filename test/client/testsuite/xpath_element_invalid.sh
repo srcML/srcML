@@ -26,17 +26,17 @@ createfile b.cpp "b;
 srcml a.cpp b.cpp --xmlns:pre=foo.com -o archive.xml
 
 srcml archive.xml --element="pre:element" --xpath="//src:name"
-check_exit 2
+check_exit 1
 
 srcml --element="pre:element" --xpath="//src:name" archive.xml
-check_exit 2
+check_exit 1
 
 # output to a file
 srcml archive.xml --element="pre:element" --xpath="//src:name" -o result.xml
-check_exit 2
+check_exit 1
 
 srcml --element="pre:element" --xpath="//src:name" archive.xml -o result.xml
-check_exit 2
+check_exit 1
 
 
 
@@ -58,21 +58,21 @@ srcml sub/a.cpp --xmlns:pre=foo.com -o sub/a.xml
 
 # from a file
 srcml sub/a.xml --element="pre:element" --xpath="//src:name"
-check_exit 2
+check_exit 1
 
 srcml --element="pre:element" --xpath="//src:name" sub/a.xml
-check_exit 2
+check_exit 1
 
 # from standard input
 echo "a;" | srcml -l C++ --element="pre:element" --xpath="//src:name"
-check_exit 2
+check_exit 1
 
 # output to a file
 srcml sub/a.xml --element="pre:element" --xpath="//src:name" -o result.xml
-check_exit 2
+check_exit 1
 
 srcml --element="pre:element" --xpath="//src:name" sub/a.xml -o result.xml
-check_exit 2
+check_exit 1
 
 echo "a;" | srcml -l C++ --element="pre:element" --xpath="//src:name" -o result.xml
-check_exit 2
+check_exit 1

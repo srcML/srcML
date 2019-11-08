@@ -16,9 +16,6 @@ _srcml_unit_apply_transforms
 _srcml_archive_check_extension
 _srcml_archive_enable_solitary_unit
 _srcml_archive_disable_solitary_unit
-_srcml_archive_disable_fragment
-_srcml_archive_enable_fragment
-_srcml_archive_is_fragment
 _srcml_archive_enable_hash
 _srcml_archive_disable_hash
 _srcml_archive_disable_option
@@ -28,10 +25,6 @@ _srcml_archive_has_hash
 _srcml_archive_get_url
 _srcml_archive_get_xml_encoding
 _srcml_archive_get_language
-_srcml_archive_get_macro_list_size
-_srcml_archive_get_macro_token
-_srcml_archive_get_macro_token_type
-_srcml_archive_get_macro_type
 _srcml_archive_get_namespace_uri
 _srcml_archive_get_namespace_prefix
 _srcml_archive_get_namespace_size
@@ -46,7 +39,6 @@ _srcml_archive_get_tabstop
 _srcml_archive_get_version
 _srcml_archive_get_srcdiff_revision
 _srcml_archive_register_file_extension
-_srcml_archive_register_macro
 _srcml_archive_register_namespace
 _srcml_archive_set_url
 _srcml_archive_set_xml_encoding
@@ -82,10 +74,6 @@ _srcml_get_url
 _srcml_get_xml_encoding
 _srcml_get_filename
 _srcml_get_language
-_srcml_get_macro_list_size
-_srcml_get_macro_token
-_srcml_get_macro_token_type
-_srcml_get_macro_type
 _srcml_get_namespace_uri
 _srcml_get_uri_from_prefix
 _srcml_get_namespace_size
@@ -99,6 +87,8 @@ _srcml_get_tabstop
 _srcml_get_version
 _srcml_get_timestamp
 _srcml_get_hash
+_srcml_get_loc
+_srcml_get_eol
 _srcml_get_language_list
 _srcml_get_language_list_size
 _srcml_get_revision
@@ -116,7 +106,6 @@ _srcml_archive_read_open_FILE
 _srcml_archive_read_unit
 _srcml_archive_skip_unit
 _srcml_register_file_extension
-_srcml_register_macro
 _srcml_register_namespace
 _srcml_set_url
 _srcml_set_xml_encoding
@@ -129,7 +118,7 @@ _srcml_set_tabstop
 _srcml_set_version
 _srcml_set_timestamp
 _srcml_set_srcdiff_revision
-_srcml_unparse_set_eol
+_srcml_set_eol
 _srcml_unit_get_src_encoding
 _srcml_unit_get_filename
 _srcml_unit_get_language
@@ -137,6 +126,8 @@ _srcml_unit_get_revision
 _srcml_unit_get_version
 _srcml_unit_get_timestamp
 _srcml_unit_get_hash
+_srcml_unit_get_loc
+_srcml_unit_get_eol
 _srcml_unit_get_srcml
 _srcml_unit_get_srcml_outer
 _srcml_unit_get_srcml_inner
@@ -145,7 +136,7 @@ _srcml_unit_set_filename
 _srcml_unit_set_language
 _srcml_unit_set_version
 _srcml_unit_set_timestamp
-_srcml_unit_unparse_set_eol
+_srcml_unit_set_eol
 _srcml_unit_unparse_fd
 _srcml_unit_unparse_filename
 _srcml_unit_unparse_io
