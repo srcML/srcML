@@ -15,7 +15,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #
 # This is the function used for building exeucables for srcML.
@@ -26,7 +26,15 @@
 # - All subsequent arguments are linked as libraries.
 #
 
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES}
+# strip executables
+set(CPACK_STRIP_FILES ON)
+ 
+set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+
+file(DOWNLOAD https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp ${CMAKE_EXTERNAL_SOURCE_DIR}/CLI11.hpp)
+file(DOWNLOAD https://raw.githubusercontent.com/vit-vit/CTPL/ctpl_v.0.0.2/ctpl_stl.h ${CMAKE_EXTERNAL_SOURCE_DIR}/ctpl_stl.h)
+
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
 if(NOT WIN32 AND APPLE)
     list(APPEND SRCML_LIBRARIES pthread)
@@ -41,7 +49,7 @@ endif()
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
 add_executable(srcml ${CLIENT_SOURCE})
-target_include_directories(srcml PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_EXTERNAL_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src/libsrcml)
 
 # @todo Is this necessary? Let CMake determin this instead
 # Maybe coverage is not a default part of Debug?
@@ -59,7 +67,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     add_custom_command(TARGET srcml POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${PROJECT_SOURCE_DIR}/deps/$<CONFIGURATION>/bin"
+    "${PROJECT_SOURCE_DIR}/deps/x64/$<CONFIGURATION>/bin"
     $<TARGET_FILE_DIR:srcml>)
 elseif(APPLE)
     # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
@@ -71,10 +79,10 @@ else()
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-if(APPLE)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"-u\" \"-r\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
-elseif(NOT WIN32)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
+# strip for release mode
+if(NOT APPLE)
+    set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
 endif()
 
-install(TARGETS srcml RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+
+install(TARGETS srcml COMPONENT SRCML)

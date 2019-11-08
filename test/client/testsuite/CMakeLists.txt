@@ -15,7 +15,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # add client tests
 file(GLOB CLIENT_TESTS *.sh)
@@ -24,5 +24,7 @@ foreach(CLIENT_TEST ${CLIENT_TESTS})
 
     if(NOT TEST_NAME STREQUAL "framework_test.sh")
         add_test(NAME ${TEST_NAME} COMMAND ${CLIENT_TEST})
+        # Command line --timeout does NOT override this value
+        #set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 10) 
     endif()
 endforeach()

@@ -15,20 +15,26 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # add cli tests
 file(GLOB EXAMPLES "srcml_*.c")
 
-set(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -std=c99")
+install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
 
-foreach(EXAMPLE ${EXAMPLES})
-    get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
-    add_executable(${EXAMPLE_NAME} ${EXAMPLE})
-	target_include_directories(${EXAMPLE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/libsrcml)
-    target_link_libraries(${EXAMPLE_NAME} libsrcml_link)
-    # @TODO Do we need these as a test?
-#    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
-	# @TODO Should we copy the examples?
-    set_target_properties(${EXAMPLE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-endforeach()
+if(BUILD_EXAMPLES)
+
+	set(CMAKE_C_STANDARD 99)
+
+	foreach(EXAMPLE ${EXAMPLES})
+	    get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
+	    add_executable(${EXAMPLE_NAME} ${EXAMPLE})
+	    target_include_directories(${EXAMPLE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/libsrcml)
+	    target_link_libraries(${EXAMPLE_NAME} libsrcml_link)
+	    # @TODO Do we need these as a test?
+	#    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+	    set_target_properties(${EXAMPLE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+	endforeach()
+
+endif()
+

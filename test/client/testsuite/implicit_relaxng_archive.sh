@@ -34,7 +34,7 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" hash="17239ee1ffe4b0abc790a338f52d2ac2f2565c4e"><function_decl><type><name>LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list>;</function_decl>
+	<unit revision="REVISION" language="C++" filename="b.cpp" hash="17239ee1ffe4b0abc790a338f52d2ac2f2565c4e"><function_decl><type><name>LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list>;</function_decl>
 	</unit>
 
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="c671c9b9a1bc97b6902a611a98700718006bd736"><comment type="block" format="doxygen">/**
@@ -105,7 +105,7 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" hash="17239ee1ffe4b0abc790a338f52d2ac2f2565c4e"><function_decl><type><name>LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list>;</function_decl>
+	<unit revision="REVISION" language="C++" filename="b.cpp" hash="17239ee1ffe4b0abc790a338f52d2ac2f2565c4e"><function_decl><type><name>LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list>;</function_decl>
 	</unit>
 
 	</unit>

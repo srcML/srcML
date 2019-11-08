@@ -21,10 +21,18 @@
 </xsl:copy>
 </xsl:template>
 
+<xsl:template match="src:unit[@language='C++'][src:expr_stmt//src:call/src:name/text()='~']" priority="9">
+<xsl:copy>
+<struct>struct <name>S</name> <block>{<public type="default"><xsl:text>
+</xsl:text><comment type="block">/* <xsl:copy-of select="string(.)"/> */</comment><xsl:text>
+</xsl:text></public>}</block>;</struct>
+</xsl:copy>
+</xsl:template>
+
 <xsl:template match="src:unit[@language='C++'][src:expr_stmt]">
 <xsl:copy>
 <struct>struct <name>S</name> <block>{<public type="default"><xsl:text>
-</xsl:text><block>{<xsl:copy-of select="*|text()"/>}</block><xsl:text>
+</xsl:text><block>{<block_content><xsl:copy-of select="*|text()"/></block_content>}</block><xsl:text>
 </xsl:text></public>}</block>;</struct>
 </xsl:copy>
 </xsl:template>

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <libxml/parser.h>
@@ -30,7 +30,6 @@
 
 #include <xpathTransformation.hpp>
 
-#include <srcexfun.hpp>
 #include <srcmlns.hpp>
 
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
@@ -272,12 +271,6 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     if (result_nodes->type != XPATH_NODESET)
         return tresult;
 
-    if (!result_nodes->nodesetval)
-        return tresult;
-
-    if (!result_nodes->nodesetval->nodeNr)
-        return tresult;
-
     if (!element.empty()) {
 
         addElementXPathResults(doc, result_nodes);
@@ -290,18 +283,25 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
 
     // convert all the found nodes
     if (!attr_name.empty()) {
-        for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+        if (result_nodes->nodesetval) {
+            for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
-            xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
+                xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
-            append_attribute_to_node(onode, attr_prefix.c_str(), attr_value.c_str());
+                append_attribute_to_node(onode, attr_prefix.c_str(), attr_value.c_str());
+            }
         }
-
         tresult.unitWrapped = true;
         tresult.nodeset = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
 
         return tresult;
     }
+
+    if (!result_nodes->nodesetval)
+        return tresult;
+
+    if (!result_nodes->nodesetval->nodeNr)
+        return tresult;
 
     if (result_nodes->nodesetval->nodeTab[0] && result_nodes->nodesetval->nodeTab[0]->name &&
         strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)

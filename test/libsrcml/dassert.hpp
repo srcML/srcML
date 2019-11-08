@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_DASSERT_HPP
@@ -28,7 +28,7 @@
 #define dassert(LEFT, RIGHT) if(!((LEFT) == (RIGHT))) { \
         std::cerr << "'" << LEFT << "'" << "\n";        \
         std::cerr << "'" << RIGHT << "'" << "\n";       \
-		std::cerr << argv[0] << ": " __FILE__ << ":" << __LINE__ << ": " << __FUNCTION__ << " Check '" << #LEFT << "' == '" << #RIGHT << "' failed.\n"; \
-		exit(1); } else { std::cerr << __LINE__ << '\n'; }
+        std::cerr << argv[0] << ": " __FILE__ << ":" << __LINE__ << ": " << __FUNCTION__ << " Check '" << #LEFT << "' == '" << #RIGHT << "' failed.\n"; \
+        exit(1); } else { std::cerr << __LINE__ << '\n'; }
 
 #endif

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -55,6 +55,13 @@ int src_input_filesystem(ParseQueue& queue,
     int status = ARCHIVE_OK;
     while ((status = archive_read_next_header(darchive, &entry)) == ARCHIVE_OK) {
 
+        std::string filename = archive_entry_pathname(entry);
+
+        // do not descend into . directories
+        if (filename[filename.find_last_of("/") + 1] == '.') {
+            continue;
+        }
+
         archive_read_disk_descend(darchive);
         if (first) {
             first = false;
@@ -65,7 +72,6 @@ int src_input_filesystem(ParseQueue& queue,
             continue;
 
         if (srcml_request.command & SRCML_COMMAND_PARSER_TEST) {
-            std::string filename = archive_entry_pathname(entry);
             if (filename.substr(filename.find_last_of(".") + 1) != "xml")
                 continue;
         }

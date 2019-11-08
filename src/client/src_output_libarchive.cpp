@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <src_output_libarchive.hpp>
@@ -30,23 +30,24 @@
 #include <SRCMLStatus.hpp>
 #include <memory>
 #include <libarchive_utilities.hpp>
+#include <srcml_utilities.hpp>
 
 void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
     ssize_t arch_status = ARCHIVE_OK;
     int unitcounter = 0;
-    while (srcml_unit* unit = srcml_archive_read_unit(srcml_arch)) {
+    while (std::unique_ptr<srcml_unit> unit{srcml_archive_read_unit(srcml_arch)}) {
 
         ++unitcounter;
 
         // have to make sure we have a valid filename
         // TODO: Counter must span input sources
-        std::string newfilename = srcml_unit_get_filename(unit) ? srcml_unit_get_filename(unit) : "";
+        std::string newfilename = srcml_unit_get_filename(unit.get()) ? srcml_unit_get_filename(unit.get()) : "";
         if (newfilename.empty()) {
             newfilename = "srcml_unit_";
             newfilename += std::to_string(unitcounter);
-            if (language_to_std_extension(srcml_unit_get_language(unit)) != "")
-                newfilename += language_to_std_extension(srcml_unit_get_language(unit));
+            if (language_to_std_extension(srcml_unit_get_language(unit.get())) != "")
+                newfilename += language_to_std_extension(srcml_unit_get_language(unit.get()));
             SRCMLstatus(WARNING_MSG, "A srcML unit without a filename saved as " + newfilename);
         }
 
@@ -58,7 +59,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         // Convert from srcML back to source in a buffer
         char* buffer;
         size_t buffer_size;
-        srcml_unit_unparse_memory(unit, &buffer, &buffer_size);
+        srcml_unit_unparse_memory(unit.get(), &buffer, &buffer_size);
         std::unique_ptr<char> pbuffer(buffer);
 
         // setup the entry
@@ -67,7 +68,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         archive_entry_set_filetype(entry.get(), AE_IFREG);
         archive_entry_set_perm(entry.get(), 0644);
 
-        time_t now = time(NULL);
+        time_t now = time(nullptr);
         archive_entry_set_atime(entry.get(), now, 0);
         archive_entry_set_ctime(entry.get(), now, 0);
         archive_entry_set_mtime(entry.get(), now, 0);
@@ -81,7 +82,5 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
             SRCMLstatus(WARNING_MSG, "Unable to save " + newfilename + " to source archive");
             break;
         }
-
-        srcml_unit_free(unit);
     }
 }

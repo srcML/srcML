@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml_display_metadata.hpp>
@@ -29,6 +29,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
+#include <srcml_utilities.hpp>
 
 namespace {
 
@@ -42,27 +43,28 @@ namespace {
     // display all files in srcml archive
     void srcml_list(srcml_archive* srcml_arch) {
 
-        std::cout << "Source encoding: ";
-        const char* src_encoding = srcml_archive_get_src_encoding(srcml_arch);
-        std::cout << (src_encoding ? src_encoding : "(null)") << '\n';
-
         std::cout << "XML encoding: ";
         const char* xml_encoding = srcml_archive_get_xml_encoding(srcml_arch);
         std::cout << (xml_encoding ? xml_encoding : "(null)") << '\n';
 
         int numUnits = 0;
         while (true) {
-            srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
+            std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(srcml_arch));
             if (!unit)
                 break;
 
             ++numUnits;
-            std::cout << std::setw(5) << numUnits << " " 
-                      << value(srcml_unit_get_filename(unit)) << '\t'
-                      << value(srcml_unit_get_language(unit)) << '\t'
-                      << value(srcml_unit_get_hash(unit)) << '\n';
+            std::cout << std::setw(5) << numUnits; // << " " 
+                      // << value(srcml_unit_get_filename(unit.get())) << '\t'
+                      // << value(srcml_unit_get_language(unit.get())) << '\t'
+                      // << value(srcml_unit_get_hash(unit.get())) << '\n';
+
+            std::cout << std::setw(5) << std::right << value(srcml_unit_get_language(unit.get())) ;
+            std::cout << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(unit.get());
+            std::cout << ' ' << value(srcml_unit_get_hash(unit.get()));
+            std::cout << ' ' << value(srcml_unit_get_filename(unit.get()));
+            std::cout << '\n';
             // TODO: Other parts of verbose here. Have to collect.
-            srcml_unit_free(unit);
         }
         std::cout << "Total: " << numUnits << '\n';
     }
@@ -70,7 +72,7 @@ namespace {
     void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
 
         auto nsSize = srcml_archive_get_namespace_size(srcml_arch);
-        bool isarchive = srcml_archive_is_full_archive(srcml_arch);
+        bool isarchive = !srcml_archive_is_solitary_unit(srcml_arch);
 
         for (size_t i = 0; i < nsSize; ++i) {
             if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
@@ -88,11 +90,11 @@ namespace {
         if (xml_encoding)
             std::cout << "encoding=" << "\"" << xml_encoding << "\"\n";
 
-        srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
+        std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(srcml_arch));
         int unit_count = 0;
 
         if (!isarchive && unit) {
-            auto language = srcml_unit_get_language(unit);
+            auto language = srcml_unit_get_language(unit.get());
             if (language)
                 std::cout << "language=" << "\"" << language << "\"\n";
         }
@@ -103,13 +105,10 @@ namespace {
         }
 
         if (!isarchive && unit) {
-            auto filename = srcml_unit_get_filename(unit);
+            auto filename = srcml_unit_get_filename(unit.get());
             if (filename)
                 std::cout << "filename=" << "\"" << filename << "\"\n";
         }
-
-        if (unit)
-            srcml_unit_free(unit);
 
         if (long_info) {
 
@@ -129,14 +128,12 @@ namespace {
         int numUnits = 0;
         while (true) {
 
-            srcml_unit* unit = srcml_archive_read_unit(srcml_arch);
+            std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(srcml_arch));
             if (!unit)
                 break;
 
-            if (srcml_unit_get_language(unit))
+            if (srcml_unit_get_language(unit.get()))
                 ++numUnits;
-
-            srcml_unit_free(unit);
         }
 
         return numUnits;
@@ -156,16 +153,17 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
     for (const auto& input : src_input) {
         // create the output srcml archive
-        srcml_archive* srcml_arch = srcml_archive_create();
+        OpenFileLimiter::open();
+        std::unique_ptr<srcml_archive> srcml_arch(srcml_archive_create());
 
         int status = SRCML_STATUS_OK;
         if (contains<int>(input)) {
-            status = srcml_archive_read_open_fd(srcml_arch, input);
+            status = srcml_archive_read_open_fd(srcml_arch.get(), input);
         }
         else if (contains<FILE*>(input)){
-            status = srcml_archive_read_open_FILE(srcml_arch, input);
+            status = srcml_archive_read_open_FILE(srcml_arch.get(), input);
         } else {
-            status = srcml_archive_read_open_filename(srcml_arch, (src_prefix_resource(input).c_str()));
+            status = srcml_archive_read_open_filename(srcml_arch.get(), (src_prefix_resource(input).c_str()));
         }
         if (status != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml input cannot not be opened.");
@@ -174,7 +172,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
 
         // Overrides all others Perform a pretty output
         if (srcml_request.pretty_format) {
-            srcml_pretty(srcml_arch, *srcml_request.pretty_format, srcml_request);
+            srcml_pretty(srcml_arch.get(), *srcml_request.pretty_format, srcml_request);
             return;
         }
 
@@ -233,31 +231,28 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         if (srcml_request.xmlns_prefix_query) {
-            const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch, srcml_request.xmlns_prefix_query->c_str());
+            const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch.get(), srcml_request.xmlns_prefix_query->c_str());
             if (prefix) {
                 std::cout << prefix << '\n';
             }
         }
 
         if (!pretty_meta_header.empty() || !pretty_meta_body.empty())
-            srcml_pretty(srcml_arch, pretty_meta_header + " { " + pretty_meta_body + " } ", srcml_request);
+            srcml_pretty(srcml_arch.get(), pretty_meta_header + " { " + pretty_meta_body + " } ", srcml_request);
 
         // units
         if (option(SRCML_COMMAND_UNITS))
-            std::cout << srcml_unit_count(srcml_arch) << "\n";
+            std::cout << srcml_unit_count(srcml_arch.get()) << "\n";
 
         // srcml info
         if (option(SRCML_COMMAND_INFO))
-            srcml_display_info(srcml_arch, false);
+            srcml_display_info(srcml_arch.get(), false);
 
         // srcml long info
         if (option(SRCML_COMMAND_LONGINFO))
-            srcml_display_info(srcml_arch, true);
+            srcml_display_info(srcml_arch.get(), true);
 
         if (option(SRCML_COMMAND_LIST))
-            srcml_list(srcml_arch);
-
-        srcml_archive_close(srcml_arch);
-        srcml_archive_free(srcml_arch);
+            srcml_list(srcml_arch.get());
     }
 }

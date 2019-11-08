@@ -15,7 +15,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 message(STATUS "Generating Parser Testfiles:")
 
@@ -59,7 +59,7 @@ macro(setlanguage INLANG URL)
         # set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
         set(OUTFILE "${URL}.${LANGEXT}.xml")
 
-        add_custom_command(COMMAND srcml --output-xml --language=${LANG} ${BASEFILE} -o ${OUTFILE}
+        add_custom_command(COMMAND srcml --output-srcml --language=${LANG} ${BASEFILE} -o ${OUTFILE}
                     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${BASEFILE}
                     OUTPUT ${OUTFILE}
                     COMMENT "Generating parser testfile ${OUTFILE}"
@@ -81,7 +81,7 @@ macro(transform OUTFILE INFILE URL XSLT)
     # Passing xslt params is not working, so set here for insertexpr
     set(EXTRA --xslt-param=expr_filename=${CMAKE_CURRENT_BINARY_DIR}/expression.cpp.xml)
 
-    add_custom_command(COMMAND srcml --output-xml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${INFILE} -o ${OUTFILE}
+    add_custom_command(COMMAND srcml --output-srcml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${INFILE} -o ${OUTFILE}
                        OUTPUT ${OUTFILE}
                        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${INFILE}
                        COMMENT "Generating parser testfile ${OUTFILE}"
@@ -95,7 +95,7 @@ message(STATUS "  Generating special transformation targets")
 
 configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
 
-add_custom_command(COMMAND srcml --language=Java --output-xml finally_cs.cs.xml -o finally_java.java.xml
+add_custom_command(COMMAND srcml --language=Java --output-srcml finally_cs.cs.xml -o finally_java.java.xml
                    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/finally_cs.cs.xml
                    OUTPUT finally_java.java.xml
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
@@ -165,6 +165,8 @@ foreach(GEN ${SUITE})
         setlanguage("C++" "${URL}" "C#")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
+
+    elseif(CATEGORY STREQUAL "LANGUAGE_NOP")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
@@ -240,7 +242,7 @@ foreach(GENURL ${TESTFILES})
         endif()
 
         add_custom_command(
-            COMMAND srcml --output-xml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
+            COMMAND srcml --output-srcml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
                      -o ${URL}.${VARIATION}.${LANGEXT}.xml
             COMMENT "Generating parser testfile ${URL}.${VARIATION}.${LANGEXT}.xml"
             DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
@@ -269,13 +271,70 @@ list(TRANSFORM CONTEXT_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
 # display number of parser testfiles
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.count "echo '-- Total Parser Testfiles: ' | tr -d '\n'; ls *.xml | wc -l | tr -d ' '")
 add_custom_command(
-    COMMAND source .count
+    COMMAND . ./.count
     COMMENT ""
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS ${CONTEXT_FILES}
     OUTPUT parser_testfile_count
 )
 
-add_custom_target(parser_tests DEPENDS parser_testfile_count
+# generate the parser tests
+if(NOT WIN32)
+add_custom_target(gen_parser_tests DEPENDS parser_testfile_count
                   COMMENT "Generated parser testfile target"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+else()
+add_custom_target(gen_parser_tests DEPENDS ${CONTEXT_FILES}
+                  COMMENT "Generated parser testfile target"
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
+# clean all parser tests, original and generated
+add_custom_target(clean_parser_tests
+                  COMMAND ${CMAKE_COMMAND} -E remove *.xml
+                  COMMENT "Clean all generated parser testfiles"
+                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+set(TESTSUITE *.xml)
+
+set(FLAGS "")
+if(WIN32)
+     set(FLAGS "--no-color")
+endif()
+
+# targets to manage parser testing
+add_custom_target(run_parser_tests        COMMENT "Run all parser test cases"
+                         COMMAND srcml --parser-test ${FLAGS} ${TESTSUITE}
+                         DEPENDS gen_parser_tests
+                         USES_TERMINAL
+                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_target(run_parser_tests_c      COMMENT "Run C parser test cases"
+                         COMMAND srcml --parser-test ${FLAGS} --language=C    ${TESTSUITE}
+                         DEPENDS gen_parser_tests
+                         USES_TERMINAL
+                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_target(run_parser_tests_cpp    COMMENT "Run C++ parser test cases"
+                         COMMAND srcml --parser-test ${FLAGS} --language=C++  ${TESTSUITE}
+                         DEPENDS gen_parser_tests
+                         USES_TERMINAL
+                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_target(run_parser_tests_C++    COMMENT "Run C++ parser test cases"
+                         COMMAND srcml --parser-test ${FLAGS} --language=C++  ${TESTSUITE}
+                         DEPENDS gen_parser_tests
+                         USES_TERMINAL
+                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_target(run_parser_tests_java   COMMENT "Run Java parser test cases"
+                         COMMAND srcml --parser-test ${FLAGS} --language=Java ${TESTSUITE}
+                         DEPENDS gen_parser_tests
+                         USES_TERMINAL
+                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_target(run_parser_tests_cs     COMMENT "Run C\# language parser test cases"
+                         COMMAND srcml --parser-test ${FLAGS} --language=C\#  ${TESTSUITE}
+                         DEPENDS gen_parser_tests
+                         USES_TERMINAL
+                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_target(run_parser_tests_CSHARP COMMENT "Run C\# language parser test cases"
+                         COMMAND srcml --parser-test ${FLAGS} --language=C\#  ${TESTSUITE}
+                         DEPENDS gen_parser_tests
+                         USES_TERMINAL
+                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef MODE_HPP
@@ -69,6 +69,9 @@ const static srcMLState::MODE_TYPE MODE_CALL;
 
 /** blocks that are not necessarily srcMLstatements */
  const static srcMLState::MODE_TYPE MODE_BLOCK;
+
+/** blocks that are not necessarily srcMLstatements */
+ const static srcMLState::MODE_TYPE MODE_BLOCK_CONTENT;
 
 /** mode for inititialization typically @code=<init>...</init>@endcode */
  const static srcMLState::MODE_TYPE MODE_INIT;
@@ -263,5 +266,7 @@ const static srcMLState::MODE_TYPE MODE_FUNCTION_CALL;
 
 /** mode for in function call */
 const static srcMLState::MODE_TYPE MODE_IF_STATEMENT;
+
+const static srcMLState::MODE_TYPE MODE_NO_BLOCK_CONTENT;
 
 #endif

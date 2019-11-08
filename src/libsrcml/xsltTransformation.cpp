@@ -17,7 +17,7 @@
 
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <xsltTransformation.hpp>
@@ -105,7 +105,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     if (!stylesheet)
         throw;
 
-    xsltsrcMLRegister();
+//    xsltsrcMLRegister();
 }
 
 /**
@@ -132,10 +132,10 @@ xsltTransformation::~xsltTransformation() {
  * 
  * @returns true on success false on failure.
  */
-TransformationResult xsltTransformation::apply(xmlDocPtr doc, int position) const {
+TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */) const {
 
     // position passed to XSLT program
-    setPosition(position);
+//    setPosition(position);
 
     // convert to c-array of c-strings, null terminated
     // @todo Extract Function

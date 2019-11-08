@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -215,7 +215,7 @@ int srcMLOutput::consume_next() {
 void srcMLOutput::outputXMLDecl() {
 
     // issue the xml declaration, but only if we want to
-    if (depth == 0 && isoption(options, SRCML_OPTION_XML_DECL))
+    if (depth == 0 && !isoption(options, SRCML_OPTION_NO_XML_DECL))
         xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
@@ -252,7 +252,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
     auto& view = namespaces.get<nstags::uri>();
 
     if (isoption(options, SRCML_OPTION_CPP_DECLARED)) {
-        view.find(SRCML_CPP_NS_URI)->flags |= NS_USED;
+//        view.find(SRCML_CPP_NS_URI)->flags |= NS_USED;
     }
 
     if (isoption(options, SRCML_OPTION_POSITION))
@@ -494,6 +494,12 @@ inline void srcMLOutput::processText(const antlr::RefToken& token) {
  */
 void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
+    srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
+
+    // how we detect empty elements: the position is wrong
+    if (stoken->endline < stoken->getLine() || (stoken->endline == stoken->getLine() && stoken->endcolumn < stoken->getColumn()))
+            return;
+
     thread_local const std::string& prefix = namespaces[POS].prefix;
     thread_local const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
     thread_local const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
@@ -508,7 +514,6 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     xmlOutputBufferWrite(output_buffer, 1, "\"");
 
     // position end attribute, e.g. pos:end="2:1"
-    srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
     xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
     if (token->getLine() > stoken->endline) {
         xmlOutputBufferWriteString(output_buffer, "INVALID_POS(");

@@ -8,7 +8,7 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
 <fixed>fixed <init>(<decl><type><name>int</name><modifier>*</modifier></type> <name>p</name> <init>= <expr><name>arr</name></expr></init></decl>)</init>
- <block>{}</block></fixed>
+ <block>{<block_content/>}</block></fixed>
 </unit>
 
 </unit>

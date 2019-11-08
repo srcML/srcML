@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -31,6 +31,7 @@
 #include "srcMLOutput.hpp"
 #include "srcmlns.hpp"
 #include <srcml_types.hpp>
+#include <unit_utilities.hpp>
 
 /** 
  * srcml_translator
@@ -97,13 +98,7 @@ void srcml_translator::close() {
     if (!first && (options & SRCML_OPTION_ARCHIVE) > 0)
         out.outputUnitSeparator();
 
-    // @todo Is this needed? Is this why we have to clone the archive, because this
-    // is always created?
-    if (first && !text_only && (options & SRCML_OPTION_ARCHIVE) > 0) {
-
-        prepareOutput();
-    }
-    first = false;
+    prepareOutput();
 
     if (is_outputting_unit)
         add_end_unit();
@@ -167,13 +162,13 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
 void srcml_translator::prepareOutput() {
 
-    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
-
     if (!first)
         return;
     first = false;
 
-    if ((options & SRCML_OPTION_XML_DECL) > 0)
+    bool is_archive = (options & SRCML_OPTION_ARCHIVE) > 0;
+
+    if ((options & SRCML_OPTION_NO_XML_DECL) == 0)
       out.outputXMLDecl();
   
     out.outputProcessingInstruction();
@@ -216,31 +211,41 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
         mergedns += *unit->namespaces;
     }
 
-    std::string language = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
-
-    // @todo have to set this up here, not sure why
-    if (language == "C" || language == "C++" || language == "C#" || language == "Objective-C") {
-        options |= SRCML_OPTION_CPP_DECLARED;
-    } else {
-        options &= ~SRCML_OPTION_CPP_DECLARED;
+    // if a srcdiff revision, remove the srcdiff namespace
+    if (unit->archive->revision_number) {
+        auto&& view = mergedns.get<nstags::uri>();
+        auto it = view.find(SRCML_DIFF_NS_URI);
+        if (it != view.end()) {
+            view.erase(it);
+        }
     }
+
+    std::string language = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
 
     // create a new unit start tag with all new info (hash value, namespaces actually used, etc.)
     out.initNamespaces(mergedns);
+    auto nrevision = unit->archive->revision_number;
     out.startUnit(language.c_str(),
             (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->c_str() : revision,
-            optional_to_c_str(unit->url),
-            optional_to_c_str(unit->filename),
-            optional_to_c_str(unit->version),
-            optional_to_c_str(unit->timestamp),
-            optional_to_c_str(unit->hash),
-            optional_to_c_str(unit->encoding),
+            (options & SRCML_OPTION_ARCHIVE) || !unit->url       ? 0 : (nrevision ? attribute_revision(*unit->url, (int) *nrevision).c_str() : unit->url->c_str()),
+            !unit->filename  ? 0 : (nrevision ? attribute_revision(*unit->filename, (int) *nrevision).c_str() : unit->filename->c_str()),
+            !unit->version   ? 0 : (nrevision ? attribute_revision(*unit->version, (int) *nrevision).c_str() : unit->version->c_str()),
+            !unit->timestamp ? 0 : (nrevision ? attribute_revision(*unit->timestamp, (int) *nrevision).c_str() : unit->timestamp->c_str()),
+            !unit->hash      ? 0 : (nrevision ? attribute_revision(*unit->hash, (int) *nrevision).c_str() : unit->hash->c_str()),
+            !unit->encoding  ? 0 : (nrevision ? attribute_revision(*unit->encoding, (int) *nrevision).c_str() : unit->encoding->c_str()),
             unit->attributes,
             false);
 
     // write out the contents, excluding the start and end unit tags
     int size = unit->content_end - unit->content_begin - 1;
-    if (size > 0) {
+
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+
+        std::string s = extract_revision(unit->srcml.c_str() + unit->content_begin, size, (int) *unit->archive->revision_number);
+
+        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST s.c_str(), (int) s.size());
+
+    } else if (size > 0) {
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->srcml.c_str() + unit->content_begin), size);
     }
 
@@ -268,17 +273,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
     is_outputting_unit = true;
 
     first = false;
- 
-    int lang = unit->language ? srcml_check_language(unit->language->c_str())
-        : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
-    if (lang == Language::LANGUAGE_C || lang == Language::LANGUAGE_CXX || lang == Language::LANGUAGE_CSHARP ||
-      lang & Language::LANGUAGE_OBJECTIVE_C) {
-        options |= SRCML_OPTION_CPP;
-        options |= SRCML_OPTION_CPP_DECLARED;
-    }
-
-    // @todo Why are we saving the options then restoring them?
-    OPTION_TYPE save_options = options;
 
     out.startUnit(optional_to_c_str(unit->language, optional_to_c_str(unit->archive->language)),
                   revision,
@@ -290,8 +284,6 @@ bool srcml_translator::add_start_unit(const srcml_unit * unit){
                   optional_to_c_str(unit->encoding),
                   unit->attributes,
                   false);
-
-    options = save_options;
 
     return true;
 }
@@ -309,11 +301,8 @@ bool srcml_translator::add_end_unit() {
     if (!is_outputting_unit)
         return false;
 
-    while (output_unit_depth > 0) {
-        --output_unit_depth;
-
-        xmlTextWriterEndElement(out.getWriter());
-    }
+    while (output_unit_depth > 0)
+        add_end_element();
 
     is_outputting_unit = false;
 
@@ -333,7 +322,7 @@ bool srcml_translator::add_end_unit() {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* /* uri */) {
+bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* uri) {
 
     if (!is_outputting_unit || name == 0)
         return false;
@@ -344,7 +333,7 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
     ++output_unit_depth;
 
     /** @todo figure out how to register namespaces so this actualy works */
-    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, /*BAD_CAST uri*/0) != -1;
+    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST uri) != -1;
 }
 
 /**
@@ -425,7 +414,7 @@ bool srcml_translator::add_string(const char *content) {
         return false;
 
     char* text = (char *)content;
-    for(char * pos = text; *pos; ++pos) {
+    for (char * pos = text; *pos; ++pos) {
 
         if (*pos != '"')
             continue;
@@ -435,15 +424,13 @@ bool srcml_translator::add_string(const char *content) {
             return false;
 
         *pos = '\"';
-        if ( xmlTextWriterWriteRaw(out.getWriter(), BAD_CAST "\"") == -1)
+        if (xmlTextWriterWriteRaw(out.getWriter(), BAD_CAST "\"") == -1)
             return false;
 
         text = pos + 1;
     }
 
-    int ret = xmlTextWriterWriteString(out.getWriter(), BAD_CAST text);
-
-    return ret != -1;
+    return xmlTextWriterWriteString(out.getWriter(), BAD_CAST text) != -1;
 }
 
 /**
@@ -451,8 +438,4 @@ bool srcml_translator::add_string(const char *content) {
  *
  * Destructor.
  */
-srcml_translator::~srcml_translator() {
-
-    if (buffer)
-        xmlBufferFree(buffer);
-}
+srcml_translator::~srcml_translator() {}

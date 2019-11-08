@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef input_curl_HPP
@@ -25,12 +25,10 @@
 
 #include <srcml_input_src.hpp>
 
+bool curl_supported(const std::string& input_protocol);
+
 // adjust input for libcurl and libarchive decompressions
 int input_curl(srcml_input_src& input);
-
-void setCurlErrors();
-
-void clearCurlErrors();
 
 bool getCurlErrors();
 

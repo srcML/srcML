@@ -15,24 +15,6 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-set(TESTSUITE ${CMAKE_CURRENT_BINARY_DIR}/testsuite)
-
-# targets to manage parser testing
-add_custom_target(run    COMMENT "Runs all parser test cases"
-                         COMMAND time srcml --parser-test ${CMAKE_CURRENT_BINARY_DIR}/testsuite VERBATIM)
-add_custom_target(c      COMMENT "Runs all C parser test cases"
-                         COMMAND time srcml --parser-test --language=C    ${TESTSUITE} VERBATIM)
-add_custom_target(cpp    COMMENT "Runs all C++ parser test cases"
-                         COMMAND time srcml --parser-test --language=C++  ${TESTSUITE} VERBATIM)
-add_custom_target(C++    COMMENT "Runs all C++ parser test cases"
-                         COMMAND time srcml --parser-test --language=C++  ${TESTSUITE} VERBATIM)
-add_custom_target(java   COMMENT "Runs all C++ parser test cases"
-                         COMMAND time srcml --parser-test --language=Java ${TESTSUITE} VERBATIM)
-add_custom_target(cs     COMMENT "Runs all C language parser test cases"
-                         COMMAND time srcml --parser-test --language=C\#  ${TESTSUITE} VERBATIM)
-add_custom_target(CSHARP COMMENT "Runs all C language parser test cases"
-                         COMMAND time srcml --parser-test --language=C\#  ${TESTSUITE} VERBATIM)
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 add_subdirectory(testsuite)

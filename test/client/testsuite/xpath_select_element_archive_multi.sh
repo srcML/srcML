@@ -8,7 +8,7 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" hash="17239ee1ffe4b0abc790a338f52d2ac2f2565c4e"><function_decl><type><name>LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list>;</function_decl>
+	<unit revision="REVISION" language="C++" filename="b.cpp" hash="17239ee1ffe4b0abc790a338f52d2ac2f2565c4e"><function_decl><type><name>LIBSRCML_DECL</name> <name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list>;</function_decl>
 	</unit>
 
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" hash="c671c9b9a1bc97b6902a611a98700718006bd736"><comment type="block" format="doxygen">/**
@@ -44,19 +44,19 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1"><name>__GNUG__</name></unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="1"><name>__GNUG__</name></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="2"><name>__MINGW32__</name></unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="2"><name>__MINGW32__</name></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="3"><name>NO_DLLOAD</name></unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="3"><name>NO_DLLOAD</name></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="4"><name>RTLD_LAZY</name></unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="4"><name>RTLD_LAZY</name></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="5"><name>RTLD_LAZY</name></unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="5"><name>RTLD_LAZY</name></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="6"><name>RTLD_LAZY</name></unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="6"><name>RTLD_LAZY</name></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="7"><name>handle</name></unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="7"><name>handle</name></unit>
 
 	</unit>
 	STDOUT
@@ -87,9 +87,9 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" item="1"><name>LIBSRCML_DECL</name></unit>
+	<unit revision="REVISION" language="C++" filename="b.cpp" item="1"><name>LIBSRCML_DECL</name></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1"><name>int</name></unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="1"><name>int</name></unit>
 
 	</unit>
 	STDOUT
@@ -124,13 +124,13 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" item="1">LIBSRCML_DECL</unit>
+	<unit revision="REVISION" language="C++" filename="b.cpp" item="1">LIBSRCML_DECL</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="b.cpp" item="2">int</unit>
+	<unit revision="REVISION" language="C++" filename="b.cpp" item="2">int</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1">int</unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="1">int</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="2">void</unit>
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="2">void</unit>
 
 	</unit>
 	STDOUT
@@ -168,7 +168,7 @@ define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1"><comment type="block" format="doxygen">/**
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="1"><comment type="block" format="doxygen">/**
 	 * @returns Return 1 on success and 0 on failure.
 	 */</comment></unit>
 

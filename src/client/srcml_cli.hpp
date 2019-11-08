@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef SRCML_CLI_HPP
@@ -58,7 +58,8 @@ const int SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP   = 1<<17;
 const int SRCML_COMMAND_DISPLAY_SRCML_HASH        = 1<<18;
 const int SRCML_COMMAND_DISPLAY_SRCML_ENCODING    = 1<<19;
 
-const int SRCML_COMMAND_OUTPUT_UNSTABLE_ORDER     = 1<<20;
+const int SRCML_COMMAND_NO_COLOR                  = 1<<20;
+
 const int SRCML_COMMAND_UPDATE                    = 1<<21;
 
 const int SRCML_COMMAND_NOARCHIVE                 = 1<<22;
@@ -95,8 +96,9 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
 // Error Codes
-// TODO: PUT THE REST HERE
-const int CLI_ERROR_INVALID_ARGUMENT = 4;
+const int CLI_STATUS_OK = 0;
+const int CLI_STATUS_ERROR = 1;
+const int CLI_STATUS_INTERNAL_ERROR = 2;
 
 struct attribute {
     boost::optional<std::string> prefix;
@@ -115,7 +117,7 @@ struct srcml_request_t {
 
     boost::optional<int> stdindex;
 
-    int command;
+    int command = 0;
     boost::optional<int> markup_options;
 
     // unit attributes
@@ -127,7 +129,7 @@ struct srcml_request_t {
 
     boost::optional<std::string> src_encoding;
     
-    boost::optional<std::string> line_ending;
+    boost::optional<int> eol;
 
     boost::optional<std::string> external;
 
@@ -167,5 +169,73 @@ struct srcml_request_t {
 
 // parse the CLI options into a srcml client request
 srcml_request_t parseCLI(int argc, char* argv[]);
+srcml_request_t parseCLI11(int argc, char* argv[]);
+
+inline std::ostream& operator<<(std::ostream& out, const srcml_request_t srcml_request) {
+
+    out << "INPUT SOURCES:\n";
+    for (auto& input : srcml_request.input_sources) {
+        out << input;
+    }
+
+    // boost::optional<int> stdindex;
+    out << "stdindex: " << (srcml_request.stdindex ? *srcml_request.stdindex : -1) << '\n';
+
+    out << "SRCML_OPTION_CPP: " << (*srcml_request.markup_options & SRCML_OPTION_CPP) << '\n';
+    out << "SRCML_COMMAND_XML_FRAGMENT: " << (srcml_request.command & SRCML_COMMAND_XML_FRAGMENT) << '\n';
+    // int command;
+    // boost::optional<int> markup_options;
+
+    // // unit attributes
+    out << "att_language: " << (srcml_request.att_language ? *srcml_request.att_language : "") << '\n';
+    out << "att_filename: " << (srcml_request.att_filename ? *srcml_request.att_filename : "") << '\n';
+    out << "att_url: " << (srcml_request.att_url ? *srcml_request.att_url : "") << '\n';
+    out << "att_xml_encoding: " << (srcml_request.att_xml_encoding ? *srcml_request.att_xml_encoding : "") << '\n';
+    out << "att_version: " << (srcml_request.att_version ? *srcml_request.att_version : "") << '\n';
+
+    // boost::optional<std::string> src_encoding;
+    
+    // boost::optional<std::string> eol;
+
+    // boost::optional<std::string> external;
+
+    out << "output_filename: " << srcml_request.output_filename << '\n';
+
+    // //filelist:// prefix
+    // std::vector<std::string> files_from;
+    // std::vector<std::string> language_ext;
+
+    out << "tabs: " << srcml_request.tabs << '\n';
+
+    // // xml namespaces
+    // boost::optional<std::string> xmlns_prefix_query;
+
+    // // xml processing attributes
+    // boost::optional<std::string> xml_processing;    
+
+    // std::map<std::string,std::string> xmlns_namespaces;
+
+    // // Use for checking for overwriting standard namespaces ("", cpp)
+    // std::map<std::string,std::string> xmlns_namespace_uris;
+
+    // // srcml transformation
+    // std::vector<std::string> transformations;
+    // std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
+
+    out << "unit: " << srcml_request.unit << '\n';
+    // int unit = 0;
+    // int max_threads;
+
+    // boost::optional<std::string> pretty_format;
+
+    // boost::optional<size_t> revision;
+
+    // // pre-input
+    // char buf[4] = { 0 };
+    // size_t bufsize = 0;
+
+
+    return out;
+}
 
 #endif

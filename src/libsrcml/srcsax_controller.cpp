@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 #include <srcsax.hpp>
 #include <sax2_srcsax_handler.hpp>
@@ -42,51 +42,6 @@ static void libxml_error(void * /*ctx*/, const char* msg, ...) {
 static xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_input, xmlCharEncoding enc);
 
 /**
- * srcsax_create_context_inner
- * @param input a libxml2 parser input buffer
- *
- * A helper function that creates the srcSAX context and does error handling.
- * With a supplied xmlParserInputBufferPtr.
- * 
- * @returns srcsax_context context to be used for srcML parsing.
- */
-static srcsax_context* srcsax_create_context_inner(const char* encoding,
-    std::function<xmlParserInputBufferPtr(xmlCharEncoding)> createxmlParserInputBuffer) {
-
-    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
-    initGenericErrorDefaultFunc(&error_handler);
-
-    auto enc = encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE;
-    xmlParserInputBufferPtr input = createxmlParserInputBuffer(enc);
-    if (input == 0)
-        return 0;
-
-    srcsax_context* context = nullptr;
-    try {
-        context = new srcsax_context();
-    } catch (...) {
-
-        xmlFreeParserInputBuffer(input);
-        return 0;
-    }
-
-    context->input = input;
-
-    xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input, encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
-
-    if (libxml2_context == nullptr) {
-
-        xmlFreeParserInputBuffer(input);
-        delete context;
-        return 0;
-    }
-
-    context->libxml2_context = libxml2_context;
-
-    return context;
-}
-
-/**
  * srcsax_create_context_parser_input_buffer
  * @param srcml_context an opened context for opened srcML document
  * @param read_callback a read callback function
@@ -97,15 +52,34 @@ static srcsax_context* srcsax_create_context_inner(const char* encoding,
  *
  * @returns srcsax_context context to be used for srcML parsing.
  */
-srcsax_context* srcsax_create_context_parser_input_buffer(xmlParserInputBufferPtr input) {
+srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlParserInputBuffer> input) {
 
     if (input == 0)
         return 0;
 
-    return srcsax_create_context_inner(0, [input](xmlCharEncoding) {
+    const char* encoding = nullptr;
 
-        return input;
-    });
+    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
+    initGenericErrorDefaultFunc(&error_handler);
+
+    srcsax_context* context = nullptr;
+    try {
+        context = new srcsax_context();
+    } catch (...) {
+        return 0;
+    }
+
+    context->input = std::move(input);
+
+    xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input.get(), encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    if (libxml2_context == nullptr) {
+        delete context;
+        return 0;
+    }
+
+    context->libxml2_context = libxml2_context;
+
+    return context;
 }
 
 /**

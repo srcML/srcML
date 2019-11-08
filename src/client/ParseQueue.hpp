@@ -1,5 +1,5 @@
 /**
- * @file parse_queue.hpp
+ * @file ParseQueue.hpp
  *
  * @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
  *
@@ -17,50 +17,50 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef PARSE_QUEUE_HPP
 #define PARSE_QUEUE_HPP
 
-#include <functional>
 #include <ParseRequest.hpp>
 #include <WriteQueue.hpp>
 #include <ctpl_stl.h>
 #include <mutex>
 #include <srcml_consume.hpp>
 #include <memory>
+#include <srcml_utilities.hpp>
 
 class ParseQueue {
 public:
 
-	ParseQueue(int max_threads, WriteQueue* write_queue)
-	    : pool(max_threads), wqueue(write_queue) {}
+    ParseQueue(int max_threads, WriteQueue* write_queue)
+        : pool(max_threads), wqueue(write_queue) {}
 
-	inline void schedule(std::shared_ptr<ParseRequest> pvalue) {
+    inline void schedule(std::shared_ptr<ParseRequest> pvalue) {
 
-		int next;
-		{
-			std::unique_lock<std::mutex> l(e);
+        int next;
+        {
+            std::unique_lock<std::mutex> l(e);
 
-	    	next = ++counter;
-		}
-		pvalue->position = next;
+            next = ++counter;
+        }
+        pvalue->position = next;
 
-	    // error passthrough to output for proper output in trace
-	    if (pvalue->status) {
-	        pvalue->unit = 0;
-	        wqueue->schedule(pvalue);
-	        return;
-	    }
+        // error passthrough to output for proper output in trace
+        if (pvalue->status) {
+            pvalue->unit = 0;
+            wqueue->schedule(pvalue);
+            return;
+        }
 
         pool.push(srcml_consume, pvalue, wqueue);
-	}
+    }
 
-	inline void wait() {
+    inline void wait() {
 
         pool.stop(true);
-	}
+    }
 
 private:
     ctpl::thread_pool pool;

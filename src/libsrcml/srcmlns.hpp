@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
@@ -59,22 +59,22 @@ namespace nstags
 
 // data structure for namespaces, prefixes and uri's
 typedef boost::multi_index::multi_index_container<Namespace,
-  	boost::multi_index::indexed_by<
-  		// default access, indexing
-    	boost::multi_index::random_access<
-      		boost::multi_index::tag<nstags::position>
-    	>,
-    	// view based on prefix
-	    boost::multi_index::hashed_non_unique<
-	      boost::multi_index::tag<nstags::prefix>,
-	      boost::multi_index::member<Namespace, std::string, &Namespace::prefix>
-	    >,
-    	// view based on uri
-	    boost::multi_index::hashed_non_unique<
-	      boost::multi_index::tag<nstags::uri>,
-	      boost::multi_index::member<Namespace, std::string, &Namespace::uri>
-	    >
-	>
+    boost::multi_index::indexed_by<
+        // default access, indexing
+        boost::multi_index::random_access<
+            boost::multi_index::tag<nstags::position>
+        >,
+        // view based on prefix
+        boost::multi_index::hashed_non_unique<
+          boost::multi_index::tag<nstags::prefix>,
+          boost::multi_index::member<Namespace, std::string, &Namespace::prefix>
+        >,
+        // view based on uri
+        boost::multi_index::hashed_non_unique<
+          boost::multi_index::tag<nstags::uri>,
+          boost::multi_index::member<Namespace, std::string, &Namespace::uri>
+        >
+    >
 > Namespaces;
 
 /** xml declaration standalone attribute */
@@ -171,5 +171,8 @@ std::string& srcml_uri_normalize(std::string & uri);
 
 // merge in the other namespace
 Namespaces& operator +=(Namespaces& ns, const Namespaces& otherns);
+
+// is a srcdiff archive
+bool issrcdiff(const Namespaces& namespaces);
 
 #endif

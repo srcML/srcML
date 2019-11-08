@@ -15,7 +15,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # Finding antlr binary.
 find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
@@ -44,7 +44,7 @@ macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
             add_custom_command(OUTPUT  ${OUTPUT_FILES}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                COMMAND touch ${OUTPUT_FILES}
+                COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
             )
         endif()
     else()
@@ -58,7 +58,7 @@ macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
             add_custom_command(OUTPUT  ${OUTPUT_FILES}
                 WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
                 COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                COMMAND touch ${OUTPUT_FILES}
+                COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
             )
         endif()
     endif()
@@ -111,7 +111,7 @@ set(srcMLParserOutputFiles
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.hpp
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.hpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.txt	
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParserTokenTypes.txt 
 )
 RunAntlr("${srcMLParserOutputFiles}"
     srcMLParser.g
@@ -119,21 +119,11 @@ RunAntlr("${srcMLParserOutputFiles}"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
-# @BUILD Why are these the same? Can the if be eliminated?
-if(WIN32)
 add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
     ${PARSER_SOURCE}
 )
-else()
-add_library(parser OBJECT
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${PARSER_SOURCE}
-)
-endif()
 
 target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})

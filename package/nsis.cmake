@@ -15,16 +15,17 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # set icons
+install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION .)
 set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
 
 set(CPACK_NSIS_MODIFY_PATH ON)
 if(WIN32)
-    set(MSVC_REDIST ${WINDOWS_DEP_PATH}/tools/VC_redist.exe)
+    set(MSVC_REDIST ${PROJECT_SOURCE_DIR}/deps/tools/VC_redist.x64.exe)
     get_filename_component(vcredist_name "${MSVC_REDIST}" NAME)
     install(PROGRAMS ${MSVC_REDIST} DESTINATION bin)
     set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\${vcredist_name}\\\" /passive /norestart'")

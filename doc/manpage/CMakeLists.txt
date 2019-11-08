@@ -15,7 +15,28 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.1.gz
+    COMMAND gzip -n -9 -f ${CMAKE_BINARY_DIR}/srcml.1
+    DEPENDS ${CMAKE_BINARY_DIR}/srcml.1
+)
+
+install(FILES ${CMAKE_BINARY_DIR}/srcml.1.gz DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT SRCML)
+
+set(REMOTE_MANPAGE_NAME srcml-${PROJECT_VERSION}.troff)
+
+# For installation only, download the man page
+if(NOT BUILD_CLIENT_DOC)
+    set(MANPAGE_URL http://gehry.sdml.cs.kent.edu/build/${REMOTE_MANPAGE_NAME})
+    message(STATUS "Downloading manpage from ${MANPAGE_URL}")
+    file(DOWNLOAD ${MANPAGE_URL} ${CMAKE_BINARY_DIR}/srcml.1.gz)
+    return()
+endif()
+
+# Upload the generated manpage for download by other installs
+# Requires permission by default user
+add_custom_target(publish_manpage COMMAND rsync --inplace ${CMAKE_BINARY_DIR}/srcml.1.gz gehry.sdml.cs.kent.edu:/var/www/html/sdml/build/${REMOTE_MANPAGE_NAME})
 
 find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn ${WINDOWS_DEP_PATH}/bin)
 
@@ -41,14 +62,13 @@ set(LANGUAGE_FLAG_LONG "language")
 set(LANGUAGE_FLAG_SHORT "l")
 set(REGISTER_EXTENSION_FLAG_LONG "register-ext")
 set(SRC_ENCODING_FLAG_LONG "src-encoding")
+set(EOL_FLAG_LONG "eol")
 set(ARCHIVE_FLAG_SHORT "r")
 set(ARCHIVE_FLAG_LONG "archive")
-set(OUTPUT_XML_FLAG_LONG "output-xml")
+set(OUTPUT_XML_FLAG_LONG "output-srcml")
 set(OUTPUT_XML_FLAG_SHORT "X")
-set(OUTPUT_XML_FRAGMENT_FLAG_LONG "output-xml-outer")
-set(OUTPUT_XML_FRAGMENT_FLAG_SHORT "F")
-set(OUTPUT_XML_RAW_FLAG_LONG "output-xml-inner")
-set(OUTPUT_XML_RAW_FLAG_SHORT "R")
+set(OUTPUT_XML_FRAGMENT_FLAG_LONG "output-srcml-outer")
+set(OUTPUT_XML_RAW_FLAG_LONG "output-srcml-inner")
 set(POSITION_FLAG_LONG "position")
 set(TABS_FLAG "tabs")
 set(CPP_FLAG_LONG "cpp")
@@ -91,38 +111,26 @@ set(ELEMENT_LONG "element")
 set(XSLT_LONG "xslt")
 set(XSLT_PARAM "xslt-param")
 set(RELAXNG_OPTION_LONG "relaxng")
-
-#set(LONG_INFO_FLAG_SHORT "L")
-#set(LONG_INFO_FLAG_LONG "longinfo")
 set(PREFIX_FLAG_LONG "show-prefix")
 set(LINE_ENDING_FLAG_LONG "output-src-eol")
 set(UPDATE_FLAG_LONG "update")
 set(OUTPUT_FORMAT_FLAG_LONG "output-format")
 #set(NO_NAMESPACE_DECL_LONG "no-namespace-decl")
-#set(INTERACTIVE_FLAG_SHORT "c")
-#set(INTERACTIVE_FLAG_LONG "interactive")
 set(DEBUG_FLAG_SHORT "g")
 set(DEBUG_FLAG_LONG "debug")
 set(SRCML_ERR_NS_PREFIX_DEFAULT "err")
 set(SRCML_CPP_NS_PREFIX_DEFAULT "cpp")
 set(SRCML_EXT_POSITION_NS_PREFIX_DEFAULT "pos")
-set(SRCML_ERR_NS_URI "http://www.srcML.org/srcML/srcerr")
-set(SRCML_SRC_NS_URI "http://www.srcML.org/srcML/src")
-set(SRCML_CPP_NS_URI "http://www.srcML.org/srcML/cpp")
-set(SRCML_EXT_POSITION_NS_URI "http://www.srcML.org/srcML/position")
-set(LITERAL_FLAG "idk")
+set(SRCML_ERR_NS_URL "http://www.srcML.org/srcML/srcerr")
+set(SRCML_SRC_NS_URL "http://www.srcML.org/srcML/src")
+set(SRCML_CPP_NS_URL "http://www.srcML.org/srcML/cpp")
+set(SRCML_EXT_POSITION_NS_URL "http://www.srcML.org/srcML/position")
 set(MAX_THREADS_FLAG_LONG "max-threads")
 set(EXTERNAL_LONG "external")
 set(XML_PROCESSING_FLAG_LONG "xml-processing")
-set(APPLY_ROOT_FLAG_LONG "apply-root")
 set(STATUS_SUCCESS "0")
 set(STATUS_ERROR "1")
-set(STATUS_INVALID_ARGUMENT "2")
-set(STATUS_INVALID_OPTION "3")
-set(SRCML_STATUS_UNKNOWN_ENCODING "7")
-#set(SRCML_STATUS_IO_ERROR "5")
-set(SRCML_STATUS_INVALID_LANGUAGE "6")
-#set(SRCML_STATUS_NO_TRANSFORMATION "8")
+set(STATUS_INTERNAL_ERROR "2")
 set(PRETTY_FLAG_LONG "pretty")
 
 # Custom commands for creating things using the ronn executable
@@ -138,6 +146,5 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.html
     DEPENDS ${CMAKE_BINARY_DIR}/srcml.md
 )
 
-add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1 ${CMAKE_BINARY_DIR}/srcml.html)
-
-install(FILES ${CMAKE_BINARY_DIR}/srcml.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1.gz ${CMAKE_BINARY_DIR}/srcml.html)
+#add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1.gz ${CMAKE_BINARY_DIR}/srcml.html)

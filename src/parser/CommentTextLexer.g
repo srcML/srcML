@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML translator; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * Handles comments as separate tokens in the character stream.
  */
@@ -39,7 +39,7 @@ header {
 }
 
 options {
-	language="Cpp";
+    language="Cpp";
     namespaceAntlr="antlr";
     namespaceStd="std";
 }
@@ -90,7 +90,7 @@ int dquote_count = 0;
 OPTION_TYPE options;
 
 CommentTextLexer(const antlr::LexerSharedInputState& state)
-	: antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), delimiter1("")
+    : antlr::CharScanner(state,true), mode(0), onpreprocline(false), noescape(false), delimiter1("")
 {}
 
 private:
@@ -173,7 +173,7 @@ COMMENT_TEXT {
 
     '\042' /* '\"' */
         { dquote_count = 1; }
-        (options { greedy = true; } : '\042' { ++dquote_count; })*
+        (options { greedy = true; } : { prevLA != '\\' }? '\042' { ++dquote_count; })*
     {
         if ((noescape && (dquote_count % 2 == 1)) ||
             (!noescape && (prevLA != '\\') && (mode == STRING_END))) {

@@ -2,35 +2,35 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="foreach" filename="qt_foreach">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<foreach>foreach <control>(<init><expr><name>i</name></expr>,<range> <expr><name>b</name></expr></range></init>)</control><block type="pseudo">
-<empty_stmt>;</empty_stmt></block></foreach>
+<foreach>foreach <control>(<init><expr><name>i</name></expr>,<range> <expr><name>b</name></expr></range></init>)</control><block type="pseudo"><block_content>
+<empty_stmt>;</empty_stmt></block_content></block></foreach>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control><block type="pseudo">
-<empty_stmt>;</empty_stmt></block></foreach>
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control><block type="pseudo"><block_content>
+<empty_stmt>;</empty_stmt></block_content></block></foreach>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>element</name>,<range> <expr><call><name><name>fibarray</name><operator>.</operator><name>array</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control><block type="pseudo"><empty_stmt>;</empty_stmt></block></foreach>
+<foreach>foreach<control>(<init><decl><type><name>int</name></type> <name>element</name>,<range> <expr><call><name><name>fibarray</name><operator>.</operator><name>array</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control><block type="pseudo"><block_content><empty_stmt>;</empty_stmt></block_content></block></foreach>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control><block type="pseudo">
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></foreach>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control>
-<block>{
-}</block></foreach>
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control><block type="pseudo"><block_content>
+<expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></foreach>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control>
-<block>{
+<block>{<block_content>
+</block_content>}</block></foreach>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<foreach>foreach <control>(<init><decl><type><name>int</name></type> <name>i</name>,<range> <expr><name>b</name></expr></range></decl></init>)</control>
+<block>{<block_content>
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-}</block></foreach>
+</block_content>}</block></foreach>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
@@ -38,7 +38,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<function><type><name>void</name></type> <name>foreach</name><parameter_list>()</parameter_list> <block>{}</block></function>
+<function><type><name>void</name></type> <name>foreach</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

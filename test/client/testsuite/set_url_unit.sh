@@ -6,13 +6,13 @@ source $(dirname "$0")/framework_test.sh
 # test on standard in
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="bar"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="bar"/>
 	STDOUT
 
 # test on file
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" url="bar" filename="sub/a.cpp"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="bar" filename="sub/a.cpp"/>
 	STDOUT
 
 xmlcheck "$output"

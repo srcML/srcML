@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /**
@@ -74,6 +74,9 @@ public:
 
     /** abstract method for starting adding an element */
     virtual void addElement(int) = 0;
+
+    /** abstract method for completing any unended skipped elements */
+    virtual void completeSkip() = 0;
 
     /** abstract method for flushing skipped */
     virtual void flushSkip() = 0;

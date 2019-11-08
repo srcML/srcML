@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML translator; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * An antlr Lexer that passes tokens consisting of either
  * whitespace or non-whitespace.  Non-whitespace is output
@@ -30,7 +30,7 @@
  */
 
 options {
-	language="Cpp";
+    language="Cpp";
     namespaceAntlr="antlr";
     namespaceStd="std";
 }
@@ -38,8 +38,8 @@ options {
 class TextLexer extends Lexer;
 
 options {
-	k = 1;
-	testLiterals = false; 
+    k = 1;
+    testLiterals = false; 
     charVocabulary = '\000'..'\377';
     importVocab = CommentTextLexer;
 }
@@ -157,7 +157,7 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; } : '/'
                 $setType(JAVADOC_COMMENT_START);
                 mode = JAVADOC_COMMENT_END;
             } ('/' { $setType(WHOLE_COMMENT); mode = 0; })? |
-            { inLanguage(LANGUAGE_CXX) }? ('*' | '!')
+            { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CSHARP) }? ('*' | '!')
             {
                 $setType(DOXYGEN_COMMENT_START);
                 mode = DOXYGEN_COMMENT_END;

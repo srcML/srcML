@@ -15,20 +15,24 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 find_package(Doxygen REQUIRED)
-configure_file("${CMAKE_SOURCE_DIR}/doc/doxygen/config" "${CMAKE_BINARY_DIR}/config")
-SET(DOXYGEN_INPUT "${CMAKE_BINARY_DIR}/config")
-SET(DOXYGEN_OUTPUT_DIR "${CMAKE_BINARY_DIR}")
-ADD_CUSTOM_COMMAND(
-    OUTPUT ${DOXYGEN_OUTPUT_DIR}/html ${DOXYGEN_OUTPUT_DIR}/latex
+
+set(DOXYGEN_TEMPLATE  "${CMAKE_SOURCE_DIR}/doc/doxygen/config.in" CACHE INTERNAL "Doxygen template file")
+set(DOXYGEN_INPUT     "${CMAKE_BINARY_DIR}/doc/doxygen/config" CACHE INTERNAL "Doxygen input file")
+
+configure_file(${DOXYGEN_TEMPLATE} ${DOXYGEN_INPUT})
+add_custom_command(
+    OUTPUT  ${CMAKE_BINARY_DIR}/html
     COMMAND ${CMAKE_COMMAND} -E echo_append "Building API Documentation..."
+#    COMMAND ${CMAKE_COMMAND} -P configure_doxygen.cmake
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
     COMMAND ${CMAKE_COMMAND} -E echo "Done."
-    WORKING_DIRECTORY ${DOXYGEN_OUTPUT_DIR}
-    DEPENDS ${DOXYGEN_INPUT} ${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    DEPENDS ${DOXYGEN_TEMPLATE} "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h"
 )
 
-ADD_CUSTOM_TARGET(doc_doxygen ALL DEPENDS ${DOXYGEN_OUTPUT_DIR}/html ${DOXYGEN_OUTPUT_DIR}/latex)
-install(DIRECTORY ${DOXYGEN_OUTPUT_DIR}/html ${DOXYGEN_OUTPUT_DIR}/latex DESTINATION doc)
+add_custom_target(doc_doxygen ALL DEPENDS ${CMAKE_BINARY_DIR}/html)
+
+install(DIRECTORY ${CMAKE_BINARY_DIR}/html DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT SRCMLDEV)
