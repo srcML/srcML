@@ -36,7 +36,7 @@
 #include <archive_entry.h>
 
 #include <stdio.h>
-#ifdef WINDOWS
+#ifdef _MSC_BUILD
     #include <direct.h>
 #else
     #include <unistd.h>
