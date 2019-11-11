@@ -79,9 +79,10 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
     * The extracted folder will be named deps, and its structure will look like the following:
     ```
         deps/
+            debug/
             include/
+            release/
             tools/
-            x64/
     ```        
     * When copied into the srcML source code directory the result should look like the following:
     ```
