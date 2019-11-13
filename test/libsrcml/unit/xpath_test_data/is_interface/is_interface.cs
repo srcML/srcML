@@ -1,6 +1,0 @@
-
-
-interface x { }
-
-
-class x { }

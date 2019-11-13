@@ -1,5 +1,5 @@
 /**
- *  @file sax2_srcsax_handler.cpp
+ * @file sax2_srcsax_handler.cpp
  *
  * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
  *
@@ -17,10 +17,11 @@
 
  *  You should have received a copy of the GNU General Public License
  * along with the srcML SAX2 Framework; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <sax2_srcsax_handler.hpp>
+#include <srcmlns.hpp>
 #include <string>
 #include <algorithm>
 #include <cstring>
@@ -117,7 +118,7 @@ static int reparse_root(void* ctx) {
     memset(&roottagsax, 0, sizeof(roottagsax));
     roottagsax.initialized    = XML_SAX2_MAGIC;
     xmlSetStructuredErrorFunc(ctx, [](void * userData, 
-                     xmlErrorPtr error) {
+                     xmlErrorPtr /* error */) {
 
         auto ctxt = (xmlParserCtxtPtr) userData;
         if (ctxt == nullptr)
@@ -128,8 +129,7 @@ static int reparse_root(void* ctx) {
 
         // @todo Find out real filename to insert in error message
         // @todo Figure out how to get where error is noted
-        fprintf(stderr, "srcml: %d:%d %d|%s", error->line, error->int2, error->code, error->message);
-        exit(1);
+        //fprintf(stderr, "srcml: %d:%d %d|%s", error->line, error->int2, error->code, error->message);
     });
 
     roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -189,9 +189,9 @@ void start_document(void* ctx) {
     SRCSAX_DEBUG_START("");
 
     // save for dictionary lookup of common elements
-    UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", strlen("unit"));
-    MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", strlen("macro-list"));
-    ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", strlen("escape"));
+    UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", (int) strlen("unit"));
+    MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", (int) strlen("macro-list"));
+    ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", (int) strlen("escape"));
 
     // save the encoding from the input
     state->context->encoding = "UTF-8";
@@ -202,6 +202,9 @@ void start_document(void* ctx) {
 
     // process any upper layer start document handling
     state->context->handler->start_document(state->context);
+
+
+
 
     SRCSAX_DEBUG_END("");
 }
@@ -313,12 +316,12 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             if (namespaces[i]) {
                 // state->rootnsstr += ":";
                 // state->rootnsstr += (const char*) namespaces[i];
-                size += 1 + strlen((const char*) namespaces[i]);
+                size += 1 + (int) strlen((const char*) namespaces[i]);
             }
             // state->rootnsstr += "=\"";
             // state->rootnsstr += (const char*) namespaces[i + 1];
             // state->rootnsstr += "\" ";
-            size += 2 + strlen((const char*) namespaces[i + 1]) + 2;
+            size += 2 + (int) strlen((const char*) namespaces[i + 1]) + 2;
         }
 
         state->rootnsstr.reserve(size);
@@ -389,6 +392,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
                          int nb_namespaces, const xmlChar** namespaces,
                          int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
+
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)
         return;
@@ -398,13 +402,12 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     SRCSAX_DEBUG_START(localname);
 
-    // if macros are found, then must return, but first save them if necessary
+    // if macros are found, then must return, process first
+    // but stay in first_start_element, since this can be between root unit and nested unit
     if (localname == MACRO_LIST_ENTRY) {
-/*
-        state->meta_tags.emplace_back(srcml_element(localname, prefix, URI,
-                                                    nb_namespaces, namespaces,
-                                                    nb_attributes, nb_defaulted, attributes));
-*/
+
+        state->context->handler->meta_tag(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
+                                          nb_namespaces, namespaces, nb_attributes, attributes);
         return;
     }
 
@@ -465,6 +468,15 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     auto state = (sax2_srcsax_handler*) ctxt->_private;
     if (state == nullptr)
         return;
+
+    // collect cpp prefix
+    // @todo Generalize this
+    for (int i = 0; i < nb_namespaces; ++i) {
+
+        if (std::string((const char*) namespaces[i * 2 + 1]) == SRCML_CPP_NS_URI) {
+            state->cpp_prefix = namespaces[i * 2] ? "" : (const char*) namespaces[i * 2];
+        }
+    }
 
     update_ctx(ctx);
 
@@ -649,8 +661,8 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
-            fprintf(stderr, "srcml: Internal error");
-            exit(1);
+//            fprintf(stderr, "srcml: Internal error");
+            return;
         }
 
         SRCML_DEBUG("BASE", (const char*) state->base, srcmllen);
@@ -705,7 +717,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
             fprintf(stderr, "srcml: Internal error");
-            exit(1);
+            return;
         }
 
         state->content_end = (int) state->unitsrcml.size() + 1;
@@ -764,7 +776,7 @@ void characters_root(void* ctx, const xmlChar* ch, int len) {
     SRCSAX_DEBUG_START_CHARS(ch, len);
 
     // skip over
-	state->base = ctxt->input->cur;
+    state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END_CHARS(ch, len);
 }
@@ -800,7 +812,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     state->unitsrc.append((const char*) ch, len);
 
-    state->loc += std::count((const char*) ch, (const char*) ch + len, '\n');
+    state->loc += (int) std::count((const char*) ch, (const char*) ch + len, '\n');
 
     update_ctx(ctx);
 
@@ -818,13 +830,13 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         state->unitsrcml.append((const char*) ch, len);
 
         // libxml2 passes ctxt->input->cur as ch, so then must increment to len
-	    state->base = ctxt->input->cur + len;
+        state->base = ctxt->input->cur + len;
 
     } else {
 
         // whitespace and escaped characters
         state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
-		state->base = ctxt->input->cur;
+        state->base = ctxt->input->cur;
     }
 
     SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());

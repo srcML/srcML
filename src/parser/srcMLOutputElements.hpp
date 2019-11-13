@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -50,7 +50,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { STYPEPREV,                   { "type",              SRC,  "ref",    "prev",     0,      0 }},
     { SCONDITION,                  { "condition",         SRC,      0,         0,     0,      0 }},
     { SBLOCK,                      { "block",             SRC,      0,         0,     0,      0 }},
-    { SCONTENT,                    { "content",           SRC,      0,         0,     0,      0 }},
+    { SCONTENT,                    { "block_content",     SRC,      0,         0,     0,      0 }},
     { SPSEUDO_BLOCK,               { "block",             SRC, "type",  "pseudo",     0,      0 }},
     { SINDEX,                      { "index",             SRC,      0,         0,     0,      0 }},
     { SDECLTYPE,                   { "decltype",          SRC,      0,         0,     0,      0 }},

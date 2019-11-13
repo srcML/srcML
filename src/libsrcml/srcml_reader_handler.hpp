@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_SRCML_READER_HANDLER_HPP
@@ -112,133 +112,6 @@ private :
     /** skip internal unit elements */
     bool skip = false;
 
-    /** srcDiff namespace */
-    bool issrcdiff = false;
-
-    /**
-     * meta_tag
-     *
-     * Store a meta tag for later output.
-     */
-     struct meta_tag {
-
-        /** metatags localname */
-        std::string localname;
-
-        /** metatags prefix */
-       boost::optional<std::string> prefix;
-
-        /** meta tags attributes */
-        std::vector<const xmlChar*> attributes;
-
-        /**
-         * meta_tag
-         * @param localname the meta tag name
-         * @param prefix the meta tag prefix
-         * @param num_attributes the number attributes on the meta tag
-         * @param attributes the attributes on the meta tag
-         *
-         * Construct meta_tag from SAX data.
-         */
-        meta_tag(const char* localname, const char* prefix, int num_attributes, const xmlChar** attributes)
-            : localname(localname) {
-
-            if(prefix) this->prefix = std::string(prefix);
-
-            this->attributes.reserve(num_attributes * 5);
-            for (int pos = 0; pos < num_attributes * 5; ++pos) {
-                this->attributes[pos] = attributes[pos];
-            }
-        }
-
-        /**
-         * meta_tag
-         * @param other another meta_tag
-         *
-         * Copy constructor.
-         */
-        meta_tag(const meta_tag& other) {
-
-            localname = other.localname;
-            prefix = other.prefix;
-            attributes = other.attributes;
-        }
-
-        /**
-         * operator=
-         * @param other another meta_tag
-         *
-         * Overloaded assignment operator
-         * Returns the assigned to meta_tag
-         */
-        meta_tag& operator=(meta_tag& other) {
-
-            swap(other);
-
-            return *this;
-        }
-
-        /**
-         * swap
-         * @param other another meta_tag
-         *
-         * swap the contents of the meta tags.
-         */
-        void swap(meta_tag & other) {
-
-            std::swap(localname, other.localname);
-            std::swap(prefix, other.prefix);
-            std::swap(attributes, other.attributes);
-        }
-
-        /**
-         * ~meta_tag
-         *
-         * Destructor
-         */
-        ~meta_tag() {}
-
-        /**
-         * get_prefix
-         *
-         * Return prefix as c string.
-         */
-       const char * get_prefix() const {
-	 if(prefix) return prefix->c_str();
-	 return 0;
-
-       }
-
-
-     };
-
-    /** save meta tags to use when non-archive write unit */
-    std::vector<meta_tag> meta_tags;
-
-    /** srcDiff enum */
-    enum srcdiff_operation { COMMON, DELETE, INSERT };
-
-    /** srcDiff enum stack */
-    std::stack<srcdiff_operation> srcdiff_stack;
-
-    /** the srcdiff revision to extract */
-    const boost::optional<size_t>& revision_number;
-
-    std::string attribute_revision(const std::string& attribute) {
-
-        if (!revision_number)
-            return attribute;
-
-        auto pos = attribute.find('|');
-        if (pos == std::string::npos)
-            return attribute;
-
-        if (*revision_number == SRCDIFF_REVISION_ORIGINAL)
-            return attribute.substr(0, pos);
-
-        return attribute.substr(pos + 1);
-    }
-
 public :
 
     /** Give access to members for srcml_sax2_reader class */
@@ -249,10 +122,9 @@ public :
      *
      * Constructor.  Sets up mutex, conditions and state.
      */
-    srcml_reader_handler(const boost::optional<size_t>& revision_number)
-        : revision_number(revision_number) {
+    srcml_reader_handler() {
 
-//        srcml_archive_disable_option(archive, SRCML_OPTION_HASH);
+//          archive->options &= ~SRCML_OPTION_HASH;
     }
 
     /**
@@ -338,7 +210,11 @@ public :
      */
     void stop() {
 
-        terminate = true;
+        {
+            std::unique_lock<std::mutex> lock(mutex);
+
+            terminate = true;
+        }
 
         resume();
     }
@@ -378,14 +254,12 @@ public :
 #endif
 
         if (!is_archive)
-            srcml_archive_disable_option(archive, SRCML_OPTION_ARCHIVE);
+            archive->options &= ~SRCML_OPTION_ARCHIVE;
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
-
             std::string attribute = (const char*) attributes[pos * 5];
             std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
-            value = attribute_revision(value);
 
             // Note: these are ignore instead of placing in attributes.
             if (attribute == "timestamp")
@@ -396,8 +270,10 @@ public :
                 archive->revision = value;
             else if (attribute == "filename")
                 ;
-            else if (attribute == "url")
+            else if (attribute == "url") {
                 srcml_archive_set_url(archive, value.c_str());
+
+            }
             else if (attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
             else if (attribute == "tabs")
@@ -414,7 +290,7 @@ public :
                         value = value.substr(value.find(",") + 1);
 
                     if (option == "XMLDECL")
-                        archive->options |= SRCML_OPTION_XML_DECL;
+                        archive->options |= SRCML_OPTION_NO_XML_DECL;
                     else if (option == "NAMESPACEDECL")
                         archive->options |= SRCML_OPTION_NAMESPACE_DECL;
                     else if (option == "CPP_TEXT_ELSE")
@@ -441,9 +317,6 @@ public :
             std::string uri = (const char*) namespaces[pos * 2 + 1] ? (const char*) namespaces[pos * 2 + 1] : "";
 
             srcml_uri_normalize(uri);
-
-            if (uri == SRCML_DIFF_NS_URI)
-                issrcdiff = true;
 
             srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
         }
@@ -473,9 +346,6 @@ public :
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
-
-        if (issrcdiff)
-            srcdiff_stack.push(COMMON);
 
         // pause
         // @todo this may need to change because, meta tags have separate call now
@@ -516,9 +386,10 @@ public :
 
             cond.notify_one();
             cond.wait(lock);
-
         }
 
+        state->loc = 0;
+        
         state->collect_unit_body = collect_unit_body;
 
         if (terminate)
@@ -528,60 +399,6 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
     }
-#if 0
-    /**
-     * startElement
-     * @param localname the name of the element tag
-     * @param prefix the tag prefix
-     * @param URI the namespace of tag
-     * @param num_namespaces number of namespaces definitions
-     * @param namespaces the defined namespaces
-     * @param num_attributes the number of attributes on the tag
-     * @param attributes list of attributes
-     *
-     * Overidden startElementNs to handle collection of srcML elements.
-     */
-    virtual void startElement(const char* localname, const char* prefix, const char* URI,
-                                int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                                const xmlChar** attributes) {
-
-#ifdef SRCSAX_DEBUG
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
-#endif
-
-        if (issrcdiff) {
-
-            if (issrcdiff && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
-
-                std::string local_name(localname);
-
-                if (local_name == "common")
-                    srcdiff_stack.push(COMMON);
-                else if (local_name == "delete")
-                    srcdiff_stack.push(DELETE);
-                else if (local_name == "insert")
-                    srcdiff_stack.push(INSERT);
-            }
-
-            if (issrcdiff && revision_number) {
-
-                if (is_srcml_namespace(URI, SRCML_DIFF_NS_URI))
-                    return;
-                if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT)
-                    return;
-                if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE)
-                    return;
-            }
-        }
-
-        if (terminate)
-            stop_parser();
-
-#ifdef SRCSAX_DEBUG
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
-#endif
-    }
-#endif
 
     /**
      * endRoot
@@ -628,21 +445,39 @@ public :
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
 #endif
 
-        if (issrcdiff)
-            srcdiff_stack.pop();
-
         auto ctxt = (xmlParserCtxtPtr) get_controller().getContext()->libxml2_context;
-	    auto state = (sax2_srcsax_handler*) ctxt->_private;
+        auto state = (sax2_srcsax_handler*) ctxt->_private;
 
         if (collect_unit_body) {
+
+            if (!state->unitsrc.empty() && state->unitsrc.back() != '\n')
+                ++state->loc;
 
             unit->content_begin = state->content_begin;
             unit->content_end = state->content_end;
             unit->insert_begin = state->insert_begin;
             unit->insert_end = state->insert_end;
-		    unit->srcml = std::move(state->unitsrcml);
-		    unit->src = std::move(state->unitsrc);
+            unit->srcml = std::move(state->unitsrcml);
+            unit->src = std::move(state->unitsrc);
             unit->loc = state->loc;
+
+            // update provisional cpp prefix
+            if (state->cpp_prefix) {
+
+                // namespaces probably aren't create yet
+                if (!unit->namespaces) {
+                    unit->namespaces = default_namespaces;
+                }
+
+                // set the found prefix, plus mark it as used
+                auto&& view = unit->namespaces->get<nstags::uri>();
+                auto it = view.find(SRCML_CPP_NS_URI);
+                if (it != view.end()) {
+                    view.modify(it, [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                } else {
+                    unit->namespaces->push_back({ state->cpp_prefix->c_str(), SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+                }
+            }
 
             // pause
             std::unique_lock<std::mutex> lock(mutex);
@@ -659,80 +494,7 @@ public :
 #endif
     }
 
-#if 0
-    /**
-     * endElementNs
-     * @param localname tag name
-     * @param prefix prefix for the tag
-     * @param URI uri for tag
-     *
-     * Overidden endElementNs to collect srcML.
-     */
-    virtual void endElement(const char* localname, const char* prefix, const char* URI) {
 
-#ifdef SRCSAX_DEBUG
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
-#endif
-
-        if (issrcdiff) {
-            
-            if (!skip && URI && is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) {
-
-                std::string local_name(localname);
-                if (local_name != "ws")
-                    srcdiff_stack.pop();
-
-            }
-
-            if (revision_number) {
-
-                if (is_srcml_namespace(URI, SRCML_DIFF_NS_URI)) return;
-                if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT) return;
-                if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE) return;
-            }
-        }
-
-        if (terminate)
-            stop_parser();
-
-#ifdef SRCSAX_DEBUG
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
-#endif
-    }
-#endif
-
-#if 0
-    /**
-     * charactersUnit
-     * @param ch the characters
-     * @param len length of the characters
-     *
-     * Overidden charactersUnit to collect srcML.
-     */
-    virtual void charactersUnit(const char* ch, int len) {
-
-#ifdef SRCSAX_DEBUG
-        std::string chars;
-        chars.append((const char *)ch, len);
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
-#endif
-
-        if (issrcdiff && revision_number) {
-
-            if (*revision_number == SRCDIFF_REVISION_ORIGINAL && srcdiff_stack.top() == INSERT)
-                return;
-            if (*revision_number == SRCDIFF_REVISION_MODIFIED && srcdiff_stack.top() == DELETE)
-                return;
-        }        
-
-        if (terminate)
-            stop_parser();
-
-#ifdef SRCSAX_DEBUG
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, chars.c_str());
-#endif
-    }
-#endif
     /**
      * metaTag
      * @param localname the name of the element tag
@@ -768,10 +530,8 @@ public :
                 archive->user_macro_list.push_back(token);
                 archive->user_macro_list.push_back(type);
             }
-        } else if (!is_archive) {
 
-            meta_tags.push_back(meta_tag(localname, prefix, num_attributes, attributes));
-        }
+        } 
     }
 
     /**

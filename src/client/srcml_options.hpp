@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef SRCML_OPTIONS_HPP
@@ -25,30 +25,30 @@
 
 class SRCMLOptions {
 public:
-	friend void enable(int option);
+    friend void enable(int option);
 
     static void set(int options) { 
 
-    	opt = options; 
+        opt = options; 
     }
 
     static int get()  { 
 
-    	return opt; 
+        return opt; 
     }
 
  private:
- 	static int opt;
+    static int opt;
 };
 
 inline bool option(int option) {
 
-	return SRCMLOptions::get() & option;
+    return SRCMLOptions::get() & option;
 }
 
 inline void enable(int option) {
 
-	SRCMLOptions::opt |= option;
+    SRCMLOptions::opt |= option;
 }
 
 #endif

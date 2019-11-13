@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  *
  * Adds markup language capabilities and stream parsing to a Parser
  * class.  The stream parsing is added by the srcMLParser class, StreamParser.
@@ -58,8 +58,7 @@ public:
      * Constructor.  Set up parser and start unit.
      */
     StreamMLParser(antlr::TokenStream& lexer, int language, OPTION_TYPE & parsing_options)
-        : srcMLParser(lexer, language, parsing_options), options(parsing_options),
-          inskip(false) {
+        : srcMLParser(lexer, language, parsing_options), options(parsing_options) {
 
         pouttb = &tb;
         pskiptb = &skiptb;
@@ -275,6 +274,7 @@ private:
         // that was enqueued
         if (isoption(options, SRCML_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
+
             qetoken->endline = lastline;
             qetoken->endcolumn = lastcolumn;
 
@@ -359,6 +359,8 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                open_comments.push(srcMLParser::SCOMMENT);
+
                 break;
 
             case srcMLParser::LINE_DOXYGEN_COMMENT_START:
@@ -367,9 +369,13 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                open_comments.push(srcMLParser::SLINE_DOXYGEN_COMMENT);
+
                 break;
 
             case srcMLParser::LINE_DOXYGEN_COMMENT_END:
+
+                open_comments.pop();
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
@@ -378,11 +384,11 @@ private:
                     slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
+                    slastcolumn = LT(1)->getColumn() - 1;
+                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
                 }
 
                 break;
@@ -392,6 +398,8 @@ private:
                 pushSSkipToken(srcMLParser::SDOXYGEN_COMMENT);
                 pushSkipToken();
                 srcMLParser::consume();
+
+                open_comments.push(srcMLParser::SDOXYGEN_COMMENT);
 
                 break;
 
@@ -407,6 +415,9 @@ private:
                 break;
 
             case srcMLParser::BLOCK_COMMENT_END:
+
+                open_comments.pop();
+
                 pushSkipToken();
                 srcMLParser::consume();
                 slastcolumn = LT(1)->getColumn() - 1;
@@ -417,6 +428,8 @@ private:
 
             case srcMLParser::DOXYGEN_COMMENT_END:
 
+                open_comments.pop();
+
                 pushSkipToken();
                 srcMLParser::consume();
                 slastcolumn = LT(1)->getColumn() - 1;
@@ -426,6 +439,8 @@ private:
                 break;
 
             case srcMLParser::JAVADOC_COMMENT_END:
+
+                open_comments.pop();
 
                 pushSkipToken();
                 srcMLParser::consume();
@@ -441,6 +456,8 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                open_comments.push(srcMLParser::SJAVADOC_COMMENT);
+
                 break;
 
             case srcMLParser::LINE_COMMENT_START:
@@ -449,9 +466,13 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
 
+                open_comments.push(srcMLParser::SLINECOMMENT);
+
                 break;
 
             case srcMLParser::LINE_COMMENT_END:
+
+                open_comments.pop();
 
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
@@ -622,6 +643,16 @@ private:
 
         rf.insert(rf.end(), std::make_move_iterator(skip().begin()), std::make_move_iterator(skip().end()));
         skip().clear();
+    }
+
+    inline void completeSkip() {
+
+        if (!open_comments.empty()) {
+            slastcolumn = LT(1)->getColumn() - 1;
+            slastline = LT(1)->getLine();
+            pushESkipToken(open_comments.top());
+            open_comments.pop();
+        }
     }
 
     /*
@@ -811,13 +842,17 @@ private:
         return &(output().back());
     }
 
+    antlr::RefToken pausetoken = nullptr;
+
     /** abstract method for pausing the output of tokens */
     void pauseStream() final {
+        pausetoken = *CurrentToken();
         paused = true;
     }
 
     /** abstract method for resuming the output of tokens */
     void resumeStream() final {
+        pausetoken = nullptr;
         paused = false;
     }
 
@@ -829,23 +864,16 @@ private:
     /** abstract method for replacing start of stream with a NOP */
     void nopStreamStart() final {
 
-        // find the first element token
-        // may have some text/spaces before
-        auto loc = tb.begin();
+        if (!paused)
+            return;
 
-        if ((*loc)->getType() == SUNIT)
-            ++loc;
+        if (pausetoken->getType() != output().back()->getType())
+            return;
 
-        while (!isstart(*loc)) {
-            ++loc;
-        }
+        pausetoken->setType(SNOP);
+        output().back()->setType(SNOP);
 
-        if ((*loc)->getType() == SEXPRESSION_STATEMENT || (*loc)->getType() == SDECLARATION_STATEMENT)
-            (*loc)->setType(SNOP);
-
-        auto& locend = tb.back();
-        if (locend->getType() == SEXPRESSION_STATEMENT || locend->getType() == SDECLARATION_STATEMENT)
-            locend->setType(SNOP);
+        resumeStream();
     }
 
 private:
@@ -868,9 +896,7 @@ private:
     OPTION_TYPE & options;
 
     /** if in a skip */
-    bool inskip;
-
-    std::stack<antlr::RefToken> ends;
+    bool inskip = false;
 
     /** token buffer */
     std::deque<antlr::RefToken> tb;
@@ -891,7 +917,13 @@ private:
     std::deque<antlr::RefToken>* pskiptb;
 
     /** any output is paused */
-    bool paused;
+    bool paused = false;
+
+    /** open position elements */
+    std::stack<antlr::RefToken> ends;
+
+    /** open comments */
+    std::stack<int> open_comments;
 };
 
 #endif

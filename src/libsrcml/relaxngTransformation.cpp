@@ -17,7 +17,7 @@
 
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <relaxngTransformation.hpp>
@@ -54,10 +54,13 @@ relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocP
  */
 TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocPtr doc, int /* position */) const {
 
+    // 0 means it validated
     int n = xmlRelaxNGValidateDoc(rngctx.get(), doc);
-    if (n == 0)
+    if (n != 0)
         return TransformationResult();
 
+    auto newdoc = xmlCopyDoc(doc, 1);
+
     // transformation result is nodeset with single unit, and the unit is wrapped
-    return TransformationResult(xmlXPathNodeSetCreate(doc->children), true);
+    return TransformationResult(xmlXPathNodeSetCreate(newdoc->children), true);
 }

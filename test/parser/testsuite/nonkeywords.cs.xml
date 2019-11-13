@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="event" filename="event_cs">
+
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#"><expr_stmt><expr><name><name>a</name><index>[<expr><name>template</name></expr>]</index></name></expr>;</expr_stmt>
+<event>event <type><name>void</name></type> <name>f</name>;</event>
+</unit>
+
+</unit>

@@ -6,23 +6,23 @@
 </unit>
 
 <unit language="Java">
-<decl_stmt><decl><specifier>synchronized</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>synchronized</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit language="Java">
-<decl_stmt><decl><specifier>abstract</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>abstract</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit language="Java">
-<decl_stmt><decl><specifier>native</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>native</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit language="Java">
-<decl_stmt><decl><specifier>strictfp</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>strictfp</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit language="Java">
-<decl_stmt><decl><specifier>transient</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>transient</specifier></type></decl>;</decl_stmt>
 </unit>
 
 </unit>

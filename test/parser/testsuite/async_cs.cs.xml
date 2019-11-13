@@ -2,12 +2,12 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="async" filename="async_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<function><specifier>public</specifier> <specifier>async</specifier> <type><name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
-<block>{
+<function><type><specifier>public</specifier> <specifier>async</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list>
+<block>{<block_content>
     <decl_stmt><decl><type><name>int</name></type> <name>i</name> <init>= <expr><operator>await</operator> <call><name>M</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 
     <return>return <expr><name>i</name></expr>;</return>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">

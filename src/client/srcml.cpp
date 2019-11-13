@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml.h>
@@ -31,7 +31,6 @@
 #include <Timer.hpp>
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
-#include <input_stdin.hpp>
 #include <boost/version.hpp>
 #include <iostream>
 #include <csignal>
@@ -56,7 +55,9 @@ int main(int argc, char * argv[]) {
     Timer runtime = Timer();
 
     // parse the command line
-    auto srcml_request = parseCLI(argc, argv);
+    auto srcml_request = parseCLI11(argc, argv);
+
+ //   std::cout << srcml_request;
 
     // global access to options
     SRCMLOptions::set(srcml_request.command);
@@ -110,7 +111,8 @@ See `srcml --help` for more information.
             exit(1);
         }
 
-        input_stdin(srcml_request);
+        // determine source or srcML input based on --language
+        srcml_request.input_sources[*srcml_request.stdindex].state = srcml_request.att_language ? SRC : SRCML;
     }
  
     /*
@@ -165,9 +167,13 @@ See `srcml --help` for more information.
     if (srcml_request.command & SRCML_DEBUG_MODE || srcml_request.command & SRCML_TIMING_MODE) {
         auto realtime = runtime.real_world_elapsed();
         SRCMLstatus(DEBUG_MSG) << "CPU Time: " << runtime.cpu_time_elapsed() << "ms\n"
-                               << "Real Time: " << realtime << "ms\n"
-                               << "LOC: " << TraceLog::totalLOC() << '\n'
-                               << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
+                               << "Real Time: " << realtime << "ms\n";
+        if (TraceLog::totalLOC() > 0) {
+            SRCMLstatus(DEBUG_MSG) << "LOC: " << TraceLog::totalLOC() << '\n'
+                                   << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
+        }
+
+        SRCMLstatus(DEBUG_MSG) << "Status: " << (SRCMLStatus::errors() ? 1 : 0) << '\n';
     }
 
     // error status is 0 unless a critical, error, or warning
@@ -186,6 +192,12 @@ namespace {
         if (!request.transformations.empty()) {
             enable(SRCML_COMMAND_XML);
         }
+
+        if (option(SRCML_COMMAND_PARSER_TEST))
+            return true;
+
+        if (option(SRCML_COMMAND_CAT_XML))
+            return true;
 
         return std::find_if(request.input_sources.begin(), request.input_sources.end(), [](const srcml_input_src& input) { return input.state == SRC; }) != request.input_sources.end() ||
         (request.output_filename.state == SRCML || option(SRCML_COMMAND_XML)) ||

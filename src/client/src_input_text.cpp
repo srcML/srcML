@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <src_input_text.hpp>
@@ -75,9 +75,11 @@ int src_input_text(ParseQueue& queue,
         prequest->srcml_arch = srcml_arch;
         prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
 
+        if (prequest->language.empty())
+            if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
+                prequest->language = l;
+    
         prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
-
-        prequest->loc = 0;
 
         // fill up the parse request buffer
         if (!prequest->status) {
@@ -101,7 +103,6 @@ int src_input_text(ParseQueue& queue,
                 switch (*epos) {
                 case 'n':
                     prequest->buffer.push_back('\n');
-                    ++prequest->loc;
                     break;
                 case 't':
                     prequest->buffer.push_back('\t');
@@ -143,14 +144,13 @@ int src_input_text(ParseQueue& queue,
                     if (value == 0) {
                         ptext = epos + offset + 1;
 
-                        srcml_archive_enable_full_archive(srcml_arch);
+                        srcml_archive_disable_solitary_unit(srcml_arch);
 
                         goto end;
                     }
 
                     prequest->buffer.push_back(value);
-                    if (value == '\n')
-                        ++prequest->loc;
+
                     epos += offset;
                     break;
                 }
@@ -196,14 +196,13 @@ int src_input_text(ParseQueue& queue,
                     if (value == 0) {
                         ptext = epos + offset;
 
-                        srcml_archive_enable_full_archive(srcml_arch);
+                        srcml_archive_disable_solitary_unit(srcml_arch);
 
                         goto end;
                     }
 
                     prequest->buffer.push_back(value);
-                    if (value == '\n')
-                        ++prequest->loc;
+
                     epos += offset - 1;
                     break;
                 }

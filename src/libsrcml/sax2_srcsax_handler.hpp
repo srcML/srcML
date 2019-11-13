@@ -17,13 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML SAX2 Framework; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_SAX2_SRCSAX_HANDLER_HPP
 #define INCLUDED_SAX2_SRCSAX_HANDLER_HPP
 
 #include <srcsax.hpp>
+#include <boost/optional.hpp>
 
 #include <libxml/parser.h>
 
@@ -62,9 +63,6 @@ struct sax2_srcsax_handler {
     /** hooks for processing */
     srcsax_context* context = nullptr;
 
-    /** temporary storage of meta-tags */
-//    std::vector<srcml_element> meta_tags;
-
     int unit_count = 0;
 
     /** the current parsing mode */
@@ -94,6 +92,8 @@ struct sax2_srcsax_handler {
     int insert_end = 0;
 
     int loc = 0;
+
+    boost::optional<std::string> cpp_prefix;
 
     bool rootcalled = false;
 };

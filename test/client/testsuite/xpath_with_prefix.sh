@@ -81,17 +81,33 @@ check sub/b.cpp.xml "$output"
 
 # src:unit
 srcml --xpath=src:unit sub/a.cpp.xml
-check "$xpathempty"
+check "$output"
 
 srcml --xpath=src:unit < sub/a.cpp.xml
-check "$xpathempty"
+check "$output"
 
 srcml --xpath=src:unit sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml "$xpathempty"
+check sub/b.cpp.xml "$output"
 
 srcml --xpath=src:unit -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml "$xpathempty"
+check sub/b.cpp.xml "$output"
 
 srcml --xpath=src:unit -o sub/b.cpp.xml < sub/a.cpp.xml
+check sub/b.cpp.xml "$output"
+
+# unit
+srcml --xpath=unit sub/a.cpp.xml
+check "$xpathempty"
+
+srcml --xpath=unit < sub/a.cpp.xml
+check "$xpathempty"
+
+srcml --xpath=unit sub/a.cpp.xml -o sub/b.cpp.xml
+check sub/b.cpp.xml "$xpathempty"
+
+srcml --xpath=unit -o sub/b.cpp.xml sub/a.cpp.xml
+check sub/b.cpp.xml "$xpathempty"
+
+srcml --xpath=unit -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$xpathempty"
 

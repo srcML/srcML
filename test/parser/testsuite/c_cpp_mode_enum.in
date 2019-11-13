@@ -1,0 +1,25 @@
+
+<unit language="C++">
+<enum_decl>enum <name>${NAME}</name>;</enum_decl>
+</unit>
+
+<unit language="C++">
+<enum>enum <name>${NAME}</name> <block>{}</block>;</enum>
+</unit>
+<!--
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>${NAME}</name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>${NAME}</name></type> <name>${NAME}</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>${NAME}</name> <modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>${NAME}</name> <modifier>*</modifier></type> <name>${NAME}</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+-->

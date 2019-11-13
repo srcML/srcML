@@ -154,9 +154,9 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<if_stmt><if>if<condition>(<expr><name>select</name></expr>)</condition><block>{
+<if_stmt><if>if<condition>(<expr><name>select</name></expr>)</condition><block>{<block_content>
         <expr_stmt><expr><name>PostConfig</name> <operator>=</operator> <name>PostConfig</name> <operator>|</operator> <name>ep</name></expr>;</expr_stmt>
-}</block></if></if_stmt>
+</block_content>}</block></if></if_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
@@ -427,9 +427,9 @@
 <foreach>foreach <control>(<init><decl><type><name>var</name></type> <name>application</name> <range>in <expr><linq><from>from <expr><name>app</name></expr> <in>in <expr><name>apps</name></expr></in></from>
                             <where>where <expr><name><name>app</name><operator>.</operator><name>MonitoredId</name></name> <operator>&gt;</operator> <literal type="number">0</literal></expr></where>
                             <select>select <expr><name>app</name></expr></select></linq></expr></range></decl></init>)</control>
-<block>{
-    <if_stmt><if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition><block>{ }</block></if></if_stmt>
-}</block></foreach>
+<block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition><block>{<block_content> </block_content>}</block></if></if_stmt>
+</block_content>}</block></foreach>
 </unit>
 
 </unit>

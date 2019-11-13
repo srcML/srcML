@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_SRCML_SAX2_READER_HPP
@@ -78,7 +78,7 @@ private :
 public :
 
     // constructors
-    srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number);
+    srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input);
 
     // destructors
     ~srcml_sax2_reader();

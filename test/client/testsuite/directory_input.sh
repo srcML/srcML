@@ -11,10 +11,10 @@ define output <<- 'STDOUT'
 	<unit revision="REVISION" language="Java" filename="dir/file.aj" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C" filename="dir/file.c" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<unit revision="REVISION" language="C" filename="dir/file.c" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="dir/file.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<unit revision="REVISION" language="C++" filename="dir/file.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 	<unit revision="REVISION" language="Java" filename="dir/file.java" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
@@ -29,22 +29,22 @@ define output2 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="dir2">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="dir2/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<unit revision="REVISION" language="C++" filename="dir2/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="dir2/b.cpp.bz2" hash="127b042b36b196e169310240b313dd9fc065ccf2">
+	<unit revision="REVISION" language="C++" filename="dir2/b.cpp.bz2" hash="127b042b36b196e169310240b313dd9fc065ccf2">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="dir2/c.cpp.bz2.gz" hash="b3b530fc0b5ee90a1e6ca6bb15d22907cde385cb">
+	<unit revision="REVISION" language="C++" filename="dir2/c.cpp.bz2.gz" hash="b3b530fc0b5ee90a1e6ca6bb15d22907cde385cb">
 	<expr_stmt><expr><name>c</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="dir2/g.cpp.gz" hash="b32a0d6d08d49cdc2d76c5ab27c57a1f5e988884">
+	<unit revision="REVISION" language="C++" filename="dir2/g.cpp.gz" hash="b32a0d6d08d49cdc2d76c5ab27c57a1f5e988884">
 	<expr_stmt><expr><name>g</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="dir2/h.cpp.gz.bz2" hash="704111c5fce3e467dd1089d211912d1da40c8439">
+	<unit revision="REVISION" language="C++" filename="dir2/h.cpp.gz.bz2" hash="704111c5fce3e467dd1089d211912d1da40c8439">
 	<expr_stmt><expr><name>h</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="dir2/q.cpp" hash="e4493c14f70ceb409026adfdbbbbb6ce580cf5a9">
+	<unit revision="REVISION" language="C++" filename="dir2/q.cpp" hash="e4493c14f70ceb409026adfdbbbbb6ce580cf5a9">
 	<expr_stmt><expr><name>q</name></expr>;</expr_stmt></unit>
 
 	</unit>
@@ -56,13 +56,13 @@ define output3 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="symtest">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="symtest/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
+	<unit revision="REVISION" language="C++" filename="symtest/a.cpp" hash="095856ebb2712a53a4eac934fd6e69fef8e06008">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="symtest/b.cpp" hash="127b042b36b196e169310240b313dd9fc065ccf2">
+	<unit revision="REVISION" language="C++" filename="symtest/b.cpp" hash="127b042b36b196e169310240b313dd9fc065ccf2">
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="symtest/c.cpp" hash="b3b530fc0b5ee90a1e6ca6bb15d22907cde385cb">
+	<unit revision="REVISION" language="C++" filename="symtest/c.cpp" hash="b3b530fc0b5ee90a1e6ca6bb15d22907cde385cb">
 	<expr_stmt><expr><name>c</name></expr>;</expr_stmt></unit>
 
 	</unit>

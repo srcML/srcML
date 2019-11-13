@@ -6,7 +6,7 @@ source $(dirname "$0")/framework_test.sh
 # test xslt empty input
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
 	STDOUT
 
 define copyxslt <<- 'STDOUT'
@@ -20,9 +20,6 @@ define copyxslt <<- 'STDOUT'
 	copy.xsl
 
 	Identity transformation.
-
-	Michael L. Collard
-	collard@uakron.edu
 	-->
 
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" standalone="yes"/>
@@ -44,9 +41,6 @@ define setlanguage <<- 'STDOUT'
 	setlanguage.xsl
 
 	Identity transformation.
-
-	Michael L. Collard
-	collard@uakron.edu
 	-->
 
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" standalone="yes"/>
@@ -62,7 +56,7 @@ define setlanguage <<- 'STDOUT'
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"/>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
 	STDOUT
 
 define srcmljava <<- 'STDOUT'

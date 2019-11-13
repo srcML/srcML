@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_TRACE_LOG_HPP
@@ -33,12 +33,18 @@ public:
     friend TraceLog& operator<<(TraceLog& tlog, char c);
     friend TraceLog& operator<<(TraceLog& tlog, const std::string& s);
 
-    inline void totalLOC(long floc) {
-    	loc += floc;
+    void output(const char* s);
+
+    inline void totalLOC(size_t floc) {
+        loc += floc;
     }
 
-    inline static long totalLOC() {
-    	return loc;
+    inline static size_t totalLOC() {
+        return loc;
+    }
+
+    inline void skip() {
+        ++num_skipped;
     }
 
     ~TraceLog();
@@ -48,7 +54,7 @@ private:
     int count = 0;
     int num_skipped = 0;
     int num_error = 0;
-    static long loc;
+    static size_t loc;
 };
 
 #endif

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -26,17 +26,33 @@
 
 #include <src_input_libarchive.hpp>
 #include <src_input_filesystem.hpp>
+#include <srcml_input_srcml.hpp>
 
 #include <list>
 #include <deque>
 #include <vector>
+#include <memory>
 #include <archive.h>
 #include <archive_entry.h>
+
+#include <stdio.h>
+#ifdef _MSC_BUILD
+    #include <direct.h>
+#else
+    #include <unistd.h>
+#endif
 
 int src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const std::string& input) {
+                          const std::string& raw_input) {
+
+	// with immediate directory "." lookup the current working directory
+    std::string input = raw_input;
+    if (input == ".") {
+		std::unique_ptr<char> cwd(getcwd(nullptr, 0));
+		input = cwd.get();
+	}
 
     // get a list of files (including directories) from the current directory
     std::vector<std::string> files;
@@ -54,6 +70,13 @@ int src_input_filesystem(ParseQueue& queue,
     int status = ARCHIVE_OK;
     while ((status = archive_read_next_header(darchive, &entry)) == ARCHIVE_OK) {
 
+        std::string filename = archive_entry_pathname(entry);
+
+        // do not descend into . directories
+        if (filename[filename.find_last_of("/") + 1] == '.') {
+            continue;
+        }
+
         archive_read_disk_descend(darchive);
         if (first) {
             first = false;
@@ -62,6 +85,11 @@ int src_input_filesystem(ParseQueue& queue,
 
         if (archive_entry_filetype(entry) != AE_IFREG)
             continue;
+
+        if (srcml_request.command & SRCML_COMMAND_PARSER_TEST) {
+            if (filename.substr(filename.find_last_of(".") + 1) != "xml")
+                continue;
+        }
 
         files.push_back(archive_entry_pathname(entry));
     }
@@ -74,11 +102,15 @@ int src_input_filesystem(ParseQueue& queue,
         srcml_input_src input_file(filename);
 
         // If a directory contains archives skip them
-        if (!(input_file.archives.empty())) {
+        if (!(srcml_request.command & SRCML_COMMAND_PARSER_TEST) && !(input_file.archives.empty())) {
             input_file.skip = true;
         }
 
-        src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
+        if (srcml_request.command & SRCML_COMMAND_PARSER_TEST) {
+            srcml_input_srcml(queue, srcml_arch, srcml_request, input_file, srcml_request.revision);
+        } else {
+            src_input_libarchive(queue, srcml_arch, srcml_request, input_file);
+        }
     }
 
     return 1;

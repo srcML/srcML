@@ -6,11 +6,10 @@ source $(dirname "$0")/framework_test.sh
 # testing for verbose
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
   STDOUT
 
 define output <<- 'STDERR'
-	Source encoding:  (null)
 	XML encoding:  UTF-8
 	    1 sub/a.cpp	C++	1	
 
@@ -37,11 +36,10 @@ check sub/c.cpp.xml "$fsrcml" "$output"
 # from standard in
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
   STDOUT
 
 define output <<- 'STDERR'
-	Source encoding:  (null)
 	XML encoding:  UTF-8
 	    1 	C++	1	
 
@@ -62,3 +60,9 @@ check
 
 srcml --verbose -l C++ -o sub/c.cpp < sub/a.cpp.xml
 check
+
+srcml --verbose --quiet
+check_exit 4
+
+srcml --quiet --verbose
+check_exit 4

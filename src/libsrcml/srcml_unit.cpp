@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml.h>
@@ -156,7 +156,7 @@ int srcml_unit_set_hash(struct srcml_unit* unit, const char* hash) {
 }
 
 /**
- * srcml_unit_unparse_set_eol
+ * srcml_unit_set_eol
  * @param unit a srcml unit
  * @param eol the kind of eol to use for unparse
  *
@@ -165,7 +165,7 @@ int srcml_unit_set_hash(struct srcml_unit* unit, const char* hash) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_INVALID_ARGUMENT
  * on failure.
  */
-int srcml_unit_unparse_set_eol(struct srcml_unit* unit, size_t eol) {
+int srcml_unit_set_eol(struct srcml_unit* unit, size_t eol) {
 
     if (unit == nullptr || eol > SOURCE_OUTPUT_EOL_CRLF)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -294,6 +294,38 @@ const char* srcml_unit_get_hash(const struct srcml_unit* unit) {
 }
 
 /**
+ * srcml_unit_get_loc
+ * @param unit a srcml unit
+ *
+ * Get the loc for the sourec code in the srcml unit.
+ *
+ * @returns loc on success and -1 on failure.
+ */
+int srcml_unit_get_loc(const struct srcml_unit* unit) {
+
+    if (unit == nullptr)
+        return -1;
+
+    return unit->loc;
+}
+
+/**
+ * srcml_unit_get_eol
+ * @param unit a srcml unit
+ *
+ * Get the eol for the srcml unit.
+ *
+ * @returns eol on success and NULL on failure.
+ */
+size_t srcml_unit_get_eol(struct srcml_unit* unit) {
+
+    if (unit == nullptr)
+        return 0;
+
+    return unit->eol;
+}
+
+/**
  * srcml_unit_get_srcml
  * @param unit a srcml unit
  *
@@ -314,11 +346,17 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_revision = extract_revision(unit->srcml.c_str(), (int) unit->srcml.size(), (int) *unit->archive->revision_number);
+        return unit->srcml_revision->c_str();
+    }
+
     return unit->srcml.c_str();
 }
 
 /**
- * srcml_unit_get_srcml_fragment
+ * srcml_unit_get_srcml_outer
  * @param unit a srcml unit
  *
  * Get the parsed or collected srcml from an archive.
@@ -329,32 +367,63 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
  *
  * @returns the raw unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
+const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
 
     if (unit == nullptr || (!unit->read_body && !unit->read_header))
         return 0;
 
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
-
-    // cached fragment
-    if (unit->srcml_fragment)
-        return unit->srcml_fragment->c_str();
 
     // size of resulting raw version (no unit tag)
     auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
 
     // construct the fragment from the full srcML, excluding the inserted root tag stuff (including namespaces)
-    unit->srcml_fragment = "";
-    unit->srcml_fragment->reserve(rawsize);
-    unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
-    unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size());
+    if (!unit->srcml_fragment) {
+
+        // find end of unit tag, e.g., end of "<unit ...>" or "<src:unit ...>"
+        std::string prefix = "";
+        auto pos = unit->srcml.find(">");
+
+        int insert_attr_begin = 0;
+        int insert_attr_end = 0;
+
+        if (pos != std::string::npos) {
+            // find url attribute
+            std::string s(unit->srcml, 0, pos);
+            auto pos2 = s.find(" url=");
+            if (pos2 != std::string::npos) {
+                insert_attr_begin = (int) pos2;
+                pos2 += 6;
+                auto pos3 = s.find("\"", pos2);
+                pos3 += 1;
+                insert_attr_end = (int) pos3;
+            }
+        }
+
+        unit->srcml_fragment = "";
+        unit->srcml_fragment->reserve(rawsize);
+        unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
+        if (insert_attr_begin == 0) {
+            unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size() - unit->insert_end);
+        } else {
+            unit->srcml_fragment->append(unit->srcml, unit->insert_end, insert_attr_begin - unit->insert_end);
+            unit->srcml_fragment->append(unit->srcml, insert_attr_end, unit->srcml.size() - insert_attr_end);
+        }
+    }
+
+    // if srcdiff versioned, then use that
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_fragment_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_fragment_revision = extract_revision(unit->srcml_fragment->c_str(), (int) unit->srcml_fragment->size(), (int) *unit->archive->revision_number);
+        return unit->srcml_fragment_revision->c_str();
+    }
 
     return unit->srcml_fragment->c_str();
 }
 
 /**
- * srcml_unit_get_srcml_fragment
+ * srcml_unit_get_srcml_outer
  * @param unit a srcml unit
  *
  * Get the parsed or collected srcml from an archive.
@@ -365,7 +434,7 @@ const char* srcml_unit_get_srcml_fragment(struct srcml_unit* unit) {
  *
  * @returns the raw unit srcML on success and NULL on failure.
  */
-const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
+const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
 
     if (unit == nullptr || (!unit->read_body && !unit->read_header))
         return 0;
@@ -373,16 +442,25 @@ const char* srcml_unit_get_srcml_raw(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    // raw version is cached
-    if (unit->srcml_raw)
-        return unit->srcml_raw->c_str();
+    auto start = unit->content_begin;
 
     // size of resulting raw version (no unit tag)
     int rawsize = unit->content_end - unit->content_begin - 1;
     if (rawsize <= 0)
         return "";
 
-    unit->srcml_raw = std::string(unit->srcml, unit->content_begin, rawsize);
+    // if srcdiff versioned, then use that
+    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        if (!unit->srcml_raw_revision || unit->currevision != (int) *unit->archive->revision_number)
+            unit->srcml_raw_revision = extract_revision(unit->srcml.c_str() + start, rawsize, (int) *unit->archive->revision_number);
+        return unit->srcml_raw_revision->c_str();
+    }
+
+    // raw version is cached
+    if (unit->srcml_raw)
+        return unit->srcml_raw->c_str();
+
+    unit->srcml_raw = std::string(unit->srcml, start, rawsize);
 
     return unit->srcml_raw->c_str();
 }
@@ -430,19 +508,32 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
     //        unit->archive->options |= SRCML_OPTION_CPP;
 
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
+
+    // verify encoding here instead of later, when more difficult to handle errors
+    if (src_encoding) {
+        auto ic = iconv_open("UTF-8", src_encoding);
+        if (ic == (iconv_t) -1) {
+            if (errno == EINVAL) {
+                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n", src_encoding);
+                return SRCML_STATUS_INVALID_ARGUMENT;
+            }
+        }
+        iconv_close(ic);
+    }
+
     bool output_hash = !unit->hash && unit->archive->options & SRCML_OPTION_HASH;
 
     UTF8CharBuffer* input = 0;
     try {
+
         input = createUTF8CharBuffer(src_encoding, output_hash, unit->hash);
 
     } catch(...) { return SRCML_STATUS_IO_ERROR; }
 
     unit->encoding = input->getEncoding();
 
-    // if this is just a solitary unit (i.e., no archive), the url attribute is on the unit
-    if (!srcml_archive_is_full_archive(unit->archive))
-        unit->url = unit->archive->url;
+    // unit url is just that of the archive
+    unit->url = unit->archive->url;
 
     // create the unit start tag (start_unit and end_unit must be called together)
     int status = srcml_write_start_unit(unit);
@@ -613,54 +704,38 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
     // generate this source from the srcml
     // @todo Should this be an option to turn off/on? For debugging?
     if (/* true || */ !unit->src) {
-
-        unit->src = "";
-
-        // parse the srcml collecting the (now needed) src
-        xmlSAXHandler charactersax;
-        memset(&charactersax, 0, sizeof(charactersax));
-        charactersax.initialized    = XML_SAX2_MAGIC;
-
-        charactersax.ignorableWhitespace = charactersax.characters = [](void* ctx, const xmlChar* ch, int len) {
-
-            auto ctxt = (xmlParserCtxtPtr) ctx;
-            if (ctxt == nullptr)
-                return;
-            auto s = (std::string*) ctxt->_private;
-            if (s == nullptr)
-                return;
-
-            s->append((const char*) ch, len);
-        };
-
-        charactersax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* /* prefix */, const xmlChar* URI,
-                         int /* nb_namespaces */, const xmlChar** /* namespaces */,
-                         int /* nb_attributes */, int /* nb_defaulted */, const xmlChar** attributes) {
-
-            auto ctxt = (xmlParserCtxtPtr) ctx;
-            if (ctxt == nullptr)
-                return;
-            auto s = (std::string*) ctxt->_private;
-            if (s == nullptr)
-                return;
-
-            if (strcmp((const char*) localname, "escape") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
-                std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
-
-                char value = (int)strtol(svalue.c_str(), NULL, 0);
-
-                s->append(1, value);
-            }
-        };
-
-        xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(unit->srcml.c_str(), (int) unit->srcml.size());
-        context->_private = &(*unit->src);
-        context->sax = &charactersax;
-
-        xmlParseDocument(context);
+        unit->src = extract_src(unit->srcml);
     }
 
-    xmlOutputBufferWrite(output_handler.get(), (int) unit->src->size(), unit->src->c_str());
+    // if EOL is not auto, then need to convert for 
+    if (unit->eol == SOURCE_OUTPUT_EOL_AUTO) {
+        xmlOutputBufferWrite(output_handler.get(), (int) unit->src->size(), unit->src->c_str());
+    } else {
+
+        // convert to the given eol
+        std::string neol(0, ' ');
+        neol.reserve(unit->src->size());
+
+        const std::string& src = *unit->src;
+        for (size_t i = 0; i < src.size(); ++i) {
+            if (src[i] != '\n') {
+                neol += src[i];
+            }
+            else if (unit->eol == SOURCE_OUTPUT_EOL_LF) {
+                neol += '\n';
+            }
+            else if (unit->eol == SOURCE_OUTPUT_EOL_CR) {
+                neol += '\r';
+            }
+            else if (unit->eol == SOURCE_OUTPUT_EOL_CRLF) {
+                neol += "\r\n";
+            } else {
+                neol += src[i];
+            }
+        }
+
+        xmlOutputBufferWrite(output_handler.get(), (int) neol.size(), neol.c_str());
+    }
 
     return SRCML_STATUS_OK;
 }
@@ -780,14 +855,14 @@ int srcml_unit_unparse_fd(struct srcml_unit* unit, int srcml_fd) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error code on failure.
  */
-int srcml_unit_unparse_io(struct srcml_unit* unit, void* context, int (*write_callback)(void* context, const char* buffer, size_t len), int (*close_callback)(void* context)) {
+int srcml_unit_unparse_io(struct srcml_unit* unit, void* context, int (*write_callback)(void* context, const char* buffer, int len), int (*close_callback)(void* context)) {
 
     if (unit == nullptr || context == nullptr || write_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_unit_unparse_internal(unit, [write_callback, close_callback, context](xmlCharEncodingHandlerPtr handler) {
 
-        return xmlOutputBufferCreateIO((int (*const)(void *, const char *, int))write_callback, close_callback, context, handler);
+        return xmlOutputBufferCreateIO(write_callback, close_callback, context, handler);
     });
 }
 
@@ -884,15 +959,22 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
  */
 int srcml_write_end_unit(struct srcml_unit* unit) {
 
-    if (unit == NULL)
+    if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if (unit->unit_translator == nullptr)
+        return SRCML_STATUS_INVALID_INPUT;
+
+    // end any open content
+    while (unit->unit_translator->output_unit_depth)
+        unit->unit_translator->add_end_element();
 
     // record end of content (before the unit end tag)
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
     unit->content_end = unit->unit_translator->output_buffer()->written + 1;
 
     // end the unit (and any open elements)
-    if (unit->unit_translator == 0 || !unit->unit_translator->add_end_unit())
+    if (!unit->unit_translator->add_end_unit())
         return SRCML_STATUS_INVALID_INPUT;
 
     // flush before detaching
@@ -908,7 +990,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 
     // redo the start element with the namespaces found in the document
     srcml_write_start_unit(unit);
-	char* start_tag = (char*) xmlBufferDetach(unit->output_buffer);
+    char* start_tag = (char*) xmlBufferDetach(unit->output_buffer);
 
     // recreate the unit with the newly generated start tag, which
     // contains all the used namespaces
@@ -926,6 +1008,15 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 
     free(start_tag);
     free(srcml);
+
+    // record the loc
+    if (!unit->src) {
+        unit->src = extract_src(unit->srcml);
+    }
+
+    unit->loc = (int) std::count(unit->src->begin(), unit->src->end(), '\n');
+    if (!unit->src->empty() && unit->src->back() != '\n')
+        ++unit->loc;
 
     // finished with any parsing
     delete unit->unit_translator;
@@ -954,7 +1045,7 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
 int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri) {
 
     // prefix can be default
-    if (unit == nullptr || name == nullptr || uri == nullptr)
+    if (unit == nullptr || name == nullptr /* || uri == nullptr */)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, uri))

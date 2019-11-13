@@ -8,10 +8,10 @@ define result <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pre="foo.com" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name pre:attr="value">a</name></expr>;</expr_stmt>
+	<unit revision="REVISION" language="C++"><expr_stmt><expr><name pre:attr="value">a</name></expr>;</expr_stmt>
 	</unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name pre:attr="value">b</name></expr>;</expr_stmt>
+	<unit revision="REVISION" language="C++"><expr_stmt><expr><name pre:attr="value">b</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -27,17 +27,17 @@ srcml a.cpp b.cpp --xmlns:pre=foo.com -o archive.xml
 
 # from the files
 srcml archive.xml --attribute="pre:attr=value" --xpath="//src:name"
-check_exit 2
+check_exit 1
 
 srcml --attribute="pre:attr=value" --xpath="//src:name" archive.xml
-check_exit 2
+check_exit 1
 
 # output to a file
 srcml archive.xml --attribute="pre:attr=value" --xpath="//src:name" -o result.xml
-check_exit 2
+check_exit 1
 
 srcml --attribute="pre:attr=value" --xpath="//src:name" archive.xml -o result.xml
-check_exit 2
+check_exit 1
 
 
 
@@ -46,7 +46,7 @@ define result <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><expr_stmt><expr><name cpp:foo="test">a</name></expr>;</expr_stmt>
+	<unit revision="REVISION" language="C++"><expr_stmt><expr><name cpp:foo="test">a</name></expr>;</expr_stmt>
 	</unit>
 
 	</unit>
@@ -58,24 +58,24 @@ createfile a.cpp "a;
 
 # from a file
 srcml a.cpp --attribute="cpp:foo=test" --xpath="//src:name"
-check_exit 2
+check_exit 1
 
 srcml --attribute="cpp:foo=test" --xpath="//src:name" a.cpp
-check_exit 2
+check_exit 1
 
 # from standard input
 echo "a;" | srcml -l C++ --attribute="cpp:foo=test" --xpath="//src:name"
-check_exit 2
+check_exit 1
 
 # output to a file
 srcml a.cpp --attribute="cpp:foo=test" --xpath="//src:name" -o result.xml
-check_exit 2
+check_exit 1
 
 srcml --attribute="cpp:foo=test" --xpath="//src:name" a.cpp -o result.xml
-check_exit 2
+check_exit 1
 
 echo "a;" | srcml -l C++ --attribute="cpp:foo=test" --xpath="//src:name" -o result.xml
-check_exit 2
+check_exit 1
 
 
 

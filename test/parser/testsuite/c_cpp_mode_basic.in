@@ -1,0 +1,232 @@
+<unit language="C++">
+<label><name>${NAME}</name>:</label>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>.</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>.</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>.</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>.</operator><name>${NAME}</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>${NAME}</name><operator>.</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>.*</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>.*</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>.*</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>.*</operator><name>${NAME}</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>${NAME}</name><operator>.*</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>-&gt;</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>-&gt;</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>-&gt;</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>-&gt;</operator><name>${NAME}</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>${NAME}</name><operator>-&gt;</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>-&gt;*</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>-&gt;*</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>-&gt;*</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><operator>-&gt;*</operator><name>${NAME}</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>${NAME}</name><operator>-&gt;*</operator><name>${NAME}</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>+</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>=</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><index>[<expr><name>${NAME}</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>${NAME}</name><index>[<expr><name>${NAME}</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>${NAME}</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>${NAME}</name></expr></argument>, <argument><expr><name>${NAME}</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><call><name>foo</name><argument_list>(<argument><expr><name>${NAME}</name></expr></argument>, <argument><expr><name>${NAME}</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>&lt;</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>&lt;</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>&lt;</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>&gt;</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>&gt;</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>&gt;</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>~</operator><name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>${NAME}</name></expr> ?</condition><then> <expr><name>a</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>${NAME}</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>${NAME}</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>${NAME}</name></expr> ?</condition><then> <expr><name>${NAME}</name></expr> </then><else>: <expr><name>${NAME}</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>|</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>|</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>${NAME}</name> <operator>|</operator> <name>${NAME}</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;</operator> <name>${NAME}</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>${NAME}</name> <operator>&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>${NAME}</name> <operator>&amp;</operator> <name>${NAME}</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;&amp;</operator> <name>${NAME}</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>${NAME}</name> <operator>&amp;&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>${NAME}</name> <operator>&amp;&amp;</operator> <name>${NAME}</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<struct_decl>struct <name>${NAME}</name>;</struct_decl>
+</unit>
+ 
+<unit language="C++">
+<class_decl>class <name>${NAME}</name>;</class_decl>
+</unit>
+
+<unit language="C++">
+<union_decl>union <name>${NAME}</name>;</union_decl>
+</unit>
+ 
+<unit language="C++">
+<struct>struct <name>${NAME}</name> <block>{<public type="default"/>}</block>;</struct>
+</unit>
+ 
+<unit language="C++">
+<class>class <name>${NAME}</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit language="C++">
+<union>union <name>${NAME}</name> <block>{<public type="default"/>}</block>;</union>
+</unit>
+

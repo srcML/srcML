@@ -17,14 +17,14 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <src_output_filesystem.hpp>
 #include <srcml.h>
 #include <iostream>
-#include <archive.h>
-#include <archive_entry.h>
+#include <srcml_utilities.hpp>
+#include <mkDir.hpp>
 
 void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
 
@@ -33,15 +33,14 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
     if (output_dir != "." && output_dir != "./")
         prefix = output_dir;
 
-    auto a = archive_write_disk_new();
-    auto entry = archive_entry_new();
-    archive_entry_set_filetype(entry, AE_IFDIR); 
-    archive_entry_set_perm(entry, 0744);
+    // create output directory structure as needed
+    mkDir dir;
+
     int count = 0;
     std::string last;
-    while (srcml_unit* unit = srcml_archive_read_unit(srcml_arch)) {
+    while (std::unique_ptr<srcml_unit> unit{srcml_archive_read_unit(srcml_arch)}) {
 
-        const char* cfilename = srcml_unit_get_filename(unit);
+        const char* cfilename = srcml_unit_get_filename(unit.get());
         // @todo What do we do with no filename?
         if (!cfilename)
             continue;
@@ -60,22 +59,11 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
 
         // use libarchive to create the file path
         // @todo Can we get away with no permission on final file?
-        if (last != path) {
-            archive_entry_set_pathname(entry, path.c_str());
-            archive_write_header(a, entry);
-            archive_write_finish_entry(a);
-        }
-        last = path;
+        dir.mkdir(path);
 
         // unparse directory to filename
         log << ++count << fullfilename;
 
-        srcml_unit_unparse_filename(unit, fullfilename.c_str());
-
-        srcml_unit_free(unit);
+        srcml_unit_unparse_filename(unit.get(), fullfilename.c_str());
     }
-
-    archive_entry_free(entry);
-    archive_write_close(a);
-    archive_write_free(a);
 }

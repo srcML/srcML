@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml_pipe.hpp>
@@ -26,6 +26,19 @@
 #include <SRCMLStatus.hpp>
 #include <mutex>
 #include <condition_variable>
+
+bool curl_supported(const std::string& input_protocol) {
+    const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
+    for (int i = 0; curl_types[i] != nullptr; ++i) {
+        if (std::string(curl_types[i]) == input_protocol)
+            return true;
+    }
+    return false;
+}
+
+void setCurlErrors();
+
+void clearCurlErrors();
 
 namespace {
 
@@ -74,7 +87,9 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
     // @todo are there any other http codes we should allow here?
     goCurl(http_code == 200);
 
-    return write(data->outfd, ptr, size * nmemb);
+    ssize_t result = write(data->outfd, ptr, size * nmemb);
+
+    return result == -1 ? 0 : (size_t) result;
 }
 
 // downloads URL into file descriptor
@@ -130,7 +145,8 @@ int input_curl(srcml_input_src& input) {
             
             // ok, no errors, but may have cached data in the buffer, especially for small files
             if (!write_info.buffer.empty()) {
-                if (write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size()) == -1) {
+                ssize_t result = write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
+                if (result < 0) {
                     SRCMLstatus(WARNING_MSG, "srcml: Buffer error with URL " + url);
                 }
             }

@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <TraceLog.hpp>
@@ -26,15 +26,18 @@
 #include <iomanip>
 #include <iostream>
 
-long TraceLog::loc = 0;
+size_t TraceLog::loc = 0;
 
 TraceLog::TraceLog()
     : enabled(option(SRCML_COMMAND_VERBOSE)) {
+}
+
+void TraceLog::output(const char* s) {
 
     if (!enabled)
         return;
 
-    std::clog << "Source encoding:  (null)\nXML encoding:  UTF-8\n";
+    std::clog << s;
 }
 
 TraceLog& operator<<(TraceLog& tlog, char c) {

@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <srcml_sax2_reader.hpp>
@@ -25,6 +25,8 @@
 
 #include <stdlib.h>
 #include <cstring>
+
+#include <iostream>
 
 /**
  * start_routine
@@ -46,11 +48,7 @@ static void* start_routine(thread_args* args) {
             // See #1218
             fprintf(stderr, "Error Parsing: %s\n", error.message.c_str());
 
-            // This is not necessary on certain errors (such as missing '>'), as
-            // the thread will finish on its own. But if the document is empty it will
-            // freeze up until it is shut down here.
-            if (error.error_code == XML_ERR_DOCUMENT_EMPTY)
-                args->handler->done();
+            args->handler->done();
         }
 
         // might have to release a lock here or set is_done;
@@ -65,8 +63,8 @@ static void* start_routine(thread_args* args) {
  *
  * Construct a srcml_sax2_reader using a parser input buffer
  */
-srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, xmlParserInputBufferPtr input, const boost::optional<size_t>& revision_number)
-    : control(input), handler(revision_number) {
+srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input)
+    : control(std::move(input)), handler() {
 
     handler.archive = archive;
 
@@ -86,7 +84,13 @@ srcml_sax2_reader::~srcml_sax2_reader() {
 
     handler.stop();
     
-    thread.join();
+    if (thread.joinable()) {
+        try {
+            thread.join();
+        } catch(const std::system_error& e) {
+            std::cerr << "srcml: Internal error " << e.code() << " meaning " << e.what() << '\n';
+        }
+    }
 }
 
 /**

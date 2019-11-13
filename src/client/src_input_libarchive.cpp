@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifdef _MSC_BUILD
@@ -35,42 +35,41 @@ typedef SSIZE_T ssize_t;
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
 #include <cstring>
-
-#include <curl_input_file.hpp>
+#include <libarchive_utilities.hpp>
 
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
-    archive* arch = archive_read_new();
+    std::unique_ptr<archive> arch(archive_read_new());
 
-    archive_read_support_format_ar(arch);
-    archive_read_support_format_cpio(arch);
-    archive_read_support_format_gnutar(arch);
-    archive_read_support_format_iso9660(arch);
-    archive_read_support_format_tar(arch);
-    archive_read_support_format_xar(arch);
-    archive_read_support_format_zip(arch);
-    archive_read_support_format_raw(arch);
-    archive_read_support_format_empty(arch);
+    archive_read_support_format_ar(arch.get());
+    archive_read_support_format_cpio(arch.get());
+    archive_read_support_format_gnutar(arch.get());
+    archive_read_support_format_iso9660(arch.get());
+    archive_read_support_format_tar(arch.get());
+    archive_read_support_format_xar(arch.get());
+    archive_read_support_format_zip(arch.get());
+    archive_read_support_format_raw(arch.get());
+    archive_read_support_format_empty(arch.get());
 
     // File Formats
-    archive_read_support_format_7zip(arch);
-    archive_read_support_format_cab(arch);
-    archive_read_support_format_lha(arch);
-    archive_read_support_format_rar(arch);
+    archive_read_support_format_7zip(arch.get());
+    archive_read_support_format_cab(arch.get());
+    archive_read_support_format_lha(arch.get());
+    archive_read_support_format_rar(arch.get());
 
     // Compressions
-    archive_read_support_filter_all(arch);
+    archive_read_support_filter_all(arch.get());
 
     int status;
     const int buffer_size = 16384;
 
     if (contains<int>(input_file)) {
 
-        status = archive_read_open_fd(arch, input_file, buffer_size);
+        status = archive_read_open_fd(arch.get(), input_file, buffer_size);
 
     } else if (contains<FILE*>(input_file)) {
 
-        status = archive_read_open_FILE(arch, input_file);
+        status = archive_read_open_FILE(arch.get(), input_file);
 
     } else if (input_file.protocol != "file" && curl_supported(input_file.protocol)) {
 
@@ -79,11 +78,11 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
         if (!input_curl(uninput))
             return 0;
         
-        status = archive_read_open_fd(arch, uninput, buffer_size);
+        status = archive_read_open_fd(arch.get(), uninput, buffer_size);
 
     } else {
 
-        status = archive_read_open_filename(arch, input_file.c_str(), buffer_size);
+        status = archive_read_open_filename(arch.get(), input_file.c_str(), buffer_size);
     }
 
     if (status != ARCHIVE_OK) {
@@ -91,7 +90,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
         return 0;
     }
 
-    return arch;
+    return arch.release();
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
@@ -110,9 +109,16 @@ int src_input_libarchive(ParseQueue& queue,
             return 0;
         }
 
+        auto filename = input_file.resource;
+        auto it = filename.begin();
+        while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
+            filename.erase(it, std::next(std::next(it)));
+            it = filename.begin();
+        }
+
         // form the parsing request
         std::shared_ptr<ParseRequest> prequest(new ParseRequest);
-        prequest->filename = input_file.resource;
+        prequest->filename = filename;
         prequest->url = srcml_request.att_url;
         prequest->version = srcml_request.att_version;
         prequest->srcml_arch = srcml_arch;
@@ -125,7 +131,7 @@ int src_input_libarchive(ParseQueue& queue,
         return 1;
     }
 
-    archive* arch = libarchive_input_file(input_file);
+    std::unique_ptr<archive> arch(libarchive_input_file(input_file));
     if (!arch) {
         return 0;
     }
@@ -137,7 +143,7 @@ int src_input_libarchive(ParseQueue& queue,
 
     int status = ARCHIVE_OK;
     while (status == ARCHIVE_OK &&
-           (((status = archive_read_next_header(arch, &entry)) == ARCHIVE_OK) ||
+           (((status = archive_read_next_header(arch.get(), &entry)) == ARCHIVE_OK) ||
             (status == ARCHIVE_EOF && !count))) {
 
         if (status == ARCHIVE_EOF && getCurlErrors())
@@ -157,26 +163,30 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
-            srcml_archive_enable_full_archive(srcml_arch);
+            srcml_archive_disable_solitary_unit(srcml_arch);
             srcml_archive_enable_hash(srcml_arch);
         }
 
         // archive entry filename for non-archive input is "data"
         if (filename.empty() || filename == "data") {
             filename = input_file.resource;
-            std::string::iterator it = filename.begin();
-            while (*it == '.' || *it == '/') {
-                filename.erase(it);
+            auto it = filename.begin();
+            while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
+                filename.erase(it, std::next(std::next(it)));
+                it = filename.begin();
             }
         }
 
-        if (srcml_request.att_filename && !srcml_archive_is_full_archive(srcml_arch))
+        if (srcml_request.att_filename && srcml_archive_is_solitary_unit(srcml_arch))
             filename = *srcml_request.att_filename;
 
         // language may have been explicitly set
         std::string language;
 
-        if (srcml_request.att_language)
+        // user specified a language, and is a file, text, or stdin
+        // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
+        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin")
+             || srcml_archive_check_extension(srcml_arch, filename.c_str())))
             language = *srcml_request.att_language;
 
         // if not explicitly set, language comes from extension
@@ -236,16 +246,9 @@ int src_input_libarchive(ParseQueue& queue,
 #else
             int64_t offset;
 #endif
-            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
+            while (status == ARCHIVE_OK && archive_read_data_block(arch.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
                 prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
             }
-
-            // LOC count
-            // @todo can't we get this from parsing?
-            // or at least only do for verbose?
-            prequest->loc = std::count(prequest->buffer.begin(), prequest->buffer.end(), '\n');
-            if (!prequest->buffer.empty() && prequest->buffer.back() != '\n')
-                ++prequest->loc;
         }
 
         // schedule for parsing
@@ -253,11 +256,6 @@ int src_input_libarchive(ParseQueue& queue,
 
         ++count;
     }
-#if ARCHIVE_VERSION_NUMBER >= 3000000
-    archive_read_free(arch);
-#else
-    archive_read_finish(arch);
-#endif
 
     return count;
 }

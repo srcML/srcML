@@ -16,7 +16,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #ifndef INCLUDED_SRCML_TYPES_HPP
@@ -34,36 +34,27 @@
 
 #include <memory>
 
-/** string for language Objective-C */
-#define SRCML_LANGUAGE_OBJECTIVE_C "Objective-C"
-
 /** Private options */
 
 /** Include any XML namespace declarations */
-const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<5;
+const unsigned int SRCML_OPTION_NAMESPACE_DECL    = 1<<8;
 /** Not sure what this used for */
-const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<13;
+const unsigned int SRCML_OPTION_XPATH_TOTAL       = 1<<9;
 /** Extra processing of @code#line@endcode for position information */
-const unsigned int SRCML_OPTION_LINE              = 1<<15;
-/** Apply transformations to the entire srcML file (default: each unit */
-const unsigned int SRCML_OPTION_APPLY_ROOT        = 1<<8;
+const unsigned int SRCML_OPTION_LINE              = 1<<10;
 /** Parser output special tokens for debugging the parser */
-const unsigned int SRCML_OPTION_DEBUG             = 1<<24;
+const unsigned int SRCML_OPTION_DEBUG             = 1<<11;
 /** Is a fragment, i.e., no unit element */
-const unsigned int SRCML_OPTION_FRAGMENT = 1<<21;
-
-const unsigned int SRCML_OPTION_CPP_DECLARED = 1<<25;
-
+const unsigned int SRCML_OPTION_FRAGMENT          = 1<<12;
+/** User requested cpp */
+const unsigned int SRCML_OPTION_CPP_DECLARED      = 1<<13;
  /** Create an archive */
-const unsigned int SRCML_OPTION_ARCHIVE           = 1<<0;
+const unsigned int SRCML_OPTION_ARCHIVE           = 1<<14;
  /** Output hash attribute on each unit (default: on) */
-const unsigned int SRCML_OPTION_HASH              = 1<<10;
+const unsigned int SRCML_OPTION_HASH              = 1<<15;
 
 /** All default enabled options */
-const unsigned int SRCML_OPTION_DEFAULT           = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH);
- 
-/** All default enabled options */
-const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_DEFAULT  | SRCML_OPTION_NAMESPACE_DECL);
+const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH | SRCML_OPTION_NAMESPACE_DECL);
 
 #include <libxml/xmlwriter.h>
 
@@ -158,9 +149,6 @@ struct srcml_archive {
 
     /** a srcMLReader for reading */
     srcml_sax2_reader* reader = nullptr;
-
-    /** xmlParserInputBuffer for reading */
-    xmlParserInputBufferPtr input = nullptr;
  
     std::vector<std::shared_ptr<Transformation>> transformations;
 
@@ -233,8 +221,12 @@ struct srcml_unit {
 
     /** srcml from read and after parsing */
     std::string srcml;
+    boost::optional<std::string> srcml_revision;
+    int currevision = -1;
     boost::optional<std::string> srcml_fragment;
+    boost::optional<std::string> srcml_fragment_revision;
     boost::optional<std::string> srcml_raw;
+    boost::optional<std::string> srcml_raw_revision;
 
     /** src from read */
     boost::optional<std::string> src;
@@ -246,7 +238,7 @@ struct srcml_unit {
     int insert_begin = 0;
     int insert_end = 0;
 
-    int loc = 0;
+    int loc = -1;
 
     /** error reporting */
     std::string error_string;

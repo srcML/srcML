@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 /*
@@ -91,8 +91,6 @@ public:
 
     xmlTextWriterPtr output_textwriter() { return out.xout; }
 
-    void set_text_only() { text_only = true; }
-
     // destructor
     ~srcml_translator();
 
@@ -130,9 +128,6 @@ private:
     /** translation options */
     OPTION_TYPE options;
 
-    /** buffer to hold output to memory */
-    xmlBuffer* buffer = nullptr;
-
 public:
     /** member for handling output */
     srcMLOutput out;
@@ -149,13 +144,10 @@ private:
 
     /** mark if have outputted starting unit tag for by element writing */
     bool is_outputting_unit = false;
-
+    
+public:
     /** track depth for by element writing */
     int output_unit_depth = 0;
-
-    /** text-only mode (no XML) */
-    bool text_only = false;
-
 };
 
 #endif

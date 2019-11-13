@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <WriteQueue.hpp>
@@ -36,16 +36,16 @@ WriteQueue::WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool
 void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
 
     // push the value on the priority queue
-	{
-		std::lock_guard<std::mutex> lock(qmutex);
+    {
+        std::lock_guard<std::mutex> lock(qmutex);
 
         // record max position for eos()
         if (pvalue->position > maxposition)
             maxposition = pvalue->position;
 
-		// put this request into the queue
-		q.push(pvalue);
-	}
+        // put this request into the queue
+        q.push(pvalue);
+    }
 
     // let the write processing know there is something
     cv.notify_one();
@@ -53,7 +53,11 @@ void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
 
 void WriteQueue::stop() {
 
-    completed = true;
+    {
+        std::unique_lock<std::mutex> lock(qmutex);
+
+        completed = true;
+    }
 
     cv.notify_one();
 

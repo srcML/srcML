@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="using_namespace">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<using>using <namespace>namespace <name>std</name>;</namespace></using>
+  <using>using <namespace>namespace <name>std</name>  ;</namespace></using>
 </unit>
 
 </unit>

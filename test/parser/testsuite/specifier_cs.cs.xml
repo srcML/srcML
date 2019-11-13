@@ -6,27 +6,27 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>internal</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>internal</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>sealed</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>sealed</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>override</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>override</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>explicit</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>explicit</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>implicit</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>implicit</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>delegate</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>delegate</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
@@ -34,15 +34,15 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>partial</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>partial</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>abstract</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>abstract</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
-<decl_stmt><decl><specifier>async</specifier></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>async</specifier></type></decl>;</decl_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">

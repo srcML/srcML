@@ -15,7 +15,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 #
 # This is the function used for building exeucables for srcML.
@@ -25,34 +25,60 @@
 #
 # - All subsequent arguments are linked as libraries.
 #
-macro(srcMLExec EXEC_NAME EXEC_FILE)
-    add_executable(${EXEC_NAME} ${EXEC_FILE})
-    target_link_libraries(${EXEC_NAME} ${ARGN})
-    if("x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
-		set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-        add_custom_command(TARGET srcml POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${PROJECT_SOURCE_DIR}/deps/${BUILD_ARCH}/$<CONFIGURATION>/bin"
-        $<TARGET_FILE_DIR:srcml>)
-    elseif(APPLE)
-        # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list /dev/null")
-    elseif(WIN32)
-        # @BUILD Why this when there is a MSVC case above?
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
-    else()
-        set_target_properties(${EXEC_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-    endif()
-endmacro()
+
+# strip executables
+set(CPACK_STRIP_FILES ON)
+ 
+set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+
+file(DOWNLOAD https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp ${CMAKE_EXTERNAL_SOURCE_DIR}/CLI11.hpp)
+file(DOWNLOAD https://raw.githubusercontent.com/vit-vit/CTPL/ctpl_v.0.0.2/ctpl_stl.h ${CMAKE_EXTERNAL_SOURCE_DIR}/ctpl_stl.h)
+
+set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
+                CACHE INTERNAL "Libraries needed to build srcml")
+if(NOT WIN32 AND APPLE)
+    list(APPEND SRCML_LIBRARIES pthread)
+elseif(NOT WIN32)
+    list(APPEND SRCML_LIBRARIES crypto pthread)
+elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    list(APPEND SRCML_LIBRARIES ws2_32 crypto)
+else()
+    list(APPEND SRCML_LIBRARIES ws2_32 ${LIBSRCML_LIBRARIES})
+endif()
 
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 
-srcMLExec(srcml "${CLIENT_SOURCE}" srcml_shared ${SRCML_LIBRARIES})
+add_executable(srcml ${CLIENT_SOURCE})
+target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_EXTERNAL_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src/libsrcml)
 
-if(APPLE)							     
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"-u\" \"-r\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
-elseif(NOT WIN32)
-    install(CODE "execute_process(COMMAND \"/usr/bin/strip\" \"${CMAKE_BINARY_DIR}/bin/srcml\")")
+# @todo Is this necessary? Let CMake determin this instead
+# Maybe coverage is not a default part of Debug?
+if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
+    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES} gcov)
+else()
+    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES})
 endif()
 
-install(TARGETS srcml RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    add_custom_command(TARGET srcml POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${PROJECT_SOURCE_DIR}/deps/$<CONFIGURATION>/bin"
+    $<TARGET_FILE_DIR:srcml>)
+elseif(APPLE)
+    # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
+    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list /dev/null")
+elseif(WIN32)
+    # @BUILD Why this when there is a MSVC case above?
+    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
+else()
+    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endif()
+
+# strip for release mode
+if(NOT APPLE)
+    set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+endif()
+
+
+install(TARGETS srcml COMPONENT SRCML)

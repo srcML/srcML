@@ -17,7 +17,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with the srcml command-line client; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 #include <decompress_srcml.hpp>
@@ -30,9 +30,9 @@
 
 namespace {
 
-    bool curl_supported(const std::string& input_protocol) {
+    bool curl_supported_file(const std::string& input_protocol) {
         const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
-        for (int i = 0; curl_types[i] != NULL; ++i) {
+        for (int i = 0; curl_types[i] != nullptr; ++i) {
             std::string curl(curl_types[i]);
             if (curl != "file" && curl == input_protocol.c_str())
                 return true;
@@ -66,7 +66,7 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
 
         status = archive_read_open_fd(libarchive_srcml.get(), input_sources[0], buffer_size);
 
-    } else if (curl_supported(input_sources[0].protocol)) {
+    } else if (curl_supported_file(input_sources[0].protocol)) {
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input_sources[0];

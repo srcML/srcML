@@ -54,15 +54,15 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<expr_stmt><expr><name>a</name> <operator>*</operator> <call><name><operator>::</operator><name>qPow</name></name><argument_list>(<argument><expr><literal type="number">2.0f</literal></expr></argument>, <argument><expr><literal type="number">10</literal> <operator>*</operator> <name>t_adj</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><operator>delete</operator><index>[]</index> <operator>(</operator><operator>*</operator><name>ptr</name><operator>)</operator></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><operator>*</operator><name>a</name> <operator>=</operator> <name><name>b</name><index>[<expr><operator>*</operator><operator>(</operator><operator>(</operator><specifier>const</specifier> <name>unsigned</name> <name>char</name><operator>*</operator><operator>)</operator><name>p</name><operator>)</operator></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<expr_stmt><expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><expr><name>d</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 </unit>
