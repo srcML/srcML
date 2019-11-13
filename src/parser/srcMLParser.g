@@ -828,6 +828,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { ((inTransparentMode(MODE_CONDITION) ||
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
+        && !inTransparentMode(MODE_INTERNAL_END_CURLY)
         && (!inLanguage(LANGUAGE_CXX) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
         { inMode(MODE_ARGUMENT_LIST) }? call_argument_list |
@@ -1935,7 +1936,7 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
             (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
-            || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
+            || (!inLanguage(LANGUAGE_CSHARP) && !inTransparentMode(MODE_INTERNAL_END_CURLY) &&postcalltoken == RCURLY)
             || (postnametoken != 1 && postcalltoken == 1 /* EOF ? */)
             || postcalltoken == TEMPLATE || postcalltoken == INLINE
             || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || postcalltoken == SIGNAL
@@ -1988,7 +1989,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
             // record token after argument list to differentiate between call and macro
             markend[postcalltoken] |
 
-            LPAREN set_int[call_count, 1]
+            (LPAREN | { inLanguage(LANGUAGE_CXX) }? LCURLY) set_int[call_count, 1]
         )
 ;
 
