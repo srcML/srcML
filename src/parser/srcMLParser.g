@@ -5343,7 +5343,9 @@ simple_name_optional_template_destop[bool push = true] { CompleteElement element
 
 // name including template argument list
 simple_name_optional_template_optional_specifier[bool push = true] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
+        // Commenting-out prevents 3-level names
         {
+/*
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
 
@@ -5352,6 +5354,7 @@ simple_name_optional_template_optional_specifier[bool push = true] { CompleteEle
 
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
+*/
         }
         push_namestack[push] (template_specifier { is_nop = false; })* identifier
     (
@@ -5361,9 +5364,11 @@ simple_name_optional_template_optional_specifier[bool push = true] { CompleteEle
         (cuda_argument_list) => cuda_argument_list |
 
         {
+/* 
             // set the token to NOP since we did not find a template argument list
             if (is_nop)
                 tp.setType(SNOP);
+*/
         }
     )
 ;
