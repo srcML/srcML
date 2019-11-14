@@ -37,7 +37,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
 
     include_directories(${WINDOWS_DEP_PATH}/include)
-    link_directories(${WINDOWS_DEP_PATH}/x64/$(ConfigurationName)/lib)
+    link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
     
     set(LIBXSLT_LIBRARIES libxslt.lib)
     set(LIBXSLT_EXSLT_LIBRARY libexslt.lib)

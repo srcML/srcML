@@ -31,13 +31,28 @@
 #include <list>
 #include <deque>
 #include <vector>
+#include <memory>
 #include <archive.h>
 #include <archive_entry.h>
+
+#include <stdio.h>
+#ifdef _MSC_BUILD
+    #include <direct.h>
+#else
+    #include <unistd.h>
+#endif
 
 int src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const std::string& input) {
+                          const std::string& raw_input) {
+
+	// with immediate directory "." lookup the current working directory
+    std::string input = raw_input;
+    if (input == ".") {
+		std::unique_ptr<char> cwd(getcwd(nullptr, 0));
+		input = cwd.get();
+	}
 
     // get a list of files (including directories) from the current directory
     std::vector<std::string> files;

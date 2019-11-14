@@ -62,7 +62,7 @@ macro(setlanguage INLANG URL)
         add_custom_command(COMMAND srcml --output-srcml --language=${LANG} ${BASEFILE} -o ${OUTFILE}
                     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${BASEFILE}
                     OUTPUT ${OUTFILE}
-                    COMMENT "Generating parser testfile ${OUTFILE}"
+                    COMMENT "Generating parser testfile ${OUTFILE} from ${BASEFILE}"
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
         list(APPEND TESTFILES "${OUTFILE}")
@@ -84,7 +84,7 @@ macro(transform OUTFILE INFILE URL XSLT)
     add_custom_command(COMMAND srcml --output-srcml --xslt ${XSLT_DIR}/${XSLT} ${EXTRA} --url=${URL} ${INFILE} -o ${OUTFILE}
                        OUTPUT ${OUTFILE}
                        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${INFILE}
-                       COMMENT "Generating parser testfile ${OUTFILE}"
+                       COMMENT "Generating parser testfile ${OUTFILE} from ${INFILE}"
                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     list(APPEND TESTFILES "${OUTFILE}")
@@ -244,7 +244,7 @@ foreach(GENURL ${TESTFILES})
         add_custom_command(
             COMMAND srcml --output-srcml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
                      -o ${URL}.${VARIATION}.${LANGEXT}.xml
-            COMMENT "Generating parser testfile ${URL}.${VARIATION}.${LANGEXT}.xml"
+            COMMENT "Generating parser testfile ${URL}.${VARIATION}.${LANGEXT}.xml from ${GENURL}"
             DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             OUTPUT ${URL}.${VARIATION}.${LANGEXT}.xml
@@ -255,7 +255,7 @@ foreach(GENURL ${TESTFILES})
     # all is generated separately because it does not use an XSLT transformation
     add_custom_command(
         COMMAND srcml --cat --url=${URL}.all ${GENURL} -o ${URL}.all.${LANGEXT}.xml
-        COMMENT "Generating parser testfile ${URL}.all.${LANGEXT}.xml"
+        COMMENT "Generating parser testfile ${URL}.all.${LANGEXT}.xml from ${GENURL}"
         DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         OUTPUT ${URL}.all.${LANGEXT}.xml

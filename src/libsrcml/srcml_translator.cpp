@@ -332,8 +332,13 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
 
     ++output_unit_depth;
 
+    const char* used_uri = nullptr;
+    if (uri == nullptr || strcmp(SRCML_SRC_NS_URI, uri) != 0) {
+        used_uri = uri;
+    }
+
     /** @todo figure out how to register namespaces so this actualy works */
-    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST uri) != -1;
+    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST used_uri) != -1;
 }
 
 /**
