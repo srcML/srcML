@@ -144,7 +144,7 @@ void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* 
         newvalue = curvalue.c_str();
     }
 
-    thread_local xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
+    xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
     xmlSetNsProp(node, ns, (const xmlChar *) attr_name.c_str(), (const xmlChar *) newvalue);
 }
 
@@ -321,7 +321,7 @@ void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPt
     xmlNodePtr a_node = xmlDocGetRootElement(doc);
 
     // set up namespace
-    thread_local xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri.c_str(), (const xmlChar*) prefix.c_str());
+    xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri.c_str(), (const xmlChar*) prefix.c_str());
 
     // add the element to all nodes
     for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
