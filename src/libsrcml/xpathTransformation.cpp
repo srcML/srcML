@@ -218,11 +218,13 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
  * @returns true on success false on failure.
  */
 TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     xmlXPathContextPtr context = createContext(doc);
 
 //    xpathsrcMLRegister(context);
     // TODO:  Detect error
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     // register standard prefixes for standard namespaces
     for (const auto& ns : default_namespaces) {
@@ -236,12 +238,14 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
             fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
         }
     }
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     // register prefixes from the doc
     for (auto p = doc->children->nsDef; p; p = p->next) {
 
         xmlXPathRegisterNs(context, p->prefix, p->href);
     }
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     // evaluate the xpath
     xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
@@ -249,9 +253,12 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
         return TransformationResult();
     }
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     TransformationResult tresult;
     tresult.unitWrapped = false;
+
+fprintf(stderr, "DEBUG:  %s %s %d result_nodes->nodesetval->nodeNr: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) result_nodes->nodesetval->nodeNr);
 
     // xpath evaluation produces a nodeset result, even if there are no results
     tresult.nodeType = result_nodes->type == XPATH_NODESET && (result_nodes->nodesetval == nullptr || result_nodes->nodesetval->nodeNr == 0)? 0 : result_nodes->type;
