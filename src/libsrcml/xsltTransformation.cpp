@@ -145,7 +145,6 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
     }
     cparams.back() = 0;
 
-#ifdef DLLOAD
     // apply the style sheet to the document, which is the individual unit
     xmlDocPtr res = xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0);
     if (!res) {
@@ -156,9 +155,6 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
 
     // transformation result is nodeset with single unit, and the unit is wrapped
     return TransformationResult(xmlXPathNodeSetCreate(res->children), true);
-#else
-    return TransformationResult();
-#endif
 }
 
 /**
