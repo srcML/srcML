@@ -221,6 +221,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
 fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     xmlXPathContextPtr context = createContext(doc);
+fprintf(stderr, "DEBUG:  %s %s %d context: %p\n", __FILE__,  __FUNCTION__, __LINE__,  context);
 
 //    xpathsrcMLRegister(context);
     // TODO:  Detect error
