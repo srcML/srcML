@@ -279,8 +279,10 @@ fprintf(stderr, "DEBUG:  %s %s %d result_nodes->nodesetval->nodeNr: %d\n", __FIL
         return tresult;
 
     if (!element.empty()) {
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         addElementXPathResults(doc, result_nodes);
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         tresult.unitWrapped = true;
         tresult.nodeset = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
@@ -290,8 +292,12 @@ fprintf(stderr, "DEBUG:  %s %s %d result_nodes->nodesetval->nodeNr: %d\n", __FIL
 
     // convert all the found nodes
     if (!attr_name.empty()) {
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
         if (result_nodes->nodesetval) {
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
             for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
                 xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
