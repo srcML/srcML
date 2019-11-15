@@ -130,6 +130,8 @@ int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
  */
 void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) const {
 
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
     // grab current value
     const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.c_str(), BAD_CAST attr_uri);
     const char* newvalue = attr_value.c_str();
@@ -218,6 +220,8 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
  * @returns true on success false on failure.
  */
 TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
+
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
     xmlXPathContextPtr context = createContext(doc);
 
@@ -315,6 +319,8 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
 // process the resulting nodes
 void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) const {
 
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
+
     if (!result_nodes || !(result_nodes->type == 1) || !(result_nodes->nodesetval))
         return;
 
@@ -325,6 +331,8 @@ void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPt
 
     // add the element to all nodes
     for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
+
+fprintf(stderr, "DEBUG:  %s %s %d \n", __FILE__,  __FUNCTION__, __LINE__);
 
         xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
