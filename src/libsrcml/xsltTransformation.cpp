@@ -33,6 +33,7 @@
 #include <libxslt/xslt.h>
 #include <libxslt/xsltInternals.h>
 #include <libxslt/xsltutils.h>
+#include <libxslt/transform.h>
 #include <libexslt/exslt.h>
 #endif
 
