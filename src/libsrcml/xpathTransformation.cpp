@@ -64,7 +64,7 @@ xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xp
     : xpath(xpath), prefix(stringOrNull(element_prefix)), uri(stringOrNull(element_uri)), element(stringOrNull(element)), attr_prefix(stringOrNull(attr_prefix)), attr_uri(stringOrNull(attr_uri)), attr_name(stringOrNull(attr_name)), attr_value(stringOrNull(attr_value)) {
 
 //    xsltsrcMLRegister();
-fprintf(stderr, "DEBUG:  %s %s %d xpath: %s\n", __FILE__,  __FUNCTION__, __LINE__,  xpath.c_str());
+fprintf(stderr, "DEBUG:  %s %s %d xpath: %s\n", __FILE__,  __FUNCTION__, __LINE__, xpath);
 
     compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
     fprintf(stderr, "DEBUG:  %s %s %d compiled_xpath: %p\n", __FILE__,  __FUNCTION__, __LINE__,  compiled_xpath);
