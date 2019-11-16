@@ -175,6 +175,11 @@ int src_input_libarchive(ParseQueue& queue,
                 filename.erase(it, std::next(std::next(it)));
                 it = filename.begin();
             }
+
+            // remove compression extensions from filename
+            for (const auto& compression : input_file.compressions) {
+                filename.resize(filename.size() - compression.size());
+            }
         }
 
         if (srcml_request.att_filename && srcml_archive_is_solitary_unit(srcml_arch))
