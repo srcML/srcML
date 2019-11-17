@@ -93,68 +93,21 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     return arch.release();
 }
 
-// Convert input to a ParseRequest and assign request to the processing queue
-int src_input_libarchive(ParseQueue& queue,
+void process_entry(int& status, archive_entry* entry,
+            ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const srcml_input_src& input_file) {
-
-    // don't process if non-archive, non-compressed, and we don't handle the extension
-    // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
-    // which then hangs
-    // Note: may need to fix in libsrcml
-    if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) | input_file.skip) {
-        // if we are not verbose, then just end this attemp
-        if (!(option(SRCML_COMMAND_VERBOSE))) {
-            return 0;
-        }
-
-        auto filename = input_file.resource;
-        auto it = filename.begin();
-        while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
-            filename.erase(it, std::next(std::next(it)));
-            it = filename.begin();
-        }
-
-        // form the parsing request
-        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
-        prequest->filename = filename;
-        prequest->url = srcml_request.att_url;
-        prequest->version = srcml_request.att_version;
-        prequest->srcml_arch = srcml_arch;
-        prequest->language = "";
-        prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
-
-        // schedule for parsing
-        queue.schedule(prequest);
-
-        return 1;
-    }
-
-    std::unique_ptr<archive> arch(libarchive_input_file(input_file));
-    if (!arch) {
-        return 0;
-    }
-
-    /* In general, go through this once for each time the header can be read
-       Exception: if empty, go through the loop exactly once */
-    int count = 0;
-    archive_entry *entry;
-
-    int status = ARCHIVE_OK;
-    while (status == ARCHIVE_OK &&
-           (((status = archive_read_next_header(arch.get(), &entry)) == ARCHIVE_OK) ||
-            (status == ARCHIVE_EOF && !count))) {
-
-        if (status == ARCHIVE_EOF && getCurlErrors())
-            return 0;
-
-        // skip any directories
-        if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
-            continue;
-
+                          const srcml_input_src& input_file, const std::unique_ptr<archive>& arch, int& count) {
         // default is filename from archive entry (if not empty)
         std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
+ 
+        // for a compressed single file, the archive entry pathname does not include the path
+        // so what is left is the plain filename, e.g., dir/a.cpp.gz may have an archive_entry_pathname()
+        // of a.cpp. So need to prepend with original path
+        if (filename != "data" && !filename.empty()) {
+            auto path = input_file.resource.substr(0, input_file.resource.find_last_of('/'));
+//            filename = path + "/" + filename;
+        }
 
         // stdin, single files require a explicit filename
         if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
@@ -208,7 +161,7 @@ int src_input_libarchive(ParseQueue& queue,
         // if we don't have a language, and are not verbose, then just end this attemp
         if (language.empty() && !(option(SRCML_COMMAND_VERBOSE))) {
             ++count;
-            continue;
+            return;
         }
 
         // form the parsing request
@@ -258,7 +211,80 @@ int src_input_libarchive(ParseQueue& queue,
 
         // schedule for parsing
         queue.schedule(prequest);
+}
+// Convert input to a ParseRequest and assign request to the processing queue
+int src_input_libarchive(ParseQueue& queue,
+                          srcml_archive* srcml_arch,
+                          const srcml_request_t& srcml_request,
+                          const srcml_input_src& input_file) {
 
+    // don't process if non-archive, non-compressed, and we don't handle the extension
+    // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
+    // which then hangs
+    // Note: may need to fix in libsrcml
+    if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) | input_file.skip) {
+        // if we are not verbose, then just end this attemp
+        if (!(option(SRCML_COMMAND_VERBOSE))) {
+            return 0;
+        }
+
+        auto filename = input_file.resource;
+        auto it = filename.begin();
+        while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
+            filename.erase(it, std::next(std::next(it)));
+            it = filename.begin();
+        }
+
+        // form the parsing request
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
+        prequest->filename = filename;
+        prequest->url = srcml_request.att_url;
+        prequest->version = srcml_request.att_version;
+        prequest->srcml_arch = srcml_arch;
+        prequest->language = "";
+        prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
+
+        // schedule for parsing
+        queue.schedule(prequest);
+
+        return 1;
+    }
+
+    std::unique_ptr<archive> arch(libarchive_input_file(input_file));
+    if (!arch) {
+        return 0;
+    }
+
+    /* In general, go through this once for each time the header can be read
+       Exception: if empty, go through the loop exactly once */
+    int count = 0;
+    archive_entry *entry;
+
+    // read the first non-directory entry
+    int status = ARCHIVE_OK;
+    if ((status = archive_read_next_header(arch.get(), &entry)) == ARCHIVE_OK) {
+
+        // process any non-directories
+        if (archive_entry_filetype(entry) != AE_IFDIR) {
+            process_entry(status, entry, queue, srcml_arch, srcml_request, input_file, arch, count);
+            ++count;
+        }
+    }
+
+    if (status == ARCHIVE_EOF && getCurlErrors())
+        return 0;
+
+    if (status != ARCHIVE_OK)
+        return count;
+
+    // read the remaining entries
+    while ((status = archive_read_next_header(arch.get(), &entry)) == ARCHIVE_OK) {
+
+        // skip any directories
+        if (archive_entry_filetype(entry) == AE_IFDIR)
+            continue;
+
+        process_entry(status, entry, queue, srcml_arch, srcml_request, input_file, arch, count);
         ++count;
     }
 
