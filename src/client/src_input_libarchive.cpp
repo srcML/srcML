@@ -162,6 +162,11 @@ int src_input_libarchive(ParseQueue& queue,
             exit(1);
         }
 
+        // if a prefix (e.g., from filesystem), tack that on to the libarchive entry
+        if (filename != "data" && !input_file.prefix.empty()) {
+            filename = input_file.prefix + "/" + filename;
+        }
+
         if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
             srcml_archive_disable_solitary_unit(srcml_arch);
             srcml_archive_enable_hash(srcml_arch);

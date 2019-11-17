@@ -77,6 +77,8 @@ public:
     const char* c_str() const { return resource.c_str(); }
 
     std::string filename;
+    // only used by filesystem input
+    std::string prefix;
     std::string protocol;
     std::string resource;
     std::string plainfile;
