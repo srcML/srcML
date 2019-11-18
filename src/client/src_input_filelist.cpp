@@ -58,7 +58,8 @@ int src_input_filelist(ParseQueue& queue,
         return -1;
     }
 
-    if (strcmp(archive_entry_pathname(entry), "data") != 0) {
+    // filelist cannot be a source archive, must only be compressed
+    if (archive_format(arch) != ARCHIVE_FORMAT_RAW && archive_format(arch) != ARCHIVE_FORMAT_EMPTY) {
         SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-archived file format");
         return -1;
     }
