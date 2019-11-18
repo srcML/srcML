@@ -38,6 +38,10 @@
 */
 std::string normalize_xpath(std::string nxpath) {
 
+    // no normalization needed if axis specified, as with "//" and "/"
+    if (nxpath[0] == '/')
+        return nxpath;
+
     // match function call to adjust where "//" is inserted
     static std::regex funcstart("^\\s*[a-zA-Z0-9:-_]*\\s*\\(\\s*");
 
