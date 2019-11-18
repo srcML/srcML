@@ -170,7 +170,7 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // if a prefix (e.g., from filesystem), tack that on to the libarchive entry
-        if (filename != "data" && !input_file.prefix.empty()) {
+        if (filename != "data" && !filename.empty() && !input_file.prefix.empty()) {
             filename = input_file.prefix + "/" + filename;
         }
 
