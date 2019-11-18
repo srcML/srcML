@@ -101,115 +101,117 @@ std::shared_ptr<ParseRequest> process_entry(ParseQueue& queue,
                           archive_entry* entry,
                           int& count,
                           archive* arch) {
-        // default is filename from archive entry (if not empty)
-        std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
 
-        // stdin, single files require a explicit filename
-        if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
-            SRCMLstatus(ERROR_MSG, "Language required for stdin single files");
-            exit(1);
+    // default is filename from archive entry (if not empty)
+    std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
+
+    // stdin, single files require a explicit filename
+    if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
+        SRCMLstatus(ERROR_MSG, "Language required for stdin single files");
+        exit(1);
+    }
+fprintf(stderr, "DEBUG:  %s %s %d input_file.prefix: %s\n", __FILE__,  __FUNCTION__, __LINE__,  input_file.prefix.c_str());
+
+    // if a prefix (e.g., from filesystem), tack that on to the libarchive entry
+    if (filename != "data" && !input_file.prefix.empty()) {
+        filename = input_file.prefix + "/" + filename;
+    }
+
+    if (count == 0 && filename != "data" && archive_format(arch) != ARCHIVE_FORMAT_RAW && status != ARCHIVE_EOF) {
+        srcml_archive_disable_solitary_unit(srcml_arch);
+        srcml_archive_enable_hash(srcml_arch);
+    }
+
+    // archive entry filename for non-archive input is "data"
+    if (filename.empty() || filename == "data") {
+        filename = input_file.resource;
+        auto it = filename.begin();
+        while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
+            filename.erase(it, std::next(std::next(it)));
+            it = filename.begin();
         }
 
-        // if a prefix (e.g., from filesystem), tack that on to the libarchive entry
-        if (filename != "data" && !input_file.prefix.empty()) {
-            filename = input_file.prefix + "/" + filename;
+        // remove compression extensions from filename
+        for (const auto& compression : input_file.compressions) {
+            filename.resize(filename.size() - compression.size());
         }
+    }
 
-        if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
-            srcml_archive_disable_solitary_unit(srcml_arch);
-            srcml_archive_enable_hash(srcml_arch);
-        }
+    if (srcml_request.att_filename && srcml_archive_is_solitary_unit(srcml_arch))
+        filename = *srcml_request.att_filename;
 
-        // archive entry filename for non-archive input is "data"
-        if (filename.empty() || filename == "data") {
-            filename = input_file.resource;
-            auto it = filename.begin();
-            while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
-                filename.erase(it, std::next(std::next(it)));
-                it = filename.begin();
-            }
+    // language may have been explicitly set
+    std::string language;
 
-            // remove compression extensions from filename
-            for (const auto& compression : input_file.compressions) {
-                filename.resize(filename.size() - compression.size());
-            }
-        }
+    // user specified a language, and is a file, text, or stdin
+    // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
+    if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin")
+         || srcml_archive_check_extension(srcml_arch, filename.c_str())))
+        language = *srcml_request.att_language;
 
-        if (srcml_request.att_filename && srcml_archive_is_solitary_unit(srcml_arch))
-            filename = *srcml_request.att_filename;
+    // if not explicitly set, language comes from extension
+    // we have to do this ourselves, since libsrcml can't for memory
+    if (language.empty())
+        if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
+            language = l;
 
-        // language may have been explicitly set
-        std::string language;
+    // with a compressed non-archive, need to check the actual extension of the file
+    if (language.empty())
+        if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.extension.c_str()))
+            language = l;
 
-        // user specified a language, and is a file, text, or stdin
-        // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
-        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin")
-             || srcml_archive_check_extension(srcml_arch, filename.c_str())))
-            language = *srcml_request.att_language;
+    // if we don't have a language, and are not verbose, then just end this attemp
+    if (language.empty() && !(option(SRCML_COMMAND_VERBOSE))) {
+        ++count;
+        return std::shared_ptr<ParseRequest>();
+    }
 
-        // if not explicitly set, language comes from extension
-        // we have to do this ourselves, since libsrcml can't for memory
-        if (language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
-                language = l;
+    // form the parsing request
+    std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
-        // with a compressed non-archive, need to check the actual extension of the file
-        if (language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.extension.c_str()))
-                language = l;
+    if (option(SRCML_COMMAND_NOARCHIVE))
+        prequest->disk_dir = srcml_request.output_filename;
 
-        // if we don't have a language, and are not verbose, then just end this attemp
-        if (language.empty() && !(option(SRCML_COMMAND_VERBOSE))) {
-            ++count;
-            return std::shared_ptr<ParseRequest>();
-        }
+    if (srcml_request.att_filename || (filename != "-"))
+        prequest->filename = filename;
 
-        // form the parsing request
-        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
+    prequest->url = srcml_request.att_url;
+    prequest->version = srcml_request.att_version;
+    prequest->srcml_arch = srcml_arch;
+    prequest->language = language;
+    prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
-        if (option(SRCML_COMMAND_NOARCHIVE))
-            prequest->disk_dir = srcml_request.output_filename;
+    if (option(SRCML_COMMAND_TIMESTAMP)) {
 
-        if (srcml_request.att_filename || (filename != "-"))
-            prequest->filename = filename;
+        //Long time provided by libarchive needs to be time_t
+        time_t mod_time(archive_entry_mtime(entry));
 
-        prequest->url = srcml_request.att_url;
-        prequest->version = srcml_request.att_version;
-        prequest->srcml_arch = srcml_arch;
-        prequest->language = language;
-        prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+        //Standard ctime output and prune '/n' from string
+        char* c_time = ctime(&mod_time);
+        c_time[strlen(c_time) - 1] = 0;
 
-        if (option(SRCML_COMMAND_TIMESTAMP)) {
+        prequest->time_stamp = c_time;
+    }
 
-            //Long time provided by libarchive needs to be time_t
-            time_t mod_time(archive_entry_mtime(entry));
+    // fill up the parse request buffer
+    if (!status && !prequest->status) {
+        // if we know the size, create the right sized data_buffer
+        if (archive_entry_size_is_set(entry))
+            prequest->buffer.reserve(archive_entry_size(entry));
 
-            //Standard ctime output and prune '/n' from string
-            char* c_time = ctime(&mod_time);
-            c_time[strlen(c_time) - 1] = 0;
-
-            prequest->time_stamp = c_time;
-        }
-
-        // fill up the parse request buffer
-        if (!status && !prequest->status) {
-            // if we know the size, create the right sized data_buffer
-            if (archive_entry_size_is_set(entry))
-                prequest->buffer.reserve(archive_entry_size(entry));
-
-            const char* buffer;
-            size_t size;
+        const char* buffer;
+        size_t size;
 #if ARCHIVE_VERSION_NUMBER < 3000000
-            off_t offset;
+        off_t offset;
 #else
-            int64_t offset;
+        int64_t offset;
 #endif
-            while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
-                prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
-            }
+        while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
+            prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
         }
+    }
 
-        return prequest;
+    return prequest;
 }
 
 // Convert input to a ParseRequest and assign request to the processing queue
@@ -275,17 +277,43 @@ int src_input_libarchive(ParseQueue& queue,
         ++entry_count;
 
     // process if not a directory. Need to run through once even in ARCHIVE_EOF
+    std::shared_ptr<ParseRequest> prerequest1;
     if (status == ARCHIVE_EOF || (status == ARCHIVE_OK && archive_entry_filetype(entry) != AE_IFDIR)) {
-        auto prequest = process_entry(queue, srcml_arch, srcml_request, input_file, status, entry, count, arch.get());
-        if (prequest) {
-            queue.schedule(prequest);
-            ++count;
+        prerequest1 = process_entry(queue, srcml_arch, srcml_request, input_file, status, entry, count, arch.get());
+    }
+
+    // read the second entry
+    std::shared_ptr<ParseRequest> prerequest2;
+    if (status == ARCHIVE_OK) {
+        status = archive_read_next_header(arch.get(), &entry);
+
+        if (status == ARCHIVE_OK)
+            ++entry_count;
+
+        // process if not a directory. Need to run through once even in ARCHIVE_EOF
+        if (status == ARCHIVE_OK && archive_entry_filetype(entry) != AE_IFDIR) {
+            prerequest2 = process_entry(queue, srcml_arch, srcml_request, input_file, status, entry, count, arch.get());
         }
     }
 
-    /*
-        Now read the rest of the archive
-    */
+    // at this point we know if there is more than one entry, so can set solitary unit correctly
+    // for gz compression
+    if (entry_count > 1) {
+        srcml_archive_disable_solitary_unit(srcml_arch);
+        srcml_archive_enable_hash(srcml_arch);
+    }
+
+    if (prerequest1) {
+        queue.schedule(prerequest1);
+        ++count;
+    }
+
+    if (prerequest2) {
+        queue.schedule(prerequest2);
+        ++count;
+    }
+
+    // read the rest of the archive
     while (status != ARCHIVE_EOF && ((status = archive_read_next_header(arch.get(), &entry)) == ARCHIVE_OK)) {
 
         // skip any directories
