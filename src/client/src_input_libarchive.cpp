@@ -163,6 +163,12 @@ int src_input_libarchive(ParseQueue& queue,
         // default is filename from archive entry (if not empty)
         std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
 
+        // starting in libarchive 3.4 gz compression, although ARCHIVE_FORMAT_RAW, has an
+        // entry. For consisten behavior, ignore this for now
+        if (archive_format(arch.get()) == ARCHIVE_FORMAT_RAW) {
+            filename = "data";
+        }
+
         // stdin, single files require a explicit filename
         if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
             SRCMLstatus(ERROR_MSG, "Language required for stdin single files");
