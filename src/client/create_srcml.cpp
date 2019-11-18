@@ -98,6 +98,11 @@ int srcml_handler_dispatch(ParseQueue& queue,
         return -1;
     }
 
+    if (!curl_supported(uninput.protocol)) {
+        uninput.prefix = uninput.plainfile.substr(0, uninput.plainfile.find_last_of('/'));
+        if (uninput.prefix == "-")
+            uninput.prefix.clear();
+    }
     return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 }
 
