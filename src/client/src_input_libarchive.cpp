@@ -149,6 +149,13 @@ int src_input_libarchive(ParseQueue& queue,
         if (status == ARCHIVE_EOF && getCurlErrors())
             return 0;
 
+        // after the first archive_read_next_header() the archive knows the archive format
+        // use this archive format to force a srcML archive output with archive source
+        if (count == 0 && archive_format(arch.get()) != ARCHIVE_FORMAT_RAW && archive_format(arch.get()) != ARCHIVE_FORMAT_EMPTY) {
+            srcml_archive_disable_solitary_unit(srcml_arch);
+            srcml_archive_enable_hash(srcml_arch);
+        }
+
         // skip any directories
         if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
             continue;
@@ -165,11 +172,6 @@ int src_input_libarchive(ParseQueue& queue,
         // if a prefix (e.g., from filesystem), tack that on to the libarchive entry
         if (filename != "data" && !input_file.prefix.empty()) {
             filename = input_file.prefix + "/" + filename;
-        }
-
-        if (count == 0 && filename != "data" && status != ARCHIVE_EOF) {
-            srcml_archive_disable_solitary_unit(srcml_arch);
-            srcml_archive_enable_hash(srcml_arch);
         }
 
         // archive entry filename for non-archive input is "data"
