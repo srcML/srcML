@@ -170,19 +170,19 @@ check dir2/dir2.xml "$output2"
 srcml dir2 --quiet
 check "$output2"
 
-#Ensure proper behavior with symbolic links (ignore them)
-createfile symtest/a.cpp "\na;"
-createfile symtest/b.cpp "\nb;"
-createfile symtest/c.cpp "\nc;"
+# #Ensure proper behavior with symbolic links (ignore them)
+# createfile symtest/a.cpp "\na;"
+# createfile symtest/b.cpp "\nb;"
+# createfile symtest/c.cpp "\nc;"
 
-ln -s $(pwd)/symtest symtest/slink
-ln -s $(pwd)/symtest/b.cpp symtest/sim_b.cpp
+# ln -s $(pwd)/symtest symtest/slink
+# ln -s $(pwd)/symtest/b.cpp symtest/sim_b.cpp
 
-srcml symtest --quiet -o symtest/symtest.xml
-check symtest/symtest.xml "$output3"
+# srcml symtest --quiet -o symtest/symtest.xml
+# check symtest/symtest.xml "$output3"
 
-#Cleanup
-rm -rf symtest
-rm -rf dir
-rm -rf dir2
+# #Cleanup
+# rm -rf symtest
+# rm -rf dir
+# rm -rf dir2
 
