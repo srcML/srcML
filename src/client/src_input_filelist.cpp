@@ -43,9 +43,17 @@ int src_input_filelist(ParseQueue& queue,
 
     archive_entry *entry = 0;
     int status = archive_read_next_header(arch, &entry);
+
     if (status == ARCHIVE_EOF) {
         return 1;
     }
+
+    // filelist cannot be a source archive, must only be compressed
+    if (archive_format(arch) != ARCHIVE_FORMAT_RAW && archive_format(arch) != ARCHIVE_FORMAT_EMPTY) {
+        SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-archived file format");
+        return -1;
+    }
+
     if (status != ARCHIVE_OK) {
         SRCMLstatus(ERROR_MSG, "srcml: Invalid filelist " + input_file);
         return -1;
@@ -55,12 +63,6 @@ int src_input_filelist(ParseQueue& queue,
     // skip any directories
     if (archive_entry_filetype(entry) == AE_IFDIR) {
         SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-directory file format");
-        return -1;
-    }
-
-    // filelist cannot be a source archive, must only be compressed
-    if (archive_format(arch) != ARCHIVE_FORMAT_RAW && archive_format(arch) != ARCHIVE_FORMAT_EMPTY) {
-        SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-archived file format");
         return -1;
     }
 
