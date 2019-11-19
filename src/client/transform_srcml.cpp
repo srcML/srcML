@@ -121,7 +121,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
     srcml_archive_disable_solitary_unit(out_arch);
 
     // normalize the path so that it is "//"
-    std::string nxpath = normalize_xpath(transform_input.c_str());
+    std::string nxpath = normalize_xpath(transform_input);
 
     // Call appropriate XPath transform
     if (element && attribute) {
