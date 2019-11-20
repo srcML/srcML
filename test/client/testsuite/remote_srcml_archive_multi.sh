@@ -4,7 +4,9 @@
 source $(dirname "$0")/framework_test.sh
 
 # have to get null byte into test case result
-printf "a;\n\0return b;\n" > tfile
+echo -en "a;\n" > tfile
+printf "\0" >> tfile
+echo -en "return b;\n" >> tfile
 
 define srca <<- 'STDOUT'
 	a;
