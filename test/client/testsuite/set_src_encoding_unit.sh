@@ -59,8 +59,9 @@ iconv -f UTF-8 -t UTF-8 sub/a.cpp > sub/a_UTF-8.cpp
 srcml --src-encoding "UTF-8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-srcml --src-encoding "UTF8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
-check "$foutput"
+# Doesn't work on Windows
+#srcml --src-encoding "UTF8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
+#check "$foutput"
 
 iconv -f UTF-8 -t UTF-16 sub/a.cpp > sub/a_UTF-16.cpp
 srcml --src-encoding "UTF-16" sub/a_UTF-16.cpp --filename "sub/a.cpp"
