@@ -36,7 +36,6 @@ new_arg() {
 
 	# Assign argument based on index value into options
 	val="${options[(($index % $size))]} ${options[(($[$index+1] % $size))]} ${options[(($[$index+2] % $size))]} ${options[(($[$index+3] % $size))]} ${options[(($[$index+4] % $size))]}"
-	message "$val"
 
 }
 

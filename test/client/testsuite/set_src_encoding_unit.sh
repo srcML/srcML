@@ -184,7 +184,6 @@ srcml --src-encoding "UTF-16" sub/special_characters_utf16.cpp -o sub/special_ch
 srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.cpp -o sub/chinese_characters_utf16.xml
 
 #check sub/special_characters_utf16-srcml.cpp "$special_characters_utf16_actual"
-message "REQUIRED"
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.xml -o sub/special_characters_utf16-srcml.cpp
 check_file sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.cpp
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.xml
