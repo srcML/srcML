@@ -144,22 +144,22 @@ header "post_include_hpp" {
 #ifdef DEBUG_PARSER
 class RuleTrace {
 public:
-	RuleTrace(int guessing, int token, int rd, std::string text, const char* fun, int line) :
-		guessing(guessing), token(token), rd(rd), text(text), fun(fun), line(line) {
+    RuleTrace(int guessing, int token, int rd, std::string text, const char* fun, int line) :
+        guessing(guessing), token(token), rd(rd), text(text), fun(fun), line(line) {
 
-		fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.c_str(), rd, "", fun, line);
-	}
+        fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.c_str(), rd, "", fun, line);
+    }
 
-	~RuleTrace() {
-		fprintf(stderr, "  END: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.c_str(), rd, "", fun, line);
-	}
+    ~RuleTrace() {
+        fprintf(stderr, "  END: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.c_str(), rd, "", fun, line);
+    }
 private:
-	int guessing;
-	int token;
-	int rd;
-	std::string text;
-	const char* fun;
-	int line;
+    int guessing;
+    int token;
+    int rd;
+    std::string text;
+    const char* fun;
+    int line;
 };
 
 // Macros to introduce RuleTrace statements
@@ -310,7 +310,7 @@ public:
         // end last opened element.
         // @todo What to do when empty()?
         if (!parent->currentState().openelements.empty())
-	        parent->endElement(parent->currentState().openelements.top());
+            parent->endElement(parent->currentState().openelements.top());
     }
 
 private:
@@ -1364,8 +1364,8 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         }
         (options { greedy = true; } :
 
-        		{ decl_specifier_tokens_set.member(LA(1)) }?
-	            (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1] | 
+                { decl_specifier_tokens_set.member(LA(1)) }?
+                (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1] | 
 
                 { inLanguage(LANGUAGE_JAVA) }? generic_parameter_list set_int[type_count, type_count - 1]
         )*

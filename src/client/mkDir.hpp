@@ -35,9 +35,9 @@ public:
 
     ~mkDir();
 private:
-	archive* arch;
-	archive_entry* entry;
-	std::string last;
+    archive* arch;
+    archive_entry* entry;
+    std::string last;
 };
 
 #endif

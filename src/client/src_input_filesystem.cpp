@@ -47,12 +47,12 @@ int src_input_filesystem(ParseQueue& queue,
                           const srcml_request_t& srcml_request,
                           const std::string& raw_input) {
 
-	// with immediate directory "." lookup the current working directory
+    // with immediate directory "." lookup the current working directory
     std::string input = raw_input;
     if (input == ".") {
-		std::unique_ptr<char> cwd(getcwd(nullptr, 0));
-		input = cwd.get();
-	}
+        std::unique_ptr<char> cwd(getcwd(nullptr, 0));
+        input = cwd.get();
+    }
 
     // get a list of files (including directories) from the current directory
     std::vector<std::string> files;
