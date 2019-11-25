@@ -151,19 +151,22 @@ struct srcml_unit;
  */
 
 /**@{ @name Version */
-/** The current version of the library
+/**
+ * The current version of the library
  * @return Version of libsrcml as a number
  */
 LIBSRCML_DECL int srcml_version_number();
 
-/** The current version of the library
+/**
+ * The current version of the library
  * @return Version of libsrcml as a string
  */
 LIBSRCML_DECL const char* srcml_version_string();
 /**@}*/
 
 /**@{ @name Supported Languages */
-/** Checks if a source-code language is supported.
+/**
+ * Checks if a source-code language is supported.
  * Accepted string values for the languages can be found in @ref Language
  * @param language The language to check support for as a string
  * @retval pos The numeric representation for that language
@@ -171,19 +174,22 @@ LIBSRCML_DECL const char* srcml_version_string();
  */
 LIBSRCML_DECL int srcml_check_language(const char* language);
 
-/** Check the current registered language for a file extension
+/**
+ * Check the current registered language for a file extension
  * @param filename The name of a file. When a full filename is given, the extension is extracted
  * @return The language name registered with that extension on success
  * @return NULL on failure
  */
 LIBSRCML_DECL const char* srcml_check_extension(const char* filename);
 
-/** Gets the number of supported source-code languages
+/**
+ * Gets the number of supported source-code languages
  * @return The number of source-code languages supported
  */
 LIBSRCML_DECL size_t srcml_get_language_list_size();
 
-/** Gets the name of the supported language at a given position
+/**
+ * Gets the name of the supported language at a given position
  * @param pos The position of the language in the supported language list
  * @return The name of the supported source-code language on success
  * @return NULL on failure
@@ -192,7 +198,8 @@ LIBSRCML_DECL const char* srcml_get_language_list(size_t pos);
 /**@}*/
 
 /**@{ @name Supported Encodings */
-/** Check if a particular encoding is supported for input and output
+/**
+ * Check if a particular encoding is supported for input and output
  * @param encoding The name of the encoding
  * @retval 0 if the encoding is not supported
  * @retval nonzero if the encoding is supported
@@ -201,13 +208,15 @@ LIBSRCML_DECL int srcml_check_encoding(const char* encoding);
 /**@}*/
 
 /**@{ @name Optional Features */
-/** Check if XSLT is available
+/**
+ * Check if XSLT is available
  * @retval 1 if XSLT is available
  * @retval 0 if it is unavailable
  */
 LIBSRCML_DECL int srcml_check_xslt();
 
-/** Check if EXSLT is available
+/**
+ * Check if EXSLT is available
  * @retval 1 if EXSLT is available
  * @retval 0 if it is unavailable
  */
@@ -215,14 +224,16 @@ LIBSRCML_DECL int srcml_check_exslt();
 /**@}*/
 
 /**@{ @name Error Handling */
-/** Provides a description of the last error to occur
+/**
+ * Provides a description of the last error to occur
  * @return A string describing last recorded error
  */
 LIBSRCML_DECL const char* srcml_error_string();
 /**@}*/
 
 /**@{ @name Memory */
-/** Free a memory buffer allocated by functions such as @ref srcml_archive_write_open_memory()
+/**
+ * Free a memory buffer allocated by functions such as @ref srcml_archive_write_open_memory()
  * @param buffer The allocated buffer
  */
 LIBSRCML_DECL void srcml_memory_free(char * buffer);
@@ -263,7 +274,8 @@ LIBSRCML_DECL void srcml_memory_free(char * buffer);
 
   @{
  */
-/** Translate to and from the srcML format
+/**
+ * Translate to and from the srcML format
  * @details Translates from source code to srcML if the input_filename
  * extension is for source code, e.g., .c, .cpp, .java Language
  * determined by file extension if language is not set with
@@ -279,35 +291,40 @@ LIBSRCML_DECL int srcml(const char* input_filename, const char* output_filename)
 /**@{ @name Global settings
       @brief To be used with the convenience function srcml()
 */
-/** Set the source encoding for the srcML
+/**
+ * Set the source encoding for the srcML
  * @param encoding An output encoding
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_src_encoding(const char* encoding);
 
-/** Set the xml encoding for the srcML
+/**
+ * Set the xml encoding for the srcML
  * @param encoding An output encoding
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_xml_encoding(const char* encoding);
 
-/** Set the language used to parse for the srcML
+/**
+ * Set the language used to parse for the srcML
  * @param language A supported source-code language
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_language(const char* language);
 
-/** Set the filename attribute for the srcML
+/**
+ * Set the filename attribute for the srcML
  * @param filename Name of a file
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_filename(const char* filename);
 
-/** Set the url attribute for the srcML
+/**
+ * Set the url attribute for the srcML
  * @note The url is not checked for validity
  * @param url a url path
  * @retval SRCML_STATUS_OK on success
@@ -315,7 +332,8 @@ LIBSRCML_DECL int srcml_set_filename(const char* filename);
  */
 LIBSRCML_DECL int srcml_set_url(const char* url);
 
-/** Set the version attribute for the srcML
+/**
+ * Set the version attribute for the srcML
  * @note The version value is user-defined, and can be any value
  * @param version A version string
  * @retval SRCML_STATUS_OK on success
@@ -323,42 +341,48 @@ LIBSRCML_DECL int srcml_set_url(const char* url);
  */
 LIBSRCML_DECL int srcml_set_version(const char* version);
 
-/** Set the timestamp attribute for the srcML
+/**
+ * Set the timestamp attribute for the srcML
  * @param timestamp A timestamp string in any format
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_timestamp(const char* timestamp);
 
-/** Set options on the srcML, clearing all previously set options
+/**
+ * Set options on the srcML, clearing all previously set options
  * @param option A srcML option
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_options(size_t option);
 
-/** Enable (set) a specific option on the srcML
+/**
+ * Enable (set) a specific option on the srcML
  * @param option The srcML option(s)
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_enable_option(size_t option);
 
-/** Disable (unset) a specific option on the srcML
+/**
+ * Disable (unset) a specific option on the srcML
  * @param option The srcML option(s)
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_disable_option(size_t option);
 
-/** Set the size of the tabstop on the srcML
+/**
+ * Set the size of the tabstop on the srcML
  * @param tabstop Tabstop size
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_tabstop(size_t tabstop);
 
-/** Associate an extension with a supported source-code language on the srcML
+/**
+ * Associate an extension with a supported source-code language on the srcML
  * @param extension A source file extension
  * @param language A supported source code language
  * @return SRCML_STATUS_OK on success
@@ -366,7 +390,8 @@ LIBSRCML_DECL int srcml_set_tabstop(size_t tabstop);
  */
 LIBSRCML_DECL int srcml_register_file_extension(const char* extension, const char* language);
 
-/** Add a new namespace or change the prefix of an existing namespace on the srcML
+/**
+ * Add a new namespace or change the prefix of an existing namespace on the srcML
  * @param prefix An XML namespace prefix
  * @param ns An XML namespace
  * @retval SRCML_STATUS_OK on success
@@ -374,7 +399,8 @@ LIBSRCML_DECL int srcml_register_file_extension(const char* extension, const cha
  */
 LIBSRCML_DECL int srcml_register_namespace(const char* prefix, const char* ns);
 
-/** Set a processing instruction that will be output before the root
+/**
+ * Set a processing instruction that will be output before the root
  * element of an archive
  * @param target the processing instruction's target
  * @param data the processing instruciton's data
@@ -383,14 +409,16 @@ LIBSRCML_DECL int srcml_register_namespace(const char* prefix, const char* ns);
  */
 LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const char* data);
 
-/** Set the end of line characters to be used for unparse
+/**
+ * Set the end of line characters to be used for unparse
  * @param eol The kind of eol to use for unparse
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_eol(size_t eol);
 
-/** Set what revision in a srcDiff document to operate with
+/**
+ * Set what revision in a srcDiff document to operate with
  * @param revision_number The revision to operate with
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
@@ -492,14 +520,16 @@ LIBSRCML_DECL const char* srcml_get_processing_instruction_data();
  */
 LIBSRCML_DECL size_t srcml_get_namespace_size();
 
-/** Get the prefix of the namespace at that position
+/**
+ * Get the prefix of the namespace at that position
  * @param pos The position to get the namespace prefix at
  * @return The prefix, where empty namespace is an empty string
  * @return 0 if given an invalid position
  */
 LIBSRCML_DECL const char* srcml_get_namespace_prefix(size_t pos);
 
-/** Get the registered prefix for the given namespace
+/**
+ * Get the registered prefix for the given namespace
  * @param namespace_uri An XML namespace
  * @return The registered prefix for the given namespace
  * @return NULL on failure
@@ -520,7 +550,8 @@ LIBSRCML_DECL const char* srcml_get_namespace_uri(size_t pos);
  */
 LIBSRCML_DECL const char* srcml_get_uri_from_prefix(const char* prefix);
 
-/** Cleanup and free globally allocated items (usually by libxml2)
+/**
+ * Cleanup and free globally allocated items (usually by libxml2)
  */
 LIBSRCML_DECL void srcml_cleanup_globals();
 /**@}*/
@@ -528,32 +559,37 @@ LIBSRCML_DECL void srcml_cleanup_globals();
 /** @defgroup archive Archive
     @{
 */
-/** Create a new srcml archive.
+/**
+ * Create a new srcml archive
  * @note Archive must be freed using srcml_archive_free()
  * @return The created srcml_archive
  */
 LIBSRCML_DECL struct srcml_archive* srcml_archive_create();
 
-/** Clone the setup of an existing archive
+/**
+ * Clone the setup of an existing archive
  * @note Archive must be freed using srcml_archive_free()
  * @param archive A srcml_archive
  * @return The cloned archive
  */
 LIBSRCML_DECL struct srcml_archive* srcml_archive_clone(const struct srcml_archive* archive);
 
-/** Provides a code of the last error to occur for an archive
+/**
+ * Provides a code of the last error to occur for an archive
  * @param archive A srcml_archive
  * @return Error code for last recorded error
  */
 LIBSRCML_DECL int srcml_archive_error_number(const struct srcml_archive* archive);
 
-/** Provides a description of the last error to occur for an archive
+/**
+ * Provides a description of the last error to occur for an archive
  * @param archive A srcml_archive
  * @return A string describing last recorded error
  */
 LIBSRCML_DECL const char* srcml_archive_error_string(const struct srcml_archive* archive);
 
-/** Append the srcml_unit unit to the srcml_archive archive
+/**
+ * Append the srcml_unit unit to the srcml_archive archive
  * @param archive A srcml_archive opened for writing
  * @param unit A srcml_unit to output
  * @note Can not mix with by element mode.
@@ -562,7 +598,8 @@ LIBSRCML_DECL const char* srcml_archive_error_string(const struct srcml_archive*
  */
 LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive* archive, struct srcml_unit* unit);
 
-/** Append the string to the srcml_archive archive
+/**
+ * Append the string to the srcml_archive archive
  * @param archive A srcml_archive opened for writing
  * @param s String to write
  * @param len Length of the string to write
@@ -572,13 +609,15 @@ LIBSRCML_DECL int srcml_archive_write_unit(struct srcml_archive* archive, struct
  */
 LIBSRCML_DECL int srcml_archive_write_string(struct srcml_archive* archive, const char* s, int len);
 
-/** Close a srcml_archive opened using srcml_archive_read_open_*() or srcml_archive_write_open_*().
+/**
+ * Close a srcml_archive opened using srcml_archive_read_open_*() or srcml_archive_write_open_*().
  * The archive can be reopened.
  * @param archive An open srcml_archive
  */
 LIBSRCML_DECL void srcml_archive_close(struct srcml_archive* archive);
 
-/** Free a srcml archive that was previously allocated
+/**
+ * Free a srcml archive that was previously allocated
  * by using srcml_archive_create() or srcml_archive_clone(). The archive must be reallocated/re-created to use again.
  * @param archive A srcml_archive
  */
@@ -587,7 +626,8 @@ LIBSRCML_DECL void srcml_archive_free(struct srcml_archive* archive);
 /**@{ @name Open for Write
       @brief Open a srcML archive for output */
 
-/** Open up a srcml_archive for writing to a given output file
+/**
+ * Open up a srcml_archive for writing to a given output file
  * @param archive A srcml_archive
  * @param srcml_filename Name of an output file
  * @return SRCML_STATUS_OK on success
@@ -595,7 +635,8 @@ LIBSRCML_DECL void srcml_archive_free(struct srcml_archive* archive);
  */
 LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive* archive, const char* srcml_filename);
 
-/** Open up a srcml_archive for writing to a given memory buffer
+/**
+ * Open up a srcml_archive for writing to a given memory buffer
  * @param archive A srcml_archive
  * @param buffer Location to return output string. The buffer is allocated
  * and set to the location the buffer points at. The buffer must be freed after use
@@ -606,7 +647,8 @@ LIBSRCML_DECL int srcml_archive_write_open_filename(struct srcml_archive* archiv
  */
 LIBSRCML_DECL int srcml_archive_write_open_memory(struct srcml_archive* archive, char** buffer, size_t * size);
 
-/** Open up a srcml_archive for writing to a given FILE pointer
+/**
+ * Open up a srcml_archive for writing to a given FILE pointer
  * @param archive A srcml_archive
  * @param srcml_file FILE opened for writing
  * @return SRCML_STATUS_OK on success
@@ -614,7 +656,8 @@ LIBSRCML_DECL int srcml_archive_write_open_memory(struct srcml_archive* archive,
  */
 LIBSRCML_DECL int srcml_archive_write_open_FILE(struct srcml_archive* archive, FILE* srcml_file);
 
-/** Open up a srcml_archive for writing to a file descriptor
+/**
+ * Open up a srcml_archive for writing to a file descriptor
  * @param archive A srcml_archive
  * @param srcml_fd Output file descriptor
  * @return SRCML_STATUS_OK on success
@@ -622,7 +665,8 @@ LIBSRCML_DECL int srcml_archive_write_open_FILE(struct srcml_archive* archive, F
  */
 LIBSRCML_DECL int srcml_archive_write_open_fd(struct srcml_archive* archive, int srcml_fd);
 
-/** Open up a srcml_archive for writing to an io context using writeand close callbacks
+/**
+ * Open up a srcml_archive for writing to an io context using writeand close callbacks
  * @param archive A srcml_archive
  * @param context An io context
  * @param write_callback A write callback function
@@ -635,7 +679,8 @@ LIBSRCML_DECL int srcml_archive_write_open_io(struct srcml_archive* archive, voi
 
 /**@{ @name Open for Read
       @brief Open a srcML archive for reading */
-/** Open a srcML archive for reading from a filename
+/**
+ * Open a srcML archive for reading from a filename
  * @param archive A srcml_archive
  * @param srcml_filename Name of an input file
  * @return SRCML_STATUS_OK on success
@@ -643,7 +688,8 @@ LIBSRCML_DECL int srcml_archive_write_open_io(struct srcml_archive* archive, voi
  */
 LIBSRCML_DECL int srcml_archive_read_open_filename(struct srcml_archive* archive, const char* srcml_filename);
 
-/** Open a srcML archive for reading from a buffer up until a buffer_size
+/**
+ * Open a srcML archive for reading from a buffer up until a buffer_size
  * @param archive A srcml_archive
  * @param buffer An input buffer
  * @param buffer_size Size of the input buffer
@@ -652,7 +698,8 @@ LIBSRCML_DECL int srcml_archive_read_open_filename(struct srcml_archive* archive
  */
 LIBSRCML_DECL int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* buffer, size_t buffer_size);
 
-/** Open a srcML archive for reading from a FILE
+/**
+ * Open a srcML archive for reading from a FILE
  * @param archive A srcml_archive
  * @param srcml_file A FILE opened for reading
  * @retval SRCML_STATUS_OK on success
@@ -660,7 +707,8 @@ LIBSRCML_DECL int srcml_archive_read_open_memory(struct srcml_archive* archive, 
  */
 LIBSRCML_DECL int srcml_archive_read_open_FILE(struct srcml_archive* archive, FILE* srcml_file);
 
-/** Open a srcML archive for reading from a file descriptor
+/**
+ * Open a srcML archive for reading from a file descriptor
  * @param archive A srcml_archive
  * @param srcml_fd A file descriptor opened for reading
  * @retval SRCML_STATUS_OK on success
@@ -668,7 +716,8 @@ LIBSRCML_DECL int srcml_archive_read_open_FILE(struct srcml_archive* archive, FI
  */
 LIBSRCML_DECL int srcml_archive_read_open_fd(struct srcml_archive* archive, int srcml_fd);
 
-/** Open a srcML archive for reading from the opened context, accessed via read and close callbacks
+/**
+ * Open a srcML archive for reading from the opened context, accessed via read and close callbacks
  * @param archive A srcml_archive
  * @param context An io context
  * @param read_callback A read callback function
@@ -681,14 +730,16 @@ LIBSRCML_DECL int srcml_archive_read_open_io(struct srcml_archive* archive, void
 
 /**@{ @name Archive Options */
 
-/** Whether the archive is a single, non-nested unit, or an archive
+/**
+ * Whether the archive is a single, non-nested unit, or an archive
  * @param archive A srcml_archive opened for reading or writing
  * @retval 1 Is a solitary unit
  * @retval 0 Is an archive that contains other units
  */
 LIBSRCML_DECL int srcml_archive_is_solitary_unit(const struct srcml_archive* archive);
 
-/** Enable a single, solitary unit. This is only needed when each source-code file is to be
+/**
+ * Enable a single, solitary unit. This is only needed when each source-code file is to be
  * represented by an individual srcML file. Note that writing multiple units to this archive is an error.
  * @param archive A srcml_archive opened for writing
  * @retval SRCML_STATUS_OK on success
@@ -696,7 +747,8 @@ LIBSRCML_DECL int srcml_archive_is_solitary_unit(const struct srcml_archive* arc
  */
 LIBSRCML_DECL int srcml_archive_enable_solitary_unit(struct srcml_archive* archive);
 
-/** Disable the solitary unit. The full archive format allows for multiple units, and
+/**
+ * Disable the solitary unit. The full archive format allows for multiple units, and
  * is the default.
  * @param archive A srcml_archive opened for writing
  * @retval SRCML_STATUS_OK on success
@@ -704,35 +756,40 @@ LIBSRCML_DECL int srcml_archive_enable_solitary_unit(struct srcml_archive* archi
  */
 LIBSRCML_DECL int srcml_archive_disable_solitary_unit(struct srcml_archive* archive);
 
-/** Whether the hash attribute exists (in the case of a read), or would be added (in case of a write)
+/**
+ * Whether the hash attribute exists (in the case of a read), or would be added (in case of a write)
  * @param archive A srcml archive opened for reading or writing
  * @retval 1 Will include hash attribute
  * @retval 0 Does not include the hash attribute
  */
 LIBSRCML_DECL int srcml_archive_has_hash(const struct srcml_archive* archive);
 
-/** Enable the hash attribute. This is the default.
+/**
+ * Enable the hash attribute. This is the default.
  * @param archive A srcml_archive opened for writing
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_archive_enable_hash(struct srcml_archive* archive);
 
-/** Disable the hash attribute
+/**
+ * Disable the hash attribute
  * @param archive A srcml_archive opened for writing
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_archive_disable_hash(struct srcml_archive* archive);
 
-/** Set the XML encoding of the srcML archive
+/**
+ * Set the XML encoding of the srcML archive
  * @param archive The srcml_archive to set the encoding
  * @param encoding The encoding of the archive
  * @retval SRCML_STATUS_OK on success @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_archive_set_xml_encoding(struct srcml_archive* archive, const char* encoding);
 
-/** Set the default source encoding for the srcML archive
+/**
+ * Set the default source encoding for the srcML archive
  * @param archive The srcml_archive to set the source encoding for
  * @param encoding A source-code encoding
  * @retval SRCML_STATUS_OK on success
@@ -740,7 +797,8 @@ LIBSRCML_DECL int srcml_archive_set_xml_encoding(struct srcml_archive* archive, 
  */
 LIBSRCML_DECL int srcml_archive_set_src_encoding(struct srcml_archive* archive, const char* encoding);
 
-/** Set the language of the srcML archive
+/**
+ * Set the language of the srcML archive
  * @param archive A srcml_archive to set the source-code language on
  * @param language A source-code language
  * @retval SRCML_STATUS_OK on success
@@ -748,7 +806,8 @@ LIBSRCML_DECL int srcml_archive_set_src_encoding(struct srcml_archive* archive, 
  */
 LIBSRCML_DECL int srcml_archive_set_language(struct srcml_archive* archive, const char* language);
 
-/** Set all options for processing an archive, erasing all previously set options
+/**
+ * Set all options for processing an archive, erasing all previously set options
  * @param archive The srcml_archive to set the options for
  * @param option A set of srcml options
  * @note Erases all previously set options
@@ -757,7 +816,8 @@ LIBSRCML_DECL int srcml_archive_set_language(struct srcml_archive* archive, cons
  */
 LIBSRCML_DECL int srcml_archive_set_options(struct srcml_archive* archive, size_t option);
 
-/** Enable/set an option or options on an archive
+/**
+ * Enable/set an option or options on an archive
  * @param archive A srcml_archive to enable options on
  * @param option An option, or multiple options by |ing each, to set on the archive
  * @retval SRCML_STATUS_OK on success
@@ -765,7 +825,8 @@ LIBSRCML_DECL int srcml_archive_set_options(struct srcml_archive* archive, size_
  */
 LIBSRCML_DECL int srcml_archive_enable_option(struct srcml_archive* archive, size_t option);
 
-/** Remove an option or options from an archive
+/**
+ * Remove an option or options from an archive
  * @param archive A srcml_archive to remove options from
  * @param option The option, or multiple options by |ing each, to clear from the archive
  * @retval SRCML_STATUS_OK on success
@@ -773,7 +834,8 @@ LIBSRCML_DECL int srcml_archive_enable_option(struct srcml_archive* archive, siz
  */
 LIBSRCML_DECL int srcml_archive_disable_option(struct srcml_archive* archive, size_t option);
 
-/** Set the tabstop size for position and column calculation
+/**
+ * Set the tabstop size for position and column calculation
  * @param archive A srcml_archive
  * @param tabstop Size of a tabstop
  * @retval SRCML_STATUS_OK on success
@@ -781,7 +843,8 @@ LIBSRCML_DECL int srcml_archive_disable_option(struct srcml_archive* archive, si
  */
 LIBSRCML_DECL int srcml_archive_set_tabstop(struct srcml_archive* archive, size_t tabstop);
 
-/** Set an extension to be associated with a given source-code language
+/**
+ * Set an extension to be associated with a given source-code language
  * @param archive A srcml_archive that associates the given extension with a language
  * @param extension A file extension
  * @param language A supported source-code language
@@ -790,7 +853,8 @@ LIBSRCML_DECL int srcml_archive_set_tabstop(struct srcml_archive* archive, size_
  */
 LIBSRCML_DECL int srcml_archive_register_file_extension(struct srcml_archive* archive, const char* extension, const char* language);
 
-/** Create a new namespace or change the prefix of an existing namespace
+/**
+ * Create a new namespace or change the prefix of an existing namespace
  * @param archive A srcml_archive
  * @param prefix An XML namespace prefix
  * @param uri An XML namespace uri
@@ -799,7 +863,8 @@ LIBSRCML_DECL int srcml_archive_register_file_extension(struct srcml_archive* ar
  */
 LIBSRCML_DECL int srcml_archive_register_namespace(struct srcml_archive* archive, const char* prefix, const char* uri);
 
-/** Set a processing instruction that will be output before the root element of the archive
+/**
+ * Set a processing instruction that will be output before the root element of the archive
  * @param archive A srcml_archive
  * @param target The processing instruction's target
  * @param data The processing instruciton's data
@@ -811,7 +876,8 @@ LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive*
 
 /**@{ @name Archive Optional Attributes */
 
-/** Set the root URL attribute of the srcML archive
+/**
+ * Set the root URL attribute of the srcML archive
  * @param archive A srcml_archive to set the root URL attribute on
  * @param url A url path
  * @retval SRCML_STATUS_OK on success
@@ -819,7 +885,8 @@ LIBSRCML_DECL int srcml_archive_set_processing_instruction(struct srcml_archive*
  */
 LIBSRCML_DECL int srcml_archive_set_url(struct srcml_archive* archive, const char* url);
 
-/** Set the root version attribute of the srcML archive
+/**
+ * Set the root version attribute of the srcML archive
  * @param archive A srcml_archive to set the root version attribute on
  * @param version A version string
  * @retval SRCML_STATUS_OK on success
@@ -925,7 +992,8 @@ LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_target(const 
  */
 LIBSRCML_DECL const char* srcml_archive_get_processing_instruction_data(const struct srcml_archive* archive);
 
-/** Retrieve the currently registered language for a file extension
+/**
+ * Retrieve the currently registered language for a file extension
  * @param archive A srcml_archive
  * @param filename Name of a file. Given the full filename, the extension is extracted
  * @return The language for extension, or if 0 if no language.
@@ -935,21 +1003,24 @@ LIBSRCML_DECL const char* srcml_archive_check_extension(const struct srcml_archi
 
 /**@{ @name Read Unit
 */
-/** Read the next unit header from the archive
+/**
+ * Read the next unit header from the archive
  * @param archive A srcml_archive open for reading
  * @return The read srcml_unit, with header information only, on success
  * @return NULL on failure
  */
 LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit_header(struct srcml_archive* archive);
 
-/** Read the next unit from the archive
+/**
+ * Read the next unit from the archive
  * @param archive A srcml_archive open for reading
  * @return The read srcml_unit on success
  * @return NULL on failure
  */
 LIBSRCML_DECL struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive);
 
-/** Skip the next unit from the archive
+/**
+ * Skip the next unit from the archive
  * @param archive A srcml_archive open for reading
  * @return 1 Succesfully skipped
  * @return NULL on failure
@@ -959,7 +1030,8 @@ LIBSRCML_DECL int srcml_archive_skip_unit(struct srcml_archive* archive);
 
 /**@{ @name XPath query and XSLT transformations */
 
-/** Append the XPath expression to the list of transformations/queries
+/**
+ * Append the XPath expression to the list of transformations/queries
  * @param archive A srcml_archive
  * @param xpath_string An XPath expression
  * @note Currently, there is no way to specify context to the expression.
@@ -968,7 +1040,8 @@ LIBSRCML_DECL int srcml_archive_skip_unit(struct srcml_archive* archive);
  */
 LIBSRCML_DECL int srcml_append_transform_xpath(struct srcml_archive* archive, const char* xpath_string);
 
-/** Append the XPath expression to the list of transformations/queries.
+/**
+ * Append the XPath expression to the list of transformations/queries.
  * Instead of outputting the results in a separate unit tag, output the complete
  * archive marking the XPath results with a user provided attribute
  * @param archive A srcml_archive
@@ -984,7 +1057,8 @@ LIBSRCML_DECL int srcml_append_transform_xpath_attribute(struct srcml_archive* a
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* attr_name, const char* attr_value);
 
-/** Append the XPath expression to the list of transformations/queries.
+/**
+ * Append the XPath expression to the list of transformations/queries.
  * Instead of outputting the results in a separate unit tag, output the complete
  * archive marking the XPath results with a user provided element.
  * @param archive A srcml_archive
@@ -999,7 +1073,8 @@ LIBSRCML_DECL int srcml_append_transform_xpath_element(struct srcml_archive* arc
                                                             const char* prefix, const char* namespace_uri,
                                                             const char* element);
 
-/** Append an XSLT program at the designated filename path to the list of transformations/queries
+/**
+ * Append an XSLT program at the designated filename path to the list of transformations/queries
  * @param archive A srcml_archive
  * @param xslt_filename An XSLT program filename path
  * @note Currently no way to specify parameters or context
@@ -1008,7 +1083,8 @@ LIBSRCML_DECL int srcml_append_transform_xpath_element(struct srcml_archive* arc
  */
 LIBSRCML_DECL int srcml_append_transform_xslt_filename(struct srcml_archive* archive, const char* xslt_filename);
 
-/** Append an XSLT program from a buffer to the list of transformations/queries
+/**
+ * Append an XSLT program from a buffer to the list of transformations/queries
  * @param archive A srcml_archive
  * @param xslt_buffer A buffer holding an XSLT
  * @param size Size of the given buffer
@@ -1018,7 +1094,8 @@ LIBSRCML_DECL int srcml_append_transform_xslt_filename(struct srcml_archive* arc
  */
 LIBSRCML_DECL int srcml_append_transform_xslt_memory(struct srcml_archive* archive, const char* xslt_buffer, size_t size);
 
-/** Append an XSLT program in a FILE to the list of transformations/queries.
+/**
+ * Append an XSLT program in a FILE to the list of transformations/queries.
  * @param archive A srcml_archive
  * @param xslt_file A FILE containing an XSLT program
  * @note Currently no way to specify parameters or context
@@ -1027,7 +1104,8 @@ LIBSRCML_DECL int srcml_append_transform_xslt_memory(struct srcml_archive* archi
  */
 LIBSRCML_DECL int srcml_append_transform_xslt_FILE(struct srcml_archive* archive, FILE* xslt_file);
 
-/** Append an XSLT program from a file descriptor to the list of transformations/queries
+/**
+ * Append an XSLT program from a file descriptor to the list of transformations/queries
  * @param archive A srcml_archive
  * @param xslt_fd A file descriptor containing an XSLT program
  * @note Currently no way to specify parameters or context
@@ -1038,7 +1116,8 @@ LIBSRCML_DECL int srcml_append_transform_xslt_FILE(struct srcml_archive* archive
  */
 LIBSRCML_DECL int srcml_append_transform_xslt_fd(struct srcml_archive* archive, int xslt_fd);
 
-/** Append the RelaxNG schema from a filename path to the list of transformations/queries
+/**
+ * Append the RelaxNG schema from a filename path to the list of transformations/queries
  * @param archive A srcml_archive
  * @param relaxng_filename A RelaxNG schema filename path
  * @return SRCML_STATUS_OK on success
@@ -1046,7 +1125,8 @@ LIBSRCML_DECL int srcml_append_transform_xslt_fd(struct srcml_archive* archive, 
  */
 LIBSRCML_DECL int srcml_append_transform_relaxng_filename(struct srcml_archive* archive, const char* relaxng_filename);
 
-/** Append the RelaxNG schema in the buffer to the list of transformations/queries
+/**
+ * Append the RelaxNG schema in the buffer to the list of transformations/queries
  * @param archive A srcml_archive
  * @param relaxng_buffer A buffer holding a RelaxNG schema
  * @param size Size of the passed buffer
@@ -1055,7 +1135,8 @@ LIBSRCML_DECL int srcml_append_transform_relaxng_filename(struct srcml_archive* 
  */
 LIBSRCML_DECL int srcml_append_transform_relaxng_memory(struct srcml_archive* archive, const char* relaxng_buffer, size_t size);
 
-/** Append the RelaxNG schema in a FILE to the list of transformations/queries
+/**
+ * Append the RelaxNG schema in a FILE to the list of transformations/queries
  * @param archive A srcml_archive
  * @param relaxng_file A FILE containing a RelaxNG schema
  * @return SRCML_STATUS_OK on success
@@ -1063,7 +1144,8 @@ LIBSRCML_DECL int srcml_append_transform_relaxng_memory(struct srcml_archive* ar
  */
 LIBSRCML_DECL int srcml_append_transform_relaxng_FILE(struct srcml_archive* archive, FILE* relaxng_file);
 
-/** Append the RelaxNG schema in a file descriptor to the list of transformations/queries
+/**
+ * Append the RelaxNG schema in a file descriptor to the list of transformations/queries
  * @param archive A srcml_archive
  * @param relaxng_fd A file descriptor containing a RelaxNG schema
  * @return SRCML_STATUS_OK on success
@@ -1071,7 +1153,8 @@ LIBSRCML_DECL int srcml_append_transform_relaxng_FILE(struct srcml_archive* arch
  */
 LIBSRCML_DECL int srcml_append_transform_relaxng_fd(struct srcml_archive* archive, int relaxng_fd);
 
-/** Append an XSLT parameter to the last transformation
+/**
+ * Append an XSLT parameter to the last transformation
  * @param archive A srcml_archive
  * @param param_name Name of a parameter
  * @param param_value Value of the parameter
@@ -1080,7 +1163,8 @@ LIBSRCML_DECL int srcml_append_transform_relaxng_fd(struct srcml_archive* archiv
  */
 LIBSRCML_DECL int srcml_append_transform_param(struct srcml_archive* archive, const char* param_name, const char* param_value);
 
-/** Append a string XSLT parameter to the last transformation, with the value wrapped in quotes
+/**
+ * Append a string XSLT parameter to the last transformation, with the value wrapped in quotes
  * @param archive A srcml_archive
  * @param param_name Name of a parameter
  * @param param_value Value of the named parameter wrapped in quotes (")
@@ -1133,7 +1217,8 @@ struct srcml_transformation_result_t {
 
 LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_transformation_result_t* result);
 
-/** Remove all appended transformations from the archive
+/**
+ * Remove all appended transformations from the archive
  * @param archive A srcml_archive
  * @retval SRCML_STATUS_OK on success
  * @retval SRCML_STATUS_INVALID_ARGUMENT
@@ -1146,7 +1231,8 @@ LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive* archive);
 /** @defgroup unit Unit
     @{
 */
-/** Create a new srcml_unit tied to the srcml archive
+/**
+ * Create a new srcml_unit tied to the srcml archive
  * @param archive A srcml_archive
  * @note The unit must be freed using srcml_unit_free()
  * @returns Created srcml_unit on success
@@ -1154,32 +1240,37 @@ LIBSRCML_DECL int srcml_clear_transforms(struct srcml_archive* archive);
  */
 LIBSRCML_DECL struct srcml_unit* srcml_unit_create(struct srcml_archive* archive);
 
-/** Clone the setup of an existing unit
+/**
+ * Clone the setup of an existing unit
  * @note Unit must be freed using srcml_unit_free()
  * @param unit A srcml_unit
  * @return The cloned unit
  */
 LIBSRCML_DECL struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit);
 
-/** Provides a code of the last error to occur for a unit
+/**
+ * Provides a code of the last error to occur for a unit
  * @param unit A srcml_unit
  * @return A code for the last recorded error
  */
 LIBSRCML_DECL int srcml_unit_error_number(const struct srcml_unit* unit);
 
-/** Provides a description of the last error to occur for a unit
+/**
+ * Provides a description of the last error to occur for a unit
  * @param unit A srcml_unit
  * @return A string describing last recorded error
  */
 LIBSRCML_DECL const char* srcml_unit_error_string(const struct srcml_unit* unit);
 
-/** Free an allocated unit
+/**
+ * Free an allocated unit
  * @param unit The srcml unit to free
  */
 LIBSRCML_DECL void srcml_unit_free(struct srcml_unit* unit);
 
 /**@{ @name Setup options */
-/** Set the source-code encoding for the srcml unit
+/**
+ * Set the source-code encoding for the srcml unit
  * @param unit A srcml_unit
  * @param encoding A source-code encoding
  * @retval SRCML_STATUS_OK on success
@@ -1187,7 +1278,8 @@ LIBSRCML_DECL void srcml_unit_free(struct srcml_unit* unit);
  */
 LIBSRCML_DECL int srcml_unit_set_src_encoding(struct srcml_unit* unit, const char* encoding);
 
-/** Set the source-code language for the srcml unit
+/**
+ * Set the source-code language for the srcml unit
  * @param unit A srcml_unit
  * @param language A supported source-code language
  * @retval SRCML_STATUS_OK on success
@@ -1195,7 +1287,8 @@ LIBSRCML_DECL int srcml_unit_set_src_encoding(struct srcml_unit* unit, const cha
  */
 LIBSRCML_DECL int srcml_unit_set_language(struct srcml_unit* unit, const char* language);
 
-/** Set the filename attribute for the srcml unit
+/**
+ * Set the filename attribute for the srcml unit
  * @param unit A srcml_unit
  * @param filename The name of a file
  * @retval SRCML_STATUS_OK on success
@@ -1203,7 +1296,8 @@ LIBSRCML_DECL int srcml_unit_set_language(struct srcml_unit* unit, const char* l
  */
 LIBSRCML_DECL int srcml_unit_set_filename(struct srcml_unit* unit, const char* filename);
 
-/** Set the version attribute for the srcml unit
+/**
+ * Set the version attribute for the srcml unit
  * @param unit A srcml_unit
  * @param version A version string
  * @retval SRCML_STATUS_OK on success
@@ -1211,7 +1305,8 @@ LIBSRCML_DECL int srcml_unit_set_filename(struct srcml_unit* unit, const char* f
  */
 LIBSRCML_DECL int srcml_unit_set_version(struct srcml_unit* unit, const char* version);
 
-/** Set the timestamp attribute for the srcml unit
+/**
+ * Set the timestamp attribute for the srcml unit
  * @param unit A srcml_unit
  * @param timestamp A timestamp string
  * @retval SRCML_STATUS_OK on success
@@ -1219,7 +1314,8 @@ LIBSRCML_DECL int srcml_unit_set_version(struct srcml_unit* unit, const char* ve
  */
 LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit* unit, const char* timestamp);
 
-/** Set the type of end of line to be used for unparse
+/**
+ * Set the type of end of line to be used for unparse
  * @param unit A srcml_unit
  * @param eol The kind of eol to use for unparse
  * @retval SRCML_STATUS_OK on success
@@ -1281,7 +1377,8 @@ LIBSRCML_DECL int srcml_unit_get_loc(const struct srcml_unit* unit);
  */
 LIBSRCML_DECL size_t srcml_unit_get_eol(struct srcml_unit* unit);
 
-/** Get a complete, valid XML of the srcML from this unit
+/**
+ * Get a complete, valid XML of the srcML from this unit
  * The XML returned is a complete solo srcML unit
  * @note Do not free
  * @note String is valid until the unit is freed, or another srcml_unit_get_srcml*() is called
@@ -1290,7 +1387,8 @@ LIBSRCML_DECL size_t srcml_unit_get_eol(struct srcml_unit* unit);
  */
 LIBSRCML_DECL const char* srcml_unit_get_srcml(struct srcml_unit* unit);
 
-/** Get a fragment of the srcML from this unit
+/**
+ * Get a fragment of the srcML from this unit
  * The XML returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing
  * the archive namespace declarations
  * @note Do not free
@@ -1300,7 +1398,8 @@ LIBSRCML_DECL const char* srcml_unit_get_srcml(struct srcml_unit* unit);
  */
 LIBSRCML_DECL const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit);
 
-/** Get the srcML without the enclosing unit tags
+/**
+ * Get the srcML without the enclosing unit tags
  * The XML fragment returned is UTF-8 encoded XML. It is not well-formed XML, e.g., it is missing
  * the archive namespace declarations and may not have a single root.
  * @note Do not free
@@ -1316,7 +1415,8 @@ LIBSRCML_DECL const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit);
       @brief Source code from a variety of input sources is converted into srcML, and stored in a unit
       @note Files/buffer can be compressed with gzip (i.e., .gz extension)
       */
-/** Convert the contents of the file with the name src_filename to srcML and store in the unit
+/**
+ * Convert the contents of the file with the name src_filename to srcML and store in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_filename Name of a file to parse into srcML
  * @return SRCML_STATUS_OK on success
@@ -1324,7 +1424,8 @@ LIBSRCML_DECL const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit);
  */
 LIBSRCML_DECL int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename);
 
-/** Convert the contents of the src_buffer to srcML and store in the unit
+/**
+ * Convert the contents of the src_buffer to srcML and store in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_buffer Buffer containing source code to parse into srcML
  * @param buffer_size Size of the buffer to parse
@@ -1333,7 +1434,8 @@ LIBSRCML_DECL int srcml_unit_parse_filename(struct srcml_unit* unit, const char*
  */
 LIBSRCML_DECL int srcml_unit_parse_memory(struct srcml_unit* unit, const char* src_buffer, size_t buffer_size);
 
-/** Convert the contents of the source-code FILE* to srcML and store in the unit
+/**
+ * Convert the contents of the source-code FILE* to srcML and store in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_file A FILE* opened for reading
  * @return SRCML_STATUS_OK on success
@@ -1341,7 +1443,8 @@ LIBSRCML_DECL int srcml_unit_parse_memory(struct srcml_unit* unit, const char* s
  */
 LIBSRCML_DECL int srcml_unit_parse_FILE(struct srcml_unit* unit, FILE* src_file);
 
-/** Convert the contents of a file descriptor and stored in the unit
+/**
+ * Convert the contents of a file descriptor and stored in the unit
  * @param unit A srcml_unit to parse the results to
  * @param src_fd A file descriptor open for reading
  * @return SRCML_STATUS_OK on success
@@ -1349,7 +1452,8 @@ LIBSRCML_DECL int srcml_unit_parse_FILE(struct srcml_unit* unit, FILE* src_file)
  */
 LIBSRCML_DECL int srcml_unit_parse_fd(struct srcml_unit* unit, int src_fd);
 
-/** Convert to srcML the contents from the opened context accessed via read and close callbacks and place it into a unit
+/**
+ * Convert to srcML the contents from the opened context accessed via read and close callbacks and place it into a unit
  * @param unit A srcml_unit to parse the results to
  * @param context an io context
  * @param read_callback a read callback function
@@ -1364,7 +1468,8 @@ LIBSRCML_DECL int srcml_unit_parse_io(struct srcml_unit* unit, void * context, s
       @brief srcML in a srcml unit is converted back to source code, and stored in a variety of output destinations
       */
 
-/** Convert the srcML in a unit into source code and place it into a filename
+/**
+ * Convert the srcML in a unit into source code and place it into a filename
  * If the srcML was not read in, but the attributes were, the XML is read in and that value is unparsed
  * @param unit A srcml unit opened for reading
  * @param src_filename Name of a file to output contents of unit as source
@@ -1373,7 +1478,8 @@ LIBSRCML_DECL int srcml_unit_parse_io(struct srcml_unit* unit, void * context, s
  */
 LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const char* src_filename);
 
-/** Convert the srcML in a unit into source code and place it into a buffer
+/**
+ * Convert the srcML in a unit into source code and place it into a buffer
  * The buffer is allocated in the function and needs to be freed after using.
  * @param unit A srcml unit opened for reading
  * @param src_buffer An output buffer address
@@ -1384,7 +1490,8 @@ LIBSRCML_DECL int srcml_unit_unparse_filename(struct srcml_unit* unit, const cha
  */
 LIBSRCML_DECL int srcml_unit_unparse_memory(struct srcml_unit* unit, char** src_buffer, size_t * src_size);
 
-/** Convert the srcML in a unit into source code and output to the FILE*
+/**
+ * Convert the srcML in a unit into source code and output to the FILE*
  * @param unit A srcml unit opened for reading
  * @param file FILE* opened for writing to output the source file
  * @return SRCML_STATUS_OK on success
@@ -1392,7 +1499,8 @@ LIBSRCML_DECL int srcml_unit_unparse_memory(struct srcml_unit* unit, char** src_
  */
 LIBSRCML_DECL int srcml_unit_unparse_FILE(struct srcml_unit* unit, FILE* file);
 
-/** Convert the srcML in a unit into source code and output to the file descriptor
+/**
+ * Convert the srcML in a unit into source code and output to the file descriptor
  * @param unit A srcml unit opened for reading
  * @param fd File descriptor opened for writing to output the source file
  * @return SRCML_STATUS_OK on success
@@ -1400,7 +1508,8 @@ LIBSRCML_DECL int srcml_unit_unparse_FILE(struct srcml_unit* unit, FILE* file);
  */
 LIBSRCML_DECL int srcml_unit_unparse_fd(struct srcml_unit* unit, int fd);
 
-/** Convert the srcML in a unit into source code and output using write callbacks
+/**
+ * Convert the srcML in a unit into source code and output using write callbacks
  * @param unit A srcml unit opened for reading
  * @param context
  * @param write_callback a write callback function
@@ -1470,7 +1579,8 @@ LIBSRCML_DECL size_t srcml_get_srcdiff_revision();
  */
 LIBSRCML_DECL size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive);
 
-/** Set what revision in a srcDiff archive to operate with
+/**
+ * Set what revision in a srcDiff archive to operate with
  * @param archive A srcml_archive
  * @param revision_number The operational srcdff revision
  * @return SRCML_STATUS_OK on success
