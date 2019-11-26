@@ -142,7 +142,7 @@ list(APPEND LIBSRCML_LIBRARIES rt crypto)
 endif()
 
 if(NOT WIN32)
-    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} crypto pthread CACHE INTERNAL "Libraries needed to build srcml")
+    set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} pthread CACHE INTERNAL "Libraries needed to build srcml")
 elseif(NOT "x${CMAKE_CXX_COMPILER_ID}" STREQUAL "xMSVC")
     set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${Boost_LIBRARIES} ${CURL_LIBRARIES} ws2_32 crypto CACHE INTERNAL "Libraries needed to build srcml")
 else()
