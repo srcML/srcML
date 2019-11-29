@@ -503,10 +503,6 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
 
     unit->derived_language = lang;
 
-    // @TODO Verify that this really isn't needed. Causes issue with srcml()
-    // if (*unit->language == "C++" || *unit->language == "C" || *unit->language == "Objective-C" || *unit->language == "C#")
-    //        unit->archive->options |= SRCML_OPTION_CPP;
-
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
 
     // verify encoding here instead of later, when more difficult to handle errors

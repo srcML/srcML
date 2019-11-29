@@ -220,9 +220,10 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
 TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
 
     xmlXPathContextPtr context = createContext(doc);
-
-//    xpathsrcMLRegister(context);
-    // TODO:  Detect error
+    if (context == 0) {
+        fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
+        return TransformationResult();
+    }
 
     // register standard prefixes for standard namespaces
     for (const auto& ns : default_namespaces) {
