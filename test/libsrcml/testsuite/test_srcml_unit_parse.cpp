@@ -366,10 +366,7 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
-
-        // @TODO FIX
-//        dassert(srcml_unit_parse_filename(unit, "project.c"), SRCML_STATUS_INVALID_IO_OPERATION);
-
+        dassert(srcml_unit_parse_filename(unit, "project.c"), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_free(archive);
     }

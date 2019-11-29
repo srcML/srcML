@@ -487,10 +487,6 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
 static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filename,
     std::function<UTF8CharBuffer*(const char* src_encoding, bool output_hash, boost::optional<std::string>& hash)> createUTF8CharBuffer) {
 
-    // @todo Figure out what the state of the archive should be
-//    if (unit->archive->type != SRCML_ARCHIVE_WRITE && unit->archive->type != SRCML_ARCHIVE_RW)
-//        return SRCML_STATUS_INVALID_IO_OPERATION;
-
     // figure out the language based on unit, archive, registered languages
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
         : (unit->archive->language ? srcml_check_language(unit->archive->language->c_str()) : SRCML_LANGUAGE_NONE);
