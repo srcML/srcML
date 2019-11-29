@@ -205,8 +205,9 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded
     // setup callbacks, mainly wrappers around fread() for FILE* converted to file descriptor
     sio.context = (void*) file;
     sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
+
         size_t result = fread(buf, 1, insize, (FILE*) context);
-        if (result == 0 && feof((FILE*) context) != 0)
+        if (result == 0 && feof((FILE*) context) != 1)
             return -1;
         else
             return (size_t) result;
