@@ -628,7 +628,6 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         srcml_archive_free(archive);
     }
 
-    // @todo Why?
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
@@ -710,7 +709,6 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C");
         FILE* file = fopen("project.c", "r");
-
         srcml_unit_parse_FILE(unit, file);
         dassert(srcml_unit_get_srcml_outer(unit), srcml);
         fclose(file);
@@ -930,7 +928,7 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         srcml_unit_set_language(unit, "C");
         FILE* file = fopen("project_bom.c", "r");
         srcml_unit_parse_FILE(unit, file);
-//        dassert(srcml_unit_get_srcml_outer(unit), srcml_encoding);
+        dassert(srcml_unit_get_srcml_outer(unit), srcml_encoding);
         fclose(file);
 
         srcml_unit_free(unit);
@@ -1245,7 +1243,7 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         srcml_unit_set_language(unit, "C");
         int fd = OPEN("project_bom.c", O_RDONLY, 0);
         srcml_unit_parse_fd(unit, fd);
-//        dassert(srcml_unit_get_srcml_outer(unit), srcml_encoding);
+        dassert(srcml_unit_get_srcml_outer(unit), srcml_encoding);
         CLOSE(fd);
 
         srcml_unit_free(unit);
@@ -1545,7 +1543,7 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         srcml_unit_set_language(unit, "C");
         FILE* file = fopen("project_bom.c", "r");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);
-//        dassert(srcml_unit_get_srcml_outer(unit), srcml_encoding);
+        dassert(srcml_unit_get_srcml_outer(unit), srcml_encoding);
         fclose(file);
 
         srcml_unit_free(unit);

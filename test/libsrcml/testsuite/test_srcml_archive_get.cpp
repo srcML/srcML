@@ -76,16 +76,9 @@ int main(int, char* argv[]) {
     /*
       srcml_archive_get_revision
     */
-    // @TODO How can both of these be true?
     {
         srcml_archive* archive = srcml_archive_create();
-//        dassert(srcml_archive_get_revision(archive), std::string(SRCML_VERSION_STRING));
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-//        dassert(srcml_archive_get_revision(archive), 0);
+        dassert(srcml_archive_get_revision(archive), std::string(SRCML_VERSION_STRING));
         srcml_archive_free(archive);
     }
 
@@ -170,24 +163,20 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-
-//        archive->options = 1;
-
-//        dassert(srcml_archive_get_options(archive), 1);
+        srcml_archive_set_options(archive, SRCML_OPTION_CPP);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_CPP);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-
-//        archive->options = 1 | 2;
-
-//        dassert(srcml_archive_get_options(archive), (1 | 2));
+        srcml_archive_set_options(archive, SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL));
         srcml_archive_free(archive);
     }
 
     {
-//        dassert(srcml_archive_get_options(0), 0);
+        dassert(srcml_archive_get_options(0), 0);
     }
 
     /*

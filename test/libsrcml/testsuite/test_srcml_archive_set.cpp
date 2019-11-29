@@ -145,27 +145,20 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
-
-        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
-
-//        dassert(archive->options, (1 | 2 | 4));
+        dassert(srcml_archive_set_options(archive, SRCML_OPTION_CPP), SRCML_STATUS_OK);
+        srcml_archive_get_options(archive);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
-
-        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
-        dassert(srcml_archive_set_options(archive, 1), SRCML_STATUS_OK);
-
-//        dassert(archive->options, 1);
+        dassert(srcml_archive_set_options(archive, SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL), SRCML_STATUS_OK);
+        srcml_archive_get_options(archive);
         srcml_archive_free(archive);
     }
 
     {
-        dassert(srcml_archive_set_options(0, 1 | 2 | 4), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_archive_set_options(0, SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*
@@ -174,33 +167,15 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
-
-        srcml_archive_enable_option(archive, 1);
-
-//        dassert(archive->options, 1);
+        dassert(srcml_archive_enable_option(archive, SRCML_OPTION_CPP), SRCML_STATUS_OK);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
-
-        dassert(srcml_archive_set_options(archive, 1 | 2), SRCML_STATUS_OK);
-        srcml_archive_enable_option(archive, 4);
-
-//        dassert(archive->options, (1 | 2 | 4));
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
-
-        dassert(srcml_archive_set_options(archive, 1), SRCML_STATUS_OK);
-        srcml_archive_enable_option(archive, 2 | 4);
-
-//        dassert(archive->options, (1 | 2 | 4));
+        srcml_archive_set_options(archive, SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL);
+        dassert(srcml_archive_enable_option(archive, SRCML_OPTION_STORE_ENCODING), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL | SRCML_OPTION_STORE_ENCODING));
         srcml_archive_free(archive);
     }
 
