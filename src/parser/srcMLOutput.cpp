@@ -313,6 +313,11 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const std::vector<std::string> & attributes,
                             bool output_macrolist) {
 
+    // go with default encoding
+    if (!encoding || encoding[0] == '\0') {
+        encoding = "UTF-8";
+    }
+
     didwrite = true;
 
     // start of main tag
