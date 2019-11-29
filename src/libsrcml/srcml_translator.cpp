@@ -103,7 +103,6 @@ void srcml_translator::close() {
     if (is_outputting_unit)
         add_end_unit();
 
-    /* FIXME: Crashes when deleted */
     out.close();
 }
 
