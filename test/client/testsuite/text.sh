@@ -73,8 +73,6 @@ define srcml_question <<- 'STDOUT'
 
 xmlcheck "$asrcml"
 
-message "FIXME: Why is this message required?"
-
 srcml -t "a;" -l "C++"
 check "$asrcml"
 
@@ -200,10 +198,6 @@ check "\03;"
 srcml -l C++ --text="\ee;\e" | srcml
 check "\x1be;\x1b"
 
-exit 0
-
 # escaped \r
-# Note: \r currently get normalized to \n in src->srcml
-# FIXME
 srcml -l C++ --text="\rr;" | srcml
-check $($ECHO -en "\nr;")
+check "\nr;"

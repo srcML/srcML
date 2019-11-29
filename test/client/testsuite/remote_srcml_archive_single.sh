@@ -35,7 +35,6 @@ check "$srca"
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-single.xml.gz.bz2?raw=true
 check "$srca"
 
-
 # input from an archived srcml file
 srcml https://github.com/srcML/test-data/raw/master/srcml/archive-single.xml.cpio
 check "$srca"
@@ -61,12 +60,11 @@ check "$srca"
 srcml https://github.com/srcML/test-data/blob/master/srcml/archive-single.xml.tgz?raw=true
 check "$srca"
 
-# FIXME: URLs don't work
-#srcml https://github.com/srcML/test-data/blob/master/srcml/archive-single.xml.zip?raw=true
-#check "$srca"
+srcml https://github.com/srcML/test-data/blob/master/srcml/archive-single.xml.zip?raw=true
+check "$srca"
 
-#srcml https://github.com/srcML/test-data/blob/master/srcml/archive-single.xml.zip.bz2?raw=true
-#check "$srca"
+srcml https://github.com/srcML/test-data/blob/master/srcml/archive-single.xml.zip.bz2?raw=true
+check "$srca"
 
-#srcml https://github.com/srcML/test-data/blob/master/srcml/archive-single.xml.zip.gz?raw=true
-#check "$srca"
+srcml https://github.com/srcML/test-data/blob/master/srcml/archive-single.xml.zip.gz?raw=true
+check "$srca"
