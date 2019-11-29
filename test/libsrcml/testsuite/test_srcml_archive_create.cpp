@@ -37,7 +37,6 @@ int main(int, char* argv[]) {
         dassert(srcml_archive_get_url(archive), 0);
         dassert(srcml_archive_get_version(archive), 0);
         dassert(srcml_archive_get_tabstop(archive), 8);
-        // @todo Does 1 namespace make sense by default?
         dassert(srcml_archive_get_namespace_size(archive), 1);
         dassert(srcml_archive_get_namespace_uri(archive, 0), std::string("http://www.srcML.org/srcML/src"));
         srcml_archive_free(archive);
