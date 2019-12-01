@@ -247,6 +247,8 @@ int srcml_archive_set_version(struct srcml_archive* archive, const char* version
 
     if (version)
         archive->version = version;
+    else
+        archive->version = boost::none;
 
     return SRCML_STATUS_OK;
 }

@@ -189,44 +189,32 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
+        dassert(srcml_archive_disable_option(archive, 0), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), 0);
+        srcml_archive_free(archive);
+    }
 
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_set_options(archive, SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL | SRCML_OPTION_STORE_ENCODING);
         srcml_archive_disable_option(archive, 0);
-
-//        dassert(archive->options, 0);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL | SRCML_OPTION_STORE_ENCODING));
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
-
-        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
-        srcml_archive_disable_option(archive, 0);
-
-//        dassert(archive->options, (1 | 2 | 4));
+        srcml_archive_set_options(archive, SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL | SRCML_OPTION_STORE_ENCODING);
+        dassert(srcml_archive_disable_option(archive, SRCML_OPTION_CPP), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), (SRCML_OPTION_NO_XML_DECL | SRCML_OPTION_STORE_ENCODING));
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
-
-        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
-        srcml_archive_disable_option(archive, 2);
-
-//        dassert(archive->options, (1 | 4));
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-//        archive->options = 0;
-
-        dassert(srcml_archive_set_options(archive, 1 | 2 | 4), SRCML_STATUS_OK);
-        srcml_archive_disable_option(archive, 1 | 2);
-
-//        dassert(archive->options, 4);
+        srcml_archive_set_options(archive, SRCML_OPTION_CPP | SRCML_OPTION_NO_XML_DECL | SRCML_OPTION_STORE_ENCODING);
+        dassert(srcml_archive_disable_option(archive, SRCML_OPTION_NO_XML_DECL | SRCML_OPTION_STORE_ENCODING), SRCML_STATUS_OK);
+        dassert(srcml_archive_get_options(archive), SRCML_OPTION_CPP);
         srcml_archive_free(archive);
     }
 
@@ -242,8 +230,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 
         dassert(srcml_archive_set_tabstop(archive, 4), SRCML_STATUS_OK);
-
-//        dassert(archive->tabstop, 4);
+        dassert(srcml_archive_get_tabstop(archive), 4);
         srcml_archive_free(archive);
     }
 
@@ -259,9 +246,7 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
 
         srcml_archive_register_file_extension(archive, "foo", "C++");
-
-//        dassert(get_extension(archive->registered_languages.last()), "foo");
-//        dassert(get_language(archive->registered_languages.last()), 2);
+        dassert(srcml_archive_check_extension(archive, "main.foo"), std::string("C++"));
         srcml_archive_free(archive);
     }
 

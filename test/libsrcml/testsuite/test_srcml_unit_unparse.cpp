@@ -53,7 +53,7 @@ int main(int, char* argv[]) {
 
     const std::string src = "a;\n";
     const std::string utf8_src = "/* ✓ */\n";
-    const std::string latin_src = "/* \xfe\xff */\n";
+    const std::string latin_src = "/* &#10003; */\n";
 
     const std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src">
@@ -80,7 +80,7 @@ int main(int, char* argv[]) {
 )";
 
     const std::string latin_from_latin_srcml = R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* þÿ */</comment>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* &#10003; */</comment>
 </unit>
 )";
 
@@ -112,10 +112,10 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        srcml_unit_unparse_filename(unit, "project.c");
+        
+        dassert(srcml_unit_unparse_filename(unit, "project.c"), SRCML_STATUS_OK);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -128,10 +128,10 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_filename(unit, "project_utf8.cpp");
+        
+        dassert(srcml_unit_unparse_filename(unit, "project_utf8.cpp"), SRCML_STATUS_OK);
         std::ifstream src_file("project_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -144,10 +144,10 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_filename(unit, "project_latin_from_utf8.cpp");
+        
+        dassert(srcml_unit_unparse_filename(unit, "project_latin_from_utf8.cpp"), SRCML_STATUS_OK);
         std::ifstream src_file("project_latin_from_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -160,11 +160,11 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_filename(unit, "project_latin.cpp");
 
+        dassert(srcml_unit_unparse_filename(unit, "project_latin.cpp"), SRCML_STATUS_OK);
         std::ifstream src_file("project_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-//        dassert(aunit, latin_src);
+        dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -176,11 +176,11 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_filename(unit, "project_latin_from_latin.cpp");
 
+        dassert(srcml_unit_unparse_filename(unit, "project_latin_from_latin.cpp"), SRCML_STATUS_OK);
         std::ifstream src_file("project_latin_from_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-//        dassert(aunit, latin_src);
+        dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -191,10 +191,10 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        srcml_unit_unparse_filename(unit, "project.c");
+        
+        dassert(srcml_unit_unparse_filename(unit, "project.c"), SRCML_STATUS_OK);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -217,7 +217,6 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
-//        unit->srcml = "<unit/>";
 
         dassert(srcml_unit_unparse_filename(unit, "project.c"),  SRCML_STATUS_INVALID_IO_OPERATION);
 
@@ -258,8 +257,8 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        srcml_unit_unparse_memory(unit, &s, &size);
-
+        
+        dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_OK);
         dassert(s, src);
 
         srcml_unit_free(unit);
@@ -275,8 +274,8 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_memory(unit, &s, &size);
-
+        
+        dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_OK);
         dassert(s, utf8_src);
 
         srcml_unit_free(unit);
@@ -292,8 +291,8 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_memory(unit, &s, &size);
-
+        
+        dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_OK);
         dassert(s, utf8_src);
 
         srcml_unit_free(unit);
@@ -309,9 +308,9 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_memory(unit, &s, &size);
 
-//        dassert(s, latin_src);
+        dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_OK);
+        dassert(s, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -326,9 +325,9 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_memory(unit, &s, &size);
 
-//        dassert(s, latin_src);
+        dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_OK);
+        dassert(s, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -342,8 +341,8 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        srcml_unit_unparse_memory(unit, &s, &size);
-
+        
+        dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_OK);
         dassert(s, src);
 
         srcml_unit_free(unit);
@@ -371,7 +370,6 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
-//        unit->srcml = "<unit/>";
 
         dassert(srcml_unit_unparse_memory(unit, &s, &size), SRCML_STATUS_INVALID_IO_OPERATION);
 
@@ -429,11 +427,11 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project.c", "w");
-        srcml_unit_unparse_FILE(unit, file);
+        
+        dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -447,11 +445,11 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project_utf8.cpp", "w");
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_FILE(unit, file);
+        
+        dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -465,11 +463,11 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project_latin_from_utf8.cpp", "w");
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_FILE(unit, file);
+        
+        dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project_latin_from_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -483,12 +481,12 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project_latin.cpp", "w");
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_FILE(unit, file);
+
+        dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-//        dassert(aunit, latin_src);
+        dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -501,12 +499,12 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project_latin_from_latin.cpp", "w");
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_FILE(unit, file);
+
+        dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project_latin_from_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-//        dassert(aunit, latin_src);
+        dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -518,11 +516,11 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project.c", "w");
-        srcml_unit_unparse_FILE(unit, file);
+        
+        dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -547,12 +545,11 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
-//        unit->srcml = "<unit/>";
         FILE* file = fopen("project.c", "w");
 
         dassert(srcml_unit_unparse_FILE(unit, file), SRCML_STATUS_INVALID_IO_OPERATION);
-        fclose(file);
 
+        fclose(file);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -593,11 +590,11 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
-        srcml_unit_unparse_fd(unit, fd);
+        
+        dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
         CLOSE(fd);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -613,11 +610,11 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_fd(unit, fd);
+        
+        dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
         CLOSE(fd);
         std::ifstream src_file("project_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -633,11 +630,11 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_latin_from_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_fd(unit, fd);
+        
+        dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
         CLOSE(fd);
         std::ifstream src_file("project_latin_from_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -653,12 +650,12 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_fd(unit, fd);
+
+        dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
         CLOSE(fd);
         std::ifstream src_file("project_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-//        dassert(aunit, latin_src);
+        dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -673,12 +670,12 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project_latin_from_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_fd(unit, fd);
+
+        dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
         CLOSE(fd);
         std::ifstream src_file("project_latin_from_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-//        dassert(aunit, latin_src);
+        dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -692,11 +689,11 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
-        srcml_unit_unparse_fd(unit, fd);
+        
+        dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
         CLOSE(fd);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -723,12 +720,11 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
-//        unit->srcml = "<unit/>";
         int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_INVALID_IO_OPERATION);
-        CLOSE(fd);
 
+        CLOSE(fd);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -769,11 +765,11 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project.c", "w");
-        srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
+        
+        dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -787,11 +783,11 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project_utf8.cpp", "w");
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
+        
+        dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -805,11 +801,11 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project_latin_from_utf8.cpp", "w");
         srcml_unit_set_src_encoding(unit, "UTF-8");
-        srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
+        
+        dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project_latin_from_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, utf8_src);
 
         srcml_unit_free(unit);
@@ -823,12 +819,12 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project_latin.cpp", "w");
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
+
+        dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-//        dassert(aunit, latin_src);
+        dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -841,12 +837,12 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project_latin_from_latin.cpp", "w");
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
-        srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
+
+        dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project_latin_from_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
-//        dassert(aunit, latin_src);
+        dassert(aunit, latin_src);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -858,11 +854,11 @@ int main(int, char* argv[]) {
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
         FILE* file = fopen("project.c", "w");
-        srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback);
+        
+        dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_OK);
         fclose(file);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
-
         dassert(aunit, src);
 
         srcml_unit_free(unit);
@@ -887,12 +883,11 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
-//        unit->srcml = "<unit/>";
         FILE* file = fopen("project.c", "w");
 
         dassert(srcml_unit_unparse_io(unit, (void *)file, write_callback, close_callback), SRCML_STATUS_INVALID_IO_OPERATION);
-        fclose(file);
 
+        fclose(file);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
