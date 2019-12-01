@@ -33,9 +33,6 @@
 // Included to take advantage of inlined methods
 #include <srcMLOutputElements.hpp>
 
-// @todo Why is this here?
-#define SRCML_OPTION_NO_REVISION ((unsigned long long)1 << 63)
-
 namespace {
     void srcMLTextWriterWriteNamespace(xmlTextWriterPtr xout, const Namespace& ns) {
 
@@ -358,7 +355,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     // list of attributes
     const char* const attrs[][2] = {
 
-        { UNIT_ATTRIBUTE_REVISION, !isoption(options, SRCML_OPTION_NO_REVISION) ? revision : 0 },
+        { UNIT_ATTRIBUTE_REVISION, revision },
 
         // language attribute
         { UNIT_ATTRIBUTE_LANGUAGE, language },

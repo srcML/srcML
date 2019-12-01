@@ -155,7 +155,6 @@ void create_src(const srcml_request_t& srcml_request,
         }
 
         // don't go through normal closure as non-existent errors are detected
-        // @todo Why?
         arch.release();
 
     } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
