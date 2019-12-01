@@ -456,12 +456,9 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
         return unit->srcml_raw_revision->c_str();
     }
 
-fprintf(stderr, "DEBUG:  %s %s %d unit->filename: %s\n", __FILE__,  __FUNCTION__, __LINE__,  unit->filename->c_str());
-
     // raw version is cached
     if (unit->srcml_raw)
         return unit->srcml_raw->c_str();
-fprintf(stderr, "DEBUG:  %s %s %d unit->srcml: %s\n", __FILE__,  __FUNCTION__, __LINE__,  unit->srcml.c_str());
 
     unit->srcml_raw = std::string(unit->srcml, start, rawsize);
 
