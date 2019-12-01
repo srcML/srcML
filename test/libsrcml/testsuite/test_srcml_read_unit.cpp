@@ -290,14 +290,14 @@ int main(int, char* argv[]) {
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_archive_get_url(archive), 0);
         dassert(srcml_unit_get_version(unit), 0);
-        dassert(srcml_unit_get_srcml_inner(unit), std::string("<s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n"));
+        dassert(srcml_unit_get_srcml_inner(unit), std::string("<expr_stmt><expr><name>a</name></expr>;</expr_stmt>\n"));
         srcml_unit_free(unit);
         unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_get_language(unit), std::string("C"));
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_archive_get_url(archive), 0);
         dassert(srcml_unit_get_version(unit), 0);
-        dassert(srcml_unit_get_srcml_inner(unit), std::string("<s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n"));
+        dassert(srcml_unit_get_srcml_inner(unit), std::string("<expr_stmt><expr><name>b</name></expr>;</expr_stmt>\n"));
         srcml_unit_free(unit);
         unit = srcml_archive_read_unit(archive);
         dassert(unit, 0);
