@@ -260,12 +260,9 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_get_language(unit), std::string("C++"));
         dassert(srcml_unit_get_filename(unit), std::string("project"));
-        // @TODO FIX
-//        dassert(srcml_archive_get_url(archive), std::string("test"));
-
+        dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_unit_get_version(unit), std::string("1"));
-//        dassert(unit->srcml, "");
-
+        dassert(srcml_unit_get_srcml_inner(unit), std::string("<s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n"));
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -279,8 +276,7 @@ int main(int, char* argv[]) {
         dassert(srcml_unit_get_filename(unit), std::string("project"));
         dassert(srcml_archive_get_url(archive), std::string("test"));
         dassert(srcml_unit_get_version(unit), std::string("1"));
-//        dassert(unit->srcml, "");
-
+        dassert(srcml_unit_get_srcml_inner(unit), std::string("<s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n"));
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -294,14 +290,14 @@ int main(int, char* argv[]) {
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_archive_get_url(archive), 0);
         dassert(srcml_unit_get_version(unit), 0);
-//        dassert(unit->srcml, "");
+        dassert(srcml_unit_get_srcml_inner(unit), std::string("<s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n"));
         srcml_unit_free(unit);
         unit = srcml_archive_read_unit(archive);
         dassert(srcml_unit_get_language(unit), std::string("C"));
         dassert(srcml_unit_get_filename(unit), std::string("project.c"));
         dassert(srcml_archive_get_url(archive), 0);
         dassert(srcml_unit_get_version(unit), 0);
-//        dassert(unit->srcml, "");
+        dassert(srcml_unit_get_srcml_inner(unit), std::string("<s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>\n"));
         srcml_unit_free(unit);
         unit = srcml_archive_read_unit(archive);
         dassert(unit, 0);

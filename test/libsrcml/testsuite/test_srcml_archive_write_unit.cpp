@@ -42,7 +42,7 @@ int main(int, char* argv[]) {
     const std::string latin_srcml_no_xmldecl = R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><comment type="block">/* Ã¾Ã¿ */</comment>
 </unit>)";
 
-    const std::string srcml_old_uri_a = R"(<unit xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    const std::string srcml_old_uri_a = R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
     const std::string utf8_srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -98,13 +98,13 @@ int main(int, char* argv[]) {
 </unit>
 )";
 
-    const std::string srcml_old_uri_a_single_no_xmldecl = R"(<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    const std::string srcml_old_uri_a_single_no_xmldecl = R"(<unit xmlns="http://www.sdml.info/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
     const std::string srcml_first_old_uri_a_single_no_xmldecl = R"(<unit xmlns="http://www.sdml.info/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
-    const std::string srcml_second_old_uri_a_single_no_xmldecl = R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+    const std::string srcml_second_old_uri_a_single_no_xmldecl = R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
     const std::string srcml_b_single_no_xmldecl = R"(<s:unit xmlns:s="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
@@ -485,7 +485,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
 
         dassert(srcml_unit_parse_memory(unit, "a;\n", 3), SRCML_STATUS_OK);
-//        dassert(srcml_unit_get_srcml(unit), srcml_old_uri_a_single_no_xmldecl);
+        dassert(srcml_unit_get_srcml(unit), srcml_second_old_uri_a_single_no_xmldecl);
 
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
@@ -508,7 +508,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
-//        dassert(srcml_unit_get_srcml(unit), srcml_first_old_uri_a_single_no_xmldecl);
+        dassert(srcml_unit_get_srcml(unit), srcml_second_old_uri_a_single_no_xmldecl);
 
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
@@ -531,7 +531,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
-//        dassert(srcml_unit_get_srcml(unit), srcml_second_old_uri_a_single_no_xmldecl);
+        dassert(srcml_unit_get_srcml(unit), srcml_second_old_uri_a_single_no_xmldecl);
 
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
@@ -553,17 +553,18 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
         srcml_unit_set_filename(unit, "a.cpp");
-//        dassert(srcml_unit_get_srcml_outer(unit), srcml_old_uri_a);
 
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+
         srcml_unit_free(unit);
+
         unit = srcml_unit_create(archive);
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;\n", 3);
-//        dassert(srcml_unit_get_srcml_outer(unit), srcml_old_uri_a);
 
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
+
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -581,6 +582,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
 
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_UNINITIALIZED_UNIT);
+
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -593,8 +595,8 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "", 0);
-    //    dassert(srcml_unit_get_srcml_outer(unit), std::string("<unit/>"));
 
+        dassert(srcml_unit_get_srcml_outer(unit), std::string(R"(<unit revision="1.0.0" language="C++" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>)"));
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_INVALID_IO_OPERATION);
 
         srcml_unit_free(unit);

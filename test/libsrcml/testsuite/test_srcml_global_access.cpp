@@ -251,15 +251,13 @@ int main(int argc, char* argv[]) {
 
     {
         srcml_set_eol(SOURCE_OUTPUT_EOL_CRLF);
-
- //       dassert(global_unit.eol, SOURCE_OUTPUT_EOL_CRLF);
+        dassert(srcml_get_eol(), SOURCE_OUTPUT_EOL_CRLF);
     }
 
     {
         srcml_set_eol(SOURCE_OUTPUT_EOL_CRLF);
         srcml_set_eol(SOURCE_OUTPUT_EOL_AUTO);
-
-//        dassert(global_unit.eol, SOURCE_OUTPUT_EOL_AUTO);
+        dassert(srcml_get_eol(), SOURCE_OUTPUT_EOL_AUTO);
     }
 
     {
@@ -369,8 +367,7 @@ int main(int argc, char* argv[]) {
 
     {
         srcml_set_version(0);
-        // @TODO Fix behavior
-//        dassert(srcml_get_version(), 0);
+        dassert(srcml_get_version(), 0);
     }
 
     {
@@ -398,11 +395,6 @@ int main(int argc, char* argv[]) {
 
     {
         dassert(srcml_get_hash(), 0);
-    }
-
-    {
-        // @TODO Figure out how to create a convenience example to set the hash
-//        dassert(srcml_get_hash(), std::string("foo"));
     }
 
     /*
@@ -455,7 +447,6 @@ int main(int argc, char* argv[]) {
     }
 
     {
-        // @TODO Something is off here
         dassert(srcml_get_namespace_prefix(5), 0);
     }
 
