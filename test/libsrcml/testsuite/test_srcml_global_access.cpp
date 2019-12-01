@@ -28,9 +28,6 @@
 
 #include <dassert.hpp>
 
-//extern srcml_archive global_archive;
-//extern srcml_unit global_unit;
-
 int main(int argc, char* argv[]) {
 
     /*

@@ -61,10 +61,6 @@ std::string srcml_full = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes
 
 int main(int, char* argv[]) {
 
-  //  assert(srcml_get_options() & SRCML_OPTION_HASH);
-//    srcml_disable_option(SRCML_OPTION_HASH);
-  //  global_unit.hash = "56f54d1636dfec63c3e1586e5e4bdc9a455bb9f6";
-
     std::ofstream src_file("a.cpp");
     src_file << src;
     src_file.close();

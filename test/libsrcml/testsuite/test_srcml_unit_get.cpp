@@ -169,7 +169,6 @@ int main(int, char* argv[]) {
     }
 
     {
-        // @todo What is a valid timestamp?
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_timestamp(unit, "Fri Nov 30 14:15:27 EST 2018");
 

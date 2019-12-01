@@ -64,7 +64,6 @@ int main(int, char* argv[]) {
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
-//        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
         srcml_archive_write_unit(archive, unit);
@@ -87,7 +86,6 @@ int main(int, char* argv[]) {
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
-//        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
         srcml_archive_write_unit(archive, unit);
@@ -110,7 +108,6 @@ int main(int, char* argv[]) {
         srcml_unit_set_filename(unit, "a.cpp");
         srcml_unit_set_version(unit, "1");
         srcml_unit_set_timestamp(unit, "today");
-//        srcml_unit_set_hash(unit, "0123456789abcdef");
         srcml_write_start_unit(unit);
         srcml_write_end_unit(unit);
         srcml_archive_write_unit(archive, unit);
