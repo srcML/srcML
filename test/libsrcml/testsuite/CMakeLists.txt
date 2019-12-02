@@ -1,6 +1,6 @@
 ##
 # @file CMakeLists.txt
-#
+# 
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+# 
+# CMake files for libsrcml tests
 
 # Build and add tests
 file(GLOB LIB_TESTS test_*.cpp)
@@ -35,4 +37,3 @@ configure_file(setlanguage.xsl setlanguage.xsl COPYONLY)
 configure_file(setlanguage.xsl ${CMAKE_BINARY_DIR}/bin/setlanguage.xsl COPYONLY)
 configure_file(schema.rng schema.rng COPYONLY)
 configure_file(schema.rng ${CMAKE_BINARY_DIR}/bin/schema.rng COPYONLY)
-

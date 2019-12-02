@@ -74,7 +74,6 @@ srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDE
         isdirectory = exists && S_ISDIR(s.st_mode);
     }
 
-    // TODO: Fix for Windows paths
     isdirectoryform = resource.back() == '/';
 
     if (!isdirectory && protocol != "text") {

@@ -40,7 +40,6 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-# TODO: issue #1213
 xmlcheck "$srcml"
 xmlcheck "$xpathempty"
 xmlcheck "$output"

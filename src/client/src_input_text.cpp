@@ -83,11 +83,9 @@ int src_input_text(ParseQueue& queue,
 
         // fill up the parse request buffer
         if (!prequest->status) {
+
             // copy from the text directly into a buffer
             // perform newline and tab expansion
-            // TODO: Make test cases for each part
-            // TODO: Support \nnn, \xnnn, \unnn, \Unnnnnnnn
-
             while (ptext) {
 
                 // find up to an escape

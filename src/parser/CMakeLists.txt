@@ -1,6 +1,6 @@
 ##
 # @file CMakeLists.txt
-#
+# 
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
@@ -16,10 +16,13 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+# 
+# CMake files for building the parser
 
-# Finding antlr binary.
+# Find antlr binary
 find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
 
+# Assume all C++ source files are parser
 file(GLOB PARSER_SOURCE *.hpp *.cpp)
 
 # 

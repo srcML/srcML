@@ -63,7 +63,6 @@ createfile xml_error/illformedarchive_multi.xml "$illformed_archive_mulit"
 createfile xml_error/illformedarchive_single.xml "$illformed_archive_single"
 
 # bad
-# TODO: issue #1039
 srcml xml_error/illformedarchive_multi.xml --info
 check "$info_archive"
 

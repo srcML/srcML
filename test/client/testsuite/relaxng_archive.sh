@@ -145,23 +145,3 @@ check sub/b.cpp.xml "$srcml"
 
 srcml --relaxng=schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
 check sub/b.cpp.xml "$srcml"
-
-
-## TODO really make sure this is ok to return ok when no schema supplied.
-#srcml --relaxng srcml
-#
-#check "" "0"
-#if sys.platform != 'cygwin' :
-#	srcml --relaxng + '=' srcml
-#
-#	check "" "0"
-#
-
-## TODO really make sure this is ok to return ok when no schema supplied.
-#srcml --relaxng srcml
-#
-#check "" "0"
-#if sys.platform != 'cygwin' :
-#	srcml --relaxng + '=' srcml
-#
-#	check "" "0"

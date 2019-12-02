@@ -1,6 +1,6 @@
 ##
 # @file CMakeLists.txt
-#
+# 
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
@@ -16,15 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
-
-#
-# This is the function used for building exeucables for srcML.
-# This outputs the executable into the bin directory at the top level.
-# - EXEC_NAME is the name of the target and the name out of the output by default.
-# - EXEC_FILE is the name of the file containing main.
-#
-# - All subsequent arguments are linked as libraries.
-#
+# 
+# CMake files for the srcML client
 
 # strip executables
 set(CPACK_STRIP_FILES ON)

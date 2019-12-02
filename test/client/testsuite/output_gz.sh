@@ -51,16 +51,3 @@ check "$sxmlfile"
 
 srcml --archive sub/a.cpp -o sub/a.cpp.xml.gz && gunzip -c sub/a.cpp.xml.gz
 check "$sxmlfile"
-
-# TODO: issue #1057 - cannot gz a raw source output file
-# srcml --> src
-# createfile sub/a.cpp.xml "$xmlfile"
-
-#srcml sub/a.cpp.xml -o sub/a.cpp.gz && gunzip -c sub/a.cpp.gz
-#check "$sfile"
-
-#srcml --archive sub/a.cpp.xml -o sub/a.cpp.gz && gunzip -c sub/a.cpp.gz
-#check "$sfile"
-
-#srcml -o sub/a.cpp.gz  && gunzip -c sub/a.cpp.gz
-#check "$sfile"

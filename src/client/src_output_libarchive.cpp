@@ -41,7 +41,6 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
         ++unitcounter;
 
         // have to make sure we have a valid filename
-        // TODO: Counter must span input sources
         std::string newfilename = srcml_unit_get_filename(unit.get()) ? srcml_unit_get_filename(unit.get()) : "";
         if (newfilename.empty()) {
             newfilename = "srcml_unit_";

@@ -18,7 +18,6 @@ define archive <<- 'STDOUT'
 xmlcheck "$archive"
 createfile sub/archive.cpp.xml "$archive"
 
-# TODO: issue #1042
 srcml --show-timestamp sub/archive.cpp.xml
 check
 

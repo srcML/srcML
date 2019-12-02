@@ -1,6 +1,6 @@
 ##
 # @file package.cmake
-#
+# 
 # @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+# 
+# CMake files for packages
 
 # Client component, SRCML, is just one component so it appears as on item
 # for installers that let you pick what to install

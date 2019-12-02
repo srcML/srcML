@@ -64,7 +64,6 @@ namespace {
             std::cout << ' ' << value(srcml_unit_get_hash(unit.get()));
             std::cout << ' ' << value(srcml_unit_get_filename(unit.get()));
             std::cout << '\n';
-            // TODO: Other parts of verbose here. Have to collect.
         }
         std::cout << "Total: " << numUnits << '\n';
     }

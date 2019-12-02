@@ -15,7 +15,6 @@ define srcml <<- 'STDOUT'
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
-# TODO: Add get-hash and get-timestamp
 options=( --show-language --show-url --show-filename --show-src-version --show-encoding )
 
 size="${#options[@]}"

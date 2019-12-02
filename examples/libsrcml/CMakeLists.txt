@@ -1,6 +1,6 @@
 ##
 # @file CMakeLists.txt
-#
+# 
 # @copyright Copyright (C) 2014 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
@@ -16,8 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+# 
+# CMake files for libsrcml examples
 
-# add cli tests
+# add examples
 file(GLOB EXAMPLES "srcml_*.c")
 
 install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
@@ -31,8 +33,6 @@ if(BUILD_EXAMPLES)
         add_executable(${EXAMPLE_NAME} ${EXAMPLE})
         target_include_directories(${EXAMPLE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src/libsrcml)
         target_link_libraries(${EXAMPLE_NAME} libsrcml_link)
-        # @TODO Do we need these as a test?
-    #    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
         set_target_properties(${EXAMPLE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     endforeach()
 
