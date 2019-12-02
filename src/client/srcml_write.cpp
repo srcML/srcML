@@ -107,6 +107,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     switch (request->results.type) {
     case SRCML_RESULTS_BOOLEAN:
         {
+            // output as true/false with newline after every results
             const char* boolresult = request->results.boolValue ? "true\n" : "false\n";
             srcml_archive_write_string(output_archive, boolresult, (int) strlen(boolresult));
         }
@@ -121,6 +122,9 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
                 s = std::to_string((int) request->results.numberValue);
 
             srcml_archive_write_string(output_archive, s.c_str(), (int) s.size());
+
+            // output a newline after every result
+            srcml_archive_write_string(output_archive, "\n", 1);
         }
         return;
 
