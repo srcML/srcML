@@ -694,28 +694,3 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 }
 
 // @todo Do we need to deprecate --units, -n?
-
-#if 0
-// option src encoding
-template <>
-void option_field<&srcml_request_t::src_encoding>(const std::string& value) {
-
-    if (value.empty() /* || srcml_check_encoding(value.c_str()) == 0 */) {
-        SRCMLstatus(ERROR_MSG, "srcml: invalid src encoding \"" + value + "\"");
-        exit(CLI_ERROR_INVALID_ARGUMENT);
-    }
-    srcml_request.src_encoding = value;
-}
-
-// option xml encoding attribute
-template <>
-void option_field<&srcml_request_t::att_xml_encoding>(const std::string& value) {
-
-    // required since an error occurs if checked in client
-    if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
-        SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding \"%s\"", value);
-        exit(CLI_ERROR_INVALID_ARGUMENT);
-    }
-    srcml_request.att_xml_encoding = value;
-}
-#endif
