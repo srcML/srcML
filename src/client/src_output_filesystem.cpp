@@ -41,7 +41,6 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
     while (std::unique_ptr<srcml_unit> unit{srcml_archive_read_unit(srcml_arch)}) {
 
         const char* cfilename = srcml_unit_get_filename(unit.get());
-        // @todo What do we do with no filename?
         if (!cfilename)
             continue;
 
@@ -58,7 +57,6 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
         fullfilename += filename;
 
         // use libarchive to create the file path
-        // @todo Can we get away with no permission on final file?
         dir.mkdir(path);
 
         // unparse directory to filename

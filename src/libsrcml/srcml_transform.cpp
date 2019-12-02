@@ -549,7 +549,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // handle non-nodeset results
-    // @todo Implement these
     switch (lastresult.nodeType) {
     case SRCML_RESULTS_STRING:
         if (result != nullptr) {
@@ -585,7 +584,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     for (int i = 0; i < fullresults->nodeNr; ++i) {
 
         // create a new unit to store the results in
-        // @todo What happens for a single result?
         auto nunit = srcml_unit_clone(unit);
         nunit->read_body = nunit->read_header = true;
         if (!lastresult.unitWrapped) {
@@ -707,7 +705,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             context->_private = nunit;
             context->sax = &roottagsax;
 
-            // @todo Handle error
+            // parse our single-element unit
             xmlParseDocument(context);
         }
 

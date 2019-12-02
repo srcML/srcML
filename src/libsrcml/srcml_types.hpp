@@ -110,7 +110,6 @@ struct srcml_archive {
     /** type archive type read/write */
     SRCML_ARCHIVE_TYPE type = SRCML_ARCHIVE_INVALID;
 
-    /** @todo rename to xml_encoding */
     /** an attribute for the xml encoding */
     boost::optional<std::string> encoding;
     /** source encoding */

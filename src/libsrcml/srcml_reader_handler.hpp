@@ -348,7 +348,6 @@ public :
 #endif
 
         // pause
-        // @todo this may need to change because, meta tags have separate call now
         if (!read_root) {
 
             {                

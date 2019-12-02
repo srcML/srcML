@@ -84,7 +84,6 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
     long http_code = 0;
     curl_easy_getinfo (data->curlhandle, CURLINFO_RESPONSE_CODE, &http_code);
 
-    // @todo are there any other http codes we should allow here?
     goCurl(http_code == 200);
 
     ssize_t result = write(data->outfd, ptr, size * nmemb);

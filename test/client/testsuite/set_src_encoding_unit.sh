@@ -76,7 +76,6 @@ srcml --src-encoding "UTF-16BE" sub/a_UTF-16BE.cpp --filename "sub/a.cpp"
 check "$foutput"
 
 # Not supported on all platforms
-# @todo Conditionally test?
 # iconv -f UTF-8 -t ISO-10646-UCS-2 sub/a.cpp > sub/a_ISO-10646-UCS-2.cpp
 # srcml --src-encoding "ISO-10646-UCS-2" sub/a_ISO-10646-UCS-2.cpp --filename "sub/a.cpp"
 # check "$foutput"
@@ -86,7 +85,6 @@ srcml --src-encoding "UCS-2" sub/a_UCS-2.cpp --filename "sub/a.cpp"
 check "$foutput"
 
 # Not supported on all platforms
-# @todo Conditionally test?
 # iconv -f UTF-8 -t ISO-10646-UCS-4 sub/a.cpp > sub/a_ISO-10646-UCS-4.cpp
 # srcml --src-encoding "ISO-10646-UCS-4" sub/a_ISO-10646-UCS-4.cpp --filename "sub/a.cpp"
 # check "$foutput"

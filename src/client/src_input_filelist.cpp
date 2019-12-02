@@ -71,12 +71,10 @@ int src_input_filelist(ParseQueue& queue,
     if (archive_entry_size_is_set(entry))
         vbuffer.reserve(archive_entry_size(entry));
 
+    // read the file into a buffer
     const char* buffer;
     size_t size;
     int64_t offset;
-
-    // read the file into a buffer
-    // @todo Shouldn't we be free'ing this buffer?
     while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
            vbuffer.insert(vbuffer.end(), buffer, buffer + size);
     }
@@ -85,18 +83,12 @@ int src_input_filelist(ParseQueue& queue,
     while (line < &vbuffer[vbuffer.size() - 1]) {
 
         // find the line
-        // @todo use strchr()
         char* startline = line;
         while (*line != '\n' && line != &vbuffer[vbuffer.size() - 1])
             ++line;
         ++line;
 
         std::string sline(startline, line - startline);
-
-        // skip comment lines
-        // @todo trim then comment lines?
-        if (sline[0] == '#')
-            continue;
 
         // trim from both ends
         const std::string WHITESPACE = " \n\r\t\f\v";
@@ -109,10 +101,12 @@ int src_input_filelist(ParseQueue& queue,
         if (sline[0] == 0)
             continue;
 
+        // skip comment lines
+        if (sline[0] == '#')
+            continue;
+
         // process this file
-        // everything in a filelist is assumed to be source, including srcML files, so change the state
         srcml_input_src input(sline);
-     //   input.state = SRC;
         int status = srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
         if (status == -1)
             return -1;

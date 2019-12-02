@@ -116,8 +116,6 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
  */
 xsltTransformation::~xsltTransformation() {
 
-    // @todo Memory leak. Crashes when more than one transformation
-//    xsltFreeStylesheet(stylesheet);
     xsltCleanupGlobals();
 
 #ifdef DLLOAD
@@ -139,7 +137,6 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
 //    setPosition(position);
 
     // convert to c-array of c-strings, null terminated
-    // @todo Extract Function
     std::vector<const char*> cparams(xsl_parameters.size() + 1);
     for (size_t i = 0; i < xsl_parameters.size(); ++i) {
         cparams[i] = xsl_parameters[i].c_str();

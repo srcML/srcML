@@ -448,9 +448,10 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
     auto& view = archive->namespaces.get<nstags::uri>();
     auto it = view.find(uri);
     if (it != view.end()) {
-        // @todo could easily make these on the root by setting the flags to NS_ROOT
+        // change prefix of existing namespace
         view.modify(it, [prefix](Namespace& ns) { ns.prefix = prefix; });
     } else {
+        // add new namespace
         archive->namespaces.push_back({ prefix, uri, NS_REGISTERED });
     }
 
@@ -652,7 +653,6 @@ size_t srcml_archive_get_tabstop(const struct srcml_archive* archive) {
  */
 size_t srcml_archive_get_namespace_size(const struct srcml_archive* archive) {
 
-    /** @todo may want to make ssize_t so can return -1 */
     return archive ? archive->namespaces.size() : 0;
 }
 
@@ -762,7 +762,6 @@ const char* srcml_archive_get_processing_instruction_data(const struct srcml_arc
  */
 size_t srcml_archive_get_macro_list_size(const struct srcml_archive* archive) {
 
-    /** @todo may want to make ssize_t so can return -1 */
     return archive ? (archive->user_macro_list.size() / 2) : 0;
 }
 
@@ -1066,7 +1065,7 @@ int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* bu
     xmlCharEncoding encoding = archive->encoding ? xmlParseCharEncoding(archive->encoding->c_str()) : XML_CHAR_ENCODING_NONE;
     std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding));
 
-    // @todo Really do not think this is needed. xmlAllocParserInputBuffer() is called inside of xmlParserInputBufferCreateMem()
+    // buffer stuff
     if (encoding != XML_CHAR_ENCODING_NONE && input && input->encoder) {
 
 #ifdef LIBXML2_NEW_BUFFER

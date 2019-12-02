@@ -57,7 +57,7 @@ define sxmlfile2src <<- 'STDOUT'
 	b;
 	STDOUT
 
-# @todo This should be a single newline.
+# single newline
 define emptysrc <<- 'STDOUT'
 	STDOUT
 

@@ -128,7 +128,7 @@ const Namespaces starting_namespaces = {
 };
 
 // srcML standard attributes
-/** revision attribute @todo see if still needed */
+/** revision attribute */
 const char* const UNIT_ATTRIBUTE_REVISION = "revision";
 
 /** language attribute */

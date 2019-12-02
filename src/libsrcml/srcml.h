@@ -1174,21 +1174,6 @@ LIBSRCML_DECL int srcml_append_transform_param(struct srcml_archive* archive, co
 LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archive, const char* param_name, const char* param_value);
 
 /**
- * srcml_unit_apply_transforms
- * @todo Fix up
- * @param archive Archive with the transformations declared
- * @param unit Unit to perform the transformation on
- * @param results Optional struct of different results types
- *
- * Apply appended transformations from the archive to the unit consecutively in order. If parameter result is NULL,
- * result replaces the unit that the transformation was performed on. If parameter result is not NULL, results
- * are places in the proper field of the result, with the result_type parameter indicating which is appropriate.
- * If the result of the transformation is not a single unit, and the parameter result is NULL, that is considered an error.
- *
- * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
- */
-
-/**
  * Transformation result types
  */
 #define SRCML_RESULTS_NONE    0
@@ -1215,6 +1200,16 @@ struct srcml_transformation_result_t {
     char* stringValue;
 };
 
+/**
+ * Apply appended transformations from the archive to the unit consecutively in order. If parameter result is NULL,
+ * result replaces the unit that the transformation was performed on. If parameter result is not NULL, results
+ * are places in the proper field of the result, with the result_type parameter indicating which is appropriate.
+ * If the result of the transformation is not a single unit, and the parameter result is NULL, that is considered an error.
+ * @param archive Archive with the transformations declared
+ * @param unit Unit to perform the transformation on
+ * @param results Optional struct of different results types
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
 LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_transformation_result_t* result);
 
 /**
@@ -1517,44 +1512,75 @@ LIBSRCML_DECL int srcml_unit_unparse_fd(struct srcml_unit* unit, int fd);
  * @return SRCML_STATUS_OK on success
  * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_unit_unparse_io(struct srcml_unit* unit, void * context, int (*write_callback)(void * context, const char * buffer, int len), int (*close_callback)(void * context));
+LIBSRCML_DECL int srcml_unit_unparse_io(struct srcml_unit* unit, void * context, int (*write_callback)(void * context, const char* buffer, int len), int (*close_callback)(void * context));
 /**@}*/
 
 /**@{ @name Iteratively build a unit */
 /**
- * @todo Add documentation
+ * Write a start tag for a unit
+ * @param unit A srcml unit opened for writing
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
  */
 LIBSRCML_DECL int srcml_write_start_unit(struct srcml_unit* unit);
 
 /**
- * @todo Add documentation
+ * Write an end tag for a unit
+ * @param unit A srcml unit opened for writing
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
  */
 LIBSRCML_DECL int srcml_write_end_unit(struct srcml_unit* unit);
 
 /**
- * @todo Add documentation
+ * Write a start tag for a general element
+ * @param unit A srcml unit opened for writing
+ * @param prefix Element prefix
+ * @param name Element name
+ * @param uri URI of the prefix
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_write_start_element(struct srcml_unit* unit, const char * prefix, const char * name, const char * uri);
+LIBSRCML_DECL int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri);
 
 /**
- * @todo Add documentation
+ * Write an end tag for a general element
+ * @param unit A srcml unit opened for writing
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
  */
 LIBSRCML_DECL int srcml_write_end_element(struct srcml_unit* unit);
 
 /**
- * @todo Add documentation
+ * Write a namespace
+ * @param unit A srcml unit opened for writing
+ * @param prefix Namespace prefix
+ * @param uri Namespace URI
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_write_namespace(struct srcml_unit* unit, const char * prefix, const char * uri);
+LIBSRCML_DECL int srcml_write_namespace(struct srcml_unit* unit, const char* prefix, const char* uri);
 
 /**
- * @todo Add documentation
+ * Write an attribute
+ * @param unit A srcml unit opened for writing
+ * @param prefix Element prefix
+ * @param name Element name
+ * @param uri URI of the prefix
+ * @param content Value of the attribute
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_write_attribute(struct srcml_unit* unit, const char * prefix, const char * name, const char * uri, const char * content);
+LIBSRCML_DECL int srcml_write_attribute(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri, const char* content);
 
 /**
- * @todo Add documentation
+ * Write a general string
+ * @param unit A srcml unit opened for writing
+ * @param content Null-terminated string to write
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
  */
-LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char * content);
+LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char* content);
 /**@}*/
 /**@}*/
 

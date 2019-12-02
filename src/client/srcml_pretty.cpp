@@ -168,24 +168,6 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
         }
     }
 
-    // Find and replace for common escapes
-    // @todo fix this for general use of srcml_pretty
-//    boost::replace_all(template_string, "\\n", "\n");
-//    boost::replace_all(template_string, "\\t", "\t");
-//    boost::replace_all(template_string, "\\r", "\r");
-
-    /* Debug for sanity...
-    std::cerr << template_string << "\n";
-
-    if (section_args) {
-        for (size_t i = 0; i < section_args->length(); ++i) {
-            std::cerr << section_args->at(i);
-        }
-
-        std::cerr << "\n";
-    }
-    */
-
     return boost::none;
 }
 
@@ -254,7 +236,6 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 
     if (unit_num > 0 && !(xml)) {
         while (unit_count != unit_num) {
-            // @todo Detect error if unit num wrong
             srcml_archive_skip_unit(srcml_arch);
             ++unit_count;
         }
@@ -350,7 +331,6 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     }
 }
 
-// TODO: RETURN REAL ERRORS
 int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, const srcml_request_t& srcml_request) {
     int unit_num = srcml_request.unit;
     pretty_template_t output_template = split_template_sections(pretty_input);

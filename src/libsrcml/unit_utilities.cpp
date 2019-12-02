@@ -33,9 +33,6 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
         std::string attribute = (const char*) attributes[pos * 5];
         std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
 
-        // @todo Fix for multiple attributes
-        //value = attribute_revision(value);
-        
         if (attribute == "timestamp")
             srcml_unit_set_timestamp(unit, value.c_str());
         else if (attribute == "hash")

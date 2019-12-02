@@ -59,7 +59,6 @@ void srcml_consume(int /* thread_pool_id */, std::shared_ptr<ParseRequest> reque
     }
 
     // language attribute, required if from memory
-    // @todo if request has a language different from input, need to srcml->src->srcml 
     if (srcml_unit_get_language(request->unit.get()) == 0 || srcml_unit_get_language(request->unit.get())[0] == '\0')
         if ((request->status = srcml_unit_set_language(request->unit.get(), request->language.c_str())) != SRCML_STATUS_OK) {
             request->unit.reset();

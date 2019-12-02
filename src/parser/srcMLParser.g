@@ -307,8 +307,7 @@ public:
         // only run if not guessing
         if (parent->inputState->guessing) return;
 
-        // end last opened element.
-        // @todo What to do when empty()?
+        // end last opened element
         if (!parent->currentState().openelements.empty())
             parent->endElement(parent->currentState().openelements.top());
     }
@@ -1285,8 +1284,7 @@ function_tail[] { ENTRY_DEBUG } :
             // K&R
             { inLanguage(LANGUAGE_C) }? (
 
-            // @todo:  Must be integrated into other C-based languages
-            // @todo:  Wrong markup
+            // macros
             (simple_identifier paren_pair)=> macro_call |
             { look_past_two(NAME, VOID) == LCURLY }? simple_identifier |
               parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
@@ -3657,10 +3655,6 @@ else_handling[] { ENTRY_DEBUG } :
                         // end the else
                         endMode();
 
-                        /*
-                          @todo  Can we only do this if we detect a cpp change?
-                          This would occur EVEN if we have an ifcount of 2.
-                        */
                         // we have an extra else that is rogue
                         // it either is a single else statement, or part of an #ifdef ... #else ... #endif
                         if (LA(1) == ELSE && ifcount == 1)
@@ -4097,7 +4091,6 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
 
     isdecl = true;
 
-    /** @todo may need to also pass and check other such as template and attribute/annotations */
     int specifier_count;
     int attribute_count;
     int template_count;
@@ -4459,7 +4452,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
         set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
         // special case for what looks like a destructor declaration
-        // @todo need a case where == 1 then , merge it with > 1
         throw_exception[isdestructor && (modifieroperator || (type_count - specifier_count - attribute_count - template_count) > 1 || ((type_count - specifier_count - attribute_count - template_count) == 1))]
 
         // check if an event
@@ -4479,7 +4471,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
             For now attribute and template counts are left out on purpose.
         */
-        /*! @todo verify this is correct */
         set_type[type, VARIABLE, ((((type_count - specifier_count - template_count) > 0 && LA(1) != OPERATORS && LA(1) != CSPEC && LA(1) != MSPEC
                 && ((inLanguage(LANGUAGE_CXX) && !inMode(MODE_ACCESS_REGION)) || LA(1) == 1 || LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == BAR || LA(1) == LBRACKET
                                               || (LA(1) == LPAREN && next_token() != RPAREN) || LA(1) == LCURLY || LA(1) == EQUAL || LA(1) == IN
@@ -4505,7 +4496,6 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
                  (
                     // inside of a C++ class definition must match class name
-                    // @todo Shouldn`t this also be the case for Java? Or is no return type the only rule needed for Java
                     (inMode(MODE_ACCESS_REGION) && !class_namestack.empty() && class_namestack.top() == namestack[0]) ||
 
                     (inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE)) ||
@@ -7661,7 +7651,7 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
 
                 }
 
-                // end while condition, etc. and output pseudo block  @todo may need to have a MODE_WHILE
+                // end while condition, etc. and output pseudo block
                 if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
 
                     endMode(MODE_LIST);
@@ -7683,7 +7673,7 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                     cppif_duplicate = false;
 
 
-                // end control group and output pseudo block @todo make sure does not hid other things that use for grammar
+                // end control group and output pseudo block
                 } else if (end_control_incr) {
 
                     if (inMode(MODE_LIST))
@@ -9297,8 +9287,7 @@ catch[...] {
 // do all the cpp garbage
 cpp_garbage[] :
 
- ~(EOL | LINE_COMMENT_START | BLOCK_COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START) /* @todo re-add EOF antlr is generating 1 for EOF but EOF hold -1 there is token
- with 1 EOF_ however, adding fails to generate */
+ ~(EOL | LINE_COMMENT_START | BLOCK_COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START) 
 ;
 
 cpp_check_end[] returns[bool is_end = false] {
@@ -9460,7 +9449,7 @@ eol_post[int directive_token, bool markblockzero] {
 
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
-                // @todo Leaving off for now, with no option. Test thoroughly, and then turn on by default
+                // Leaving off for now, with no option. Test thoroughly, and then turn on by default
                 if (false && !inputState->guessing) {
 
                     for (auto& item : cppif_end_count_check()) {
@@ -9479,7 +9468,6 @@ eol_post[int directive_token, bool markblockzero] {
                             std::stack<int> open_elements;
                             open_elements.push(SCONDITION);
 
-                            /** @todo Could have multipl endings of a name as well.  However, just correct double ending of condition. */
                             if (number_finishing_elements)
                                 finish_elements_add.push_back(std::make_pair(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP, open_elements));
                             else

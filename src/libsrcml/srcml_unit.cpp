@@ -694,8 +694,7 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
 
     // if this unit was parsed from source, then the src does not exist
     // generate this source from the srcml
-    // @todo Should this be an option to turn off/on? For debugging?
-    if (/* true || */ !unit->src) {
+    if (!unit->src) {
         unit->src = extract_src(unit->srcml);
     }
 
@@ -929,7 +928,6 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
     unit->content_begin = unit->unit_translator->output_buffer()->written + 1;
 
     // record end of content (after xmlns for srcML)
-    // @todo Only records for srcML namespace, not user-defined
     const char* s = (const char*) xmlBufferContent(unit->output_buffer);
     auto pos = strstr(s, "xmlns") - s;
     unit->insert_begin = (int) pos;
@@ -970,7 +968,6 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
         return SRCML_STATUS_INVALID_INPUT;
 
     // flush before detaching
-    // @todo Is this needed?
     xmlTextWriterFlush(unit->unit_translator->output_textwriter());
 
     // store the generated srcml in a char buffer

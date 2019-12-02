@@ -95,7 +95,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
         cloned.reset(srcml_archive_clone(output_archive));
         output_archive = cloned.get();
 
-        // @todo These should follow the master archive
+        // per-unit archive
         srcml_archive_enable_solitary_unit(output_archive);
         srcml_archive_disable_hash(output_archive);
 
@@ -103,7 +103,6 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     }
 
     // output scalar results
-    // @todo Make sure this works with filename output, not just file descriptor
     switch (request->results.type) {
     case SRCML_RESULTS_BOOLEAN:
         {
@@ -146,7 +145,6 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive
-        // @todo Make sure it is only an xpath transformation
         if (request->results.num_units > 1) {
             srcml_archive_disable_solitary_unit(output_archive);
         }

@@ -162,8 +162,6 @@ public:
     const char* unit_encoding = nullptr;
 
     /** output options */
-    // @todo Bad design, but making it a value breaks cpp namespace
-    // have to figure out why the options are being changed later
     OPTION_TYPE& options;
 
     /** xml encoding */

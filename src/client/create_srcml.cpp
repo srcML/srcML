@@ -61,7 +61,6 @@ int srcml_handler_dispatch(ParseQueue& queue,
         }
 
         // may have some compressions/archives
-        // @todo What if there is multiple files in the archive?
         if (!uninput.compressions.empty() || !uninput.archives.empty())
             uninput.fd = input_archive(uninput);
 
@@ -169,7 +168,6 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // markup options
-    // @todo Add error handling, and remove direct use of options
     if (srcml_request.markup_options) {
 
         if (*srcml_request.markup_options & SRCML_ARCHIVE)
@@ -186,9 +184,6 @@ void create_srcml(const srcml_request_t& srcml_request,
             srcml_archive_enable_option(srcml_arch.get(), SRCML_OPTION_NO_XML_DECL);
         if (*srcml_request.markup_options & SRCML_HASH)
             srcml_archive_enable_hash(srcml_arch.get());
-
-//            SRCMLstatus(ERROR_MSG, "srcml: invalid options for srcml archive");
-//            exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     // language
@@ -294,7 +289,6 @@ void create_srcml(const srcml_request_t& srcml_request,
             auto pos = resource.find('=');
             std::string name = resource.substr(0, pos);
             std::string value = resource.substr(pos + 1);
-            // @todo Should we always wrap?
             if (value[0] != '"') {
                 value.insert(0, 1, '"');
                 value.append("\"");

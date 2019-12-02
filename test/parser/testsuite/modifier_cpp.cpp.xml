@@ -29,7 +29,6 @@
 <decl_stmt><decl><type><name>int</name><modifier>*</modifier><modifier>&amp;</modifier><modifier>*</modifier><modifier>&amp;</modifier><modifier>*</modifier><modifier>&amp;</modifier></type> <name>i</name></decl>;</decl_stmt>
 </unit>
 
-<!-- @todo This is marked up wrong.  Need to figure out what correct syntax is -->
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name>int</name> <argument_list>(<argument><expr><operator>&amp;</operator><name>i</name></expr></argument>)</argument_list></call><index>[<expr><literal type="number">4</literal></expr>]</index></expr>;</expr_stmt>
 </unit>

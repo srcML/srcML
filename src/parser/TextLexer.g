@@ -45,7 +45,6 @@ options {
 }
 
 tokens {
-    // @todo Check that all of these are used here, and if not move them
     BLOCK_COMMENT_START;
     JAVADOC_COMMENT_START;
     DOXYGEN_COMMENT_START;
@@ -58,8 +57,6 @@ tokens {
 {
 public:
     bool onpreprocline;
-    // @todo Figure out what this was going to be for
-//    bool firstpreprocline;
     std::string delimiter;
 }
 

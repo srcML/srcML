@@ -129,7 +129,7 @@ const static srcMLState::MODE_TYPE MODE_CALL;
 /** mode fore expression block */
  const static srcMLState::MODE_TYPE MODE_EXPRESSION_BLOCK;
 
-/** mode marking to end at right parenthesis @todo remove */
+/** mode marking to end at right parenthesis */
  const static srcMLState::MODE_TYPE MODE_INTERNAL_END_PAREN;
 
 /** access regions in classes used for matching of */

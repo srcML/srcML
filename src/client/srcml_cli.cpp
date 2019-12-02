@@ -305,7 +305,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("MARKUP OPTIONS");
 
     // xml_form
-    // @todo Why not check in the client?
     srcml_request.att_xml_encoding = "UTF-8";
     app.add_option("--xml-encoding", srcml_request.att_xml_encoding,
         "Set output XML encoding. Default is UTF-8")
@@ -668,7 +667,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     }
 
     // check user-provided namespaces as a set compared to standard namespaces
-    // @todo Not sure of this, and that it catches everything
     for (size_t i = 0; i < srcml_get_namespace_size(); ++i) {
         std::string std_prefix = srcml_get_namespace_prefix(i);
         std::string std_uri = srcml_get_namespace_uri(i);
@@ -692,5 +690,3 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     return srcml_request;
 }
-
-// @todo Do we need to deprecate --units, -n?

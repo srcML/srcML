@@ -126,10 +126,6 @@ static int reparse_root(void* ctx) {
         auto state = (sax2_srcsax_handler*) ctxt->_private;
         if (state == nullptr)
             return;
-
-        // @todo Find out real filename to insert in error message
-        // @todo Figure out how to get where error is noted
-        //fprintf(stderr, "srcml: %d:%d %d|%s", error->line, error->int2, error->code, error->message);
     });
 
     roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
@@ -470,7 +466,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         return;
 
     // collect cpp prefix
-    // @todo Generalize this
     for (int i = 0; i < nb_namespaces; ++i) {
 
         if (std::string((const char*) namespaces[i * 2 + 1]) == SRCML_CPP_NS_URI) {
@@ -504,7 +499,6 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             state->unitsrcml.append((const char*) state->base + pos, ctxt->input->cur - state->base + 1 - pos);
 
             if (!state->context->is_archive) {
-                // @todo This is a hack
                 std::string& s = state->unitsrcml;
                 auto pos = s.find("xmlns");
                 auto firstquote = s.find("\"", pos + 1);
@@ -899,7 +893,7 @@ void cdata_block(void* ctx, const xmlChar* value, int len) {
 
     SRCSAX_DEBUG_START("");
 
-    // @todo Make sure we capture this for srcml collection
+    // append CDATA
     if (state->collect_unit_body) {
 
         // xml can get raw

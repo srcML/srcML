@@ -51,7 +51,6 @@ set(QUIET_FLAG_LONG "quiet")
 set(QUIET_FLAG_SHORT "q")
 set(OUTPUT_FLAG_LONG "output")
 set(OUTPUT_FLAG_SHORT "o")
-# @todo Missing in doc
 set(JOBS_FLAG_LONG "jobs")
 set(JOBS_FLAG_SHORT "j")
 

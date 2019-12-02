@@ -337,7 +337,6 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     }
 
     // setup for storing options in output
-    // @todo how much of this do we test, or need?
     std::array<std::pair<int, const char*>, 4> sep = {{
         { SRCML_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
         { SRCML_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
@@ -554,7 +553,6 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
         // if position attributes for non-empty start elements
-        // @todo Should <escape../> have a position?
         if (isposition && !isempty(token))
             addPosition(token);
     } 

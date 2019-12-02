@@ -92,8 +92,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
         // make sure we found it somewhere
         if (!element_uri) {
             SRCMLstatus(WARNING_MSG, "srcml: no uri exists for prefix \"" + std::string(element->prefix->c_str()) + "\"");
-            // @todo Can this be a return?
-            exit(1);
+            return -1;
         }
     }
 
@@ -111,13 +110,11 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
 
         if (!attribute_uri) {
             SRCMLstatus(WARNING_MSG, "srcml: no uri exists for prefix \"" + std::string(attribute->prefix->c_str()) + "\"");
-            // @todo Can this be a return?
-            exit(1);
+            return -1;
         }
     }
 
     // for xpath the output archive is always a non-solo unit
-    // @todo This doesn't make sense in all cases, and should be revisited
     srcml_archive_disable_solitary_unit(out_arch);
 
     // normalize the path so that it is "//"
