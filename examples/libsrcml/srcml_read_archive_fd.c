@@ -1,7 +1,7 @@
 /**
  * @file srcml_read_archive_fd.c
  *
- * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

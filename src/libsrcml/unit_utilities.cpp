@@ -1,7 +1,7 @@
 /**
  * @file unit_utilities.cpp
  *
- * @copyright Copyright (C) 2018 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2018-2019 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *

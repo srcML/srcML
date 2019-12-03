@@ -1,7 +1,7 @@
 /*!
  * @file CommentTextLexer.g
  *
- * @copyright Copyright (C) 2008-2011  srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2008-2019 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
  *

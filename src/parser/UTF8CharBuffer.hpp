@@ -1,7 +1,7 @@
 /**
  * @file UTF8CharBuffer.hpp
  *
- * @copyright Copyright (C) 2008-2014 SDML (www.srcML.org)
+ * @copyright Copyright (C) 2008-2019 srcML (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *

@@ -1,7 +1,7 @@
 /**
  * @file src_input_text.cpp
  *
- * @copyright Copyright (C) 2015 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2015-2019 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *

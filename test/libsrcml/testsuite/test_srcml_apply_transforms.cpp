@@ -1,7 +1,7 @@
 /*
   test_srcml_apply_transforms.cpp
 
-  Copyright (C) 2013-2014 SDML (www.srcML.org)
+  Copyright (C) 2013-2019 srcML (www.srcML.org)
 
   The srcML Toolkit is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by

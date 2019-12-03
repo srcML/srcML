@@ -1,7 +1,7 @@
 /**
  * @file test_srcml_sax2_reader.cpp
  *
- * @copyright Copyright (C) 2013-2014 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

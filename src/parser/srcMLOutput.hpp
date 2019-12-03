@@ -1,7 +1,7 @@
 /**
  * @file srcMLOutput.hpp
  *
- * @copyright Copyright (C) 2003-2017 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2003-2019 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *

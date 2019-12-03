@@ -1,7 +1,7 @@
 /**
  * @file input_archive.hpp
  *
- * @copyright Copyright (C) 2017 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2017-2019 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  *
