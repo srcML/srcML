@@ -101,7 +101,12 @@ void srcsax_free_context(srcsax_context* context) {
     if (context->libxml2_context)
         xmlFreeParserCtxt(context->libxml2_context);
 
-    delete context;
+    /*
+        Causes IO error in libxml2 on fedora
+        Since only one per srcML input, leave memory leak for now
+        Problem is further down in xmlFreeParserInputBuffer()
+    */
+    // delete context;
 }
 
 /**
