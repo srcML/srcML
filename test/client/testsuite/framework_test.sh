@@ -209,6 +209,71 @@ check() {
 #
 # If stdout is not specified, it is assumed to be empty
 # If stderr is not specified, it is assumed to be empty
+check_ignore() {
+
+    local exit_status=$?
+
+    set -e
+
+    # return stdout and stderr to standard streams
+    uncapture_output
+
+    # trace the command
+    firsthistoryentry
+
+    # check <filename> stdoutstr stderrstr
+    if [ $# -ge 3 ]; then
+
+        $diff <(echo -en "$2") $1
+        $diff <(echo -en "$3") $STDERR
+
+    # check <filename> stdoutstr
+    # note: empty string reports as a valid file
+    elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
+
+        $diff <(echo -en "$2") $1
+#        [ ! -s $STDERR ]
+
+    # check stdoutstr stderrstr
+    elif [ $# -ge 2 ]; then
+
+        $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$2") $STDERR
+
+    # check <filename>
+    elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
+        $diff $1 $STDOUT
+#        [ ! -s $STDERR ]
+
+    # check stdoutstr
+    elif [ $# -ge 1 ]; then
+
+        $diff <(echo -en "$1") $STDOUT
+ #       [ ! -s $STDERR ]
+
+    else
+        # check that the captured stdout is empty
+        [ ! -s $STDOUT ]
+  #      [ ! -s $STDERR ]
+    fi
+
+    set +e
+
+    if [ $exit_status -ne 0 ]; then
+        exit 1
+    fi
+
+    # return to capturing stdout and stderr
+    capture_output
+
+    true
+}
+
+##
+# checks the result of a command
+#
+# If stdout is not specified, it is assumed to be empty
+# If stderr is not specified, it is assumed to be empty
 check_file() {
 
     local exit_status=$?
@@ -223,6 +288,38 @@ check_file() {
 
     $diff $2 $1
     [ ! -s $STDERR ]
+
+    if [ $exit_status -ne 0 ]; then
+        exit 1
+    fi
+
+    set +e
+
+    # return to capturing stdout and stderr
+    capture_output
+
+    true
+}
+
+##
+# checks the result of a command
+#
+# If stdout is not specified, it is assumed to be empty
+# If stderr is not specified, it is assumed to be empty
+check_file_ignore() {
+
+    local exit_status=$?
+
+    # return stdout and stderr to standard streams
+    uncapture_output
+
+    # trace the command
+    firsthistoryentry
+
+    set -e
+
+    $diff $2 $1
+#    [ ! -s $STDERR ]
 
     if [ $exit_status -ne 0 ]; then
         exit 1
