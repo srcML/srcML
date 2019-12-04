@@ -65,10 +65,13 @@ int src_input_filesystem(ParseQueue& queue,
     archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_XATTR);
 #endif
     archive_read_disk_open(darchive, input.c_str());
-    archive_entry* entry = nullptr;
+
+    /* Null entry with archive_read_next_header() causes a segfault on ARCHIVE_VERSION_NUMBER < 300200
+       Creating an entry and using archive_read_next_header2() works */
+    archive_entry* entry = archive_entry_new();
     bool first = true;
     int status = ARCHIVE_OK;
-    while ((status = archive_read_next_header(darchive, &entry)) == ARCHIVE_OK) {
+    while ((status = archive_read_next_header2(darchive, entry)) == ARCHIVE_OK) {
 
         std::string filename = archive_entry_pathname(entry);
 
