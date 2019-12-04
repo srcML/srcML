@@ -50,9 +50,6 @@ check "$result"
 srcml --xpath="//src:name" a.cpp --xmlns:pre=foo.com --attribute="pre:attr=value"
 check "$result"
 
-srcml --xpath="src:name" a.cpp --xmlns:pre=foo.com --attribute="pre:attr=value"
-check "$result"
-
 srcml --xpath="name" a.cpp --xmlns:pre=foo.com --attribute="pre:attr=value"
 check "$resultnop"
 

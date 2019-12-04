@@ -76,22 +76,6 @@ check sub/b.cpp.xml "$output2"
 srcml --xpath=//src:name -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$output2"
 
- # src:name
-srcml --xpath=src:name sub/a.cpp.xml
-check "$output2"
-
-srcml --xpath=src:name < sub/a.cpp.xml
-check "$output2"
-
-srcml --xpath=src:name sub/a.cpp.xml -o sub/b.cpp.xml
-check sub/b.cpp.xml "$output2"
-
-srcml --xpath=src:name -o sub/b.cpp.xml sub/a.cpp.xml
-check sub/b.cpp.xml "$output2"
-
-srcml --xpath=src:name -o sub/b.cpp.xml < sub/a.cpp.xml
-check sub/b.cpp.xml "$output2"
-
 # src:name
 srcml --xpath=name sub/a.cpp.xml
 check "$output_empty"

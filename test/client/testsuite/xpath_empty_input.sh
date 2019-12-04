@@ -31,7 +31,3 @@ check_exit 1
 
 srcml -l C++ --xpath=src:unit -o sub/b.cpp.xml sub/a.cpp.xml
 check_exit 1
-
-# equivalent as inputting an empty source file
-srcml -l C++ --xpath=src:unit < sub/a.cpp.xml
-check "$xpath_empty"

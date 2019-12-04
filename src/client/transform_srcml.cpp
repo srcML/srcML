@@ -27,45 +27,6 @@
 #include <string>
 #include <SRCMLStatus.hpp>
 
-#include <regex>
-
-/*
-    normalize the xpath 
-    src:function -> //src:function
-    count(src:function) -> count(//src:function)
-    //src:function -> //src:function
-    call(src:function) -> call(//src:function)
-*/
-std::string normalize_xpath(std::string nxpath) {
-
-    // no normalization needed if axis specified, as with "//" and "/"
-    if (nxpath[0] == '/')
-        return nxpath;
-
-    // match function call to adjust where "//" is inserted
-    static std::regex funcstart("^\\s*[a-zA-Z0-9:-_]*\\s*\\(\\s*");
-
-    // just check if the start looks like a function call
-    size_t axispos = 0;
-    while (true) {
-
-        std::smatch start;
-        std::string rest = nxpath.substr(axispos);
-        std::regex_search(rest, start, funcstart);
-        if (start.size() == 0)
-            break;
-
-        axispos += start.str(0).size();
-    }
-
-    // check axis part for starting context
-    if (nxpath[axispos] != '/') {
-        nxpath.insert(axispos, "//");
-    }
-
-    return nxpath;
-}
-
 int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::string& transform_input, const std::pair< boost::optional<element>, boost::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
 
     auto element = xpath_support.first;
@@ -117,8 +78,8 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
     // for xpath the output archive is always a non-solo unit
     srcml_archive_disable_solitary_unit(out_arch);
 
-    // normalize the path so that it is "//"
-    std::string nxpath = normalize_xpath(transform_input);
+    // save for future xpath normalization
+    std::string nxpath = transform_input;
 
     // Call appropriate XPath transform
     if (element && attribute) {
