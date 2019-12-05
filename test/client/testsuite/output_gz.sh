@@ -1,7 +1,16 @@
 #!/bin/bash
 
+libversion=$(srcml --version | tail -1)
+libversion=${libversion:10}
+numversion=$(printf "%d%03d%03d" ${libversion:1:1} ${libversion:3:1} ${libversion:5:1})
+if [[ $numversion -lt 3002000 ]]; then
+	echo "Test Skipped: Output as gz not available on this platform"
+	exit 0
+fi
+
 # test framework
 source $(dirname "$0")/framework_test.sh
+
 
 # test compression tool
 
