@@ -75,9 +75,6 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
         }
     }
 
-    // for xpath the output archive is always a non-solo unit
-    srcml_archive_disable_solitary_unit(out_arch);
-
     // save for future xpath normalization
     std::string nxpath = transform_input;
 
@@ -113,6 +110,9 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
             attribute->value->c_str());
 
     } else {
+
+        // for xpath individual results the output archive is always a non-solo unit
+        srcml_archive_disable_solitary_unit(out_arch);
 
         return srcml_append_transform_xpath(in_arch, nxpath.c_str());
     }
