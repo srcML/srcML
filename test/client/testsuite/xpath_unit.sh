@@ -104,9 +104,9 @@ define xpathout <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
 
-	<unit xmlns:omp="http://www.srcML.org/srcML/openmp" revision="1.0.0" language="C" item="1"><omp:directive>omp <omp:name>parallel</omp:name></omp:directive></unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="1.0.0" language="C" item="1"><omp:directive>omp <omp:name>parallel</omp:name></omp:directive></unit>
 
-	<unit xmlns:omp="http://www.srcML.org/srcML/openmp" revision="1.0.0" language="C" item="2"><omp:name>parallel</omp:name></unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="1.0.0" language="C" item="2"><omp:name>parallel</omp:name></unit>
 
 	</unit>
 	STDOUT

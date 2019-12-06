@@ -267,6 +267,11 @@ int srcml_archive_set_options(struct srcml_archive* archive, size_t options) {
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    // if the user specified cpp, then mark that it was declared
+    if (options & SRCML_OPTION_CPP) {
+        archive->options |= SRCML_OPTION_CPP_DECLARED;
+    }
+
     int modoption = options % (1<<7);
 
     archive->options = modoption;
@@ -356,8 +361,9 @@ int srcml_archive_enable_option(struct srcml_archive* archive, size_t option) {
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (archive->options & SRCML_OPTION_CPP) {
-//        archive->options |= SRCML_OPTION_CPP_DECLARED;
+    // if the user specified cpp, then mark that it was declared
+    if (option & SRCML_OPTION_CPP) {
+        archive->options |= SRCML_OPTION_CPP_DECLARED;
     }
 
     int modoption = option % (1<<7);
@@ -459,7 +465,7 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
     std::string suri = uri;
     if (suri == SRCML_CPP_NS_URI) {
         archive->options |= SRCML_OPTION_CPP;
-//        archive->options |= SRCML_OPTION_CPP_DECLARED;
+        archive->options |= SRCML_OPTION_CPP_DECLARED;
     } else if (suri == SRCML_ERROR_NS_URI) {
         archive->options |= SRCML_OPTION_DEBUG;
     } else if (suri == SRCML_POSITION_NS_URI) {
