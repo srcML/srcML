@@ -22,6 +22,7 @@
 #define INCLUDED_DASSERT_HPP
 
 #include <iostream>
+#include <assert.h>
 
 // difference assertion
 #define dassert(LEFT, RIGHT) if(!((LEFT) == (RIGHT))) { \

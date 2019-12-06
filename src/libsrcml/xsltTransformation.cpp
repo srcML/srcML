@@ -99,8 +99,18 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     libexslt_handle = dlopen_libexslt();
 
     // allow for all exslt functions
-    dlexsltRegisterAll(libexslt_handle);
+    typedef void (*exsltRegisterAll_t)();
+    dlerror();
+    exsltRegisterAll_t exsltRegisterAll;
+    *(void **) (&exsltRegisterAll) = dlsym(libexslt_handle, "exsltRegisterAll");
+    if ((error = dlerror()) != NULL) {
+        dlclose(libexslt_handle);
+        throw;
+    }
 #endif
+
+    // allow for all exslt functions
+    exsltRegisterAll();
 
     // parse the stylesheet
     stylesheet = xsltParseStylesheetDoc(xslt);
@@ -154,29 +164,4 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
 
     // transformation result is nodeset with single unit, and the unit is wrapped
     return TransformationResult(xmlXPathNodeSetCreate(res->children), true);
-}
-
-/**
- * dlexsltRegisterAll
- *
- * Allow for all exslt functions by dynamic load
- * of exslt library.
- */
-void dlexsltRegisterAll(void* handle) {
-
-#ifdef DLLOAD
-    typedef void (*exsltRegisterAll_t)();
-
-    dlerror();
-    exsltRegisterAll_t exsltRegisterAll;
-    *(void **) (&exsltRegisterAll) = dlsym(handle, "exsltRegisterAll");
-    char* error;
-    if ((error = dlerror()) != NULL) {
-        dlclose(handle);
-        return;
-    }
-
-    // allow for all exslt functions
-    exsltRegisterAll();
-#endif
 }

@@ -25,9 +25,17 @@ foreach(LIB_TEST ${LIB_TESTS})
     get_filename_component(TEST_NAME ${LIB_TEST} NAME_WE)
     add_executable(${TEST_NAME} ${LIB_TEST})
     target_link_libraries(${TEST_NAME} libsrcml_link)
-    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+    set(TEST_DIR ${CMAKE_BINARY_DIR}/bin/tmp/${TEST_NAME})
+    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>
+             WORKING_DIRECTORY ${TEST_DIR})
+    file(MAKE_DIRECTORY ${TEST_DIR})
     set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 15)
+
+    configure_file(copy.xsl ${TEST_DIR}/copy.xsl COPYONLY)
+    configure_file(setlanguage.xsl ${TEST_DIR}/setlanguage.xsl COPYONLY)
+    configure_file(schema.rng ${TEST_DIR}/schema.rng COPYONLY)
+
 endforeach()
 
 # Copy xpath test data
