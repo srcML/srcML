@@ -65,7 +65,7 @@ void* dlopen_library(std::vector<const char*> libnames) {
  */
 void* dlopen_libxslt() {
 
-    return dlopen_library({ "libxslt.so", "libxslt.so.0", "libxslt.dylib" });
+    return dlopen_library({ "libxslt.so", "libxslt.so.1", "libxslt.so.0", "libxslt.dylib" });
 }
 
 /**
