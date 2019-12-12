@@ -11,13 +11,13 @@ srcML toolkit includes:
 
 * srcML client
 
-Conversion to the srcML format, querying and transformation on 
-srcML, and conversion of srcML back to source code using the 
-command `srcml`
+    Conversion to the srcML format, querying and transformation on 
+    srcML, and conversion of srcML back to source code using the 
+    command `srcml`
 
 * libsrcml
 
-A C interface for translation of source code to and from srcML, 
-as well as, efficient manipulation and fact extraction (XPath, 
-XSLT, and RelaxNG).  The srcML client `srcml` is built utilizing 
-libsrcml.
+    A C interface for translation of source code to and from srcML, 
+    as well as, efficient manipulation and fact extraction (XPath, 
+    XSLT, and RelaxNG).  The srcML client `srcml` is built utilizing 
+    libsrcml.

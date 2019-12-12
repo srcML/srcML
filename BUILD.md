@@ -77,28 +77,30 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
 * Locate the source code for srcML
 * Extract the zipped build dependencies
     * The extracted folder will be named deps, and its structure will look like the following:
-    ```
-        deps/
-            debug/
-            include/
-            release/
-            tools/
-    ```        
+
+        ```
+            deps/
+                debug/
+                include/
+                release/
+                tools/
+        ```
     * When copied into the srcML source code directory the result should look like the following:
-    ```
-        srcML/
-                BUILD.md
-                package/
-                CMakeLists.txt
-                COPYING.txt
-                CTestConfig.cmake
-                deps/
-                    include/
-                    tools/
-                    x64/
-                doc/
-                ...etc...
-    ```
+
+        ```
+            srcML/  
+                    BUILD.md
+                    package/
+                    CMakeLists.txt
+                    COPYING.txt
+                    CTestConfig.cmake
+                    deps/
+                        include/
+                        tools/
+                        x64/
+                    doc/
+                    ...etc...
+        ```
 * NOTES:
     * Building srcml should be done in a separate directory external to the source code to avoid issues
 * Graphical Interface Build:
@@ -110,14 +112,24 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
     * Right click Project "ALL_BUILD" and choose "build"
 * Command Line Buid:
     * Generate the build files in your target build directory.
-    ```
-        cmake [path to srcML source directory] -G [target visual studio version and architecture]   
-        ex. cmake ..\srcML\ -G "Visual Studio 15 2017 Win64"
-    ```
+
+        ```
+            cmake [path to srcML source directory] -G [target visual studio version and architecture]   
+        ```
+        For example:
+
+        ```
+            cmake ..\srcML\ -G "Visual Studio 15 2017 Win64"
+        ```
     * Execute the build.
-    ```
-        cmake --build . --config [build mode]
-        ex. cmake --build . --config release
+
+        ```
+            cmake --build . --config [build mode]
+        ```
+        For example:
+
+        ```
+            cmake --build . --config release
     ```
 
 * Once built, locate the build folder. Within that folder there is now a directory named `bin` containing the release or debug versions of srcML executable and library along with all other dependencies.
