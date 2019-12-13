@@ -56,7 +56,37 @@ namespace std {
 
     template<>
     struct default_delete<xmlParserInputBuffer> {
-        void operator()(xmlParserInputBuffer* buffer) { xmlFreeParserInputBuffer(buffer); }
+        void operator()(xmlParserInputBuffer* buffer) {
+
+            /*
+                Emulate xmlFreeParserInputBuffer() to avoid crash
+                on fedora, but allow for proper closing of files.
+            */
+            // xmlFreeParserInputBuffer(buffer);
+            if (buffer == nullptr)
+                return;
+
+            if (buffer->raw) {
+                xmlBufferFree(xmlBufferPtr(buffer->raw));
+                buffer->raw = nullptr;
+            }
+            if (buffer->encoder) {
+                xmlCharEncCloseFunc(buffer->encoder);
+            }
+            if (buffer->closecallback) {
+                buffer->closecallback(buffer->context);
+            }
+            if (buffer->buffer) {
+                xmlBufferFree(xmlBufferPtr(buffer->buffer));
+                buffer->buffer = nullptr;
+            }
+
+            /*
+                Causes memory errors no fedora. Not a big memory leak
+                because one per input file
+            */
+            //xmlFree(buffer);
+        }
     };
 
     template<>

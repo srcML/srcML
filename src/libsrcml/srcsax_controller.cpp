@@ -106,7 +106,7 @@ void srcsax_free_context(srcsax_context* context) {
         Since only one per srcML input, leave memory leak for now
         Problem is further down in xmlFreeParserInputBuffer()
     */
-    // delete context;
+    delete context;
 }
 
 /**
