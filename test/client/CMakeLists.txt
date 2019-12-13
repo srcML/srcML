@@ -19,8 +19,8 @@
 
 # Separate project driver for testing the client outside of build
 if(NOT PROJECT_NAME MATCHES "^srcML")
-    project(srcML-Test-client)
-    cmake_minimum_required(VERSION 3.15)
+    project(srcML-Test-client NONE)
+    cmake_minimum_required(VERSION 3.14)
     enable_testing()
 endif()
 
