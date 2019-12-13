@@ -17,7 +17,17 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src/libsrcml)
+# Separate project driver for testing libsrcml outside of build
+if(NOT PROJECT_NAME MATCHES "^srcML")
+    project(srcML-Test)
+    cmake_minimum_required(VERSION 3.15)
+    option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
+    option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" ON)
+    option(BUILD_PARSER_TESTS "Include tests for parser" ON)
+    enable_testing()
+else()
+    include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src/libsrcml)
+endif()
 
 if(BUILD_CLIENT_TESTS)
     add_subdirectory(client)

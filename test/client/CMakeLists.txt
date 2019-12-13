@@ -17,4 +17,11 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+# Separate project driver for testing the client outside of build
+if(NOT PROJECT_NAME MATCHES "^srcML")
+    project(srcML-Test-client)
+    cmake_minimum_required(VERSION 3.15)
+    enable_testing()
+endif()
+
 add_subdirectory(testsuite)
