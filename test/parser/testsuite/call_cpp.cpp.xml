@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="call_cpp">
 
+<!--
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name>~f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
+-->
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name><operator>(</operator><operator>*</operator><name>a</name><operator>)</operator><operator>.</operator><name>b</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
