@@ -134,15 +134,15 @@ int main(int, char* argv[]) {
     */
 
     {
-        assert(srcml_check_encoding("UTF-8"));
+        dassert(srcml_check_encoding("UTF-8"), 1);
     }
 
     {
-        assert(!srcml_check_encoding("foo"));
+        dassert(srcml_check_encoding("foo"), 0);
     }
 
     {
-        assert(!srcml_check_encoding(0));
+        dassert(srcml_check_encoding(0), 0);
     }
 
     srcml_cleanup_globals();

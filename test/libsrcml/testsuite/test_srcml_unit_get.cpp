@@ -198,7 +198,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;", 2);
 
-        assert(srcml_archive_has_hash(archive));
+        dassert(srcml_archive_has_hash(archive), 1);
         dassert(srcml_unit_get_hash(unit), std::string("a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"));
         
         srcml_unit_free(unit);
@@ -222,7 +222,7 @@ int main(int, char* argv[]) {
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
-        assert(srcml_archive_has_hash(archive));
+        dassert(srcml_archive_has_hash(archive), 1);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;", 2);
 

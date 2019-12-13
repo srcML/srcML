@@ -287,7 +287,7 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         srcml_archive_write_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_parse_filename(unit, "project.c");
-        assert(srcml_unit_get_timestamp(unit) == 0);
+        dassert(srcml_unit_get_timestamp(unit), 0);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -565,7 +565,9 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C");
         srcml_unit_parse_memory(unit, src.c_str(), src.size());
-        assert(srcml_unit_get_timestamp(unit) != 0);
+        fprintf(stderr, "DEBUG:  %s %s %d srcml_unit_get_timestamp(unit): %s\n", __FILE__,  __FUNCTION__, __LINE__, srcml_unit_get_timestamp(unit));
+
+        dassert(srcml_unit_get_timestamp(unit), 0);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -879,7 +881,7 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         FILE* file = fopen("project.c", "r");
         srcml_unit_set_language(unit, "C");
         srcml_unit_parse_FILE(unit, file);
-        assert(srcml_unit_get_timestamp(unit) != 0);
+        dassert(srcml_unit_get_timestamp(unit), 0);
         fclose(file);
 
         srcml_unit_free(unit);
@@ -1194,7 +1196,7 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         int fd = OPEN("project.c", O_RDONLY, 0);
         srcml_unit_set_language(unit, "C");
         srcml_unit_parse_fd(unit, fd);
-        assert(srcml_unit_get_timestamp(unit) != 0);
+        dassert(srcml_unit_get_timestamp(unit), 0);
         CLOSE(fd);
 
         srcml_unit_free(unit);
@@ -1494,7 +1496,7 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         FILE* file = fopen("project.c", "r");
         srcml_unit_set_language(unit, "C");
         srcml_unit_parse_io(unit, (void *)file, read_callback, close_callback);
-        assert(srcml_unit_get_timestamp(unit) != 0);
+        dassert(srcml_unit_get_timestamp(unit), 0);
         fclose(file);
 
         srcml_unit_free(unit);

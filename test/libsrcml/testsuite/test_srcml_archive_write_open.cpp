@@ -61,7 +61,7 @@ int main(int, char* argv[]) {
 
         // check file either does not exist or empty
         std::ifstream result_file("project.xml");
-        assert(!result_file);
+        dassert(bool(result_file), true);
     }
 
     {
