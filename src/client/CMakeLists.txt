@@ -47,6 +47,10 @@ target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_EXTERNAL_SOURCE_DIR} $
 # Add coverage to default part of Debug
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES} gcov)
+elseif(LINK_AWS_SDK STREQUAL "ON")
+    find_package(AWSSDK REQUIRED COMPONENTS s3)
+    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES} ${AWSSDK_LINK_LIBRARIES})
+    add_compile_definitions(LINKING_WITH_AWS_SDK="LINKING_WITH_AWS_SDK")
 else()
     target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES})
 endif()

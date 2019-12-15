@@ -36,6 +36,7 @@
 #include <TraceLog.hpp>
 #include <input_file.hpp>
 #include <input_curl.hpp>
+#include <input_s3.hpp>
 #include <iostream>
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
@@ -90,6 +91,13 @@ int srcml_handler_dispatch(ParseQueue& queue,
     }
 
     srcml_input_src uninput = input;
+
+    #ifdef LINKING_WITH_AWS_SDK
+    if (uninput.protocol == "s3" && !input_s3(uninput)) {
+        SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml S3 object %s", uninput.filename);
+        return -1;
+    }
+    #endif
 
     // input must go through libcurl pipe
     if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput)){
