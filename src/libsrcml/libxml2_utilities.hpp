@@ -73,7 +73,12 @@ namespace std {
             if (buffer->encoder) {
                 xmlCharEncCloseFunc(buffer->encoder);
             }
-            if (buffer->closecallback) {
+
+            /*
+                On some versions of fedora, if buffer->context is 0 (i.e, stdin)
+                causes a "BAD DESCRIPTOR" error
+            */
+            if (buffer->closecallback && buffer->context != 0) {
                 buffer->closecallback(buffer->context);
             }
             if (buffer->buffer) {
