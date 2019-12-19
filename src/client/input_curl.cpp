@@ -26,6 +26,7 @@
 #include <SRCMLStatus.hpp>
 #include <mutex>
 #include <condition_variable>
+#include <atomic>
 
 bool curl_supported(const std::string& input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
@@ -35,10 +36,6 @@ bool curl_supported(const std::string& input_protocol) {
     }
     return false;
 }
-
-void setCurlErrors();
-
-void clearCurlErrors();
 
 namespace {
 
@@ -65,9 +62,17 @@ namespace {
         CURL* curlhandle;
     };
 
-    std::mutex c;
+    std::atomic<bool> curl_errors(false);
+}
 
-    bool curl_errors = false;
+// coordinate curl error response
+// only call before goCurl() 
+void setCurlErrors(bool flag) {
+    curl_errors = flag;
+}
+
+bool getCurlErrors() {
+    return curl_errors;
 }
 
 /*
@@ -84,7 +89,12 @@ size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userd
     long http_code = 0;
     curl_easy_getinfo (data->curlhandle, CURLINFO_RESPONSE_CODE, &http_code);
 
-    goCurl(http_code == 200);
+    // return immediately with an error so that curl_easy_perform() returns
+    // and curl_easy_getinfo() can get data to process the error
+    if (http_code != 200)
+        return 0;
+
+    goCurl(true);
 
     ssize_t result = write(data->outfd, ptr, size * nmemb);
 
@@ -135,11 +145,12 @@ int input_curl(srcml_input_src& input) {
         curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
         if(response != CURLE_OK || http_code != 200) {
             SRCMLstatus(WARNING_MSG, "srcml: Unable to access URL " + url);
-            setCurlErrors();
+            setCurlErrors(true);
             goCurl(false);
 
         } else {
 
+            setCurlErrors(false);
             goCurl(true);
             
             // ok, no errors, but may have cached data in the buffer, especially for small files
@@ -163,19 +174,4 @@ int input_curl(srcml_input_src& input) {
 
     // wait to see if curl is able to download the url at all
     return waitCurl();
-}
-
-void setCurlErrors() {
-    std::unique_lock<std::mutex> l(c);
-    curl_errors = true;
-}
-
-void clearCurlErrors() {
-    std::unique_lock<std::mutex> l(c);
-    curl_errors = false;
-}
-
-bool getCurlErrors() {
-    std::unique_lock<std::mutex> l(c);
-    return curl_errors;
 }
