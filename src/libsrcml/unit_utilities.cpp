@@ -52,9 +52,20 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
         //else if (attribute == "src-encoding")
             //archive->options |= SRCML_OPTION_STORE_ENCODING, srcml_unit_set_src_encoding(unit, value.c_str());
         else {
-
-            unit->attributes.push_back(attribute);
-            unit->attributes.push_back(value);
+            // if we already have the attribute, then just update the value
+            // otherwise create a new one
+            bool found = false;
+            for (size_t i = 0; i < unit->attributes.size(); i += 2) {
+                if (unit->attributes[i] == attribute) {
+                    found = true;
+                    unit->attributes[i + 1] = value;
+                    break;
+                }
+            }
+            if (!found) {
+                unit->attributes.push_back(attribute);
+                unit->attributes.push_back(value);
+            }
         }
     }
 }
