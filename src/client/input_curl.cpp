@@ -57,8 +57,6 @@ namespace {
 
     struct curl_write_info {
         int outfd;
-        size_t currentsize;
-        std::string buffer;
         CURL* curlhandle;
     };
 
@@ -116,7 +114,6 @@ int input_curl(srcml_input_src& input) {
 
         curl_write_info write_info;
         write_info.outfd = *destination.fd; // output is a file descriptor
-        write_info.currentsize = 0;
         write_info.curlhandle = curl_handle;
 
         curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
@@ -152,14 +149,7 @@ int input_curl(srcml_input_src& input) {
 
             setCurlErrors(false);
             goCurl(true);
-            
-            // ok, no errors, but may have cached data in the buffer, especially for small files
-            if (!write_info.buffer.empty()) {
-                ssize_t result = write(write_info.outfd, write_info.buffer.c_str(), write_info.buffer.size());
-                if (result < 0) {
-                    SRCMLstatus(WARNING_MSG, "srcml: Buffer error with URL " + url);
-                }
-            }
+
         }
 
         // close the output file descriptor we were writing the download to
