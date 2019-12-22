@@ -54,7 +54,7 @@ static xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buf
  */
 srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlParserInputBuffer> input) {
 
-    if (input == 0)
+    if (!input)
         return 0;
 
     const char* encoding = nullptr;
@@ -71,7 +71,7 @@ srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlPar
 
     context->input = std::move(input);
 
-    xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input.get(), encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
+    xmlParserCtxtPtr libxml2_context = srcsax_create_parser_context(context->input.release(), encoding ? xmlParseCharEncoding(encoding) : XML_CHAR_ENCODING_NONE);
     if (libxml2_context == nullptr) {
         delete context;
         return 0;
@@ -94,18 +94,9 @@ void srcsax_free_context(srcsax_context* context) {
     if (context == 0)
         return;
 
-    xmlParserInputPtr stream = inputPop(context->libxml2_context);
-    stream->buf = 0;
-    xmlFreeInputStream(stream);
-
     if (context->libxml2_context)
         xmlFreeParserCtxt(context->libxml2_context);
 
-    /*
-        Causes IO error in libxml2 on fedora
-        Since only one per srcML input, leave memory leak for now
-        Problem is further down in xmlFreeParserInputBuffer()
-    */
     delete context;
 }
 

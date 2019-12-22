@@ -1018,6 +1018,9 @@ int srcml_archive_write_open_io(struct srcml_archive* archive, void * context, i
  */
 static int srcml_archive_read_open_internal(struct srcml_archive* archive, std::unique_ptr<xmlParserInputBuffer> input) {
 
+    if (!input)
+        return SRCML_STATUS_IO_ERROR;
+
     try {
 
         archive->reader = new srcml_sax2_reader(archive, std::move(input));
