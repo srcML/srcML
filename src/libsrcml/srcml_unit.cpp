@@ -892,6 +892,10 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
         if (!(unit->namespaces))
             unit->namespaces = unit->archive->namespaces;
 
+        if (unit->unit_translator) {
+            delete unit->unit_translator;
+            unit->unit_translator = nullptr;
+        }
         unit->unit_translator = new srcml_translator(
             obuffer,
             optional_to_c_str(unit->archive->encoding, "UTF-8"),
@@ -1221,7 +1225,7 @@ const char* srcml_unit_error_string(const struct srcml_unit* unit) {
 }
 
 /**
- * srcml_unit_free
+ * 
  * @param unit a srcml unit
  *
  * Free the contents of a srcml_unit.

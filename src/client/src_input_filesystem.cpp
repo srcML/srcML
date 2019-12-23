@@ -96,7 +96,7 @@ int src_input_filesystem(ParseQueue& queue,
 
         files.push_back(archive_entry_pathname(entry));
     }
-    archive_read_close(darchive);
+    archive_read_free(darchive);
 
     std::sort(files.begin(), files.end());
 

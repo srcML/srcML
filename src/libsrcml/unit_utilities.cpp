@@ -187,6 +187,11 @@ std::string extract_src(const std::string& srcml, boost::optional<int> revision)
 
     xmlParseDocument(context);
 
+    context->_private = nullptr;
+    context->sax = nullptr;
+
+    xmlFreeParserCtxt(context);
+
     return scontext.s;
 }
 
