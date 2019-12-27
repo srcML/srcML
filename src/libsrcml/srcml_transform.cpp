@@ -578,7 +578,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     // create units out of the transformation results
     result->type = lastresult.nodeType;
     result->num_units = fullresults->nodeNr;
-    result->units = new srcml_unit*[fullresults->nodeNr + 1];
+    result->units = (srcml_unit**) calloc(fullresults->nodeNr + 1, sizeof(srcml_unit*));
     result->units[fullresults->nodeNr] = 0;
 
     for (int i = 0; i < fullresults->nodeNr; ++i) {
