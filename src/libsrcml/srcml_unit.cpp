@@ -785,6 +785,8 @@ int srcml_unit_unparse_memory(struct srcml_unit* unit, char** src_buffer, size_t
         return SRCML_STATUS_ERROR;
     *src_size = strlen(*src_buffer);
 
+    xmlBufferFree(buffer);
+
     return SRCML_STATUS_OK;
 }
 
