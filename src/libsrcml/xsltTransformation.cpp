@@ -129,6 +129,8 @@ xsltTransformation::~xsltTransformation() {
 
     xsltCleanupGlobals();
 
+    xsltFreeStylesheet(stylesheet);
+
 #ifdef DLLOAD
     dlclose(libxslt_handle);
     dlclose(libexslt_handle);
