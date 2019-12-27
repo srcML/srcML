@@ -68,6 +68,11 @@ xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xp
     compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
 }
 
+xpathTransformation::~xpathTransformation() {
+
+    xmlXPathFreeCompExpr(compiled_xpath);
+}
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
