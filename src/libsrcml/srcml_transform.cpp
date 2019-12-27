@@ -514,6 +514,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     std::unique_ptr<xmlNodeSet> fullresults(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc.get())));
     if (fullresults == nullptr)
         return SRCML_STATUS_ERROR;
+    auto save_doc = xmlDocGetRootElement(doc.get());
 
     TransformationResult lastresult;
     for (const auto& trans : archive->transformations) {
@@ -551,6 +552,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     // handle non-nodeset results
     switch (lastresult.nodeType) {
     case SRCML_RESULTS_STRING:
+        xmlDocSetRootElement(doc.get(), save_doc);
         if (result != nullptr) {
             result->stringValue = strdup(lastresult.stringValue.c_str());
             return SRCML_STATUS_OK;
@@ -558,6 +560,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return SRCML_STATUS_ERROR;
 
     case SRCML_RESULTS_BOOLEAN:
+        xmlDocSetRootElement(doc.get(), save_doc);
         if (result != nullptr) {
             result->boolValue = lastresult.boolValue;
             return SRCML_STATUS_OK;
@@ -565,6 +568,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return SRCML_STATUS_ERROR;
 
     case SRCML_RESULTS_NUMBER:
+        xmlDocSetRootElement(doc.get(), save_doc);
         if (result != nullptr) {
             result->numberValue = lastresult.numberValue;
             return SRCML_STATUS_OK;
@@ -572,8 +576,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return SRCML_STATUS_ERROR;
     };
 
-    if (result == nullptr)
+    if (result == nullptr) {
+        xmlDocSetRootElement(doc.get(), save_doc);
         return SRCML_STATUS_OK;
+    }
 
     // create units out of the transformation results
     result->type = lastresult.nodeType;
@@ -717,6 +723,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
         result->units[i] = nunit;
     }
+
+    xmlDocSetRootElement(doc.get(), save_doc);
 
     return SRCML_STATUS_OK;
 }
