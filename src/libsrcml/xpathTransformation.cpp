@@ -38,6 +38,8 @@
 
 #include <srcml_translator.hpp>
 #include <srcml_sax2_utilities.hpp>
+#include <libxml2_utilities.hpp>
+#include <memory>
 
 const char* const xpathTransformation::simple_xpath_attribute_name = "location";
 
@@ -250,8 +252,8 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     }
 
     // evaluate the xpath
-    xmlXPathObjectPtr result_nodes = xmlXPathCompiledEval(compiled_xpath, context);
-    if (result_nodes == 0) {
+    std::unique_ptr<xmlXPathObject> result_nodes(xmlXPathCompiledEval(compiled_xpath, context));
+    if (!result_nodes) {
         fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
         return TransformationResult();
     }
@@ -279,7 +281,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
 
     if (!element.empty()) {
 
-        addElementXPathResults(doc, result_nodes);
+        addElementXPathResults(doc, result_nodes.get());
 
         tresult.unitWrapped = true;
         tresult.nodeset = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
@@ -314,6 +316,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         tresult.unitWrapped = true;
 
     tresult.nodeset = result_nodes->nodesetval;
+    result_nodes->nodesetval = nullptr;
 
     return tresult;
 }
