@@ -702,11 +702,17 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
             // parse the start tag updating the unit
             xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.c_str(), (int) starttag.size());
+            auto save_private = context->_private;
             context->_private = nunit;
+            auto save_sax = context->sax;
             context->sax = &roottagsax;
 
             // parse our single-element unit
             xmlParseDocument(context);
+
+            context->_private = save_private;
+            context->sax = save_sax;
+            xmlFreeParserCtxt(context);
         }
 
         result->units[i] = nunit;

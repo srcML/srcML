@@ -182,13 +182,15 @@ std::string extract_src(const std::string& srcml, boost::optional<int> revision)
     };
 
     xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(srcml.c_str(), (int) srcml.size());
+    auto save_private = context->_private;
     context->_private = &scontext;
+    auto save_sax = context->sax;
     context->sax = &charactersax;
 
     xmlParseDocument(context);
 
-    context->_private = nullptr;
-    context->sax = nullptr;
+    context->_private = save_private;
+    context->sax = save_sax;
 
     xmlFreeParserCtxt(context);
 
