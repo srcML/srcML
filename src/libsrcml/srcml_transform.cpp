@@ -495,27 +495,29 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (archive == nullptr || unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    // unit stays the same for no transformation
+    if (archive->transformations.empty())
+        return SRCML_STATUS_OK;
+
     if (result) {
         result->num_units = 0;
         result->units = nullptr;
         result->stringValue = nullptr;
     }
 
-    // unit stays the same for no transformation
-    if (archive->transformations.empty())
-        return SRCML_STATUS_OK;
-
     // create a DOM of the unit
     std::unique_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0));
     if (doc == nullptr)
         return SRCML_STATUS_ERROR;
+    // reusing this doc multiple times, so save original root element
+    auto save_root = xmlDocGetRootElement(doc.get());
 
     // apply transformations sequentially on the results from the previous transformation
     std::unique_ptr<xmlNodeSet> fullresults(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc.get())));
     if (fullresults == nullptr)
         return SRCML_STATUS_ERROR;
-    auto save_doc = xmlDocGetRootElement(doc.get());
 
+    // final result of all applied transformations
     TransformationResult lastresult;
     for (const auto& trans : archive->transformations) {
 
@@ -531,10 +533,14 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             xmlDocSetRootElement(doc.get(), pr->nodeTab[i]);
 
             lastresult = trans->apply(doc.get(), 0);
-            std::unique_ptr<xmlNodeSet> results(lastresult.nodeset);
+            std::unique_ptr<xmlNodeSet> results(std::move(lastresult.nodeset));
             if (results == nullptr)
                 break;
+
             xmlXPathNodeSetMerge(fullresults.get(), results.get());
+
+            // to avoid memory problems
+            xmlDocSetRootElement(doc.get(), save_root);
         }
 
         // if there are no results, then we can't apply further transformations
@@ -552,7 +558,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     // handle non-nodeset results
     switch (lastresult.nodeType) {
     case SRCML_RESULTS_STRING:
-        xmlDocSetRootElement(doc.get(), save_doc);
         if (result != nullptr) {
             result->stringValue = strdup(lastresult.stringValue.c_str());
             return SRCML_STATUS_OK;
@@ -560,7 +565,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return SRCML_STATUS_ERROR;
 
     case SRCML_RESULTS_BOOLEAN:
-        xmlDocSetRootElement(doc.get(), save_doc);
         if (result != nullptr) {
             result->boolValue = lastresult.boolValue;
             return SRCML_STATUS_OK;
@@ -568,7 +572,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         return SRCML_STATUS_ERROR;
 
     case SRCML_RESULTS_NUMBER:
-        xmlDocSetRootElement(doc.get(), save_doc);
         if (result != nullptr) {
             result->numberValue = lastresult.numberValue;
             return SRCML_STATUS_OK;
@@ -577,7 +580,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     };
 
     if (result == nullptr) {
-        xmlDocSetRootElement(doc.get(), save_doc);
         return SRCML_STATUS_OK;
     }
 
@@ -598,8 +600,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             nunit->hash = boost::none;
         }
 
-        doc->children = fullresults->nodeTab[i];
-
+        // when no namespace, use the starting namespaces
         if (!nunit->namespaces)
             nunit->namespaces = starting_namespaces;
 
@@ -614,7 +615,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             view.modify(itomp, [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
         }
 
-        // special case for XML comment as it does not get written to the tree
+        // special cases where the nodes are not written to the tree
         switch (fullresults->nodeTab[i]->type) {
         case XML_COMMENT_NODE:
 
@@ -639,7 +640,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         default:
 
             // dump the result tree to the string using an output buffer that writes to a std::string
-            doc->children = fullresults->nodeTab[i];
             xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
 
                 ((std::string*) context)->append(buffer, len);
@@ -647,13 +647,14 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 return len;
 
             }, 0, &(nunit->srcml), 0);
-            xmlNodeDumpOutput(output, doc.get(), xmlDocGetRootElement(doc.get()), 0, 0, 0);
+            xmlNodeDumpOutput(output, doc.get(), fullresults->nodeTab[i], 0, 0, 0);
 
             // very important to flush to make sure the unit contents are all present
             // also performs a free of resources
             xmlOutputBufferClose(output);
 
-            if (usesURI(xmlDocGetRootElement(doc.get()), SRCML_CPP_NS_URI)) {
+            // update the cpp namespace if actually used
+            if (usesURI(fullresults->nodeTab[i], SRCML_CPP_NS_URI)) {
 
                 if (itcpp != view.end()) {
                     view.modify(itcpp, [](Namespace& thisns){ thisns.flags |= NS_USED; });
@@ -662,7 +663,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 }
             }
 
-            if (usesURI(xmlDocGetRootElement(doc.get()), SRCML_OPENMP_NS_URI)) {
+            // update the openmp namespace if actually used
+            if (usesURI(fullresults->nodeTab[i], SRCML_OPENMP_NS_URI)) {
 
                 if (itomp != view.end()) {
                     view.modify(itomp, [](Namespace& thisns){ thisns.flags |= NS_USED; });
@@ -716,15 +718,21 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // parse our single-element unit
             xmlParseDocument(context);
 
+            // restore state and free
             context->_private = save_private;
             context->sax = save_sax;
             xmlFreeParserCtxt(context);
         }
 
+        // store in the returned results
         result->units[i] = nunit;
     }
 
-    xmlDocSetRootElement(doc.get(), save_doc);
+    // remove all nodes in the fullresults nodeset
+    // valgrind shows free accessing these nodes after they have been freed
+    // by the xmlDoc
+    while (fullresults->nodeNr)
+        xmlXPathNodeSetRemove(fullresults.get(), 0);
 
     return SRCML_STATUS_OK;
 }

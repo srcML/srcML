@@ -226,8 +226,8 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
  */
 TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
 
-    xmlXPathContextPtr context = createContext(doc);
-    if (context == 0) {
+    std::unique_ptr<xmlXPathContext> context(createContext(doc));
+    if (!context) {
         fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
         return TransformationResult();
     }
@@ -240,7 +240,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         if (ns.uri == SRCML_SRC_NS_URI)
             prefix = "src";
 
-        if (xmlXPathRegisterNs(context, BAD_CAST prefix, BAD_CAST uri) == -1) {
+        if (xmlXPathRegisterNs(context.get(), BAD_CAST prefix, BAD_CAST uri) == -1) {
             fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
         }
     }
@@ -248,11 +248,11 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     // register prefixes from the doc
     for (auto p = doc->children->nsDef; p; p = p->next) {
 
-        xmlXPathRegisterNs(context, p->prefix, p->href);
+        xmlXPathRegisterNs(context.get(), p->prefix, p->href);
     }
 
     // evaluate the xpath
-    std::unique_ptr<xmlXPathObject> result_nodes(xmlXPathCompiledEval(compiled_xpath, context));
+    std::unique_ptr<xmlXPathObject> result_nodes(xmlXPathCompiledEval(compiled_xpath, context.get()));
     if (!result_nodes) {
         fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
         return TransformationResult();
@@ -284,7 +284,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         addElementXPathResults(doc, result_nodes.get());
 
         tresult.unitWrapped = true;
-        tresult.nodeset = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+        tresult.nodeset.reset(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc)));
 
         return tresult;
     }
@@ -300,7 +300,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
             }
         }
         tresult.unitWrapped = true;
-        tresult.nodeset = xmlXPathNodeSetCreate(xmlDocGetRootElement(doc));
+        tresult.nodeset.reset(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc)));
 
         return tresult;
     }
@@ -315,7 +315,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)
         tresult.unitWrapped = true;
 
-    tresult.nodeset = result_nodes->nodesetval;
+    tresult.nodeset.reset(result_nodes->nodesetval);
     result_nodes->nodesetval = nullptr;
 
     return tresult;

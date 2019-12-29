@@ -27,18 +27,20 @@
 #include <libxml/xpath.h>
 #include <string>
 #include <vector>
-
+#include <libxml2_utilities.hpp>
+#include <memory>
 #include <boost/optional.hpp>
 
 struct TransformationResult {
     TransformationResult(xmlNodeSetPtr nodeset = nullptr, bool wrapped = false)
         : nodeset(nodeset), unitWrapped(wrapped) {}
     int nodeType = 0;
-    xmlNodeSetPtr nodeset = nullptr;
+    std::unique_ptr<xmlNodeSet> nodeset;
     double numberValue = 0.0;
     bool boolValue = false;
     std::string stringValue;
     bool unitWrapped = false;
+    std::unique_ptr<xmlDoc> doc;
 };
 
 /**

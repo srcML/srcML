@@ -65,6 +65,11 @@ namespace std {
     };
 
     template<>
+    struct default_delete<xmlXPathContext> {
+        void operator()(xmlXPathContext* context) { xmlXPathFreeContext(context); }
+    };
+
+    template<>
     struct default_delete<xmlRelaxNGValidCtxt> {
         void operator()(xmlRelaxNGValidCtxt* rngctx) { xmlRelaxNGFreeValidCtxt(rngctx); }
     };
