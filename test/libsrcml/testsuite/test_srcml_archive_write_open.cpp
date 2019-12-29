@@ -87,8 +87,6 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
         srcml_memory_free(s);
-
-        dassert(size, -1);
     }
 
     {
