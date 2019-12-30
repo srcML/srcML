@@ -50,8 +50,9 @@ int src_input_filesystem(ParseQueue& queue,
     // with immediate directory "." lookup the current working directory
     std::string input = raw_input;
     if (input == ".") {
-        std::unique_ptr<char> cwd(getcwd(nullptr, 0));
-        input = cwd.get();
+        char* cwd(getcwd(nullptr, 0));
+        input = cwd;
+        free(cwd);
     }
 
     // get a list of files (including directories) from the current directory
@@ -96,6 +97,7 @@ int src_input_filesystem(ParseQueue& queue,
 
         files.push_back(archive_entry_pathname(entry));
     }
+    archive_entry_free(entry);
     archive_read_free(darchive);
 
     std::sort(files.begin(), files.end());
