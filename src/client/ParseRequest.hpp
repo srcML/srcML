@@ -50,7 +50,7 @@ struct ParseRequest {
     boost::optional<std::string> time_stamp;
     boost::optional<std::string> errormsg;
     bool needsparsing = true;
-    srcml_transformation_result_t results;
+    srcml_transformation_result_t results{ 0, 0, nullptr, false, 0, nullptr };
     std::shared_ptr<srcml_archive> input_archive;
 };
 
