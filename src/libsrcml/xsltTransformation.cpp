@@ -127,9 +127,9 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
  */
 xsltTransformation::~xsltTransformation() {
 
-    xsltCleanupGlobals();
-
     xsltFreeStylesheet(stylesheet);
+
+    xsltCleanupGlobals();
 
 #ifdef DLLOAD
     dlclose(libxslt_handle);
