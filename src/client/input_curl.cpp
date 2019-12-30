@@ -107,9 +107,9 @@ int input_curl(srcml_input_src& input) {
         // input comes from URL
         std::string url = input_sources[0].filename;
 
-        CURL *curl_handle;
-
         curl_global_init(CURL_GLOBAL_DEFAULT);
+
+        CURL* curl_handle{ 0 };
         curl_handle = curl_easy_init();
 
         curl_write_info write_info;
@@ -134,8 +134,7 @@ int input_curl(srcml_input_src& input) {
         //curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
 
         // start the download
-        CURLcode response;
-        response = curl_easy_perform(curl_handle);
+        CURLcode response = curl_easy_perform(curl_handle);
 
         // check for download errors
         long http_code = 0;
