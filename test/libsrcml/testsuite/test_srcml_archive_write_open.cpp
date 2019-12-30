@@ -123,6 +123,7 @@ int main(int, char* argv[]) {
         FILE* file = fopen("project.xml", "w");
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_FILE(archive, file), SRCML_STATUS_OK);
+        srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
 
@@ -131,7 +132,7 @@ int main(int, char* argv[]) {
         size_t num_read = fread(buf, 1, 1, file);
         fclose(file);
 
-        dassert(num_read, 0);
+        dassert(num_read, 1);
     }
 
     {
@@ -154,6 +155,7 @@ int main(int, char* argv[]) {
         int fd = OPEN("project.xml", O_WRONLY, 0);
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_fd(archive, fd), SRCML_STATUS_OK);
+        srcml_archive_close(archive);
         srcml_archive_free(archive);
         CLOSE(fd);
 
@@ -162,13 +164,12 @@ int main(int, char* argv[]) {
         size_t num_read = read(fd, buf, 1);
         CLOSE(fd);
         
-        dassert(num_read, 0);
+        dassert(num_read, 1);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
-
         srcml_archive_free(archive);
     }
 
@@ -186,6 +187,7 @@ int main(int, char* argv[]) {
         FILE* file = fopen("project.xml", "w");
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_io(archive, (void *)file, write_callback, close_callback), SRCML_STATUS_OK);
+        srcml_archive_close(archive);
         srcml_archive_free(archive);
         fclose(file);
 
@@ -194,7 +196,7 @@ int main(int, char* argv[]) {
         size_t num_read = fread(buf, 1, 1, file);
         fclose(file);
         
-        dassert(num_read, 0);
+        dassert(num_read, 1);
     }
 
     {
