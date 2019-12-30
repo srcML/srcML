@@ -131,6 +131,7 @@ int main(int, char* argv[]) {
         dassert(srcml_write_start_unit(0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
 
     /*
@@ -149,6 +150,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
 
     {
@@ -379,6 +381,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
 
     {
@@ -400,6 +403,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
     
     {
@@ -468,6 +472,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
 
     {
@@ -481,6 +486,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
     
     {
@@ -614,6 +620,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
 
     {
@@ -627,6 +634,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
     
     {
@@ -694,6 +702,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
 
     {
@@ -709,6 +718,7 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        free(s);
     }
     
     {

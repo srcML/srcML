@@ -60,6 +60,16 @@ namespace std {
     };
 
     template<>
+    struct default_delete<xmlXPathObject> {
+        void operator()(xmlXPathObject* xpath) { xmlXPathFreeObject(xpath); }
+    };
+
+    template<>
+    struct default_delete<xmlXPathContext> {
+        void operator()(xmlXPathContext* context) { xmlXPathFreeContext(context); }
+    };
+
+    template<>
     struct default_delete<xmlRelaxNGValidCtxt> {
         void operator()(xmlRelaxNGValidCtxt* rngctx) { xmlRelaxNGFreeValidCtxt(rngctx); }
     };

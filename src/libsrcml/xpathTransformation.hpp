@@ -83,6 +83,11 @@ public :
     xpathTransformation(srcml_archive* oarchive, const char* xpath, const char* element_prefix, const char* element_uri, const char* element,
                         const char* attr_prefix, const char* attr_uri, const char* attr_name, const char* attr_value);
 
+    /*
+     * Destructor
+     */
+    ~xpathTransformation();
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 

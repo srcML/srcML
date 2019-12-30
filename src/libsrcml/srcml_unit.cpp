@@ -780,11 +780,12 @@ int srcml_unit_unparse_memory(struct srcml_unit* unit, char** src_buffer, size_t
     if (status != SRCML_STATUS_OK)
         return status;
 
-    (*src_buffer) = (char *)buffer->content;
-    buffer->content = 0;
-    if (!buffer->content && !(*src_buffer))
+    (*src_buffer) = (char *) xmlBufferDetach(buffer);
+    if (!(*src_buffer))
         return SRCML_STATUS_ERROR;
     *src_size = strlen(*src_buffer);
+
+    xmlBufferFree(buffer);
 
     return SRCML_STATUS_OK;
 }
@@ -893,8 +894,11 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
             unit->namespaces = unit->archive->namespaces;
 
         if (unit->unit_translator) {
+            unit->unit_translator->close();
             delete unit->unit_translator;
             unit->unit_translator = nullptr;
+            xmlBufferFree(unit->output_buffer);
+            unit->output_buffer = nullptr;
         }
         unit->unit_translator = new srcml_translator(
             obuffer,

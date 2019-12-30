@@ -151,12 +151,18 @@ static int reparse_root(void* ctx) {
     };
 
     xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(state->rootstarttag.c_str(), (int) state->rootstarttag.size());
+    auto save_private = context->_private;
     context->_private = state;
+    auto save_sax = context->sax;
     context->sax = &roottagsax;
 
     state->rootcalled = true;
 
     int status = xmlParseDocument(context);
+
+    context->_private = save_private;
+    context->sax = save_sax;
+    xmlFreeParserCtxt(context);
 
     return status;
 }

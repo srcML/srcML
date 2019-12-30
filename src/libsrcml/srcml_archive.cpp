@@ -878,6 +878,7 @@ static int srcml_archive_write_create_translator_xml_buffer(struct srcml_archive
     } catch(...) {
 
         xmlOutputBufferClose(archive->output_buffer);
+        archive->output_buffer = nullptr;
         return SRCML_STATUS_IO_ERROR;
     }
 
@@ -1300,6 +1301,7 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
     return 1;
 }
 
+
 /******************************************************************************
  *                                                                            *
  *                       Archive close function                               *
@@ -1322,15 +1324,18 @@ void srcml_archive_close(struct srcml_archive* archive) {
     // if we haven't opened the translator yet, do so now. This will create an empty unit/archive
     if (archive->type == SRCML_ARCHIVE_WRITE && !archive->rawwrites && archive->translator == nullptr) {
         srcml_archive_write_create_translator_xml_buffer(archive);
-    } 
-
-    if (archive->rawwrites && archive->output_buffer)
-        xmlOutputBufferClose(archive->output_buffer);
+    }
 
     if (archive->translator) {
         archive->translator->close();
         delete archive->translator;
         archive->translator = nullptr;
+        archive->output_buffer = nullptr;
+    }
+
+    if (archive->rawwrites && archive->output_buffer) {
+        xmlOutputBufferClose(archive->output_buffer);
+        archive->output_buffer = nullptr;
     }
 
     // Give the user the completed buffer if opened using srcml_archive_write_open_memory() 
@@ -1340,6 +1345,9 @@ void srcml_archive_close(struct srcml_archive* archive) {
         *archive->size = (size_t) archive->xbuffer->use;
         (*archive->buffer) = (char *) xmlBufferDetach(archive->xbuffer);
     }
+
+    if (archive->xbuffer)
+        xmlBufferFree(archive->xbuffer);
 
     if (archive->reader) {
         delete archive->reader;
