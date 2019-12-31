@@ -565,8 +565,6 @@ R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C");
         srcml_unit_parse_memory(unit, src.c_str(), src.size());
-        fprintf(stderr, "DEBUG:  %s %s %d srcml_unit_get_timestamp(unit): %s\n", __FILE__,  __FUNCTION__, __LINE__, srcml_unit_get_timestamp(unit));
-
         dassert(srcml_unit_get_timestamp(unit), 0);
 
         srcml_unit_free(unit);
