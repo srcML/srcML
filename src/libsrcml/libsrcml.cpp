@@ -834,7 +834,11 @@ const char * srcml_check_extension(const char* filename) {
  */
 int srcml_check_encoding(const char* encoding) {
 
-    return xmlParseCharEncoding(encoding) > 0;
+    if (encoding == nullptr)
+        return 0;
+
+    auto result = xmlParseCharEncoding(encoding);
+    return result != XML_CHAR_ENCODING_NONE && result != XML_CHAR_ENCODING_ERROR;
 }
 
 /**
