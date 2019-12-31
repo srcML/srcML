@@ -32,7 +32,7 @@
 
 #include <srcmlns.hpp>
 
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+#ifdef DLLOAD
 #include <dlfcn.h>
 #endif
 
@@ -68,11 +68,23 @@ xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xp
 //    xsltsrcMLRegister();
 
     compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
+
+    // load DLL exslt functions
+#if LIBEXSLT_VERSION > 813
+#ifdef DLLOAD
+    handle = dlopen_libexslt();
+#endif
+#endif
+
 }
 
 xpathTransformation::~xpathTransformation() {
 
     xmlXPathFreeCompExpr(compiled_xpath);
+
+#ifdef DLLOAD
+    dlclose(handle);
+#endif
 }
 
 #pragma GCC diagnostic push
@@ -155,18 +167,18 @@ void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* 
     xmlSetNsProp(node, ns, (const xmlChar *) attr_name.c_str(), (const xmlChar *) newvalue);
 }
 
-xmlXPathContextPtr createContext(xmlDocPtr doc) {
+xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
 
     auto context = xmlXPathNewContext(doc);
+
 #if LIBEXSLT_VERSION > 813
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+#ifdef DLLOAD
     typedef int (*exsltXpathCtxtRegister)(xmlXPathContextPtr, const xmlChar*);
 
     /** create a variable for dynamically load from library */
     typedef void * __attribute__ ((__may_alias__)) VOIDPTR;
 #define dlsymvar(type, name) type name;  *(VOIDPTR *)(&name) = dlsym(handle, #name)
 
-    thread_local void* handle = dlopen_libexslt();
     if (false && handle) {
 
         dlerror();
@@ -212,6 +224,7 @@ xmlXPathContextPtr createContext(xmlDocPtr doc) {
 #undef dlsymvar
 #endif
 #endif
+
 
     return context;
 }

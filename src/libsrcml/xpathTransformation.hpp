@@ -23,6 +23,12 @@
 #ifndef INCLUDED_XPATHTRANSFORMATION_HPP
 #define INCLUDED_XPATHTRANSFORMATION_HPP
 
+#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
+#define DLLOAD
+#else
+#undef DLLOAD
+#endif
+
 #include <libxml/parser.h>
 
 #include <srcmlns.hpp>
@@ -145,6 +151,13 @@ public:
     xmlXPathCompExprPtr compiled_xpath = nullptr;
 
     static const char* const simple_xpath_attribute_name;
+
+private:
+    xmlXPathContextPtr createContext(xmlDocPtr doc) const;
+#ifdef DLLOAD
+    void* handle = nullptr;
+#endif
+
 };
 
 #endif
