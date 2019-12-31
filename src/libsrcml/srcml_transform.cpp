@@ -506,7 +506,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // create a DOM of the unit
-    std::unique_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0));
+    std::shared_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
     if (doc == nullptr)
         return SRCML_STATUS_ERROR;
 
@@ -517,7 +517,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     // final result of all applied transformations
     TransformationResult lastresult;
-    xmlDocPtr curdoc = doc.get();
+    std::shared_ptr<xmlDoc> curdoc(doc);
     for (const auto& trans : archive->transformations) {
 
         // preserve the fullresults to iterate through
@@ -530,9 +530,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
         for (int i = 0; i < pr->nodeNr; ++i) {
 
-            xmlDocSetRootElement(curdoc, pr->nodeTab[i]);
+            xmlDocSetRootElement(curdoc.get(), pr->nodeTab[i]);
 
-            lastresult = trans->apply(curdoc, 0);
+            lastresult = trans->apply(curdoc.get(), 0);
             std::unique_ptr<xmlNodeSet> results(std::move(lastresult.nodeset));
             if (results == nullptr)
                 break;
@@ -546,7 +546,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
         // result of the transformation may be a new doc
         if (lastresult.doc && lastresult.doc.get() != doc.get()) {
-            curdoc = lastresult.doc.get();
+            curdoc = lastresult.doc;
         }
 
         // if there are no results, then we can't apply further transformations
@@ -653,7 +653,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 return len;
 
             }, 0, &(nunit->srcml), 0);
-            xmlNodeDumpOutput(output, curdoc, fullresults->nodeTab[i], 0, 0, 0);
+            xmlNodeDumpOutput(output, curdoc.get(), fullresults->nodeTab[i], 0, 0, 0);
 
             // very important to flush to make sure the unit contents are all present
             // also performs a free of resources
@@ -737,8 +737,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     // remove all nodes in the fullresults nodeset
     // valgrind shows free accessing these nodes after they have been freed
     // by the xmlDoc
-    while (fullresults->nodeNr)
-       xmlXPathNodeSetRemove(fullresults.get(), 0);
+    fullresults->nodeNr = 0;
 
     return SRCML_STATUS_OK;
 }
