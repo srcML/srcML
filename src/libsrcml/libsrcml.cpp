@@ -42,12 +42,31 @@
 #include <dlfcn.h>
 #endif
 
+// library constructor/destructor
+#if defined(__GNUC__)
+
+__attribute__((constructor))
+static void constructor() {
+
+    xmlInitParser();
+}
+
+__attribute__((destructor))
+static void destructor() {
+
+    xmlCleanupParser();
+}
+
+#else
+
 static bool once = [](){
 
     xmlInitParser();
 
     return true;
-} ();
+}();
+
+#endif
 
 /**
  * @var global_archive
@@ -85,9 +104,8 @@ static bool register_languages = true;
  */
 void srcml_cleanup_globals() {
 
-    xmlCleanupCharEncodingHandlers();
-    xmlCleanupGlobals();
-    xmlDictCleanup();
+    // automatic on library unloading, but this lets
+    // it be done earlier
     xmlCleanupParser();
 }
 
