@@ -84,12 +84,6 @@ static srcml_archive global_archive;
  */
 static srcml_unit global_unit;
 
-/**
- * @var register_languages
- *
- * Global variable tracking if need to register default languages.
- */
-static bool register_languages = true;
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
@@ -159,26 +153,6 @@ int srcml(const char* input_filename, const char* output_filename) {
         global_archive.error_string = "No input file provided";
         return  SRCML_STATUS_INVALID_ARGUMENT;
 
-    }
-
-    if (register_languages) {
-
-        register_languages = false;
-        language_extension_registry registry = global_archive.registered_languages;
-
-        global_archive.registered_languages = language_extension_registry();
-
-        global_archive.registered_languages.register_standard_file_extensions();
-
-        global_archive.registered_languages.append(registry);
-
-        decltype(global_archive.namespaces) save_namespaces = global_archive.namespaces;
-
-        srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_DEFAULT_PREFIX, SRCML_SRC_NS_URI);
-
-        for (const auto& ns : save_namespaces) {
-            srcml_archive_register_namespace(&global_archive, ns.prefix.c_str(), ns.uri.c_str());
-        }
     }
 
     if (srcml_check_extension(input_filename)) {
@@ -827,18 +801,6 @@ const char * srcml_get_language_list(size_t pos) {
  * @returns Returns language on success and NULL on failure.
  */
 const char * srcml_check_extension(const char* filename) {
-
-    if (register_languages) {
-        register_languages = false;
-
-        language_extension_registry registry = global_archive.registered_languages;
-
-        global_archive.registered_languages = language_extension_registry();
-
-        global_archive.registered_languages.register_standard_file_extensions();
-
-        global_archive.registered_languages.append(registry);
-    }
 
     return srcml_archive_check_extension(&global_archive, filename);
 }
