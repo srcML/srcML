@@ -1328,7 +1328,6 @@ int main(int, char* argv[]) {
         free(s);
     }
 
-    exit(0);
     {
         char* s;
         size_t size;
@@ -1363,6 +1362,9 @@ int main(int, char* argv[]) {
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
         srcml_archive_write_unit(oarchive, result.units[0]);
+        srcml_unit_free(result.units[0]);
+        free(result.units);
+        srcml_unit_free(unit);
         srcml_clear_transforms(iarchive);
 
         srcml_archive_close(oarchive);
@@ -1408,6 +1410,9 @@ int main(int, char* argv[]) {
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
         srcml_archive_write_unit(oarchive, result.units[0]);
+        srcml_unit_free(result.units[0]);
+        free(result.units);
+        srcml_unit_free(unit);
         srcml_clear_transforms(iarchive);
 
         srcml_archive_close(oarchive);
@@ -1453,6 +1458,9 @@ int main(int, char* argv[]) {
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
         srcml_archive_write_unit(oarchive, result.units[0]);
+        srcml_unit_free(result.units[0]);
+        free(result.units);
+        srcml_unit_free(unit);
         srcml_clear_transforms(iarchive);
 
         srcml_archive_close(oarchive);
