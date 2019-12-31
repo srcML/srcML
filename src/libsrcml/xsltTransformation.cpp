@@ -52,8 +52,6 @@
 xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xslt, const std::vector<std::string>& params)
         : params(params) {
 
-    xmlInitParser();
-
 #ifdef DLLOAD
 
     libxslt_handle = dlopen_libxslt();

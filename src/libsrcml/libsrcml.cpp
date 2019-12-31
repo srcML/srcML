@@ -42,6 +42,13 @@
 #include <dlfcn.h>
 #endif
 
+static bool once = [](){
+
+    xmlInitParser();
+
+    return true;
+} ();
+
 /**
  * @var global_archive
  *
@@ -135,8 +142,6 @@ int srcml(const char* input_filename, const char* output_filename) {
         return  SRCML_STATUS_INVALID_ARGUMENT;
 
     }
-
-    xmlInitParser();
 
     if (register_languages) {
 
