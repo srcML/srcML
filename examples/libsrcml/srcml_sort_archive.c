@@ -26,14 +26,15 @@
 */
 
 #include <srcml.h>
+#include <stdio.h>
 #include <string.h>
 
 int main(int argc, char* argv[]) {
 
     int num_units = 0;
     struct srcml_unit* units[10];
-    const char* inputfile = "project.xml";
-    const char* outputfile = "project_tmp.xml";
+    const char* inputfile = "input/project.xml";
+    const char* outputfile = "sorted.xml";
 
     /* open up an existing archive */
     struct srcml_archive* iarchive = srcml_archive_create();
@@ -42,46 +43,45 @@ int main(int argc, char* argv[]) {
     /* options and attributes of cloned archive start the same as
        the original archive */
     struct srcml_archive* oarchive = srcml_archive_clone(iarchive);
-    srcml_archive_read_open_filename(iarchive, inputfile);
+
+    int status = srcml_archive_read_open_filename(iarchive, inputfile);
+    if (status != SRCML_STATUS_OK) {
+        printf("srcML file: %s is missing", inputfile);
+        return status;
+    }
+
+    /* read up to 3 units in storing them all */
     while (1) {
-
-
         units[num_units] = srcml_archive_read_unit(iarchive);
         if (units[num_units] == 0)
             break;
         ++num_units;
 
+        if (num_units >= 3)
+            break;
     }
+
+    /* sort the first 3 units based on the filenames */
     int i;
     for(i = 1; i < num_units; ++i) {
-
         int j;
         for(j = i; j > 0; --j) {
-
-            if(strcmp(srcml_unit_get_filename(units[j]), srcml_unit_get_filename(units[j - 1])) < 0) {
-
+            if (strcmp(srcml_unit_get_filename(units[j]), srcml_unit_get_filename(units[j - 1])) < 0) {
                 struct srcml_unit* tmp_unit = units[j];
                 units[j] = units[j - 1];
                 units[j - 1] = tmp_unit;
-
-            } else
-                break;
-
+            }
         }
-
     }
 
-    /* open a srcML archive for output */
+    /* store the sorted units in a srcML archive */
     srcml_archive_write_open_filename(oarchive, outputfile);
-
     for(i = 0; i < num_units; ++i) {
 
         /* copy the files from the input archive to the output archive */
-        /* Translate to srcml and append to the archive */
         srcml_archive_write_unit(oarchive, units[i]);
 
         srcml_unit_free(units[i]);
-
     }
 
     /* close the archives */

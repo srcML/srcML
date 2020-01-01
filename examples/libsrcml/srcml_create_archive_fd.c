@@ -25,6 +25,7 @@
 */
 
 #include <srcml.h>
+#include <stdio.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #ifdef _MSC_BUILD
@@ -33,7 +34,9 @@
 #include <unistd.h>
 #endif
 
-int main(int argc, char* argv[]) {
+int main() {
+
+    const char* source[] = { "input/h.cpp", "input/g.cpp", "input/f.cpp" };
 
     /* create a new srcml archive structure */
     struct srcml_archive* archive = srcml_archive_create();
@@ -45,31 +48,40 @@ int main(int argc, char* argv[]) {
     srcml_archive_write_open_fd(archive, srcml_output);
 
     /* add all the files to the archive */
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 0; i < 3; ++i) {
 
         struct srcml_unit* unit = srcml_unit_create(archive);
 
-        srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
+        /* set the language based on the file extension */
+        srcml_unit_set_language(unit, srcml_archive_check_extension(archive, source[i]));
 
-        /* Translate to srcml */
-        int srcml_input = open(argv[i], O_RDONLY, 0);
+        /* set the filename */
+        srcml_unit_set_filename(unit, source[i]);
+
+        /* open the source file */
+        int srcml_input = open(source[i], O_RDONLY, 0);
+
+        /* translate to srcml */
         srcml_unit_parse_fd(unit, srcml_input);
 
-        /* Append to the archive */
+        /* close the source file */
+        close(srcml_input);
+
+        /* append to the archive */
         srcml_archive_write_unit(archive, unit);
 
+        /* free the created unit */
         srcml_unit_free(unit);
-        close(srcml_input);
     }
 
     /* close the srcML archive */
     srcml_archive_close(archive);
 
-    /* file can now be closed also */
-    close(srcml_output);
-
     /* free the srcML archive data */
     srcml_archive_free(archive);
+
+    /* file can now be closed */
+    close(srcml_output);
 
     return 0;
 }

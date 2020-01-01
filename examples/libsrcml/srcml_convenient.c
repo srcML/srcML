@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
       - Since there is only a single input file, the output file will be a non-archive by default.
       Convenience function can also convert to archive
     */
-    srcml("main.cpp", "main.cpp.xml");
+    srcml("input/main.cpp", "main.cpp.xml");
 
     return 0;
 }

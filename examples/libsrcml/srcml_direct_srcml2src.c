@@ -22,11 +22,9 @@
   Example program of the use of the C API for srcML.
 
   A straightforward translation from the srcML format back to source code.
-  Translates the srcML file "a.cpp.xml" to the source-code file "a.cpp":
+  Translates the srcML file "main.cpp.xml" to the source-code file "main.cpp":
 
   * This creates a single-unit srcML file, i.e., a non-archive srcML
-  * The srcML attribute filename will be the name of the file passed as the first
-  parameter.
 */
 
 #include <srcml.h>
@@ -34,7 +32,7 @@
 int main(int argc, char* argv[]) {
 
     /* Translate from a srcML file to a source-code file */
-    srcml("a.cpp.xml", "a.cpp");
+    srcml("input/main.cpp.xml", "main.cpp");
 
     return 0;
 }

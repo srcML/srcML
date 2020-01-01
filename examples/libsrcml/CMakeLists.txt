@@ -22,12 +22,25 @@
 # add examples
 file(GLOB EXAMPLES "srcml_*.c")
 
+# install examples
 install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
+
+# install input files
+set(INPUT_FILES
+    input/main.cpp
+    input/main.cpp.xml
+    input/project.xml
+    input/f.cpp
+    input/g.cpp
+    input/h.cpp
+)
+install(FILES ${INPUT_FILES} DESTINATION share/srcml/examples/input COMPONENT EXAMPLES)
 
 if(BUILD_EXAMPLES)
 
     set(CMAKE_C_STANDARD 99)
 
+    # Create each example
     foreach(EXAMPLE ${EXAMPLES})
         get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
         add_executable(${EXAMPLE_NAME} ${EXAMPLE})
@@ -36,5 +49,9 @@ if(BUILD_EXAMPLES)
         set_target_properties(${EXAMPLE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     endforeach()
 
-endif()
+    # Copy input files
+    foreach(INPUT ${INPUT_FILES})
+        configure_file(${INPUT} ${CMAKE_BINARY_DIR}/bin/${INPUT} COPYONLY)
+    endforeach()
 
+endif()
