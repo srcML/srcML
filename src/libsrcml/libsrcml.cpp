@@ -861,7 +861,12 @@ int srcml_check_encoding(const char* encoding) {
     if (encoding == nullptr)
         return 0;
 
+    /* 
+       valgrind produces the error "Conditional jump or move depends on uninitialised value(s)"
+       based on a strcmp() inside of xml. For a long, invalid name, no error is produced
+    */
     auto result = xmlParseCharEncoding(encoding);
+
     return result != XML_CHAR_ENCODING_NONE && result != XML_CHAR_ENCODING_ERROR;
 }
 

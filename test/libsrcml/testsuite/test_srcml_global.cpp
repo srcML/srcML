@@ -138,7 +138,11 @@ int main(int, char* argv[]) {
     }
 
     {
-        dassert(srcml_check_encoding("foo"), 0);
+        /* 
+           valgrind produces the error "Conditional jump or move depends on uninitialised value(s)"
+           based on a strcmp() inside of xml. For a long, invalid name, no error is produced
+        */
+        dassert(srcml_check_encoding("UTF-64"), 0);
     }
 
     {
