@@ -99,6 +99,7 @@ int src_input_filesystem(ParseQueue& queue,
     }
     archive_entry_free(entry);
     archive_read_free(darchive);
+    archive_entry_free(entry);
 
     std::sort(files.begin(), files.end());
 

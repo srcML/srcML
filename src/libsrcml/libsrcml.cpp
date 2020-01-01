@@ -38,8 +38,36 @@
 #include <string>
 #include <fstream>
 
+#include <memory>
+
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
+#endif
+
+// library constructor/destructor
+#if defined(__GNUC__)
+
+__attribute__((constructor))
+static void constructor() {
+
+    xmlInitParser();
+}
+
+__attribute__((destructor))
+static void destructor() {
+
+    xmlCleanupParser();
+}
+
+#else
+
+static bool once = [](){
+
+    xmlInitParser();
+
+    return true;
+}();
+
 #endif
 
 /**
@@ -58,12 +86,6 @@ static srcml_archive global_archive;
  */
 static srcml_unit global_unit;
 
-/**
- * @var register_languages
- *
- * Global variable tracking if need to register default languages.
- */
-static bool register_languages = true;
 /******************************************************************************
  *                                                                            *
  *                           Global Cleanup function                          *
@@ -78,9 +100,8 @@ static bool register_languages = true;
  */
 void srcml_cleanup_globals() {
 
-    xmlCleanupCharEncodingHandlers();
-    xmlCleanupGlobals();
-    xmlDictCleanup();
+    // automatic on library unloading, but this lets
+    // it be done earlier
     xmlCleanupParser();
 }
 
@@ -116,6 +137,23 @@ int srcml_version_number() {
  *                                                                            *
  ******************************************************************************/
 
+namespace std {
+    template<>
+    struct default_delete<srcml_archive> {
+        void operator()(srcml_archive* arch) { 
+            srcml_archive_close(arch);
+            srcml_archive_free(arch);
+        }
+    };
+
+    template<>
+    struct default_delete<srcml_unit> {
+        void operator()(srcml_unit* unit) { 
+            srcml_unit_free(unit);
+        }
+    };
+}
+
 /**
  * srcml
  * @param input_filename input file to turn to srcML or source code.
@@ -132,81 +170,72 @@ int srcml(const char* input_filename, const char* output_filename) {
     if (!input_filename || !output_filename) {
 
         global_archive.error_string = "No input file provided";
-        return  SRCML_STATUS_INVALID_ARGUMENT;
-
-    }
-
-    xmlInitParser();
-
-    if (register_languages) {
-
-        register_languages = false;
-        language_extension_registry registry = global_archive.registered_languages;
-
-        global_archive.registered_languages = language_extension_registry();
-
-        global_archive.registered_languages.register_standard_file_extensions();
-
-        global_archive.registered_languages.append(registry);
-
-        decltype(global_archive.namespaces) save_namespaces = global_archive.namespaces;
-
-        srcml_archive_register_namespace(&global_archive, SRCML_SRC_NS_DEFAULT_PREFIX, SRCML_SRC_NS_URI);
-
-        for (const auto& ns : save_namespaces) {
-            srcml_archive_register_namespace(&global_archive, ns.prefix.c_str(), ns.uri.c_str());
-        }
+        return SRCML_STATUS_INVALID_ARGUMENT;
     }
 
     if (srcml_check_extension(input_filename)) {
 
-        srcml_archive_write_open_filename(&global_archive, output_filename);
-        srcml_unit * unit = srcml_unit_create(&global_archive);
-
-        srcml_archive_enable_solitary_unit(&global_archive);
-
-        int status = srcml_unit_set_language(unit, srcml_archive_get_language(&global_archive));
-        if (status != SRCML_STATUS_OK) {
-
-            srcml_unit_free(unit);
+        // src->srcml
+        std::unique_ptr<srcml_archive> archive(srcml_archive_clone(&global_archive));
+        if (!archive) {
+            global_archive.error_string = "Unable to create srcML archive";
+            return SRCML_STATUS_ERROR;
+        }
+ 
+        int status = srcml_archive_write_open_filename(archive.get(), output_filename);
+        if (status != SRCML_STATUS_OK)
             return status;
 
+        std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive.get()));
+        if (!unit) {
+            global_archive.error_string = "Unable to create srcML unit";
+            return SRCML_STATUS_ERROR;
         }
-        
+
+        // single input file, so non-archive unit
+        status = srcml_archive_enable_solitary_unit(archive.get());
+        if (status != SRCML_STATUS_OK)
+            return status;
+
+        status = srcml_unit_set_language(unit.get(), srcml_archive_get_language(archive.get()));
+        if (status != SRCML_STATUS_OK)
+            return status;
+
+        // unit filename is based on convenience functions or the input filename        
         if (srcml_unit_get_filename(&global_unit) != 0)
-            srcml_unit_set_filename(unit, srcml_unit_get_filename(&global_unit));
+            status = srcml_unit_set_filename(unit.get(), srcml_unit_get_filename(&global_unit));
         else
-            srcml_unit_set_filename(unit, input_filename);
-
-        srcml_unit_set_version(unit, srcml_archive_get_version(&global_archive));
-        srcml_unit_set_timestamp(unit, srcml_unit_get_timestamp(&global_unit));
-        srcml_unit_set_hash(unit, srcml_unit_get_hash(&global_unit));
-
-        status = srcml_unit_parse_filename(unit, input_filename);
-        if (status != SRCML_STATUS_OK) {
-
-            srcml_unit_free(unit);
+            status = srcml_unit_set_filename(unit.get(), input_filename);
+        if (status != SRCML_STATUS_OK)
             return status;
 
-        }
+        // get value possibly set by convenience functions
+        status = srcml_unit_set_version(unit.get(), srcml_archive_get_version(archive.get()));
+        if (status != SRCML_STATUS_OK)
+            return status;
 
-        srcml_archive_write_unit(&global_archive, unit);
+        status = srcml_unit_set_timestamp(unit.get(), srcml_unit_get_timestamp(&global_unit));
+        if (status != SRCML_STATUS_OK)
+            return status;
 
-        srcml_unit_free(unit);
-        srcml_archive_close(&global_archive);
+        // parse the unit
+        status = srcml_unit_parse_filename(unit.get(), input_filename);
+        if (status != SRCML_STATUS_OK)
+            return status;
+
+        // write the parse unit to the archive
+        status = srcml_archive_write_unit(archive.get(), unit.get());
+        if (status != SRCML_STATUS_OK)
+            return status;
 
     } else {
 
-        bool is_xml = false;
+        // check the extension for .xml or .srcml, non case-sensitive
         size_t len = strlen(input_filename);
-        if ((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
+        if (!((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
             && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
              || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
-           || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))
-            is_xml = true;
-
-        // not xml or handled language
-        if (!is_xml) {
+           || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))) {
 
             if (global_archive.language) {
                 global_archive.error_string = "Language '";
@@ -216,13 +245,25 @@ int srcml(const char* input_filename, const char* output_filename) {
                 global_archive.error_string = "No language provided.";
 
             return SRCML_STATUS_INVALID_INPUT;
-
         }
 
-        srcml_archive_read_open_filename(&global_archive, input_filename);
-        auto unit = srcml_archive_read_unit(&global_archive);
-        srcml_unit_unparse_filename(unit, output_filename);
-        srcml_unit_free(unit);
+        std::unique_ptr<srcml_archive> archive(srcml_archive_clone(&global_archive));
+        if (!archive) {
+            global_archive.error_string = "Unable to create srcML archive";
+            return SRCML_STATUS_ERROR;
+        }
+
+        int status = srcml_archive_read_open_filename(archive.get(), input_filename);
+        if (status != SRCML_STATUS_OK)
+            return status;
+
+        std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(archive.get()));
+        if (!unit)
+            return status;
+
+        status = srcml_unit_unparse_filename(unit.get(), output_filename);
+        if (status != SRCML_STATUS_OK)
+            return status;
     }
 
     return SRCML_STATUS_OK;
@@ -805,18 +846,6 @@ const char * srcml_get_language_list(size_t pos) {
  */
 const char * srcml_check_extension(const char* filename) {
 
-    if (register_languages) {
-        register_languages = false;
-
-        language_extension_registry registry = global_archive.registered_languages;
-
-        global_archive.registered_languages = language_extension_registry();
-
-        global_archive.registered_languages.register_standard_file_extensions();
-
-        global_archive.registered_languages.append(registry);
-    }
-
     return srcml_archive_check_extension(&global_archive, filename);
 }
 
@@ -829,7 +858,16 @@ const char * srcml_check_extension(const char* filename) {
  */
 int srcml_check_encoding(const char* encoding) {
 
-    return xmlParseCharEncoding(encoding) > 0;
+    if (encoding == nullptr)
+        return 0;
+
+    /* 
+       valgrind produces the error "Conditional jump or move depends on uninitialised value(s)"
+       based on a strcmp() inside of xml. For a long, invalid name, no error is produced
+    */
+    auto result = xmlParseCharEncoding(encoding);
+
+    return result != XML_CHAR_ENCODING_NONE && result != XML_CHAR_ENCODING_ERROR;
 }
 
 /**

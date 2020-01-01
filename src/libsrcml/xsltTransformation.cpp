@@ -52,8 +52,6 @@
 xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xslt, const std::vector<std::string>& params)
         : params(params) {
 
-    xmlInitParser();
-
 #ifdef DLLOAD
 
     libxslt_handle = dlopen_libxslt();
@@ -127,9 +125,9 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
  */
 xsltTransformation::~xsltTransformation() {
 
-    xsltCleanupGlobals();
-
     xsltFreeStylesheet(stylesheet);
+
+    xsltCleanupGlobals();
 
 #ifdef DLLOAD
     dlclose(libxslt_handle);
@@ -157,7 +155,7 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
     cparams.back() = 0;
 
     // apply the style sheet to the document, which is the individual unit
-    std::unique_ptr<xmlDoc> res(xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0));
+    std::shared_ptr<xmlDoc> res(xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
     if (!res) {
         fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
 
@@ -166,6 +164,6 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
 
     // transformation result is nodeset with single unit, and the unit is wrapped
     TransformationResult result(xmlXPathNodeSetCreate(res->children), true);
-    result.doc = std::move(res);
+    result.doc = res;
     return result;
 }

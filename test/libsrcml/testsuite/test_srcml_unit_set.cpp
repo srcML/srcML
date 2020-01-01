@@ -263,6 +263,7 @@ int main(int, char* argv[]) {
         free(buf);
 
         srcml_unit_free(unit);
+        srcml_archive_close(archive);
         srcml_archive_free(archive);
     }
 

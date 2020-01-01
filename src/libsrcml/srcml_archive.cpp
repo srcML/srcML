@@ -68,8 +68,6 @@ srcml_archive* srcml_archive_create() {
 
     } catch(...) { return nullptr; }
 
-    xmlInitParser();
-
     archive->registered_languages.register_standard_file_extensions();
 
     return archive;

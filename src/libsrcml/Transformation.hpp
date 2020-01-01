@@ -40,7 +40,7 @@ struct TransformationResult {
     bool boolValue = false;
     std::string stringValue;
     bool unitWrapped = false;
-    std::unique_ptr<xmlDoc> doc;
+    std::shared_ptr<xmlDoc> doc;
 };
 
 /**
