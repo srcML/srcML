@@ -780,6 +780,8 @@ int srcml_transform_free(struct srcml_transformation_result_t* result) {
     if (result->stringValue)
         free(result->stringValue);
 
+    delete result;
+
     return SRCML_STATUS_OK;
 }
 
