@@ -127,7 +127,7 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
     if (archive == nullptr)
         return nullptr;
 
-    srcml_archive* new_archive = srcml_archive_create();
+    std::unique_ptr<srcml_archive> new_archive(srcml_archive_create());
     if (!new_archive)
         return nullptr;
 
@@ -141,10 +141,10 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
     new_archive->buffer = nullptr;
     new_archive->size = nullptr;
     new_archive->rawwrites = false;
-    new_archive->error_string = std::string();
+    new_archive->error_string.clear();
     new_archive->error_number = 0;
 
-    return new_archive;
+    return new_archive.release();
 }
 
 /******************************************************************************
@@ -1254,20 +1254,18 @@ struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
         return nullptr;
 
-    srcml_unit * unit = srcml_unit_create(archive);
+    std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive));
     int not_done = 0;
     if (!unit->read_header)
-        not_done = archive->reader->read_header(unit);
+        not_done = archive->reader->read_header(unit.get());
 
-    archive->reader->read_body(unit);
+    archive->reader->read_body(unit.get());
 
     if (!not_done || !unit->read_body) {
-        srcml_unit_free(unit);
-        unit = nullptr;
+        return nullptr;
     }
 
-
-    return unit;
+    return unit.release();
 }
 
 /**
@@ -1287,14 +1285,13 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
     if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
         return 0;
 
-    thread_local srcml_unit* unit = srcml_unit_create(archive);
+    // read the header only of a temporary unit
+    std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive));
 
-    int not_done = archive->reader->read_header(unit);
+    int not_done = archive->reader->read_header(unit.get());
     if (!not_done) {
         return 0;
     }
-
-    unit->read_header = true;
 
     return 1;
 }

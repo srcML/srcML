@@ -137,23 +137,6 @@ int srcml_version_number() {
  *                                                                            *
  ******************************************************************************/
 
-namespace std {
-    template<>
-    struct default_delete<srcml_archive> {
-        void operator()(srcml_archive* arch) { 
-            srcml_archive_close(arch);
-            srcml_archive_free(arch);
-        }
-    };
-
-    template<>
-    struct default_delete<srcml_unit> {
-        void operator()(srcml_unit* unit) { 
-            srcml_unit_free(unit);
-        }
-    };
-}
-
 /**
  * srcml
  * @param input_filename input file to turn to srcML or source code.

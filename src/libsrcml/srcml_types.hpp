@@ -262,4 +262,22 @@ inline const char* optional_to_c_str(const boost::optional<std::string>& s, cons
     return s ? s->c_str() : value;
 }
 
+// RAII for archives and units with std::unique_ptr<>
+namespace std {
+    template<>
+    struct default_delete<srcml_archive> {
+        void operator()(srcml_archive* arch) { 
+            srcml_archive_close(arch);
+            srcml_archive_free(arch);
+        }
+    };
+
+    template<>
+    struct default_delete<srcml_unit> {
+        void operator()(srcml_unit* unit) { 
+            srcml_unit_free(unit);
+        }
+    };
+}
+
 #endif
