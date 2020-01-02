@@ -97,6 +97,10 @@ xpathTransformation::~xpathTransformation() {
     if (attr_ns)
         xmlFreeNs(attr_ns);
 
+    // free the namespace for any added elements
+    if (element_ns)
+        xmlFreeNs(element_ns);
+
 #ifdef DLLOAD
     dlclose(handle);
 #endif
