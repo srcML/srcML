@@ -69,6 +69,16 @@ xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xp
 
     compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
 
+    // create a namespace for the new attribute (if needed)
+    if (attr_uri) {
+        attr_ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
+    }
+
+    // create a namespace for the new element (if needed)
+    if (element_uri) {
+        element_ns = xmlNewNs(NULL, (const xmlChar*) uri.c_str(), (const xmlChar*) prefix.c_str());
+    }
+
     // load DLL exslt functions
 #if LIBEXSLT_VERSION > 813
 #ifdef DLLOAD
@@ -80,7 +90,12 @@ xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xp
 
 xpathTransformation::~xpathTransformation() {
 
+    // free the compiled xpath
     xmlXPathFreeCompExpr(compiled_xpath);
+
+    // free the namespace for any added attributes
+    if (attr_ns)
+        xmlFreeNs(attr_ns);
 
 #ifdef DLLOAD
     dlclose(handle);
@@ -163,8 +178,7 @@ void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* 
         newvalue = curvalue.c_str();
     }
 
-    xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar *) attr_uri, (const xmlChar *) attr_prefix);
-    xmlSetNsProp(node, ns, (const xmlChar *) attr_name.c_str(), (const xmlChar *) newvalue);
+    xmlNewNsProp(node, attr_ns, (const xmlChar *) attr_name.c_str(), (const xmlChar *) newvalue);
 }
 
 xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
@@ -342,18 +356,13 @@ void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPt
 
     xmlNodePtr a_node = xmlDocGetRootElement(doc);
 
-    // set up namespace
-    xmlNsPtr ns = xmlNewNs(NULL, (const xmlChar*) uri.c_str(), (const xmlChar*) prefix.c_str());
-
     // add the element to all nodes
     for (int i = 0; i < result_nodes->nodesetval->nodeNr; ++i) {
 
         xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
-//        xpath_arguments& thisarguments = oarchive->transformations[0].arguments;
-
         // set up node to insert
-        xmlNodePtr element_node = xmlNewNode(ns, (const xmlChar*) element.c_str());
+        xmlNodePtr element_node = xmlNewNode(element_ns, (const xmlChar*) element.c_str());
 
         if (!attr_name.empty())
             append_attribute_to_node(element_node, !attr_uri.empty() ? attr_prefix.c_str() : prefix.c_str(), 

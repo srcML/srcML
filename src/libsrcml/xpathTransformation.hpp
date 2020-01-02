@@ -139,6 +139,12 @@ public :
 
     void addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPtr result_nodes) const;
 
+    // element namespace
+    xmlNsPtr element_ns = nullptr;
+
+    // attribute namespace
+    xmlNsPtr attr_ns = nullptr;
+
 public:
     std::string xpath;
     std::string prefix;
