@@ -30,6 +30,7 @@
 
 #include <thread>
 #include <list>
+#include <srcml_pipe.hpp>
 
 void srcml_execute(const srcml_request_t& srcml_request,
                    processing_steps_t& pipeline,
@@ -77,4 +78,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
 
     // wait on all threads
     std::for_each(pipethreads.begin(), pipethreads.end(), [](std::thread& t) { t.join(); });
+
+    // wait for all the input pipes to finish
+    srcml_pipe_clean();
 }

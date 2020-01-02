@@ -25,6 +25,7 @@
 #include <src_input_file.hpp>
 #include <src_input_filesystem.hpp>
 #include <create_srcml.hpp>
+#include <libarchive_utilities.hpp>
 #include <iostream>
 #include <cstring>
 #include <archive.h>
@@ -37,19 +38,19 @@ int src_input_filelist(ParseQueue& queue,
                         const std::string& input_file,
                         const srcml_output_dest& destination) {
 
-    archive* arch = libarchive_input_file(input_file);
+    std::unique_ptr<archive> arch(libarchive_input_file(input_file));
     if (!arch)
         return -1;
 
     archive_entry *entry = 0;
-    int status = archive_read_next_header(arch, &entry);
+    int status = archive_read_next_header(arch.get(), &entry);
 
     if (status == ARCHIVE_EOF) {
         return 1;
     }
 
     // filelist cannot be a source archive, must only be compressed
-    if (archive_format(arch) != ARCHIVE_FORMAT_RAW && archive_format(arch) != ARCHIVE_FORMAT_EMPTY) {
+    if (archive_format(arch.get()) != ARCHIVE_FORMAT_RAW && archive_format(arch.get()) != ARCHIVE_FORMAT_EMPTY) {
         SRCMLstatus(INFO_MSG, "srcml: filelist requires a non-archived file format");
         return -1;
     }
@@ -75,7 +76,7 @@ int src_input_filelist(ParseQueue& queue,
     const char* buffer;
     size_t size;
     int64_t offset;
-    while (status == ARCHIVE_OK && archive_read_data_block(arch, (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
+    while (status == ARCHIVE_OK && archive_read_data_block(arch.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
            vbuffer.insert(vbuffer.end(), buffer, buffer + size);
     }
 

@@ -31,4 +31,6 @@ typedef void (*srcml_pipe_process)(const srcml_request_t&, const srcml_input_t&,
 
 void srcml_pipe(srcml_input_src& input, srcml_pipe_process process, srcml_request_t srcml_request = srcml_request_t());
 
+void srcml_pipe_clean();
+
 #endif

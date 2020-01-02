@@ -64,3 +64,12 @@ void srcml_pipe(srcml_input_src& input, srcml_pipe_process process, srcml_reques
     // from fds[0]
     input.fd = fds[0];
 }
+
+void srcml_pipe_clean() {
+
+    for(auto thread : lthreads) {
+        thread->join();
+        delete thread;
+    }
+}
+
