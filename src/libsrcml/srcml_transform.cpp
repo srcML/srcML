@@ -40,6 +40,7 @@
 #include <unit_utilities.hpp>
 
 #include <algorithm>
+#include <vector>
 
 #include <srcmlns.hpp>
 
@@ -49,10 +50,8 @@
 struct srcml_transformation_result_t {
     /** Transformation result type */
     int type;
-    /** Number of units for type SRCML_RESULTS_UNIT */
-    int num_units;
     /** Array of srcml units for type SRCML_RESULTS_UNIT */
-    struct srcml_unit** units;
+    std::vector<srcml_unit*> units;
     /** Result for type SRCML_RESULTS_BOOLEAN */
     int boolValue;
     /** Result for type SRCML_RESULTS_NUMBER */
@@ -522,8 +521,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         *presult = new srcml_transformation_result_t;
         result = *presult;
         result->type = SRCML_RESULTS_NONE;
-        result->num_units = 0;
-        result->units = nullptr;
         result->boolValue = false;
     }
 
@@ -572,9 +569,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
 
         // if there are no results, then we can't apply further transformations
-        // but there still might be reults in the scalar values
+        // but there still might be results in the scalar values
         if (fullresults->nodeNr == 0) {
-            result->units = 0;
+            result->units.clear();
             break;
         }
     }
@@ -613,9 +610,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     // create units out of the transformation results
     result->type = lastresult.nodeType;
-    result->num_units = fullresults->nodeNr;
-    result->units = (srcml_unit**) calloc(fullresults->nodeNr + 1, sizeof(srcml_unit*));
-    result->units[fullresults->nodeNr] = 0;
 
     for (int i = 0; i < fullresults->nodeNr; ++i) {
 
@@ -753,7 +747,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
 
         // store in the returned results
-        result->units[i] = nunit;
+        result->units.push_back(nunit);
     }
 
     // remove all nodes in the fullresults nodeset
@@ -771,10 +765,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
  */
 int srcml_transform_free(struct srcml_transformation_result_t* result) {
 
-    for (int i = 0; i < result->num_units; ++i) {
-        srcml_unit_free(result->units[i]);
+    for (auto unit : result->units) {
+        srcml_unit_free(unit);
     }
-    free(result->units);
 
     delete result;
 
@@ -796,7 +789,7 @@ LIBSRCML_DECL int srcml_transform_get_type(struct srcml_transformation_result_t*
  */
 int srcml_transform_get_unit_size(struct srcml_transformation_result_t* result) {
 
-    return result->num_units;
+    return (int) result->units.size();
 }
 
 /**
@@ -804,9 +797,9 @@ int srcml_transform_get_unit_size(struct srcml_transformation_result_t* result) 
  * @param pos The index in the units
  * @return The unit in the transformation result at that index
  */
-srcml_unit* srcml_transform_get_unit(struct srcml_transformation_result_t* result, int index) {
+struct srcml_unit* srcml_transform_get_unit(struct srcml_transformation_result_t* result, int index) {
 
-    if (index >= result->num_units)
+    if (index >= (int) result->units.size())
         return 0;
 
     return result->units[index];
