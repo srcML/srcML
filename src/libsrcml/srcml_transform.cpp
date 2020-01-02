@@ -58,7 +58,7 @@ struct srcml_transformation_result_t {
     /** Result for type SRCML_RESULTS_NUMBER */
     double numberValue;
     /** Result for type SRCML_RESULTS_STRING */
-    char* stringValue;
+    std::string stringValue;
 };
 
 /**
@@ -524,7 +524,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         result->type = SRCML_RESULTS_NONE;
         result->num_units = 0;
         result->units = nullptr;
-        result->stringValue = nullptr;
         result->boolValue = false;
     }
 
@@ -588,7 +587,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     switch (lastresult.nodeType) {
     case SRCML_RESULTS_STRING:
         if (result != nullptr) {
-            result->stringValue = strdup(lastresult.stringValue.c_str());
+            result->stringValue = lastresult.stringValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
@@ -777,9 +776,6 @@ int srcml_transform_free(struct srcml_transformation_result_t* result) {
     }
     free(result->units);
 
-    if (result->stringValue)
-        free(result->stringValue);
-
     delete result;
 
     return SRCML_STATUS_OK;
@@ -822,7 +818,7 @@ srcml_unit* srcml_transform_get_unit(struct srcml_transformation_result_t* resul
  */
 const char* srcml_transform_get_string(struct srcml_transformation_result_t* result) {
 
-    return result->stringValue;
+    return result->stringValue.c_str();
 }
 
 /**
