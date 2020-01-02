@@ -122,11 +122,10 @@ void srcml_consume(int /* thread_pool_id */, std::shared_ptr<ParseRequest> reque
     }
 
     request->runtime = parsetime.cpu_time_elapsed();
-    request->results.type = SRCML_RESULTS_UNITS;
 
     // perform any transformations and add them to the request
     srcml_unit_apply_transforms(request->srcml_arch, request->unit.get(), &(request->results));
-    if (request->results.type == SRCML_RESULTS_NONE) {
+    if (request->results && srcml_transform_get_type(request->results) == SRCML_RESULTS_NONE) {
         request->unit.reset();
     }
 

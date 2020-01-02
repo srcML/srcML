@@ -103,40 +103,45 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     }
 
     // output scalar results
-    switch (request->results.type) {
-    case SRCML_RESULTS_BOOLEAN:
-        {
-            // output as true/false with newline after every results
-            const char* boolresult = request->results.boolValue ? "true\n" : "false\n";
-            srcml_archive_write_string(output_archive, boolresult, (int) strlen(boolresult));
-        }
-        return;
+    if (request->results) {
+        switch (srcml_transform_get_type(request->results)) {
+        case SRCML_RESULTS_BOOLEAN:
+            {
+                // output as true/false with newline after every results
+                const char* boolresult = srcml_transform_get_bool(request->results) ? "true\n" : "false\n";
+                srcml_archive_write_string(output_archive, boolresult, (int) strlen(boolresult));
+            }
+            srcml_transform_free(request->results);
+            return;
 
-    case SRCML_RESULTS_NUMBER:
-        {
-            std::string s;
-            if (request->results.numberValue != (int) request->results.numberValue)
-                s = std::to_string(request->results.numberValue);
-            else
-                s = std::to_string((int) request->results.numberValue);
+        case SRCML_RESULTS_NUMBER:
+            {
+                std::string s;
+                if (srcml_transform_get_number(request->results) != (int) srcml_transform_get_number(request->results))
+                    s = std::to_string(srcml_transform_get_number(request->results));
+                else
+                    s = std::to_string((int) srcml_transform_get_number(request->results));
 
-            srcml_archive_write_string(output_archive, s.c_str(), (int) s.size());
+                srcml_archive_write_string(output_archive, s.c_str(), (int) s.size());
 
-            // output a newline after every result
-            srcml_archive_write_string(output_archive, "\n", 1);
-        }
-        return;
+                // output a newline after every result
+                srcml_archive_write_string(output_archive, "\n", 1);
+            }
+            srcml_transform_free(request->results);
+            return;
 
-    case SRCML_RESULTS_STRING:
-        const char* s = (const char*) request->results.stringValue;
-        srcml_archive_write_string(output_archive, s, (int) strlen(s));
+        case SRCML_RESULTS_STRING:
+            const char* s = (const char*) srcml_transform_get_string(request->results);
+            srcml_archive_write_string(output_archive, s, (int) strlen(s));
 
-        // if the string does not end in a newline, output one
-        if (s[strlen(s) - 1] != '\n')
-            srcml_archive_write_string(output_archive, "\n", 1);
-        
-        return;
-    };
+            // if the string does not end in a newline, output one
+            if (s[strlen(s) - 1] != '\n')
+                srcml_archive_write_string(output_archive, "\n", 1);
+            
+            srcml_transform_free(request->results);
+            return;
+        };
+    }
 
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
@@ -145,17 +150,18 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
 
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive
-        if (request->results.num_units > 1) {
+        if (request->results && srcml_transform_get_unit_size(request->results) > 1) {
             srcml_archive_disable_solitary_unit(output_archive);
         }
 
         // write out any transformed units
-        for (int i = 0; i < request->results.num_units; ++i) {
-            srcml_archive_write_unit(output_archive, request->results.units[i]);
+        if (request->results) {
+            for (int i = 0; i < srcml_transform_get_unit_size(request->results); ++i) {
+                srcml_archive_write_unit(output_archive, srcml_transform_get_unit(request->results, i));
+            }
         }
-
         // if no transformed units, write the main unit
-        if (request->results.num_units == 0 && request->unit) {
+        if ((!request->results || srcml_transform_get_unit_size(request->results) == 0) && request->unit) {
             int status = SRCML_STATUS_OK;
             if (option(SRCML_COMMAND_XML_FRAGMENT)) {
                 const char* s = srcml_unit_get_srcml_outer(request->unit.get());
@@ -201,6 +207,9 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
                 SRCMLstatus(ERROR_MSG) << "Error in writing parsed unit to archive" << '\n';
             }
         }
+
+        if (request->results)
+            srcml_transform_free(request->results);
 
         // logging
         if (option(SRCML_COMMAND_VERBOSE)) {
