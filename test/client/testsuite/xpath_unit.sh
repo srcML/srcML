@@ -92,6 +92,23 @@ check sub/b.cpp.xml "$output_empty"
 srcml --xpath=name -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$output_empty"
 
+srcml --xpath="count(//src:name)" < sub/a.cpp.xml
+check "1
+"
+
+srcml --xpath="//src:name[1]/text()" < sub/a.cpp.xml
+check '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+<unit revision="1.0.0" language="C++" filename="a.cpp" item="1">a</unit>
+
+</unit>
+'
+
+srcml --xpath="boolean(//src:name)" < sub/a.cpp.xml
+check "true
+"
+
 # test for omp
 define ompsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

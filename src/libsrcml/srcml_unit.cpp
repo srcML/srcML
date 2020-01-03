@@ -1185,7 +1185,7 @@ struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
     if (unit == nullptr)
         return 0;
 
-    srcml_unit* new_unit = srcml_unit_create(unit->archive);
+    std::unique_ptr<srcml_unit> new_unit(srcml_unit_create(unit->archive));
     new_unit->filename = unit->filename;
 
     new_unit->hash = unit->hash;
@@ -1201,7 +1201,7 @@ struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
     new_unit->derived_language = unit->derived_language;
     new_unit->namespaces = unit->namespaces;
 
-    return new_unit;
+    return new_unit.release();
 }
 
 /** Provides a code of the last error to occur for a unit
