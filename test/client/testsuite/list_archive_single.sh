@@ -16,7 +16,8 @@ define srcml <<- 'STDOUT'
 define output <<- 'STDOUT'
 	XML encoding: UTF-8
 	    1  C++     1 aa2a72b26cf958d8718a2e9bc6b84679a81d54cb a.cpp
-	Total: 1
+	units: 1
+	LOC: 1
 	STDOUT
 
 xmlcheck "$srcml"

@@ -48,6 +48,7 @@ namespace {
         std::cout << (xml_encoding ? xml_encoding : "(null)") << '\n';
 
         int numUnits = 0;
+        long LOC = 0;
         while (true) {
             std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(srcml_arch));
             if (!unit)
@@ -64,8 +65,12 @@ namespace {
             std::cout << ' ' << value(srcml_unit_get_hash(unit.get()));
             std::cout << ' ' << value(srcml_unit_get_filename(unit.get()));
             std::cout << '\n';
+
+            // total LOC
+            LOC += srcml_unit_get_loc(unit.get());
         }
-        std::cout << "Total: " << numUnits << '\n';
+        std::cout << "units: " << numUnits << '\n';
+        std::cout << "LOC: " << LOC << '\n';
     }
 
     void srcml_display_info(srcml_archive* srcml_arch, bool long_info) {
