@@ -57,7 +57,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     libxslt_handle = dlopen_libxslt();
     if (!libxslt_handle) {
         fprintf(stderr, "Unable to open libxslt library\n");
-        exit(1);
+        throw;
     }
 
     char* error;
@@ -67,7 +67,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     if ((error = dlerror()) != NULL) {
         dlclose(libxslt_handle);
         libxslt_handle = 0;
-        exit(1);
+        throw;
     }
 
     dlerror();
@@ -75,7 +75,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     if ((error = dlerror()) != NULL) {
         dlclose(libxslt_handle);
         libxslt_handle = 0;
-        exit(1);
+        throw;
     }
 
     dlerror();
@@ -83,7 +83,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     if ((error = dlerror()) != NULL) {
         dlclose(libxslt_handle);
         libxslt_handle = 0;
-        exit(1);
+        throw;
     }
 
     dlerror();
@@ -91,7 +91,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     if ((error = dlerror()) != NULL) {
         dlclose(libxslt_handle);
         libxslt_handle = 0;
-        exit(1);
+        throw;
     }
 
     libexslt_handle = dlopen_libexslt();
@@ -113,7 +113,7 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     // parse the stylesheet
     stylesheet = xsltParseStylesheetDoc(xslt);
     if (!stylesheet)
-        exit(1);
+        throw;
 
 //    xsltsrcMLRegister();
 }
