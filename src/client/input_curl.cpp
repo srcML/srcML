@@ -56,8 +56,8 @@ namespace {
     }
 
     struct curl_write_info {
-        int outfd;
-        CURL* curlhandle;
+        int outfd = 0;
+        CURL* curlhandle = nullptr;
     };
 
     std::atomic<bool> curl_errors(false);
@@ -131,15 +131,13 @@ int input_curl(srcml_input_src& input) {
 
         curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);
         curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, 5L);
-        //curl_easy_setopt(curl_handle, CURLOPT_NOPROGRESS, 0L);
+        curl_easy_setopt(curl_handle, CURLOPT_FAILONERROR, 1L);
 
         // start the download
         CURLcode response = curl_easy_perform(curl_handle);
 
         // check for download errors
-        long http_code = 0;
-        curl_easy_getinfo (curl_handle, CURLINFO_RESPONSE_CODE, &http_code);
-        if(response != CURLE_OK || http_code != 200) {
+        if (response != CURLE_OK) {
             SRCMLstatus(WARNING_MSG, "srcml: Unable to access URL " + url);
             setCurlErrors(true);
             goCurl(false);
@@ -148,7 +146,6 @@ int input_curl(srcml_input_src& input) {
 
             setCurlErrors(false);
             goCurl(true);
-
         }
 
         // close the output file descriptor we were writing the download to
