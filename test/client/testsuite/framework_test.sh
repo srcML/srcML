@@ -64,7 +64,7 @@ fi
 
 
 function srcml () {
-    $SRCML "$@"
+    env $SRCML_CLIENT_TEST_PREFIX $SRCML "$@"
 }
 
 # turn history on so we can output the command issued
