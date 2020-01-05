@@ -232,16 +232,6 @@ void end_document(void* ctx) {
 
     SRCSAX_DEBUG_START("");
 
-    // handle libxml errors
-    const char* errmsg = 0;
-    switch (ctxt->errNo) {
-    case XML_ERR_DOCUMENT_END:
-        errmsg = "Extra content at the end of the document";
-        break;
-    default:
-        break;
-    };
-
     // process any upper layer end document handling
     state->context->handler->end_document(state->context);
 
