@@ -30,6 +30,7 @@
 #include <libxml2_utilities.hpp>
 #include <memory>
 #include <boost/optional.hpp>
+#include <srcml.h>
 
 struct TransformationResult {
     TransformationResult(xmlNodeSetPtr nodeset = nullptr, bool wrapped = false)

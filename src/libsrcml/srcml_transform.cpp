@@ -50,7 +50,7 @@
 struct srcml_transform_result {
     /** Transformation result type */
     int type;
-    /** Array of srcml units for type SRCML_RESULTS_UNIT */
+    /** Array of srcml units for type SRCML_RESULTS_UNITS */
     std::vector<srcml_unit*> units;
     /** Result for type SRCML_RESULTS_BOOLEAN */
     int boolValue;
@@ -789,6 +789,10 @@ LIBSRCML_DECL int srcml_transform_get_type(struct srcml_transform_result* result
  */
 int srcml_transform_get_unit_size(struct srcml_transform_result* result) {
 
+    // make sure correct result type
+    if (result->type != SRCML_RESULTS_UNITS)
+       return 0;
+
     return (int) result->units.size();
 }
 
@@ -798,6 +802,10 @@ int srcml_transform_get_unit_size(struct srcml_transform_result* result) {
  * @return The unit in the transformation result at that index
  */
 struct srcml_unit* srcml_transform_get_unit(struct srcml_transform_result* result, int index) {
+
+    // make sure correct result type
+    if (result->type != SRCML_RESULTS_UNITS)
+        return 0;
 
     if (index >= (int) result->units.size())
         return 0;
@@ -811,6 +819,10 @@ struct srcml_unit* srcml_transform_get_unit(struct srcml_transform_result* resul
  */
 const char* srcml_transform_get_string(struct srcml_transform_result* result) {
 
+    // make sure correct result type
+    if (result->type != SRCML_RESULTS_STRING)
+        return 0;
+
     return result->stringValue.c_str();
 }
 
@@ -819,6 +831,10 @@ const char* srcml_transform_get_string(struct srcml_transform_result* result) {
  * @return The transformation result number
  */
 double srcml_transform_get_number(struct srcml_transform_result* result) {
+
+    // make sure correct result type
+    if (result->type != SRCML_RESULTS_NUMBER)
+        return 0;
 
     return result->numberValue;
 }
@@ -829,6 +845,9 @@ double srcml_transform_get_number(struct srcml_transform_result* result) {
  */
 int srcml_transform_get_bool(struct srcml_transform_result* result) {
 
+    // make sure correct result type
+    if (result->type != SRCML_RESULTS_BOOLEAN)
+        return 0;
+
     return result->boolValue;
 }
-
