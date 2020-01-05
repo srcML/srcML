@@ -280,14 +280,14 @@ int main(int, char* argv[]) {
     {
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
-        srcml_append_transform_xpath(iarchive, "string(//src:name/@language)");
+        srcml_append_transform_xpath(iarchive, "string(//src:unit/@language)");
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
         srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
         dassert(srcml_transform_get_type(result), SRCML_RESULTS_STRING);
-        dassert(srcml_transform_get_bool(result), false);
+        dassert(srcml_transform_get_string(result), std::string("C++"));
         srcml_transform_free(result);
         srcml_clear_transforms(iarchive);
         srcml_unit_free(unit);
