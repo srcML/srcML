@@ -41,6 +41,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <boost/optional.hpp>
 
 #include <srcmlns.hpp>
 
@@ -53,11 +54,11 @@ struct srcml_transform_result {
     /** Array of srcml units for type SRCML_RESULTS_UNITS */
     std::vector<srcml_unit*> units;
     /** Result for type SRCML_RESULTS_BOOLEAN */
-    int boolValue;
+    boost::optional<int> boolValue;
     /** Result for type SRCML_RESULTS_NUMBER */
-    double numberValue;
+    boost::optional<double> numberValue;
     /** Result for type SRCML_RESULTS_STRING */
-    std::string stringValue;
+    boost::optional<std::string> stringValue;
 };
 
 /**
@@ -823,7 +824,10 @@ const char* srcml_transform_get_string(struct srcml_transform_result* result) {
     if (result->type != SRCML_RESULTS_STRING)
         return 0;
 
-    return result->stringValue.c_str();
+    if (!result->stringValue)
+        return 0;
+
+    return result->stringValue->c_str();
 }
 
 /**
@@ -836,7 +840,10 @@ double srcml_transform_get_number(struct srcml_transform_result* result) {
     if (result->type != SRCML_RESULTS_NUMBER)
         return 0;
 
-    return result->numberValue;
+    if (!result->numberValue)
+        return 0;
+
+    return *(result->numberValue);
 }
 
 /**
@@ -847,7 +854,10 @@ int srcml_transform_get_bool(struct srcml_transform_result* result) {
 
     // make sure correct result type
     if (result->type != SRCML_RESULTS_BOOLEAN)
-        return 0;
+        return -1;
 
-    return result->boolValue;
+    if (!result->boolValue)
+        return -1;
+
+    return *(result->boolValue);
 }
