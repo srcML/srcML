@@ -204,7 +204,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->expected(1)
         ->check([&](std::string value) {
             if (!value.empty() && value[0] == '-') {
-                std::cerr << "srcml: --text: 1 required STRING missing";
+                SRCMLstatus(ERROR_MSG, "srcml: --text: 1 required STRING missing");
                 exit(CLI_STATUS_ERROR);
             }
             return "";
