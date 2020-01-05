@@ -77,7 +77,7 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
         // write the data into the archive
         arch_status = archive_write_data(src_archive, pbuffer.get(), (size_t) buffer_size);
-        if (arch_status == -1 /* || arch_status != buffer_size */) {
+        if (arch_status == -1) {
             SRCMLstatus(WARNING_MSG, "Unable to save " + newfilename + " to source archive");
             break;
         }

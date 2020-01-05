@@ -497,14 +497,7 @@ private:
 
                 break;
             }
-/*
-            // rest of consume process
-            srcMLParser::consume();
 
-            srcMLToken* qetoken = static_cast<srcMLToken*>(&(skiptb->front()));
-            qetoken->endline = LT(1)->getLine();
-            qetoken->endcolumn = LT(1)->getColumn();
-*/
             return true;
         }
 

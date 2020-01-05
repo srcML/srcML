@@ -242,14 +242,6 @@ void end_document(void* ctx) {
         break;
     };
 
-    if (errmsg) {
-//        fprintf(stderr, "srcml: %s\n", errmsg);
-    }
-
-    // never found any content, so end the root
-//    if (state->mode != END_ROOT && state->mode != START)
-//        end_root(ctx, state->root.localname, state->root.prefix, state->root.URI);
-
     // process any upper layer end document handling
     state->context->handler->end_document(state->context);
 

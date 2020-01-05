@@ -588,9 +588,6 @@ protected:
      */
      void endDownToModeSet(const srcMLState::MODE_TYPE& mode) {
 
-        //  if (getTransparentMode() & (mode == 0))
-        //      return;
-
         while (size() > 1 && (getMode() & mode) == 0)
             endMode();
     }
