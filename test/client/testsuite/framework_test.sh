@@ -156,24 +156,27 @@ check() {
     # trace the command
     firsthistoryentry
 
+    # NOTE: All diff checks with pipeline fail twice to avoid intermittent
+    #       '/dev/fd/63' errors
+
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        $diff <(echo -en "$2") $1
-        $diff <(echo -en "$3") $STDERR
+        $diff <(echo -en "$2") $1 || $diff <(echo -en "$2") $1
+        $diff <(echo -en "$3") $STDERR || $diff <(echo -en "$3") $STDERR
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        $diff <(echo -en "$2") $1
+        $diff <(echo -en "$2") $1 || $diff <(echo -en "$2") $1
         [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        $diff <(echo -en "$1") $STDOUT
-        $diff <(echo -en "$2") $STDERR
+        $diff <(echo -en "$1") $STDOUT || $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$2") $STDERR || $diff <(echo -en "$2") $STDERR
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
@@ -183,7 +186,7 @@ check() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$1") $STDOUT || $diff <(echo -en "$1") $STDOUT
         [ ! -s $STDERR ]
 
     else
@@ -221,11 +224,14 @@ check_ignore() {
     # trace the command
     firsthistoryentry
 
+    # NOTE: All diff checks with pipeline fail twice to avoid intermittent
+    #       '/dev/fd/63' errors
+
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        $diff <(echo -en "$2") $1
-        $diff <(echo -en "$3") $STDERR
+        $diff <(echo -en "$2") $1 || $diff <(echo -en "$2") $1
+        $diff <(echo -en "$3") $STDERR || $diff <(echo -en "$3") $STDERR
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
@@ -237,8 +243,8 @@ check_ignore() {
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        $diff <(echo -en "$1") $STDOUT
-        $diff <(echo -en "$2") $STDERR
+        $diff <(echo -en "$1") $STDOUT || $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$2") $STDERR || $diff <(echo -en "$2") $STDERR
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
@@ -248,7 +254,7 @@ check_ignore() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$1") $STDOUT || $diff <(echo -en "$1") $STDOUT
  #       [ ! -s $STDERR ]
 
     else
@@ -355,13 +361,13 @@ check_exit() {
     set -e
 
     if [ $# -eq 2 ]; then
-        $diff <(echo -en "$2") $STDERR
+        $diff <(echo -en "$2") $STDERR || $diff <(echo -en "$2") $STDERR
         [ ! -s $STDOUT ]
     fi
 
     if [ $# -eq 3 ]; then
-        $diff <(echo -en "$2") $STDOUT
-        $diff <(echo -en "$3") $STDERR
+        $diff <(echo -en "$2") $STDOUT || $diff <(echo -en "$2") $STDOUT
+        $diff <(echo -en "$3") $STDERR || $diff <(echo -en "$3") $STDERR
     fi
 
     set +e
