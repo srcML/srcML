@@ -88,6 +88,17 @@ int main(int, char* argv[]) {
 </s:unit>
 )";
 
+    const std::string string_xsl = R"(<xsl:stylesheet
+    xmlns="http://www.srcML.org/srcML/src"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:cpp="http://www.srcML.org/srcML/cpp"
+    version="1.0">
+
+<xsl:output method="text"/>
+<xsl:template match="/"><xsl:value-of select="'srcML'"/></xsl:template>
+</xsl:stylesheet>
+)";
+
     std::ifstream in("copy.xsl");
     std::string copy((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
 
@@ -963,6 +974,26 @@ int main(int, char* argv[]) {
         srcml_archive_free(iarchive);
         dassert(std::string(s, size), srcml_full_python);
         free(s);
+    }
+
+    // xslt string (text)
+    {
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        srcml_append_transform_xslt_memory(iarchive, string_xsl.c_str(), string_xsl.size());
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULTS_STRING);
+        dassert(srcml_transform_get_string(result), std::string("srcML"));
+        srcml_transform_free(result);
+        srcml_unit_free(unit);
+        srcml_clear_transforms(iarchive);
+
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
     }
 
     //  relaxng_filename
