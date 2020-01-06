@@ -156,7 +156,7 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
 
     // apply the style sheet to the document, which is the individual unit
     std::shared_ptr<xmlDoc> res(xsltApplyStylesheetUser(stylesheet, doc, cparams.data(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
-    if (!res) {
+    if (!res || !res->children) {
         fprintf(stderr, "libsrcml:  Error in applying stylesheet\n");
 
         return TransformationResult();
