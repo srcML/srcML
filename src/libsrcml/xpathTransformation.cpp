@@ -315,6 +315,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         addElementXPathResults(doc, result_nodes.get());
 
         tresult.unitWrapped = true;
+        tresult.nodeType = SRCML_RESULT_UNITS;
         tresult.nodeset.reset(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc)));
 
         return tresult;
@@ -331,6 +332,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
             }
         }
         tresult.unitWrapped = true;
+        tresult.nodeType = SRCML_RESULT_UNITS;
         tresult.nodeset.reset(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc)));
 
         return tresult;

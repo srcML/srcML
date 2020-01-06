@@ -41,23 +41,24 @@
 
 #include <algorithm>
 #include <vector>
+#include <boost/optional.hpp>
 
 #include <srcmlns.hpp>
 
 /**
  * Transformation result. Passed to srcml_unit_apply_transforms() to collect results of transformation
  */
-struct srcml_transformation_result_t {
+struct srcml_transform_result {
     /** Transformation result type */
     int type;
-    /** Array of srcml units for type SRCML_RESULTS_UNIT */
+    /** Array of srcml units for type SRCML_RESULT_UNITS */
     std::vector<srcml_unit*> units;
-    /** Result for type SRCML_RESULTS_BOOLEAN */
-    int boolValue;
-    /** Result for type SRCML_RESULTS_NUMBER */
-    double numberValue;
-    /** Result for type SRCML_RESULTS_STRING */
-    std::string stringValue;
+    /** Result for type SRCML_RESULT_BOOLEAN */
+    boost::optional<int> boolValue;
+    /** Result for type SRCML_RESULT_NUMBER */
+    boost::optional<double> numberValue;
+    /** Result for type SRCML_RESULT_STRING */
+    boost::optional<std::string> stringValue;
 };
 
 /**
@@ -503,7 +504,7 @@ static bool usesURI(xmlNode* cur_node, const std::string& URI) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_transformation_result_t** presult) {
+int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_transform_result** presult) {
 
     if (archive == nullptr || unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
@@ -512,11 +513,11 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (archive->transformations.empty())
         return SRCML_STATUS_OK;
 
-    srcml_transformation_result_t* result = nullptr;
+    srcml_transform_result* result = nullptr;
     if (presult) {
-        *presult = new srcml_transformation_result_t;
+        *presult = new srcml_transform_result;
         result = *presult;
-        result->type = SRCML_RESULTS_NONE;
+        result->type = SRCML_RESULT_NONE;
         result->boolValue = false;
     }
 
@@ -578,21 +579,21 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     // handle non-nodeset results
     switch (lastresult.nodeType) {
-    case SRCML_RESULTS_STRING:
+    case SRCML_RESULT_STRING:
         if (result != nullptr) {
             result->stringValue = lastresult.stringValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
 
-    case SRCML_RESULTS_BOOLEAN:
+    case SRCML_RESULT_BOOLEAN:
         if (result != nullptr) {
             result->boolValue = lastresult.boolValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
 
-    case SRCML_RESULTS_NUMBER:
+    case SRCML_RESULT_NUMBER:
         if (result != nullptr) {
             result->numberValue = lastresult.numberValue;
             return SRCML_STATUS_OK;
@@ -759,7 +760,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
  * @param results Struct of result
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-int srcml_transform_free(struct srcml_transformation_result_t* result) {
+int srcml_transform_free(struct srcml_transform_result* result) {
 
     for (auto unit : result->units) {
         srcml_unit_free(unit);
@@ -774,7 +775,7 @@ int srcml_transform_free(struct srcml_transformation_result_t* result) {
  * @param result A srcml transformation result
  * @return The type of the transformation result
  */
-LIBSRCML_DECL int srcml_transform_get_type(struct srcml_transformation_result_t* result) {
+LIBSRCML_DECL int srcml_transform_get_type(struct srcml_transform_result* result) {
 
     return result->type;
 }
@@ -783,7 +784,11 @@ LIBSRCML_DECL int srcml_transform_get_type(struct srcml_transformation_result_t*
  * @param result A srcml transformation result
  * @return The number of units in the transformation result
  */
-int srcml_transform_get_unit_size(struct srcml_transformation_result_t* result) {
+int srcml_transform_get_unit_size(struct srcml_transform_result* result) {
+
+    // make sure correct result type
+    if (result->type != SRCML_RESULT_UNITS)
+       return 0;
 
     return (int) result->units.size();
 }
@@ -793,7 +798,11 @@ int srcml_transform_get_unit_size(struct srcml_transformation_result_t* result) 
  * @param pos The index in the units
  * @return The unit in the transformation result at that index
  */
-struct srcml_unit* srcml_transform_get_unit(struct srcml_transformation_result_t* result, int index) {
+struct srcml_unit* srcml_transform_get_unit(struct srcml_transform_result* result, int index) {
+
+    // make sure correct result type
+    if (result->type != SRCML_RESULT_UNITS)
+        return 0;
 
     if (index >= (int) result->units.size())
         return 0;
@@ -805,26 +814,46 @@ struct srcml_unit* srcml_transform_get_unit(struct srcml_transformation_result_t
  * @param result A srcml transformation result
  * @return The transformation result string
  */
-const char* srcml_transform_get_string(struct srcml_transformation_result_t* result) {
+const char* srcml_transform_get_string(struct srcml_transform_result* result) {
 
-    return result->stringValue.c_str();
+    // make sure correct result type
+    if (result->type != SRCML_RESULT_STRING)
+        return 0;
+
+    if (!result->stringValue)
+        return 0;
+
+    return result->stringValue->c_str();
 }
 
 /**
  * @param result A srcml transformation result
  * @return The transformation result number
  */
-double srcml_transform_get_number(struct srcml_transformation_result_t* result) {
+double srcml_transform_get_number(struct srcml_transform_result* result) {
 
-    return result->numberValue;
+    // make sure correct result type
+    if (result->type != SRCML_RESULT_NUMBER)
+        return 0;
+
+    if (!result->numberValue)
+        return 0;
+
+    return *(result->numberValue);
 }
 
 /**
  * @param result A srcml transformation result
  * @return The transformation result boolean
  */
-int srcml_transform_get_bool(struct srcml_transformation_result_t* result) {
+int srcml_transform_get_bool(struct srcml_transform_result* result) {
 
-    return result->boolValue;
+    // make sure correct result type
+    if (result->type != SRCML_RESULT_BOOLEAN)
+        return -1;
+
+    if (!result->boolValue)
+        return -1;
+
+    return *(result->boolValue);
 }
-

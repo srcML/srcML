@@ -88,6 +88,17 @@ int main(int, char* argv[]) {
 </s:unit>
 )";
 
+    const std::string string_xsl = R"(<xsl:stylesheet
+    xmlns="http://www.srcML.org/srcML/src"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:cpp="http://www.srcML.org/srcML/cpp"
+    version="1.0">
+
+<xsl:output method="text"/>
+<xsl:template match="/"><xsl:value-of select="'srcML'"/></xsl:template>
+</xsl:stylesheet>
+)";
+
     std::ifstream in("copy.xsl");
     std::string copy((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
 
@@ -110,8 +121,10 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
         srcml_unit_free(unit);
@@ -136,9 +149,11 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
         srcml_unit_free(unit);
@@ -164,9 +179,11 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
         srcml_unit_free(unit);
@@ -193,9 +210,11 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
         srcml_unit_free(unit);
@@ -209,6 +228,84 @@ int main(int, char* argv[]) {
         free(s);
     }
 
+    //  xpath number result
+    {
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+        srcml_append_transform_xpath(iarchive, "count(//src:unit)");
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_NUMBER);
+        dassert(srcml_transform_get_number(result), 1.0);
+        srcml_transform_free(result);
+        srcml_clear_transforms(iarchive);
+        srcml_unit_free(unit);
+
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    //  xpath boolean result
+    {
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+        srcml_append_transform_xpath(iarchive, "count(//src:unit)=1");
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_BOOLEAN);
+        dassert(srcml_transform_get_bool(result), true);
+        srcml_transform_free(result);
+        srcml_clear_transforms(iarchive);
+        srcml_unit_free(unit);
+
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    {
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+        srcml_append_transform_xpath(iarchive, "count(//src:unit)!=1");
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_BOOLEAN);
+        dassert(srcml_transform_get_bool(result), false);
+        srcml_transform_free(result);
+        srcml_clear_transforms(iarchive);
+        srcml_unit_free(unit);
+
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // xpath string
+    {
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+        srcml_append_transform_xpath(iarchive, "string(//src:unit/@language)");
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_STRING);
+        dassert(srcml_transform_get_string(result), std::string("C++"));
+        srcml_transform_free(result);
+        srcml_clear_transforms(iarchive);
+        srcml_unit_free(unit);
+
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
 
     //  xslt_filename
 
@@ -222,8 +319,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -248,8 +349,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -274,8 +379,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -300,8 +409,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -327,8 +440,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -356,8 +473,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -382,8 +503,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -408,8 +533,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -434,8 +563,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -461,8 +594,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -488,8 +625,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -518,8 +659,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -546,8 +691,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -574,8 +723,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -602,8 +755,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -631,8 +788,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -662,8 +823,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -691,8 +856,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -720,8 +889,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -749,8 +922,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -779,8 +956,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -795,6 +976,26 @@ int main(int, char* argv[]) {
         free(s);
     }
 
+    // xslt string (text)
+    {
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        srcml_append_transform_xslt_memory(iarchive, string_xsl.c_str(), string_xsl.size());
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_STRING);
+        dassert(srcml_transform_get_string(result), std::string("srcML"));
+        srcml_transform_free(result);
+        srcml_unit_free(unit);
+        srcml_clear_transforms(iarchive);
+
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
     //  relaxng_filename
 
     {
@@ -807,8 +1008,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -833,8 +1038,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -859,8 +1068,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -885,8 +1098,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -914,8 +1131,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -940,8 +1161,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -966,8 +1191,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -992,8 +1221,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1024,7 +1257,7 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
@@ -1053,8 +1286,13 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
+
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
         srcml_unit_free(unit);
@@ -1081,8 +1319,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1110,8 +1352,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1141,8 +1387,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1170,8 +1420,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1199,8 +1453,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1228,8 +1486,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1270,8 +1532,13 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
+
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
         srcml_unit_free(unit);
@@ -1316,8 +1583,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1363,8 +1634,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
@@ -1410,8 +1685,12 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
         srcml_unit* unit = srcml_archive_read_unit(iarchive);
-        srcml_transformation_result_t* result = nullptr;
+        srcml_transform_result* result = nullptr;
         srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(!srcml_transform_get_unit(result, 0), false);
 
         srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
         srcml_transform_free(result);
