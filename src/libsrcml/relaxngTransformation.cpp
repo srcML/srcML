@@ -61,6 +61,6 @@ TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocP
 
     // transformation result is nodeset with single unit, and the unit is wrapped
     TransformationResult result(xmlXPathNodeSetCreate(xmlDocGetRootElement(doc)), true);
-    result.nodeType = SRCML_RESULTS_UNITS;
+    result.nodeType = SRCML_RESULT_UNITS;
     return result;
 }

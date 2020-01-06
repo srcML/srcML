@@ -165,8 +165,8 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
     // transformation result is nodeset with single unit, and the unit is wrapped
     TransformationResult result(xmlXPathNodeSetCreate(res->children), true);
     result.doc = res;
-    result.nodeType = res->children->type == 1 ? SRCML_RESULTS_UNITS : SRCML_RESULTS_STRING;
-    if (result.nodeType == SRCML_RESULTS_STRING) {
+    result.nodeType = res->children->type == 1 ? SRCML_RESULT_UNITS : SRCML_RESULT_STRING;
+    if (result.nodeType == SRCML_RESULT_STRING) {
         auto str = (char*) xmlNodeListGetRawString(res.get(), res->children, 0);
         result.stringValue = str;
         xmlFree(str);

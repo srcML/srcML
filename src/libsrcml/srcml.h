@@ -1183,11 +1183,11 @@ LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archi
 /**
  * Transformation result types
  */
-#define SRCML_RESULTS_NONE    0
-#define SRCML_RESULTS_UNITS   1
-#define SRCML_RESULTS_BOOLEAN 2
-#define SRCML_RESULTS_NUMBER  3
-#define SRCML_RESULTS_STRING  4
+#define SRCML_RESULT_NONE    0
+#define SRCML_RESULT_UNITS   1
+#define SRCML_RESULT_BOOLEAN 2
+#define SRCML_RESULT_NUMBER  3
+#define SRCML_RESULT_STRING  4
 
 /**
  * Apply appended transformations from the archive to the unit consecutively in order. If parameter result is NULL,

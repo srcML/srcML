@@ -105,7 +105,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     // output scalar results
     if (request->results) {
         switch (srcml_transform_get_type(request->results)) {
-        case SRCML_RESULTS_BOOLEAN:
+        case SRCML_RESULT_BOOLEAN:
             {
                 // output as true/false with newline after every results
                 const char* boolresult = srcml_transform_get_bool(request->results) ? "true\n" : "false\n";
@@ -114,7 +114,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             srcml_transform_free(request->results);
             return;
 
-        case SRCML_RESULTS_NUMBER:
+        case SRCML_RESULT_NUMBER:
             {
                 std::string s;
                 if (srcml_transform_get_number(request->results) != (int) srcml_transform_get_number(request->results))
@@ -130,7 +130,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             srcml_transform_free(request->results);
             return;
 
-        case SRCML_RESULTS_STRING:
+        case SRCML_RESULT_STRING:
             const char* s = (const char*) srcml_transform_get_string(request->results);
             srcml_archive_write_string(output_archive, s, (int) strlen(s));
 

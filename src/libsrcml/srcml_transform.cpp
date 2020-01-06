@@ -51,13 +51,13 @@
 struct srcml_transform_result {
     /** Transformation result type */
     int type;
-    /** Array of srcml units for type SRCML_RESULTS_UNITS */
+    /** Array of srcml units for type SRCML_RESULT_UNITS */
     std::vector<srcml_unit*> units;
-    /** Result for type SRCML_RESULTS_BOOLEAN */
+    /** Result for type SRCML_RESULT_BOOLEAN */
     boost::optional<int> boolValue;
-    /** Result for type SRCML_RESULTS_NUMBER */
+    /** Result for type SRCML_RESULT_NUMBER */
     boost::optional<double> numberValue;
-    /** Result for type SRCML_RESULTS_STRING */
+    /** Result for type SRCML_RESULT_STRING */
     boost::optional<std::string> stringValue;
 };
 
@@ -521,7 +521,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     if (presult) {
         *presult = new srcml_transform_result;
         result = *presult;
-        result->type = SRCML_RESULTS_NONE;
+        result->type = SRCML_RESULT_NONE;
         result->boolValue = false;
     }
 
@@ -583,21 +583,21 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
     // handle non-nodeset results
     switch (lastresult.nodeType) {
-    case SRCML_RESULTS_STRING:
+    case SRCML_RESULT_STRING:
         if (result != nullptr) {
             result->stringValue = lastresult.stringValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
 
-    case SRCML_RESULTS_BOOLEAN:
+    case SRCML_RESULT_BOOLEAN:
         if (result != nullptr) {
             result->boolValue = lastresult.boolValue;
             return SRCML_STATUS_OK;
         }
         return SRCML_STATUS_ERROR;
 
-    case SRCML_RESULTS_NUMBER:
+    case SRCML_RESULT_NUMBER:
         if (result != nullptr) {
             result->numberValue = lastresult.numberValue;
             return SRCML_STATUS_OK;
@@ -791,7 +791,7 @@ LIBSRCML_DECL int srcml_transform_get_type(struct srcml_transform_result* result
 int srcml_transform_get_unit_size(struct srcml_transform_result* result) {
 
     // make sure correct result type
-    if (result->type != SRCML_RESULTS_UNITS)
+    if (result->type != SRCML_RESULT_UNITS)
        return 0;
 
     return (int) result->units.size();
@@ -805,7 +805,7 @@ int srcml_transform_get_unit_size(struct srcml_transform_result* result) {
 struct srcml_unit* srcml_transform_get_unit(struct srcml_transform_result* result, int index) {
 
     // make sure correct result type
-    if (result->type != SRCML_RESULTS_UNITS)
+    if (result->type != SRCML_RESULT_UNITS)
         return 0;
 
     if (index >= (int) result->units.size())
@@ -821,7 +821,7 @@ struct srcml_unit* srcml_transform_get_unit(struct srcml_transform_result* resul
 const char* srcml_transform_get_string(struct srcml_transform_result* result) {
 
     // make sure correct result type
-    if (result->type != SRCML_RESULTS_STRING)
+    if (result->type != SRCML_RESULT_STRING)
         return 0;
 
     if (!result->stringValue)
@@ -837,7 +837,7 @@ const char* srcml_transform_get_string(struct srcml_transform_result* result) {
 double srcml_transform_get_number(struct srcml_transform_result* result) {
 
     // make sure correct result type
-    if (result->type != SRCML_RESULTS_NUMBER)
+    if (result->type != SRCML_RESULT_NUMBER)
         return 0;
 
     if (!result->numberValue)
@@ -853,7 +853,7 @@ double srcml_transform_get_number(struct srcml_transform_result* result) {
 int srcml_transform_get_bool(struct srcml_transform_result* result) {
 
     // make sure correct result type
-    if (result->type != SRCML_RESULTS_BOOLEAN)
+    if (result->type != SRCML_RESULT_BOOLEAN)
         return -1;
 
     if (!result->boolValue)
