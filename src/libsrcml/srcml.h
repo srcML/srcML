@@ -146,13 +146,6 @@ struct srcml_archive;
  */
 struct srcml_unit;
 
-/**
- * @struct srcml_transform_result
- *
- * The result of a srcML transformation
- */
-struct srcml_transform_result;
-
 /** @defgroup utility Utility functions
     @{
  */
@@ -1181,6 +1174,13 @@ LIBSRCML_DECL int srcml_append_transform_param(struct srcml_archive* archive, co
 LIBSRCML_DECL int srcml_append_transform_stringparam(struct srcml_archive* archive, const char* param_name, const char* param_value);
 
 /**
+ * @struct srcml_transform_result
+ *
+ * The result of a srcML transformation
+ */
+struct srcml_transform_result;
+
+/**
  * Transformation result types
  */
 #define SRCML_RESULT_NONE    0
@@ -1206,13 +1206,6 @@ LIBSRCML_DECL int srcml_unit_apply_transforms(struct srcml_archive* archive, str
  * @return The type of the transformation result
  */
 LIBSRCML_DECL int srcml_transform_get_type(struct srcml_transform_result* result);
-
-/**
- * Free the resources in a tranformation result.
- * @param results Struct of result
- * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
- */
-LIBSRCML_DECL int srcml_transform_free(struct srcml_transform_result* result);
 
 /**
  * @param result A srcml transformation result
@@ -1244,6 +1237,13 @@ LIBSRCML_DECL double srcml_transform_get_number(struct srcml_transform_result* r
  * @return The transformation result boolean
  */
 LIBSRCML_DECL int srcml_transform_get_bool(struct srcml_transform_result* result);
+
+/**
+ * Free the resources in a tranformation result.
+ * @param results Struct of result
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+LIBSRCML_DECL int srcml_transform_free(struct srcml_transform_result* result);
 
 /**
  * Remove all appended transformations from the archive
