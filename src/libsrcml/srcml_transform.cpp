@@ -577,6 +577,13 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         result->type = lastresult.nodeType;
     }
 
+    if (lastresult.nodeType != SRCML_RESULT_UNITS) {
+        // remove all nodes in the fullresults nodeset
+        // valgrind shows free accessing these nodes after they have been freed
+        // by the xmlDoc
+        fullresults->nodeNr = 0;
+    }
+
     // handle non-nodeset results
     switch (lastresult.nodeType) {
     case SRCML_RESULT_STRING:
