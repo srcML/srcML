@@ -200,7 +200,7 @@ protected:
         return 0;
 
     }
-        
+
     /**
      * setMode
      * @param m modes to add to current mode

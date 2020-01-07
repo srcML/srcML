@@ -184,4 +184,4 @@ srcml --xpath='//src:comment[@type="block"]' -o sub/a.xml sub/archive.cpp.xml
 check sub/a.xml "$output"
 
 srcml --xpath='//src:comment[@type="block"]' sub/archive.cpp.xml -o sub/a.xml
-check sub/a.xml "$output" 
+check sub/a.xml "$output"

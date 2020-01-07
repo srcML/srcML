@@ -11,7 +11,7 @@ define fsrcml <<- 'STDOUT'
 
 define output <<- 'STDERR'
 	XML encoding:  UTF-8
-	    1 sub/a.cpp	C++	1	
+	    1 sub/a.cpp	C++	1
 
 	Translated: 1	Skipped: 0	Error: 0	Total: 1
   STDERR
@@ -19,7 +19,7 @@ define output <<- 'STDERR'
 xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
 createfile sub/a.cpp.xml "$fsrcml"
- 
+
 # from a file
 srcml sub/a.cpp --verbose
 check "$fsrcml" "$output"
@@ -41,7 +41,7 @@ define srcml <<- 'STDOUT'
 
 define output <<- 'STDERR'
 	XML encoding:  UTF-8
-	    1 	C++	1	
+	    1 	C++	1
 
 	Translated: 1	Skipped: 0	Error: 0	Total: 1
   STDERR

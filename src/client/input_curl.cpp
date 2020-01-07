@@ -64,7 +64,7 @@ namespace {
 }
 
 // coordinate curl error response
-// only call before goCurl() 
+// only call before goCurl()
 void setCurlErrors(bool flag) {
     curl_errors = flag;
 }

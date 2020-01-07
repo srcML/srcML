@@ -196,7 +196,7 @@ public :
     void done() {
 
         is_done = true;
-        
+
         cond.notify_one();
     }
 
@@ -299,7 +299,7 @@ public :
                         archive->options |= SRCML_OPTION_LINE;
                 }
 
-            } else if (attribute == "hash") 
+            } else if (attribute == "hash")
                 ;
             else {
 
@@ -348,7 +348,7 @@ public :
         // pause
         if (!read_root) {
 
-            {                
+            {
                 std::unique_lock<std::mutex> lock(mutex);
 
                 if (terminate)
@@ -356,7 +356,7 @@ public :
                 wait_root = false;
                 cond.notify_one();
                 cond.wait(lock);
-                read_root = true;        
+                read_root = true;
             }
 
             if (terminate) {
@@ -386,7 +386,7 @@ public :
         }
 
         state->loc = 0;
-        
+
         state->collect_unit_body = collect_unit_body;
 
         if (terminate)
@@ -527,7 +527,7 @@ public :
                 archive->user_macro_list.push_back(type);
             }
 
-        } 
+        }
     }
 
     /**
@@ -538,7 +538,7 @@ public :
      * Overrident processingInstruction to collect srcML.
      */
     virtual void processingInstruction(const char* target, const char* data) {
-        
+
         srcml_archive_set_processing_instruction(archive, (const char*)target, (const char *)data);
 
     }

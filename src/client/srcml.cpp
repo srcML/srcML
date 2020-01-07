@@ -99,7 +99,7 @@ Typical usage includes:
     # pipe in source code
     echo "int i = 1;" | srcml --language C++
 
-    # convert from srcML back to source code 
+    # convert from srcML back to source code
     srcml main.cpp.xml -o main.cpp
 
 Consider using the --text option for direct entry of text.
@@ -112,7 +112,7 @@ See `srcml --help` for more information.
         // determine source or srcML input based on --language
         srcml_request.input_sources[*srcml_request.stdindex].state = srcml_request.att_language ? SRC : SRCML;
     }
- 
+
     /*
         Setup the internal pipeline of possible steps:
         * creating srcml from src files and input srcml files, and transforming srcml

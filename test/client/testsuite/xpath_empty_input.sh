@@ -13,7 +13,7 @@ define xpath_empty <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
 	<unit revision="1.0.0" language="C++"/>
-	
+
 	</unit>
 	STDOUT
 

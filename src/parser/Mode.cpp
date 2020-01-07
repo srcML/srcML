@@ -19,7 +19,7 @@
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
- 
+
 #include "ModeStack.hpp"
 
 /* Set of mode flags */

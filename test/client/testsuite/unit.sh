@@ -28,7 +28,7 @@ define sxmlfile2 <<- 'STDOUT'
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
-	
+
 	<unit revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
 
@@ -58,7 +58,7 @@ check sub/a.cpp "$sfile1"
 srcml --unit "1" sub/a.cpp.xml -o sub/a.cpp
 check sub/a.cpp "$sfile1"
 
-srcml sub/a.cpp.xml -U "2" 
+srcml sub/a.cpp.xml -U "2"
 check "$sfile2"
 
 srcml sub/a.cpp.xml --unit "2"
@@ -83,7 +83,7 @@ check sub/b.cpp.xml "$sxmlfile1"
 srcml -X --unit "1" sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$sxmlfile1"
 
-srcml -X --unit "2" sub/a.cpp.xml 
+srcml -X --unit "2" sub/a.cpp.xml
 check "$sxmlfile2"
 
 srcml -X --unit "2" -o sub/b.cpp.xml < sub/a.cpp.xml

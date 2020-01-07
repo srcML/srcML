@@ -33,7 +33,7 @@
 #include <srcml_types.hpp>
 #include <unit_utilities.hpp>
 
-/** 
+/**
  * srcml_translator
  * @param output_buffer general libxml2 output buffer
  * @param xml_encoding output srcML encoding
@@ -50,7 +50,7 @@
  * @param timestamp unit timestamp attribute
  * @param hash unit hash attribute
  * @param encoding unit source encoding
- * 
+ *
  * Constructor for output to libxml2 output buffer.
  */
 srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
@@ -65,7 +65,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* filename,
                                  const char* version,
                                  const std::vector<std::string>& attributes,
-                                 const char* timestamp, 
+                                 const char* timestamp,
                                  const char* hash,
                                  const char* encoding)
     : Language(language),
@@ -169,7 +169,7 @@ void srcml_translator::prepareOutput() {
 
     if ((options & SRCML_OPTION_NO_XML_DECL) == 0)
       out.outputXMLDecl();
-  
+
     out.outputProcessingInstruction();
 
     // root unit for compound srcML documents
@@ -248,7 +248,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->srcml.c_str() + unit->content_begin), size);
     }
 
-    // end the unit 
+    // end the unit
     xmlTextWriterEndElement(out.getWriter());
 
     return true;

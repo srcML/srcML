@@ -375,7 +375,7 @@ int main(int, char* argv[]) {
         size_t size;
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_enable_solitary_unit(archive);
-        srcml_archive_write_open_memory(archive, &s, &size);      
+        srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_write_start_element(unit, 0, "element", 0), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
@@ -405,7 +405,7 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
         free(s);
     }
-    
+
     {
         dassert(srcml_write_end_element(0), SRCML_STATUS_INVALID_ARGUMENT);
     }
@@ -488,7 +488,7 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
         free(s);
     }
-    
+
     {
         dassert(srcml_write_namespace(0, "foo", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
@@ -636,7 +636,7 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
         free(s);
     }
-    
+
     {
         dassert(srcml_write_attribute(0, "f", "foo", "b", "bar"), SRCML_STATUS_INVALID_ARGUMENT);
     }
@@ -720,7 +720,7 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
         free(s);
     }
-    
+
     {
         dassert(srcml_write_string(0, "foo"), SRCML_STATUS_INVALID_ARGUMENT);
     }

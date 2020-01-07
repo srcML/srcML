@@ -66,7 +66,7 @@ language_extension_registry::~language_extension_registry() {}
  * @param extension the found extension returned passed by reference
  *
  * Gets the language extension from a filename with path.
- * 
+ *
  * @returns if successsful.
  */
 bool get_language_extension(const char * const inpath, std::string & extension)
@@ -88,7 +88,7 @@ bool get_language_extension(const char * const inpath, std::string & extension)
     }
 }
 
-/** 
+/**
  * register_user_ext
  * @param ext the file extension
  * @param language interger representation of language to associated with extention
@@ -108,7 +108,7 @@ bool language_extension_registry::register_user_ext(const char* ext, int languag
     return true;
 }
 
-/** 
+/**
  * register_user_ext
  * @param ext the file extension
  * @param language string representation of language to associated with extention
@@ -136,7 +136,7 @@ bool language_extension_registry::register_user_ext(const char* ext, const char*
  *
  * @returns the numeric representation of the currently registered language from the given filename.
  */
-int language_extension_registry::get_language_from_filename(const char* const path) const { 
+int language_extension_registry::get_language_from_filename(const char* const path) const {
 
     // extract the (pure) extension
     std::string extension;
@@ -157,7 +157,7 @@ int language_extension_registry::get_language_from_filename(const char* const pa
 /**
  * register_standar_file_extensions
   *
- * Register the standard file extensions for all languages. 
+ * Register the standard file extensions for all languages.
  */
 void language_extension_registry::register_standard_file_extensions() {
 
@@ -228,7 +228,7 @@ unsigned int language_extension_registry::size() const {
  * last
  *
  * Get the last language/extension pair at given position.
- * 
+ *
  * @returns the last language/extension pair at given position.
  */
 language_extension language_extension_registry::last() const {

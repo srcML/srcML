@@ -79,7 +79,7 @@ srcml_archive* srcml_archive_create() {
  */
 int srcml_archive_error_number(const struct srcml_archive* archive) {
 
-    if (archive == nullptr) 
+    if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     return archive->error_number;
@@ -91,7 +91,7 @@ int srcml_archive_error_number(const struct srcml_archive* archive) {
  */
 const char* srcml_archive_error_string(const struct srcml_archive* archive) {
 
-    if (archive == nullptr) 
+    if (archive == nullptr)
         return "Archive does not exist";
 
     return archive->error_string.c_str();
@@ -429,7 +429,7 @@ int srcml_archive_register_file_extension(struct srcml_archive* archive, const c
 
     if (archive->registered_languages.register_user_ext(extension, language))
         return SRCML_STATUS_OK;
-    
+
     return SRCML_STATUS_INVALID_INPUT;
 }
 
@@ -1202,7 +1202,7 @@ int srcml_archive_write_unit(struct srcml_archive* archive, struct srcml_unit* u
         int status = srcml_archive_write_create_translator_xml_buffer(archive);
         if (status != SRCML_STATUS_OK)
             return status;
-    } 
+    }
 
     archive->translator->add_unit(unit);
 
@@ -1332,7 +1332,7 @@ void srcml_archive_close(struct srcml_archive* archive) {
         archive->output_buffer = nullptr;
     }
 
-    // Give the user the completed buffer if opened using srcml_archive_write_open_memory() 
+    // Give the user the completed buffer if opened using srcml_archive_write_open_memory()
     if (archive->buffer && archive->size) {
 
         // record the size before the buffer is detached

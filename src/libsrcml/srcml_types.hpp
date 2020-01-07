@@ -148,7 +148,7 @@ struct srcml_archive {
 
     /** a srcMLReader for reading */
     srcml_sax2_reader* reader = nullptr;
- 
+
     std::vector<std::shared_ptr<Transformation>> transformations;
 
     /** srcDiff revision number */
@@ -266,7 +266,7 @@ inline const char* optional_to_c_str(const boost::optional<std::string>& s, cons
 namespace std {
     template<>
     struct default_delete<srcml_archive> {
-        void operator()(srcml_archive* arch) { 
+        void operator()(srcml_archive* arch) {
             srcml_archive_close(arch);
             srcml_archive_free(arch);
         }
@@ -274,7 +274,7 @@ namespace std {
 
     template<>
     struct default_delete<srcml_unit> {
-        void operator()(srcml_unit* unit) { 
+        void operator()(srcml_unit* unit) {
             srcml_unit_free(unit);
         }
     };

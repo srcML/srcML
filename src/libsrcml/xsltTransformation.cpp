@@ -137,7 +137,7 @@ xsltTransformation::~xsltTransformation() {
  * apply
  *
  * Apply XSLT program, writing results.
- * 
+ *
  * @returns true on success false on failure.
  */
 TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */) const {

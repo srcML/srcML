@@ -36,7 +36,7 @@ int src_input_file(ParseQueue& queue,
 
     // form the parsing request
     std::shared_ptr<ParseRequest> prequest(new ParseRequest);
-   
+
     if (option(SRCML_COMMAND_NOARCHIVE)) {
         prequest->disk_dir = srcml_request.output_filename;
     }
@@ -54,7 +54,7 @@ int src_input_file(ParseQueue& queue,
     if (prequest->language.empty())
         if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
             prequest->language = l;
-    
+
     prequest->disk_filename = input.resource;
 
     // Hand request off to the processing queue

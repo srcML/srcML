@@ -33,5 +33,5 @@ check a.cpp.xml "$srcmla"
 srcml a.cpp b.cpp --to-dir .
 check a.cpp.xml "$srcmla"
 
-srcml a.cpp b.cpp --to-dir . 
+srcml a.cpp b.cpp --to-dir .
 check a.cpp.xml "$srcmla"

@@ -114,7 +114,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
 
         dassert(srcml_unit_get_filename(unit), 0);
-        
+
         srcml_unit_free(unit);
     }
 
@@ -123,7 +123,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_filename(unit, "main.cpp");
 
         dassert(srcml_unit_get_filename(unit), std::string("main.cpp"));
-        
+
         srcml_unit_free(unit);
     }
 
@@ -139,7 +139,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
 
         dassert(srcml_unit_get_version(unit), 0);
-        
+
         srcml_unit_free(unit);
     }
 
@@ -148,7 +148,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_version(unit, "1.5");
 
         dassert(srcml_unit_get_version(unit), std::string("1.5"));
-        
+
         srcml_unit_free(unit);
     }
 
@@ -164,7 +164,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
 
         dassert(srcml_unit_get_timestamp(unit), 0);
-        
+
         srcml_unit_free(unit);
     }
 
@@ -173,7 +173,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_timestamp(unit, "Fri Nov 30 14:15:27 EST 2018");
 
         dassert(srcml_unit_get_timestamp(unit), std::string("Fri Nov 30 14:15:27 EST 2018"));
-        
+
         srcml_unit_free(unit);
     }
 
@@ -189,7 +189,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
 
         dassert(srcml_unit_get_hash(unit), 0);
-        
+
         srcml_unit_free(unit);
     }
 
@@ -200,7 +200,7 @@ int main(int, char* argv[]) {
 
         dassert(srcml_archive_has_hash(archive), 1);
         dassert(srcml_unit_get_hash(unit), std::string("a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"));
-        
+
         srcml_unit_free(unit);
     }
 
@@ -216,7 +216,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
 
         dassert(srcml_unit_get_srcml_outer(unit), 0);
-        
+
         srcml_unit_free(unit);
     }
 
@@ -227,7 +227,7 @@ int main(int, char* argv[]) {
         srcml_unit_parse_memory(unit, "a;", 2);
 
         dassert(srcml_unit_get_srcml_outer(unit), std::string(R"(<unit revision="1.0.0" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>)"));
-        
+
         srcml_unit_free(unit);
     }
 
@@ -235,7 +235,7 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
 
         dassert(srcml_unit_get_srcml_outer(unit), 0);
-        
+
         srcml_unit_free(unit);
     }
 
@@ -260,7 +260,7 @@ int main(int, char* argv[]) {
         srcml_unit_parse_memory(unit, "a;", 2);
 
         dassert(srcml_unit_get_srcml(unit), std::string(R"(<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>)"));
-        
+
         srcml_unit_free(unit);
     }
 

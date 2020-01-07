@@ -137,7 +137,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             // if the string does not end in a newline, output one
             if (s[strlen(s) - 1] != '\n')
                 srcml_archive_write_string(output_archive, "\n", 1);
-            
+
             srcml_transform_free(request->results);
             return;
         };

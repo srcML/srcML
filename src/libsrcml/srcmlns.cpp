@@ -92,7 +92,7 @@ bool is_srcml_namespace(const std::string& uri, const std::string& srcml_uri) {
  * @param uri the uri to normalize
  *
  * Normalize the uri to www.srcML.org
- * 
+ *
  * @returns the normalized uri.
  */
 std::string& srcml_uri_normalize(std::string& uri) {

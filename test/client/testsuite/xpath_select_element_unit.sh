@@ -180,4 +180,4 @@ srcml --xpath='//src:comment[@type="block"]' -o sub/a.xml sub/a.cpp.xml
 check sub/a.xml "$output"
 
 srcml --xpath='//src:comment[@type="block"]' sub/a.cpp.xml -o sub/a.xml
-check sub/a.xml "$output" 
+check sub/a.xml "$output"

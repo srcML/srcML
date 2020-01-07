@@ -71,7 +71,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
             srcml_request,
             /* first process_srcml uses input_source, rest input from previous output pipe */
             first ? input_sources : srcml_input_t(1, srcml_input_src("stdin://-", prevoutfd)),
-            /* last process_srcml uses destination, rest output to pipe */                
+            /* last process_srcml uses destination, rest output to pipe */
             last  ? destination   : srcml_output_dest("-", fds[1])
         ));
     }

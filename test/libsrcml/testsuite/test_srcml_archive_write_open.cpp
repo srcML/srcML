@@ -163,7 +163,7 @@ int main(int, char* argv[]) {
         fd = OPEN("project.xml", O_RDONLY, 0);
         size_t num_read = read(fd, buf, 1);
         CLOSE(fd);
-        
+
         dassert(num_read, 1);
     }
 
@@ -195,7 +195,7 @@ int main(int, char* argv[]) {
         file = fopen("project.xml", "r");
         size_t num_read = fread(buf, 1, 1, file);
         fclose(file);
-        
+
         dassert(num_read, 1);
     }
 

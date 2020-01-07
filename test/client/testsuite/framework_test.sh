@@ -47,7 +47,7 @@ if [[ "$OSTYPE" == 'msys' ]]; then
 	SRCML=$SRCML_HOME/srcml
 	diff='diff -Z '
 else
-	diff='diff'   
+	diff='diff'
 	if [ -z "$SRCML"]; then
 
 	    if [ -e "/usr/bin/srcml" ]; then
@@ -369,7 +369,7 @@ check_exit() {
     fi
 
     set +e
-    
+
     # return to capturing stdout and stderr
     capture_output
 

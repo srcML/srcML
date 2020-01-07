@@ -92,7 +92,7 @@ const int SRCML_COMMAND_INSRCML =
     SRCML_COMMAND_DISPLAY_SRCML_FILENAME |
     SRCML_COMMAND_DISPLAY_SRCML_SRC_VERSION |
     SRCML_COMMAND_DISPLAY_SRCML_ENCODING |
-    SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP | 
+    SRCML_COMMAND_DISPLAY_SRCML_TIMESTAMP |
     SRCML_COMMAND_DISPLAY_SRCML_HASH;
 
 // Error Codes
@@ -128,7 +128,7 @@ struct srcml_request_t {
     boost::optional<std::string> att_version;
 
     boost::optional<std::string> src_encoding;
-    
+
     boost::optional<int> eol;
 
     boost::optional<std::string> external;
@@ -144,7 +144,7 @@ struct srcml_request_t {
     boost::optional<std::string> xmlns_prefix_query;
 
     // xml processing attributes
-    boost::optional<std::string> xml_processing;    
+    boost::optional<std::string> xml_processing;
 
     std::map<std::string,std::string> xmlns_namespaces;
 

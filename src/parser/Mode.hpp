@@ -58,9 +58,9 @@ const static srcMLState::MODE_TYPE MODE_EXPRESSION;
 /** expecting a call (member initialization list) */
 const static srcMLState::MODE_TYPE MODE_CALL;
 
-/** 
+/**
  * setup for expecting a condition and detection of the end
- * of a condition at a left parentheses of the correct count 
+ * of a condition at a left parentheses of the correct count
  */
  const static srcMLState::MODE_TYPE MODE_CONDITION;
 
@@ -76,15 +76,15 @@ const static srcMLState::MODE_TYPE MODE_CALL;
 /** mode for inititialization typically @code=<init>...</init>@endcode */
  const static srcMLState::MODE_TYPE MODE_INIT;
 
-/** 
+/**
  * block tags from being issued.  Should be moved to
- * output handling 
+ * output handling
  */
  const static srcMLState::MODE_TYPE MODE_FUNCTION_TAIL;
 
-/** 
+/**
  * whether to parse the end of line character
- * used with preprocessor directives 
+ * used with preprocessor directives
  */
  const static srcMLState::MODE_TYPE MODE_PARSE_EOL;
 
@@ -94,11 +94,11 @@ const static srcMLState::MODE_TYPE MODE_CALL;
 /** Mode for a variable name */
  const static srcMLState::MODE_TYPE MODE_VARIABLE_NAME;
 
-/** 
+/**
  * the if srcMLstatement includes some special processing
  * including starting a THEN element after the condition
  * and stopping the ending of srcMLstatements at the IF when
- * an ELSE is matched 
+ * an ELSE is matched
  */
  const static srcMLState::MODE_TYPE MODE_IF;
 
@@ -165,7 +165,7 @@ const static srcMLState::MODE_TYPE MODE_CALL;
 /** mode for a if then */
  const static srcMLState::MODE_TYPE MODE_THEN;
 
-/** mode for an else */    
+/** mode for an else */
  const static srcMLState::MODE_TYPE MODE_ELSE;
 
 /** mode for a typdef */

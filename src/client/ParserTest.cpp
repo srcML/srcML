@@ -144,7 +144,7 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
                 off.first = std::next(off.first);
                 off.second = std::next(off.second);
             }
-            
+
             // remove the common end of the strings
             sxml.resize(sxml.size() - std::distance(sxml.rbegin(), endoff.first));
             ssout.resize(ssout.size() - std::distance(ssout.rbegin(), endoff.second));

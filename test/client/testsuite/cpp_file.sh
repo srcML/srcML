@@ -146,10 +146,10 @@ check sub/a.java.xml "$foutput"
 srcml -l Java --cpp sub/a.java -o sub/a.java.xml
 check sub/a.java.xml "$foutput"
 
-srcml -l Java -o sub/a.java.xml sub/a.java --cpp 
+srcml -l Java -o sub/a.java.xml sub/a.java --cpp
 check sub/a.java.xml "$foutput"
 
-srcml -o sub/a.java.xml -l Java sub/a.java --cpp 
+srcml -o sub/a.java.xml -l Java sub/a.java --cpp
 check sub/a.java.xml "$foutput"
 
 srcml -o sub/a.java.xml --cpp sub/a.java -l Java
@@ -167,7 +167,7 @@ check sub/a.java.xml "$foutput"
 srcml -l Java sub/a.java -o sub/a.java.xml --cpp
 check sub/a.java.xml "$foutput"
 
-srcml -o sub/a.java.xml sub/a.java -l Java --cpp 
+srcml -o sub/a.java.xml sub/a.java -l Java --cpp
 check sub/a.java.xml "$foutput"
 
 srcml -o sub/a.java.xml sub/a.java --cpp -l Java

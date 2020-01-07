@@ -138,7 +138,7 @@ int main(int, char* argv[]) {
     }
 
     {
-        /* 
+        /*
            valgrind produces the error "Conditional jump or move depends on uninitialised value(s)"
            based on a strcmp() inside of xml. For a long, invalid name, no error is produced
         */

@@ -32,7 +32,7 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
                     const srcml_input_t& input_sources,
                     const srcml_output_dest& destination) {
 
-    // create a new archive for output that will handle all 
+    // create a new archive for output that will handle all
     // types, including source-code files
     std::unique_ptr<archive> ar(archive_write_new());
     if (!ar) {

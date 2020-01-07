@@ -46,7 +46,7 @@ PRETTY Args
 - %f: file name attribute on the unit
 - %h: hash attribute on the unit
 - %i: index of the unit within the archive
-- %l: unit language 
+- %l: unit language
 - %N: print xmlns namespace %N = full namespace, %N:u = namespace uri, %N:p = namespace prefix
 - %S: source encoding attribute on the archive
 - %s: source encoding attribute on the unit

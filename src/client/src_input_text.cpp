@@ -78,7 +78,7 @@ int src_input_text(ParseQueue& queue,
         if (prequest->language.empty())
             if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
                 prequest->language = l;
-    
+
         prequest->status = 0;
 
         // fill up the parse request buffer
@@ -166,7 +166,7 @@ int src_input_text(ParseQueue& queue,
                 {
                     int value = 0;
                     int offset = *epos == '0' ? 1 : 0;
-                    /* 
+                    /*
                         Spec 6.4.4.4 Character constants:
 
                         octal-escape-sequence:

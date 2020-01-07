@@ -29,7 +29,7 @@
 
 // std::shared_ptr deleter for srcml archive
 // some compilers will not use the default_delete<srcml_archive> for std::shared_ptr
-inline void srcml_archive_deleter(srcml_archive* arch) { 
+inline void srcml_archive_deleter(srcml_archive* arch) {
     srcml_archive_close(arch);
     srcml_archive_free(arch);
 
@@ -43,7 +43,7 @@ inline void srcml_archive_deleter(srcml_archive* arch) {
 namespace std {
     template<>
     struct default_delete<srcml_archive> {
-        void operator()(srcml_archive* arch) { 
+        void operator()(srcml_archive* arch) {
             srcml_archive_close(arch);
             srcml_archive_free(arch);
 
@@ -53,7 +53,7 @@ namespace std {
 
     template<>
     struct default_delete<srcml_unit> {
-        void operator()(srcml_unit* unit) { 
+        void operator()(srcml_unit* unit) {
             srcml_unit_free(unit);
         }
     };

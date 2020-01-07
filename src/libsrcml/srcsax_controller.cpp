@@ -25,13 +25,13 @@
 #include <functional>
 #include <cstring>
 
-/** 
+/**
  * libxml_error
  *
  * Silence/catch/default libxml2 errors.
  */
 static void libxml_error(void * /*ctx*/, const char* msg, ...) {
-    
+
     va_list vl;
     va_start(vl, msg);
     vfprintf(stderr, msg, vl);

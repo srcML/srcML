@@ -57,7 +57,7 @@ public :
      * apply
      *
      * Apply relaxng program, writing results.
-     * 
+     *
      * @returns true on success false on failure.
      */
     virtual TransformationResult apply(xmlDocPtr doc, int position) const;

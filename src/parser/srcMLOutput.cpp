@@ -84,7 +84,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const std::vector<std::string>& attributes,
                          const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
                          size_t ts)
-    : input(ints), output_buffer(output_buffer), unit_language(language), 
+    : input(ints), output_buffer(output_buffer), unit_language(language),
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
@@ -139,7 +139,7 @@ void srcMLOutput::close() {
 }
 
 void srcMLOutput::outputUnitSeparator() {
-    
+
     processText("\n\n", 2);
 }
 
@@ -259,7 +259,7 @@ void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& opt
         view.find(SRCML_ERROR_NS_URI)->flags |= NS_USED;
 
     for (const auto& ns : namespaces) {
-        
+
         // output standard namespaces for outer unit or non-archive unit
         if (depth == 0 || !isoption(options, SRCML_OPTION_ARCHIVE)) {
 
@@ -555,7 +555,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         // if position attributes for non-empty start elements
         if (isposition && !isempty(token))
             addPosition(token);
-    } 
+    }
 
     if (!isstart(token) || isempty(token)) {
 
@@ -585,7 +585,7 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
         processToken(token, eparts.name,
                     // use getPrefix() to record that this prefix was used
                     namespaces[eparts.prefix].getPrefix().c_str(),
-                    eparts.attr_name, 
+                    eparts.attr_name,
                     // if attribute name and no value, then take text from token
                     eparts.attr_name && eparts.attr_value ? eparts.attr_value : token->getText().c_str(),
                     eparts.attr2_name,

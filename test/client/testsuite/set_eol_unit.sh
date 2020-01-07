@@ -7,31 +7,31 @@ srcml --text="\na;\n" -l C++ | srcml --unit=1
 check "\na;\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol lf
-check "\na;\n" 
+check "\na;\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol=lf
-check "\na;\n" 
+check "\na;\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol UNIX
-check "\na;\n" 
+check "\na;\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol=UNIX
-check "\na;\n" 
+check "\na;\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol cr
-check "\ra;\r" 
+check "\ra;\r"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol=cr
-check "\ra;\r" 
+check "\ra;\r"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol crlf
-check "\r\na;\r\n" 
+check "\r\na;\r\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol=crlf
-check "\r\na;\r\n" 
+check "\r\na;\r\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol Windows
-check "\r\na;\r\n" 
+check "\r\na;\r\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol=Windows
 check "\r\na;\r\n"

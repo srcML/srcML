@@ -164,7 +164,7 @@ int srcml(const char* input_filename, const char* output_filename) {
             global_archive.error_string = "Unable to create srcML archive";
             return SRCML_STATUS_ERROR;
         }
- 
+
         int status = srcml_archive_write_open_filename(archive.get(), output_filename);
         if (status != SRCML_STATUS_OK)
             return status;
@@ -184,7 +184,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         if (status != SRCML_STATUS_OK)
             return status;
 
-        // unit filename is based on convenience functions or the input filename        
+        // unit filename is based on convenience functions or the input filename
         if (srcml_unit_get_filename(&global_unit) != 0)
             status = srcml_unit_set_filename(unit.get(), srcml_unit_get_filename(&global_unit));
         else
@@ -784,7 +784,7 @@ int srcml_check_encoding(const char* encoding) {
     if (encoding == nullptr)
         return 0;
 
-    /* 
+    /*
        valgrind produces the error "Conditional jump or move depends on uninitialised value(s)"
        based on a strcmp() inside of xml. For a long, invalid name, no error is produced
     */

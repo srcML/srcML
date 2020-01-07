@@ -535,7 +535,7 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
     // parse the input
     unit->unit_translator->translate(input);
 
-    // namespaces were updated during translation, may now include 
+    // namespaces were updated during translation, may now include
     // namespaces that were optional
     unit->namespaces = unit->unit_translator->out.getNamespaces();
 
@@ -698,7 +698,7 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
         unit->src = extract_src(unit->srcml);
     }
 
-    // if EOL is not auto, then need to convert for 
+    // if EOL is not auto, then need to convert for
     if (unit->eol == SOURCE_OUTPUT_EOL_AUTO) {
         xmlOutputBufferWrite(output_handler.get(), (int) unit->src->size(), unit->src->c_str());
     } else {
@@ -840,7 +840,7 @@ int srcml_unit_unparse_fd(struct srcml_unit* unit, int srcml_fd) {
  * @param write_callback a write callback function
  * @param close_callback a close callback function
  *
- * Convert the srcML in unit into source code and place it into 
+ * Convert the srcML in unit into source code and place it into
  * the opened io context written to using write callback
  * and closed using close callback.  If the srcML was not read in,
  * but the attributes were read in the xml and unparse that value.
@@ -1168,7 +1168,7 @@ struct srcml_unit* srcml_unit_create(struct srcml_archive* archive) {
         unit = new srcml_unit;
 
     } catch(...) { return nullptr; }
-    
+
     unit->archive = archive;
 
     return unit;
@@ -1210,7 +1210,7 @@ struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
  */
 int srcml_unit_error_number(const struct srcml_unit* unit) {
 
-    if (unit == nullptr) 
+    if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     return unit->error_number;
@@ -1222,14 +1222,14 @@ int srcml_unit_error_number(const struct srcml_unit* unit) {
  */
 const char* srcml_unit_error_string(const struct srcml_unit* unit) {
 
-    if (unit == nullptr) 
+    if (unit == nullptr)
         return "Unit does not exist";
 
     return unit->error_string.c_str();
 }
 
 /**
- * 
+ *
  * @param unit a srcml unit
  *
  * Free the contents of a srcml_unit.

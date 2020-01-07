@@ -26,7 +26,7 @@ mkDir::mkDir() {
 
     arch = archive_write_disk_new();
     entry = archive_entry_new();
-    archive_entry_set_filetype(entry, AE_IFDIR); 
+    archive_entry_set_filetype(entry, AE_IFDIR);
     archive_entry_set_perm(entry, 0744);
 }
 

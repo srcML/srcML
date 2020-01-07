@@ -21,7 +21,7 @@ define illformed <<- 'INPUT'
 createfile xml_error/illformed.xml "$illformed"
 
 define output <<- 'STDOUT'
-	
+
 	a;
 	STDOUT
 

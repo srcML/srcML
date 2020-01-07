@@ -114,7 +114,7 @@ int srcml_input_srcml(ParseQueue& queue,
         prequest->input_archive = srcml_input_archive;
         prequest->parsertest_filename = srcml_input.resource;
 
-        if (srcml_archive_get_url(prequest->input_archive.get())) 
+        if (srcml_archive_get_url(prequest->input_archive.get()))
             prequest->url = srcml_archive_get_url(prequest->input_archive.get());
 
         // if the archive has a language (set by the user) then use that

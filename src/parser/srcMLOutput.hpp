@@ -38,7 +38,7 @@
 #include "srcmlns.hpp"
 #include <libxml/xmlwriter.h>
 
-/** 
+/**
  * anonymous enum for prefix positions
  */
 enum PREFIXES { SRC,
@@ -133,7 +133,7 @@ public:
 
     /** output xml writer */
     xmlTextWriter* xout = nullptr;
-    
+
     /** output buffer */
     xmlOutputBuffer* output_buffer = nullptr;
 

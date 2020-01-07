@@ -81,7 +81,7 @@ srcml_sax2_reader::srcml_sax2_reader(srcml_archive* archive, std::unique_ptr<xml
 srcml_sax2_reader::~srcml_sax2_reader() {
 
     handler.stop();
-    
+
     if (thread.joinable()) {
         try {
             thread.join();

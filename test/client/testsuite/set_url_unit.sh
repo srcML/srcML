@@ -25,10 +25,10 @@ check "$output"
 echo -n "" | srcml -l C++ --url=bar
 check "$output"
 
-srcml --url "bar" sub/a.cpp 
+srcml --url "bar" sub/a.cpp
 check "$fsrcml"
 
-srcml --url "bar" sub/a.cpp 
+srcml --url "bar" sub/a.cpp
 check "$fsrcml"
 
 srcml --url="bar" sub/a.cpp

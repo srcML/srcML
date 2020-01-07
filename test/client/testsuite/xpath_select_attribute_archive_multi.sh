@@ -50,7 +50,7 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-xmlcheck "$output"	
+xmlcheck "$output"
 
 srcml sub/archive_multi.xml --xpath "//src:unit/@filename"
 check "$output"

@@ -68,7 +68,7 @@ public:
                      const char* filename,
                      const char* version,
                      const std::vector<std::string>& attributes,
-                     const char* timestamp, 
+                     const char* timestamp,
                      const char* hash,
                      const char* encoding);
 
@@ -144,7 +144,7 @@ private:
 
     /** mark if have outputted starting unit tag for by element writing */
     bool is_outputting_unit = false;
-    
+
 public:
     /** track depth for by element writing */
     int output_unit_depth = 0;

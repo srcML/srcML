@@ -33,7 +33,7 @@
 
 /**
  * srcMLMode
- * 
+ *
  * Enum of srcML parsing modes.
  */
 enum srcMLMode {
@@ -82,7 +82,7 @@ struct sax2_srcsax_handler {
     bool collect_unit_body = true;
 
     bool callupper = true;
-    
+
     std::string rootnsstr;
     std::string rootstarttag;
 

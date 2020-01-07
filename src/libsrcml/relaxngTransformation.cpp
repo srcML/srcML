@@ -49,7 +49,7 @@ relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocP
  * apply
  *
  * Apply relaxng program, writing results.
- * 
+ *
  * @returns true on success false on failure.
  */
 TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocPtr doc, int /* position */) const {

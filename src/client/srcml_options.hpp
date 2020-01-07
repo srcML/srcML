@@ -27,14 +27,14 @@ class SRCMLOptions {
 public:
     friend void enable(int option);
 
-    static void set(int options) { 
+    static void set(int options) {
 
-        opt = options; 
+        opt = options;
     }
 
-    static int get()  { 
+    static int get()  {
 
-        return opt; 
+        return opt;
     }
 
  private:

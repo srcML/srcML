@@ -32,7 +32,7 @@
 enum { ERROR_MSG    = 1<<3,
        WARNING_MSG  = 1<<2,
        INFO_MSG     = 1<<1,
-       DEBUG_MSG    = 1<<0  
+       DEBUG_MSG    = 1<<0
 };
 
 class SRCMLStatus {
@@ -56,7 +56,7 @@ public:
         return;
 
       return;
-      
+
       switch (msg_type) {
       case ERROR_MSG:
         std::cerr << "ERROR ";

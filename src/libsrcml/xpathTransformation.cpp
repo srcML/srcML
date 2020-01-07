@@ -60,7 +60,7 @@ const char* const xpathTransformation::simple_xpath_attribute_name = "location";
  *
  * Constructor.
  */
-xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xpath, 
+xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xpath,
                         const char* element_prefix, const char* element_uri, const char* element,
                         const char* attr_prefix, const char* attr_uri, const char* attr_name, const char* attr_value)
     : xpath(xpath), prefix(stringOrNull(element_prefix)), uri(stringOrNull(element_uri)), element(stringOrNull(element)), attr_prefix(stringOrNull(attr_prefix)), attr_uri(stringOrNull(attr_uri)), attr_name(stringOrNull(attr_name)), attr_value(stringOrNull(attr_value)) {
@@ -251,7 +251,7 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
  * apply
  *
  * Apply XPath expression, writing results.
- * 
+ *
  * @returns true on success false on failure.
  */
 TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
@@ -370,7 +370,7 @@ void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPt
         xmlNodePtr element_node = xmlNewNode(element_ns, (const xmlChar*) element.c_str());
 
         if (!attr_name.empty())
-            append_attribute_to_node(element_node, !attr_uri.empty() ? attr_prefix.c_str() : prefix.c_str(), 
+            append_attribute_to_node(element_node, !attr_uri.empty() ? attr_prefix.c_str() : prefix.c_str(),
                 !attr_uri.empty() ? attr_uri.c_str() : uri.c_str());
 
         // result node is not a unit

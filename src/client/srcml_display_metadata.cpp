@@ -135,7 +135,7 @@ namespace {
 
         return numUnits;
     }
-     
+
 }
 
 void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_input_t& src_input, const srcml_output_dest&) {

@@ -78,7 +78,7 @@ public :
     void stop_parser() {
 
         srcsax_stop_parser(controller->getContext());
-    } 
+    }
 
     /**
      * set_encoding

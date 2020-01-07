@@ -24,7 +24,7 @@
 #define SRCML_CONSUME_HPP
 
 #include <memory>
-  
+
 struct ParseRequest;
 class WriteQueue;
 

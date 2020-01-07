@@ -26,10 +26,10 @@ xmlcheck "$srcml"
 xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
 
-srcml sub/a.cpp --xml-encoding="ISO-8859-1" --archive 
+srcml sub/a.cpp --xml-encoding="ISO-8859-1" --archive
 check "$fsrcml"
 
-srcml --xml-encoding "ISO-8859-1" sub/a.cpp --archive 
+srcml --xml-encoding "ISO-8859-1" sub/a.cpp --archive
 check "$fsrcml"
 
 srcml -l C++ --xml-encoding "ISO-8859-1" -o sub/a.cpp.xml --archive < sub/a.cpp
@@ -44,7 +44,7 @@ check sub/a.cpp.xml "$srcml"
 srcml --xml-encoding "ISO-8859-1" -l C++ -o sub/a.cpp.xml --archive < sub/a.cpp
 check sub/a.cpp.xml "$srcml"
 
-srcml --xml-encoding "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml --archive 
+srcml --xml-encoding "ISO-8859-1" sub/a.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml "$fsrcml"
 
 # test encoding flag on an archive of more than one

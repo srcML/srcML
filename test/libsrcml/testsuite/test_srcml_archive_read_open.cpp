@@ -24,7 +24,7 @@
 */
 
 #include <srcml.h>
-    
+
 #include <macros.hpp>
 
 #include <fstream>

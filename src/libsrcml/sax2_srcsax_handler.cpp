@@ -31,8 +31,8 @@
 #include <libxml/tree.h>
 
 #ifdef SRCSAX_DEBUG
-    #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase); 
-    #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch); 
+    #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase);
+    #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch);
     #define SRCSAX_DEBUG_BASE(title,m) fprintf(stderr, "%s: %s %s %d %s BASE: pos %ld |%.*s| \n", title, __FILE__, __FUNCTION__, __LINE__, m, state->base - state->prevbase, 3, state->base);
     #define SRCSAX_DEBUG_START(m) SRCSAX_DEBUG_BASE("BEGIN",m)
     #define SRCSAX_DEBUG_END(m)   SRCSAX_DEBUG_BASE("END  ",m)
@@ -41,7 +41,7 @@
 #else
     #define BASE_DEBUG
     #define SRCML_DEBUG(title, ch, len)
-    #define SRCSAX_DEBUG(title,m) 
+    #define SRCSAX_DEBUG(title,m)
     #define SRCSAX_DEBUG_START(m)
     #define SRCSAX_DEBUG_END(m)
     #define SRCSAX_DEBUG_START_CHARS(ch,len)
@@ -117,7 +117,7 @@ static int reparse_root(void* ctx) {
     xmlSAXHandler roottagsax;
     memset(&roottagsax, 0, sizeof(roottagsax));
     roottagsax.initialized    = XML_SAX2_MAGIC;
-    xmlSetStructuredErrorFunc(ctx, [](void * userData, 
+    xmlSetStructuredErrorFunc(ctx, [](void * userData,
                      xmlErrorPtr /* error */) {
 
         auto ctxt = (xmlParserCtxtPtr) userData;
@@ -140,13 +140,13 @@ static int reparse_root(void* ctx) {
             return;
 
         // call the upper-level start_root
-        state->context->handler->start_root(state->context, (const char*) localname, 
+        state->context->handler->start_root(state->context, (const char*) localname,
                             (const char*) prefix, (const char*) URI,
                             nb_namespaces, namespaces, nb_attributes, attributes);
 
         // call the upper-level start_unit for non-archives
         if (!state->context->is_archive)
-            state->context->handler->start_unit(state->context, (const char*) localname, 
+            state->context->handler->start_unit(state->context, (const char*) localname,
                     (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     };
 
@@ -322,7 +322,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // call the upper-level start_root when an empty element
     if (isempty) {
         state->rootcalled = true;
-        state->context->handler->start_root(state->context, (const char*) localname, 
+        state->context->handler->start_root(state->context, (const char*) localname,
                             (const char*) prefix, (const char*) URI,
                             nb_namespaces, namespaces, nb_attributes, attributes);
     }
@@ -335,7 +335,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     // call the upper-level start_unit for non-archives
     if (isempty && !state->context->is_archive) {
-        state->context->handler->start_unit(state->context, (const char*) localname, 
+        state->context->handler->start_unit(state->context, (const char*) localname,
                 (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     }
 
@@ -395,7 +395,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     // decide if this start element is for a unit (archive), or just a regular element (solo unit)
     if (state->context->is_archive) {
-        
+
         // restart unit count due to call of start_unit() in start_root() when we assumed a solo unit
         state->unit_count = 0;
 
@@ -670,9 +670,9 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     if (ctxt == nullptr)
         return;
     auto state = (sax2_srcsax_handler*) ctxt->_private;
-    if (state == nullptr)  
+    if (state == nullptr)
         return;
-    
+
     update_ctx(ctx);
 
     SRCSAX_DEBUG_START(localname);
@@ -707,7 +707,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
         end_unit(ctx, localname, prefix, URI);
     }
- 
+
     if (ctxt->nameNr == 1) {
 
         state->mode = END_ROOT;

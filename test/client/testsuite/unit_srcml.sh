@@ -48,12 +48,12 @@ define sxmlfile2fragment <<- 'STDOUT'
 	STDOUT
 
 define sxmlfile2raw <<- 'STDOUT'
-	
+
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	STDOUT
 
 define sxmlfile2src <<- 'STDOUT'
-	
+
 	b;
 	STDOUT
 

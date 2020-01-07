@@ -41,7 +41,7 @@ public:
     /** type of mode for GNU */
     typedef std::bitset<128> MODE_TYPE;
 
-    /** 
+    /**
      * srcMLState
      * @param mode current mode to create
      * @param transmode the transparent mode
@@ -302,7 +302,7 @@ private:
 
     /** current type count */
     int typecount;
-    
+
 };
 
 #endif

@@ -16,7 +16,7 @@ createfile sub/a.cpp ""
 srcml --register-ext cpp=Java sub/a.cpp
 check "$fxmlfile"
 
-srcml --register-ext="cpp=Java" sub/a.cpp 
+srcml --register-ext="cpp=Java" sub/a.cpp
 check "$fxmlfile"
 
 srcml --register-ext cpp=Java sub/a.cpp -o sub/a.cpp.xml

@@ -5,7 +5,7 @@ source $(dirname "$0")/framework_test.sh
 
 # test --cpp-nomarkup-else
 define input <<- 'INPUT'
-	
+
 	#if A
 	break;
 	#else

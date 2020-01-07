@@ -70,7 +70,7 @@ public:
 
     /**
      * factory
-     * 
+     *
      * Factory method for creating srcMLToken.
      *
      * @returns the created srcMLToken.
@@ -85,7 +85,7 @@ public:
      *
      * Set the line number to l.
      */
-    virtual void setLine(int l) final { line = l; }        
+    virtual void setLine(int l) final { line = l; }
 
     /**
      * getLine
@@ -112,7 +112,7 @@ public:
      * Get the column number.
      *
      * @returns the column number.
-     */    
+     */
     virtual int getColumn() const final { return column; }
 
     /**

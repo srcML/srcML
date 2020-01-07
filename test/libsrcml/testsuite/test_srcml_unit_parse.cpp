@@ -59,25 +59,25 @@ int main(int, char* argv[]) {
 R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
-    const std::string srcml_full = 
+    const std::string srcml_full =
 R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
-    const std::string utf8_srcml = 
+    const std::string utf8_srcml =
 R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><comment type="block">/* ✓ */</comment>
 </unit>)";
-    const std::string latin_srcml = 
+    const std::string latin_srcml =
 R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" url="test" filename="project" version="1"><comment type="block">/* þÿ */</comment>
 </unit>)";
-    const std::string srcml_timestamp = 
+    const std::string srcml_timestamp =
 R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" timestamp="today"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
-    const std::string srcml_hash = 
+    const std::string srcml_hash =
 R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
-    const std::string srcml_hash_generated = 
+    const std::string srcml_hash_generated =
 R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
-    const std::string srcml_encoding = 
+    const std::string srcml_encoding =
 R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C" src-encoding="UTF-8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 

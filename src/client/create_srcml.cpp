@@ -154,7 +154,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         // Cleanup filename
         std::string url_name = src_prefix_resource(input_sources[0].filename);
         url_name = url_name.substr(url_name.find_first_not_of("./"));
-        
+
         if (srcml_archive_set_url(srcml_arch.get(), url_name.c_str()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
@@ -208,7 +208,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         !input_sources[0].isdirectory && input_sources[0].archives.empty()) {
 
         srcml_archive_enable_solitary_unit(srcml_arch.get());
-        
+
         // If --hash is used, force hash for single input
         if (*srcml_request.markup_options & SRCML_HASH) {
             if (srcml_archive_enable_hash(srcml_arch.get()) != SRCML_STATUS_OK) {
@@ -282,7 +282,7 @@ void create_srcml(const srcml_request_t& srcml_request,
                 exit(1);
             }
         }
-        
+
         if (protocol == "xslt-param") {
 
             // split resource into name and value
@@ -326,7 +326,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // convert input sources to srcml
     int status = 0;
-    bool always_archive = option(SRCML_COMMAND_PARSER_TEST);    
+    bool always_archive = option(SRCML_COMMAND_PARSER_TEST);
     for (const auto& input : input_sources) {
 
         if (input.protocol == "filelist")

@@ -26,7 +26,7 @@ xmlcheck "$fsrcml"
 
 createfile sub/a.cpp "a;"
 createfile sub/a.cpp.xml "$fsrcml"
- 
+
 # from a file
 srcml sub/a.cpp --archive --verbose
 check "$fsrcml" "$foutput"
@@ -49,7 +49,7 @@ define srcml <<- 'STDOUT'
 
 define output <<- 'STDERR'
 	XML encoding:  UTF-8
-	    1 C++      1 a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8 
+	    1 C++      1 a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8
 
 	Source Files: 1	Other Files: 0	Errors: 0	Total Files: 1
 	STDERR

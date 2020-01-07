@@ -48,10 +48,10 @@ define open_error <<- 'STDOUT'
 createfile loop.txt "loop.txt"
 
 srcml --files-from loop.txt
-check_exit 1 "$empty_srcml" "$open_error" 
+check_exit 1 "$empty_srcml" "$open_error"
 
 srcml --files-from loop.txt -o loop.xml
-check_exit 1 "$open_error" 
+check_exit 1 "$open_error"
 #loop.xml "$empty_srcml"
 
 # file list references empty file

@@ -107,7 +107,7 @@ int main(int, char* argv[]) {
 
     std::ifstream inschema("schema.rng");
     std::string schema((std::istreambuf_iterator<char>(inschema)), std::istreambuf_iterator<char>());
-    
+
     //  srcml_apply_transforms
 
     //  xpath
@@ -398,7 +398,7 @@ int main(int, char* argv[]) {
         dassert(std::string(s, size), srcml_a);
         free(s);
     }
-    
+
     {
         char* s;
         size_t size;
@@ -644,7 +644,7 @@ int main(int, char* argv[]) {
         dassert(std::string(s, size), srcml_full_python);
         free(s);
     }
-    
+
     //  xslt_FILE
 
     {
@@ -808,7 +808,7 @@ int main(int, char* argv[]) {
         free(s);
     }
 
-    
+
     //  xslt_fd
 
     {
@@ -1118,7 +1118,7 @@ int main(int, char* argv[]) {
         free(s);
     }
 
-    
+
     //  relaxng_memory
 
     {
@@ -1241,7 +1241,7 @@ int main(int, char* argv[]) {
         free(s);
     }
 
-    
+
     //  relaxng_FILE
 
     {

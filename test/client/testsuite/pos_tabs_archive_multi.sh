@@ -47,11 +47,11 @@ check sub/a.cpp.xml "$fsrcml"
 srcml --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --archive --position
 check sub/a.cpp.xml "$fsrcml"
 
-srcml --tabs 4 -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --position 
+srcml --tabs 4 -o sub/a.cpp.xml --archive sub/a.cpp sub/b.cpp --position
 check sub/a.cpp.xml "$fsrcml"
 
-srcml --tabs 4 --position --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp 
+srcml --tabs 4 --position --archive -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"
 
-srcml --position --archive --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp 
+srcml --position --archive --tabs 4 -o sub/a.cpp.xml sub/a.cpp sub/b.cpp
 check sub/a.cpp.xml "$fsrcml"

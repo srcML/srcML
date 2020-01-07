@@ -53,7 +53,7 @@ www.srcML.org)";
 
 class srcMLClI : public CLI::App {
 public:
-    srcMLClI(std::string app_description, std::string app_name) 
+    srcMLClI(std::string app_description, std::string app_name)
         : CLI::App(app_description, app_name) {
 
         set_help_flag("-h,--help", "Output this help message and exit")->group("GENERAL OPTIONS");
@@ -160,7 +160,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.input_sources.push_back(input);
         });
 
-    // general 
+    // general
     app.add_flag_callback("--version,-V", [&]() { srcml_request.command |= SRCML_COMMAND_VERSION; },
         "Output version number and exit")
         ->group("GENERAL OPTIONS");
@@ -197,7 +197,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     // src2srcml_options "CREATING SRCML"
     auto text =
-    app.add_option("--text,-t", 
+    app.add_option("--text,-t",
         "Input source code from STRING, e.g., --text=\"int a;\"")
         ->type_name("STRING")
         ->group("CREATING SRCML")
@@ -209,7 +209,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
             return "";
         })
-        ->each([&](std::string text) { 
+        ->each([&](std::string text) {
             srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
         });
 
@@ -227,7 +227,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             return "";
         });
 
-    app.add_option("--files-from", 
+    app.add_option("--files-from",
         "Input source-code filenames from FILE")
         ->type_name("FILE")
         ->group("CREATING SRCML")
@@ -236,16 +236,16 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.files_from.push_back(value);
             srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", value));
         });
-    
+
     app.add_option("--register-ext", srcml_request.language_ext,
         "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
         ->type_name("EXT=LANG")
         ->group("CREATING SRCML");
-    
+
     app.add_option("--src-encoding", srcml_request.src_encoding,
         "Set the input source-code encoding")->type_name("ENCODING")
         ->group("CREATING SRCML");
-    
+
     app.add_flag_callback("--archive,-r",      [&]() { *srcml_request.markup_options |= SRCML_ARCHIVE; },
         "Create a srcML archive, default for multiple input files")
         ->group("CREATING SRCML");
@@ -254,15 +254,15 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     app.add_flag_callback("--output-srcml,-X",   [&]() { srcml_request.command |= SRCML_COMMAND_XML; },
         "Output in XML instead of text")
         ->group("CREATING SRCML");
-    
+
     auto output_xml_outer =
-    app.add_flag_callback("--output-srcml-outer",[&]() { 
+    app.add_flag_callback("--output-srcml-outer",[&]() {
         srcml_request.command |= SRCML_COMMAND_XML_FRAGMENT;
         srcml_request.command |= SRCML_COMMAND_XML;
     },
         "Output an individual unit from an XML archive")
         ->group("CREATING SRCML");
-    
+
     auto output_xml_inner =
     app.add_flag_callback("--output-srcml-inner",[&]() {
         srcml_request.command |= SRCML_COMMAND_XML_RAW;
@@ -310,7 +310,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Set output XML encoding. Default is UTF-8")
         ->type_name("ENCODING")
         ->group("ENCODING")
-        ->check([&](const std::string &value) { 
+        ->check([&](const std::string &value) {
 
             if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
                 return std::string("invalid xml encoding \"") + value + "\"";
@@ -328,7 +328,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("URI, PRE=URI")
         ->group("ENCODING")
         ->expected(1)
-        ->each([&](const std::string& value) {  
+        ->each([&](const std::string& value) {
             auto delim = value.find("=");
             if (delim == std::string::npos) {
                 srcml_request.xmlns_namespaces[""] = value;
@@ -384,7 +384,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Output number of srcML files and exit")
         ->group("METADATA OPTIONS");
 
-    app.add_option("--show-prefix", srcml_request.xmlns_prefix_query, 
+    app.add_option("--show-prefix", srcml_request.xmlns_prefix_query,
         "Output prefix of namespace URI and exit")
         ->type_name("URI")
         ->group("METADATA OPTIONS");
@@ -400,7 +400,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("URL")
         ->group("METADATA OPTIONS");
 
-    app.add_option("--src-version,-s", srcml_request.att_version, 
+    app.add_option("--src-version,-s", srcml_request.att_version,
         "Set the version attribute")
         ->type_name("VERSION")
         ->group("METADATA OPTIONS");
@@ -414,7 +414,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("METADATA OPTIONS");
 
     // srcml2src
-    app.add_option("--unit,-U", srcml_request.unit, 
+    app.add_option("--unit,-U", srcml_request.unit,
         "Extract the source code for an individual unit at position NUM in a srcML archive")
         ->type_name("NUM")
         ->group("EXTRACTING SOURCE CODE");
@@ -460,7 +460,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     // query/transform
     auto xpath =
-    app.add_option("--xpath", 
+    app.add_option("--xpath",
         "Apply XPATH expression to each individual srcML unit")
         ->type_name("XPATH")
         ->group("QUERY & TRANSFORMATION")
@@ -469,7 +469,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
         });
 
-    app.add_option("--attribute", 
+    app.add_option("--attribute",
         "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
         ->type_name("PRE:NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION")
@@ -528,7 +528,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.xpath_query_support.back().second = attrib;
         });
 
-    app.add_option("--element", 
+    app.add_option("--element",
         "Insert element PRE:NAME around each element result of XPath query in original unit")
         ->type_name("PRE:NAME")
         ->group("QUERY & TRANSFORMATION")
@@ -545,13 +545,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
             return "";
         })
-        ->each([&](std::string value) { 
+        ->each([&](std::string value) {
             auto elemn_index = value.find(":");
             srcml_request.xpath_query_support.back().first = element{ value.substr(0, elemn_index), value.substr(elemn_index + 1) };
         });
 
     auto xslt =
-    app.add_option("--xslt", 
+    app.add_option("--xslt",
         "Apply the XSLT program FILE to each unit, where FILE can be a url")
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
@@ -559,7 +559,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.transformations.push_back(src_prefix_add_uri("xslt", value));
         });
 
-    app.add_option("--xslt-param", 
+    app.add_option("--xslt-param",
         "Passes the string parameter NAME with UTF-8 encoded string VALUE to the XSLT program")
         ->type_name("NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION")
@@ -568,7 +568,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.transformations.push_back(src_prefix_add_uri("xslt-param", value));
         });
 
-    app.add_option("--relaxng", 
+    app.add_option("--relaxng",
         "Output individual units that match the RelaxNG pattern FILE, where FILE can be a url")
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
@@ -590,7 +590,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Cat all the XML units into a single unit")
         ->group("");
 
-    app.add_flag("--revision", srcml_request.revision, 
+    app.add_flag("--revision", srcml_request.revision,
         "Extract the given revision (0 = original, 1 = modified)")
         ->group("");
 
@@ -601,19 +601,19 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     app.add_flag("--xml-processing", srcml_request.xml_processing,
         "Add XML processing instruction")
         ->group("");
-    
+
     app.add_flag("--pretty", srcml_request.pretty_format,
         "Custom formatting for output")
         ->group("");
-    
+
     app.add_flag("--external", srcml_request.external,
         "Run a user defined external script or application on srcml client output")
         ->group("");
-    
+
     app.add_flag_callback("--parser-test",      [&]() {
 
-        srcml_request.command |= SRCML_COMMAND_PARSER_TEST; 
-        srcml_request.command |= SRCML_TIMING_MODE; 
+        srcml_request.command |= SRCML_COMMAND_PARSER_TEST;
+        srcml_request.command |= SRCML_TIMING_MODE;
     },
         "Run parser tests on the input files")
         ->group("");
@@ -648,7 +648,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         SRCMLstatus(ERROR_MSG, "srcml: --text requires --language or --filename to determine source language");
         exit(CLI_STATUS_ERROR);
     }
-    
+
     if (srcml_request.output_filename == "")
         srcml_request.output_filename = "stdout://-";
 

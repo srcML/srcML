@@ -28,7 +28,7 @@
 
 #include <antlr/TokenStream.hpp>
 #include "TokenStream.hpp"
- 
+
 #include <deque>
 #include <stack>
 #include <cassert>
@@ -106,7 +106,7 @@ public:
      */
     void endElement(int id) final {
 
-        if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP).any()) 
+        if((srcMLParser::getMode() & srcMLParser::MODE_ISSUE_EMPTY_AT_POP).any())
             pushSToken(id);
 
         pushEToken(id);
@@ -620,7 +620,7 @@ private:
      *
      * Delegate to get the number of the skipped elements.
      *
-     * @returns the number of skipped elements 
+     * @returns the number of skipped elements
      */
     inline int SkipBufferSize() final {
         return (int)skiptb.size();
@@ -654,7 +654,7 @@ private:
 
     /**
      * nextToken
-     * 
+     *
      * Get the next token in the output token stream.
      *
      * @returns the next token in the output token stream.
@@ -676,7 +676,7 @@ private:
 
         // to calculate end position, need to buffer until end token in reached
         // to prevent infinite loops, consume is called if no progress is made on the
-        // current token, e.g., double max const(); 
+        // current token, e.g., double max const();
         if (isoption(options, SRCML_OPTION_POSITION)) {
             auto curline = LT(1)->getLine();
             auto curcolumn = LT(1)->getColumn();
@@ -849,7 +849,7 @@ private:
     }
 
     /** abstract method for indicating if the stream is paused */
-    virtual bool isPaused() final { 
+    virtual bool isPaused() final {
         return paused;
     }
 

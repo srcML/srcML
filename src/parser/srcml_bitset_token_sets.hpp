@@ -1,6 +1,6 @@
 /**
  * @file srcml_bitset_token_sets.hpp
- * 
+ *
  * @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
@@ -19,7 +19,7 @@
  * along with the srcML translator; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
- 
+
 #ifndef SRCML_BITSET_TOKEN_SETS_HPP
 #define SRCML_BITSET_TOKEN_SETS_HPP
 
@@ -36,7 +36,7 @@ constexpr unsigned long convert(const int pos, T value, Args... args) {
 #define token_set(CLASS, MEMBER, ...) const unsigned long MEMBER ## _foo[] = { convert(0, __VA_ARGS__), convert(1, __VA_ARGS__), convert(2, __VA_ARGS__), convert(3, __VA_ARGS__), convert(4, __VA_ARGS__), convert(5, __VA_ARGS__), convert(6, __VA_ARGS__), convert(7, __VA_ARGS__), \
 convert(8, __VA_ARGS__), convert(9, __VA_ARGS__), convert(10, __VA_ARGS__), convert(11, __VA_ARGS__), convert(12, __VA_ARGS__), convert(13, __VA_ARGS__), convert(14, __VA_ARGS__), convert(15, __VA_ARGS__) }; const antlr::BitSet CLASS::MEMBER(MEMBER ## _foo, 16);
 
-token_set(srcMLParser, keyword_name_token_set, 
+token_set(srcMLParser, keyword_name_token_set,
     srcMLParser::LPAREN, srcMLParser::RCURLY, srcMLParser::EQUAL, srcMLParser::TEMPOPS, srcMLParser::TEMPOPE, srcMLParser::DESTOP,
     srcMLParser::OPERATORS, srcMLParser::PERIOD, srcMLParser::DOTDEREF, srcMLParser::TRETURN, srcMLParser::MPDEREF, srcMLParser::RPAREN,
     srcMLParser::LBRACKET, srcMLParser::RBRACKET, srcMLParser::TERMINATE, srcMLParser::COLON, srcMLParser::COMMA, srcMLParser::MULTOPS,
@@ -80,7 +80,7 @@ token_set(srcMLParser, argument_token_set,
     srcMLParser::PRIVATE, srcMLParser::OVERRIDE, srcMLParser::ATSIGN, srcMLParser::CLASS, srcMLParser::INTO, srcMLParser::YIELD,
     srcMLParser::TEMPOPS, srcMLParser::PRAGMA, srcMLParser::IN, srcMLParser::IMPLICIT, srcMLParser::FROM, srcMLParser::STRUCT,
     srcMLParser::SIGNAL, srcMLParser::CONSTEXPR, srcMLParser::SEALED, srcMLParser::IFDEF, srcMLParser::SUPER, srcMLParser::RESTRICT,
-    srcMLParser::ALIGNAS, srcMLParser::VOID, srcMLParser::DECLTYPE, srcMLParser::TYPENAME, srcMLParser::MACRO_TYPE_NAME, 
+    srcMLParser::ALIGNAS, srcMLParser::VOID, srcMLParser::DECLTYPE, srcMLParser::TYPENAME, srcMLParser::MACRO_TYPE_NAME,
     srcMLParser::MACRO_SPECIFIER, srcMLParser::TEMPLATE, srcMLParser::CRESTRICT, srcMLParser::COMPLEX, srcMLParser::ATOMIC,
     srcMLParser::NORETURN, srcMLParser::IMAGINARY, srcMLParser::GENERIC_SELECTION, srcMLParser::ASM, srcMLParser::CXX_TRY, srcMLParser::CXX_CATCH,
     srcMLParser::CXX_CLASS, srcMLParser::ATREQUIRED, srcMLParser::ATOPTIONAL, srcMLParser::BLOCK, srcMLParser::WEAK, srcMLParser::STRONG
@@ -107,7 +107,7 @@ token_set(srcMLParser, modifier_tokens_set,
 )
 
 token_set(srcMLParser, skip_tokens_set,
-    srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::BLOCK_COMMENT_START, srcMLParser::BLOCK_COMMENT_END, srcMLParser::LINE_COMMENT_END, srcMLParser::COMMENT_TEXT, 
+    srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::BLOCK_COMMENT_START, srcMLParser::BLOCK_COMMENT_END, srcMLParser::LINE_COMMENT_END, srcMLParser::COMMENT_TEXT,
     srcMLParser::LINE_COMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL, srcMLParser::WHOLE_COMMENT
 )
 
@@ -115,14 +115,14 @@ token_set(srcMLParser, class_tokens_set,
     srcMLParser::CLASS, srcMLParser::CXX_CLASS, srcMLParser::STRUCT, srcMLParser::UNION, srcMLParser::ENUM
 )
 
-token_set(srcMLParser, decl_specifier_tokens_set, 
+token_set(srcMLParser, decl_specifier_tokens_set,
 
     // function decl and other
     srcMLParser::VIRTUAL, srcMLParser::STATIC, srcMLParser::INLINE, srcMLParser::EXTERN, srcMLParser::TEMPLATE, srcMLParser::CONSTEXPR, srcMLParser::NORETURN, srcMLParser::PUBLIC, srcMLParser::PRIVATE, srcMLParser::PROTECTED,
     srcMLParser::DEFAULT, srcMLParser::SYNCHRONIZED, srcMLParser::STRICTFP, srcMLParser::NATIVE,
     srcMLParser::OVERRIDE, srcMLParser::NEW, srcMLParser::DELEGATE, srcMLParser::ASYNC, srcMLParser::ABSTRACT, srcMLParser::PARTIAL, srcMLParser::SEALED, srcMLParser::IMPLICIT, srcMLParser::EXPLICIT,
     srcMLParser::FINAL,
-    
+
     // decl_stmt
     srcMLParser::TRANSIENT, srcMLParser::INTERNAL
 

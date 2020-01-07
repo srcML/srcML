@@ -30,7 +30,7 @@ xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
 createfile sub/a.cpp.xml "$fsrcml"
- 
+
 # from a file
 srcml sub/a.cpp sub/b.cpp --archive --verbose
 check "$fsrcml" "$foutput"

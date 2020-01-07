@@ -77,7 +77,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
         srcml_input_src uninput = input_file;
         if (!input_curl(uninput))
             return 0;
-        
+
         status = archive_read_open_fd(arch.get(), uninput, buffer_size);
 
     } else {

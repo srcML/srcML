@@ -37,7 +37,7 @@ define output2 <<- 'STDOUT'
 	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
 	<break>break;</break>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-	
+
 	</unit>
 	STDOUT
 

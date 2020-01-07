@@ -80,7 +80,7 @@ namespace {
         return "ISO-8859-1";
     }
 #endif
-    
+
     // some common aliases that libiconv does not accept
     std::map<std::string, std::string> encodingAliases = {
         { "UTF16", "UTF-16"},
@@ -290,7 +290,7 @@ ssize_t UTF8CharBuffer::readChars() {
         // new size is the number of bytes read in, plus any incomplete multibyte sequences from previous
         raw.resize(insize + inbytesleft);
     }
-    
+
     // hash only the read data, not the inbytesleft (from previous call)
     if (hashneeded) {
 #ifdef _MSC_BUILD
@@ -378,8 +378,8 @@ ssize_t UTF8CharBuffer::readChars() {
     if (!trivial) {
 
         // raw input characters
-        // after call to iconv(), linbuf will point to start of any 
-        // incomplete multibyte sequences that were not cooked     
+        // after call to iconv(), linbuf will point to start of any
+        // incomplete multibyte sequences that were not cooked
         char* linbuf = raw.data();
         inbytesleft = raw.size();
 
@@ -413,7 +413,7 @@ ssize_t UTF8CharBuffer::readChars() {
  * getChar
  *
  * Overrides CharBuffer getChar,
- * 
+ *
  * Get the next character from the stream.
  *
  * Grab characters one byte at a time from the input stream and place
@@ -489,7 +489,7 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
     if (ic)
         iconv_close(ic);
-    
+
     if (hashneeded) {
         unsigned char md[20];
 

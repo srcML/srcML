@@ -43,7 +43,7 @@ define info_archive <<- 'STDOUT'
 	STDOUT
 
 define output <<- 'STDOUT'
-	
+
 	a;
 	STDOUT
 

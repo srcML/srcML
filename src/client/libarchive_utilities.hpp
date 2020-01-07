@@ -32,7 +32,7 @@
 namespace std {
     template<>
     struct default_delete<archive> {
-        void operator()(archive* ar) { 
+        void operator()(archive* ar) {
             archive_write_close(ar);
             archive_write_free(ar);
         }
@@ -40,7 +40,7 @@ namespace std {
 
     template<>
     struct default_delete<archive_entry> {
-        void operator()(archive_entry* e) { 
+        void operator()(archive_entry* e) {
             archive_entry_free(e);
         }
     };
