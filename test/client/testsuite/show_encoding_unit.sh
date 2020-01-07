@@ -38,7 +38,6 @@ check "UTF-8"
 srcml --show-encoding < sub/archive.cpp.xml
 check "UTF-8"
 
-
 # test on empty archive
 define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -52,4 +51,3 @@ check "UTF-8"
 
 srcml --show-encoding < sub/emptyarchive.xml
 check "UTF-8"
-

@@ -14,7 +14,6 @@ define srcml_with_url <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-
 # archive/compression mix
 srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.cpio --url="test"
 check "$srcml_with_url"

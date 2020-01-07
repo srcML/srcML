@@ -67,7 +67,6 @@ createfile "list.txt" "nonexistent.xml"
 srcml --files-from list.txt
 check_exit 1
 
-
 createfile "remote-list.txt" "https://github.com/srcML/test-data/blob/master/nonexistent_file.xml"
 
 srcml --files-from remote-list.txt

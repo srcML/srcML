@@ -243,7 +243,6 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
 #endif
 #endif
 
-
     return context;
 }
 #pragma GCC diagnostic push

@@ -29,7 +29,6 @@
 #undef DLLOAD
 #endif
 
-
 #include <Transformation.hpp>
 
 #include <libxml/parser.h>

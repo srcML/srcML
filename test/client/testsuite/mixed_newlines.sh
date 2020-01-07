@@ -57,8 +57,3 @@ check_lines 3
 
 echo -en "\r\r\n\r" | srcml -l C | srcml
 check_lines 3
-
-
-
-
-

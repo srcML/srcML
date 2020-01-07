@@ -205,9 +205,6 @@ void start_document(void* ctx) {
     // process any upper layer start document handling
     state->context->handler->start_document(state->context);
 
-
-
-
     SRCSAX_DEBUG_END("");
 }
 
@@ -364,7 +361,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
                          int nb_namespaces, const xmlChar** namespaces,
                          int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
-
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)

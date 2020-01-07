@@ -53,7 +53,6 @@ gzip -c list.txt > list.txt.gz
 createfile empty.txt " "
 gzip -c empty.txt > empty.txt.gz
 
-
 # src --> srcml
 srcml archive/a.cpp.gz -o archive/a.cpp.xml
 check archive/a.cpp.xml "$foutput"
@@ -67,7 +66,6 @@ check "$output"
 srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.gz
 check archive/a.cpp.xml "$output"
 
-
 # files from
 srcml --files-from list.txt
 check "$archive_output"
@@ -80,7 +78,6 @@ check archive/list.xml "$archive_output"
 
 srcml --files-from list.txt.gz -o archive/compressed_list.xml
 check archive/compressed_list.xml "$archive_output"
-
 
 # files from empty
 srcml --files-from empty.txt
@@ -101,7 +98,6 @@ rmfile empty.txt
 rmfile empty.txt.gz
 rmfile archive/a.cpp
 rmfile archive/a.cpp.gz
-
 
 # srcml --> src
 srcml archive/a.cpp.xml

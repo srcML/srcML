@@ -1296,7 +1296,6 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
     return 1;
 }
 
-
 /******************************************************************************
  *                                                                            *
  *                       Archive close function                               *

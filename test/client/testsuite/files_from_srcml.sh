@@ -31,8 +31,6 @@ define output <<- 'STDOUT'
   </unit>
   STDOUT
 
-
-
 # files from has a list of srcml units
 createfile "list.txt" "a.xml
 b.xml"

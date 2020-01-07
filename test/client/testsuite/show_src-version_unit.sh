@@ -39,7 +39,6 @@ check "1.0"
 srcml --show-src-version < sub/archive.cpp.xml
 check "1.0"
 
-
 # test src version on single unit with empty version
 define empty <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -75,7 +74,6 @@ check ""
 
 srcml --show-src-version < sub/archive.cpp.xml
 check ""
-
 
 # test on empty archive with no version
 define noneempty <<- 'STDIN'

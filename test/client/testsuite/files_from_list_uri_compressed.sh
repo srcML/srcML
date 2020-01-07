@@ -33,7 +33,6 @@ srcml --files-from list-empty-bz2.txt --url="test"
 check "$empty_srcml_archive"
 rmfile list-empty-bz2.txt
 
-
 define empty_srcml_archive <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="test">

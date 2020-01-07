@@ -30,7 +30,6 @@ check sub/a.cpp.xml "$output"
 srcml -f 'foo.cpp' sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$output"
 
-
 # standard input
 echo -n "" | srcml -l C++ -f foo.cpp
 check "$output"

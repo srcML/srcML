@@ -54,7 +54,6 @@ check "$archive_multi_output"
 srcml --show-unit-count < sub/archive_multi.cpp.xml
 check "$archive_multi_output"
 
-
 # test on on multiple input src files that create an archive
 createfile sub/a.cpp "a;"
 createfile sub/b.cpp "b;"
@@ -64,7 +63,6 @@ check "$archive_multi_output"
 
 srcml sub/a.cpp sub/b.cpp --show-unit-count
 check "$archive_multi_output"
-
 
 # test count on empty archive
 define empty <<- 'STDOUT'

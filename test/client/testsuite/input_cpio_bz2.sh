@@ -52,7 +52,6 @@ bzip2 -c archive/a.cpp.cpio > archive/a.cpp.cpio.bz2
 
 createfile list.txt "archive/a.cpp.cpio.bz2"
 
-
 # src --> srcml
 srcml archive/a.cpp.cpio.bz2 -o archive/a.cpp.xml
 check archive/a.cpp.xml "$foutput" "1 block
@@ -67,7 +66,6 @@ check "$output"
 srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio.bz2
 check archive/a.cpp.xml "$output"
 
-
 # files from
 srcml --files-from list.txt
 check "$archive_output"
@@ -75,9 +73,7 @@ check "$archive_output"
 srcml --files-from list.txt -o archive/list.xml
 check archive/list.xml "$archive_output"
 
-
 # files from empty (not necessary - archive format)
-
 
 rmfile list.txt
 rmfile archive/a.cpp

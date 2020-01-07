@@ -44,7 +44,6 @@ xmlcheck "$foutput"
 xmlcheck "$output"
 xmlcheck "$empty_output"
 
-
 createfile archive/a.cpp "$src"
 bzip2 -c archive/a.cpp > archive/a.cpp.bz2
 gzip -c archive/a.cpp.bz2 > archive/a.cpp.bz2.gz
@@ -96,7 +95,6 @@ check archive/empty.xml "$empty_output"
 srcml --files-from empty.txt.bz2.gz -o archive/compressed_empty.xml
 check archive/compressed_empty.xml "$empty_output"
 
-
 rmfile list.txt
 rmfile list.txt.bz2
 rmfile list.txt.bz2.gz
@@ -106,7 +104,6 @@ rmfile empty.txt.bz2.gz
 rmfile archive/a.cpp
 rmfile archive/a.cpp.bz2
 rmfile archive/a.cpp.bz2.gz
-
 
 # srcml --> src
 srcml archive/a.cpp.xml

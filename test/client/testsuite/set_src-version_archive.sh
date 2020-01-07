@@ -85,7 +85,6 @@ check "$fsrcml"
 srcml --archive -s 1.0 sub/a.cpp
 check "$fsrcml"
 
-
 # test src-version attribute an archive of more than one
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

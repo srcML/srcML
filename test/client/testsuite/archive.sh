@@ -147,7 +147,6 @@ check sub/ab.cpp.xml "$asrcml"
 srcml -o sub/ab.cpp.xml --archive -l C++ < sub/a.cpp
 check sub/ab.cpp.xml "$asrcml"
 
-
 # test issue #1063: nondeterministic failures when run multiple times
 srcml sub/a.cpp sub/b.cpp
 check "$nestedfile"

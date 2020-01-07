@@ -45,12 +45,10 @@ int main(int argc, char* argv[]) {
     srcml_archive_read_open_filename(iarchive, inputfile);
     while (1) {
 
-
         units[num_units] = srcml_archive_read_unit(iarchive);
         if (units[num_units] == 0)
             break;
         ++num_units;
-
     }
     int i;
     for(i = 1; i < num_units; ++i) {

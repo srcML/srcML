@@ -23,7 +23,6 @@
 
 #include <sstream>
 
-
 #ifdef WITH_LIBXSLT
 #include <libexslt/exslt.h>
 #endif

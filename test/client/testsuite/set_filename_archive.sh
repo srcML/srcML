@@ -29,7 +29,6 @@ srcml --archive  -f 'compressed.tar.gz' sub/a.cpp -o sub/a.cpp.xml
 check_exit 2 "srcml: --filename cannot be set for a srcML archive. Use --url instead
 "
 
-
 # standard input
 echo -n "a;" | srcml -l C++ --archive -f compressed.tar.gz
 check_exit 2 "srcml: --filename cannot be set for a srcML archive. Use --url instead
@@ -42,7 +41,6 @@ check_exit 2 "srcml: --filename cannot be set for a srcML archive. Use --url ins
 echo -n "a;" | srcml -l C++ --archive --filename=compressed.tar.gz
 check_exit 2 "srcml: --filename cannot be set for a srcML archive. Use --url instead
 "
-
 
 # filename flag on archive of multiple units
 createfile sub/b.cpp "b;"

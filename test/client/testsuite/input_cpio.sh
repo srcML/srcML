@@ -51,7 +51,6 @@ echo archive/a.cpp | tr " " "\n" | cpio -o > archive/a.cpp.cpio
 
 createfile list.txt "archive/a.cpp.cpio"
 
-
 # src --> srcml
 srcml archive/a.cpp.cpio -o archive/a.cpp.xml
 check archive/a.cpp.xml "$foutput" "1 block
@@ -66,7 +65,6 @@ check "$output"
 srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio
 check archive/a.cpp.xml "$output"
 
-
 # files from
 srcml --files-from list.txt
 check "$archive_output"
@@ -76,11 +74,9 @@ check archive/list.xml "$archive_output"
 
 # files from empty (not necessary - archive format)
 
-
 rmfile list.txt
 rmfile archive/a.cpp
 rmfile archive/a.cpp.cpio
-
 
 # srcml --> src
 srcml archive/a.cpp.xml

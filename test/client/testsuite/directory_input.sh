@@ -70,7 +70,6 @@ define output3 <<- 'STDOUT'
 
 xmlcheck "$output3"
 
-
 # directory of just source
 createfile dir/file.aj "\na;"
 createfile dir/file.c  "\na;"

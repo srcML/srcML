@@ -81,7 +81,6 @@ srcml --info < xml_error/illformedarchive_multi.xml
 srcml --info < xml_error/illformedarchive_single.xml
 #check "$info_archive"
 
-
 srcml xml_error/illformedarchive_multi.xml --show-unit-count
 #check "$units3" "$xml_archive_error"
 

@@ -60,7 +60,6 @@ check ""
 srcml --prefix="http://www.srcML.org/srcML/src" <<< "$input"
 check ""
 
-
 # archive of multiple units
 define archive_multi <<- 'INPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

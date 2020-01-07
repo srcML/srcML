@@ -61,8 +61,6 @@ else
 	fi
 fi
 
-
-
 function srcml () {
     env $SRCML_CLIENT_TEST_PREFIX $SRCML "$@"
 }

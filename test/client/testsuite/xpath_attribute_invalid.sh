@@ -39,8 +39,6 @@ check_exit 1
 srcml --attribute="pre:attr=value" --xpath="//src:name" archive.xml -o result.xml
 check_exit 1
 
-
-
 # test setting the attribute on xpath query results
 define result <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -76,6 +74,3 @@ check_exit 1
 
 echo "a;" | srcml -l C++ --attribute="cpp:foo=test" --xpath="//src:name" -o result.xml
 check_exit 1
-
-
-

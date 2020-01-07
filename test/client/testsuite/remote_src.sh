@@ -21,7 +21,6 @@ define archive_output <<- 'STDOUT'
 
 xmlcheck "$output"
 
-
 # input from a valid remote source file
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp
 check "$output"
@@ -34,7 +33,6 @@ check "$archive_output"
 
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp	--archive -o remote_archive.xml
 check remote_archive.xml "$archive_output"
-
 
 # files from contains a remote source file
 createfile list.txt "https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp"

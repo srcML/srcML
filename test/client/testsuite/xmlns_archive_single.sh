@@ -79,7 +79,6 @@ check sub/a.xml "$foosrcml"
 srcml -o sub/a.xml --archive sub/a.cpp --xmlns="http://www.foo.com" --xmlns:bar=http://www.srcML.org/srcML/src
 check sub/a.xml "$foosrcml"
 
-
 # with prefix
 define fooprefixsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -154,5 +153,3 @@ check sub/a.xml "$fooprefixsrcml"
 
 srcml -o sub/a.xml --archive sub/a.cpp --xmlns:foo="http://www.foo.com"
 check sub/a.xml "$fooprefixsrcml"
-
-

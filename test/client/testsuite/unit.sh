@@ -73,7 +73,6 @@ check sub/b.cpp "$sfile2"
 srcml --unit "2" sub/a.cpp.xml -o sub/b.cpp
 check sub/b.cpp "$sfile2"
 
-
 # check xml and unit option
 srcml -X --unit "1" sub/a.cpp.xml
 check "$sxmlfile1"

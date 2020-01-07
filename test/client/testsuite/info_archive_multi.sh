@@ -21,7 +21,6 @@ define longinfo <<- 'STDOUT'
 	units="2"
 	STDOUT
 
-
 # test on archive of many units
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -61,7 +60,6 @@ check "$longinfo"
 
 srcml --full-info < sub/archive_multi.xml
 check "$longinfo"
-
 
 # test on archive of one unit
 define longinfo <<- 'STDOUT'

@@ -51,7 +51,6 @@ tar -cjf archive/a.cpp.tar.bz2 archive/a.cpp
 
 createfile list.txt "archive/a.cpp.tar.bz2"
 
-
 # src --> srcml
 srcml archive/a.cpp.tar.bz2 -o archive/a.cpp.xml
 check archive/a.cpp.xml "$foutput"
@@ -65,7 +64,6 @@ check "$output"
 srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.tar.bz2
 check archive/a.cpp.xml "$output"
 
-
 # files from
 srcml --files-from list.txt
 check "$archive_output"
@@ -75,12 +73,10 @@ check archive/list.xml "$archive_output"
 
 # files from empty (not necessary - archive format)
 
-
 rmfile list.txt
 rmfile archive/a.cpp
 rmfile archive/a.cpp.tar
 rmfile archive/a.cpp.tar.bz2
-
 
 # srcml --> src
 srcml archive/a.cpp.xml

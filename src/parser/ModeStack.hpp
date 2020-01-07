@@ -181,7 +181,6 @@ protected:
         return !st.empty() ? st.back().getTransparentMode() : 0;
     }
 
-
     /**
      * getFirstMode
      * @param m modes to query for
@@ -501,7 +500,6 @@ protected:
         dup.openelements = open_elements;
         dup.setMode(MODE_ISSUE_EMPTY_AT_POP);
         st.push_back(dup);
-
     }
 
     /**
@@ -561,8 +559,6 @@ protected:
             st.push_back(*i);
 
         }
-
-
     }
 
     /**

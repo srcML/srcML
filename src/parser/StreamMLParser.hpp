@@ -711,7 +711,6 @@ private:
         output().emplace_back(rtoken);
     }
 
-
     /**
      * pushTokenFlush
      * @param rtoken token to push onto output stream

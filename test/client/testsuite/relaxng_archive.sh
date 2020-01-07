@@ -28,7 +28,6 @@ define schema <<- 'STDOUT'
 	</grammar>
 	STDOUT
 
-
 # test on archive of many
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -98,7 +97,6 @@ check sub/b.cpp.xml "$srcml"
 
 srcml --relaxng=schema.rng -o sub/b.cpp.xml < sub/archive_multi.xml
 check sub/b.cpp.xml "$srcml"
-
 
 # test on archive of one
 define srcml <<- 'STDOUT'

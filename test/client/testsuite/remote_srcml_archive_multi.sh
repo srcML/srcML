@@ -40,7 +40,6 @@ check tfile
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/archive-multi.xml.gz.bz2
 check tfile
 
-
 # input from an archived srcml file
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/archive-multi.xml.cpio
 check tfile

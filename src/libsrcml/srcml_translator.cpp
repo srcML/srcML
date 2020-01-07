@@ -254,7 +254,6 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
     return true;
 }
 
-
 /**
  * add_start_unit
  * @param unit srcML to add to archive/non-archive with configuration options

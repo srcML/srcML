@@ -29,7 +29,6 @@ xmlcheck "$fsxmlfile"
 xmlcheck "$expr_stmt_sxmlfile"
 xmlcheck "$expr_stmt_fsxmlfile"
 
-
 createfile sub/a.cpp "a"
 createfile sub/b.cpp "b;"
 
@@ -61,7 +60,6 @@ check sub/a.cpp.xml "$sxmlfile"
 
 srcml sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsxmlfile"
-
 
 # within expression statement
 srcml sub/b.cpp

@@ -9,7 +9,6 @@ define input <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="sub" filename="a.cpp" version="1.2"/>
 	STDOUT
 
-
 define output <<- 'STDOUT'
 	url="sub"
 	filename="a.cpp"
@@ -40,7 +39,6 @@ check "$output"
 srcml --show-filename --show-url --show-language < sub/a.cpp.xml
 check "$output"
 
-
 define output <<- 'STDOUT'
 	encoding="UTF-8"
 	url="sub"
@@ -61,7 +59,6 @@ check "$output"
 
 srcml --show-encoding --show-url --show-language --show-filename < sub/a.cpp.xml
 check "$output"
-
 
 define output <<- 'STDOUT'
 	encoding="UTF-8"
@@ -84,5 +81,3 @@ check "$output"
 
 srcml --show-src-version --show-language --show-filename --show-encoding --show-url < sub/a.cpp.xml
 check "$output"
-
-

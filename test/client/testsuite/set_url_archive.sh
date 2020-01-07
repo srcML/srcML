@@ -34,7 +34,6 @@ check "$output"
 echo -n "a;" | srcml -l C++ --url=bar --archive
 check "$output"
 
-
 srcml sub/a.cpp --url "bar" --archive
 check "$fsrcml"
 
@@ -44,7 +43,6 @@ check "$fsrcml"
 srcml --url "bar" sub/a.cpp --archive
 check "$fsrcml"
 
-
 srcml --url="bar" sub/a.cpp --archive
 check "$fsrcml"
 
@@ -53,7 +51,6 @@ check sub/a.cpp.xml "$fsrcml"
 
 srcml --url 'bar' sub/a.cpp -o sub/a.cpp.xml --archive
 check sub/a.cpp.xml "$fsrcml"
-
 
 # archive of multiple units
 # test on file

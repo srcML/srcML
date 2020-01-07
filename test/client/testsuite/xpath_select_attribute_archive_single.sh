@@ -35,7 +35,6 @@ define srcml <<- 'STDOUT'
 xmlcheck "$srcml"
 createfile sub/archive_single.cpp.xml "$srcml"
 
-
 # select filename
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -72,7 +71,6 @@ check sub/a.xml "$output"
 srcml --xpath "//src:unit/@filename" sub/archive_single.cpp.xml
 check sub/a.xml "$output"
 
-
 # select comment format (doxygen)
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -108,5 +106,3 @@ check sub/a.xml "$output"
 
 srcml --xpath "//src:comment/@format" sub/archive_single.cpp.xml
 check sub/a.xml "$output"
-
-

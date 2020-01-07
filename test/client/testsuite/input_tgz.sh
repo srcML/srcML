@@ -51,7 +51,6 @@ tar -czf archive/a.cpp.tgz archive/a.cpp
 
 createfile list.txt "archive/a.cpp.tgz"
 
-
 # src --> srcml
 srcml archive/a.cpp.tgz -o archive/a.cpp.xml
 check archive/a.cpp.xml "$foutput"
@@ -65,7 +64,6 @@ check "$output"
 srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.tgz
 check archive/a.cpp.xml "$output"
 
-
 # files from
 srcml --files-from list.txt
 check "$archive_output"
@@ -75,11 +73,9 @@ check archive/list.xml "$archive_output"
 
 # files from empty (not necessary - archive format)
 
-
 rmfile list.txt
 rmfile archive/a.cpp
 rmfile archive/a.cpp.tgz
-
 
 # srcml --> src
 srcml archive/a.cpp.xml

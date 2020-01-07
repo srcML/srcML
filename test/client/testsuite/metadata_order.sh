@@ -46,6 +46,13 @@ check "$values"
 srcml $val < sub/a.cpp.xml
 check "$values"
 
+new_arg
+
+srcml $val sub/a.cpp.xml
+check "$values"
+
+srcml $val < sub/a.cpp.xml
+check "$values"
 
 new_arg
 
@@ -55,7 +62,6 @@ check "$values"
 srcml $val < sub/a.cpp.xml
 check "$values"
 
-
 new_arg
 
 srcml $val sub/a.cpp.xml
@@ -64,7 +70,6 @@ check "$values"
 srcml $val < sub/a.cpp.xml
 check "$values"
 
-
 new_arg
 
 srcml $val sub/a.cpp.xml
@@ -72,14 +77,3 @@ check "$values"
 
 srcml $val < sub/a.cpp.xml
 check "$values"
-
-
-new_arg
-
-srcml $val sub/a.cpp.xml
-check "$values"
-
-srcml $val < sub/a.cpp.xml
-check "$values"
-
-

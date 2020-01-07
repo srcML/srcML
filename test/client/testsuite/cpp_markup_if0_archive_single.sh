@@ -70,7 +70,6 @@ xmlcheck "$fmarkupif0"
 
 createfile sub/a.cpp "$input"
 
-
 # use default, where if 0 sections are not marked up
 srcml -l C++ --archive < sub/a.cpp
 check "$nomarkupif0"
@@ -110,7 +109,6 @@ check sub/b.xml "$fnomarkupif0"
 
 srcml --archive sub/a.cpp -o sub/b.xml
 check sub/b.xml "$fnomarkupif0"
-
 
 # markup if0 regions
 srcml -l C++ --cpp-markup-if0 --archive < sub/a.cpp

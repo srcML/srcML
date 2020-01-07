@@ -38,8 +38,6 @@ check_exit 1
 srcml --element="pre:element" --xpath="//src:name" archive.xml -o result.xml
 check_exit 1
 
-
-
 # test specify element after xpath (unit)
 define result <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

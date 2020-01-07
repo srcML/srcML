@@ -52,7 +52,6 @@ gzip -c archive/a.cpp.cpio > archive/a.cpp.cpio.gz
 
 createfile list.txt "archive/a.cpp.cpio.gz"
 
-
 # src --> srcml
 srcml archive/a.cpp.cpio.gz -o archive/a.cpp.xml
 check archive/a.cpp.xml "$foutput" "1 block
@@ -67,7 +66,6 @@ check "$output"
 srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.cpio.gz
 check archive/a.cpp.xml "$output"
 
-
 # files from
 srcml --files-from list.txt
 check "$archive_output"
@@ -77,12 +75,10 @@ check archive/list.xml "$archive_output"
 
 # files from empty (not necessary - archive format)
 
-
 rmfile list.txt
 rmfile archive/a.cpp
 rmfile archive/a.cpp.cpio
 rmfile archive/a.cpp.cpio.gz
-
 
 # srcml --> src
 srcml archive/a.cpp.xml

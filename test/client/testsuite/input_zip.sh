@@ -46,12 +46,10 @@ xmlcheck "$archive_output"
 xmlcheck "$foutput"
 xmlcheck "$output"
 
-
 createfile archive/a.cpp "$src"
 zip archive/a.cpp.zip archive/a.cpp
 
 createfile list.txt "archive/a.cpp.zip"
-
 
 # src --> srcml
 srcml archive/a.cpp.zip -o archive/a.cpp.xml
@@ -66,7 +64,6 @@ check "$output"
 srcml -l C++ -o archive/a.cpp.xml < archive/a.cpp.zip
 check archive/a.cpp.xml "$output"
 
-
 # files from
 srcml --files-from list.txt
 check "$archive_output"
@@ -76,11 +73,9 @@ check archive/list.xml "$archive_output"
 
 # files from empty (not necessary - archive format)
 
-
 rmfile list.txt
 rmfile archive/a.cpp
 rmfile archive/a.cpp.zip
-
 
 # srcml --> src
 srcml archive/a.cpp.xml

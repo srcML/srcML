@@ -842,7 +842,6 @@ int srcml_check_exslt() {
  */
 const char* srcml_error_string() { return global_archive.error_string.c_str(); }
 
-
 /******************************************************************************
  *                                                                            *
  *                           libsrcml misc functions                          *

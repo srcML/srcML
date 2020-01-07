@@ -144,6 +144,5 @@ createfile ompsrcml.xml "$ompsrcml"
 srcml --xpath="//omp:*" ompsrcml.xml
 check "$xpathout"
 
-
 srcml --xpath="//cpp:*" ompsrcml.xml
 check "$xpathoutcpp"

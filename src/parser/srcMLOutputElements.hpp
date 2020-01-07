@@ -62,7 +62,6 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SGENERIC_ASSOCIATION_LIST,   { "association_list",  SRC,      0,         0,     0,      0 }},
     { SGENERIC_ASSOCIATION,        { "association",       SRC,      0,         0,     0,      0 }},
 
-
     { SEXPRESSION_STATEMENT,       { "expr_stmt",         SRC,      0,         0,     0,      0 }},
     { SEXPRESSION,                 { "expr",              SRC,      0,         0,     0,      0 }},
 
@@ -299,7 +298,6 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     { SCLASS_INTERFACE,            { "class",       SRC, "type",      "@interface",     0,      0 }},
     { SCLASS_IMPLEMENTATION,       { "class",       SRC, "type", "@implementation",     0,      0 }},
-
 
     // casts
     { SCAST,                       { "cast",              SRC,      0,             0,   0,      0 }},

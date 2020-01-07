@@ -149,7 +149,6 @@ iconv -f UTF-8 -t EUC-JP sub/a.cpp > sub/a_EUC-JP.cpp
 srcml --src-encoding "EUC-JP" sub/a.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-
 # from one encoding to another
 define special_characters_utf8_actual <<- 'STDOUT'
 	typedef void ‼; // Also known as \u203C

@@ -38,7 +38,6 @@ define srcml <<- 'STDOUT'
 xmlcheck "$srcml"
 createfile sub/archive.cpp.xml "$srcml"
 
-
 # select elements matching *<argument><expr><name>*
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -81,7 +80,6 @@ check sub/a.xml "$output"
 srcml -o sub/a.xml sub/archive.cpp.xml --xpath "//src:argument/src:expr/src:name"
 check sub/a.xml "$output"
 
-
 # select the first elements (from each archive unit) that match *<name>*
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -116,8 +114,6 @@ check sub/a.xml "$output"
 
 srcml --xpath "(//src:name)[1]" -o sub/a.xml sub/archive.cpp.xml
 check sub/a.xml "$output"
-
-
 
 # select the text from *<type><name>
 define output <<- 'STDOUT'
@@ -160,8 +156,6 @@ check sub/a.xml "$output"
 
 srcml --xpath "//src:type/src:name/text()" sub/archive.cpp.xml -o sub/a.xml
 check sub/a.xml "$output"
-
-
 
 # select all comment elements that contain block comments
 define output <<- 'STDOUT'

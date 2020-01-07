@@ -17,11 +17,9 @@ define xpath_empty <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-
 xmlcheck "$xpath_empty"
 xmlcheck "$output"
 createfile sub/a.cpp.xml ""
-
 
 srcml --xpath=src:unit sub/a.cpp.xml
 check_exit 1

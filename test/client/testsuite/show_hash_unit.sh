@@ -21,7 +21,6 @@ check "1a2c5d67e6f651ae10b7673c53e8c502c97316d6"
 srcml --show-hash < sub/a.cpp.xml
 check "1a2c5d67e6f651ae10b7673c53e8c502c97316d6"
 
-
 # test hash on unit with no hash provided
 define none <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

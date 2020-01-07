@@ -43,7 +43,6 @@ define fmarkup_else <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-
 define nomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" options="CPP_TEXT_ELSE">
@@ -129,7 +128,6 @@ check sub/b.cpp.xml "$fmarkup_else"
 
 srcml --archive -o sub/b.cpp.xml sub/a.cpp
 check sub/b.cpp.xml "$fmarkup_else"
-
 
 # don't markup else
 srcml -l C++ --cpp-nomarkup-else --archive < sub/a.cpp

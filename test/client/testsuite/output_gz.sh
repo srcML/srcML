@@ -11,7 +11,6 @@ fi
 # test framework
 source $(dirname "$0")/framework_test.sh
 
-
 # test compression tool
 
 define sfile <<- 'STDOUT'

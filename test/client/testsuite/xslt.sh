@@ -85,7 +85,6 @@ check sub/b.cpp.xml "$srcml"
 srcml --xslt=copy.xsl --xslt-param 'NAME=VALUE' -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-
 # xslt copy xslt-param name="a"
 srcml --xslt=copy.xsl --xslt-param 'name="a"' sub/a.cpp.xml
 check "$srcml"
@@ -102,7 +101,6 @@ check sub/b.cpp.xml "$srcml"
 srcml --xslt=copy.xsl --xslt-param 'name="a"' -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$srcml"
 
-
 srcml --xslt=setlanguage.xsl --xslt-param 'language="Java"' sub/a.cpp.xml
 check "$srcmljava"
 
@@ -117,5 +115,3 @@ check sub/b.java.xml "$srcmljava"
 
 srcml --xslt=setlanguage.xsl --xslt-param 'language="Java"' -o sub/b.java.xml < sub/a.cpp.xml
 check sub/b.java.xml "$srcmljava"
-
-

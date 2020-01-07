@@ -39,7 +39,6 @@ check "bar"
 srcml --show-url < sub/archive.cpp.xml
 check "bar"
 
-
 # empty on the unit
 define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -75,7 +74,6 @@ check ""
 
 srcml --show-url < sub/archive.cpp.xml
 check ""
-
 
 # none
 define none <<- 'STDIN'
