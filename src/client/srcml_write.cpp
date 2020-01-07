@@ -225,7 +225,8 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
             const char* hash = srcml_unit_get_hash(request->unit.get());
             if (hash)
                 outs << ' ' << hash;
-            outs << ' ' << (request->filename ? *request->filename : "");
+            if (request->filename)
+                outs << ' ' << *request->filename;
 
             log << 'a' << outs.str();
         }
