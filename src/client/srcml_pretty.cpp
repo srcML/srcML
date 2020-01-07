@@ -141,7 +141,6 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
 
             // Error
             if (valid_arg == std::string::npos) {
-                //std::cerr << "Invalid arg: " << template_string[found + 1] << "\n";
                 return found + 1;
             }
 

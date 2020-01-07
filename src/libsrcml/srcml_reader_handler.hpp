@@ -123,8 +123,6 @@ public :
      * Constructor.  Sets up mutex, conditions and state.
      */
     srcml_reader_handler() {
-
-//          archive->options &= ~SRCML_OPTION_HASH;
     }
 
     /**

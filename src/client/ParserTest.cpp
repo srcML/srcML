@@ -173,8 +173,6 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     srcml_archive_write_string(archive, " ", 1);
 
     free(buffer);
- //   srcml_unit_free(unit);
-
 }
 
 void ParserTest::report(srcml_archive* archive) {

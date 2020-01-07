@@ -79,7 +79,7 @@ int src_input_text(ParseQueue& queue,
             if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
                 prequest->language = l;
     
-        prequest->status = 0; //!language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+        prequest->status = 0;
 
         // fill up the parse request buffer
         if (!prequest->status) {

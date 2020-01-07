@@ -43,11 +43,6 @@
 #define STDERR_FILENO   2       /* standard error file descriptor */
 #endif
 
-//#ifdef _MSC_BUILD
-//#include <BaseTsd.h>
-//typedef SSIZE_T ssize_t;
-//#endif
-
 class srcml_input_src;
 
 typedef std::vector<srcml_input_src> srcml_input_t;

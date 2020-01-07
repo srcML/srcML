@@ -49,7 +49,7 @@ static void* start_routine(thread_args* args) {
             args->handler->done();
         }
 
-        // might have to release a lock here or set is_done;
+        // might have to release a lock here or set is_done
     }
 
     return 0;

@@ -34,10 +34,7 @@
 namespace {
 
     const char* value(const char* call) {
-        if (call)
-            return call;
-        else
-            return "";
+        return call ? call : "";
     }
 
     // display all files in srcml archive
@@ -55,11 +52,7 @@ namespace {
                 break;
 
             ++numUnits;
-            std::cout << std::setw(5) << numUnits; // << " " 
-                      // << value(srcml_unit_get_filename(unit.get())) << '\t'
-                      // << value(srcml_unit_get_language(unit.get())) << '\t'
-                      // << value(srcml_unit_get_hash(unit.get())) << '\n';
-
+            std::cout << std::setw(5) << numUnits;
             std::cout << std::setw(5) << std::right << value(srcml_unit_get_language(unit.get())) ;
             std::cout << ' ' << std::setw(5) << std::right << srcml_unit_get_loc(unit.get());
             std::cout << ' ' << value(srcml_unit_get_hash(unit.get()));

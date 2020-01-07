@@ -444,20 +444,6 @@ int srcml_set_processing_instruction(const char* target, const char* data) {
 }
 
 /**
- * srcml_archive_register_macro
- * @param token name of macro
- * @param type macro type
- *
- * Register a macro (token) to be processed as a special type
- *
- * @returns SRCML_STATUS_OK on success and a status error code on failure.
- */
-int srcml_register_macro(const char* /* token */, const char* /* type */) {
-
-    return 0; //srcml_archive_register_macro(&global_archive, token, type);
-}
-
-/**
  * srcml_set_eol
  * @param eol the kind of eol to use for unparse
  *
@@ -701,52 +687,6 @@ const char* srcml_get_processing_instruction_target() {
 const char* srcml_get_processing_instruction_data() {
 
     return srcml_archive_get_processing_instruction_data(&global_archive);
-}
-
-/**
- * srcml_archive_get_macro_list_size
- *
- * @returns Get the number of currently defined macros.
- */
-size_t srcml_get_macro_list_size() {
-
-    return 0; //srcml_archive_get_macro_list_size(&global_archive);
-}
-
-/**
- * srcml_archive_get_macro_token
- * @param pos macro position
- *
- * @returns Get token for the given position on success
- * and NULL on failure.
- */
-const char* srcml_get_macro_token(size_t /* pos */) {
-
-    return 0; //srcml_archive_get_macro_token(&global_archive, pos);
-}
-
-/**
- * srcml_archive_get_macro_token_type
- * @param token a macro token
- *
- * @returns Get the registered type for the given token
- * on success and NULL on failure.
- */
-const char* srcml_get_macro_token_type(const char* /* token */) {
-
-    return 0; // srcml_archive_get_macro_token_type(&global_archive, token);
-}
-
-/**
- * srcml_archive_get_macro_type
- * @param pos position in macro list
- *
- * @returns Get the type at the given pos on succcess
- * and NULL on failure.
- */
-const char* srcml_get_macro_type(size_t /* pos */) {
-
-    return 0; //srcml_archive_get_macro_type(&global_archive, pos);
 }
 
 /**

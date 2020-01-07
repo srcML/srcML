@@ -65,8 +65,8 @@ xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xp
                         const char* attr_prefix, const char* attr_uri, const char* attr_name, const char* attr_value)
     : xpath(xpath), prefix(stringOrNull(element_prefix)), uri(stringOrNull(element_uri)), element(stringOrNull(element)), attr_prefix(stringOrNull(attr_prefix)), attr_uri(stringOrNull(attr_uri)), attr_name(stringOrNull(attr_name)), attr_value(stringOrNull(attr_value)) {
 
-//    xsltsrcMLRegister();
-
+    // compile the xpath expression
+    // errors will show up when it is first used
     compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
 
     // create a namespace for the new attribute (if needed)

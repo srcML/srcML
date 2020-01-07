@@ -160,7 +160,7 @@ xmlParserCtxtPtr srcsax_create_parser_context(xmlParserInputBufferPtr buffer_inp
 
     xmlCtxtUseOptions(ctxt, XML_PARSE_COMPACT | XML_PARSE_HUGE | XML_PARSE_NODICT);
 
-    xmlParserInputPtr input = xmlNewIOInputStream(ctxt, buffer_input, enc); //xmlNewInputStream(ctxt);
+    xmlParserInputPtr input = xmlNewIOInputStream(ctxt, buffer_input, enc);
     if (input == 0) {
         xmlFreeParserCtxt(ctxt);
         return 0;

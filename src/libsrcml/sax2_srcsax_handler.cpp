@@ -270,17 +270,6 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->mode = ROOT;
 
-    // wait to call upper-level callbacks until we know whether this is an archive or not
-    // this is done in first_start_element()
-
-/*
-    for (auto citr : state->meta_tags) {
-
-        state->context->handler->meta_tag(state->context, (const char*) citr.localname, (const char*) citr.prefix, (const char*) citr.URI,
-                                                          citr.nb_namespaces, citr.namespaces.data(),
-                                                          citr.nb_attributes, citr.attributes.data());
-    }
-*/
     // save the root start tag because we are going to parse it again to generate proper start_root() and start_unit()
     // calls after we know whether this is an archive or not
     state->rootstarttag.reserve(ctxt->input->cur - state->base + 2);
@@ -643,7 +632,6 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
         auto srcmllen = ctxt->input->cur - state->base;
         if (srcmllen < 0) {
-//            fprintf(stderr, "srcml: Internal error");
             return;
         }
 

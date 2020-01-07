@@ -141,8 +141,8 @@ int language_extension_registry::get_language_from_filename(const char* const pa
     // extract the (pure) extension
     std::string extension;
     bool success = get_language_extension(path, extension);
-
-    if (!success) return 0;
+    if (!success)
+        return 0;
 
     // custom extensions
     for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
@@ -159,8 +159,8 @@ int language_extension_registry::get_language_from_filename(const char* const pa
   *
  * Register the standard file extensions for all languages. 
  */
-void language_extension_registry::register_standard_file_extensions()
-{
+void language_extension_registry::register_standard_file_extensions() {
+
     register_user_ext("c",    Language::LANGUAGE_C);
     register_user_ext("h",    Language::LANGUAGE_C);
     register_user_ext("i",    Language::LANGUAGE_C);
@@ -181,12 +181,9 @@ void language_extension_registry::register_standard_file_extensions()
     register_user_ext("ii",   Language::LANGUAGE_CXX);
 
     register_user_ext("java", Language::LANGUAGE_JAVA);
-
     register_user_ext("aj",   Language::LANGUAGE_JAVA);
 
     register_user_ext("cs",   Language::LANGUAGE_CSHARP);
-
-    /* register_user_ext("m",   Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C); */
 }
 
 /**
@@ -198,7 +195,6 @@ void language_extension_registry::register_standard_file_extensions()
 void language_extension_registry::c_is_cpp(bool use_cpp) {
 
     use_cpp_for_c = use_cpp;
-
 }
 
 /**
@@ -214,7 +210,6 @@ language_extension language_extension_registry::at(unsigned int pos) const {
     if(pos >= size()) throw language_extension_registry_error();
 
     return registered_languages.at(pos);
-
 }
 
 /**
@@ -227,7 +222,6 @@ language_extension language_extension_registry::at(unsigned int pos) const {
 unsigned int language_extension_registry::size() const {
 
     return (unsigned int)registered_languages.size();
-
 }
 
 /**
@@ -239,10 +233,10 @@ unsigned int language_extension_registry::size() const {
  */
 language_extension language_extension_registry::last() const {
 
-    if(size() == 0) throw language_extension_registry_error();
+    if (size() == 0)
+        throw language_extension_registry_error();
 
     return registered_languages.back();
-
 }
 
 /**
@@ -253,7 +247,6 @@ language_extension language_extension_registry::last() const {
  */
 void language_extension_registry::append(language_extension_registry registry) {
 
-    for(std::vector<language_extension>::const_iterator itr = registry.registered_languages.begin(); itr != registry.registered_languages.end(); ++itr)
-        registered_languages.push_back(*itr);
-
+    for(auto& language : registry.registered_languages)
+        registered_languages.push_back(language);
 }

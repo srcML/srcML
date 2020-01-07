@@ -114,8 +114,6 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     stylesheet = xsltParseStylesheetDoc(xslt);
     if (!stylesheet)
         throw;
-
-//    xsltsrcMLRegister();
 }
 
 /**
@@ -143,9 +141,6 @@ xsltTransformation::~xsltTransformation() {
  * @returns true on success false on failure.
  */
 TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */) const {
-
-    // position passed to XSLT program
-//    setPosition(position);
 
     // convert to c-array of c-strings, null terminated
     std::vector<const char*> cparams(xsl_parameters.size() + 1);
