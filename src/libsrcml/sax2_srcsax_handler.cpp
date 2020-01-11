@@ -820,7 +820,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
  * A comment has been parsed.
  * Immediately calls supplied handlers function.
  */
-void comment(void* ctx, const xmlChar* /* value */) {
+void comment(void* ctx, const xmlChar* value) {
 
     auto ctxt = (xmlParserCtxtPtr) ctx;
     if (ctxt == nullptr)
@@ -835,10 +835,13 @@ void comment(void* ctx, const xmlChar* /* value */) {
 
     if (state->collect_unit_body) {
 
-        state->unitsrcml.append((const char*) state->base, ctxt->input->cur - state->base);
-
-        state->base = ctxt->input->cur;
+        // take the value but note it could be part of inter-unit
+        state->unitsrcml.append("<!--");
+        state->unitsrcml.append((const char*) value);
+        state->unitsrcml.append("-->");
     }
+
+    state->base = ctxt->input->cur;
 
     SRCSAX_DEBUG_END("");
 }
