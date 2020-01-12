@@ -107,6 +107,25 @@ const char* srcml_archive_error_string(const struct srcml_archive* archive) {
  */
 void srcml_archive_free(struct srcml_archive* archive) {
 
+    if (archive->translator) {
+        delete archive->translator;
+        archive->translator = nullptr;
+        archive->output_buffer = nullptr;
+    }
+
+    if (archive->output_buffer) {
+        xmlOutputBufferClose(archive->output_buffer);
+        archive->output_buffer = nullptr;
+    }
+
+    if (archive->xbuffer)
+        xmlBufferFree(archive->xbuffer);
+
+    if (archive->reader) {
+        delete archive->reader;
+        archive->reader = nullptr;
+    }
+
     if (archive == nullptr)
         return;
 
@@ -1322,9 +1341,6 @@ void srcml_archive_close(struct srcml_archive* archive) {
 
     if (archive->translator) {
         archive->translator->close();
-        delete archive->translator;
-        archive->translator = nullptr;
-        archive->output_buffer = nullptr;
     }
 
     if (archive->rawwrites && archive->output_buffer) {
@@ -1338,14 +1354,6 @@ void srcml_archive_close(struct srcml_archive* archive) {
         // record the size before the buffer is detached
         *archive->size = (size_t) archive->xbuffer->use;
         (*archive->buffer) = (char *) xmlBufferDetach(archive->xbuffer);
-    }
-
-    if (archive->xbuffer)
-        xmlBufferFree(archive->xbuffer);
-
-    if (archive->reader) {
-        delete archive->reader;
-        archive->reader = nullptr;
     }
 
     archive->type = SRCML_ARCHIVE_INVALID;
