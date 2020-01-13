@@ -15,37 +15,37 @@ define srcml_with_url <<- 'STDOUT'
 	STDOUT
 
 # archive/compression mix
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.cpio --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.cpio --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.cpio.bz2 --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.cpio.bz2 --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.cpio.gz --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.cpio.gz --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tar.bz2 --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.tar.bz2 --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tar.gz --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.tar.gz --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tar --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.tar --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tbz2 --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.tbz2 --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.tgz --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.tgz --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.zip --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.zip --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.zip.bz2 --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.zip.bz2 --url="test"
 check "$srcml_with_url"
 
-srcml https://github.com/srcML/test-data/raw/master/source/a.cpp.zip.gz --url="test"
+srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.zip.gz --url="test"
 check "$srcml_with_url"
 
 # empty direct remote source input with various compressions
