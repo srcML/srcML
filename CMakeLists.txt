@@ -94,7 +94,7 @@ endif()
 
 # Fedora and CentOS do not put /usr/local/{bin,lib64} on the default search paths
 # So change installation to /usr
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND DISTRO AND DISTRO MATCHES "CentOS|Fedora")
+if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
     set(CMAKE_INSTALL_PREFIX /usr)
 endif()
 
