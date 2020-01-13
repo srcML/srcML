@@ -285,13 +285,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->check(CLI::Range(1, 8))
         ->each([&](std::string){ *srcml_request.markup_options |= SRCML_OPTION_POSITION; });
 
-#if 0
-    // check tabstop
-    if (value < 1) {
-        SRCMLstatus(ERROR_MSG, "srcml: %d is an invalid tab stop. Tab stops must be 1 or higher.", value);
-        exit(1); //ERROR CODE TBD
-    }
-#endif
     app.add_flag_callback("--cpp",              [&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP; },
         "Enable preprocessor parsing and markup (default for C/C++/C#)")
         ->group("MARKUP OPTIONS");
