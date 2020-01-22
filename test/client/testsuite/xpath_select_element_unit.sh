@@ -7,7 +7,7 @@ source $(dirname "$0")/framework_test.sh
 # test
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++" filename="a.cpp"><comment type="block" format="doxygen">/**
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp"><comment type="block" format="doxygen">/**
 	 * @returns Return 1 on success and 0 on failure.
 	 */</comment>
 	<function><type><name>int</name></type> <name>srcml_check_xslt</name><parameter_list>()</parameter_list> <block>{<block_content>

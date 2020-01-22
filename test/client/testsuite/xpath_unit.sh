@@ -96,14 +96,17 @@ srcml --xpath="count(//src:name)" < sub/a.cpp.xml
 check "1
 "
 
+define oneresult <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit revision="REVISION" language="C++" filename="a.cpp" item="1">a</unit>
+
+	</unit>
+	STDOUT
+
 srcml --xpath="//src:name[1]/text()" < sub/a.cpp.xml
-check '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
-
-<unit revision="1.0.0" language="C++" filename="a.cpp" item="1">a</unit>
-
-</unit>
-'
+check "$oneresult"
 
 srcml --xpath="boolean(//src:name)" < sub/a.cpp.xml
 check "true
@@ -119,18 +122,18 @@ define ompsrcml <<- 'STDOUT'
 
 define xpathout <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="1.0.0" language="C" item="1"><omp:directive>omp <omp:name>parallel</omp:name></omp:directive></unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="REVISION" language="C" item="1"><omp:directive>omp <omp:name>parallel</omp:name></omp:directive></unit>
 
-	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="1.0.0" language="C" item="2"><omp:name>parallel</omp:name></unit>
+	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="REVISION" language="C" item="2"><omp:name>parallel</omp:name></unit>
 
 	</unit>
 	STDOUT
 
 define xpathoutcpp <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
 
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="REVISION" language="C" item="1"><cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name></omp:directive></cpp:pragma></unit>
 
