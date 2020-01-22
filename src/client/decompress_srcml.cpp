@@ -47,8 +47,15 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
 
     std::unique_ptr<archive> libarchive_srcml(archive_read_new());
 
-    // just a bunch of bytes
+    archive_read_support_format_ar(libarchive_srcml.get());
+    archive_read_support_format_cpio(libarchive_srcml.get());
+    archive_read_support_format_gnutar(libarchive_srcml.get());
+    archive_read_support_format_iso9660(libarchive_srcml.get());
+    archive_read_support_format_tar(libarchive_srcml.get());
+    archive_read_support_format_xar(libarchive_srcml.get());
+    archive_read_support_format_zip(libarchive_srcml.get());
     archive_read_support_format_raw(libarchive_srcml.get());
+    archive_read_support_format_empty(libarchive_srcml.get());
 
     // File Formats
     archive_read_support_format_7zip(libarchive_srcml.get());
