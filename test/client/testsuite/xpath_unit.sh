@@ -42,38 +42,38 @@ xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
 # /src:unit/src:expr_stmt/src:expr/src:name
-srcml --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml
+srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml
 check "$output1"
 
-srcml --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml --output-src
+srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml --output-src
 check "a"
 
-srcml --xpath=/src:unit/src:expr_stmt/src:expr/src:name < sub/a.cpp.xml
+srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" < sub/a.cpp.xml
 check "$output1"
 
-srcml --xpath=/src:unit/src:expr_stmt/src:expr/src:name sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$output1"
 
-srcml --xpath=/src:unit/src:expr_stmt/src:expr/src:name -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml "$output1"
 
-srcml --xpath=/src:unit/src:expr_stmt/src:expr/src:name -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$output1"
 
 # //src:name
-srcml --xpath=//src:name sub/a.cpp.xml
+srcml --xpath="//src:name" sub/a.cpp.xml
 check "$output2"
 
-srcml --xpath=//src:name < sub/a.cpp.xml
+srcml --xpath="//src:name" < sub/a.cpp.xml
 check "$output2"
 
-srcml --xpath=//src:name sub/a.cpp.xml -o sub/b.cpp.xml
+srcml --xpath="//src:name" sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$output2"
 
-srcml --xpath=//src:name -o sub/b.cpp.xml sub/a.cpp.xml
+srcml --xpath="//src:name" -o sub/b.cpp.xml sub/a.cpp.xml
 check sub/b.cpp.xml "$output2"
 
-srcml --xpath=//src:name -o sub/b.cpp.xml < sub/a.cpp.xml
+srcml --xpath="//src:name" -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$output2"
 
 # src:name
