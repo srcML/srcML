@@ -115,7 +115,6 @@ OPERATORS options { testLiterals = true; } {
             // primarily so that unterminated strings in
             // a preprocessor line will end at the right spot
             onpreprocline = true; 
-            //firstpreprocline = true;
         }
     } |
 

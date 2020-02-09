@@ -115,7 +115,6 @@ CONSTANTS :
     (options { greedy = true; } : 'i' { $setType(COMPLEX_NUMBER); })*
     (options { greedy = true; } : NAME)*
     {
-        //firstpreprocline = false;
         if (onpreprocline && isline) {
             line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
         }
