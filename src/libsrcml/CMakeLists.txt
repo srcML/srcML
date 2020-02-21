@@ -68,7 +68,7 @@ else()
 endif()
 
 # which types of libraries
-install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
+install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCMLLIB NAMELINK_COMPONENT SRCMLDEV)
 if (BUILD_LIBSRCML_STATIC)
     install(TARGETS libsrcml_static COMPONENT DEVLIBS)
 endif()

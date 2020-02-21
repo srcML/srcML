@@ -28,6 +28,11 @@ cpack_add_component(SRCML
                     DESCRIPTION "srcml cli program with required library"
                     REQUIRED)
 
+cpack_add_component(SRCMLLIB
+                    DISPLAY_NAME "libsrcml1"
+                    DESCRIPTION "Libraries for client"
+                    REQUIRED)
+
 cpack_add_component_group(SRCMLDEV
                     DISPLAY_NAME "Development"
                     DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
@@ -58,7 +63,7 @@ set(CPACK_PACKAGE_NAME "srcml")
 
 # Package release number (NOT srcml or libsrcml release)
 # Note: Update when package is updated, but not contents
-set(SRCML_PACKAGE_RELEASE 1)
+set(SRCML_PACKAGE_RELEASE 2)
 
 # executables and text label
 set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
