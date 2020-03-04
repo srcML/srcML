@@ -81,7 +81,7 @@ endif()
 set(CPACK_RPM_MAIN_COMPONENT SRCML)
 
 # srcml-devel package requires srcml package
-set(CPACK_RPM_SRCMLDEV_PACKAGE_REQUIRES "${CPACK_PACKAGE_NAME} >= ${PROJECT_VERSION}")
+set(CPACK_RPM_SRCMLDEV_PACKAGE_REQUIRES "${CPACK_RPM_SRCMLLIB_PACKAGE_NAME} >= ${PROJECT_VERSION}")
 
 # Homepage URLs
 # Note: Default should be CMAKE_PROJECT_HOMEPAGE_URL, but isn't due to components
