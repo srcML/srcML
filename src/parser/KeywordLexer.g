@@ -51,8 +51,10 @@ header "post_include_cpp" {
 
 void KeywordLexer::changetotextlexer(int typeend, const std::string delim) {
 
+    bool continuation_comment = inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C);
+
     selector->push("text"); 
-    ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, delim, isline, line_number, options);
+    ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, delim, isline, line_number, continuation_comment, options);
 }
 
 }
@@ -374,9 +376,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { ":"            , COLON         , LANGUAGE_ALL }, 
         { "}"            , RCURLY        , LANGUAGE_ALL }, 
         { ","            , COMMA         , LANGUAGE_ALL }, 
-        { "]"            , RBRACKET      , LANGUAGE_ALL }, 
-        { "{"            , LCURLY        , LANGUAGE_ALL }, 
         { "["            , LBRACKET      , LANGUAGE_ALL }, 
+//        { "\\?\\?("      , LBRACKET      , LANGUAGE_C | LANGUAGE_CXX }, 
+        { "<:"           , LBRACKET      , LANGUAGE_C | LANGUAGE_CXX }, 
+        { "]"            , RBRACKET      , LANGUAGE_ALL }, 
+//        { "\\?\\?)"      , RBRACKET      , LANGUAGE_C | LANGUAGE_CXX }, 
+        { ":>"           , RBRACKET      , LANGUAGE_C | LANGUAGE_CXX }, 
+        { "{"            , LCURLY        , LANGUAGE_ALL }, 
 
         { "<"            , TEMPOPS       , LANGUAGE_ALL }, 
         { ">"            , TEMPOPE       , LANGUAGE_ALL },

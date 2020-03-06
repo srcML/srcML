@@ -87,6 +87,8 @@ std::string delimiter;
 
 int dquote_count = 0;
 
+bool continuation = false;
+
 OPTION_TYPE options;
 
 CommentTextLexer(const antlr::LexerSharedInputState& state)
@@ -102,12 +104,13 @@ public:
     }
 
     // reinitialize comment lexer
-    void init(int m, bool onpreproclinestate, bool nescape = false, std::string dstring = "", bool /* is_line */ = false, long /* lnumber */ = -1, OPTION_TYPE op = 0) {
+    void init(int m, bool onpreproclinestate, bool nescape = false, std::string dstring = "", bool /* is_line */ = false, long /* lnumber */ = -1, bool isContinuationComment = false, OPTION_TYPE op = 0) {
 
         onpreprocline = onpreproclinestate;
         mode = m;
         noescape = nescape;
         delimiter1 = dstring;
+        continuation = isContinuationComment;
         options = op;
     }
 }
@@ -157,7 +160,7 @@ COMMENT_TEXT {
           setLine(getLine() + (1 << 16));
 
         // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-        if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+        if ((mode == LINE_COMMENT_END && prevLA != '\\' && !continuation) || (mode == LINE_DOXYGEN_COMMENT_END && prevLA != '\\' && !continuation) || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
           $setType(mode);
           selector->pop();
         }
@@ -243,8 +246,11 @@ COMMENT_TEXT {
             ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline || mode == RAW_STRING_END))
              || mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END)) {
 
-            $setType(mode);
-            selector->pop();
+            // line continuation character at EOL extends line comment
+            if (!((mode == LINE_COMMENT_END || LINE_DOXYGEN_COMMENT_END) && prevprevLA == '\\' && continuation)) {
+                $setType(mode);
+                selector->pop();
+            }
         }
    } )+
 ;

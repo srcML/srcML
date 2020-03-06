@@ -105,7 +105,7 @@ tokens {
 OPERATORS options { testLiterals = true; } {
     int start = LA(1);
 } : (
-    '#'
+    '#' 
     {
         if (startline) {
 
@@ -121,12 +121,18 @@ OPERATORS options { testLiterals = true; } {
     '+' ('+' | '=')? |
     '-' ('-' | '=' | '>' ('*')? )?  |
     '*' ('=')? |
-    '%' ('=')? |
+
+    // %, %> (digraph), %=
+    '%' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '>' { $setType(RCURLY); } | 
+         { startline & (inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C)) }? ':' { $setType(PREPROC); onpreprocline = true; } | 
+        '=')? |
     '^' ('=')? |
     '|' ('|')? ('=')? |
     '`' |
     '!' ('=')? |
-    ':' (':')? |
+
+    // :, ::, :> (digraph)
+    ':' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '>' { $setType(RBRACKET); } | ':')? |
 
     '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>')? |
 
@@ -136,8 +142,10 @@ OPERATORS options { testLiterals = true; } {
     // >, >>=, >=, not >>
     '>' (('>' '=') => '>' '=')? ('=')? |
 
-    // <, << (C/C++), <=, <<< (CUDA)
-    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
+    // <, << (C/C++), <=, <<< (CUDA), <: (digraph), <% (digraph)
+    '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? ':' { $setType(LBRACKET); } |
+         { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '%' { $setType(LCURLY); } |
+        '=' | '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
 
     // match these as individual operators only
     ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
@@ -171,7 +179,22 @@ OPERATORS options { testLiterals = true; } {
         }
         STRING_START )? |
 
-    '?' ('?')* | // part of ternary
+    '?' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '?' (
+        { inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }?
+
+        // trigraph conversion
+        '=' /* '#' */ | 
+        '/' ( EOL { $setType(EOL_BACKSLASH); } )* |
+        '\'' /* '^' */ |
+        '(' { $setType(LBRACKET); } |
+        ')' { $setType(RBRACKET); } |
+        '!' /* '|' */ |
+        '<' { $setType(LCURLY); } |
+        '>' { $setType(RCURLY); } |
+        '-' { $setType(DESTOP); } 
+        )?
+
+    )? ('?')* | // part of ternary
     '~'  | // has to be separate if part of name
 
     '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |
