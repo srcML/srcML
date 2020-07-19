@@ -692,6 +692,10 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
         return SRCML_STATUS_IO_ERROR;
     }
 
+    if(unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+        unit->src = extract_revision(unit->srcml.c_str(), (int)unit->srcml.size(), int(*unit->archive->revision_number), true);
+    }
+
     // if this unit was parsed from source, then the src does not exist
     // generate this source from the srcml
     if (!unit->src) {
