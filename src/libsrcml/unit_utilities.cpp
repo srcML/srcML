@@ -69,7 +69,7 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
 }
 
 enum { INSERT, DELETE, COMMON};
-
+#include <iostream>
 std::string extract_revision(const char* srcml, int size, int revision, bool text_only) {
 
     const char* DIFF_PREFIX = "diff:";
@@ -85,8 +85,32 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
         bool inmode = mode.top() == COMMON || (revision == 0 && mode.top() == DELETE) || (revision == 1 && mode.top() == INSERT);
 
         // output previous non-tag text
-        if (inmode)
-            news.append(lp, p - lp);
+        if (inmode) {
+
+            if(!text_only) {
+                news.append(lp, p - lp);
+            } else {
+                std::string text(lp, p - lp);
+                std::string::size_type start = 0;
+                while((start = text.find('&', start)) != std::string::npos) {
+
+                    // should always be a ;
+                    std::string::size_type end = text.find(';', start + 1);
+                    std::string escape(text, start, end - start + 1);
+
+                    char new_char = '<';
+                    if(escape == "&gt;") {
+                        new_char = '>';
+                    } else if(escape == "&amp;") {
+                        new_char = '&';
+                    }
+
+                    text.replace(start, escape.size(), std::string(1, new_char));
+                    start = start + 1;
+                }
+                news += text;
+            }
+        }
 
         auto sp = p;
 
