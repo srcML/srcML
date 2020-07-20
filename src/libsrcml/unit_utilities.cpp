@@ -90,25 +90,36 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
             if(!text_only) {
                 news.append(lp, p - lp);
             } else {
-                std::string text(lp, p - lp);
-                std::string::size_type start = 0;
-                while((start = text.find('&', start)) != std::string::npos) {
+                const char * start_p = lp;
+                while(lp != p) {
 
-                    // should always be a ;
-                    std::string::size_type end = text.find(';', start + 1);
-                    std::string escape(text, start, end - start + 1);
+                    if(*lp == '&') {
 
-                    char new_char = '<';
-                    if(escape == "&gt;") {
-                        new_char = '>';
-                    } else if(escape == "&amp;") {
-                        new_char = '&';
+                        // append previous
+                        news.append(start_p, lp - start_p);
+                        ++lp;
+
+                        // determine escape
+                        char new_char = '<';
+                        std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << *lp << '\n';
+                        if(*lp == 'g') {
+                            new_char = '>';
+                        } else if(*lp == 'a') {
+                            new_char = '&';
+                        }
+                        news += new_char;
+
+                        // should always be a ;
+                        while(*lp != ';') {
+                            ++lp;
+                        }
+                        start_p = lp + 1;
+
                     }
 
-                    text.replace(start, escape.size(), std::string(1, new_char));
-                    start = start + 1;
+                    ++lp;
                 }
-                news += text;
+                news.append(start_p, p - start_p);
             }
         }
 
