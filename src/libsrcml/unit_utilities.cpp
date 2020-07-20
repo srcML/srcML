@@ -143,9 +143,9 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
         }
         else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX, strlen(DIFF_PREFIX)) == 0) {
 
-            const char* tstart = sp + 1 + strlen(DIFF_PREFIX);
+            const char* tstart = sp + 2 + strlen(DIFF_PREFIX);
 
-            if (strncmp(tstart, "ws", 2) == 0) {
+            if (strncmp(tstart, "ws", 2) != 0) {
                 mode.pop();
             }
         }
