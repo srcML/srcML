@@ -69,7 +69,8 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
 }
 
 enum { INSERT, DELETE, COMMON};
-#include <iostream>
+
+/** @todo add handling for versioned attributes */
 std::string extract_revision(const char* srcml, int size, int revision, bool text_only) {
 
     const char* DIFF_PREFIX = "diff:";
