@@ -101,7 +101,6 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
 
                         // determine escape
                         char new_char = '<';
-                        std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << *lp << '\n';
                         if(*lp == 'g') {
                             new_char = '>';
                         } else if(*lp == 'a') {
