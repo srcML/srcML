@@ -90,6 +90,7 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
             if(!text_only) {
                 news.append(lp, p - lp);
             } else {
+
                 const char * start_p = lp;
                 while(lp != p) {
 
@@ -136,16 +137,22 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
                 mode.push(DELETE);
             } else if (strncmp(tstart, "insert", 6) == 0) {
                 mode.push(INSERT);
-            } else {
+            } else if (strncmp(tstart, "ws", 2) != 0) {
                 mode.push(COMMON);
             }
         }
         else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX, strlen(DIFF_PREFIX)) == 0) {
-            mode.pop();
+
+            const char* tstart = sp + 1 + strlen(DIFF_PREFIX);
+
+            if (strncmp(tstart, "ws", 2) == 0) {
+                mode.pop();
+            }
         }
         else {
-            if (inmode && !text_only)
+            if (inmode && !text_only) {
                 news.append(sp, p - sp);
+            }
         }
 
         lp = p;
