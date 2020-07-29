@@ -507,6 +507,10 @@ private:
         // preprocessor (unless we already are in one)
         if (isoption(options, SRCML_OPTION_CPP) && srcMLParser::LA(1) == srcMLParser::PREPROC) {
 
+            // cache position values
+            auto lastlineSave = lastline;
+            auto lastcolumnSave = lastcolumn;
+
             // start preprocessor handling
             inskip = true;
 
@@ -535,6 +539,10 @@ private:
 
             // stop preprocessor handling
             inskip = false;
+
+            // restore position values
+            lastline = lastlineSave;
+            lastcolumn = lastcolumnSave;
 
             return true;
         }
