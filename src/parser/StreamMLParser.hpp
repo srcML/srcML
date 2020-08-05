@@ -208,8 +208,8 @@ private:
 
         // push a new start token
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
+        ntoken->setLine(lastline);
+        ntoken->setColumn(lastcolumn + 1);
 
         if (isoption(options, SRCML_OPTION_POSITION)) {
             ends.emplace(ntoken);
@@ -275,17 +275,26 @@ private:
         if (isoption(options, SRCML_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
 
-            qetoken->endline = lastline;
-            qetoken->endcolumn = lastcolumn;
+            // not the start of a line
+            if (lastcolumn != 0) {
+                qetoken->endline = lastline;
+                qetoken->endcolumn = lastcolumn;
+
+            // start of line with a non-blank line before
+            // add one to the column for the newline
+            } else {
+                qetoken->endline = lastline - 1;
+                qetoken->endcolumn = prevcolumn + 1;
+            }
 
             if (token == srcMLParser::STYPE) {
                 lasttypeendline = lastline;
-                lasttypeendcolumn = lastcolumn;
+                lasttypeprevcolumn = lastcolumn;
             }
 
             if (token == srcMLParser::STYPEPREV) {
                 qetoken->endline = lasttypeendline;
-                qetoken->endcolumn = lasttypeendcolumn;
+                qetoken->endcolumn = lasttypeprevcolumn;
             }
 
             ends.pop();
@@ -322,6 +331,7 @@ private:
 
         // record for end position of start elements
         lastline = LT(1)->getLine();
+        prevcolumn = lastcolumn;
         lastcolumn = LT(1)->getColumn() - 1;
 
         // consume any skipped tokens
@@ -494,7 +504,8 @@ private:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
                 srcMLParser::consume();
-
+                slastline = LT(1)->getLine();
+                slastcolumn = LT(1)->getColumn() - 1;
                 break;
             }
 
@@ -539,6 +550,9 @@ private:
 
             // stop preprocessor handling
             inskip = false;
+
+            slastline = lastline;
+            slastcolumn = lastcolumn;
 
             // restore position values
             lastline = lastlineSave;
@@ -642,6 +656,13 @@ private:
      */
     inline void flushSkip(std::deque<antlr::RefToken>& rf) {
 
+        // update the last line/column from the skipped tokens
+        if (slastline > lastline || (slastline == lastline && slastcolumn > lastcolumn)) {
+            lastline = slastline;
+            prevcolumn = lastcolumn;
+            lastcolumn = slastcolumn;
+        }
+
         rf.insert(rf.end(), std::make_move_iterator(skip().begin()), std::make_move_iterator(skip().end()));
         skip().clear();
     }
@@ -649,8 +670,8 @@ private:
     inline void completeSkip() {
 
         if (!open_comments.empty()) {
-            slastcolumn = LT(1)->getColumn() - 1;
             slastline = LT(1)->getLine();
+            slastcolumn = LT(1)->getColumn() - 1;
             pushESkipToken(open_comments.top());
             open_comments.pop();
         }
@@ -881,6 +902,7 @@ private:
     // record position of text elements
     int lastline = 0;
     int lastcolumn = 0;
+    int prevcolumn = 0;
 
     // record position for comment elements
     int slastline = 0;
@@ -888,7 +910,7 @@ private:
 
     // record position for <type prev=""/>
     int lasttypeendline = 0;
-    int lasttypeendcolumn = 0;
+    int lasttypeprevcolumn = 0;
     int lasttypestartline = 0;
     int lasttypestartcolumn = 0;
 
