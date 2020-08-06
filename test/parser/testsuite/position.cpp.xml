@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pos="http://www.srcML.org/srcML/position" revision="1.0.0" url="position" pos:tabs="8">
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="bf21a9e8fbc5a3846fb05b4fa0859e0917b2202f"><block pos:start="1:1" pos:end="1:2">{<block_content/>}</block></unit>
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="dff8a1731f59ccad056b346102d1e1d014b843f3"><block pos:start="1:1" pos:end="2:1">{<block_content pos:start="1:2" pos:end="1:2">
+</block_content>}</block></unit>
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="7bb1290be085deb178fa2f64bf55343ec0292a9d"><block pos:start="1:1" pos:end="2:2">{<block_content pos:start="1:2" pos:end="2:1">
+ </block_content>}</block></unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++" pos:tabs="8" hash="0cdc06b379fe5c2bed4254ecdbd2a14368374aca"><block pos:start="1:1" pos:end="2:1">{<block_content pos:start="1:2" pos:end="1:2">
+</block_content>}</block>
+<cpp:define pos:start="3:1" pos:end="3:7">#<cpp:directive pos:start="3:2" pos:end="3:7">define</cpp:directive></cpp:define>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++" pos:tabs="8" hash="41eb644b0e7b5efc9372b9f0928e0753fc6c463d">
+<return pos:start="2:1" pos:end="3:1">return
+;</return>
+<cpp:define pos:start="4:1" pos:end="4:7">#<cpp:directive pos:start="4:2" pos:end="4:7">define</cpp:directive></cpp:define>
+</unit>
+
+</unit>
