@@ -20,3 +20,17 @@ srcML toolkit includes:
     as well as, efficient manipulation and fact extraction (XPath, 
     XSLT, and RelaxNG).  The srcML client `srcml` is built using 
     libsrcml.
+    
+---
+
+## Webpage
+
+[srcML.org](https://www.srcml.org/)
+
+## Contact & Discussion
+
+For questions or suggestions, please contact us via email [srcmldev@gmail.com](mailto:srcmldev@gmail.com).
+
+To keep up with development, ask questions, or get involved with the conversation, join our [Discord](https://discord.com/new) server srcML.org.   To  be invited, please contact us via email [srcmldev@gmail.com](mailto:srcmldev@gmail.com) and provide your Discord id.
+
+    
