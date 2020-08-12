@@ -81,7 +81,7 @@ public:
     bool add_unit(const srcml_unit* unit);
     bool add_start_unit(const srcml_unit* unit);
     bool add_end_unit();
-    bool add_start_element(const char* prefix, const char* name, const char* uri);
+    bool add_start_element(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri);
     bool add_end_element();
     bool add_namespace(const char* prefix, const char* uri);
     bool add_attribute(const char* prefix, const char* name, const char* uri, const char* content);

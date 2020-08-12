@@ -44,6 +44,7 @@ int main(int, char* argv[]) {
 )";
 
     std::string start_unit = R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++">)";
+    std::string start_unit_cpp = R"(<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision=")" SRCML_VERSION_STRING R"(" language="C++">)";
     std::string end_unit = R"(</unit>
 )";
 
@@ -363,6 +364,32 @@ int main(int, char* argv[]) {
         srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_write_start_unit(unit);
+        srcml_write_start_element(unit, "cpp", "define", 0);
+        srcml_write_string(unit, "#");
+        srcml_write_start_element(unit, "cpp", "directive", 0);
+        srcml_write_string(unit, "define");
+        srcml_write_end_element(unit);
+        srcml_write_end_element(unit);
+        srcml_write_end_unit(unit);
+        srcml_archive_write_unit(archive, unit);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+fprintf(stderr, "DEBUG:  %s %s %d s: %s\n", __FILE__,  __FUNCTION__, __LINE__, s);
+
+        dassert(std::string(s, size), xml_decl + start_unit_cpp + R"(<cpp:define>#<cpp:directive>define</cpp:directive></cpp:define>)" + end_unit);
+        free(s);
+    }
+
+    {
+        char* s = 0;
+        size_t size;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        srcml_write_start_unit(unit);
         dassert(srcml_write_start_element(unit, 0, 0, 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
@@ -378,6 +405,20 @@ int main(int, char* argv[]) {
         srcml_archive_write_open_memory(archive, &s, &size);
         srcml_unit* unit = srcml_unit_create(archive);
         dassert(srcml_write_start_element(unit, 0, "element", 0), SRCML_STATUS_INVALID_INPUT);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+        free(s);
+    }
+
+    {
+        char* s = 0;
+        size_t size;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_write_start_element(unit, "cpp", "define", "http://www.srcML.org/srcML/cpp"), SRCML_STATUS_INVALID_INPUT);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);

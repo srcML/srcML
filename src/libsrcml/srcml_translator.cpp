@@ -320,7 +320,7 @@ bool srcml_translator::add_end_unit() {
  *
  * @returns if succesfully added.
  */
-bool srcml_translator::add_start_element(const char* prefix, const char* name, const char* uri) {
+bool srcml_translator::add_start_element(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri) {
 
     if (!is_outputting_unit || name == 0)
         return false;
@@ -333,6 +333,22 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
     const char* used_uri = nullptr;
     if (uri == nullptr || strcmp(SRCML_SRC_NS_URI, uri) != 0) {
         used_uri = uri;
+    }
+
+    // if there is a cpp prefix, then mark the resulting file
+    if ((prefix && strcmp(prefix, SRCML_CPP_NS_DEFAULT_PREFIX) == 0) || (uri && strcmp(uri, SRCML_CPP_NS_URI) == 0)) {
+        // update provisional cpp prefix
+        if (!(unit->namespaces))
+            unit->namespaces = unit->archive->namespaces;
+
+        // set the found prefix, plus mark it as used
+        auto&& view = unit->namespaces->get<nstags::uri>();
+        auto it = view.find(SRCML_CPP_NS_URI);
+        if (it != view.end()) {
+            view.modify(it, [](Namespace& thisns){ thisns.flags |= NS_USED; });
+        } else {
+            unit->namespaces->push_back({ prefix, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+        }
     }
 
     return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST used_uri) != -1;
