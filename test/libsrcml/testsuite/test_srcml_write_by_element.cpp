@@ -375,8 +375,6 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-fprintf(stderr, "DEBUG:  %s %s %d s: %s\n", __FILE__,  __FUNCTION__, __LINE__, s);
-
         dassert(std::string(s, size), xml_decl + start_unit_cpp + R"(<cpp:define>#<cpp:directive>define</cpp:directive></cpp:define>)" + end_unit);
         free(s);
     }
