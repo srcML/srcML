@@ -157,7 +157,7 @@ COMMENT_TEXT {
           setLine(getLine() + (1 << 16));
 
         // end at EOL when for line comment, or the end of a string or char on a preprocessor line
-        if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+        if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && ((prevLA != '\\') && onpreprocline /* || rawstring */))) {
           $setType(mode);
           selector->pop();
         }
@@ -240,7 +240,7 @@ COMMENT_TEXT {
         */
         if (_ttype == COMMENT_TEXT &&
             ((LA(1) == '\n' && mode != RAW_STRING_END) || LA(1) == EOF_CHAR) &&
-            ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline || mode == RAW_STRING_END))
+            ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (((prevprevLA != '\\') && onpreprocline) || mode == RAW_STRING_END))
              || mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END)) {
 
             $setType(mode);

@@ -147,9 +147,25 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>"abc" "def</cpp:value></cpp:define>
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>"abc\
+"</cpp:value></cpp:define>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>"abc\
+def"</cpp:value></cpp:define>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>"a\
+b\
+c\
+def"</cpp:value></cpp:define>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<cpp:define>#<cpp:directive>define</cpp:directive> <cpp:macro><name>a</name></cpp:macro> <cpp:value>"abc" "def</cpp:value></cpp:define>
+</unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <expr_stmt><expr><call><name>printk</name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>memaddr</name></expr></argument>
