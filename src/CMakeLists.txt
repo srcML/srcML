@@ -110,7 +110,7 @@ else()
         find_library(LIBARCHIVE_LOCAL_LIBRARY NAMES libarchive.a PATHS ${OSX_LIBARCHIVE_PATH} PATH_SUFFIXES libarchive /.libs NO_DEFAULT_PATH)
 
         set(LibArchive_INCLUDE_DIRS ${OSX_LIBARCHIVE_PATH}/libarchive)
-        set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} ${CMAKE_BINARY_DIR}/../xz/src/liblzma/.libs/liblzma.a /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+        set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} ${CMAKE_BINARY_DIR}/../xz/src/liblzma/.libs/liblzma.a libbz2.dylib libcompression.dylib libz.dylib libxar.dylib libiconv.dylib libexpat.dylib)
 
         message(STATUS "  LibArchive_INCLUDE_DIRS:")
         foreach(library ${LibArchive_INCLUDE_DIRS})
@@ -125,7 +125,7 @@ else()
     # macOS with homebrew
     elseif(EXISTS "/usr/local/opt/libarchive")
         set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/libzstd.a /usr/local/lib/liblz4.a /usr/local/lib/liblzma.a /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
+        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/libzstd.a /usr/local/lib/liblz4.a /usr/local/lib/liblzma.a libbz2.dylib libcompression.dylib libz.dylib libxar.dylib libiconv.dylib libexpat.dylib)
 
     else() 
         message(FATAL_ERROR "LibArchive >= 3 is required. Either install via homebrew\n% brew install libarchive\nor enable INSTALL_LIBARCHIVE\n% cmake ../srcML ... -DINSTALL_LIBARCHIVE=ON")
