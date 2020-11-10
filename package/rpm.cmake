@@ -95,9 +95,9 @@ set(CPACK_RPM_PACKAGE_LICENSE "GPLv2+")
 
 # post install script for ldconfig
 # Note: Believe that newline is required
-file(WRITE ${CPACK_BINARY_DIR}/post.sh "/sbin/ldconfig\n")
-set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE   ${CPACK_BINARY_DIR}/post.sh)
-set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE ${CPACK_BINARY_DIR}/post.sh)
+# file(WRITE ${CPACK_BINARY_DIR}/post.sh "/sbin/ldconfig\n")
+# set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE   ${CPACK_BINARY_DIR}/post.sh)
+# set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE ${CPACK_BINARY_DIR}/post.sh)
 
 # CPack puts directories of installed files into the RPM
 # Since they already exist, this is a conflict with other packages
