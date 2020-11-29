@@ -137,6 +137,7 @@ else()
     find_package(Iconv REQUIRED)
     set(Boost_NO_BOOST_CMAKE ON)
     set(Boost_USE_STATIC_LIBS ON)
+    set(BOOST_INCLUDEDIR /usr/local)
     find_package(Boost COMPONENTS REQUIRED)
 
     # add include directories
