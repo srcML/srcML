@@ -63,8 +63,19 @@ else()
     set(OSX_LIBARCHIVE_PATH ${CMAKE_SOURCE_DIR}/../libarchive)
 
     # libarchive 3 is necessary
+    string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
     if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
+
+    # macOS Big Sur (20.*.*) and Mojave (19.*.*) include libarchive.a 3.3.*
+    # Only need include files
+    elseif(OS_VERSION GREATER_EQUAL "19")
+
+        # Assumes brew install for include files only
+        # Not using brew shared library due to Big Sur on arm64e
+        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+        set(LibArchive_INCLUDE_DIR ${LibArchive_INCLUDE_DIRS})
+        set(LibArchive_LIBRARIES libarchive.dylib)
 
     # macOS with custom-built libarchive
     elseif(EXISTS "${OSX_LIBARCHIVE_PATH}" OR INSTALL_LIBARCHIVE)
