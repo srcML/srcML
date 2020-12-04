@@ -65,7 +65,7 @@ else()
     if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
 
-    # macOS Big Sur (20.*.*) and Mojave (19.*.*) include libarchive.a 3.3.*
+    # macOS Big Sur (20.*.*) and Catalina (19.*.*) include libarchive.a 3.3.*
     # Only need include files
     elseif(OS_VERSION GREATER_EQUAL "19")
 
@@ -75,8 +75,8 @@ else()
         set(LibArchive_INCLUDE_DIR ${LibArchive_INCLUDE_DIRS})
         set(LibArchive_LIBRARIES libarchive.dylib)
 
-    # macOS versions before Mojave only have libarchive 2, and require homebrew
-    # and use of a static library
+    # macOS versions before Catalina only have libarchive 2, and require homebrew
+    # and use a static library
     elseif(EXISTS "/usr/local/opt/libarchive")
 
         set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
