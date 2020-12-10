@@ -109,7 +109,10 @@ else()
     endif()
 
     # Helps with new path on default antlr2 install using homebrew on MacOS Mojave
-    if(EXISTS /usr/local/opt/antlr@2 AND APPLE)
+    if(EXISTS /usr/local/lib/libantlr.a AND APPLE)
+        list(APPEND CMAKE_PREFIX_PATH "/usr/local/lib")
+        include_directories("/usr/local/include")
+    elseif(EXISTS /usr/local/opt/antlr@2 AND APPLE)
         list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/antlr@2")
         include_directories("/usr/local/opt/antlr@2/include")
     endif()
