@@ -73,10 +73,13 @@ else()
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-# strip for release mode
-if(NOT APPLE)
-    set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+# strip macOS for release
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if(APPLE)
+        add_custom_command(TARGET srcml POST_BUILD
+            COMMAND /usr/bin/strip -x $<TARGET_FILE:srcml>
+            COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping $<TARGET_FILE:srcml>")
+    endif()
 endif()
-
 
 install(TARGETS srcml COMPONENT SRCML)

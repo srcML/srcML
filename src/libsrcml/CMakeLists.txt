@@ -97,16 +97,13 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     install(FILES ${SRCML_DLLS} DESTINATION bin)
 endif()
 
-if(NOT APPLE)
-    set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
-endif()
-
-if(APPLE)
-    add_custom_command(TARGET libsrcml_static POST_BUILD
-        COMMAND /usr/bin/strip -ur ${CMAKE_BINARY_DIR}/bin/libsrcml.a
-        COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping bin/libsrcml.a")
-elseif(NOT WIN32)
-    add_custom_command(TARGET libsrcml_static POST_BUILD
-        COMMAND /usr/bin/strip ${CMAKE_BINARY_DIR}/bin/libsrcml.a
-        COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping bin/libsrcml.a")
+# strip libraries
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    if(APPLE)
+        add_custom_command(TARGET libsrcml_shared POST_BUILD
+            COMMAND /usr/bin/strip -x $<TARGET_FILE:libsrcml_shared>
+            COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping $<TARGET_FILE:libsrcml_shared>")
+    elseif(NOT WIN32)
+        set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
+    endif()
 endif()
