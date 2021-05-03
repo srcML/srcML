@@ -36,7 +36,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message("MSVC BUILD")
 
     add_definitions(-DWITH_LIBXSLT)
-    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
+    set(WINDOWS_DEP_PATH ${PROJECT_BINARY_DIR}/deps)
 
     include_directories(${WINDOWS_DEP_PATH}/include)
     link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
