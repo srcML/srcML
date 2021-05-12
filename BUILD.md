@@ -31,14 +31,10 @@ The main packages required may be installed via brew:
 
     brew install antlr2 boost cmake
 
-The srcML client requires at least LibArchive 3. macOS includes version 2.8. Because of this, LibArchive is
-statically linked into the client. There are two options
-
-* Use brew to install a more recent version:
+Libarchive greater than 3.0.0 is required. For macOS previous to Catalina (19.*.*), libarchive.a 3.3.* must be 
+statically included. Use brew to install a more recent version:
 
     `brew install libarchive`
-
-* Download and build LibArchive in a directory `libarchive` parallel to the source directory, typically \~/libarchive
 
 To generate srcML documentation:
 
