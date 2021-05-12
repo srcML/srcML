@@ -69,9 +69,16 @@ else()
     # Only need include files
     elseif(OS_VERSION GREATER_EQUAL "19")
 
-        # Assumes brew install for include files only
-        # Not using brew shared library due to Big Sur on arm64e
-        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
+        # install via Apple opensource
+        set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+        set(LIBARCHIVE_VERSION "libarchive-83.40.4")
+        set(LIBARCHIVE_URL "https://opensource.apple.com/source/libarchive/${LIBARCHIVE_VERSION}")
+        if(NOT EXISTS ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
+            message("-- Downloading libarchive include files")
+            file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
+            file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive_entry.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive_entry.h)
+        endif()
+        set(LibArchive_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/external)
         set(LibArchive_INCLUDE_DIR ${LibArchive_INCLUDE_DIRS})
         set(LibArchive_LIBRARIES libarchive.dylib)
 
