@@ -73,7 +73,7 @@ else()
         set(BREW "YES")
     
         # Use the brew libarchive even if the platform has the correct version
-        option(SRCML_BREW_LIBARCHIVE "Use the brew libarchive regardless of macOS version" OFF)
+        option(SRCML_BUILD_BREW_LIBARCHIVE "Use the brew libarchive regardless of macOS version" OFF)
 
         # macOS Big Sur (20.*.*) and Catalina (19.*.*) include libarchive.a 3.3.*
         # Only need include files
