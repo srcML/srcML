@@ -59,38 +59,60 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 else()
 
     set(WINDOWS_DEP_PATH "")
-    
-    # libarchive 3 is necessary
-    string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
+
     if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
+    else()
 
-    # macOS Big Sur (20.*.*) and Catalina (19.*.*) include libarchive.a 3.3.*
-    # Only need include files
-    elseif(OS_VERSION GREATER_EQUAL "19")
+        # Detect brew directories on macOS
+        execute_process(COMMAND brew --prefix
+            OUTPUT_VARIABLE BREW_PREFIX
+            RESULT_VARIABLE BREW_RESULT
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(BREW "YES")
+    
+        # Use the brew libarchive even if the platform has the correct version
+        option(SRCML_BUILD_BREW_LIBARCHIVE "Use the brew libarchive regardless of macOS version" OFF)
 
-        # install via Apple opensource
-        set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
-        set(LIBARCHIVE_VERSION "libarchive-83.40.4")
-        set(LIBARCHIVE_URL "https://opensource.apple.com/source/libarchive/${LIBARCHIVE_VERSION}")
-        if(NOT EXISTS ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
-            message("-- Downloading libarchive include files")
-            file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
-            file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive_entry.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive_entry.h)
+        # macOS Big Sur (20.*.*) and Catalina (19.*.*) include libarchive.a 3.3.*
+        # Only need include files
+        string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
+        if(NOT SRCML_BREW_LIBARCHIVE AND OS_VERSION GREATER_EQUAL "19")
+
+            # install via Apple opensource
+            set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+            set(LIBARCHIVE_VERSION "libarchive-83.40.4")
+            set(LIBARCHIVE_URL "https://opensource.apple.com/source/libarchive/${LIBARCHIVE_VERSION}")
+            if(NOT EXISTS ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
+                message("-- Downloading libarchive include files")
+                file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
+                file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive_entry.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive_entry.h)
+            endif()
+            set(LibArchive_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/external)
+            set(LibArchive_INCLUDE_DIR ${LibArchive_INCLUDE_DIRS})
+            set(LibArchive_LIBRARIES libarchive.dylib)
+
+        # macOS versions before Catalina only have libarchive 2, and require homebrew
+        # and use a static library
+        elseif(BREW AND EXISTS "${BREW_PREFIX}/opt/libarchive")
+
+            set(LibArchive_INCLUDE_DIRS ${BREW_PREFIX}/opt/libarchive/include)
+            set(LibArchive_LIBRARIES ${BREW_PREFIX}/opt/libarchive/lib/libarchive.a ${BREW_PREFIX}/lib/libzstd.a ${BREW_PREFIX}/lib/liblz4.a ${BREW_PREFIX}/lib/liblzma.a libbz2.dylib libcompression.dylib libz.dylib libxar.dylib libiconv.dylib libexpat.dylib)
+
+        else()
+            message(FATAL_ERROR "LibArchive >= 3 is required. Install via homebrew\n% brew install libarchive\n")
         endif()
-        set(LibArchive_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/external)
-        set(LibArchive_INCLUDE_DIR ${LibArchive_INCLUDE_DIRS})
-        set(LibArchive_LIBRARIES libarchive.dylib)
 
-    # macOS versions before Catalina only have libarchive 2, and require homebrew
-    # and use a static library
-    elseif(EXISTS "/usr/local/opt/libarchive")
+        # Detect brew antlr2
+        if(BREW AND EXISTS ${BREW_PREFIX}/opt/antlr@2)
+            list(APPEND CMAKE_PREFIX_PATH "${BREW_PREFIX}/opt/antlr@2")
+            include_directories("${BREW_PREFIX}/opt/antlr@2/include")
+        else()
+            message("   Note: antlr2 not found. Please use brew to install antlr2: ")
+            message("      brew install antlr2")
+        endif()
 
-        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/libzstd.a /usr/local/lib/liblz4.a /usr/local/lib/liblzma.a libbz2.dylib libcompression.dylib libz.dylib libxar.dylib libiconv.dylib libexpat.dylib)
-
-    else() 
-        message(FATAL_ERROR "LibArchive >= 3 is required. Install via homebrew\n% brew install libarchive\n")
     endif()
 
     # Locating packages
@@ -113,12 +135,6 @@ else()
     if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
         add_definitions(-DWITH_LIBXSLT)
-    endif()
-
-    # Helps with new path on default antlr2 install using homebrew on MacOS Mojave
-    if(EXISTS /usr/local/opt/antlr@2 AND APPLE)
-        list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/antlr@2")
-        include_directories("/usr/local/opt/antlr@2/include")
     endif()
 
     # Locating the antlr library.
