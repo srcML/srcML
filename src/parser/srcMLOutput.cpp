@@ -535,7 +535,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
     if (name[0] == 0)
         return;
 
-    thread_local bool isposition = isoption(options, SRCML_OPTION_POSITION);
+    bool isposition = isoption(options, SRCML_OPTION_POSITION);
 
     if (isstart(token) || isempty(token)) {
 

@@ -36,7 +36,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message("MSVC BUILD")
 
     add_definitions(-DWITH_LIBXSLT)
-    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/deps)
+    set(WINDOWS_DEP_PATH ${PROJECT_BINARY_DIR}/deps)
 
     include_directories(${WINDOWS_DEP_PATH}/include)
     link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
@@ -59,76 +59,60 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 else()
 
     set(WINDOWS_DEP_PATH "")
-    
-    set(OSX_LIBARCHIVE_PATH ${CMAKE_SOURCE_DIR}/../libarchive)
 
-    # libarchive 3 is necessary
     if(NOT APPLE)
         find_package(LibArchive 3 REQUIRED)
+    else()
 
-    # macOS with custom-built libarchive
-    elseif(EXISTS "${OSX_LIBARCHIVE_PATH}" OR INSTALL_LIBARCHIVE)
+        # Detect brew directories on macOS
+        execute_process(COMMAND brew --prefix
+            OUTPUT_VARIABLE BREW_PREFIX
+            RESULT_VARIABLE BREW_RESULT
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(BREW "YES")
+    
+        # Use the brew libarchive even if the platform has the correct version
+        option(SRCML_BUILD_BREW_LIBARCHIVE "Use the brew libarchive regardless of macOS version" OFF)
 
-        # If we don't have the homebrew, and not locally installed cmake, install it
-        if(NOT EXISTS "${OSX_LIBARCHIVE_PATH}")
-            message(STATUS "Installing local versions of libarchive and xz")
+        # macOS Big Sur (20.*.*) and Catalina (19.*.*) include libarchive.a 3.3.*
+        # Only need include files
+        string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
+        if(NOT SRCML_BREW_LIBARCHIVE AND OS_VERSION GREATER_EQUAL "19")
 
-            message(STATUS "  Downloading libarchive")
-            file(DOWNLOAD https://www.libarchive.org/downloads/libarchive-3.3.3.tar.gz ${CMAKE_BINARY_DIR}/../libarchive-333.tar.gz)
+            # install via Apple opensource
+            set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+            set(LIBARCHIVE_VERSION "libarchive-83.40.4")
+            set(LIBARCHIVE_URL "https://opensource.apple.com/source/libarchive/${LIBARCHIVE_VERSION}")
+            if(NOT EXISTS ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
+                message("-- Downloading libarchive include files")
+                file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
+                file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive_entry.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive_entry.h)
+            endif()
+            set(LibArchive_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/external)
+            set(LibArchive_INCLUDE_DIR ${LibArchive_INCLUDE_DIRS})
+            set(LibArchive_LIBRARIES libarchive.dylib)
 
-            message(STATUS "  Extracting libarchive")
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf libarchive-333.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E rename libarchive-3.3.3 libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E remove -f libarchive-333.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+        # macOS versions before Catalina only have libarchive 2, and require homebrew
+        # and use a static library
+        elseif(BREW AND EXISTS "${BREW_PREFIX}/opt/libarchive")
 
-            message(STATUS "  Building libarchive")
-            # mimic brew settings: https://github.com/Homebrew/homebrew-core/blob/master/Formula/libarchive.rb
-            execute_process(COMMAND ./configure --without-lzo2 --without-nettle --without-xml2 --without-openssl --with-expat
-                            OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../libarchive)
-            execute_process(COMMAND make OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../libarchive)
+            set(LibArchive_INCLUDE_DIRS ${BREW_PREFIX}/opt/libarchive/include)
+            set(LibArchive_LIBRARIES ${BREW_PREFIX}/opt/libarchive/lib/libarchive.a ${BREW_PREFIX}/lib/libzstd.a ${BREW_PREFIX}/lib/liblz4.a ${BREW_PREFIX}/lib/liblzma.a libbz2.dylib libcompression.dylib libz.dylib libxar.dylib libiconv.dylib libexpat.dylib)
 
-            message(STATUS "  Downloading xz")
-            file(DOWNLOAD https://downloads.sourceforge.net/project/lzmautils/xz-5.2.4.tar.gz ${CMAKE_BINARY_DIR}/../xz-5.2.4.tar.gz)
-
-            message(STATUS "  Extracting xz")
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf xz-5.2.4.tar.gz OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E rename xz-5.2.4 xz WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E remove -f xz-5.2.4.tar.gz libarchive WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/..)
-
-            message(STATUS "  Building xz")
-            # mimic brew settings: https://github.com/Homebrew/homebrew-core/blob/master/Formula/xz.rb
-            execute_process(COMMAND ./configure --disable-debug --disable-dependency-tracking --disable-silent-rules
-                            OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../xz)
-            execute_process(COMMAND make OUTPUT_QUIET WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/../xz)
-
-            message(STATUS "Completed building local versions of libarchive and xz")
+        else()
+            message(FATAL_ERROR "LibArchive >= 3 is required. Install via homebrew\n% brew install libarchive\n")
         endif()
 
-        message(STATUS "Linking to local version of libarchive")
+        # Detect brew antlr2
+        if(BREW AND EXISTS ${BREW_PREFIX}/opt/antlr@2)
+            list(APPEND CMAKE_PREFIX_PATH "${BREW_PREFIX}/opt/antlr@2")
+            include_directories("${BREW_PREFIX}/opt/antlr@2/include")
+        else()
+            message("   Note: antlr2 not found. Please use brew to install antlr2: ")
+            message("      brew install antlr2")
+        endif()
 
-        # different versions of libarchive place the generated libarchive.a in different places
-        find_library(LIBARCHIVE_LOCAL_LIBRARY NAMES libarchive.a PATHS ${OSX_LIBARCHIVE_PATH} PATH_SUFFIXES libarchive /.libs NO_DEFAULT_PATH)
-
-        set(LibArchive_INCLUDE_DIRS ${OSX_LIBARCHIVE_PATH}/libarchive)
-        set(LibArchive_LIBRARIES  ${LIBARCHIVE_LOCAL_LIBRARY} ${CMAKE_BINARY_DIR}/../xz/src/liblzma/.libs/liblzma.a /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
-
-        message(STATUS "  LibArchive_INCLUDE_DIRS:")
-        foreach(library ${LibArchive_INCLUDE_DIRS})
-            message(STATUS "    ${library}")
-        endforeach()
-
-        message(STATUS "  LibArchive_LIBRARIES:")
-        foreach(library ${LibArchive_LIBRARIES})
-            message(STATUS "    ${library}")
-        endforeach()
-
-    # macOS with homebrew
-    elseif(EXISTS "/usr/local/opt/libarchive")
-        set(LibArchive_INCLUDE_DIRS /usr/local/opt/libarchive/include)
-        set(LibArchive_LIBRARIES /usr/local/opt/libarchive/lib/libarchive.a /usr/local/lib/liblzma.a /usr/lib/libbz2.dylib /usr/lib/libcompression.dylib /usr/lib/libz.dylib /usr/lib/libxar.dylib /usr/lib/libiconv.dylib /usr/lib/libexpat.dylib)
-
-    else() 
-        message(FATAL_ERROR "LibArchive >= 3 is required. Either install via homebrew\n% brew install libarchive\nor enable INSTALL_LIBARCHIVE\n% cmake ../srcML ... -DINSTALL_LIBARCHIVE=ON")
     endif()
 
     # Locating packages
@@ -151,12 +135,6 @@ else()
     if(LIBXSLT_FOUND)
         include_directories(${LIBXSLT_INCLUDE_DIR})
         add_definitions(-DWITH_LIBXSLT)
-    endif()
-
-    # Helps with new path on default antlr2 install using homebrew on MacOS Mojave
-    if(EXISTS /usr/local/opt/antlr@2 AND APPLE)
-        list (APPEND CMAKE_PREFIX_PATH "/usr/local/opt/antlr@2")
-        include_directories("/usr/local/opt/antlr@2/include")
     endif()
 
     # Locating the antlr library.
