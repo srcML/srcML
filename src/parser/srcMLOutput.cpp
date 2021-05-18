@@ -86,7 +86,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          size_t ts)
     : input(ints), output_buffer(output_buffer), unit_language(language),
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
-      tabsize(ts)
+      tabsize(std::to_string(ts))
 {
     // open the output text writer stream
     xout = xmlNewTextWriter(output_buffer);
@@ -369,7 +369,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { UNIT_ATTRIBUTE_VERSION, version },
 
         // position tab setting
-        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? std::to_string(tabsize).c_str() : 0 },
+        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? tabsize.c_str() : 0 },
 
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
