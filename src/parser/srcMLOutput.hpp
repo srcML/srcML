@@ -180,7 +180,7 @@ public:
     int openelementcount = 0;
 
     /** the tabstop size */
-    size_t tabsize = 0;
+    std::string tabsize = "0";
 
     /** number of units output or depth into archive */
     int depth = 0;
