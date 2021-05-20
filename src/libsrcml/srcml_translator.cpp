@@ -330,8 +330,12 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
 
     ++output_unit_depth;
 
+    // detect standard URIs and pass them on
     const char* used_uri = nullptr;
-    if (uri == nullptr || strcmp(SRCML_SRC_NS_URI, uri) != 0) {
+    if (uri == nullptr 
+        || (   strcmp(SRCML_SRC_NS_URI, uri)  != 0
+            && strcmp(SRCML_CPP_NS_URI, uri)  != 0
+            && strcmp(SRCML_DIFF_NS_URI, uri) != 0)) {
         used_uri = uri;
     }
 
