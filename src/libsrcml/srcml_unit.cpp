@@ -1049,6 +1049,19 @@ int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const
     if (unit == nullptr || name == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+
+    if (uri && strcmp(SRCML_CPP_NS_URI, uri) == 0) {
+
+        auto&& view = unit->namespaces->get<nstags::uri>();
+        auto it = view.find(SRCML_CPP_NS_URI);
+        if (it != view.end()) {
+            view.modify(it, [](Namespace& thisns){ thisns.flags |= NS_USED; });
+        } else {
+            unit->namespaces->push_back({ prefix, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+        }
+
+    }
+
     if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, uri))
         return SRCML_STATUS_INVALID_INPUT;
 
