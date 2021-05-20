@@ -438,6 +438,8 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     if (state == nullptr)
         return;
 
+    state->cpp_prefix = boost::optional<std::string>();
+
     // collect cpp prefix
     for (int i = 0; i < nb_namespaces; ++i) {
 
