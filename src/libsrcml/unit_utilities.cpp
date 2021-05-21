@@ -70,6 +70,7 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
 
 enum { INSERT, DELETE, COMMON};
 
+/** @todo add handling for versioned attributes */
 std::string extract_revision(const char* srcml, int size, int revision, bool text_only) {
 
     const char* DIFF_PREFIX = "diff:";
@@ -85,8 +86,43 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
         bool inmode = mode.top() == COMMON || (revision == 0 && mode.top() == DELETE) || (revision == 1 && mode.top() == INSERT);
 
         // output previous non-tag text
-        if (inmode)
-            news.append(lp, p - lp);
+        if (inmode) {
+
+            if(!text_only) {
+                news.append(lp, p - lp);
+            } else {
+
+                const char * start_p = lp;
+                while(lp != p) {
+
+                    if(*lp == '&') {
+
+                        // append previous
+                        news.append(start_p, lp - start_p);
+                        ++lp;
+
+                        // determine escape
+                        char new_char = '<';
+                        if(*lp == 'g') {
+                            new_char = '>';
+                        } else if(*lp == 'a') {
+                            new_char = '&';
+                        }
+                        news += new_char;
+
+                        // should always be a ;
+                        while(*lp != ';') {
+                            ++lp;
+                        }
+                        start_p = lp + 1;
+
+                    }
+
+                    ++lp;
+                }
+                news.append(start_p, p - start_p);
+            }
+        }
 
         auto sp = p;
 
@@ -102,16 +138,22 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
                 mode.push(DELETE);
             } else if (strncmp(tstart, "insert", 6) == 0) {
                 mode.push(INSERT);
-            } else {
+            } else if (strncmp(tstart, "ws", 2) != 0) {
                 mode.push(COMMON);
             }
         }
         else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX, strlen(DIFF_PREFIX)) == 0) {
-            mode.pop();
+
+            const char* tstart = sp + 2 + strlen(DIFF_PREFIX);
+
+            if (strncmp(tstart, "ws", 2) != 0) {
+                mode.pop();
+            }
         }
         else {
-            if (inmode && !text_only)
+            if (inmode && !text_only) {
                 news.append(sp, p - sp);
+            }
         }
 
         lp = p;
