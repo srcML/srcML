@@ -1,3 +1,0 @@
-<unit language="C++">
-<expr_stmt><expr><name>${NAME}</name></expr>;</expr_stmt>
-</unit>

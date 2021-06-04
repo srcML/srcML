@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="c_cpp_mode">
+
+<unit language="C++">
+<label><name>mutable</name>:</label>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>.</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>.</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>.</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>.</operator><name>mutable</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>mutable</name><operator>.</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>.*</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>.*</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>.*</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>.*</operator><name>mutable</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>mutable</name><operator>.*</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>-&gt;</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>-&gt;</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>-&gt;</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>-&gt;</operator><name>mutable</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>mutable</name><operator>-&gt;</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>-&gt;*</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>-&gt;*</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>-&gt;*</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><operator>-&gt;*</operator><name>mutable</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>mutable</name><operator>-&gt;*</operator><name>mutable</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>+</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>=</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><index>[<expr><name>mutable</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>mutable</name><index>[<expr><name>mutable</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>mutable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>mutable</name></expr></argument>, <argument><expr><name>mutable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><call><name>foo</name><argument_list>(<argument><expr><name>mutable</name></expr></argument>, <argument><expr><name>mutable</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>&lt;</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>&lt;</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>&lt;</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>&gt;</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>&gt;</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>&gt;</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>~</operator><name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>mutable</name></expr> ?</condition><then> <expr><name>a</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>mutable</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>mutable</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>mutable</name></expr> ?</condition><then> <expr><name>mutable</name></expr> </then><else>: <expr><name>mutable</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>|</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>|</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>mutable</name> <operator>|</operator> <name>mutable</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;</operator> <name>mutable</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>mutable</name> <operator>&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>mutable</name> <operator>&amp;</operator> <name>mutable</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;&amp;</operator> <name>mutable</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>mutable</name> <operator>&amp;&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>mutable</name> <operator>&amp;&amp;</operator> <name>mutable</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<struct_decl>struct <name>mutable</name>;</struct_decl>
+</unit>
+
+<unit language="C++">
+<class_decl>class <name>mutable</name>;</class_decl>
+</unit>
+
+<unit language="C++">
+<union_decl>union <name>mutable</name>;</union_decl>
+</unit>
+
+<unit language="C++">
+<struct>struct <name>mutable</name> <block>{<public type="default"/>}</block>;</struct>
+</unit>
+
+<unit language="C++">
+<class>class <name>mutable</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit language="C++">
+<union>union <name>mutable</name> <block>{<public type="default"/>}</block>;</union>
+</unit>
+
+<unit language="C++">
+<enum_decl>enum <name>mutable</name>;</enum_decl>
+</unit>
+
+<unit language="C++">
+<enum>enum <name>mutable</name> <block>{}</block>;</enum>
+</unit>
+<!--
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>mutable</name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>mutable</name></type> <name>mutable</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>mutable</name> <modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>mutable</name> <modifier>*</modifier></type> <name>mutable</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+-->
+<unit language="C++">
+<decl_stmt><decl><type><specifier>mutable</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><specifier>mutable</specifier></type> <name>mutable</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><specifier>mutable</specifier> <specifier>mutable</specifier></type> <name>mutable</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><specifier>mutable</specifier> <specifier>mutable</specifier> <specifier>mutable</specifier></type> <name>mutable</name></decl>;</decl_stmt>
+</unit>
+<unit language="C++">
+<expr_stmt><expr><call><name>mutable</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>mutable</name><argument_list>(<argument><expr><name>mutable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>mutable</name><argument_list>(<argument><expr><name>mutable</name></expr></argument>, <argument><expr><name>mutable</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><call><name>mutable</name><argument_list>(<argument><expr><name>mutable</name></expr></argument>, <argument><expr><name>mutable</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>mutable</name><argument_list>(<argument><expr><name>mutable</name></expr></argument>, <argument><expr><name>mutable</name></expr></argument>)</argument_list></call><index>[<expr><literal type="number">0</literal></expr>]</index></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>mutable</name><argument_list>(<argument><expr><name>mutable</name></expr></argument>, <argument><expr><name>mutable</name></expr></argument>)</argument_list></call><index>[<expr><name>mutable</name></expr>]</index></expr>;</expr_stmt>
+</unit>
+
+</unit>
