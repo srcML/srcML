@@ -21,6 +21,11 @@
 
 include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
 
+if(NOT CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
+    set(CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG /external:W0)
+    set(CMAKE_INCLUDE_SYSTEM_FLAG_CXX /external:I)
+endif()
+
 if(NOT DYNAMIC_LOAD_ENABLED)
     add_definitions(-DNO_DLLOAD)
 endif()
@@ -35,6 +40,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
     # Download project dependencies
     set(WINDOWS_DEP_FILENAME VS2021_Dependencies-05-26-21.zip)
+    # set(WINDOWS_DEP_FILENAME VS2017_Dependencies-06_20_18.zip)
     set(WINDOWS_DEP_URL http://www.sdml.cs.kent.edu/build/${WINDOWS_DEP_FILENAME})
     if (NOT EXISTS ${WINDOWS_DEP_PATH}/tools) 
         message("-- Download ${WINDOWS_DEP_URL}")
@@ -136,14 +142,45 @@ endif()
 add_compile_options(
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fPIC>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
-    # $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wextra>
-    # $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>
-    # $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-ansi>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wextra>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-ansi>
 
-    # $<$<CXX_COMPILER_ID:MSVC>:/Wall>
+    $<$<CXX_COMPILER_ID:MSVC>:/Wall>
     $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS>  # disable strcpy() warnings
     $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_NONSTDC_NO_WARNINGS> # disable read() warnings
 )
+
+# handle specific warnings
+option(ENABLE_BUILD_WARNINGS "Enable disabled build warnings" OFF)
+if(NOT ENABLE_BUILD_WARNINGS)
+    add_compile_options(
+        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-inline>
+        $<$<CXX_COMPILER_ID:GNU,Clang,Apple>:-Wno-unknown-pragmas>
+        $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wshorten-64-to-32>
+
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4068> # unknown pragma
+        # $<$<CXX_COMPILER_ID:MSVC>:/wd4101> # unreferenced local variable
+        # $<$<CXX_COMPILER_ID:MSVC>:/wd4519> # unmarked inlining notification warning
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4514> # removed inline function not called (in one context)
+            # $<$<CXX_COMPILER_ID:MSVC>:/wd4668> # preprocessor symbol not defined but used in an #if
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4710> # unmarked inlining notification warning
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4820> # byte padding
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5039> # pointer or reference to potentially throwing function passed to 'extern "C"' function under -EHc
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4711> # selected for automatic inline expansion
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4706> # assigment within conditional expression
+
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4625> # copy constructor was implicitly defined as deleted
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4626> # assignment operator was implicitly defined as deleted
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5026> # move constructor was implicitly defined as deleted
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5027> # move assignment operator was implicitly defined as deleted
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4668> # is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4868> # compiler may not enforce left-to-right evaluation order in braced initializer list
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4371> # layout of class may have changed from a previous version of the compiler due to better packing of member
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4623> # default constructor was implicitly defined as deleted
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5045> # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+    )
+endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
