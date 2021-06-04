@@ -27,7 +27,11 @@ set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 file(GLOB PARSE_TESTS *.xml)
 foreach(PATH ${PARSE_TESTS})
     get_filename_component(FILENAME ${PATH} NAME)
-    configure_file(${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} COPYONLY)
+
+    # Set newline at LF since these are srcML files and srcML uses LF (as does XML)
+    # Do not use file(COPY) as it changes the line endings
+    # Do not use COPYFILE_ONLY as it changes the line endings
+    configure_file(${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} NEWLINE_STYLE LF)
 endforeach()
 
 set(TESTFILES)
@@ -95,7 +99,10 @@ endmacro()
 # Generate special transformations
 message(STATUS "  Generating special transformation targets")
 
-configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml COPYONLY)
+# Set newline at LF since these are srcML files and srcML uses LF (as does XML)
+# Do not use file(COPY) as it changes the line endings
+# Do not use COPYFILE_ONLY as it changes the line endings
+configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml NEWLINE_STYLE LF)
 
 add_custom_command(COMMAND ${SRCML_EXE} --language=Java --output-srcml finally_cs.cs.xml -o finally_java.java.xml
                    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/finally_cs.cs.xml
@@ -182,6 +189,7 @@ foreach(GEN ${SUITE})
         # base is C++, so these just get added
         list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C#" "Java")
+
 
     elseif(CATEGORY STREQUAL "LANGUAGE_TRANSFORM")
 
