@@ -202,7 +202,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { SCPP_MACRO_VALUE,            { "value",             CPP,      0,         0,     0,      0 }},
     { SCPP_EMPTY,                  { "empty",             CPP,      0,         0,     0,      0 }},
 
-#if DEBUG
+#ifdef DEBUG
     { SMARKER,                     { "marker",            SRC, "item",         0,     0,      0 }},
 #endif
 

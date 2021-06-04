@@ -117,10 +117,17 @@
  */
 
 header "pre_include_hpp" {
+
+#ifndef _MSC_VER
     #pragma GCC diagnostic ignored "-Wunknown-pragmas"
     #pragma GCC diagnostic ignored "-Wunknown-warning-option"
     #pragma GCC diagnostic ignored "-Wunused-parameter"
     #pragma GCC diagnostic ignored "-Wcatch-value"
+#else
+    #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+    #pragma warning(disable : 4100)  // 'pe' unreferenced local variable
+    #pragma warning(disable : 4101)  // 'pe' unreferenced local variable
+#endif
 }
 
 // Included in the generated srcMLParser.hpp file after antlr includes
@@ -132,8 +139,8 @@ header "post_include_hpp" {
 #include <deque>
 #include <array>
 #include <stack>
-#include "Language.hpp"
-#include "ModeStack.hpp"
+#include <Language.hpp>
+#include <ModeStack.hpp>
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
 #include <srcml.h>
@@ -1083,7 +1090,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
 ;
 
 // efficient way to view the token after the current LA(1)
-next_token[] returns [int token] {
+next_token[] returns [unsigned int token] {
 
         if (LT(1)->getColumn() == current_column && LT(1)->getLine() == current_line) {
 
@@ -1136,7 +1143,7 @@ next_token_check[int token1, int token2] returns [bool result] {
 // skips past any skiptokens to get the one after
 look_past[int skiptoken] returns [int token] {
 
-        int place = mark();
+        unsigned int place = mark();
         inputState->guessing++;
 
         while (LA(1) == skiptoken)
@@ -2834,7 +2841,7 @@ namespace_directive[] { ENTRY_DEBUG } :
         USING
 ;
 
-using_aliasing[]  { int type_count;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+using_aliasing[]  { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
@@ -9273,9 +9280,6 @@ cpp_check_end[] returns[bool is_end = false] {
 
  if (LA(1) == EOL || LA(1) == LINE_COMMENT_START || LA(1) == BLOCK_COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF || LA(1) == 1)  /* EOF */
      return true;
-
- return false;
-
 }:;
 
 // skip to eol
@@ -9429,8 +9433,13 @@ eol_post[int directive_token, bool markblockzero] {
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
                 // Leaving off for now, with no option. Test thoroughly, and then turn on by default
+#ifdef _MSC_VER
+#   pragma warning (push, 0)
+#endif
                 if (false && !inputState->guessing) {
-
+#ifdef _MSC_VER
+    #pragma warning (pop)
+#endif
                     for (auto& item : cppif_end_count_check()) {
 
                         if (item == RCURLY) {

@@ -37,7 +37,7 @@
 #include <cmath>
 #include <TraceLog.hpp>
 
-#ifndef _MSC_BUILD
+#ifndef _MSC_VER
 #include <sys/uio.h>
 #include <unistd.h>
 #endif
@@ -168,7 +168,7 @@ See `srcml --help` for more information.
                                << "Real Time: " << realtime << "ms\n";
         if (TraceLog::totalLOC() > 0) {
             SRCMLstatus(DEBUG_MSG) << "LOC: " << TraceLog::totalLOC() << '\n'
-                                   << "KLOC/s: " << (realtime > 0 ? std::round(TraceLog::totalLOC() / realtime) : 0) << '\n';
+                                   << "KLOC/s: " << (realtime > 0 ? std::round((double) TraceLog::totalLOC() / realtime) : 0) << '\n';
         }
 
         SRCMLstatus(DEBUG_MSG) << "Status: " << (SRCMLStatus::errors() ? 1 : 0) << '\n';

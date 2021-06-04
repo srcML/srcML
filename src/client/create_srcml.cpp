@@ -36,7 +36,7 @@
 #include <TraceLog.hpp>
 #include <input_file.hpp>
 #include <input_curl.hpp>
-#include <iostream>
+// #include <iostream>
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
 #include <ParserTest.hpp>
@@ -61,8 +61,18 @@ int srcml_handler_dispatch(ParseQueue& queue,
         }
 
         // may have some compressions/archives
-        if (!uninput.compressions.empty() || !uninput.archives.empty())
+        if (!uninput.compressions.empty() || !uninput.archives.empty()) {
+
+#if WIN32
+            // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
+            // or cut short. 
+            // So for Windows, convert to a FILE*. Note sure when to close the FILE*
+            uninput.fileptr = fdopen(*(uninput.fd), "r");
+            uninput.fd = boost::none;
+#endif
+
             uninput.fd = input_archive(uninput);
+        }
 
         return srcml_input_srcml(queue, srcml_arch, srcml_request, uninput, srcml_request.revision);
     }
@@ -90,11 +100,6 @@ int srcml_handler_dispatch(ParseQueue& queue,
     }
 
     srcml_input_src uninput = input;
-
-    // input must go through libcurl pipe
-    if (curl_supported(uninput.protocol) && uninput.protocol != "file" && !input_curl(uninput)){
-        return -1;
-    }
 
     return src_input_libarchive(queue, srcml_arch, srcml_request, uninput);
 }
@@ -241,26 +246,26 @@ void create_srcml(const srcml_request_t& srcml_request,
     // register file extension
     for (const auto& ext : srcml_request.language_ext) {
         auto pos = ext.find('=');
-        const auto& extension = ext.substr(0, pos);
-        const auto& language = ext.substr(pos+1);
-        if (srcml_archive_register_file_extension(srcml_arch.get(), extension.c_str(), language.c_str()) != SRCML_STATUS_OK) {
-            SRCMLstatus(ERROR_MSG, "srcml: unable to register file extension '%s' for language '%s' for srcml archive", extension, language);
+        const auto& registerExtension = ext.substr(0, pos);
+        const auto& registerLanguage = ext.substr(pos+1);
+        if (srcml_archive_register_file_extension(srcml_arch.get(), registerExtension.c_str(), registerLanguage.c_str()) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to register file extension '%s' for language '%s' for srcml archive", registerExtension, registerLanguage);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
 
     // register xml namespaces
     for (const auto& ns : srcml_request.xmlns_namespaces) {
-        const auto& prefix = ns.first;
-        const auto& uri = ns.second;
-        if (srcml_archive_register_namespace(srcml_arch.get(), prefix.c_str(), uri.c_str()) != SRCML_STATUS_OK) {
-            SRCMLstatus(ERROR_MSG, "srcml: unable to register namespace '%s:%s' for srcml archive", prefix, uri);
+        const auto& namespacePrefix = ns.first;
+        const auto& namespaceURI = ns.second;
+        if (srcml_archive_register_namespace(srcml_arch.get(), namespacePrefix.c_str(), namespaceURI.c_str()) != SRCML_STATUS_OK) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to register namespace '%s:%s' for srcml archive", namespacePrefix, namespaceURI);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
 
     // iterate through all transformations added during cli parsing
-    int xpath_index = -1;
+    std::size_t xpath_index = 0;
     for (const auto& trans : srcml_request.transformations) {
 
         std::string protocol;
@@ -268,7 +273,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         std::tie(protocol, resource) = src_prefix_split_uri(trans);
 
         if (protocol == "xpath") {
-            if (apply_xpath(srcml_arch.get(), srcml_arch.get(), resource, srcml_request.xpath_query_support[++xpath_index], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
+            if (apply_xpath(srcml_arch.get(), srcml_arch.get(), resource, srcml_request.xpath_query_support[xpath_index++], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
                 exit(1);
             }
 
@@ -360,6 +365,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         srcml_archive_close(srcml_arch.get());
     }
 
-    if (destination.fd)
+    // don't close stdout
+    if (destination.fd && (*destination.fd != 1))
         close(*destination.fd);
 }

@@ -23,10 +23,17 @@
 #ifndef SRCML_CLI_HPP
 #define SRCML_CLI_HPP
 
-#include <srcml.h>
+// #include <srcml.h>
 #include <string>
 #include <vector>
+#ifdef _MSC_VER
+#    pragma warning(push,0)
+#    pragma warning(disable : 4619)
+#endif
 #include <boost/optional.hpp>
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
 #include <iostream>
 #include <utility>
 #include <map>
@@ -115,7 +122,7 @@ struct element {
 struct srcml_request_t {
     srcml_input_t input_sources;
 
-    boost::optional<int> stdindex;
+    boost::optional<std::size_t> stdindex;
 
     int command = 0;
     boost::optional<int> markup_options;
@@ -129,7 +136,7 @@ struct srcml_request_t {
 
     boost::optional<std::string> src_encoding;
 
-    boost::optional<int> eol;
+    boost::optional<size_t> eol;
 
     boost::optional<std::string> external;
 
@@ -138,7 +145,7 @@ struct srcml_request_t {
     //filelist:// prefix
     std::vector<std::string> files_from;
     std::vector<std::string> language_ext;
-    int tabs;
+    size_t tabs;
 
     // xml namespaces
     boost::optional<std::string> xmlns_prefix_query;

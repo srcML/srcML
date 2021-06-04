@@ -31,7 +31,7 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
     for (int pos = 0; pos < num_attributes; ++pos) {
 
         std::string attribute = (const char*) attributes[pos * 5];
-        std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
+        std::string value((const char *)attributes[pos * 5 + 3], static_cast<size_t>(attributes[pos * 5 + 4] - attributes[pos * 5 + 3]));
 
         if (attribute == "timestamp")
             srcml_unit_set_timestamp(unit, value.c_str());
@@ -70,7 +70,6 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
 
 enum { INSERT, DELETE, COMMON};
 
-/** @todo add handling for versioned attributes */
 std::string extract_revision(const char* srcml, int size, int revision, bool text_only) {
 
     const char* DIFF_PREFIX = "diff:";
@@ -81,53 +80,18 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
     std::string news;
     const char* p = srcml;
     const char* lp = p;
-    while ((p = (const char*) memchr(p, '<', size - (p - srcml)))) {
+    while ((p = (const char*) memchr(p, '<', static_cast<size_t>(size - (p - srcml))))) {
 
         bool inmode = mode.top() == COMMON || (revision == 0 && mode.top() == DELETE) || (revision == 1 && mode.top() == INSERT);
 
         // output previous non-tag text
-        if (inmode) {
-
-            if(!text_only) {
-                news.append(lp, p - lp);
-            } else {
-
-                const char * start_p = lp;
-                while(lp != p) {
-
-                    if(*lp == '&') {
-
-                        // append previous
-                        news.append(start_p, lp - start_p);
-                        ++lp;
-
-                        // determine escape
-                        char new_char = '<';
-                        if(*lp == 'g') {
-                            new_char = '>';
-                        } else if(*lp == 'a') {
-                            new_char = '&';
-                        }
-                        news += new_char;
-
-                        // should always be a ;
-                        while(*lp != ';') {
-                            ++lp;
-                        }
-                        start_p = lp + 1;
-
-                    }
-
-                    ++lp;
-                }
-                news.append(start_p, p - start_p);
-            }
-        }
+        if (inmode)
+            news.append(lp, static_cast<size_t>(p - lp));
 
         auto sp = p;
 
         // skip to end of tag
-        p = (const char*) memchr(p, '>', size - (p - srcml));
+        p = (const char*) memchr(p, '>', static_cast<size_t>(size - (p - srcml)));
         ++p;
 
         if (strncmp(sp + 1, DIFF_PREFIX, strlen(DIFF_PREFIX)) == 0) {
@@ -138,22 +102,16 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
                 mode.push(DELETE);
             } else if (strncmp(tstart, "insert", 6) == 0) {
                 mode.push(INSERT);
-            } else if (strncmp(tstart, "ws", 2) != 0) {
+            } else {
                 mode.push(COMMON);
             }
         }
         else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX, strlen(DIFF_PREFIX)) == 0) {
-
-            const char* tstart = sp + 2 + strlen(DIFF_PREFIX);
-
-            if (strncmp(tstart, "ws", 2) != 0) {
-                mode.pop();
-            }
+            mode.pop();
         }
         else {
-            if (inmode && !text_only) {
-                news.append(sp, p - sp);
-            }
+            if (inmode && !text_only)
+                news.append(sp, static_cast<size_t>(p - sp));
         }
 
         lp = p;
@@ -189,7 +147,7 @@ std::string extract_src(const std::string& srcml, boost::optional<int> revision)
         if (scontext == nullptr)
             return;
 
-        scontext->s.append((const char*) ch, len);
+        scontext->s.append((const char*) ch, static_cast<size_t>(len));
     };
 
     charactersax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* /* prefix */, const xmlChar* URI,
@@ -204,9 +162,10 @@ std::string extract_src(const std::string& srcml, boost::optional<int> revision)
             return;
 
         if (strcmp((const char*) localname, "escape") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
-            std::string svalue((const char *)attributes[0 * 5 + 3], attributes[0 * 5 + 4] - attributes[0 * 5 + 3]);
+            std::string svalue((const char *)attributes[0 * 5 + 3], static_cast<std::size_t>(attributes[0 * 5 + 4] - attributes[0 * 5 + 3]));
 
-            char value = (int)strtol(svalue.c_str(), NULL, 0);
+            // use strtol() instead of atoi() since strtol() understands hex encoding of '0x0?'
+            char value = (char)strtol(svalue.c_str(), NULL, 0);
 
             scontext->s.append(1, value);
 

@@ -22,19 +22,26 @@
 
 header "pre_include_hpp" {
     #include <cstring>
+#ifndef _MSC_VER
     #pragma GCC diagnostic ignored "-Wunknown-pragmas"
     #pragma GCC diagnostic ignored "-Wunknown-warning-option"
     #pragma GCC diagnostic ignored "-Wunused-parameter"
-    #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+    #pragma GCC diagnostic ignored "-Wcatch-value"
+#else
+    #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+    #pragma warning(disable : 4101)  // 'pe' unreferenced local variable
+    #pragma warning(disable : 4456)  // declaration of 'theRetToken' hides previous local declaration
+    #pragma warning(disable : 4242) // 'argument': conversion from 'int' to 'char'
+#endif
 }
 
 header {
     #include <string>
-    #include "Language.hpp"
-    #include "UTF8CharBuffer.hpp"
-    #include "antlr/TokenStreamSelector.hpp"
-    #include "CommentTextLexer.hpp"
-    #include "srcMLToken.hpp"
+    #include <Language.hpp>
+    #include <UTF8CharBuffer.hpp>
+    #include <antlr/TokenStreamSelector.hpp>
+    #include <CommentTextLexer.hpp>
+    #include <srcMLToken.hpp>
     #include <srcml_types.hpp>
     #include <srcml_macros.hpp>
     #include <srcml.h>

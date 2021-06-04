@@ -36,7 +36,7 @@
 #include <archive_entry.h>
 
 #include <stdio.h>
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
     #include <direct.h>
 #else
     #include <unistd.h>

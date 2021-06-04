@@ -24,7 +24,14 @@
 #define INCLUDED_SAX2_SRCSAX_HANDLER_HPP
 
 #include <srcsax.hpp>
+#ifdef _MSC_VER
+#    pragma warning(push,0)
+#    pragma warning(disable : 4619)
+#endif
 #include <boost/optional.hpp>
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
 
 #include <libxml/parser.h>
 

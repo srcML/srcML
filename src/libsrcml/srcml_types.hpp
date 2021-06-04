@@ -1,4 +1,3 @@
-
 /**
  * @file srcml_types.hpp
  *
@@ -61,8 +60,14 @@ const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_ARCHIVE | SRCM
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
 
+#ifdef _MSC_VER
+#    pragma warning(push,0)
+#    pragma warning(disable : 4619)
+#endif
 #include <boost/optional.hpp>
-
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
 #include <string>
 #include <vector>
 

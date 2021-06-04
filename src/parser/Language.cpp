@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "Language.hpp"
+#include <Language.hpp>
 #include <algorithm>
 
 /** static size of lang2int */

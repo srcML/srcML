@@ -28,11 +28,10 @@
 #include <iterator>
 #include <map>
 #include <string>
+#include <stdio.h>
 #include <cstring>
 
-#ifndef _MSC_BUILD
-#include <unistd.h>
-#else
+#ifdef _MSC_VER
 #include <io.h>
 #endif
 
@@ -59,7 +58,7 @@ namespace {
 #endif
         iconv_close(ce);
 
-        return trivial;
+        return trivial != 0;
     }
 #if 0
     std::string estimateEncoding(const std::vector<char>& buffer) {
@@ -91,7 +90,7 @@ namespace {
     std::string normalizeEncodingName(const char* name) {
 
         std::string str = name;
-        std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+        std::transform(str.begin(), str.end(), str.begin(), [](char c){ return static_cast<char>(std::toupper(c)); });
 
         auto search = encodingAliases.find(str);
         if (search == encodingAliases.end())
@@ -116,7 +115,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::opt
     this->encoding = encoding ? normalizeEncodingName(encoding) : "";
 
     if (hashneeded) {
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
         BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
         if(!success && GetLastError() == NTE_BAD_KEYSET)
             success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
@@ -149,7 +148,13 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool
     // setup callbacks, wrappers around read() and close()
     sio.context = new Context<int>(fd);
     sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
+#ifndef WIN32
         return read(static_cast<Context<int>*>(context)->value, buf, insize);
+#else
+        if (insize > UINT_MAX)
+            return -1;
+        return read(static_cast<Context<int>*>(context)->value, buf, static_cast<unsigned int>(insize));
+#endif
     };
     sio.close_callback = [](void* context) -> int {
         int fd = static_cast<Context<int>*>(context)->value;
@@ -209,7 +214,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded
         if (result == 0 && feof((FILE*) context) != 1)
             return -1;
         else
-            return (size_t) result;
+            return (ssize_t) result;
     };
     sio.close_callback = [](void*) -> int { return 0; };
 }
@@ -230,8 +235,14 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, bo
 
     // setup callbacks, wrappers around read()
     sio.context = new Context<int>(fd);
-    sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
-        return read(static_cast<Context<int>*>(context)->value, buf, insize);
+    sio.read_callback = [](void* context, void* buf, size_t readsize) -> ssize_t {
+#ifndef WIN32
+        return read(static_cast<Context<int>*>(context)->value, buf, readsize);
+#else
+        if (readsize > UINT_MAX)
+            return -1;
+        return read(static_cast<Context<int>*>(context)->value, buf, static_cast<unsigned int>(readsize));
+#endif
     };
     sio.close_callback = [](void* context) -> int {
         delete static_cast<Context<int>*>(context);
@@ -265,7 +276,7 @@ UTF8CharBuffer::UTF8CharBuffer(void* context, srcml_read_callback read_callback,
  *
  * Read and process the next sequence of data.
  */
-ssize_t UTF8CharBuffer::readChars() {
+size_t UTF8CharBuffer::readChars() {
 
     // read more data into raw (may already be data in there)
     if (insize == 0 || pos >= insize) {
@@ -276,24 +287,24 @@ ssize_t UTF8CharBuffer::readChars() {
         // use the provided callback
         // the entire input buffer may not be available because of incomplete multi-byte sequences
         // from a previous read
-        ssize_t insize = sio.read_callback ? (int) sio.read_callback(sio.context, raw.data() + inbytesleft, raw.size() - inbytesleft) : 0;
-        if (insize == -1) {
+        auto readsize = sio.read_callback ? (int) sio.read_callback(sio.context, raw.data() + inbytesleft, raw.size() - inbytesleft) : 0;
+        if (readsize == -1) {
             fprintf(stderr, "Error reading: %s", strerror(errno));
             return 0;
         }
 
         // EOF
-        if (insize == 0) {
+        if (readsize == 0) {
             return 0;
         }
 
         // new size is the number of bytes read in, plus any incomplete multibyte sequences from previous
-        raw.resize(insize + inbytesleft);
+        raw.resize(readsize + inbytesleft);
     }
 
     // hash only the read data, not the inbytesleft (from previous call)
     if (hashneeded) {
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
         CryptHashData(crypt_hash, (BYTE *)raw.data() + inbytesleft, (DWORD) (raw.size() - inbytesleft), 0);
 #else
         SHA1_Update(&ctx, raw.data() + inbytesleft, (SHA_LONG) (raw.size() - inbytesleft));
@@ -380,13 +391,13 @@ ssize_t UTF8CharBuffer::readChars() {
         // raw input characters
         // after call to iconv(), linbuf will point to start of any
         // incomplete multibyte sequences that were not cooked
-        char* linbuf = raw.data();
+        auto linbuf = raw.data();
         inbytesleft = raw.size();
 
         // cooked (encoded in UTF-8) input characters
         // full output buffer is available since all previous characters have been processed
         cooked.resize(cooked_size);
-        char* loutbuf = cooked.data();
+        auto loutbuf = cooked.data();
         size_t outbytesleft = cooked.size();
 
         // convert from raw characters to cooked, encoded in UTF-8 characters
@@ -424,9 +435,6 @@ ssize_t UTF8CharBuffer::readChars() {
  */
 int UTF8CharBuffer::getChar() {
 
-    // has to be int to handle -1 return value
-    unsigned char c = 0;
-
     // may need more characters
     if (insize == 0 || pos >= insize) {
 
@@ -439,7 +447,7 @@ int UTF8CharBuffer::getChar() {
 
     // read the next char either from the current input buffer (for a trivial, no-iconv needed)
     // or from the iconv'ed output buffer
-    c = (trivial ? raw : cooked)[pos];
+    unsigned char c = static_cast<unsigned char>((trivial ? raw : cooked)[pos]);
     ++pos;
 
     // sequence "\r\n" where the '\r'
@@ -493,7 +501,7 @@ UTF8CharBuffer::~UTF8CharBuffer() {
     if (hashneeded) {
         unsigned char md[20];
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
         DWORD        SHA_DIGEST_LENGTH;
         DWORD        hash_length_size = sizeof(DWORD);
         CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);

@@ -27,15 +27,23 @@
 #ifndef SRCMLOUTPUT_HPP
 #define SRCMLOUTPUT_HPP
 
-#include "antlr/Token.hpp"
-#include "srcMLParserTokenTypes.hpp"
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable : 4619)
+#endif
+#include <antlr/Token.hpp>
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
+#include <srcMLParserTokenTypes.hpp>
 #include <antlr/TokenStream.hpp>
-#include "StreamMLParser.hpp"
-#include "TokenStream.hpp"
-#include "srcMLException.hpp"
+#include <StreamMLParser.hpp>
+#include <TokenStream.hpp>
+
+#include <srcMLException.hpp>
 #include <string>
 #include <unordered_map>
-#include "srcmlns.hpp"
+#include <srcmlns.hpp>
 #include <libxml/xmlwriter.h>
 
 /**
@@ -180,7 +188,7 @@ public:
     int openelementcount = 0;
 
     /** the tabstop size */
-    std::string tabsize = "0";
+    size_t tabsize = 0;
 
     /** number of units output or depth into archive */
     int depth = 0;
@@ -188,7 +196,7 @@ public:
     /** user defined macro list */
     std::vector<std::string> user_macro_list;
 
-    void outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth);
+    void outputNamespaces();
 
     void setMacroList(std::vector<std::string> & list);
 

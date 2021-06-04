@@ -24,9 +24,9 @@
   Output of the XML format based on srcMLParser
 */
 
-#include "srcMLOutput.hpp"
-#include "srcMLToken.hpp"
-#include "srcmlns.hpp"
+#include <srcMLOutput.hpp>
+#include <srcMLToken.hpp>
+#include <srcmlns.hpp>
 #include <srcml.h>
 
 // Definition of elements, including name, URI, attributes, and special processing
@@ -86,7 +86,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          size_t ts)
     : input(ints), output_buffer(output_buffer), unit_language(language),
       options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
-      tabsize(std::to_string(ts))
+      tabsize(ts)
 {
     // open the output text writer stream
     xout = xmlNewTextWriter(output_buffer);
@@ -235,15 +235,11 @@ void srcMLOutput::outputProcessingInstruction() {
 }
 
 /**
- * outputNamesapces
- * @param xout the xml writer to write namespaces
- * @param options the current set options
- * @param depth the depth in the archive number of output units
- * @param outer is this an outer unit or inner unit
+ * outputNamespaces
  *
  * Output the namespaces on the units.
  */
-void srcMLOutput::outputNamespaces(xmlTextWriterPtr xout, const OPTION_TYPE& options, int depth) {
+void srcMLOutput::outputNamespaces() {
 
     // based on options, turn on specific namespaces (i.e., mark as used)
     auto& view = namespaces.get<nstags::uri>();
@@ -324,7 +320,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
 
     // output namespaces for root and nested units
     if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
-        outputNamespaces(xout, options, depth);
+        outputNamespaces();
     }
 
     // setup for tabs if used
@@ -369,7 +365,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { UNIT_ATTRIBUTE_VERSION, version },
 
         // position tab setting
-        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? tabsize.c_str() : 0 },
+        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? std::to_string(tabsize).c_str() : 0 },
 
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },

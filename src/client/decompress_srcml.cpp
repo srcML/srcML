@@ -80,7 +80,15 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
         if (!input_curl(uninput))
             exit(1);
 
-        status = archive_read_open_fd(libarchive_srcml.get(), uninput, buffer_size);
+#if WIN32
+        // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
+        // or cut short. 
+        // So for Windwos, convert to a FILE*. Note sure when to close the FILE*
+        FILE* f = fdopen(*(uninput.fd), "r");
+        status = archive_read_open_FILE(libarchive_srcml.get(), f);
+#else
+        status = archive_read_open_fd(libarchive_srcml.get(), *(uninput.fd), buffer_size);
+#endif
 
     } else {
 

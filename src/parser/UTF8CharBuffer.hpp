@@ -36,7 +36,7 @@
 #include <iconv.h>
 #include <sha1utilities.hpp>
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
 #include <BaseTsd.h>
 typedef SSIZE_T ssize_t;
 #include <wincrypt.h>
@@ -65,7 +65,14 @@ typedef SSIZE_T ssize_t;
 #include <openssl/sha.h>
 #endif
 
+#ifdef _MSC_VER
+#    pragma warning(push,0)
+#    pragma warning(disable : 4619)
+#endif
 #include <boost/optional.hpp>
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
 
 /**
  * UTF8FileError
@@ -129,7 +136,7 @@ public:
 private:
     UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t outbuf_size);
 
-    ssize_t readChars();
+    size_t readChars();
 
     /* position currently at in input buffer */
     size_t pos = 0;
@@ -148,7 +155,7 @@ private:
 
     int lastchar = 0;
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
     /** msvc hash provider object */
     HCRYPTPROV   crypt_provider;
     /** msvc hash object */
@@ -168,7 +175,7 @@ private:
     std::vector<char> cooked;
 
     /** number of encoded characters */
-    ssize_t cooked_size = 0;
+    size_t cooked_size = 0;
 
     /** store encoding for later queries */
     std::string encoding;

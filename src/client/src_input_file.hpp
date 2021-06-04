@@ -23,9 +23,7 @@
 #ifndef SRC_INPUT_FILE_HPP
 #define SRC_INPUT_FILE_HPP
 
-#include <srcml.h>
 #include <srcml_cli.hpp>
-#include <string>
 #include <ParseQueue.hpp>
 
 int src_input_file(ParseQueue& queue,

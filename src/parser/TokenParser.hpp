@@ -29,7 +29,7 @@
  *
  * In order to use:
  *
- * Put a @code#include "tokenparser.h"@endcode in your grammar file
+ * Put a @code#include <TokenParser.hpp>@endcode in your grammar file
  *
  * Define a symbol(?) start.  Include in it all the cases
  * that you want to use:

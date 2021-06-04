@@ -24,8 +24,6 @@
 #include <srcml.h>
 #include <archive.h>
 #include <archive_entry.h>
-#include <stdlib.h>
-#include <cstdio>
 #include <string>
 #include <SRCMLStatus.hpp>
 #include <memory>
@@ -63,7 +61,11 @@ void src_output_libarchive(srcml_archive* srcml_arch, archive* src_archive) {
 
         // setup the entry
         archive_entry_set_pathname(entry.get(), newfilename.c_str());
-        archive_entry_set_size(entry.get(), buffer_size);
+        if (buffer_size > INT_MAX) {
+            SRCMLstatus(ERROR_MSG, "Internal error and unable to save " + newfilename + " to source archive");
+            break;
+        }
+        archive_entry_set_size(entry.get(), static_cast<int>(buffer_size));
         archive_entry_set_filetype(entry.get(), AE_IFREG);
         archive_entry_set_perm(entry.get(), 0644);
 

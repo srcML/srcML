@@ -24,12 +24,20 @@
   Class for straight forward translation from source code to srcML
 */
 
-#include "srcml_translator.hpp"
-#include "KeywordLexer.hpp"
-#include "srcMLParser.hpp"
-#include "StreamMLParser.hpp"
-#include "srcMLOutput.hpp"
-#include "srcmlns.hpp"
+#ifdef _MSC_VER
+#   pragma warning(push, 0)
+#   pragma warning(disable : 5204)
+#   pragma warning(disable : 4355)
+#endif
+#include <srcml_translator.hpp>
+#include <KeywordLexer.hpp>
+#include <srcMLParser.hpp>
+#include <StreamMLParser.hpp>
+#include <srcMLOutput.hpp>
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
+#include <srcmlns.hpp>
 #include <srcml_types.hpp>
 #include <unit_utilities.hpp>
 
@@ -219,12 +227,12 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
         }
     }
 
-    std::string language = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
+    std::string derivedLanguage = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
 
     // create a new unit start tag with all new info (hash value, namespaces actually used, etc.)
     out.initNamespaces(mergedns);
     auto nrevision = unit->archive->revision_number;
-    out.startUnit(language.c_str(),
+    out.startUnit(derivedLanguage.c_str(),
             (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->c_str() : revision,
             (options & SRCML_OPTION_ARCHIVE) || !unit->url       ? 0 : (nrevision ? attribute_revision(*unit->url, (int) *nrevision).c_str() : unit->url->c_str()),
             !unit->filename  ? 0 : (nrevision ? attribute_revision(*unit->filename, (int) *nrevision).c_str() : unit->filename->c_str()),
@@ -330,12 +338,8 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
 
     ++output_unit_depth;
 
-    // detect standard URIs and pass them on
     const char* used_uri = nullptr;
-    if (uri == nullptr 
-        || (   strcmp(SRCML_SRC_NS_URI, uri)  != 0
-            && strcmp(SRCML_CPP_NS_URI, uri)  != 0
-            && strcmp(SRCML_DIFF_NS_URI, uri) != 0)) {
+    if (uri == nullptr || strcmp(SRCML_SRC_NS_URI, uri) != 0) {
         used_uri = uri;
     }
 

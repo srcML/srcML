@@ -27,14 +27,14 @@
 #define INCLUDED_STREAM_MLPARSER_HPP
 
 #include <antlr/TokenStream.hpp>
-#include "TokenStream.hpp"
+#include <TokenStream.hpp>
 
 #include <deque>
 #include <stack>
 #include <cassert>
 
-#include "srcMLToken.hpp"
-#include "srcMLParser.hpp"
+#include <srcMLToken.hpp>
+#include <srcMLParser.hpp>
 
 /**
  * StreamMLParser
@@ -787,7 +787,7 @@ private:
      *
      * Push the a token onto the correct buffer.
      */
-    inline void pushCorrectToken(const antlr::RefToken& rtoken) {
+    inline void pushCorrectToken(const antlr::RefToken& /* rtoken */) {
 
         if (isSkipToken(srcMLParser::LA(1)))
 

@@ -24,7 +24,6 @@
 #include <srcml_options.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_prefix.hpp>
-#include <ctype.h>
 #include <cstring>
 
 static int hex2decimal(unsigned char c) {
@@ -130,7 +129,7 @@ int src_input_text(ParseQueue& queue,
                     int value = 0;
                     int offset = 0;
                     while (offset < 2 && isxdigit(*(epos + offset + 1))) {
-                        value = hex2decimal(*(epos + offset + 1)) + 16 * value;
+                        value = hex2decimal((unsigned char) *(epos + offset + 1)) + 16 * value;
                         ++offset;
                     }
                     if (offset == 0) {
@@ -147,7 +146,7 @@ int src_input_text(ParseQueue& queue,
                         goto end;
                     }
 
-                    prequest->buffer.push_back(value);
+                    prequest->buffer.push_back((char) value);
 
                     epos += offset;
                     break;
@@ -199,7 +198,7 @@ int src_input_text(ParseQueue& queue,
                         goto end;
                     }
 
-                    prequest->buffer.push_back(value);
+                    prequest->buffer.push_back(static_cast<char>(value));
 
                     epos += offset - 1;
                     break;

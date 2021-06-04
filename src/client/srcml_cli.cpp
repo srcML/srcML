@@ -22,7 +22,6 @@
 
 #include <srcml_cli.hpp>
 #include <src_prefix.hpp>
-#include <stdlib.h>
 #include <SRCMLStatus.hpp>
 #include <algorithm>
 
@@ -414,7 +413,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     app.add_option_function<std::string>("--eol", [&](std::string value) {
 
-        std::transform(value.begin(), value.end(), value.begin(), ::tolower);
+        std::transform(value.begin(), value.end(), value.begin(), [](char c){ return static_cast<char>(std::tolower(c)); });
 
         if (value == "auto") {
             srcml_request.eol = SOURCE_OUTPUT_EOL_AUTO;

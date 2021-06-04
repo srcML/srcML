@@ -289,7 +289,7 @@ int srcml_archive_set_options(struct srcml_archive* archive, size_t options) {
         archive->options |= SRCML_OPTION_CPP_DECLARED;
     }
 
-    int modoption = options % (1<<7);
+    OPTION_TYPE modoption = options % (1<<7);
 
     archive->options = modoption;
 
@@ -383,7 +383,7 @@ int srcml_archive_enable_option(struct srcml_archive* archive, size_t option) {
         archive->options |= SRCML_OPTION_CPP_DECLARED;
     }
 
-    int modoption = option % (1<<7);
+    OPTION_TYPE modoption = option % (1<<7);
 
     archive->options |= modoption;
 
@@ -405,7 +405,7 @@ int srcml_archive_disable_option(struct srcml_archive* archive, size_t option) {
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    int modoption = option % (1<<7);
+    OPTION_TYPE modoption = option % (1<<7);
 
     archive->options &= ~modoption;
 
@@ -654,7 +654,7 @@ const char* srcml_archive_get_version(const struct srcml_archive* archive) {
  */
 int srcml_archive_get_options(const struct srcml_archive* archive) {
 
-    return archive ? (archive->options % (1<<7)) : 0;
+    return archive ? static_cast<int>(archive->options % (1<<7)) : 0;
 }
 
 /**

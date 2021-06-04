@@ -42,7 +42,7 @@ public:
     void (*srcsax_error)(const char* message, int error_code);
 
     /** is the document an archive */
-    int is_archive;
+    bool is_archive;
 
     /** the xml documents encoding */
     const char* encoding;
