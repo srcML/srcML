@@ -34,7 +34,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(WINDOWS_DEP_PATH ${PROJECT_BINARY_DIR}/deps)
 
     # Download project dependencies
-    set(WINDOWS_DEP_FILENAME VS2017_Dependencies-06_20_18.zip)
+    set(WINDOWS_DEP_FILENAME VS2021_Dependencies-05-26-21.zip)
     set(WINDOWS_DEP_URL http://www.sdml.cs.kent.edu/build/${WINDOWS_DEP_FILENAME})
     if (NOT EXISTS ${WINDOWS_DEP_PATH}/tools) 
         message("-- Download ${WINDOWS_DEP_URL}")
