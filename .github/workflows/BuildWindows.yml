@@ -1,0 +1,26 @@
+---
+name: Build Windows
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - uses: microsoft/setup-msbuild@v1
+
+      - shell: bash
+        run: mkdir build
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          export EXTERNAL_INCLUDE="C:\Program Files (x86)\Windows Kits\10\Include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30037\include"
+          cmake .. -DBUILD_LIBSRCML_TESTS=OFF
+          cmake --build . --verbose --config Release
