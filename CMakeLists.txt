@@ -21,6 +21,11 @@
 
 cmake_minimum_required(VERSION 3.14)
 
+# Handles problem of commandline tools interfering with Xcode includes
+if(APPLE)
+    set(PKG_CONFIG_EXECUTABLE "/usr/bin/true")
+endif()
+
 # Set libsrcml version from src/libsrcml/srcml.h
 # Extract this first because manually setting major, minor, and patch leads to bugs
 file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER REGEX "SRCML_VERSION_STRING")
