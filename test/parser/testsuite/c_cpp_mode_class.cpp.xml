@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="c_cpp_mode">
+
+<unit language="C++">
+<label><name>class</name>:</label>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>.</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>.</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>.</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>.</operator><name>class</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>class</name><operator>.</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>.*</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>.*</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>.*</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>.*</operator><name>class</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>class</name><operator>.*</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>-&gt;</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>-&gt;</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>-&gt;</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>-&gt;</operator><name>class</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>class</name><operator>-&gt;</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>-&gt;*</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>-&gt;*</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>-&gt;*</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><operator>-&gt;*</operator><name>class</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>class</name><operator>-&gt;*</operator><name>class</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>+</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>=</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><index>[<expr><name>class</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>class</name><index>[<expr><name>class</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>class</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>class</name></expr></argument>, <argument><expr><name>class</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><call><name>foo</name><argument_list>(<argument><expr><name>class</name></expr></argument>, <argument><expr><name>class</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>&lt;</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>&lt;</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>&lt;</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>&gt;</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>&gt;</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>&gt;</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>~</operator><name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>class</name></expr> ?</condition><then> <expr><name>a</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>class</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>class</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>class</name></expr> ?</condition><then> <expr><name>class</name></expr> </then><else>: <expr><name>class</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>|</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>|</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name> <operator>|</operator> <name>class</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;</operator> <name>class</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>class</name> <operator>&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>class</name> <operator>&amp;</operator> <name>class</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;&amp;</operator> <name>class</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>class</name> <operator>&amp;&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>class</name> <operator>&amp;&amp;</operator> <name>class</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<struct_decl>struct <name>class</name>;</struct_decl>
+</unit>
+
+<unit language="C++">
+<class_decl>class <name>class</name>;</class_decl>
+</unit>
+
+<unit language="C++">
+<union_decl>union <name>class</name>;</union_decl>
+</unit>
+
+<unit language="C++">
+<struct>struct <name>class</name> <block>{<public type="default"/>}</block>;</struct>
+</unit>
+
+<unit language="C++">
+<class>class <name>class</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit language="C++">
+<union>union <name>class</name> <block>{<public type="default"/>}</block>;</union>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>class</name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>a</name> <modifier>*</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>class</name> <modifier>*</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>struct</name> <name>class</name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>struct</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>struct</name> <name>a</name></name></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>struct</name> <name>a</name></name> <modifier>*</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>struct</name> <name>class</name></name></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>struct</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>class</name> <name>class</name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>class</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>class</name> <name>a</name></name></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>class</name> <name>a</name></name> <modifier>*</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>class</name> <name>class</name></name></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>class</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>union</name> <name>class</name></name></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>union</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>union</name> <name>a</name></name></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>union</name> <name>a</name></name> <modifier>*</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>union</name> <name>class</name></name></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name><name>union</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>a</name> <modifier>&amp;</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>class</name> <modifier>&amp;</modifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>class</name> <modifier>&amp;</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>a</name> <modifier>&amp;&amp;</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>class</name> <modifier>&amp;&amp;</modifier></type> <name>a</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><name>class</name> <modifier>&amp;&amp;</modifier></type> <name>class</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>class</name></name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>class</name></name></type> <name>class</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>class</name> <name>class</name></name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>class</name> <name>class</name></name></type> <name>class</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>class</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>class</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>union</name> <name>class</name></name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>union</name> <name>class</name></name></type> <name>class</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>union</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>union</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>struct</name> <name>class</name></name></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>struct</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>struct</name> <name>a</name></name></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>struct</name> <name>a</name></name> <modifier>*</modifier></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>struct</name> <name>class</name></name></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>struct</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>class</name> <name>class</name></name></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>class</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>class</name> <name>a</name></name></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>class</name> <name>a</name></name> <modifier>*</modifier></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>class</name> <name>class</name></name></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>class</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>union</name> <name>class</name></name></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>union</name> <name>class</name></name> <modifier>*</modifier></type> <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>union</name> <name>a</name></name></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>union</name> <name>a</name></name> <modifier>*</modifier></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>union</name> <name>class</name></name></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name><name>union</name> <name>class</name></name> <modifier>*</modifier></type> <name>class</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>class</name></expr>;</expr_stmt>
+</unit>
+<unit language="C++">
+<expr_stmt><expr><call><name>class</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>class</name><argument_list>(<argument><expr><name>class</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>class</name><argument_list>(<argument><expr><name>class</name></expr></argument>, <argument><expr><name>class</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><call><name>class</name><argument_list>(<argument><expr><name>class</name></expr></argument>, <argument><expr><name>class</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>class</name><argument_list>(<argument><expr><name>class</name></expr></argument>, <argument><expr><name>class</name></expr></argument>)</argument_list></call><index>[<expr><literal type="number">0</literal></expr>]</index></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>class</name><argument_list>(<argument><expr><name>class</name></expr></argument>, <argument><expr><name>class</name></expr></argument>)</argument_list></call><index>[<expr><name>class</name></expr>]</index></expr>;</expr_stmt>
+</unit>
+
+</unit>

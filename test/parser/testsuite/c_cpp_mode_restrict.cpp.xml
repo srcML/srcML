@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="c_cpp_mode">
+
+<unit language="C++">
+<label><name>restrict</name>:</label>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>.</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>.</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>.</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>.</operator><name>restrict</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>restrict</name><operator>.</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>.*</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>.*</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>.*</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>.*</operator><name>restrict</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>restrict</name><operator>.*</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>-&gt;</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>-&gt;</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>-&gt;</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>-&gt;</operator><name>restrict</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>restrict</name><operator>-&gt;</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><operator>-&gt;*</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>-&gt;*</operator><name>a</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>-&gt;*</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><operator>-&gt;*</operator><name>restrict</name></name> <operator>+</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name><name>restrict</name><operator>-&gt;*</operator><name>restrict</name></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>+</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>+</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>=</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>a</name><index>[<expr><name>restrict</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name><name>restrict</name><index>[<expr><name>restrict</name></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>restrict</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>foo</name><argument_list>(<argument><expr><name>restrict</name></expr></argument>, <argument><expr><name>restrict</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><call><name>foo</name><argument_list>(<argument><expr><name>restrict</name></expr></argument>, <argument><expr><name>restrict</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>&lt;</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>&lt;</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>&lt;</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>&gt;</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>&gt;</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>&gt;</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>~</operator><name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>restrict</name></expr> ?</condition><then> <expr><name>a</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>restrict</name></expr> </then><else>: <expr><name>b</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>restrict</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><ternary><condition><expr><name>restrict</name></expr> ?</condition><then> <expr><name>restrict</name></expr> </then><else>: <expr><name>restrict</name></expr></else></ternary></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>a</name> <operator>|</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>|</operator> <name>a</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><name>restrict</name> <operator>|</operator> <name>restrict</name></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;</operator> <name>restrict</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>restrict</name> <operator>&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>restrict</name> <operator>&amp;</operator> <name>restrict</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>a</name> <operator>&amp;&amp;</operator> <name>restrict</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>restrict</name> <operator>&amp;&amp;</operator> <name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><operator>(</operator><name>restrict</name> <operator>&amp;&amp;</operator> <name>restrict</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<struct_decl>struct <name>restrict</name>;</struct_decl>
+</unit>
+
+<unit language="C++">
+<class_decl>class <name>restrict</name>;</class_decl>
+</unit>
+
+<unit language="C++">
+<union_decl>union <name>restrict</name>;</union_decl>
+</unit>
+
+<unit language="C++">
+<struct>struct <name>restrict</name> <block>{<public type="default"/>}</block>;</struct>
+</unit>
+
+<unit language="C++">
+<class>class <name>restrict</name> <block>{<private type="default"/>}</block>;</class>
+</unit>
+
+<unit language="C++">
+<union>union <name>restrict</name> <block>{<public type="default"/>}</block>;</union>
+</unit>
+
+<unit language="C++">
+<enum_decl>enum <name>restrict</name>;</enum_decl>
+</unit>
+
+<unit language="C++">
+<enum>enum <name>restrict</name> <block>{}</block>;</enum>
+</unit>
+<!--
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>restrict</name></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>restrict</name></type> <name>restrict</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>restrict</name> <modifier>*</modifier></type> <name>a</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit language="C++">
+<function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type>enum <name>restrict</name> <modifier>*</modifier></type> <name>restrict</name></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+-->
+<unit language="C++">
+<decl_stmt><decl><type><specifier>restrict</specifier></type></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><specifier>restrict</specifier></type> <name>restrict</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><specifier>restrict</specifier> <specifier>restrict</specifier></type> <name>restrict</name></decl>;</decl_stmt>
+</unit>
+
+<unit language="C++">
+<decl_stmt><decl><type><specifier>restrict</specifier> <specifier>restrict</specifier> <specifier>restrict</specifier></type> <name>restrict</name></decl>;</decl_stmt>
+</unit>
+<unit language="C++">
+<expr_stmt><expr><call><name>restrict</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>restrict</name><argument_list>(<argument><expr><name>restrict</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>restrict</name><argument_list>(<argument><expr><name>restrict</name></expr></argument>, <argument><expr><name>restrict</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><call><name>restrict</name><argument_list>(<argument><expr><name>restrict</name></expr></argument>, <argument><expr><name>restrict</name></expr></argument>)</argument_list></call><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>restrict</name><argument_list>(<argument><expr><name>restrict</name></expr></argument>, <argument><expr><name>restrict</name></expr></argument>)</argument_list></call><index>[<expr><literal type="number">0</literal></expr>]</index></expr>;</expr_stmt>
+</unit>
+
+<unit language="C++">
+<expr_stmt><expr><call><name>restrict</name><argument_list>(<argument><expr><name>restrict</name></expr></argument>, <argument><expr><name>restrict</name></expr></argument>)</argument_list></call><index>[<expr><name>restrict</name></expr>]</index></expr>;</expr_stmt>
+</unit>
+
+</unit>

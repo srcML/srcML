@@ -102,26 +102,6 @@ add_custom_command(COMMAND srcml --language=Java --output-srcml finally_cs.cs.xm
                    OUTPUT finally_java.java.xml
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-# Template-based test cases
-macro(template OUT_FILE NAME)
-
-    # cat all the files into one string
-    set(RAWCONTENTS "")
-    foreach(FILE ${ARGN})
-        file(READ ${CMAKE_CURRENT_SOURCE_DIR}/${FILE} S)
-        set(RAWCONTENTS "${RAWCONTENTS}${S}")
-    endforeach()
-
-    # replace the placeholder (in configure_file() format)
-    string(REPLACE "\$\{NAME\}" "${NAME}" CONTENTS "${RAWCONTENTS}")
-
-    # write the substituted string
-    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${OUT_FILE} "${CONTENTS}")
-
-    list(APPEND TESTFILES "${OUT_FILE}")
-
-endmacro()
-
 message(STATUS "  Generating suite targets")
 
 # Process all tests in suite.txt according to their categories
@@ -202,10 +182,6 @@ foreach(GEN ${SUITE})
         # base is C++, so these just get added
         list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C#" "Java")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_TEMPLATE")
-
-        template(${FULLURL})
 
     elseif(CATEGORY STREQUAL "LANGUAGE_TRANSFORM")
 
