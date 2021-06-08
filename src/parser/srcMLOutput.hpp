@@ -28,7 +28,7 @@
 #define SRCMLOUTPUT_HPP
 
 #ifdef _MSC_VER
-#   pragma warning(push)
+#   pragma warning(push, 0)
 #   pragma warning(disable : 4619)
 #endif
 #include <antlr/Token.hpp>
