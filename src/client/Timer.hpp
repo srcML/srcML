@@ -27,10 +27,7 @@
 #include <time.h>
 #endif
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <chrono>
-#pragma GCC diagnostic pop
 
 class Timer {
 public:

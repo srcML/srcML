@@ -118,12 +118,16 @@
 
 header "pre_include_hpp" {
 
-#ifndef _MSC_VER
+#if defined(__GNUC__)
     #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-    #pragma GCC diagnostic ignored "-Wunknown-warning-option"
     #pragma GCC diagnostic ignored "-Wunused-parameter"
-    #pragma GCC diagnostic ignored "-Wcatch-value"
-#else
+#endif
+#ifdef __clang__
+#endif
+#if defined(__GNUC__) and !defined(__clang__)
+    #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
+#ifdef _MSC_VER
     #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
     #pragma warning(disable : 4100)  // 'pe' unreferenced local variable
     #pragma warning(disable : 4101)  // 'pe' unreferenced local variable
@@ -5603,7 +5607,7 @@ compound_name_cpp[bool& iscompound] { namestack.fill(""); bool iscolon = false; 
         { notdestructor = LA(1) == DESTOP; }
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 }
 
 // compound name for C#
@@ -5626,7 +5630,7 @@ compound_name_csharp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
         )*
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 }
 
 // compound name for C
@@ -5716,7 +5720,7 @@ keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
         { notdestructor = LA(1) == DESTOP; }
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 }
 
 // an identifier
@@ -6544,7 +6548,7 @@ macro_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEB
         } set_bool[first, false] )*
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 
         // no end found to macro
         if (isoption(parser_options, SRCML_OPTION_DEBUG))
@@ -6671,7 +6675,7 @@ macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
         } set_bool[first, false] )*
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 
         // no end found to macro
         if (isoption(parser_options, SRCML_OPTION_DEBUG))
@@ -6720,7 +6724,7 @@ macro_type_name_call_inner[] { CompleteElement element(this); bool first = true;
         set_bool[first, false] )*
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 
         // no end found to macro
         if (isoption(parser_options, SRCML_OPTION_DEBUG))
@@ -8473,7 +8477,7 @@ template_param[] { in_template_param = true; ENTRY_DEBUG } :
     set_bool[in_template_param, false]
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 
     in_template_param = false;
     throw antlr::RecognitionException();

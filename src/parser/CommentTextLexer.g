@@ -24,12 +24,14 @@
 
 header "pre_include_hpp" {
    #include <cstring>
-#ifndef _MSC_VER
-    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-    #pragma GCC diagnostic ignored "-Wunknown-warning-option"
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
+#if defined(__GNUC__)
+#endif
+#ifdef __clang__
+#endif
+#if defined(__GNUC__) and !defined(__clang__)
     #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#else
+#endif
+#ifdef _MSC_VER
     #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
     #pragma warning(disable : 4101)  // 'pe' unreferenced local variable
     #pragma warning(disable : 4456)  // declaration of 'theRetToken' hides previous local declaration

@@ -27,12 +27,7 @@
 
 // tell cli11 to use boost optional
 #define CLI11_BOOST_OPTIONAL 1
-// warning in CLI11.hpp
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunknown-warning-option"
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #include <CLI11.hpp>
-#pragma GCC diagnostic pop
 
 const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
