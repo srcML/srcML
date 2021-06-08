@@ -24,19 +24,11 @@
   Class for straight forward translation from source code to srcML
 */
 
-#ifdef _MSC_VER
-#   pragma warning(push, 0)
-#   pragma warning(disable : 5204)
-#   pragma warning(disable : 4355)
-#endif
 #include <srcml_translator.hpp>
 #include <KeywordLexer.hpp>
 #include <srcMLParser.hpp>
 #include <StreamMLParser.hpp>
 #include <srcMLOutput.hpp>
-#ifdef _MSC_VER
-#   pragma warning(pop)
-#endif
 #include <srcmlns.hpp>
 #include <srcml_types.hpp>
 #include <unit_utilities.hpp>
