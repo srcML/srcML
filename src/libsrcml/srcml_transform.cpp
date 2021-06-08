@@ -649,8 +649,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
 
         // special cases where the nodes are not written to the tree
-#pragma warning(push)
-#pragma warning(disable: 4061)
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable: 4061)
+#endif
         switch (fullresults->nodeTab[i]->type) {
         case XML_COMMENT_NODE:
 
@@ -762,7 +764,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         // store in the returned results
         result->units.push_back(nunit);
     }
-#pragma warning(pop)
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
 
     // remove all nodes in the fullresults nodeset
     // valgrind shows free accessing these nodes after they have been freed

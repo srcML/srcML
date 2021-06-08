@@ -22,9 +22,10 @@
 
 header "pre_include_hpp" {
     #include <cstring>
+}
+
+header "pre_include_cpp" {
 #if defined(__GNUC__)
-    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 #ifdef __clang__
 #endif

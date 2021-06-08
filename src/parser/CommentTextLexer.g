@@ -24,12 +24,15 @@
 
 header "pre_include_hpp" {
    #include <cstring>
+}
+
+header "pre_include_cpp" {
 #if defined(__GNUC__)
 #endif
 #ifdef __clang__
 #endif
 #if defined(__GNUC__) and !defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+        #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #endif
 #ifdef _MSC_VER
     #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch

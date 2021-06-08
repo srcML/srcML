@@ -116,16 +116,12 @@
  * the input if in C++ mode.  They are matched as NAME in C mode.
  */
 
-header "pre_include_hpp" {
-
+header "pre_include_cpp" {
 #if defined(__GNUC__)
-    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 #ifdef __clang__
 #endif
 #if defined(__GNUC__) and !defined(__clang__)
-    #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #endif
 #ifdef _MSC_VER
     #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
@@ -136,9 +132,6 @@ header "pre_include_hpp" {
 
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
-
-#pragma GCC diagnostic warning "-Wunused-parameter"
-
 #include <string>
 #include <deque>
 #include <array>
