@@ -72,7 +72,15 @@ jobs:
           path: build/dist/msi.log
 
       - shell: bash
-        if: matrix.os != 'windows-latest'
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        working-directory: build
+        run: |
+          ldconfig
+          srcml --version
+          srcml --text="int a;" -l C++
+
+      - shell: bash
+        if: matrix.os == 'macos-latest'
         working-directory: build
         run: |
           srcml --version
