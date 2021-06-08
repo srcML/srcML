@@ -27,8 +27,6 @@
 #include <srcml_translator.hpp>
 #ifdef _MSC_VER
 #   pragma warning(push, 0)
-#   pragma warning(disable : 5204)
-#   pragma warning(disable : 4355)
 #endif
 #include <KeywordLexer.hpp>
 #include <srcMLParser.hpp>
