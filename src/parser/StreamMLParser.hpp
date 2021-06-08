@@ -152,7 +152,7 @@ private:
 
         // Always handled as white space and hidden from
         // parsing
-        if (srcMLParser::whitespace_token_set.member(token_type))
+        if (srcMLParser::whitespace_token_set.member(static_cast<unsigned long>(token_type)))
             return true;
 
         // whether to handle a line comment start or an EOL
