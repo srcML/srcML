@@ -38,8 +38,15 @@
 #endif
 
 #include <Transformation.hpp>
+#ifdef _MSC_VER
+#   pragma warning(push, 0)
+#   pragma warning(disable : 5204)
+#   pragma warning(disable : 4355)
+#endif
 #include <srcml_translator.hpp>
-
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
 /**
  * srcml_xpath
  * @param input_buffer a parser input buffer
