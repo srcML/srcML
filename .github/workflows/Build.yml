@@ -51,7 +51,7 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
-          cmake .. -DBUILD_LIBSRCML_TESTS=OFF
+          cmake ..
           cmake --build . --config Release
           cpack -G WIX -V
 
@@ -61,12 +61,6 @@ jobs:
         run: |
           cmake .. -G Ninja
           sudo cmake --build . --config Release --target install
-
-      - shell: bash
-        if: ${{ matrix.os == 'ubuntu-latest' }}
-        working-directory: build
-        run: |
-          ldconfig
 
       - working-directory: build/dist
         if: matrix.os == 'windows-latest'
