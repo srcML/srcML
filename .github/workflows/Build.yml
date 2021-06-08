@@ -1,0 +1,92 @@
+---
+name: Build
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Cache Build
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: build
+          key: ${{ runner.os }}-client100
+
+      - shell: bash
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt update
+          sudo apt install curl zip g++ make ninja-build antlr libantlr-dev \
+                           libxml2-dev libxml2-utils libxslt1-dev \
+                           libarchive-dev libssl-dev libcurl4-openssl-dev \
+                           cpio man file dpkg-dev
+          curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
+              sudo tar xz -C /usr/local/include
+
+      - shell: bash
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          brew install ninja antlr2
+          curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
+            sudo tar xz -C /usr/local/include
+
+      - uses: microsoft/setup-msbuild@v1
+        if: ${{ matrix.os == 'windows-latest' }}
+
+      - shell: bash
+        if: ${{ !steps.cache.outputs.cache-hit }}
+        run: mkdir build
+
+      - shell: bash
+        if: ${{ matrix.os == 'windows-latest' }}
+        working-directory: build
+        continue-on-error: true
+        run: |
+          cmake .. -DBUILD_LIBSRCML_TESTS=OFF
+          cmake --build . --config Release
+          cpack -G WIX -V
+
+      - shell: bash
+        if: ${{ matrix.os != 'windows-latest' }}
+        working-directory: build
+        run: |
+          cmake .. -G Ninja
+          sudo cmake --build . --config Release --target install
+
+      - shell: bash
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        working-directory: build
+        run: |
+          ldconfig
+
+      - working-directory: build/dist
+        if: matrix.os == 'windows-latest'
+        run: msiexec /i D:\a\srcML\srcML\build\dist\srcML-Win.msi /quiet /norestart /L*V .\msi.log
+      - uses: actions/upload-artifact@v2
+        if: matrix.os == 'windows-latest'
+        with:
+          name: msi.log
+          path: build/dist/msi.log
+
+      - shell: bash
+        if: matrix.os != 'windows-latest'
+        working-directory: build
+        run: |
+          srcml --version
+          srcml --text="int a;" -l C++
+
+      - shell: bash
+        if: matrix.os == 'windows-latest'
+        working-directory: build
+        run: |
+          srcml.exe --version
+          srcml.exe --text="int a;" -l C++
