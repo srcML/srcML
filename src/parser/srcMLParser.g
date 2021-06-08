@@ -121,7 +121,7 @@ header "pre_include_cpp" {
 #endif
 #ifdef __clang__
 #endif
-#if defined(__GNUC__) and !defined(__clang__)
+#if defined(__GNUC__) && !defined(__clang__)
 #endif
 #ifdef _MSC_VER
     #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
