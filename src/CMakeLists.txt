@@ -155,10 +155,6 @@ add_compile_options(
 option(ENABLE_BUILD_WARNINGS "Enable disabled build warnings" OFF)
 if(NOT ENABLE_BUILD_WARNINGS)
     add_compile_options(
-        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-inline>
-        $<$<CXX_COMPILER_ID:GNU,Clang,Apple>:-Wno-unknown-pragmas>
-        $<$<CXX_COMPILER_ID:Clang,AppleClang>:-Wshorten-64-to-32>
-
         $<$<CXX_COMPILER_ID:MSVC>:/wd4068> # unknown pragma
         # $<$<CXX_COMPILER_ID:MSVC>:/wd4101> # unreferenced local variable
         # $<$<CXX_COMPILER_ID:MSVC>:/wd4519> # unmarked inlining notification warning
