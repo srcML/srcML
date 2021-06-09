@@ -74,15 +74,33 @@ jobs:
         run: |
           sudo ldconfig
 
-      - name: Set PATH for Windows
-        shell: bash
+      - name: Setup msys2 with additional client-test packages for Windows
         if: ${{ matrix.os == 'windows-latest' }}
-        working-directory: build
-        run: |
-          echo "/c/Program Files (x86)/srcML/bin" >> $GITHUB_PATH
+        uses: msys2/setup-msys2@v2
+        with:
+          install: >-
+            zip
+            cpio
+            diffutils
+            cmake
+            util-linux
 
-      - name: Run Client Test on Installed srcml
+      - name: Windows Client Tests on Installed srcml
+        if: ${{ matrix.os == 'windows-latest' }}
+        shell: msys2 {0}
+        working-directory: build
+        timeout-minutes: 5
+        continue-on-error: true
+        run: |
+          ctest -C Release -VV
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ClientLastTest.${{ runner.os }}.log
+          path: build/Testing/Temporary/LastTest.log
+
+      - name: Ubuntu/macOS Client Tests on Installed srcml
+        if: ${{ matrix.os != 'windows-latest' }}
         shell: bash
         working-directory: build
         run: |
-          ctest -C Release
+          ctest -VV
