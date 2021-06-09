@@ -7,8 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest]
-        # os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu_latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     steps:
@@ -86,6 +85,5 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          echo $PATH
           srcml --version
           srcml --text="int a;" -l C++
