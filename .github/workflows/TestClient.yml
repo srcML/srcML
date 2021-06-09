@@ -85,4 +85,4 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          ctest
+          ctest -C Release
