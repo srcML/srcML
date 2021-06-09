@@ -82,6 +82,9 @@ jobs:
         working-directory: build
         run: |
           export PATH=$PATH:"/c/Program Files/srcML/bin;/c/Program Files (x86)/srcML/bin"
+          printenv PATH
+          srcml --version
+          which srcml
           srcml.exe --version
           srcml.exe --text="int a;" -l C++
           which srcml.exe

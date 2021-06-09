@@ -19,7 +19,7 @@
 # 
 # The master CMake project file for srcML
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.15)
 
 # Handles problem of commandline tools interfering with Xcode includes
 if(APPLE)
