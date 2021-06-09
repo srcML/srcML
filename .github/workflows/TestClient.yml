@@ -92,6 +92,7 @@ jobs:
         timeout-minutes: 5
         continue-on-error: true
         run: |
+          export SRCML_HOME="/c/Program Files (x86)/srcML/bin"
           ctest -C Release -VV
       - uses: actions/upload-artifact@v2
         with:
