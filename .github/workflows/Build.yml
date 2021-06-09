@@ -7,7 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [windows-latest]
         # os: [macos-latest, ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
@@ -53,8 +53,7 @@ jobs:
         continue-on-error: true
         run: |
           cmake ..
-          cmake --build . --config Release
-          cpack -G WIX -V
+          cmake --build . --config Release --target install
 
       - shell: bash
         if: ${{ matrix.os != 'windows-latest' }}
@@ -62,15 +61,6 @@ jobs:
         run: |
           cmake .. -G Ninja
           sudo cmake --build . --config Release --target install
-
-      - working-directory: build/dist
-        if: matrix.os == 'windows-latest'
-        run: msiexec /i D:\a\srcML\srcML\build\dist\srcML-Win.msi /quiet /norestart /L*V .\msi.log
-      - uses: actions/upload-artifact@v2
-        if: matrix.os == 'windows-latest'
-        with:
-          name: msi.log
-          path: build/dist/msi.log
 
       - shell: bash
         if: matrix.os == 'macos-latest'
@@ -91,5 +81,7 @@ jobs:
         if: matrix.os == 'windows-latest'
         working-directory: build
         run: |
+          export PATH=$PATH:"/c/Program Files/srcML/bin;/c/Program Files (x86)/srcML/bin"
           srcml.exe --version
           srcml.exe --text="int a;" -l C++
+          which srcml.exe
