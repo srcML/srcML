@@ -44,7 +44,7 @@ cd $TEMPDIR
 export PATH=.:$PATH
 
 if [[ "$OSTYPE" == 'msys' ]]; then
-	SRCML=$SRCML_HOME/srcml
+	SRCML=$SRCML_HOME/srcml.exe
 	diff='diff -Z '
 else
 	diff='diff'
