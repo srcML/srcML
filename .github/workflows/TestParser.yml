@@ -88,20 +88,13 @@ jobs:
         run: |
           echo "/c/Program Files (x86)/srcML/bin" >> $GITHUB_PATH
 
-      - name: Run Parser Tests on Windows
+      - name: Run Parser Tests
         shell: bash
-        if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         continue-on-error: true
         run: |
           srcml --parser-test test/parser/testsuite | tee ParserTest.log
-      - name: Run Parser Tests on Ubuntu/macOS
-        shell: bash
-        if: ${{ matrix.os != 'windows-latest' }}
-        working-directory: build
-        continue-on-error: true
-        run: |
-          srcml --parser-test test/parser/testsuite | tee ParserTest.log
+
       - uses: actions/upload-artifact@v2
         with:
           name: ParserTest.${{ runner.os }}.log
