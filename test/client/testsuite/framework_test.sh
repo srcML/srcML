@@ -46,7 +46,7 @@ export PATH=.:$PATH
 echo "OSTYPE: "$OSTYPE
 
 if [[ "$OSTYPE" == 'msys' ]]; then
-    SRCML=$SRCML_HOME/srcml.exe
+    SRCML="$SRCML_HOME/srcml.exe"
     echo "Client Path: "$SRCML
     diff='diff -Z '
 else
@@ -65,8 +65,14 @@ else
 fi
 
 function srcml () {
-    env $SRCML_CLIENT_TEST_PREFIX $SRCML "$@"
+    "$SRCML" "$@"
+    # env $SRCML_CLIENT_TEST_PREFIX $SRCML "$@"
 }
+
+# Test run
+echo "TESTRUN START"
+srcml --version
+echo "TESTRUN END"
 
 # turn history on so we can output the command issued
 # note that the fc command accesses the history
