@@ -81,14 +81,20 @@ jobs:
           cmake .. -DBUILD_PARSER_TESTS=ON
           cmake --build . --config Release --target gen_parser_tests
 
+      - name: Set PATH for Windows
+        shell: bash
+        if: ${{ matrix.os == 'windows-latest' }}
+        working-directory: build
+        run: |
+          echo "/c/Program Files (x86)/srcML/bin" >> $GITHUB_PATH
+
       - name: Run Parser Tests on Windows
         shell: bash
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         continue-on-error: true
         run: |
-          export PATH=$PATH:"/c/Program Files/srcML/bin"
-          srcml.exe --parser-test test/parser/testsuite | tee ParserTest.log
+          srcml --parser-test test/parser/testsuite | tee ParserTest.log
       - name: Run Parser Tests on Ubuntu/macOS
         shell: bash
         if: ${{ matrix.os != 'windows-latest' }}
