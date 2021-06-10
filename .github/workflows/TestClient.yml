@@ -7,8 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [windows-latest]
-        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     steps:
@@ -86,13 +85,6 @@ jobs:
             cmake
             util-linux
 
-      - name: Set PATH for Windows
-        shell: bash
-        if: ${{ matrix.os == 'windows-latest' }}
-        working-directory: build
-        run: |
-          echo "/c/Program Files (x86)/srcML/bin" >> $GITHUB_PATH
-
       - name: Windows Client Tests on Installed srcml
         if: ${{ matrix.os == 'windows-latest' }}
         shell: msys2 {0}
@@ -100,9 +92,7 @@ jobs:
         timeout-minutes: 5
         continue-on-error: true
         run: |
-          echo $PATH
           export SRCML_HOME="/c/Program Files (x86)/srcML/bin"
-          "/c/Program Files (x86)/srcML/bin/srcml.exe" --version
           ctest -C Release -VV
       - uses: actions/upload-artifact@v2
         with:
@@ -115,3 +105,7 @@ jobs:
         working-directory: build
         run: |
           ctest -VV
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ClientLastTest.${{ runner.os }}.log
+          path: build/Testing/Temporary/LastTest.log
