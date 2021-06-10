@@ -44,21 +44,22 @@ cd $TEMPDIR
 export PATH=.:$PATH
 
 if [[ "$OSTYPE" == 'msys' ]]; then
-	SRCML=$SRCML_HOME/srcml.exe
-	diff='diff -Z '
+    SRCML=$SRCML_HOME/srcml.exe
+    echo "Client Path: "$SRCML
+    diff='diff -Z '
 else
-	diff='diff'
-	if [ -z "$SRCML"]; then
+    diff='diff'
+    if [ -z "$SRCML"]; then
 
-	    if [ -e "/usr/bin/srcml" ]; then
-	        SRCML='/usr/bin/srcml'
-	    fi
+        if [ -e "/usr/bin/srcml" ]; then
+            SRCML='/usr/bin/srcml'
+        fi
 
-	    if [ -e "/usr/local/bin/srcml" ]; then
-	        SRCML='/usr/local/bin/srcml'
-	    fi
+        if [ -e "/usr/local/bin/srcml" ]; then
+            SRCML='/usr/local/bin/srcml'
+        fi
 
-	fi
+    fi
 fi
 
 function srcml () {
