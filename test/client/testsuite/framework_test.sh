@@ -43,6 +43,8 @@ cd $TEMPDIR
 # make sure to find the srcml executable
 export PATH=.:$PATH
 
+echo "OSTYPE: "$OSTYPE
+
 if [[ "$OSTYPE" == 'msys' ]]; then
     SRCML=$SRCML_HOME/srcml.exe
     echo "Client Path: "$SRCML
