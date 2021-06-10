@@ -66,13 +66,7 @@ fi
 
 function srcml () {
     "$SRCML" "$@"
-    # env $SRCML_CLIENT_TEST_PREFIX $SRCML "$@"
 }
-
-# Test run
-echo "TESTRUN START"
-srcml --version
-echo "TESTRUN END"
 
 # turn history on so we can output the command issued
 # note that the fc command accesses the history
