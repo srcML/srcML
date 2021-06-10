@@ -103,8 +103,6 @@ jobs:
           echo $PATH
           export SRCML_HOME="/c/Program Files (x86)/srcML/bin"
           "/c/Program Files (x86)/srcML/bin/srcml.exe" --version
-          srcml.exe --version
-          srcml --version
           ctest -C Release -VV
       - uses: actions/upload-artifact@v2
         with:
