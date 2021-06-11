@@ -20,16 +20,11 @@ define illformed <<- 'INPUT'
 
 createfile xml_error/illformed.xml "$illformed"
 
-define output <<- 'STDOUT'
-
-	a;
-	STDOUT
-
 define xml_error <<- 'STDERR'
 	Error Parsing: expected '>'
+
 	STDERR
 
+# @TODO Why isn't the exit status non-0?
 srcml xml_error/illformed.xml
-#check "$output" "$xml_error"
-
-exit 0
+check "" "$xml_error"
