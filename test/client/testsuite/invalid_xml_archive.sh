@@ -67,36 +67,35 @@ srcml xml_error/illformedarchive_multi.xml --info
 check "$info_archive"
 
 srcml xml_error/illformedarchive_single.xml --info
-#check "$info_archive"
+check "$info_archive"
 
 srcml --info xml_error/illformedarchive_multi.xml
-#check "$info_archive"
+check "$info_archive"
 
 srcml --info xml_error/illformedarchive_single.xml
-#check "$info_archive"
+check "$info_archive"
 
 srcml --info < xml_error/illformedarchive_multi.xml
-#check "$info_archive"
+check "$info_archive"
 
 srcml --info < xml_error/illformedarchive_single.xml
-#check "$info_archive"
+check "$info_archive"
 
 srcml xml_error/illformedarchive_multi.xml --show-unit-count
-#check "$units3" "$xml_archive_error"
+check "$units3" ""
 
 srcml xml_error/illformedarchive_single.xml --show-unit-count
-#check "$units1" "$xml_archive_error"
+check "$units1" ""
 
+# @TODO Why don't these show an error message?
 srcml --show-unit-count xml_error/illformedarchive_multi.xml
-#check "$units3" "$xml_archive_error"
+check "$units3" ""
 
 srcml --show-unit-count xml_error/illformedarchive_single.xml
-#check "$units1" "$xml_archive_error"
+check "$units1" ""
 
 srcml --show-unit-count < xml_error/illformedarchive_multi.xml
-#check "$units3" "$xml_archive_error"
+check "$units3" ""
 
 srcml --show-unit-count < xml_error/illformedarchive_single.xml
-#check "$units1" "$xml_archive_error"
-
-exit 0
+check "$units1" ""
