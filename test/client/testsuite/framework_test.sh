@@ -44,6 +44,7 @@ cd $TEMPDIR
 export PATH=.:$PATH
 
 if [[ "$OSTYPE" == 'msys' ]]; then
+    SRCML="$SRCML_HOME/srcml.exe"
     EOL="\r\n"
     export PATH=$PATH:"/c/Program Files/srcML/bin/"
 	SRCML='srcml.exe'
@@ -66,7 +67,7 @@ else
 fi
 
 function srcml () {
-    $SRCML "$@"
+    "$SRCML" "$@"
 }
 # turn history on so we can output the command issued
 # note that the fc command accesses the history
