@@ -4,9 +4,11 @@
 source $(dirname "$0")/framework_test.sh
 
 # have to get null byte into test case result
-echo -en "a;\n" > tfile
-printf "\0" >> tfile
-echo -en "return b;\n" >> tfile
+if [[ "$OSTYPE" == 'msys' ]]; then
+    printf "a;\r\n\0return b;\r\n" > tfile
+else
+    printf "a;\n\0return b;\n" > tfile
+fi
 
 define srca <<- 'STDOUT'
 	a;
