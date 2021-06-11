@@ -43,31 +43,31 @@ cd $TEMPDIR
 # make sure to find the srcml executable
 export PATH=.:$PATH
 
-echo "OSTYPE: "$OSTYPE
-
 if [[ "$OSTYPE" == 'msys' ]]; then
-    SRCML="$SRCML_HOME/srcml.exe"
-    echo "Client Path: "$SRCML
-    diff='diff -Z '
+    EOL="\r\n"
+    export PATH=$PATH:"/c/Program Files/srcML/bin/"
+	SRCML='srcml.exe'
+    export MSYS2_ARG_CONV_EXCL="*"
+	diff='diff -Z '
 else
-    diff='diff'
-    if [ -z "$SRCML"]; then
+    EOL="\n"
+	diff='diff '
+	if [ -z "$SRCML"]; then
 
-        if [ -e "/usr/bin/srcml" ]; then
-            SRCML='/usr/bin/srcml'
-        fi
+	    if [ -e "/usr/bin/srcml" ]; then
+	        SRCML='/usr/bin/srcml'
+	    fi
 
-        if [ -e "/usr/local/bin/srcml" ]; then
-            SRCML='/usr/local/bin/srcml'
-        fi
+	    if [ -e "/usr/local/bin/srcml" ]; then
+	        SRCML='/usr/local/bin/srcml'
+	    fi
 
-    fi
+	fi
 fi
 
 function srcml () {
-    "$SRCML" "$@"
+    $SRCML "$@"
 }
-
 # turn history on so we can output the command issued
 # note that the fc command accesses the history
 set -o history
@@ -108,6 +108,8 @@ createfile() {
 
 rmfile() { rm -f ${1}; }
 
+rmdir()  { rm -fr ${1}; }
+
 # capture stdout and stderr
 capture_output() {
     [ "$CAPTURE_STDOUT" = true ] && exec 3>&1 1>$STDOUT
@@ -134,6 +136,7 @@ message() {
 
 # output filenames for capturing stdout and stderr from the command
 base=$(basename $0 .sh)
+
 typeset STDERR=.stderr_$base
 typeset STDOUT=.stdout_$base
 
@@ -163,21 +166,21 @@ check() {
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        $diff <(echo -en "$2") $1 || $diff <(echo -en "$2") $1
-        $diff <(echo -en "$3") $STDERR || $diff <(echo -en "$3") $STDERR
+        $diff <(echo -en "$2") $1
+        $diff <(echo -en "$3") $STDERR
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        $diff <(echo -en "$2") $1 || $diff <(echo -en "$2") $1
+        $diff <(echo -en "$2") $1 # || $diff <(echo -en "$2") $1
         [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        $diff <(echo -en "$1") $STDOUT || $diff <(echo -en "$1") $STDOUT
-        $diff <(echo -en "$2") $STDERR || $diff <(echo -en "$2") $STDERR
+        $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$2") $STDERR
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
@@ -187,7 +190,7 @@ check() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        $diff <(echo -en "$1") $STDOUT || $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$1") $STDOUT
         [ ! -s $STDERR ]
 
     else
@@ -231,8 +234,8 @@ check_ignore() {
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        $diff <(echo -en "$2") $1 || $diff <(echo -en "$2") $1
-        $diff <(echo -en "$3") $STDERR || $diff <(echo -en "$3") $STDERR
+        $diff <(echo -en "$2") $1
+        $diff <(echo -en "$3") $STDERR
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
@@ -244,8 +247,8 @@ check_ignore() {
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        $diff <(echo -en "$1") $STDOUT || $diff <(echo -en "$1") $STDOUT
-        $diff <(echo -en "$2") $STDERR || $diff <(echo -en "$2") $STDERR
+        $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$2") $STDERR
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
@@ -255,7 +258,7 @@ check_ignore() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        $diff <(echo -en "$1") $STDOUT || $diff <(echo -en "$1") $STDOUT
+        $diff <(echo -en "$1") $STDOUT
  #       [ ! -s $STDERR ]
 
     else
