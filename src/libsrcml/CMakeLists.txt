@@ -43,7 +43,8 @@ include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_INSTALL_INCL
 # Building static and dynamic libraries for srcML.
 add_library(libsrcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-target_include_directories(libsrcml_static BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
+target_include_directories(libsrcml_static SYSTEM PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
+target_include_directories(libsrcml_static BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser)
 target_link_libraries(libsrcml_static PRIVATE ${LIBSRCML_LIBRARIES})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(libsrcml_static PRIVATE gcov)
@@ -51,7 +52,13 @@ endif()
 
 add_library(libsrcml_shared SHARED $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(libsrcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-target_include_directories(libsrcml_shared BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
+if(WIN32)
+    target_compile_options(libsrcml_shared PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIRS})
+    target_compile_options(libsrcml_shared PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIR})
+    target_compile_options(libsrcml_shared PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${Boost_INCLUDE_DIR})
+    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${ANTLR_INCLUDE_DIR})
+    target_compile_options(libsrcml_shared PRIVATE ${CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG})
+endif()
 target_link_libraries(libsrcml_shared PRIVATE ${LIBSRCML_LIBRARIES})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(libsrcml_shared PRIVATE gcov)
@@ -68,9 +75,14 @@ else()
 endif()
 
 # which types of libraries
-install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
+if(MSVC)
+    install(TARGETS libsrcml_shared COMPONENT SRCML)
+else()
+    install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
+endif()
+
 if (BUILD_LIBSRCML_STATIC)
-    install(TARGETS libsrcml_static COMPONENT DEVLIBS)
+    install(TARGETS libsrcml_static COMPONENT SRCML)
 endif()
 
 if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)
@@ -86,15 +98,18 @@ endif()
 file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
-target_include_directories(libsrcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_GENERATED_SOURCE_DIR})
+target_include_directories(libsrcml SYSTEM PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
+target_include_directories(libsrcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser)
 add_dependencies(libsrcml parser)
 
 # install the libsrcml include file
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT INCLUDE)
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT DEVLIBS)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/release/bin/*.dll)
-    install(FILES ${SRCML_DLLS} DESTINATION bin)
+    install(FILES ${SRCML_DLLS} DESTINATION bin COMPONENT SRCML)
+    file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/release/lib/*.lib)
+    install(FILES ${SRCML_DLLS} DESTINATION lib COMPONENT DEVLIB)
 endif()
 
 # strip libraries

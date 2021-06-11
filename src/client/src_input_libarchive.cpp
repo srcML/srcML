@@ -20,22 +20,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifdef _MSC_BUILD
-#include <BaseTsd.h>
-typedef SSIZE_T ssize_t;
-#endif
-
 #include <src_input_libarchive.hpp>
 #include <srcml_options.hpp>
 #include <curl/curl.h>
 #include <archive.h>
 #include <archive_entry.h>
-#include <algorithm>
 #include <Timer.hpp>
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
-#include <cstring>
 #include <libarchive_utilities.hpp>
+#include <cstring>
+#include <stdio.h>
 
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
@@ -75,10 +70,19 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
         // input must go through libcurl pipe
         srcml_input_src uninput = input_file;
-        if (!input_curl(uninput))
+        if (!input_curl(uninput)) {
             return 0;
+        }
 
-        status = archive_read_open_fd(arch.get(), uninput, buffer_size);
+#if WIN32
+        // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
+        // or cut short. 
+        // So for Windwos, convert to a FILE*. Note sure when to close the FILE*
+        FILE* f = fdopen(*(uninput.fd), "r");
+        status = archive_read_open_FILE(arch.get(), f);
+#else
+        status = archive_read_open_fd(arch.get(), *(uninput.fd), buffer_size);
+#endif
 
     } else {
 
@@ -255,7 +259,7 @@ int src_input_libarchive(ParseQueue& queue,
         if (!status && !prequest->status) {
             // if we know the size, create the right sized data_buffer
             if (archive_entry_size_is_set(entry))
-                prequest->buffer.reserve(archive_entry_size(entry));
+                prequest->buffer.reserve((decltype(prequest->buffer)::size_type) archive_entry_size(entry));
 
             const char* buffer;
             size_t size;

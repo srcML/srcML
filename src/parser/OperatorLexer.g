@@ -21,6 +21,12 @@
  */
 
 header {
+#ifndef _MSC_VER
+#else
+    #pragma warning(disable : 4456) // declaration of 'theRetToken' hides previous local declaration
+    #pragma warning(disable : 4242) // 'argument': conversion from 'int' to 'char'
+#endif
+
    #include <iostream>
 }
 

@@ -126,6 +126,8 @@ public:
 
     }
 
+    Language& operator=(const Language&) = delete;
+
     /**
      * inLanguage
      *

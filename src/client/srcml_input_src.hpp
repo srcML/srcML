@@ -28,7 +28,14 @@
 #include <list>
 #include <vector>
 #include <sstream>
+#ifdef _MSC_VER
+#    pragma warning(push,0)
+#    pragma warning(disable : 4619)
+#endif
 #include <boost/optional.hpp>
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
 #include <src_prefix.hpp>
 #include <algorithm>
 #include <src_archive.hpp>

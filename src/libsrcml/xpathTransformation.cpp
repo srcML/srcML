@@ -60,7 +60,7 @@ const char* const xpathTransformation::simple_xpath_attribute_name = "location";
  *
  * Constructor.
  */
-xpathTransformation::xpathTransformation(srcml_archive* oarchive, const char* xpath,
+xpathTransformation::xpathTransformation(srcml_archive* /* oarchive */, const char* xpath,
                         const char* element_prefix, const char* element_uri, const char* element,
                         const char* attr_prefix, const char* attr_uri, const char* attr_name, const char* attr_value)
     : xpath(xpath), prefix(stringOrNull(element_prefix)), uri(stringOrNull(element_uri)), element(stringOrNull(element)), attr_prefix(stringOrNull(attr_prefix)), attr_uri(stringOrNull(attr_uri)), attr_name(stringOrNull(attr_name)), attr_value(stringOrNull(attr_value)) {
@@ -166,10 +166,10 @@ int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
  * Append an attribute to the given node.  Only the prefix and uri can vary.  The
  * rest are the same throughout all calls and are part of the class.
  */
-void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* attr_prefix, const char* attr_uri) const {
+void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* /* attr_prefix */, const char* append_attr_uri) const {
 
     // grab current value
-    const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.c_str(), BAD_CAST attr_uri);
+    const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.c_str(), BAD_CAST append_attr_uri);
     const char* newvalue = attr_value.c_str();
 
     // previous property
@@ -254,7 +254,7 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
  *
  * @returns true on success false on failure.
  */
-TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
+TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position */) const {
 
     std::unique_ptr<xmlXPathContext> context(createContext(doc));
     if (!context) {
@@ -265,13 +265,13 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     // register standard prefixes for standard namespaces
     for (const auto& ns : default_namespaces) {
 
-        const char* uri = ns.uri.c_str();
-        const char* prefix = ns.prefix.c_str();
+        const char* registerURI = ns.uri.c_str();
+        const char* registerPrefix = ns.prefix.c_str();
         if (ns.uri == SRCML_SRC_NS_URI)
-            prefix = "src";
+            registerPrefix = "src";
 
-        if (xmlXPathRegisterNs(context.get(), BAD_CAST prefix, BAD_CAST uri) == -1) {
-            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", prefix, uri);
+        if (xmlXPathRegisterNs(context.get(), BAD_CAST registerPrefix, BAD_CAST registerURI) == -1) {
+            fprintf(stderr, "%s: Unable to register prefix '%s' for namespace %s\n", "libsrcml", registerPrefix, registerURI);
         }
     }
 
@@ -299,7 +299,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         tresult.numberValue = result_nodes->floatval;
     }
     if (result_nodes->type == XPATH_BOOLEAN) {
-        tresult.boolValue = result_nodes->boolval;
+        tresult.boolValue = result_nodes->boolval != 0;
     }
     if (result_nodes->type == XPATH_STRING) {
         tresult.stringValue = (const char*) result_nodes->stringval;

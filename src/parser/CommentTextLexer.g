@@ -24,15 +24,27 @@
 
 header "pre_include_hpp" {
    #include <cstring>
-   #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-   #pragma GCC diagnostic ignored "-Wunknown-warning-option"
-   #pragma GCC diagnostic ignored "-Wunused-parameter"
-   #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+}
+
+header "pre_include_cpp" {
+#if defined(__GNUC__)
+#endif
+#ifdef __clang__
+#endif
+#if defined(__GNUC__) && !defined(__clang__)
+        #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
+#ifdef _MSC_VER
+    #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+    #pragma warning(disable : 4101)  // 'pe' unreferenced local variable
+    #pragma warning(disable : 4456)  // declaration of 'theRetToken' hides previous local declaration
+    #pragma warning(disable : 4242) // 'argument': conversion from 'int' to 'char'
+#endif
 }
 
 header {
    #include <iostream>
-   #include "antlr/TokenStreamSelector.hpp"
+   #include <antlr/TokenStreamSelector.hpp>
    #include <srcml_types.hpp>
    #include <srcml_macros.hpp>
    #include <srcml.h>
@@ -252,6 +264,6 @@ COMMENT_TEXT {
 protected
 RSTRING_DELIMITER:
     { delimiter = ""; }
-    (options { greedy = true; } : { delimiter.size() < delimiter1.size() }? { delimiter += LA(1); } 
+    (options { greedy = true; } : { delimiter.size() < delimiter1.size() }? { delimiter += static_cast<char>(LA(1)); }
         ~('(' | ')' | '\\' | '\n' | ' ' | '\t' ))*
 ;

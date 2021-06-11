@@ -205,17 +205,17 @@ void ParserTest::report(srcml_archive* archive) {
     srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
 
     for (auto& kv : ltotal) {
-        double percent = double(misses[kv.first] * 100) / kv.second;
-        std::ostringstream sout;
-        sout << "        " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << kv.first << std::setw(6) << std::right << misses[kv.first] << std::setw(6) << std::right << kv.second << '\t';
-        sout << std::setw(4) << std::right;
-        if (percent == 0 || percent >= 1)
-            sout << std::setprecision(2) << percent;
+        double missesPercent = double(misses[kv.first] * 100) / kv.second;
+        std::ostringstream out;
+        out << "        " << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << kv.first << std::setw(6) << std::right << misses[kv.first] << std::setw(6) << std::right << kv.second << '\t';
+        out << std::setw(4) << std::right;
+        if (missesPercent == 0 || missesPercent >= 1)
+            out << std::setprecision(2) << missesPercent;
         else
-            sout << "<1";
-        sout << "%" << '\n';
+            out << "<1";
+        out << "%" << '\n';
 
-        srcml_archive_write_string(archive, sout.str().c_str(), (int) sout.str().size());
+        srcml_archive_write_string(archive, out.str().c_str(), static_cast<int>(out.str().size()));
     }
 }
 

@@ -22,7 +22,7 @@
 
 #include <srcml_execute.hpp>
 
-#if defined(_MSC_BUILD) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
@@ -50,7 +50,7 @@ void srcml_execute(const srcml_request_t& srcml_request,
         int prevoutfd = fds[0];
         fds[0] = fds[1] = -1;
         if (pipeline.size() > 1 && !last) {
-#if !defined(_MSC_BUILD) && !defined(__MINGW32__)
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
             if (pipe(fds) == -1) {
                 perror("srcml");
                 return;
@@ -76,9 +76,9 @@ void srcml_execute(const srcml_request_t& srcml_request,
         ));
     }
 
-    // wait on all threads
-    std::for_each(pipethreads.begin(), pipethreads.end(), [](std::thread& t) { t.join(); });
-
     // wait for all the input pipes to finish
     srcml_pipe_clean();
+
+    // wait on all threads
+    std::for_each(pipethreads.begin(), pipethreads.end(), [](std::thread& t) { t.join(); });
 }

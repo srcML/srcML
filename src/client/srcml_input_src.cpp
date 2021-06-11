@@ -126,21 +126,23 @@ srcml_input_src& srcml_input_src::operator=(const std::string& other) { srcml_in
 srcml_input_src& srcml_input_src::operator=(FILE* other) { fileptr = other; return *this; }
 srcml_input_src& srcml_input_src::operator=(int other) { fd = other; return *this; }
 
-int srcml_read_callback(void* context, char* buffer, int len) {
-    archive* libarchive_srcml = (archive*) context;
+extern "C" {
+    static int srcml_read_callback(void* context, char* buffer, int len) {
+        archive* libarchive_srcml = (archive*) context;
 
-    ssize_t status = archive_read_data(libarchive_srcml, buffer, len);
+        auto status = archive_read_data(libarchive_srcml, buffer, static_cast<size_t>(len));
 
-    return (int) status;
-}
+        return (int) status;
+    }
 
-int srcml_close_callback(void* context) {
-    archive* libarchive_srcml = (archive*) context;
+    static int srcml_close_callback(void* context) {
+        archive* libarchive_srcml = (archive*) context;
 
-    archive_read_close(libarchive_srcml);
-    archive_read_free(libarchive_srcml);
+        archive_read_close(libarchive_srcml);
+        archive_read_free(libarchive_srcml);
 
-    return 0;
+        return 0;
+    }
 }
 
 int srcml_archive_read_open(srcml_archive* arch, const srcml_input_src& input_source) {

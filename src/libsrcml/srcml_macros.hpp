@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCML_MACROS_HPP
 #define INCLUDED_SRCML_MACROS_HPP
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
 #include <io.h>
 #endif
 
@@ -36,7 +36,7 @@
  */
 #define optional_get_c_str(str) (str ? str->c_str() : 0)
 
-#ifndef _MSC_BUILD
+#ifndef _MSC_VER
 
 #define OPEN(FILE, ACCESS, PERM) open(FILE, ACCESS, PERM)
 #define CLOSE(FILE) close(FILE)

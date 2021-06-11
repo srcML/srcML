@@ -25,7 +25,7 @@
 
 #include <type_traits>
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
 #include <windows.h>
 #include <Wincrypt.h>
 #elif defined(__MACH__) // Should this be __APPLE__?

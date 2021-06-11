@@ -65,6 +65,16 @@ TraceLog& operator<<(TraceLog& tlog, const std::string& s) {
     return tlog;
 }
 
+TraceLog& operator<<(TraceLog& tlog, int n) {
+
+    if (!tlog.enabled)
+        return tlog;
+
+    std::clog << n << '\n';
+
+    return tlog;
+}
+
 TraceLog::~TraceLog() {
 
     if (!enabled)

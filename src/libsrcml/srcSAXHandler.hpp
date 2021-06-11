@@ -55,9 +55,9 @@ public :
      * Used by srcSAXController to provide access to self
      * for such things as disabling sax parsing.
      */
-    void set_controller(srcSAXController * controller) {
+    void set_controller(srcSAXController* newController) {
 
-        this->controller = controller;
+        controller = newController;
     }
 
     /**
@@ -87,9 +87,9 @@ public :
      * Used by SAX2srcSAXHandler when determined
      * encoding.  Set the input encoding if any.
      */
-    void set_encoding(const char* encoding) {
+    void set_encoding(const char* newEncoding) {
 
-        this->encoding = encoding;
+        encoding = newEncoding;
     }
 
     /**
@@ -99,9 +99,9 @@ public :
      * Used by SAX2srcSAXHandler when determined
      * if an archive.  Sets if srcML document is an archive.
      */
-    void set_is_archive(bool is_archive) {
+    void set_is_archive(bool newIsArchive) {
 
-        this->is_archive = is_archive;
+        is_archive = newIsArchive;
     }
 
 #pragma GCC diagnostic push
@@ -136,9 +136,9 @@ public :
      * SAX handler function for start of the root element.
      * Overide for desired behaviour.
      */
-    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** attributes) {}
+    virtual void startRoot(const char* /* localname */, const char* /* prefix */, const char* /* URI */,
+                           int /* num_namespaces */, const xmlChar** /* namespaces */, int /* num_attributes */,
+                           const xmlChar** /* attributes */) {}
 
     /**
      * startUnit
@@ -153,9 +153,9 @@ public :
      * SAX handler function for start of an unit.
      * Overide for desired behaviour.
      */
-    virtual void startUnit(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** attributes) {}
+    virtual void startUnit(const char* /* localname */, const char* /* prefix */, const char* /* URI */,
+                           int /* num_namespaces */, const xmlChar** /* namespaces */, int /* num_attributes */,
+                           const xmlChar** /* attributes */) {}
     /**
      * endRoot
      * @param localname the name of the element tag
@@ -165,7 +165,7 @@ public :
      * SAX handler function for end of the root element.
      * Overide for desired behaviour.
      */
-    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {}
+    virtual void endRoot(const char* /* localname */, const char* /* prefix */, const char* /* URI */) {}
 
     /**
      * endUnit
@@ -176,7 +176,7 @@ public :
      * SAX handler function for end of an unit.
      * Overide for desired behaviour.
      */
-    virtual void endUnit(const char* localname, const char* prefix, const char* URI) {}
+    virtual void endUnit(const char* /* localname */, const char* /* prefix */, const char* /* URI */) {}
 
     /**
      * metaTag
@@ -191,9 +191,9 @@ public :
      * SAX handler function for a meta tags.
      * Overide for desired behaviour.
      */
-    virtual void metaTag(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
-                           const xmlChar** attributes) {}
+    virtual void metaTag(const char* /* localname */, const char* /* prefix */, const char* /* URI */,
+                           int /* num_namespaces */, const xmlChar** /* namespaces */, int /* num_attributes */,
+                           const xmlChar** /* attributes */) {}
 
     /**
      * processingInstruction
@@ -203,7 +203,12 @@ public :
      * Called when a processing instruction has been parsed.
      * Overide for desired behaviour.
      */
-    virtual void processingInstruction(const char* target, const char* data) {}
+    virtual void processingInstruction(const char* /* target */, const char* /* data */) {}
+
+    /*
+    * destructor
+    */
+    virtual ~srcSAXHandler() = default;
 
 #pragma GCC diagnostic pop
 

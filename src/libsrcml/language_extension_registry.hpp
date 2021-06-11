@@ -31,10 +31,10 @@
 typedef std::pair<std::string, int> language_extension;
 
 /** access the extension from language_extension */
-#define get_extension(OBJ) OBJ.first
+#define get_extension(OBJ) (OBJ).first
 
 /** access the language from language_extension */
-#define get_language(OBJ) OBJ.second
+#define get_language(OBJ) (OBJ).second
 
  /**
   * language_extension_registry_error

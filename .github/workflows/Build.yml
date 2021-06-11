@@ -1,0 +1,89 @@
+---
+name: Build
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Cache Build
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: build
+          key: ${{ runner.os }}-client1
+
+      - name: Setup Ubuntu
+        shell: bash
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          sudo apt update
+          sudo apt install curl zip g++ make ninja-build antlr libantlr-dev \
+                           libxml2-dev libxml2-utils libxslt1-dev \
+                           libarchive-dev libssl-dev libcurl4-openssl-dev \
+                           cpio man file dpkg-dev
+          curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
+              sudo tar xz -C /usr/local/include
+
+      - name: Setup macOS
+        shell: bash
+        if: ${{ matrix.os == 'macos-latest' }}
+        run: |
+          brew install ninja antlr2
+          curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
+            sudo tar xz -C /usr/local/include
+
+      - name: Setup Windows
+        uses: microsoft/setup-msbuild@v1
+        if: ${{ matrix.os == 'windows-latest' }}
+
+      - name: Create build directory
+        shell: bash
+        if: ${{ !steps.cache.outputs.cache-hit }}
+        run: mkdir build
+
+      - name: Build on Windows
+        shell: bash
+        if: ${{ matrix.os == 'windows-latest' }}
+        working-directory: build
+        run: |
+          cmake ..
+          cmake --build . --config Release --target install
+
+      - name: Build on Ubuntu/macOS
+        shell: bash
+        if: ${{ matrix.os != 'windows-latest' }}
+        working-directory: build
+        run: |
+          cmake .. -G Ninja
+          sudo cmake --build . --config Release --target install
+
+      - name: Finish install for Ubuntu
+        shell: bash
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        working-directory: build
+        run: |
+          sudo ldconfig
+
+      - name: Set PATH for Windows
+        shell: bash
+        if: ${{ matrix.os == 'windows-latest' }}
+        working-directory: build
+        run: |
+          echo "/c/Program Files (x86)/srcML/bin" >> $GITHUB_PATH
+
+      - name: Run Installed srcml
+        shell: bash
+        working-directory: build
+        run: |
+          srcml --version
+          srcml --text="int a;" -l C++

@@ -29,11 +29,21 @@
 
 #include <string>
 #include <array>
+
+// Disable warnings from boost
+// Marked as external include, but still doesn't block all of them
+// The specific warnings are necessary
+#ifdef _MSC_VER
+#   pragma warning (push, 0)
+#   pragma warning (disable : 5243)
+#endif
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/random_access_index.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/member.hpp>
-#include <string>
+#ifdef _MSC_VER
+    #pragma warning (pop)
+#endif
 
 enum {
   NS_REQUIRED   = 1 << 0, // required for all srcML, and must be on the root

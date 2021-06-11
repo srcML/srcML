@@ -29,6 +29,13 @@
  * including whitespace, is passed through unused.
  */
 
+header {
+#ifndef _MSC_VER
+#else
+    #pragma warning(disable : 4242) // 'argument': conversion from 'int' to 'char'
+#endif
+}
+
 options {
     language="Cpp";
     namespaceAntlr="antlr";
@@ -97,7 +104,7 @@ RAW_STRING_START :
 protected
 RSTRING_DELIMITER:
     { delimiter = ""; }
-    (options { greedy = true; } : { delimiter += LA(1); } ~('(' | ')' | '\\' | '\n' | ' ' | '\t' ))*
+    (options { greedy = true; } : { delimiter += static_cast<char>(LA(1)); } ~('(' | ')' | '\\' | '\n' | ' ' | '\t' ))*
 ;
 
 CHAR_START :

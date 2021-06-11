@@ -51,7 +51,7 @@ typedef void (*xsltFreeStylesheet_t)(xsltStylesheetPtr);
 void dlexsltRegisterAll(void * handle);
 #endif
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
 #include <io.h>
 #endif
 

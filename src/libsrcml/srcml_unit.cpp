@@ -403,12 +403,12 @@ const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
 
         unit->srcml_fragment = "";
         unit->srcml_fragment->reserve(rawsize);
-        unit->srcml_fragment->assign(unit->srcml, 0, unit->insert_begin);
+        unit->srcml_fragment->assign(unit->srcml, 0, static_cast<std::size_t>(unit->insert_begin));
         if (insert_attr_begin == 0) {
-            unit->srcml_fragment->append(unit->srcml, unit->insert_end, unit->srcml.size() - unit->insert_end);
+            unit->srcml_fragment->append(unit->srcml, static_cast<std::size_t>(unit->insert_end), static_cast<std::size_t>(unit->srcml.size() - unit->insert_end));
         } else {
-            unit->srcml_fragment->append(unit->srcml, unit->insert_end, insert_attr_begin - unit->insert_end);
-            unit->srcml_fragment->append(unit->srcml, insert_attr_end, unit->srcml.size() - insert_attr_end);
+            unit->srcml_fragment->append(unit->srcml, static_cast<std::size_t>(unit->insert_end), static_cast<std::size_t>(insert_attr_begin - unit->insert_end));
+            unit->srcml_fragment->append(unit->srcml, static_cast<std::size_t>(insert_attr_end), static_cast<std::size_t>(unit->srcml.size() - insert_attr_end));
         }
     }
 
@@ -460,7 +460,7 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
     if (unit->srcml_raw)
         return unit->srcml_raw->c_str();
 
-    unit->srcml_raw = std::string(unit->srcml, start, rawsize);
+    unit->srcml_raw = std::string(unit->srcml, static_cast<std::size_t>(start), static_cast<std::size_t>(rawsize));
 
     return unit->srcml_raw->c_str();
 }
@@ -692,10 +692,6 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
         return SRCML_STATUS_IO_ERROR;
     }
 
-    if(unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
-        unit->src = extract_revision(unit->srcml.c_str(), (int)unit->srcml.size(), int(*unit->archive->revision_number), true);
-    }
-
     // if this unit was parsed from source, then the src does not exist
     // generate this source from the srcml
     if (!unit->src) {
@@ -856,7 +852,7 @@ int srcml_unit_unparse_io(struct srcml_unit* unit, void* context, int (*write_ca
     if (unit == nullptr || context == nullptr || write_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_unit_unparse_internal(unit, [write_callback, close_callback, context](xmlCharEncodingHandlerPtr handler) {
+    return srcml_unit_unparse_internal(unit, [write_callback, close_callback, context](xmlCharEncodingHandlerPtr handler) noexcept {
 
         return xmlOutputBufferCreateIO(write_callback, close_callback, context, handler);
     });
@@ -1048,18 +1044,6 @@ int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const
     // prefix can be default
     if (unit == nullptr || name == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
-
-    // set the found prefix, plus mark it as used
-    if (uri && strcmp(SRCML_CPP_NS_URI, uri) == 0) {
-
-        auto&& view = unit->namespaces->get<nstags::uri>();
-        auto it = view.find(SRCML_CPP_NS_URI);
-        if (it != view.end()) {
-            view.modify(it, [](Namespace& thisns){ thisns.flags |= NS_USED; });
-        } else {
-            unit->namespaces->push_back({ prefix, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
-        }
-    }
 
     if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, uri))
         return SRCML_STATUS_INVALID_INPUT;

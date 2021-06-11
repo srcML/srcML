@@ -116,24 +116,28 @@
  * the input if in C++ mode.  They are matched as NAME in C mode.
  */
 
-header "pre_include_hpp" {
-    #pragma GCC diagnostic ignored "-Wunknown-pragmas"
-    #pragma GCC diagnostic ignored "-Wunknown-warning-option"
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
-    #pragma GCC diagnostic ignored "-Wcatch-value"
+header "pre_include_cpp" {
+#if defined(__GNUC__)
+#endif
+#ifdef __clang__
+#endif
+#if defined(__GNUC__) && !defined(__clang__)
+#endif
+#ifdef _MSC_VER
+    #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+    #pragma warning(disable : 4100)  // 'pe' unreferenced local variable
+    #pragma warning(disable : 4101)  // 'pe' unreferenced local variable
+#endif
 }
 
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
-
-#pragma GCC diagnostic warning "-Wunused-parameter"
-
 #include <string>
 #include <deque>
 #include <array>
 #include <stack>
-#include "Language.hpp"
-#include "ModeStack.hpp"
+#include <Language.hpp>
+#include <ModeStack.hpp>
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
 #include <srcml.h>
@@ -1083,7 +1087,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
 ;
 
 // efficient way to view the token after the current LA(1)
-next_token[] returns [int token] {
+next_token[] returns [unsigned int token] {
 
         if (LT(1)->getColumn() == current_column && LT(1)->getLine() == current_line) {
 
@@ -1136,7 +1140,7 @@ next_token_check[int token1, int token2] returns [bool result] {
 // skips past any skiptokens to get the one after
 look_past[int skiptoken] returns [int token] {
 
-        int place = mark();
+        unsigned int place = mark();
         inputState->guessing++;
 
         while (LA(1) == skiptoken)
@@ -2834,7 +2838,7 @@ namespace_directive[] { ENTRY_DEBUG } :
         USING
 ;
 
-using_aliasing[]  { int type_count;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+using_aliasing[]  { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
@@ -5596,7 +5600,7 @@ compound_name_cpp[bool& iscompound] { namestack.fill(""); bool iscolon = false; 
         { notdestructor = LA(1) == DESTOP; }
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 }
 
 // compound name for C#
@@ -5619,7 +5623,7 @@ compound_name_csharp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
         )*
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 }
 
 // compound name for C
@@ -5709,7 +5713,7 @@ keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
         { notdestructor = LA(1) == DESTOP; }
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 }
 
 // an identifier
@@ -6537,7 +6541,7 @@ macro_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEB
         } set_bool[first, false] )*
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 
         // no end found to macro
         if (isoption(parser_options, SRCML_OPTION_DEBUG))
@@ -6664,7 +6668,7 @@ macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
         } set_bool[first, false] )*
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 
         // no end found to macro
         if (isoption(parser_options, SRCML_OPTION_DEBUG))
@@ -6713,7 +6717,7 @@ macro_type_name_call_inner[] { CompleteElement element(this); bool first = true;
         set_bool[first, false] )*
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 
         // no end found to macro
         if (isoption(parser_options, SRCML_OPTION_DEBUG))
@@ -8466,7 +8470,7 @@ template_param[] { in_template_param = true; ENTRY_DEBUG } :
     set_bool[in_template_param, false]
 ;
 exception
-catch[antlr::RecognitionException] {
+catch[antlr::RecognitionException&] {
 
     in_template_param = false;
     throw antlr::RecognitionException();
@@ -9273,9 +9277,6 @@ cpp_check_end[] returns[bool is_end = false] {
 
  if (LA(1) == EOL || LA(1) == LINE_COMMENT_START || LA(1) == BLOCK_COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF || LA(1) == 1)  /* EOF */
      return true;
-
- return false;
-
 }:;
 
 // skip to eol
@@ -9429,8 +9430,13 @@ eol_post[int directive_token, bool markblockzero] {
                 // should work unless also creates a dangling lcurly or lparen
                 // in which case may need to run on everthing except else.
                 // Leaving off for now, with no option. Test thoroughly, and then turn on by default
+#ifdef _MSC_VER
+#   pragma warning (push, 0)
+#endif
                 if (false && !inputState->guessing) {
-
+#ifdef _MSC_VER
+    #pragma warning (pop)
+#endif
                     for (auto& item : cppif_end_count_check()) {
 
                         if (item == RCURLY) {

@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "ModeStack.hpp"
+#include <ModeStack.hpp>
 
 /* Set of mode flags */
 const srcMLState::MODE_TYPE ModeStack::MODE_STATEMENT                 (std::string("0000000000000000000000000000000000000000000000000000000000000001"));

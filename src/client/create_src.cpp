@@ -32,6 +32,18 @@
 #include <libarchive_utilities.hpp>
 #include <srcml_utilities.hpp>
 
+#include <stdio.h>
+#if !defined(_MSC_VER)
+#include <sys/uio.h>
+#include <unistd.h>
+#define READ read
+#define WRITE write
+#else
+#include <io.h>
+#define READ _read
+#define WRITE _write
+#endif
+
 static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
 
     OpenFileLimiter::open();
@@ -51,23 +63,47 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
     srcml_input_src curinput = input_source;
 
     // urls
+    bool isCurl = false;
     if (curinput.protocol != "file" && curl_supported(curinput.protocol)) {
         srcml_input_src uninput = curinput;
         if (!input_curl(uninput))
             return 0;
 
+        isCurl = true;
         curinput.fd = *uninput.fd;
     }
 
     // compressed files
     if (!curinput.compressions.empty() && curinput.archives.empty()) {
         srcml_input_src uninput = curinput;
+
+#if true //WIN32
+        // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
+        // or cut short. 
+        // So for Windows, convert to a FILE*. Note sure when to close the FILE*
+        if (isCurl) {
+            uninput.fileptr = fdopen(*(uninput.fd), "r");
+            uninput.fd = boost::none;
+        }
+#endif
+
         input_file(uninput);
         curinput.fd = *uninput.fd;
     }
 
     // archives (and possibly compressions)
-    if (!curinput.archives.empty()) {
+    else if (!curinput.archives.empty()) {
+
+#if true //WIN32
+        if (isCurl) {
+            // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
+            // or cut short. 
+            // So for Windows, convert to a FILE*. Note sure when to close the FILE*
+            curinput.fileptr = fdopen(*(curinput.fd), "r");
+            curinput.fd = boost::none;
+        }
+#endif
+        
         curinput.fd = input_archive(curinput);
     }
 

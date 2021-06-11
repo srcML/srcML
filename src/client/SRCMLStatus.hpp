@@ -55,24 +55,23 @@ public:
       if (option(SRCML_COMMAND_QUIET) && !(msg_type == ERROR_MSG))
         return;
 
-      return;
-
-      switch (msg_type) {
-      case ERROR_MSG:
-        std::cerr << "ERROR ";
-        break;
-      case WARNING_MSG:
-        std::cerr << "WARNING ";
-        break;
-      case INFO_MSG:
-        std::cerr << "INFO ";
-        break;
-      case DEBUG_MSG:
-        std::cerr << "DEBUG ";
-        break;
-      default:
-        break;
-      }
+      // @TODO Figure out why this code is not used
+      // switch (msg_type) {
+      // case ERROR_MSG:
+      //   std::cerr << "ERROR ";
+      //   break;
+      // case WARNING_MSG:
+      //   std::cerr << "WARNING ";
+      //   break;
+      // case INFO_MSG:
+      //   std::cerr << "INFO ";
+      //   break;
+      // case DEBUG_MSG:
+      //   std::cerr << "DEBUG ";
+      //   break;
+      // default:
+      //   break;
+      // }
     }
 
     static void log(int msg_type, const std::string& msg_text) {

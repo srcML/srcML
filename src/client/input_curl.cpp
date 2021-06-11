@@ -77,26 +77,34 @@ bool getCurlErrors() {
     Write callback for curl. libcurl internals use fwrite() as default, so replacing it
     with our own callback does not entail an additional copy
 */
-size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
+extern "C" {
+    size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
 
-    curl_write_info* data = (curl_write_info*) userdata;
+        curl_write_info* data = (curl_write_info*) userdata;
 
-    // have to check for download errors before we write anything into the pipe
-    // you may expect that if there were errors, you could check for that before data
-    // is written. But that is not the case
-    long http_code = 0;
-    curl_easy_getinfo (data->curlhandle, CURLINFO_RESPONSE_CODE, &http_code);
+        // have to check for download errors before we write anything into the pipe
+        // you may expect that if there were errors, you could check for that before data
+        // is written. But that is not the case
+        long http_code = 0;
+        curl_easy_getinfo (data->curlhandle, CURLINFO_RESPONSE_CODE, &http_code);
 
-    // return immediately with an error so that curl_easy_perform() returns
-    // and curl_easy_getinfo() can get data to process the error
-    if (http_code != 200)
-        return 0;
+        // return immediately with an error so that curl_easy_perform() returns
+        // and curl_easy_getinfo() can get data to process the error
+        if (http_code != 200)
+            return 0;
 
-    goCurl(true);
+        goCurl(true);
 
-    ssize_t result = write(data->outfd, ptr, size * nmemb);
+    #ifndef WIN32
+        ssize_t result = write(data->outfd, ptr, size * nmemb);
+    #else
+        if (size * nmemb > UINT_MAX)
+            return 0;
+        ssize_t result = write(data->outfd, ptr, static_cast<unsigned int>(size * nmemb));
+    #endif
 
-    return result == -1 ? 0 : (size_t) result;
+        return result == -1 ? 0 : (size_t) result;
+    }
 }
 
 // downloads URL into file descriptor

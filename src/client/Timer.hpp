@@ -23,14 +23,11 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
 #include <time.h>
 #endif
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wshorten-64-to-32"
 #include <chrono>
-#pragma GCC diagnostic pop
 
 class Timer {
 public:
@@ -43,7 +40,7 @@ public:
 
     inline void start() {
         real_world_time = std::chrono::high_resolution_clock::now();
-        #ifdef _MSC_BUILD
+        #ifdef _MSC_VER
             cpu_time = clock();
         #else
             cpu_time = std::clock();
@@ -57,7 +54,7 @@ public:
 
     // time in milliseconds
     inline double cpu_time_elapsed() {
-        #ifdef _MSC_BUILD
+        #ifdef _MSC_VER
             return  1000.0 * (clock() - cpu_time) / CLOCKS_PER_SEC;
         #else
             return  1000.0 * (std::clock() - cpu_time) / CLOCKS_PER_SEC;
@@ -74,7 +71,7 @@ public:
 
 private:
     std::chrono::time_point<std::chrono::high_resolution_clock> real_world_time;
-    #ifdef _MSC_BUILD
+    #ifdef _MSC_VER
         clock_t cpu_time;
     #else
         std::clock_t cpu_time;

@@ -31,18 +31,25 @@
 #include <unit_utilities.hpp>
 
 #include <libxml/parser.h>
-#include <stdio.h>
+// #include <stdio.h>
 #include <srcmlns.hpp>
 
 #include <string>
 #include <vector>
 #include <stack>
 
-#include <cstring>
+// #include <cstring>
 
 #include <mutex>
 #include <condition_variable>
+#ifdef _MSC_VER
+#    pragma warning(push,0)
+#    pragma warning(disable : 4619)
+#endif
 #include <boost/optional.hpp>
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
 
 #define ATTR_LOCALNAME(pos) (pos * 5)
 #define ATTR_PREFIX(pos) (pos * 5 + 1)
@@ -130,7 +137,7 @@ public :
      *
      * Destructor, deletes mutex and conditions.
      */
-    ~srcml_reader_handler() {
+    virtual ~srcml_reader_handler() {
      }
 
     /**
@@ -243,7 +250,7 @@ public :
      *
      * Overidden startRoot to handle collection of root attributes. Stop before continue
      */
-    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
+    virtual void startRoot(const char* /* localname */, const char* /* prefix */, const char* /* URI */,
                            int num_namespaces, const xmlChar** namespaces, int num_attributes,
                            const xmlChar** attributes) {
 
@@ -257,7 +264,7 @@ public :
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
             std::string attribute = (const char*) attributes[pos * 5];
-            std::string value((const char *)attributes[pos * 5 + 3], attributes[pos * 5 + 4] - attributes[pos * 5 + 3]);
+            std::string value((const char *)attributes[pos * 5 + 3], static_cast<std::size_t>(attributes[pos * 5 + 4] - attributes[pos * 5 + 3]));
 
             // Note: these are ignore instead of placing in attributes.
             if (attribute == "timestamp")
@@ -275,14 +282,14 @@ public :
             else if (attribute == "version")
                 srcml_archive_set_version(archive, value.c_str());
             else if (attribute == "tabs")
-                archive->tabstop = atoi(value.c_str());
+                archive->tabstop = static_cast<std::size_t>(atoi(value.c_str()));
             else if (attribute == "options") {
 
                 while(!value.empty()) {
 
-                    std::string::size_type pos = value.find(",");
-                    std::string option = value.substr(0, pos);
-                    if (pos == std::string::npos)
+                    std::string::size_type commaPos = value.find(",");
+                    std::string option = value.substr(0, commaPos);
+                    if (commaPos == std::string::npos)
                         value = "";
                     else
                         value = value.substr(value.find(",") + 1);
@@ -311,12 +318,12 @@ public :
         // collect namespaces
         for (int pos = 0; pos < num_namespaces; ++pos) {
 
-            std::string prefix = (const char*) namespaces[pos * 2] ? (const char*) namespaces[pos * 2] : "";
-            std::string uri = (const char*) namespaces[pos * 2 + 1] ? (const char*) namespaces[pos * 2 + 1] : "";
+            std::string nsPrefix = (const char*) namespaces[pos * 2] ? (const char*) namespaces[pos * 2] : "";
+            std::string nsURI = (const char*) namespaces[pos * 2 + 1] ? (const char*) namespaces[pos * 2 + 1] : "";
 
-            srcml_uri_normalize(uri);
+            srcml_uri_normalize(nsURI);
 
-            srcml_archive_register_namespace(archive, prefix.c_str(), uri.c_str());
+            srcml_archive_register_namespace(archive, nsPrefix.c_str(), nsURI.c_str());
         }
 
 #ifdef SRCSAX_DEBUG
@@ -337,8 +344,8 @@ public :
      * Overidden startUnit to handle collection of Unit attributes and tag. Stop before continue
      * if collecting attributes.
      */
-    virtual void startUnit(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+    virtual void startUnit(const char* /* localname */, const char* /* prefix */, const char* /* URI */,
+                           int /* num_namespaces */, const xmlChar** /* namespaces */, int num_attributes,
                            const xmlChar** attributes) {
 
 #ifdef SRCSAX_DEBUG
@@ -406,7 +413,7 @@ public :
      * Overidden endRoot to indicate done with parsing and
         free any waiting process.
      */
-    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {
+    virtual void endRoot(const char* /* localname */, const char* /* prefix */, const char* /* URI */) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -436,7 +443,7 @@ public :
      *
      * Overidden endUnit to collect srcml and stop parsing.  Clear collect srcML after pause.
      */
-    virtual void endUnit(const char* localname, const char* prefix, const char* URI) {
+    virtual void endUnit(const char* /* localname */, const char* /* prefix */, const char* /* URI */) {
 
 #ifdef SRCSAX_DEBUG
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)localname);
@@ -504,8 +511,8 @@ public :
      * SAX handler function for a meta tags.
      * Overide for desired behaviour.
      */
-    virtual void metaTag(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const xmlChar** namespaces, int num_attributes,
+    virtual void metaTag(const char* localname, const char* /* prefix */, const char* /* URI */,
+                           int /* num_namespaces */, const xmlChar** /* namespaces */, int num_attributes,
                            const xmlChar** attributes) {
 
         if (strcmp(localname, "macro-list") == 0) {
@@ -516,9 +523,9 @@ public :
             for (int pos = 0; pos < num_attributes; ++pos) {
 
                 if (strcmp((const char*) attributes[ATTR_LOCALNAME(pos)], "token") == 0)
-                    token.append((const char*) attributes[ATTR_VALUE_START(pos)], attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]);
+                    token.append((const char*) attributes[ATTR_VALUE_START(pos)], static_cast<std::size_t>(attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]));
                 else if (strcmp((const char*) attributes[ATTR_LOCALNAME(pos)], "type") == 0)
-                    type.append((const char*) attributes[ATTR_VALUE_START(pos)], attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]);
+                    type.append((const char*) attributes[ATTR_VALUE_START(pos)], static_cast<std::size_t>(attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]));
             }
 
             if (token != "" && type != "") {

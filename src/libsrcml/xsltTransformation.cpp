@@ -37,7 +37,7 @@
 #include <libexslt/exslt.h>
 #endif
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
 #include <io.h>
 #endif
 

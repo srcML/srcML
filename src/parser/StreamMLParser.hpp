@@ -27,14 +27,14 @@
 #define INCLUDED_STREAM_MLPARSER_HPP
 
 #include <antlr/TokenStream.hpp>
-#include "TokenStream.hpp"
+#include <TokenStream.hpp>
 
 #include <deque>
 #include <stack>
 #include <cassert>
 
-#include "srcMLToken.hpp"
-#include "srcMLParser.hpp"
+#include <srcMLToken.hpp>
+#include <srcMLParser.hpp>
 
 /**
  * StreamMLParser
@@ -152,7 +152,7 @@ private:
 
         // Always handled as white space and hidden from
         // parsing
-        if (srcMLParser::whitespace_token_set.member(token_type))
+        if (srcMLParser::whitespace_token_set.member(static_cast<unsigned long>(token_type)))
             return true;
 
         // whether to handle a line comment start or an EOL
@@ -787,7 +787,7 @@ private:
      *
      * Push the a token onto the correct buffer.
      */
-    inline void pushCorrectToken(const antlr::RefToken& rtoken) {
+    inline void pushCorrectToken(const antlr::RefToken& /* rtoken */) {
 
         if (isSkipToken(srcMLParser::LA(1)))
 

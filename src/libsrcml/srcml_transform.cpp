@@ -21,7 +21,7 @@
 #include <srcml.h>
 #include <srcml_types.hpp>
 
-#ifdef _MSC_BUILD
+#ifdef _MSC_VER
 #include <io.h>
 #endif
 
@@ -41,7 +41,14 @@
 
 #include <algorithm>
 #include <vector>
+#ifdef _MSC_VER
+#    pragma warning(push,0)
+#    pragma warning(disable : 4619)
+#endif
 #include <boost/optional.hpp>
+#ifdef _MSC_VER
+#    pragma warning(pop)
+#endif
 
 #include <srcmlns.hpp>
 
@@ -642,6 +649,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         }
 
         // special cases where the nodes are not written to the tree
+#ifdef _MSC_VER
+#   pragma warning(push)
+#   pragma warning(disable: 4061)
+#endif
         switch (fullresults->nodeTab[i]->type) {
         case XML_COMMENT_NODE:
 
@@ -666,9 +677,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         default:
 
             // dump the result tree to the string using an output buffer that writes to a std::string
-            xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) {
+            xmlOutputBufferPtr output = xmlOutputBufferCreateIO([](void* context, const char* buffer, int len) noexcept {
 
-                ((std::string*) context)->append(buffer, len);
+                ((std::string*) context)->append(buffer, static_cast<std::size_t>(len));
 
                 return len;
 
@@ -713,8 +724,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             xmlSAXHandler roottagsax;
             memset(&roottagsax, 0, sizeof(roottagsax));
             roottagsax.initialized    = XML_SAX2_MAGIC;
-            roottagsax.startElementNs = [](void* ctx, const xmlChar* localname, const xmlChar* prefix, const xmlChar* URI,
-                             int nb_namespaces, const xmlChar** namespaces,
+            roottagsax.startElementNs = [](void* ctx, const xmlChar* /* localname */, const xmlChar* /* prefix */, const xmlChar* /* URI */,
+                             int /* nb_namespaces */, const xmlChar** /* namespaces */,
                              int nb_attributes, int /* nb_defaulted */, const xmlChar** attributes) {
 
                 auto ctxt = (xmlParserCtxtPtr) ctx;
@@ -729,7 +740,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
             // extract the start tag, turning it into an empty tag
             // note: it may be an empty tag already
-            std::string starttag = nunit->srcml.substr(0, nunit->content_begin - 1);
+            std::string starttag = nunit->srcml.substr(0, static_cast<std::size_t>(nunit->content_begin - 1));
             if (starttag.back() != '/')
                 starttag += "/";
             starttag += ">";
@@ -753,6 +764,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         // store in the returned results
         result->units.push_back(nunit);
     }
+#ifdef _MSC_VER
+#   pragma warning(pop)
+#endif
 
     // remove all nodes in the fullresults nodeset
     // valgrind shows free accessing these nodes after they have been freed
@@ -814,7 +828,7 @@ struct srcml_unit* srcml_transform_get_unit(struct srcml_transform_result* resul
     if (index >= (int) result->units.size())
         return 0;
 
-    return result->units[index];
+    return result->units[static_cast<std::size_t>(index)];
 }
 
 /**

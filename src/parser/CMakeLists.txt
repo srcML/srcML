@@ -21,6 +21,7 @@
 
 # Find antlr binary
 find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
+message("-- ANTLR: ${ANTLR_EXE}")
 
 # Assume all C++ source files are parser
 file(GLOB PARSER_SOURCE *.hpp *.cpp)
@@ -36,34 +37,20 @@ file(GLOB PARSER_SOURCE *.hpp *.cpp)
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
 
     if("${INCLUDE_GRAMMAR}" STREQUAL "")
-        if(WIN32)
-            # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
-            add_custom_command(OUTPUT  ${OUTPUT_FILES}
-                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES}
-            )
-        else()
-            add_custom_command(OUTPUT  ${OUTPUT_FILES}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
-            )
-        endif()
+        # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
+        add_custom_command(OUTPUT  ${OUTPUT_FILES}
+            DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES}
+            COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
+        )
     else()
-        if(WIN32)
-            add_custom_command(OUTPUT  ${OUTPUT_FILES}
-                DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
-            )
-        else()
-            add_custom_command(OUTPUT  ${OUTPUT_FILES}
-                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES} DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-                COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
-            )
-        endif()
+        add_custom_command(OUTPUT  ${OUTPUT_FILES}
+            DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
+            COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
+        )
     endif()
 endmacro(RunAntlr)
 
@@ -129,4 +116,14 @@ add_library(parser OBJECT
     ${PARSER_SOURCE}
 )
 
-target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml ${CMAKE_GENERATED_SOURCE_DIR})
+target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+if(MSVC)
+    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIRS})
+    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIR})
+    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${Boost_INCLUDE_DIR})
+    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${ANTLR_INCLUDE_DIR})
+    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CMAKE_GENERATED_SOURCE_DIR})
+    target_compile_options(parser PRIVATE ${CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG})
+else()
+    target_include_directories(parser SYSTEM PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
+endif()

@@ -26,7 +26,7 @@
 
 #include <SRCMLStatus.hpp>
 
-#if defined(_MSC_BUILD) || defined(__MINGW32__)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 #include <io.h>
 #include <fcntl.h>
 #include <windows.h>
@@ -38,7 +38,7 @@ void srcml_pipe(srcml_input_src& input, srcml_pipe_process process, srcml_reques
 
     // setup the pipes
     int fds[2] = { -1, -1 };
-#if !defined(_MSC_BUILD) && !defined(__MINGW32__)
+#if !defined(_MSC_VER) && !defined(__MINGW32__)
     if (pipe(fds) == -1) {
         perror("srcml");
         return;

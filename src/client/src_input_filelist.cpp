@@ -70,7 +70,7 @@ int src_input_filelist(ParseQueue& queue,
     // if we know the size, create the right sized data_buffer
     std::vector<char> vbuffer;
     if (archive_entry_size_is_set(entry))
-        vbuffer.reserve(archive_entry_size(entry));
+        vbuffer.reserve(static_cast<std::size_t>(archive_entry_size(entry)));
 
     // read the file into a buffer
     const char* buffer;
@@ -89,7 +89,7 @@ int src_input_filelist(ParseQueue& queue,
             ++line;
         ++line;
 
-        std::string sline(startline, line - startline);
+        std::string sline(startline, static_cast<std::size_t>(line - startline));
 
         // trim from both ends
         const std::string WHITESPACE = " \n\r\t\f\v";
@@ -108,8 +108,8 @@ int src_input_filelist(ParseQueue& queue,
 
         // process this file
         srcml_input_src input(sline);
-        int status = srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
-        if (status == -1)
+        auto fileStatus = srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
+        if (fileStatus == -1)
             return -1;
     }
 

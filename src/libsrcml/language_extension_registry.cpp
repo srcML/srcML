@@ -145,10 +145,16 @@ int language_extension_registry::get_language_from_filename(const char* const pa
         return 0;
 
     // custom extensions
-    for (int i = (int)(registered_languages.size() - 1); i >= 0; --i) {
-        if (get_extension(registered_languages[i]) == extension)
-            return get_language(registered_languages[i]) == Language::LANGUAGE_NONE ? 0 :
-                get_language(registered_languages[i]) == Language::LANGUAGE_C && use_cpp_for_c ? Language::LANGUAGE_CXX : get_language(registered_languages[i]);
+    // search from the back
+    auto result = std::find_if(registered_languages.rbegin(), registered_languages.rend(), [extension](const language_extension& le){ return le.first == extension; });
+    if (result != registered_languages.rend()) {
+            if (result->second == Language::LANGUAGE_NONE)
+                return 0;
+
+            if (result->second == Language::LANGUAGE_C && use_cpp_for_c)
+                return Language::LANGUAGE_CXX;
+
+            return result->second;
     }
 
     return 0;

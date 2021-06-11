@@ -146,7 +146,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> request, TraceLog& log, c
     // write the unit
     if (request->status == SRCML_STATUS_OK) {
 
-        log.totalLOC(srcml_unit_get_loc(request->unit.get()));
+        log.totalLOC(static_cast<size_t>(srcml_unit_get_loc(request->unit.get())));
 
         // chance that a solo unit archive was the input, but transformation was
         // done, so output has to be a full archive

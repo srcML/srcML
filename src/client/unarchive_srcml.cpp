@@ -60,10 +60,14 @@ void unarchive_srcml(const srcml_request_t& /* srcml_request */,
     int status = ARCHIVE_OK;
     const int buffer_size = 16384;
 
-    if (contains<int>(input_sources[0])) {
+    if (contains<FILE*>(input_sources[0])) {
+
+        status = archive_read_open_FILE(libarchive_srcml.get(), input_sources[0]);
+    } else if (contains<int>(input_sources[0])) {
 
         status = archive_read_open_fd(libarchive_srcml.get(), input_sources[0], buffer_size);
     } else {
+
         status = archive_read_open_filename(libarchive_srcml.get(), input_sources[0].resource.c_str(), buffer_size);
     }
     if (status != ARCHIVE_OK) {

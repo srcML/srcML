@@ -119,13 +119,18 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
 
 boost::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args, size_t ns_size) {
 
-    size_t found = -1;
+    size_t found = 0;
+    bool first = true;
 
     while (true) {
         std::string template_arg = "";
         std::string replace_arg = "%s";
 
-        found = template_string.find("%", found + 1);
+        if (first)
+            found = template_string.find("%", 0);
+        else
+            found = template_string.find("%", found + 1);
+        first = false;
 
         if (found == std::string::npos) {
             break;

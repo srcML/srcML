@@ -23,8 +23,8 @@
 #ifndef MODE_STACK_HPP
 #define MODE_STACK_HPP
 
-#include "TokenParser.hpp"
-#include "srcMLState.hpp"
+#include <TokenParser.hpp>
+#include <srcMLState.hpp>
 
 /**
  * ModeStack
@@ -36,7 +36,7 @@ class ModeStack : public TokenParser {
 
 public:
 
-    #include "Mode.hpp"
+    #include <Mode.hpp>
 
    /**
      * ModeStack
@@ -125,7 +125,7 @@ protected:
      * Delegate to remove the current mode m (pop from stack).
      * Does not actually check or use m.
      */
-    void endMode(const srcMLState::MODE_TYPE& m) {
+    void endMode(const srcMLState::MODE_TYPE& /* m */) {
 
         if (st.size() <= 1)
             throw Segmentation_Fault();
