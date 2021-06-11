@@ -13,4 +13,3 @@ xmlcheck "$output"
 # test simple
 echo -n "" | srcml -l C++
 check "$output"
-

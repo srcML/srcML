@@ -27,4 +27,3 @@ check "sub/a.cpp"
 
 srcml --show-filename sub/a.cpp
 check "sub/a.cpp"
-

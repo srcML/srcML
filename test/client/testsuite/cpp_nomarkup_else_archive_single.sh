@@ -285,4 +285,3 @@ check sub/b.cpp.xml "$fnomarkup_else"
 
 srcml --archive --cpp-nomarkup-else -o sub/b.cpp.xml sub/a.cpp
 check sub/b.cpp.xml "$fnomarkup_else"
-

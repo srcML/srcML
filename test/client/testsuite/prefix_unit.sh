@@ -58,4 +58,3 @@ check
 
 srcml --prefix="http://www.cs.uakron.edu/~collard/foo" <<< "$input"
 check
-

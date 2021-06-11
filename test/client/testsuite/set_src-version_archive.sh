@@ -155,4 +155,3 @@ check sub/a.cpp.xml "$fsrcml"
 
 srcml -s '1.0' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"
-

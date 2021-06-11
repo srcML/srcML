@@ -15,4 +15,3 @@ check "$output"
 
 echo -n "" | srcml -l C++ --url bar -f foo
 check "$output"
-

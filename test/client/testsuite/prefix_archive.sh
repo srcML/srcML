@@ -110,4 +110,3 @@ check ""
 
 srcml --prefix="http://www.srcML.org/srcML/src" <<< "$archive_multi"
 check ""
-

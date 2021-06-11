@@ -93,4 +93,3 @@ check sub/b.cpp.xml "$xpathempty"
 
 srcml --xpath=unit -o sub/b.cpp.xml < sub/a.cpp.xml
 check sub/b.cpp.xml "$xpathempty"
-

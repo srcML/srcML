@@ -139,4 +139,3 @@ check "$outputb"
 
 echo "$srcml" | srcml -X
 check "$srcml"
-

@@ -81,4 +81,3 @@ check sub/b.cpp.xml "$srcml"
 
 srcml --xslt=identity.xsl -o sub/b.cpp.xml < sub/unit.cpp.xml
 check sub/b.cpp.xml "$srcml"
-

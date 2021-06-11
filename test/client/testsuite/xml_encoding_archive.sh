@@ -109,4 +109,3 @@ check sub/a.cpp.xml "$fsrcmlb"
 
 srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --xml-encoding "ISO-8859-1"
 check sub/a.cpp.xml "$fsrcmlb"
-

@@ -87,4 +87,3 @@ check sub/a.cpp.xml "$fsrcml"
 
 srcml --url 'bar' sub/a.cpp sub/b.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$fsrcml"
-

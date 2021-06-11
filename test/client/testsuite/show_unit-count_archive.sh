@@ -81,4 +81,3 @@ check "$empty_output"
 
 srcml --show-unit-count < sub/emptyarchive.xml
 check "$empty_output"
-

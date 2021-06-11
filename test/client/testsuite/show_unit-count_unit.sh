@@ -55,4 +55,3 @@ check "$output"
 
 srcml --show-unit-count  < sub/empty.xml
 check "$output"
-

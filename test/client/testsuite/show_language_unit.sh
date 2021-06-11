@@ -98,4 +98,3 @@ check ""
 
 srcml --show-language < sub/a.cpp.xml
 check ""
-

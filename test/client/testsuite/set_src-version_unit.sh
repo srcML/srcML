@@ -46,4 +46,3 @@ check "$srcml"
 
 echo -n "" | srcml -l C++ --src-version=1.0
 check "$srcml"
-
