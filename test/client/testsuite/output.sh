@@ -66,11 +66,11 @@ check sub/a.cpp "$fstuff"
 srcml -o sub/a.cpp <<< "$foutput"
 check sub/a.cpp "$fstuff"
 
-# srcml - --output /dev/stdout <<< "$foutput"
-# check "$fstuff"
+srcml - --output /dev/stdout <<< "$foutput" || [[ "$OSTYPE" == 'msys' ]]
+check "$fstuff" || [[ "$OSTYPE" == 'msys' ]]
 
-# srcml - --output=/dev/stdout <<< "$foutput"
-# check "$fstuff"
+srcml - --output=/dev/stdout <<< "$foutput" || [[ "$OSTYPE" == 'msys' ]]
+check "$fstuff" || [[ "$OSTYPE" == 'msys' ]]
 
-# srcml - -o /dev/stdout <<< "$foutput"
-# check "$fstuff"
+srcml - -o /dev/stdout <<< "$foutput" || [[ "$OSTYPE" == 'msys' ]]
+check "$fstuff" || [[ "$OSTYPE" == 'msys' ]]
