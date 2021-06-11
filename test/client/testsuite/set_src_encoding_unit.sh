@@ -59,10 +59,6 @@ iconv -f UTF-8 -t UTF-8 sub/a.cpp > sub/a_UTF-8.cpp
 srcml --src-encoding "UTF-8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-# Doesn't work on Windows
-#srcml --src-encoding "UTF8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
-#check "$foutput"
-
 iconv -f UTF-8 -t UTF-16 sub/a.cpp > sub/a_UTF-16.cpp
 srcml --src-encoding "UTF-16" sub/a_UTF-16.cpp --filename "sub/a.cpp"
 check "$foutput"
@@ -75,19 +71,9 @@ iconv -f UTF-8 -t UTF-16BE sub/a.cpp > sub/a_UTF-16BE.cpp
 srcml --src-encoding "UTF-16BE" sub/a_UTF-16BE.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-# Not supported on all platforms
-# iconv -f UTF-8 -t ISO-10646-UCS-2 sub/a.cpp > sub/a_ISO-10646-UCS-2.cpp
-# srcml --src-encoding "ISO-10646-UCS-2" sub/a_ISO-10646-UCS-2.cpp --filename "sub/a.cpp"
-# check "$foutput"
-
 iconv -f UTF-8 -t UCS-2 sub/a.cpp > sub/a_UCS-2.cpp
 srcml --src-encoding "UCS-2" sub/a_UCS-2.cpp --filename "sub/a.cpp"
 check "$foutput"
-
-# Not supported on all platforms
-# iconv -f UTF-8 -t ISO-10646-UCS-4 sub/a.cpp > sub/a_ISO-10646-UCS-4.cpp
-# srcml --src-encoding "ISO-10646-UCS-4" sub/a_ISO-10646-UCS-4.cpp --filename "sub/a.cpp"
-# check "$foutput"
 
 iconv -f UTF-8 -t UCS-4 sub/a.cpp > sub/a_UCS-4.cpp
 srcml --src-encoding "UCS-4" sub/a_UCS-4.cpp --filename "sub/a.cpp"
@@ -149,41 +135,39 @@ iconv -f UTF-8 -t EUC-JP sub/a.cpp > sub/a_EUC-JP.cpp
 srcml --src-encoding "EUC-JP" sub/a.cpp --filename "sub/a.cpp"
 check "$foutput"
 
-# from one encoding to another
-define special_characters_utf8_actual <<- 'STDOUT'
-	typedef void ‼; // Also known as \u203C
-	class ooɟ {
-    	operator ‼() {}
-	};
-	STDOUT
+# # from one encoding to another
 
-define chinese_characters_utf8_actual <<- 'STDOUT'
-	//源代码转换
-	STDOUT
+# Build output file using echo to get proper EOL
+uncapture_output
+touch sub/special_characters_utf8.cpp
+echo -n "typedef void ‼; // Also known as \u203C"$EOL >> sub/special_characters_utf8.cpp
+echo -n "class ooɟ {"$EOL >> sub/special_characters_utf8.cpp
+echo -n "    operator ‼() {}"$EOL >> sub/special_characters_utf8.cpp
+echo -n "};"$EOL >> sub/special_characters_utf8.cpp
 
-createfile sub/special_characters_utf8.cpp "$special_characters_utf8_actual"
-createfile sub/chinese_characters_utf8.cpp "$chinese_characters_utf8_actual"
+echo -n "//源代码转换"$EOL > sub/chinese_characters_utf8.cpp
+capture_output
 
 # create utf16 versions of the files
-#iconv -f UTF-8 -t UTF-16 sub/special_characters_utf8.cpp | dd conv=swab of=sub/special_characters_utf16.cpp
+uncapture_output
 ( printf "\xff\xfe" ; iconv -f utf-8 -t utf-16le sub/special_characters_utf8.cpp) > sub/special_characters_utf16.cpp
 ( printf "\xff\xfe" ; iconv -f utf-8 -t utf-16le sub/chinese_characters_utf8.cpp) > sub/chinese_characters_utf16.cpp
 
-# If this is removed or commented out, the following cases will fail
-# Not sure why
-uncapture_output
-capture_output
-
 special_characters_utf16_actual=$(< sub/special_characters_utf16.cpp)
 chinese_characters_utf16_actual=$(< sub/chinese_characters_utf16.cpp)
+capture_output
 
 # create input srcML files from UTF16 encoding. use srcML files to output UTF16 files
+uncapture_output
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.cpp -o sub/special_characters_utf16.xml
 srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.cpp -o sub/chinese_characters_utf16.xml
+capture_output
 
-#check sub/special_characters_utf16-srcml.cpp "$special_characters_utf16_actual"
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.xml
 check_ignore sub/special_characters_utf16.cpp
+
+srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.xml
+check_ignore sub/chinese_characters_utf16.cpp
 
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.xml -o sub/special_characters_utf16-srcml.cpp
 check_file_ignore sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.cpp
@@ -195,18 +179,18 @@ srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.xml
 check_ignore sub/chinese_characters_utf16.cpp
 
 # input UTF8 files and output UTF16 files
-#srcml --src-encoding "UTF-8" sub/special_characters_utf8.cpp --output-src -o sub/special_characters_utf8-srcml.cpp
-#check_file sub/special_characters_utf8-srcml.cpp sub/special_characters_utf8.cpp
+srcml --src-encoding "UTF-8" sub/special_characters_utf8.cpp --output-src -o sub/special_characters_utf8-srcml.cpp
+check_file sub/special_characters_utf8-srcml.cpp sub/special_characters_utf8.cpp
 
-#srcml --src-encoding "UTF-8" sub/chinese_characters_utf8.cpp --output-src -o sub/chinese_characters_utf8-srcml.cpp
-#check_file sub/chinese_characters_utf8-srcml.cpp sub/chinese_characters_utf8.cpp
+srcml --src-encoding "UTF-8" sub/chinese_characters_utf8.cpp --output-src -o sub/chinese_characters_utf8-srcml.cpp
+check_file sub/chinese_characters_utf8-srcml.cpp sub/chinese_characters_utf8.cpp
 
 # input UTF16 files and output UTF8 files
-#srcml --src-encoding "UTF-16" sub/special_characters_utf16.cpp --output-src -o sub/special_characters_utf16-srcml.cpp
-#check_file sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.cpp
+srcml --src-encoding "UTF-16" sub/special_characters_utf16.cpp --output-src -o sub/special_characters_utf16-srcml.cpp
+check_file sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.cpp
 
-#srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.cpp --output-src -o sub/chinese_characters_utf16-srcml.cpp
-#check_file sub/chinese_characters_utf16-srcml.cpp sub/chinese_characters_utf16.cpp
+srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.cpp --output-src -o sub/chinese_characters_utf16-srcml.cpp
+check_file sub/chinese_characters_utf16-srcml.cpp sub/chinese_characters_utf16.cpp
 
 # input UTF16 files and output UTF16 files
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.cpp --output-src -o sub/special_characters_utf16-srcml.cpp
@@ -215,3 +199,27 @@ check_file sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.c
 srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.cpp --output-src -o sub/chinese_characters_utf16-srcml.cpp
 check_file sub/chinese_characters_utf16-srcml.cpp sub/chinese_characters_utf16.cpp
 
+# Not supported on all platforms
+if [[ "$OSTYPE" == 'msys' ]]; then
+    exit 0
+fi
+
+srcml --src-encoding "UTF8" sub/a_UTF-8.cpp --filename "sub/a.cpp"
+check "$foutput"
+
+# Not supported on all platforms
+if [[ "$OSTYPE" != "darwin"*  ]]; then
+    exit 0
+fi
+
+uncapture_output
+iconv -f UTF-8 -t ISO-10646-UCS-2 sub/a.cpp > sub/a_ISO-10646-UCS-2.cpp
+capture_output
+srcml --src-encoding "ISO-10646-UCS-2" sub/a_ISO-10646-UCS-2.cpp --filename "sub/a.cpp"
+check "$foutput"
+
+uncapture_output
+iconv -f UTF-8 -t ISO-10646-UCS-4 sub/a.cpp > sub/a_ISO-10646-UCS-4.cpp
+capture_output
+srcml --src-encoding "ISO-10646-UCS-4" sub/a_ISO-10646-UCS-4.cpp --filename "sub/a.cpp"
+check "$foutput"
