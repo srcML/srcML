@@ -96,7 +96,7 @@ jobs:
           ctest -C Release -VV
       - uses: actions/upload-artifact@v2
         with:
-          name: ClientLastTest.${{ runner.os }}.log
+          name: ClientTest.${{ runner.os }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Ubuntu/macOS Client Tests on Installed srcml
@@ -108,7 +108,7 @@ jobs:
           ctest -VV
       - uses: actions/upload-artifact@v2
         with:
-          name: ClientLastTest.${{ runner.os }}.log
+          name: ClientTest.${{ runner.os }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Build libsrcml Tests
@@ -127,7 +127,7 @@ jobs:
           ctest -C Release -R ^test_
       - uses: actions/upload-artifact@v2
         with:
-          name: libsrcmlLastTest.${{ runner.os }}.log
+          name: libsrcmlTest.${{ runner.os }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Generate Parser Tests
