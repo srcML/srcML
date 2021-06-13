@@ -64,4 +64,3 @@ check sub/c.cpp.xml "$fsrcml" "$foutput"
 
 srcml -o sub/c.cpp.xml sub/a.cpp sub/b.cpp --archive --verbose
 check sub/c.cpp.xml "$fsrcml" "$foutput"
-

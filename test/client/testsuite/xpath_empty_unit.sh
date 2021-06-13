@@ -33,4 +33,3 @@ check sub/b.cpp.xml "$xpath"
 
 srcml --xpath=/src:unit sub/a.cpp.xml -o sub/b.cpp.xml
 check sub/b.cpp.xml "$xpath"
-

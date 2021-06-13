@@ -159,4 +159,3 @@ check sub/a.xml "$fooprefixsrcml"
 
 srcml -o sub/a.xml sub/a.cpp sub/b.cpp --xmlns:foo="http://www.foo.com"
 check sub/a.xml "$fooprefixsrcml"
-

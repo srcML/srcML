@@ -89,4 +89,3 @@ check
 
 srcml --show-url < sub/a.cpp.xml
 check
-

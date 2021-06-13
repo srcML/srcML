@@ -142,4 +142,3 @@ check sub/b.cpp.xml "$srcml"
 
 srcml schema.rng -o sub/b.cpp.xml < sub/archive_single.xml
 check sub/b.cpp.xml "$srcml"
-

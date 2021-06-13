@@ -34,17 +34,20 @@ define srcml <<- 'STDOUT'
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
-echo "a;" > expected_output
-echo -en '\0' >> expected_output
-echo "b;" >> expected_output
+# have to get null byte into test case result
+if [[ "$OSTYPE" == 'msys' ]]; then
+    printf "a;\r\n\0b;\r\n" > expected_output
+else
+    printf "a;\n\0b;\n" > expected_output
+fi
 
 srcml --output-src sub/a.cpp.xml > ab
-cmp --verbose ab expected_output
-rm ab
+check_file ab expected_output
+rmfile ab
 
 srcml -S sub/a.cpp.xml > ab
-cmp --verbose ab expected_output
-rm ab
+check_file ab expected_output
+rmfile ab
 
 srcml -U 1 --output-src sub/a.cpp.xml
 check "$srca"
@@ -59,8 +62,8 @@ srcml -U 2 -S sub/a.cpp.xml
 check "$srcb"
 
 cat sub/a.cpp.xml | srcml -S > ab
-cmp --verbose ab expected_output
-rm ab
+check_file ab expected_output
+rmfile ab
 
 srcml -U 1 -S < sub/a.cpp.xml
 check "$srca"

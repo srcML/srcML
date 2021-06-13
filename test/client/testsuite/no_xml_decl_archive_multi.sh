@@ -55,4 +55,3 @@ check sub/a.cpp.xml "$srcml"
 
 srcml -o sub/a.cpp.xml sub/a.cpp sub/b.cpp --no-xml-declaration
 check sub/a.cpp.xml "$srcml"
-

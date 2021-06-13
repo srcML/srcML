@@ -175,4 +175,3 @@ check sub/a.java.xml "$foutput"
 
 srcml --cpp sub/a.java -o sub/a.java.xml -l Java
 check sub/a.java.xml "$foutput"
-

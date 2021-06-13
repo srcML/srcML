@@ -76,6 +76,9 @@ createfile dir/file.c  "\na;"
 createfile dir/file.cpp "\na;"
 createfile dir/file.java "\na;"
 
+uncapture_output
+capture_output
+
 # Check typical source directory
 srcml dir --quiet -o dir/dir.xml
 check dir/dir.xml "$output"
@@ -169,19 +172,23 @@ check dir2/dir2.xml "$output2"
 srcml dir2 --quiet
 check "$output2"
 
-# #Ensure proper behavior with symbolic links (ignore them)
-# createfile symtest/a.cpp "\na;"
-# createfile symtest/b.cpp "\nb;"
-# createfile symtest/c.cpp "\nc;"
+# Ensure proper behavior with symbolic links (ignore them)
+if [[ "$OSTYPE" == 'msys' ]]; then
+    exit 0
+fi
 
-# ln -s $(pwd)/symtest symtest/slink
-# ln -s $(pwd)/symtest/b.cpp symtest/sim_b.cpp
+uncapture_output
+createfile symtest/a.cpp "\na;"
+createfile symtest/b.cpp "\nb;"
+createfile symtest/c.cpp "\nc;"
 
-# srcml symtest --quiet -o symtest/symtest.xml
-# check symtest/symtest.xml "$output3"
+ln -s $(pwd)/symtest symtest/slink
+ln -s $(pwd)/symtest/b.cpp symtest/sim_b.cpp
+capture_output
 
-# #Cleanup
-# rm -rf symtest
-# rm -rf dir
-# rm -rf dir2
+srcml symtest --quiet -o symtest/symtest.xml
+check symtest/symtest.xml "$output3"
 
+rmdir symtest
+rmdir dir
+rmdir dir2

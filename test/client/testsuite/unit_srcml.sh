@@ -77,4 +77,3 @@ check "$sxmlfile2src"
 
 srcml --text="" --filename="sub/b.cpp" -l C++ --hash | srcml
 check "$emptysrc"
-

@@ -290,4 +290,3 @@ check sub/b.xml "$fmarkupif0"
 
 srcml --archive -o sub/b.xml --cpp-markup-if0 sub/a.cpp
 check sub/b.xml "$fmarkupif0"
-

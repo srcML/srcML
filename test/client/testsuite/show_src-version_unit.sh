@@ -110,4 +110,3 @@ check
 
 srcml --show-src-version < sub/archive.cpp.xml
 check
-

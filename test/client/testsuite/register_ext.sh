@@ -35,4 +35,3 @@ check
 
 srcml --register-ext="xml=Java" sub/a.xml
 check
-

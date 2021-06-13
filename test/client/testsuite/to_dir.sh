@@ -53,4 +53,3 @@ srcml --verbose --to-dir '.' a.cpp.xml
 
 check sub/a.cpp "a;" "$output"
 check sub/b.cpp "b;"
-

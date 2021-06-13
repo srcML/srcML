@@ -65,4 +65,3 @@ check
 
 srcml --show-timestamp < sub/archive.cpp.xml
 check
-

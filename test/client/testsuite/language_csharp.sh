@@ -35,4 +35,3 @@ check sub/a.cpp.xml "$output"
 
 srcml -l 'C#' sub/a.cpp -o sub/a.cpp.xml
 check sub/a.cpp.xml "$output"
-

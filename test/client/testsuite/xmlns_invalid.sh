@@ -69,4 +69,3 @@ check_exit 1
 
 srcml -o sub/a.xml sub/a.cpp sub/b.cpp --xmlns=http://www.foo.com
 check_exit 1
-

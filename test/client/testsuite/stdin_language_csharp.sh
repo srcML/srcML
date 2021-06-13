@@ -19,4 +19,3 @@ check "$output"
 
 echo -n "" | srcml --language=C#
 check "$output"
-

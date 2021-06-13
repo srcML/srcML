@@ -64,4 +64,3 @@ check "$srcml"
 
 echo "$srcml" | srcml -X -o sub/b.cpp.xml
 check sub/b.cpp.xml "$srcml"
-

@@ -65,4 +65,3 @@ check sub/a.cpp.xml "$fsrcml"
 
 srcml -o sub/a.cpp.xml sub/a.cpp --no-xml-declaration
 check sub/a.cpp.xml "$fsrcml"
-

@@ -56,7 +56,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         run: |
-          cmake ..
+          cmake .. -DBUILD_LIBSRCML_TESTS=OFF
           cmake --build . --config Release --target install
 
       - name: Build on Ubuntu/macOS
@@ -64,7 +64,7 @@ jobs:
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: build
         run: |
-          cmake .. -G Ninja
+          cmake .. -G Ninja -DBUILD_LIBSRCML_TESTS=OFF
           sudo cmake --build . --config Release --target install
 
       - name: Finish install for Ubuntu
@@ -96,18 +96,19 @@ jobs:
           ctest -C Release -VV
       - uses: actions/upload-artifact@v2
         with:
-          name: ClientLastTest.${{ runner.os }}.log
+          name: ClientTest.${{ runner.os }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Ubuntu/macOS Client Tests on Installed srcml
         if: ${{ matrix.os != 'windows-latest' }}
         shell: bash
         working-directory: build
+        continue-on-error: true
         run: |
           ctest -VV
       - uses: actions/upload-artifact@v2
         with:
-          name: ClientLastTest.${{ runner.os }}.log
+          name: ClientTest.${{ runner.os }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Build libsrcml Tests
@@ -126,7 +127,7 @@ jobs:
           ctest -C Release -R ^test_
       - uses: actions/upload-artifact@v2
         with:
-          name: libsrcmlLastTest.${{ runner.os }}.log
+          name: libsrcmlTest.${{ runner.os }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Generate Parser Tests
