@@ -53,7 +53,7 @@ int main(int, char* argv[]) {
 
     const std::string src = "a;\n";
     const std::string src_bom = "\xEF\xBB\xBF" "a;\n";
-    const std::string utf8_src = "/* \u2713 */\n";
+    const std::string utf8_src = u8"/* \u2713 */\n";
     const std::string latin_src = "/* \xfe\xff */\n";
     const std::string srcml =
 R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
