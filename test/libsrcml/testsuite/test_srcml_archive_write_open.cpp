@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for write open for archives
+  Test cases for srcml_archive_write_open_*
 */
 
 #include <srcml.h>

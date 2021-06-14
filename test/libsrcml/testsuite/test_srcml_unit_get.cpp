@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_unit_get_*.
+  Test cases for srcml_unit_get_*()
 */
 
 #include <srcml.h>

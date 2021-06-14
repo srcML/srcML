@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_unit_parse
+  Test cases for srcml_unit_parse_*()
 */
 
 #include <srcml.h>

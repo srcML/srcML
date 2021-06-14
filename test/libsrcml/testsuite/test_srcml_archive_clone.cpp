@@ -1,5 +1,5 @@
 /**
- * @file test_srcml_sax2_reader.cpp
+ * @file test_srcml_archive_clone.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_archive_create.
+  Test cases for test_srcml_archive_clone()
 */
 
 #include <srcml.h>

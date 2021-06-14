@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_archive_create.
+  Test cases for srcml_archive_create()
 */
 
 #include <srcml.h>

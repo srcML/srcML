@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_append_transform_*
+  Test cases for srcml_append_transform_*()
 */
 
 #include <srcml.h>

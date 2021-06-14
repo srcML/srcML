@@ -20,8 +20,7 @@
 
 /*
 
-  Test cases for srcml_global get and set
-
+  Test cases for srcml_set_*() and srcml_get_*()
 */
 
 #include <srcml.h>

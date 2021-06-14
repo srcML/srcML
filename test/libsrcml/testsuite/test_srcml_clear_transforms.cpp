@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_clear_transforms
+  Test cases for srcml_clear_transforms()
 */
 
 #include <srcml.h>

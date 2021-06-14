@@ -19,7 +19,7 @@
 */
 
 /*
-  Test cases for srcml_apply_transforms
+  Test cases for srcml_apply_transforms()
 */
 
 #include <srcml.h>
