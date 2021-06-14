@@ -43,7 +43,7 @@
 extern "C" {
     int write_callback(void* context, const char* buffer, int len) {
 
-        return (int)fwrite(buffer, 1, len, (FILE*)context);
+        return (int)fwrite(buffer, 1, (size_t)len, (FILE*)context);
     }
 
     int close_callback(void* /* context */) {
