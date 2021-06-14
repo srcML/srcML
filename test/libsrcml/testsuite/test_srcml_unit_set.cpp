@@ -281,7 +281,7 @@ int main(int, char* argv[]) {
 
     {
         std::string text = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C++">
+<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 )";
