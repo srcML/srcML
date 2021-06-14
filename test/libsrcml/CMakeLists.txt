@@ -48,7 +48,7 @@ add_compile_options(
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-ansi>
 
-    $<$<CXX_COMPILER_ID:MSVC>:/Wall>
+    $<$<CXX_COMPILER_ID:MSVC>:/W3>
     $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS>  # disable strcpy() warnings
     $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_NONSTDC_NO_WARNINGS> # disable read() warnings
 )
