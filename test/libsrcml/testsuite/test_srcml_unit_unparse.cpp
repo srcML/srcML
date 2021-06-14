@@ -25,8 +25,6 @@
 
 #include <srcml.h>
 
-#include <macros.hpp>
-
 #include <fstream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -437,6 +435,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -455,6 +455,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project_utf8.cpp");
     }
 
     {
@@ -473,6 +475,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project_latin_from_utf8.cpp");
     }
 
     {
@@ -491,6 +495,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project_latin.cpp");
     }
 
     {
@@ -509,6 +515,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project_latin_from_latin.cpp");
     }
 
     {
@@ -526,6 +534,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -540,6 +550,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -553,6 +565,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -579,6 +593,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     /*
@@ -589,10 +605,10 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
-        CLOSE(fd);
+        close(fd);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
         dassert(aunit, src);
@@ -601,18 +617,18 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        UNLINK("project.c");
+        unlink("project.c");
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "UTF-8");
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
-        CLOSE(fd);
+        close(fd);
         std::ifstream src_file("project_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
         dassert(aunit, utf8_src);
@@ -621,18 +637,18 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        UNLINK("project_utf8.cpp");
+        unlink("project_utf8.cpp");
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project_latin_from_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project_latin_from_utf8.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "UTF-8");
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
-        CLOSE(fd);
+        close(fd);
         std::ifstream src_file("project_latin_from_utf8.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
         dassert(aunit, utf8_src);
@@ -641,18 +657,18 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        UNLINK("project_latin_from_utf8.cpp");
+        unlink("project_latin_from_utf8.cpp");
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
-        CLOSE(fd);
+        close(fd);
         std::ifstream src_file("project_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
         dassert(aunit, latin_src);
@@ -661,18 +677,18 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        UNLINK("project_latin.cpp");
+        unlink("project_latin.cpp");
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project_latin_from_latin.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project_latin_from_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project_latin_from_latin.cpp", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
         srcml_unit_set_src_encoding(unit, "ISO-8859-1");
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
-        CLOSE(fd);
+        close(fd);
         std::ifstream src_file("project_latin_from_latin.cpp");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
         dassert(aunit, latin_src);
@@ -681,17 +697,17 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        UNLINK("project_latin_from_latin.cpp");
+        unlink("project_latin_from_latin.cpp");
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_OK);
-        CLOSE(fd);
+        close(fd);
         std::ifstream src_file("project.c");
         std::string aunit((std::istreambuf_iterator<char>(src_file)), std::istreambuf_iterator<char>());
         dassert(aunit, src);
@@ -700,34 +716,38 @@ int main(int, char* argv[]) {
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        UNLINK("project.c");
+        unlink("project.c");
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_unit_create(archive);
-        int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_UNINITIALIZED_UNIT);
-        CLOSE(fd);
+        close(fd);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_unit* unit = srcml_unit_create(archive);
-        int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
 
         dassert(srcml_unit_unparse_fd(unit, fd), SRCML_STATUS_INVALID_IO_OPERATION);
 
-        CLOSE(fd);
+        close(fd);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -746,14 +766,16 @@ int main(int, char* argv[]) {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_read_open_filename(archive, "project.xml");
         srcml_unit* unit = srcml_archive_read_unit(archive);
-        int fd = OPEN("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
+        int fd = open("project.c", O_WRONLY | O_CREAT , S_IRUSR | S_IWUSR);
 
         dassert(srcml_unit_unparse_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
-        CLOSE(fd);
+        close(fd);
 
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     /*
@@ -775,6 +797,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -793,6 +817,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project_utf8.cpp");
     }
 
     {
@@ -811,6 +837,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project_latin_from_utf8.cpp");
     }
 
     {
@@ -829,6 +857,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project_latin.cpp");
     }
 
     {
@@ -847,6 +877,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project_latin_from_latin.cpp");
     }
 
     {
@@ -864,6 +896,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -878,6 +912,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -891,6 +927,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -917,6 +955,8 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
     {
@@ -931,18 +971,15 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+
+        unlink("project.c");
     }
 
-    UNLINK("project.c");
-    UNLINK("project.xml");
-    UNLINK("project_utf8.cpp");
-    UNLINK("project_utf8.xml");
-    UNLINK("project_latin.cpp");
-    UNLINK("project_latin.xml");
-    UNLINK("project_latin_from_utf8.cpp");
-    UNLINK("project_latin_from_utf8.xml");
-    UNLINK("project_latin_from_latin.cpp");
-    UNLINK("project_latin_from_latin.xml");
+    unlink("project.xml");
+    unlink("project_utf8.xml");
+    unlink("project_latin.xml");
+    unlink("project_latin_from_utf8.xml");
+    unlink("project_latin_from_latin.xml");
 
     srcml_cleanup_globals();
 
