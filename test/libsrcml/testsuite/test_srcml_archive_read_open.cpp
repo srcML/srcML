@@ -37,8 +37,7 @@
 #include <dassert.hpp>
 
 int read_callback(void * context, char* buffer, int len) {
-    return (int)fread(buffer, 1, len, (FILE*)context);
-
+    return (int)fread(buffer, 1, (size_t)len, (FILE*)context);
 }
 
 int close_callback(void * /* context */) {
