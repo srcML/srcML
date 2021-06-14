@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_unit_create.
+  Test cases for srcml_unit_create()
 */
 
 #include <srcml.h>

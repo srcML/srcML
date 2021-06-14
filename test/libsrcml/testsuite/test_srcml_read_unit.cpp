@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_archive_read_unit
+  Test cases for srcml_archive_read_unit()
 */
 
 #include <srcml.h>

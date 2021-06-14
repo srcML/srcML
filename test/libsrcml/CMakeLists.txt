@@ -40,4 +40,28 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_definitions(-DWITH_LIBXSLT)
 
+# standard compile options
+add_compile_options(
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fPIC>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wextra>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-ansi>
+
+    $<$<CXX_COMPILER_ID:MSVC>:/Wall>
+    $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS>  # disable strcpy() warnings
+    $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_NONSTDC_NO_WARNINGS> # disable read() warnings
+)
+
+# handle specific warnings
+option(ENABLE_BUILD_WARNINGS "Enable disabled build warnings" OFF)
+if(NOT ENABLE_BUILD_WARNINGS)
+    add_compile_options(
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4514> # removed inline function not called (in one context)
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4710> # unmarked inlining notification warning
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4711> # selected for automatic inline expansion
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4820> # byte padding
+    )
+endif()
+
 add_subdirectory(testsuite)

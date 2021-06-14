@@ -284,7 +284,7 @@ int main(int, char* argv[]) {
 
         srcml_archive_register_namespace(archive, "foo", "bar");
 
-        int pos = srcml_archive_get_namespace_size(archive) - 1;
+        size_t pos = srcml_archive_get_namespace_size(archive) - 1;
         dassert(srcml_archive_get_namespace_prefix(archive, pos), std::string("foo"));
         dassert(srcml_archive_get_namespace_uri(archive, pos) , std::string("bar"));
 
@@ -296,7 +296,7 @@ int main(int, char* argv[]) {
 
         srcml_archive_register_namespace(archive, "foo", "http://www.srcML.org/srcML/src");
 
-        int pos = srcml_archive_get_namespace_size(archive) - 1;
+        size_t pos = srcml_archive_get_namespace_size(archive) - 1;
         dassert(srcml_archive_get_namespace_prefix(archive, pos), std::string("foo"));
         dassert(srcml_archive_get_namespace_uri(archive, pos) , std::string("http://www.srcML.org/srcML/src"));
 

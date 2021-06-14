@@ -1,5 +1,5 @@
 /**
- * @file test_srcml_archive_write_unit.cpp
+ * @file test_srcml_write.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_archive_check_extension
+  Test cases for srcml_write_*
 */
 
 #include <srcml.h>

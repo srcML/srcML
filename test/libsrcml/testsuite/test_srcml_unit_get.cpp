@@ -20,7 +20,7 @@
 
 /*
 
-  Test cases for srcml_unit_get_*.
+  Test cases for srcml_unit_get_*()
 */
 
 #include <srcml.h>
@@ -72,7 +72,7 @@ int main(int, char* argv[]) {
     {
         srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_get_revision(unit), std::string("1.0.0"));
+        dassert(srcml_unit_get_revision(unit), std::string(SRCML_VERSION_STRING));
 
         srcml_unit_free(unit);
     }
@@ -226,7 +226,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;", 2);
 
-        dassert(srcml_unit_get_srcml_outer(unit), std::string(R"(<unit revision="1.0.0" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>)"));
+        dassert(srcml_unit_get_srcml_outer(unit), std::string(R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>)"));
 
         srcml_unit_free(unit);
     }
@@ -259,7 +259,7 @@ int main(int, char* argv[]) {
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "a;", 2);
 
-        dassert(srcml_unit_get_srcml(unit), std::string(R"(<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>)"));
+        dassert(srcml_unit_get_srcml(unit), std::string(R"(<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>)"));
 
         srcml_unit_free(unit);
     }

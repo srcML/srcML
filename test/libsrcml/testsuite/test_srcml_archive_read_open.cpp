@@ -20,12 +20,10 @@
 
 /*
 
-  Test cases for read open for archives
+  Test cases for srcml_archive_read_open_*
 */
 
 #include <srcml.h>
-
-#include <macros.hpp>
 
 #include <fstream>
 
@@ -38,13 +36,14 @@
 
 #include <dassert.hpp>
 
-int read_callback(void * context, char* buffer, int len) {
-    return (int)fread(buffer, 1, len, (FILE*)context);
+extern "C" {
+    int read_callback(void * context, char* buffer, int len) {
+        return (int)fread(buffer, 1, (size_t)len, (FILE*)context);
+    }
 
-}
-
-int close_callback(void * context UNUSED) {
-    return 0;
+    int close_callback(void * /* context */) {
+        return 0;
+    }
 }
 
 int main(int, char* argv[]) {
@@ -265,7 +264,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        int fd = OPEN("project.xml", O_RDONLY, 0);
+        int fd = open("project.xml", O_RDONLY, 0);
 
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_fd(archive, fd), SRCML_STATUS_OK);
@@ -276,11 +275,10 @@ int main(int, char* argv[]) {
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-        CLOSE(fd);
     }
 
     {
-        int fd = OPEN("project_single.xml", O_RDONLY, 0);
+        int fd = open("project_single.xml", O_RDONLY, 0);
 
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_fd(archive, fd), SRCML_STATUS_OK);
@@ -292,11 +290,10 @@ int main(int, char* argv[]) {
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-        CLOSE(fd);
     }
 
     {
-        int fd = OPEN("project_ns.xml", O_RDONLY, 0);
+        int fd = open("project_ns.xml", O_RDONLY, 0);
 
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_fd(archive, fd), SRCML_STATUS_OK);
@@ -306,7 +303,6 @@ int main(int, char* argv[]) {
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-        CLOSE(fd);
     }
 
     {
@@ -317,9 +313,8 @@ int main(int, char* argv[]) {
     }
 
     {
-        int fd = OPEN("project_ns.xml", O_RDONLY, 0);
+        int fd = open("project_ns.xml", O_RDONLY, 0);
         dassert(srcml_archive_read_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
-        CLOSE(fd);
     }
 
     /*
@@ -393,9 +388,9 @@ int main(int, char* argv[]) {
         fclose(file);
     }
 
-    UNLINK("project.xml");
-    UNLINK("project_single.xml");
-    UNLINK("project_ns.xml");
+    unlink("project.xml");
+    unlink("project_single.xml");
+    unlink("project_ns.xml");
 
     srcml_cleanup_globals();
 

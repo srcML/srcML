@@ -20,15 +20,14 @@
 
 /*
 
-  Test cases for srcml_global get and set
-
+  Test cases for srcml_set_*() and srcml_get_*()
 */
 
 #include <srcml.h>
 
 #include <dassert.hpp>
 
-int main(int argc, char* argv[]) {
+int main(int, char* argv[]) {
 
     /*
       srcml_set_src_encoding
@@ -440,10 +439,6 @@ int main(int argc, char* argv[]) {
     }
 
     {
-        dassert(srcml_get_namespace_prefix(-1), 0);
-    }
-
-    {
         dassert(srcml_get_namespace_prefix(5), 0);
     }
 
@@ -469,10 +464,6 @@ int main(int argc, char* argv[]) {
 
     {
         dassert(srcml_get_namespace_uri(1), std::string("bar"));
-    }
-
-    {
-        dassert(srcml_get_namespace_uri(-1), 0);
     }
 
     {
