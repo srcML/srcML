@@ -36,13 +36,15 @@
 
 #include <dassert.hpp>
 
-int write_callback(void * context, const char * buffer, int len) {
-    return (int)fwrite(buffer, 1, len, (FILE*)context);
+extern "C" {
+    int write_callback(void * context, const char * buffer, int len) {
+        return (int)fwrite(buffer, 1, len, (FILE*)context);
 
-}
+    }
 
-int close_callback(void* /* context */) {
-    return 0;
+    int close_callback(void* /* context */) {
+        return 0;
+    }
 }
 
 int main(int, char* argv[]) {

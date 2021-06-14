@@ -36,12 +36,14 @@
 
 #include <dassert.hpp>
 
-int read_callback(void * context, char* buffer, int len) {
-    return (int)fread(buffer, 1, (size_t)len, (FILE*)context);
-}
+extern "C" {
+    int read_callback(void * context, char* buffer, int len) {
+        return (int)fread(buffer, 1, (size_t)len, (FILE*)context);
+    }
 
-int close_callback(void * /* context */) {
-    return 0;
+    int close_callback(void * /* context */) {
+        return 0;
+    }
 }
 
 int main(int, char* argv[]) {
