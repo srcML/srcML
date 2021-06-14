@@ -24,7 +24,6 @@
 */
 
 #include <srcml.h>
-
 #include <fstream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -33,6 +32,11 @@
 #include <io.h>
 #endif
 #include <fcntl.h>
+
+#ifdef _MSC_VER
+#define S_IRUSR _S_IREAD
+#define S_IWUSR _S_IWRITE
+#endif
 
 #include <dassert.hpp>
 
