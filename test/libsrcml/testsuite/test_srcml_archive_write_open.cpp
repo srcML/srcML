@@ -81,7 +81,7 @@ int main(int, char* argv[]) {
 
     {
         char* s = 0;
-        size_t size = -1;
+        size_t size = 0;
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_memory(archive, &s, &size), SRCML_STATUS_OK);
         srcml_archive_close(archive);
@@ -90,13 +90,13 @@ int main(int, char* argv[]) {
     }
 
     {
-        size_t size = -1;
+        size_t size = 0;
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_memory(archive, 0, &size), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(size, -1);
+        dassert(size, 0);
     }
 
     {
@@ -110,9 +110,9 @@ int main(int, char* argv[]) {
 
     {
         char* s = 0;
-        size_t size = -1;
+        size_t size = 0;
         dassert(srcml_archive_write_open_memory(0, &s, &size), SRCML_STATUS_INVALID_ARGUMENT);
-        dassert(size, -1);
+        dassert(size, 0);
     }
 
     /*
