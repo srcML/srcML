@@ -259,7 +259,7 @@ int main(int, char* argv[]) {
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
         dassert(srcml_transform_get_type(result), SRCML_RESULT_BOOLEAN);
-        dassert(srcml_transform_get_bool(result), true);
+        dassert(srcml_transform_get_bool(result), 1);
         srcml_transform_free(result);
         srcml_clear_transforms(iarchive);
         srcml_unit_free(unit);
@@ -278,7 +278,7 @@ int main(int, char* argv[]) {
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
         dassert(srcml_transform_get_type(result), SRCML_RESULT_BOOLEAN);
-        dassert(srcml_transform_get_bool(result), false);
+        dassert(srcml_transform_get_bool(result), 0);
         srcml_transform_free(result);
         srcml_clear_transforms(iarchive);
         srcml_unit_free(unit);
