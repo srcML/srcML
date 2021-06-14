@@ -227,12 +227,6 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_get_namespace_prefix(archive, -1), 0);
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_get_namespace_prefix(archive, 2), 0);
         srcml_archive_free(archive);
     }
@@ -273,12 +267,6 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_get_namespace_uri(archive, 0), std::string("http://www.srcML.org/srcML/src"));
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-        dassert(srcml_archive_get_namespace_uri(archive, -1), 0);
         srcml_archive_free(archive);
     }
 

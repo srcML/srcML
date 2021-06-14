@@ -439,10 +439,6 @@ int main(int, char* argv[]) {
     }
 
     {
-        dassert(srcml_get_namespace_prefix(-1), 0);
-    }
-
-    {
         dassert(srcml_get_namespace_prefix(5), 0);
     }
 
@@ -468,10 +464,6 @@ int main(int, char* argv[]) {
 
     {
         dassert(srcml_get_namespace_uri(1), std::string("bar"));
-    }
-
-    {
-        dassert(srcml_get_namespace_uri(-1), 0);
     }
 
     {
