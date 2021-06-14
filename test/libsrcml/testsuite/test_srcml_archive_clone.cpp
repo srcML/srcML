@@ -27,7 +27,7 @@
 
 #include <dassert.hpp>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
