@@ -28,7 +28,7 @@
 
 #include <dassert.hpp>
 
-int main(int /* argc */, char* argv[]) {
+int main(int, char* argv[]) {
 
     /*
       srcml_set_src_encoding
