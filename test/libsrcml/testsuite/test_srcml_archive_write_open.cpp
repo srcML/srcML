@@ -161,7 +161,7 @@ int main(int, char* argv[]) {
 
         char buf[1];
         fd = open("project.xml", O_RDONLY, 0);
-        size_t num_read = read(fd, buf, 1);
+        ssize_t num_read = read(fd, buf, 1);
         close(fd);
 
         dassert(num_read, 1);
