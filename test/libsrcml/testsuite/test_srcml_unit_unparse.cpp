@@ -52,7 +52,8 @@ int main(int, char* argv[]) {
     const std::string utf8_src = "/* ✓ */\n";
     const std::string latin_src = "/* &#10003; */\n";
 
-    const std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+    std::ofstream srcml_file("project.xml");
+    srcml_file << R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src">
 
 <unit language="C" filename="project.c"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
@@ -60,45 +61,34 @@ int main(int, char* argv[]) {
 
 </unit>
 )";
-
-    const std::string utf8_srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* ✓ */</comment>
-</unit>
-)";
-
-    const std::string latin_srcml = R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* &#10003; */</comment>
-</unit>
-)";
-
-    const std::string latin_from_utf8_srcml = R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* &#10003; */</comment>
-</unit>
-)";
-
-    const std::string latin_from_latin_srcml = R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* &#10003; */</comment>
-</unit>
-)";
-
-    std::ofstream srcml_file("project.xml");
-    srcml_file << srcml;
     srcml_file.close();
 
     std::ofstream srcml_utf8_file("project_utf8.xml");
-    srcml_utf8_file << utf8_srcml;
+    srcml_utf8_file << R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* ✓ */</comment>
+</unit>
+)";
     srcml_utf8_file.close();
 
     std::ofstream srcml_latin_file("project_latin.xml");
-    srcml_latin_file << latin_srcml;
+    srcml_latin_file << R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* &#10003; */</comment>
+</unit>
+)";
     srcml_latin_file.close();
 
     std::ofstream srcml_latin_from_utf8_file("project_latin_from_utf8.xml");
-    srcml_latin_from_utf8_file << latin_from_utf8_srcml;
+    srcml_latin_from_utf8_file << R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* &#10003; */</comment>
+</unit>
+)";
     srcml_latin_from_utf8_file.close();
 
     std::ofstream srcml_latin_from_latin_file("project_latin_from_latin.xml");
-    srcml_latin_from_latin_file << latin_from_latin_srcml;
+    srcml_latin_from_latin_file << R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="test" filename="project" version="1"><comment type="block">/* &#10003; */</comment>
+</unit>
+)";
     srcml_latin_from_latin_file.close();
 
     /*
