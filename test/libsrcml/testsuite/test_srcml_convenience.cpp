@@ -25,8 +25,6 @@
 
 #include <srcml.h>
 
-#include <macros.hpp>
-
 #include <string>
 #include <fstream>
 
@@ -169,16 +167,16 @@ int main(int, char* argv[]) {
 
     srcml_cleanup_globals();
 
-    UNLINK("a.cpp");
-    UNLINK("project.xml");
-    UNLINK("project.srcML");
-    UNLINK("project_c.xml");
-    UNLINK("project");
-    UNLINK("project_full.xml");
-    UNLINK("project.cpp.xml");
-    UNLINK("project.c.xml");
-    UNLINK("inta.cpp");
-    UNLINK("project_full.cpp.xml");
+    unlink("a.cpp");
+    unlink("project.xml");
+    unlink("project.srcML");
+    unlink("project_c.xml");
+    unlink("project");
+    unlink("project_full.xml");
+    unlink("project.cpp.xml");
+    unlink("project.c.xml");
+    unlink("inta.cpp");
+    unlink("project_full.cpp.xml");
 
     return 0;
 }

@@ -25,8 +25,6 @@
 
 #include <srcml.h>
 
-#include <macros.hpp>
-
 #include <fstream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -94,9 +92,9 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        int fd = OPEN("copy.xsl", O_RDONLY, 0);
+        int fd = open("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(archive, fd);
-        CLOSE(fd);
+        close(fd);
         dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
         srcml_archive_free(archive);
     }
@@ -126,9 +124,9 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
-        int fd = OPEN("schema.rng", O_RDONLY, 0);
+        int fd = open("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(archive, fd);
-        CLOSE(fd);
+        close(fd);
         dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
         srcml_archive_free(archive);
     }
@@ -143,18 +141,18 @@ int main(int, char* argv[]) {
         FILE* f = fopen("copy.xsl", "r");
         srcml_append_transform_xslt_FILE(archive, f);
         fclose(f);
-        int fd = OPEN("copy.xsl", O_RDONLY, 0);
+        int fd = open("copy.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(archive, fd);
-        CLOSE(fd);
+        close(fd);
 
         srcml_append_transform_relaxng_filename(archive, "schema.rng");
         srcml_append_transform_relaxng_memory(archive, schema.c_str(), schema.size());
         f = fopen("schema.rng", "r");
         srcml_append_transform_relaxng_FILE(archive, f);
         fclose(f);
-        fd = OPEN("schema.rng", O_RDONLY, 0);
+        fd = open("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(archive, fd);
-        CLOSE(fd);
+        close(fd);
 
         dassert(srcml_clear_transforms(archive), SRCML_STATUS_OK);
         srcml_archive_free(archive);

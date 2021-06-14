@@ -25,8 +25,6 @@
 
 #include <srcml.h>
 
-#include <macros.hpp>
-
 #include <fstream>
 
 #if defined(__GNUC__) && !defined(__MINGW32__)
@@ -43,7 +41,7 @@ int write_callback(void * context, const char * buffer, int len) {
 
 }
 
-int close_callback(void * context UNUSED) {
+int close_callback(void* /* context */) {
     return 0;
 }
 
@@ -152,17 +150,17 @@ int main(int, char* argv[]) {
     */
 
     {
-        int fd = OPEN("project.xml", O_WRONLY, 0);
+        int fd = open("project.xml", O_WRONLY, 0);
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_write_open_fd(archive, fd), SRCML_STATUS_OK);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-        CLOSE(fd);
+        close(fd);
 
         char buf[1];
-        fd = OPEN("project.xml", O_RDONLY, 0);
+        fd = open("project.xml", O_RDONLY, 0);
         size_t num_read = read(fd, buf, 1);
-        CLOSE(fd);
+        close(fd);
 
         dassert(num_read, 1);
     }
@@ -174,9 +172,9 @@ int main(int, char* argv[]) {
     }
 
     {
-        int fd = OPEN("project_ns.xml", O_WRONLY, 0);
+        int fd = open("project_ns.xml", O_WRONLY, 0);
         dassert(srcml_archive_write_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
-        CLOSE(fd);
+        close(fd);
     }
 
     /*
@@ -219,8 +217,8 @@ int main(int, char* argv[]) {
         fclose(file);
    }
 
-    UNLINK("project.xml");
-    UNLINK("project_ns.xml");
+    unlink("project.xml");
+    unlink("project_ns.xml");
 
     srcml_cleanup_globals();
 
