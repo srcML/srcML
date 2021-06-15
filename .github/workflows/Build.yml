@@ -57,7 +57,7 @@ jobs:
         working-directory: build
         run: |
           cmake ..
-          cmake --build . --config Release --target install
+          cmake --build . --config Release
 
       - name: Build on Ubuntu/macOS
         shell: bash
@@ -65,7 +65,13 @@ jobs:
         working-directory: build
         run: |
           cmake .. -G Ninja
-          sudo cmake --build . --config Release --target install
+          sudo cmake --build . --config Release
+
+      - name: Install
+        shell: bash
+        working-directory: build
+        run: |
+          cmake --build . --config Release --target install
 
       - name: Finish install for Ubuntu
         shell: bash
