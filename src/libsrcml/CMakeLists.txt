@@ -80,7 +80,6 @@ if(MSVC)
 else()
     install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
 endif()
-target_precompile_headers(libsrcml_shared PRIVATE <srcmlns.hpp> <srcml_types.hpp>)
 
 if (BUILD_LIBSRCML_STATIC)
     install(TARGETS libsrcml_static COMPONENT SRCML)
@@ -101,6 +100,10 @@ file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
 target_include_directories(libsrcml SYSTEM PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
 target_include_directories(libsrcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser)
+if(SRCML_BUILD_USEPCH)
+    target_precompile_headers(libsrcml PRIVATE <srcmlns.hpp> <srcml_types.hpp> <srcml_sax2_utilities.hpp> <srcml_translator.hpp> <srcml_sax2_reader.hpp>)
+endif()
+
 add_dependencies(libsrcml parser)
 
 # install the libsrcml include file

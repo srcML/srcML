@@ -115,7 +115,9 @@ add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
     ${PARSER_SOURCE}
 )
-target_precompile_headers(parser PRIVATE <srcmlns.hpp> <srcMLParser.hpp>)
+if(SRCML_BUILD_USEPCH)
+    target_precompile_headers(parser PRIVATE <srcMLParser.hpp> <CommentTextLexer.hpp> <UTF8CharBuffer.hpp> <ModeStack.hpp> <Language.hpp>)
+endif()
 
 target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml)
 if(MSVC)
