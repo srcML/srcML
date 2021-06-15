@@ -57,7 +57,7 @@ jobs:
         working-directory: build
         run: |
           cmake ..
-          cmake --build . --config Release --verbose
+          cmake --build . --config Release --verbose -- -maxcpucount
 
       - name: Build on Ubuntu/macOS
         shell: bash
