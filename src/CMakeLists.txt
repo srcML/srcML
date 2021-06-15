@@ -19,7 +19,13 @@
 # 
 # CMake files for building from source
 
+option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
+
 include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
+
+if(CLANG_TIME_TRACE)
+    add_compile_options(-ftime-trace)
+endif()
 
 if(NOT CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
     set(CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG /external:W0)
