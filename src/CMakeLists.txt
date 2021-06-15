@@ -188,12 +188,12 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
-    if(CMAKE_BUILD_TYPE STREQUAL "Release")
-        add_compile_options(PRIVATE "/Od")
-        add_compile_options(PRIVATE "/Zi")
-        add_compile_options(PRIVATE "/MDd")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_compile_options("/Od")
+        add_compile_options("/Zi")
+        add_compile_options("/MDd")
     else()
-        add_compile_options(PRIVATE "/Ox")
+        add_compile_options("/Ox")
     endif()
 
 endif()
