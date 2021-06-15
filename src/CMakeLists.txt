@@ -193,7 +193,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         add_compile_options("/Zi")
         add_compile_options("/MDd")
     else()
-        add_compile_options("/Ox")
+        add_compile_options("/O2")
     endif()
 
 endif()
