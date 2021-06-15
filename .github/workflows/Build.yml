@@ -57,7 +57,7 @@ jobs:
         working-directory: build
         run: |
           cmake ..
-          cmake --build . --config Release
+          cmake --build . --config Release --verbose
 
       - name: Build on Ubuntu/macOS
         shell: bash
@@ -65,7 +65,7 @@ jobs:
         working-directory: build
         run: |
           cmake .. -G Ninja
-          sudo cmake --build . --config Release
+          sudo cmake --build . --config Release --verbose
 
       - name: Install on Windows
         shell: bash
