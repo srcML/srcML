@@ -59,6 +59,7 @@ else()
     target_include_directories(srcml SYSTEM PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
 endif()
 target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+target_precompile_headers(srcml PRIVATE <srcml_cli.hpp> <srcmlns.hpp> <srcml_cli.hpp> <srcml_input_src.hpp>)
 
 # Add coverage to default part of Debug
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)

@@ -80,6 +80,7 @@ if(MSVC)
 else()
     install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
 endif()
+target_precompile_headers(libsrcml_shared PRIVATE <srcmlns.hpp> <srcml_types.hpp>)
 
 if (BUILD_LIBSRCML_STATIC)
     install(TARGETS libsrcml_static COMPONENT SRCML)
