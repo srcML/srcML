@@ -188,8 +188,13 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
-    string(APPEND CMAKE_CXX_FLAGS_DEBUG " /Od /ZI /MDd")
-    string(APPEND CMAKE_CXX_FLAGS_RELEASE " /Ox")
+    if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        add_compile_options(PRIVATE "/Od")
+        add_compile_options(PRIVATE "/Zi")
+        add_compile_options(PRIVATE "/MDd")
+    else()
+        add_compile_options(PRIVATE "/Ox")
+    endif()
 
 endif()
 
