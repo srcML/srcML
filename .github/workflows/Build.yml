@@ -67,11 +67,19 @@ jobs:
           cmake .. -G Ninja
           sudo cmake --build . --config Release
 
-      - name: Install
+      - name: Install on Windows
         shell: bash
+        if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         run: |
           cmake --build . --config Release --target install
+
+      - name: Install on Ubuntu/macOS
+        shell: bash
+        if: ${{ matrix.os != 'windows-latest' }}
+        working-directory: build
+        run: |
+          sudo cmake --build . --config Release --target install
 
       - name: Finish install for Ubuntu
         shell: bash
