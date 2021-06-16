@@ -46,6 +46,13 @@ jobs:
         uses: microsoft/setup-msbuild@v1
         if: ${{ matrix.os == 'windows-latest' }}
 
+      - name: Setup cmake on Windows to 3.20.4
+        uses: jwlawson/actions-setup-cmake@v1.9
+        if: ${{ matrix.os == 'windows-latest' }}
+
+      - name: Use cmake
+        run: cmake --version
+
       - name: Create build directory
         shell: bash
         if: ${{ !steps.cache.outputs.cache-hit }}
