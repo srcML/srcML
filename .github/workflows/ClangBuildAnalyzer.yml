@@ -33,10 +33,13 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release .. -G Ninja
           ninja
           ls -lhr
+          echo "/Users/runner/work/srcML/srcML/analyzer/build" >> $GITHUB_PATH
 
       - name: Create build directory
         shell: bash
-        run: mkdir build
+        run: |
+          mkdir build
+          which ClangBuildAnalyzer
 
       - name: CMake Setup
         shell: bash
