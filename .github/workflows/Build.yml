@@ -46,12 +46,12 @@ jobs:
         uses: microsoft/setup-msbuild@v1
         if: ${{ matrix.os == 'windows-latest' }}
 
+        # Windows runner has 3.20.3 installed, which generates the warning:
+        #   cl : Command line warning D9025: overriding '/external:W4' with '/external:W0'
+        # Once the runner is updated, this step can be eliminated
       - name: Setup cmake on Windows to 3.20.4
         uses: jwlawson/actions-setup-cmake@v1.9
         if: ${{ matrix.os == 'windows-latest' }}
-
-      - name: Use cmake
-        run: cmake --version
 
       - name: Create build directory
         shell: bash
