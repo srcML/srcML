@@ -1,0 +1,51 @@
+---
+name: ClangBuildAnalyzer
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Checkout ClangBuildAnalyzer
+        uses: actions/checkout@v2
+        with:
+          repository: aras-p/ClangBuildAnalyzer
+          path: analyzer
+
+      - name: Setup macOS
+        shell: bash
+        run: |
+          brew install ninja antlr2 --display-times
+          curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
+            sudo tar xz -C /usr/local/include
+
+      - name: Build ClangBuildAnalyzer
+        working-directory: analyzer
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release .. -G Ninja
+          ninja
+          ls -lhr
+
+      - name: Create build directory
+        shell: bash
+        run: mkdir build
+
+      - name: CMake Setup
+        shell: bash
+        working-directory: build
+        run: |
+          cmake .. -G Ninja
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        run: |
+          cmake --build . --config Release
