@@ -69,7 +69,7 @@ else()
     target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if(MSVC)
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     add_custom_command(TARGET srcml POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
