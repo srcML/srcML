@@ -64,9 +64,10 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         run: |
-          which cmake
           export UseMultiToolTask=true
           cmake ..
+          which cmake
+          ls -lh /c/hostedtoolcache/windows/cmake
 
       - name: CMake Setup on Ubuntu/macOS
         shell: bash
