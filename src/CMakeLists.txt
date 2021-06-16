@@ -32,7 +32,6 @@ endif()
 if(NOT CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
     set(CMAKE_INCLUDE_SYSTEM_FLAG_CXX /external:I)
     add_compile_options(/external:W0)
-    message("CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 endif()
 
 if(NOT DYNAMIC_LOAD_ENABLED)

@@ -132,3 +132,6 @@ if(MSVC)
 else()
     target_include_directories(parser SYSTEM PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
 endif()
+
+message("CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
