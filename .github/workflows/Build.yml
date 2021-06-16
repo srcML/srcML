@@ -59,7 +59,7 @@ jobs:
         # if: ${{ !steps.cache.outputs.cache-hit }}
         run: mkdir build
 
-      - name: Build on Windows
+      - name: CMake Setup on Windows
         shell: bash
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
@@ -67,15 +67,19 @@ jobs:
           which cmake
           export UseMultiToolTask=true
           cmake ..
-          cmake --build . --config Release
 
-      - name: Build on Ubuntu/macOS
+      - name: CMake Setup on Ubuntu/macOS
         shell: bash
-        if: ${{ matrix.os != 'windows-latest' }}
+        if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         run: |
           cmake .. -G Ninja
-          sudo cmake --build . --config Release
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        run: |
+          cmake --build . --config Release
 
       - name: Install on Windows
         shell: bash
