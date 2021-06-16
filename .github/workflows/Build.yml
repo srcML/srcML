@@ -56,8 +56,9 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         run: |
+          export UseMultiToolTask=true
           cmake ..
-          cmake --build . --config Release --verbose -- -maxcpucount
+          cmake --build . --config Release
 
       - name: Build on Ubuntu/macOS
         shell: bash
