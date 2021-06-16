@@ -15,26 +15,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Download CMake
-        if: ${{ matrix.os == 'windows-latest' }}
-        id: cmake
-        shell: cmake -P {0}
-        run: |
-          set(cmake_version "3.20.4")
-
-          message(STATUS "Using host CMake version: ${CMAKE_VERSION}")
-
-          set(cmake_suffix "win64-x64.zip")
-          set(cmake_dir "cmake-${cmake_version}-win64-x64/bin")
-
-          set(cmake_url "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/cmake-${cmake_version}-${cmake_suffix}")
-          file(DOWNLOAD "${cmake_url}" ./cmake.zip SHOW_PROGRESS)
-          execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./cmake.zip)
-
-          # Save the path for other steps
-          file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}/${cmake_dir}" cmake_dir)
-          message("::set-output name=cmake_dir::${cmake_dir}")
-
       # - name: Cache Build
       #   id: cache
       #   uses: actions/cache@v2
@@ -83,6 +63,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         run: |
+          which cmake
           export UseMultiToolTask=true
           cmake ..
           cmake --build . --config Release
