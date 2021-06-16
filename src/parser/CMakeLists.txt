@@ -134,4 +134,4 @@ else()
 endif()
 
 message("CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
-
+message("CMAKE_EXE_LINKER_FLAGS: ${CMAKE_EXE_LINKER_FLAGS}")
