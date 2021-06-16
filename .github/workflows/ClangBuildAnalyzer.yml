@@ -65,18 +65,17 @@ jobs:
           ClangBuildAnalyzer --all . capture_pch
           ClangBuildAnalyzer --analyze capture_pch > capture_pch.txt
 
-
       - name: CMake Setup PCH Off
         shell: bash
         working-directory: build
         run: |
           cmake .. -G Ninja -DCLANG_TIME_TRACE=ON -DSRCML_BUILD_USEPCH=OFF
+          cmake --build . --config Release --target clean
 
       - name: Build
         shell: bash
         working-directory: build
         run: |
-          cmake --build . --config Release --target clean
           cmake --build . --config Release
 
       - name: Analyze
