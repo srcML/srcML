@@ -31,7 +31,7 @@ jobs:
           sudo apt install curl zip g++ make ninja-build antlr libantlr-dev \
                            libxml2-dev libxml2-utils libxslt1-dev \
                            libarchive-dev libssl-dev libcurl4-openssl-dev \
-                           cpio man file dpkg-dev
+                           cpio file dpkg-dev
           curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
               sudo tar xz -C /usr/local/include
 
