@@ -15,12 +15,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # - name: Cache Build
-      #   id: cache
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: build
-      #     key: ${{ runner.os }}-client1
+      - name: Cache Build
+        if: ${{ matrix.os == 'windows-latest' }}
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: /c/hostedtoolcache/windows/cmake
+          key: ${{ runner.os }}-cmake
 
       - name: Setup Ubuntu
         shell: bash
@@ -50,8 +51,8 @@ jobs:
         #   cl : Command line warning D9025: overriding '/external:W4' with '/external:W0'
         # Once the runner is updated, this step can be eliminated
       - name: Setup cmake on Windows to 3.20.4
+        if: ${{ !steps.cache.outputs.cache-hit && matrix.os == 'windows-latest' }}
         uses: jwlawson/actions-setup-cmake@v1.9
-        if: ${{ matrix.os == 'windows-latest' }}
 
       - name: Create build directory
         shell: bash
