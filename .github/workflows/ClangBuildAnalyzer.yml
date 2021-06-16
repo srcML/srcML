@@ -56,7 +56,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          ClangBuildAnalyzer --all src/parser capture_nopch_parser
+          ClangBuildAnalyzer --all src/parser capture_pch_parser
           ClangBuildAnalyzer --analyze capture_pch_parser > capture_pch_parser.txt
           ClangBuildAnalyzer --all src/libsrcml capture_pch_libsrcml
           ClangBuildAnalyzer --analyze capture_pch_libsrcml > capture_pch_libsrcml.txt
