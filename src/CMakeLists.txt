@@ -30,9 +30,8 @@ if(CLANG_TIME_TRACE)
 endif()
 
 if(NOT CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
-    set(CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG /external:W0)
     set(CMAKE_INCLUDE_SYSTEM_FLAG_CXX /external:I)
-    add_compile_options(${CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG})
+    add_compile_options(/external:W0)
 endif()
 
 if(NOT DYNAMIC_LOAD_ENABLED)
