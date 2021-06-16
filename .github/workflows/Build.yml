@@ -65,7 +65,7 @@ jobs:
         run: |
           export UseMultiToolTask=true
           cmake ..
-          cmake --build . --config Release --verbose
+          cmake --build . --config Release
 
       - name: Build on Ubuntu/macOS
         shell: bash
@@ -73,7 +73,7 @@ jobs:
         working-directory: build
         run: |
           cmake .. -G Ninja
-          sudo cmake --build . --config Release --verbose
+          sudo cmake --build . --config Release
 
       - name: Install on Windows
         shell: bash
