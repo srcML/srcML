@@ -47,7 +47,7 @@ jobs:
         working-directory: build
         run: |
           export UseMultiToolTask=true
-          cmake .. -G Ninja
+          cmake ..
 
       - name: CMake Setup on Ubuntu/macOS
         shell: bash
