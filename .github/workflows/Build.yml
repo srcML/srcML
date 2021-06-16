@@ -58,7 +58,7 @@ jobs:
         run: |
           export UseMultiToolTask=true
           cmake ..
-          cmake --build . --config Release
+          cmake --build . --config Release --verbose
 
       - name: Build on Ubuntu/macOS
         shell: bash
