@@ -31,7 +31,7 @@ jobs:
         shell: bash
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
-          brew install ninja antlr2
+          brew install ninja antlr2 --display-times
           curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
             sudo tar xz -C /usr/local/include
 
