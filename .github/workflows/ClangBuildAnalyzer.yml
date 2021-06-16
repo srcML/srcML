@@ -76,7 +76,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          cmake --build . --config Release clean
+          cmake --build . --config Release --target clean
           cmake --build . --config Release
 
       - name: Analyze
