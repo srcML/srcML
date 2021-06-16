@@ -44,7 +44,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          cmake .. -G Ninja -DCLANG_TIME_TRACE=ON
+          cmake .. -G Ninja -DCLANG_TIME_TRACE=ON -DSRCML_BUILD_USEPCH=ON
 
       - name: Build
         shell: bash
@@ -70,7 +70,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          cmake .. -G Ninja -DCLANG_TIME_TRACE=OFF
+          cmake .. -G Ninja -DCLANG_TIME_TRACE=ON -DSRCML_BUILD_USEPCH=OFF
 
       - name: Build
         shell: bash
