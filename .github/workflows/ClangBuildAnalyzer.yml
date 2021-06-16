@@ -39,16 +39,30 @@ jobs:
         shell: bash
         run: |
           mkdir build
-          which ClangBuildAnalyzer
 
       - name: CMake Setup
         shell: bash
         working-directory: build
         run: |
-          cmake .. -G Ninja
+          cmake .. -G Ninja -DSRCML_BUILD_USEPCH=ON
 
       - name: Build
         shell: bash
         working-directory: build
         run: |
           cmake --build . --config Release
+
+      - name: Analyze
+        shell: bash
+        working-directory: build
+        run: |
+          ClangBuildAnalyzer --all src/parser capture_parser
+          ClangBuildAnalyzer --analyze capture_parser > capture_parser.txt
+          ClangBuildAnalyzer --all src/libsrcml capture_libsrcml
+          ClangBuildAnalyzer --analyze capture_libsrcml > capture_libsrcml.txt
+          ClangBuildAnalyzer --all src/client capture_client
+          ClangBuildAnalyzer --analyze capture_client > capture_client.txt
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Capture
+          path: build/capture*
