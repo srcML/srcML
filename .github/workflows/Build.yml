@@ -74,6 +74,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
+          export UseMultiToolTask=true
           cmake --build . --config Release
 
       - name: Install on Windows
