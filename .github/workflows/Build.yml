@@ -62,7 +62,7 @@ jobs:
 
       - name: CMake Setup on Ubuntu/macOS
         shell: bash
-        if: ${{ matrix.os == 'windows-latest' }}
+        if: ${{ matrix.os != 'windows-latest' }}
         working-directory: build
         run: |
           cmake .. -G Ninja
