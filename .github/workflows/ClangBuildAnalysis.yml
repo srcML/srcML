@@ -1,5 +1,5 @@
 ---
-name: ClangBuildAnalyzer
+name: Clang Build Analysis
 
 on: workflow_dispatch
 
