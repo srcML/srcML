@@ -47,7 +47,6 @@ jobs:
         run: |
           export CC=/usr/bin/clang
           export CXX=/usr/bin/clang++
-          export PATH="$PATH:/Users/runner/work/srcML/srcML/analyzer/build"
           cmake .. -G Ninja -DCLANG_TIME_TRACE=ON -DSRCML_BUILD_USEPCH=ON
 
       - name: Build
@@ -60,6 +59,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
+          export PATH="$PATH:/Users/runner/work/srcML/srcML/analyzer/build"
           ClangBuildAnalyzer --all src/parser capture_pch_parser
           ClangBuildAnalyzer --analyze capture_pch_parser > capture_pch_parser.txt
           ClangBuildAnalyzer --all src/libsrcml capture_pch_libsrcml
@@ -86,6 +86,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
+          export PATH="$PATH:/Users/runner/work/srcML/srcML/analyzer/build"
           ClangBuildAnalyzer --all src/parser capture_nopch_parser
           ClangBuildAnalyzer --analyze capture_nopch_parser > capture_nopch_parser.txt
           ClangBuildAnalyzer --all src/libsrcml capture_nopch_libsrcml
