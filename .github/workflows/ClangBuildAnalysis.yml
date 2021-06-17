@@ -35,6 +35,7 @@ jobs:
           cmake -DCMAKE_BUILD_TYPE=Release .. -G Ninja
           ninja
           echo ":/Users/runner/work/srcML/srcML/analyzer/build" >> $GITHUB_PATH
+          ls -lh /Users/runner/work/srcML/srcML/analyzer/build
 
       - name: Create build directory
         shell: bash
