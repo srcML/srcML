@@ -5,8 +5,8 @@ on: workflow_dispatch
 
 jobs:
   build:
-    runs-on: macos-latest
-    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
 
       - name: Checkout Repository
@@ -18,12 +18,14 @@ jobs:
           repository: aras-p/ClangBuildAnalyzer
           path: analyzer
 
-      - name: Setup macOS
+      - name: Setup Ubuntu
         shell: bash
         run: |
-          brew install ninja antlr2 --display-times
+          sudo apt install antlr libantlr-dev libantlr-java libarchive-dev \
+                           libcurl4-openssl-dev libxml2-utils libxslt1-dev \
+                           ninja-build
           curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
-            sudo tar xz -C /usr/local/include
+              sudo tar xz -C /usr/local/include
 
       - name: Build ClangBuildAnalyzer
         working-directory: analyzer
@@ -32,8 +34,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release .. -G Ninja
           ninja
-          ls -lhr
-          echo "/Users/runner/work/srcML/srcML/analyzer/build" >> $GITHUB_PATH
+          echo ":/Users/runner/work/srcML/srcML/analyzer/build" >> $GITHUB_PATH
 
       - name: Create build directory
         shell: bash
@@ -44,6 +45,8 @@ jobs:
         shell: bash
         working-directory: build
         run: |
+          export CC=/usr/bin/clang
+          export CXX=/usr/bin/clang++
           cmake .. -G Ninja -DCLANG_TIME_TRACE=ON -DSRCML_BUILD_USEPCH=ON
 
       - name: Build
