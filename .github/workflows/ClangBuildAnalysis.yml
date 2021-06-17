@@ -47,6 +47,7 @@ jobs:
         run: |
           export CC=/usr/bin/clang
           export CXX=/usr/bin/clang++
+          export PATH="$PATH:/Users/runner/work/srcML/srcML/analyzer/build"
           cmake .. -G Ninja -DCLANG_TIME_TRACE=ON -DSRCML_BUILD_USEPCH=ON
 
       - name: Build
