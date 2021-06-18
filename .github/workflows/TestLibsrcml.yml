@@ -56,6 +56,7 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         run: |
+          export UseMultiToolTask=true
           cmake .. -DBUILD_LIBSRCML_TESTS=OFF
           cmake --build . --config Release --target install
 

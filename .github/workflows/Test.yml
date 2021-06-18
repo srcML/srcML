@@ -140,6 +140,7 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
+          export UseMultiToolTask=true
           cmake .. -DBUILD_LIBSRCML_TESTS=ON
           cmake --build . --config Release --target build_libsrcml_tests
 
