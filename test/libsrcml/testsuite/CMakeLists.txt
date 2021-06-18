@@ -19,6 +19,7 @@
 # 
 # CMake files for libsrcml tests
 
+message("HERE LIBSRCML_LIBRARIES: ${LIBSRCML_LIBRARIES}")
 # Build and add tests
 add_custom_target(build_libsrcml_tests)
 file(GLOB LIB_TESTS test_*.cpp)
