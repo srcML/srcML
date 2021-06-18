@@ -34,13 +34,14 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release .. -G Ninja
           ninja
-          echo ":/Users/runner/work/srcML/srcML/analyzer/build" >> $GITHUB_PATH
-          ls -lh /Users/runner/work/srcML/srcML/analyzer/build
+          echo ":$(PWD)" >> $GITHUB_PATH
 
       - name: Create build directory
         shell: bash
         run: |
           mkdir build
+          echo $PATH
+          ClangBuildAnalyzer --help
 
       - name: CMake Setup PCH On
         shell: bash
