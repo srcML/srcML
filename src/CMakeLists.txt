@@ -198,6 +198,6 @@ if(MSVC)
 
 endif()
 
+add_subdirectory(client)
 add_subdirectory(parser)
 add_subdirectory(libsrcml)
-add_subdirectory(client)
