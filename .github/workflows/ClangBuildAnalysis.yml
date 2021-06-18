@@ -34,14 +34,12 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release .. -G Ninja
           ninja
-          echo ":$(PWD)" >> $GITHUB_PATH
+          sudo cp ClangBuildAnalyzer /usr/local/bin
 
       - name: Create build directory
         shell: bash
         run: |
           mkdir build
-          echo $PATH
-          ClangBuildAnalyzer --help
 
       - name: CMake Setup PCH On
         shell: bash
