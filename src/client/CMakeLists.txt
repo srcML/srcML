@@ -36,7 +36,6 @@ endif()
 set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
 
-message("LIBSRCML_LIBRARIES: ${LIBSRCML_LIBRARIES}")
 if(APPLE)
     # list(APPEND SRCML_LIBRARIES pthread)
 elseif(NOT WIN32)
@@ -45,7 +44,7 @@ elseif(NOT WIN32)
 # elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 #     list(APPEND SRCML_LIBRARIES ws2_32 crypto)
 else()
-    list(APPEND SRCML_LIBRARIES ws2_32 ${LIBSRCML_LIBRARIES})
+    list(APPEND SRCML_LIBRARIES ws2_32)
 endif()
 
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
