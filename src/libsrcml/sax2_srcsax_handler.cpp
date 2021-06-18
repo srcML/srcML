@@ -805,7 +805,15 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     } else {
 
         // whitespace and escaped characters
-        state->unitsrcml.append((const char*) state->base, static_cast<std::size_t>(ctxt->input->cur - state->base));
+        if (*ch == '<')
+            state->unitsrcml.append("&lt;");
+        else if (*ch == '>')
+            state->unitsrcml.append("&gt;");
+        else if (*ch == '&')
+            state->unitsrcml.append("&amp;");
+        else
+            state->unitsrcml.append((const char*) ch, static_cast<std::size_t>(len));
+
         state->base = ctxt->input->cur;
     }
 
