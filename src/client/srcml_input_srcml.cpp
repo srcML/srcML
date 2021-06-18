@@ -27,7 +27,6 @@
 #include <srcml.h>
 #include <srcml_options.hpp>
 #include <srcml_cli.hpp>
-#include <srcmlns.hpp>
 #include <SRCMLStatus.hpp>
 #include <OpenFileLimiter.hpp>
 
@@ -69,7 +68,7 @@ int srcml_input_srcml(ParseQueue& queue,
         for (size_t i = 0; i < nsSize; ++i) {
 
             // ignore srcDiff URL, since it will not be on the output
-            if (revision && srcml_archive_get_namespace_uri(srcml_input_archive.get(), i) == std::string(SRCML_DIFF_NS_URI))
+            if (revision && srcml_archive_get_namespace_uri(srcml_input_archive.get(), i) == std::string("http://www.srcML.org/srcDiff"))
                 continue;
 
             // register the input srcml archive namespace

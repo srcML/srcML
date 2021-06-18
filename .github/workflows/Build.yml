@@ -15,22 +15,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Cache Build
-        id: cache
-        uses: actions/cache@v2
-        with:
-          path: build
-          key: ${{ runner.os }}-client1
-
       - name: Setup Ubuntu
         shell: bash
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          sudo apt update
-          sudo apt install curl zip g++ make ninja-build antlr libantlr-dev \
-                           libxml2-dev libxml2-utils libxslt1-dev \
-                           libarchive-dev libssl-dev libcurl4-openssl-dev \
-                           cpio man file dpkg-dev
+          sudo apt install antlr libantlr-dev libantlr-java libarchive-dev \
+                           libcurl4-openssl-dev libxml2-utils libxslt1-dev \
+                           ninja-build
           curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
               sudo tar xz -C /usr/local/include
 
@@ -38,7 +29,7 @@ jobs:
         shell: bash
         if: ${{ matrix.os == 'macos-latest' }}
         run: |
-          brew install ninja antlr2
+          brew install ninja antlr2 --display-times
           curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
             sudo tar xz -C /usr/local/include
 
@@ -48,23 +39,42 @@ jobs:
 
       - name: Create build directory
         shell: bash
-        if: ${{ !steps.cache.outputs.cache-hit }}
         run: mkdir build
 
-      - name: Build on Windows
+      - name: CMake Setup on Windows
         shell: bash
         if: ${{ matrix.os == 'windows-latest' }}
         working-directory: build
         run: |
+          export UseMultiToolTask=true
           cmake ..
-          cmake --build . --config Release --target install
 
-      - name: Build on Ubuntu/macOS
+      - name: CMake Setup on Ubuntu/macOS
         shell: bash
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: build
         run: |
           cmake .. -G Ninja
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        run: |
+          export UseMultiToolTask=true
+          cmake --build . --config Release
+
+      - name: Install on Windows
+        shell: bash
+        if: ${{ matrix.os == 'windows-latest' }}
+        working-directory: build
+        run: |
+          cmake --build . --config Release --target install
+
+      - name: Install on Ubuntu/macOS
+        shell: bash
+        if: ${{ matrix.os != 'windows-latest' }}
+        working-directory: build
+        run: |
           sudo cmake --build . --config Release --target install
 
       - name: Finish install for Ubuntu

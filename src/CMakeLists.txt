@@ -19,11 +19,19 @@
 # 
 # CMake files for building from source
 
+option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
+
+option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" ON)
+
 include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
 
+if(CLANG_TIME_TRACE)
+    add_compile_options(-ftime-trace)
+endif()
+
 if(NOT CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
-    set(CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG /external:W0)
     set(CMAKE_INCLUDE_SYSTEM_FLAG_CXX /external:I)
+    add_compile_options(/external:W0)
 endif()
 
 if(NOT DYNAMIC_LOAD_ENABLED)
@@ -34,7 +42,7 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if(MSVC)
 
     set(WINDOWS_DEP_PATH ${PROJECT_BINARY_DIR}/deps)
 
@@ -178,13 +186,18 @@ if(NOT ENABLE_BUILD_WARNINGS)
     )
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if(MSVC)
 
-    string(APPEND CMAKE_CXX_FLAGS_DEBUG " /Od /ZI /MDd")
-    string(APPEND CMAKE_CXX_FLAGS_RELEASE " /Ox")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_compile_options("/Od")
+        add_compile_options("/Zi")
+        add_compile_options("/MDd")
+    else()
+        add_compile_options("/O2")
+    endif()
 
 endif()
 
+add_subdirectory(client)
 add_subdirectory(parser)
 add_subdirectory(libsrcml)
-add_subdirectory(client)

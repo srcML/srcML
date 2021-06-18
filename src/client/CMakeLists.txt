@@ -35,14 +35,16 @@ endif()
 
 set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
-if(NOT WIN32 AND APPLE)
-    list(APPEND SRCML_LIBRARIES pthread)
+
+if(APPLE)
+    # list(APPEND SRCML_LIBRARIES pthread)
 elseif(NOT WIN32)
-    list(APPEND SRCML_LIBRARIES crypto pthread)
-elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    list(APPEND SRCML_LIBRARIES ws2_32 crypto)
+    list(APPEND SRCML_LIBRARIES pthread)
+    # list(APPEND SRCML_LIBRARIES crypto pthread)
+# elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+#     list(APPEND SRCML_LIBRARIES ws2_32 crypto)
 else()
-    list(APPEND SRCML_LIBRARIES ws2_32 ${LIBSRCML_LIBRARIES})
+    list(APPEND SRCML_LIBRARIES ws2_32)
 endif()
 
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
@@ -54,11 +56,13 @@ if(MSVC)
     target_compile_options(srcml PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LibArchive_INCLUDE_DIR})
     target_compile_options(srcml PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CURL_INCLUDE_DIR})
     target_compile_options(srcml PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${Boost_INCLUDE_DIR})
-    target_compile_options(srcml PRIVATE ${CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG})
 else()
     target_include_directories(srcml SYSTEM PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
 endif()
 target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+if(SRCML_BUILD_USEPCH)
+    target_precompile_headers(srcml PRIVATE <srcml_cli.hpp> <srcml_input_src.hpp> <srcml_pipe.hpp> <ParseQueue.hpp> <src_input_libarchive.hpp> <SRCMLStatus.hpp> <WriteQueue.hpp> <ParseRequest.hpp> <TraceLog.hpp> <curl/curl.h>)
+endif()
 
 # Add coverage to default part of Debug
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
@@ -67,7 +71,7 @@ else()
     target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+if(MSVC)
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     add_custom_command(TARGET srcml POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory

@@ -22,5 +22,6 @@ jobs:
         continue-on-error: true
         run: |
           export EXTERNAL_INCLUDE="C:\Program Files (x86)\Windows Kits\10\Include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30037\include"
+          export UseMultiToolTask=true
           cmake .. -DBUILD_LIBSRCML_TESTS=OFF
           cmake --build . --verbose --config Release

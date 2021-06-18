@@ -1,0 +1,100 @@
+---
+name: Clang Build Analysis
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Checkout ClangBuildAnalyzer
+        uses: actions/checkout@v2
+        with:
+          repository: aras-p/ClangBuildAnalyzer
+          path: analyzer
+
+      - name: Setup Ubuntu
+        shell: bash
+        run: |
+          sudo apt install antlr libantlr-dev libantlr-java libarchive-dev \
+                           libcurl4-openssl-dev libxml2-utils libxslt1-dev \
+                           ninja-build
+          curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
+              sudo tar xz -C /usr/local/include
+
+      - name: Build ClangBuildAnalyzer
+        working-directory: analyzer
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release .. -G Ninja
+          ninja
+          sudo cp ClangBuildAnalyzer /usr/local/bin
+
+      - name: Create build directory
+        shell: bash
+        run: |
+          mkdir build
+
+      - name: CMake Setup PCH On
+        shell: bash
+        working-directory: build
+        run: |
+          export CC=/usr/bin/clang
+          export CXX=/usr/bin/clang++
+          cmake .. -G Ninja -DCLANG_TIME_TRACE=ON -DSRCML_BUILD_USEPCH=ON
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        run: |
+          cmake --build . --config Release
+
+      - name: Analyze
+        shell: bash
+        working-directory: build
+        run: |
+          ClangBuildAnalyzer --all src/parser capture_pch_parser
+          ClangBuildAnalyzer --analyze capture_pch_parser > capture_pch_parser.txt
+          ClangBuildAnalyzer --all src/libsrcml capture_pch_libsrcml
+          ClangBuildAnalyzer --analyze capture_pch_libsrcml > capture_pch_libsrcml.txt
+          ClangBuildAnalyzer --all src/client capture_pch_client
+          ClangBuildAnalyzer --analyze capture_pch_client > capture_pch_client.txt
+          ClangBuildAnalyzer --all . capture_pch
+          ClangBuildAnalyzer --analyze capture_pch > capture_pch.txt
+
+      - name: CMake Setup PCH Off
+        shell: bash
+        working-directory: build
+        run: |
+          cmake .. -G Ninja -DCLANG_TIME_TRACE=ON -DSRCML_BUILD_USEPCH=OFF
+          cmake --build . --config Release --target clean
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        run: |
+          cmake --build . --config Release
+
+      - name: Analyze
+        shell: bash
+        working-directory: build
+        run: |
+          ClangBuildAnalyzer --all src/parser capture_nopch_parser
+          ClangBuildAnalyzer --analyze capture_nopch_parser > capture_nopch_parser.txt
+          ClangBuildAnalyzer --all src/libsrcml capture_nopch_libsrcml
+          ClangBuildAnalyzer --analyze capture_nopch_libsrcml > capture_nopch_libsrcml.txt
+          ClangBuildAnalyzer --all src/client capture_nopch_client
+          ClangBuildAnalyzer --analyze capture_nopch_client > capture_nopch_client.txt
+          ClangBuildAnalyzer --all . capture_nopch
+          ClangBuildAnalyzer --analyze capture_nopch > capture_nopch.txt
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Capture
+          path: build/capture*

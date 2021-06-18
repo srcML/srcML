@@ -115,6 +115,12 @@ add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
     ${PARSER_SOURCE}
 )
+if(SRCML_BUILD_USEPCH)
+    target_precompile_headers(parser PRIVATE <srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp>)
+    if(NOT MSVC)
+        target_precompile_headers(parser PRIVATE <UTF8CharBuffer.hpp>)
+    endif()
+endif()
 
 target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml)
 if(MSVC)
@@ -123,7 +129,6 @@ if(MSVC)
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${Boost_INCLUDE_DIR})
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${ANTLR_INCLUDE_DIR})
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CMAKE_GENERATED_SOURCE_DIR})
-    target_compile_options(parser PRIVATE ${CXX_SYSTEM_INCLUDE_CONFIGURATION_FLAG})
 else()
     target_include_directories(parser SYSTEM PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
 endif()
