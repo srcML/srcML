@@ -1,0 +1,121 @@
+---
+name: Test Fedora
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Run docker image
+        shell: bash
+        run: |
+          mkdir dist
+
+      - name: Run docker image
+        working-directory: dist
+        shell: bash
+        run: |
+          echo "PWD: " "$(pwd)"
+          docker run -v "$(pwd)"/..:/Source -v "$(pwd)":/Dist srcml/fedora_x86_64_base:latest bash -c "mkdir /Build; cd /Build; cmake /Source -G Ninja;ninja install;ctest;cpack -G RPM; cp dist/*.rpm /Dist/."     # - name: Setup Ubuntu
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: FedoraDist
+          path: dist/*
+
+      #   shell: bash
+      #   run: |
+      #     sudo apt install antlr libantlr-dev libantlr-java libarchive-dev \
+      #                      libcurl4-openssl-dev libxml2-utils libxslt1-dev \
+      #                      ninja-build
+      #     curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
+      #         sudo tar xz -C /usr/local/include
+
+      # - name: Create build directory
+      #   shell: bash
+      #   run: mkdir build
+
+      # - name: CMake Setup on Ubuntu/macOS
+      #   shell: bash
+      #   if: ${{ matrix.os != 'windows-latest' }}
+      #   working-directory: build
+      #   run: |
+      #     cmake .. -G Ninja
+
+      # - name: Build
+      #   shell: bash
+      #   working-directory: build
+      #   run: |
+      #     export UseMultiToolTask=true
+      #     cmake --build . --config Release
+
+      # - name: Install on Ubuntu/macOS
+      #   shell: bash
+      #   if: ${{ matrix.os != 'windows-latest' }}
+      #   working-directory: build
+      #   run: |
+      #     sudo cmake --build . --config Release --target install
+
+      # - name: Run Installed srcml
+      #   shell: bash
+      #   working-directory: build
+      #   run: |
+      #     srcml --version
+      #     srcml --text="int a;" -l C++
+
+      # - name: Ubuntu/macOS Client Tests on Installed srcml
+      #   if: ${{ matrix.os != 'windows-latest' }}
+      #   shell: bash
+      #   working-directory: build
+      #   continue-on-error: true
+      #   run: |
+      #     ctest -VV
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: ClientTest.${{ runner.os }}.log
+      #     path: build/Testing/Temporary/LastTest.log
+
+      # - name: Build libsrcml Tests
+      #   shell: bash
+      #   working-directory: build
+      #   continue-on-error: true
+      #   run: |
+      #     export UseMultiToolTask=true
+      #     cmake .. -DBUILD_LIBSRCML_TESTS=ON
+      #     cmake --build . --config Release --target build_libsrcml_tests
+
+      # - name: Run libsrcml Tests on Installed libsrcml
+      #   shell: bash
+      #   working-directory: build
+      #   continue-on-error: true
+      #   run: |
+      #     ctest -C Release -R ^test_
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: libsrcmlTest.${{ runner.os }}.log
+      #     path: build/Testing/Temporary/LastTest.log
+
+      # - name: Generate Parser Tests
+      #   shell: bash
+      #   working-directory: build
+      #   run: |
+      #     cmake .. -DBUILD_PARSER_TESTS=ON
+      #     cmake --build . --config Release --target gen_parser_tests
+
+      # - name: Run Parser Tests
+      #   shell: bash
+      #   working-directory: build
+      #   continue-on-error: true
+      #   run: |
+      #     srcml --parser-test test/parser/testsuite | tee ParserTest.log
+
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: ParserTest.${{ runner.os }}.log
+      #     path: build/ParserTest.log
