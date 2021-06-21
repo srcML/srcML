@@ -14,13 +14,13 @@ jobs:
 
       - name: Run docker image
         shell: bash
-        run |
+        run: |
           mkdir dist
 
       - name: Run docker image
         working-directory: dist
         shell: bash
-        run |
+        run: |
           docker run -v "$(PWD)"/..:/Source -v "$(PWD)":/Dist srcml/fedora_x86_64_base:latest bash -c "mkdir /Build; cd /Build; cmake /Source -G Ninja;ninja install;ctest;cpack -G RPM; cp dist/*.rpm /Dist/."     # - name: Setup Ubuntu
 
       - uses: actions/upload-artifact@v2
