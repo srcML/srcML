@@ -44,7 +44,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: FedoraDist
-          path: dist/*
+          path: build/dist/*
 
       # - name: Run docker image
       #   working-directory: dist
