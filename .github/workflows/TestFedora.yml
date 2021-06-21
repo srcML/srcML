@@ -13,11 +13,38 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Run docker image
+      - name: Debug
         shell: bash
         run: |
           ls -lh
           cat /etc/os-release
+
+      - name: Create build directory
+        shell: bash
+        run: mkdir build
+
+      - name: CMake Setup
+        shell: bash
+        working-directory: build
+        run: |
+          cmake .. -G Ninja
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        run: |
+          ninja
+
+      - name: Package
+        shell: bash
+        working-directory: build
+        run: |
+          cpack -G RPM
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: FedoraDist
+          path: dist/*
 
       # - name: Run docker image
       #   working-directory: dist
@@ -26,11 +53,6 @@ jobs:
       #     echo "PWD: " "$(pwd)"
       #     docker run -v "$(pwd)"/..:/Source -v "$(pwd)":/Dist srcml/fedora_x86_64_base:latest bash -c "mkdir /Build; cd /Build; cmake /Source -G Ninja;ninja install;ctest;cpack -G RPM; cp dist/*.rpm /Dist/."     # - name: Setup Ubuntu
 
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: FedoraDist
-      #     path: dist/*
-
       #   shell: bash
       #   run: |
       #     sudo apt install antlr libantlr-dev libantlr-java libarchive-dev \
@@ -38,17 +60,6 @@ jobs:
       #                      ninja-build
       #     curl -L http://www.sdml.cs.kent.edu/build/srcML-1.0.0-Boost.tar.gz | \
       #         sudo tar xz -C /usr/local/include
-
-      # - name: Create build directory
-      #   shell: bash
-      #   run: mkdir build
-
-      # - name: CMake Setup on Ubuntu/macOS
-      #   shell: bash
-      #   if: ${{ matrix.os != 'windows-latest' }}
-      #   working-directory: build
-      #   run: |
-      #     cmake .. -G Ninja
 
       # - name: Build
       #   shell: bash
