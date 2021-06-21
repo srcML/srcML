@@ -5,8 +5,11 @@ on: workflow_dispatch
 
 jobs:
   build:
+    strategy:
+      matrix:
+        tag: [latest]
     runs-on: ubuntu-latest
-    container: srcml/fedora_base:latest
+    container: srcml/fedora_base:${{ matrix.tag }}
     timeout-minutes: 10
     steps:
 
