@@ -6,6 +6,7 @@ on: workflow_dispatch
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: srcml/fedora_base:latest
     timeout-minutes: 10
     steps:
 
@@ -15,19 +16,20 @@ jobs:
       - name: Run docker image
         shell: bash
         run: |
-          mkdir dist
+          ls -lh
+          cat /etc/os-release
 
-      - name: Run docker image
-        working-directory: dist
-        shell: bash
-        run: |
-          echo "PWD: " "$(pwd)"
-          docker run -v "$(pwd)"/..:/Source -v "$(pwd)":/Dist srcml/fedora_x86_64_base:latest bash -c "mkdir /Build; cd /Build; cmake /Source -G Ninja;ninja install;ctest;cpack -G RPM; cp dist/*.rpm /Dist/."     # - name: Setup Ubuntu
+      # - name: Run docker image
+      #   working-directory: dist
+      #   shell: bash
+      #   run: |
+      #     echo "PWD: " "$(pwd)"
+      #     docker run -v "$(pwd)"/..:/Source -v "$(pwd)":/Dist srcml/fedora_x86_64_base:latest bash -c "mkdir /Build; cd /Build; cmake /Source -G Ninja;ninja install;ctest;cpack -G RPM; cp dist/*.rpm /Dist/."     # - name: Setup Ubuntu
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: FedoraDist
-          path: dist/*
+      # - uses: actions/upload-artifact@v2
+      #   with:
+      #     name: FedoraDist
+      #     path: dist/*
 
       #   shell: bash
       #   run: |
