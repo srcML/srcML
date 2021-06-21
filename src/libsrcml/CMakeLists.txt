@@ -19,10 +19,6 @@
 # 
 # CMake files for the library libsrcml
 
-# strip executables
-# Note: Does not seem to have an effect, so post-build strip is added
-set(CPACK_STRIP_FILES ON)
-
 if(DYNAMIC_LOAD_ENABLED)
     set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} ${Iconv_LIBRARIES} dl pthread
                 CACHE INTERNAL "Libraries needed to build libsrcml")

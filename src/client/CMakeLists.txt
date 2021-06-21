@@ -19,9 +19,6 @@
 # 
 # CMake files for the srcML client
 
-# strip executables
-set(CPACK_STRIP_FILES ON)
- 
 set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
 
 set(CLI11_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/CLI11.hpp)
