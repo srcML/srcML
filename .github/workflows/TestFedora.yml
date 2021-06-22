@@ -60,7 +60,7 @@ jobs:
 
       - uses: actions/download-artifact@v2
         with:
-          name: my-artifact
+          name: FedoraDist
 
       - name: Display structure of downloaded files
         run: ls -R
