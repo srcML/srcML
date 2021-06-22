@@ -68,10 +68,11 @@ jobs:
         continue-on-error: true
         run: |
           ctest -VV
+      - run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
         with:
-          name: ClientTest.${{ env.LABEL }}.log
-          path: build/Testing/Temporary/LastTest.log
+          name: ClientTests
+          path: build/Testing/ClientTest.${{ env.LABEL }}.log
 
       - name: Build libsrcml Tests
         shell: bash
