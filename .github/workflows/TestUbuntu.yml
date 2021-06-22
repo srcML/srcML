@@ -1,0 +1,114 @@
+---
+name: Test Ubuntu
+
+on: workflow_dispatch
+
+jobs:
+  package:
+    strategy:
+      matrix:
+        distribution: ["ubuntu:18.04", "ubuntu:20.04", "ubuntu:20.10", "ubuntu:21.04", "ubuntu:21.10"]
+    runs-on: ubuntu-latest
+    container: srcml/${{ matrix.distribution }}
+    timeout-minutes: 10
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: OS Version
+        shell: bash
+        run: |
+          cat /etc/os-release
+          export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
+          echo "LABEL=$VALUE" >> $GITHUB_ENV
+
+      - name: Create build directory
+        shell: bash
+        run: mkdir build
+
+      - name: CMake Setup
+        shell: bash
+        working-directory: build
+        run: |
+          cmake .. -G Ninja
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        run: |
+          ninja
+
+      - name: Package
+        shell: bash
+        working-directory: build
+        run: |
+          cpack -G DEB
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: FedoraDist
+          path: build/dist/*.deb
+
+      - name: Install using packages
+        shell: bash
+        run: |
+          sudo apt install ./build/dist/srcml*.rpm
+
+      - name: Run Installed srcml
+        shell: bash
+        working-directory: build
+        run: |
+          srcml --version
+          srcml --text="int a;" -l C++
+
+      - name: Client Tests on Installed srcml
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          ctest -VV
+      - run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ClientTests
+          path: build/Testing/ClientTest.${{ env.LABEL }}.log
+
+      - name: Build libsrcml Tests
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          cmake .. -DBUILD_LIBSRCML_TESTS=ON
+          cmake --build . --config Release --target build_libsrcml_tests
+
+      - name: Run libsrcml Tests on Installed libsrcml
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          ctest -R ^test_
+      - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
+      - uses: actions/upload-artifact@v2
+        with:
+          name: libsrcmlTests
+          path: build/Testing/libsrcmlTest.${{ env.LABEL }}.log
+
+      - name: Generate Parser Tests
+        shell: bash
+        working-directory: build
+        run: |
+          cmake .. -DBUILD_PARSER_TESTS=ON
+          cmake --build . --config Release --target gen_parser_tests
+
+      - name: Run Parser Tests
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
+      - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ParserTests
+          path: build/libsrcmlTest.${{ env.LABEL }}.log
