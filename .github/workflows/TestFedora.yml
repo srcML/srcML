@@ -70,7 +70,7 @@ jobs:
           ctest -VV
       - uses: actions/upload-artifact@v2
         with:
-          name: ClientTest.${{ $VALUE }}.log
+          name: ClientTest.${{ env.LABEL }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Build libsrcml Tests
@@ -89,7 +89,7 @@ jobs:
           ctest -R ^test_
       - uses: actions/upload-artifact@v2
         with:
-          name: libsrcmlTest.${{ $VALUE }}.log
+          name: libsrcmlTest.${{ env.LABEL }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Generate Parser Tests
@@ -108,5 +108,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ParserTest.${{ $VALUE }}.log
+          name: ParserTest.${{ env.LABEL }}.log
           path: build/ParserTest.log
