@@ -53,7 +53,7 @@ jobs:
       - name: Install using packages
         shell: bash
         run: |
-          dnf install -y build/dist/*.rpm
+          dnf --cacheonly install -y build/dist/srcml*.rpm
 
       - name: Run Installed srcml
         shell: bash
