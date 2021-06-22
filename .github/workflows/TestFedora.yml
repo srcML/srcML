@@ -7,9 +7,14 @@ jobs:
   package:
     strategy:
       matrix:
-        tag: [rawhide, 35, latest, 34, 33, 32]
+        distribution: [fedora:rawhide,
+                       fedora:35,
+                       fedora:latest,
+                       fedora:34,
+                       fedora:33,
+                       fedora:32]
     runs-on: ubuntu-latest
-    container: srcml/fedora:${{ matrix.tag }}
+    container: srcml/${{ matrix.distribution }}
     timeout-minutes: 10
     steps:
 
@@ -68,7 +73,7 @@ jobs:
           ctest -VV
       - uses: actions/upload-artifact@v2
         with:
-          name: ClientTest.${{ runner.os }}.log
+          name: ClientTest.${{ matrix.distribution }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Build libsrcml Tests
@@ -87,7 +92,7 @@ jobs:
           ctest -R ^test_
       - uses: actions/upload-artifact@v2
         with:
-          name: libsrcmlTest.${{ runner.os }}.log
+          name: libsrcmlTest.${{ matrix.distribution }}.log
           path: build/Testing/Temporary/LastTest.log
 
       - name: Generate Parser Tests
@@ -106,5 +111,5 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         with:
-          name: ParserTest.${{ runner.os }}.log
+          name: ParserTest.${{ matrix.distribution }}.log
           path: build/ParserTest.log
