@@ -88,10 +88,11 @@ jobs:
         continue-on-error: true
         run: |
           ctest -R ^test_
+      - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
         with:
-          name: libsrcmlTest.${{ env.LABEL }}.log
-          path: build/Testing/Temporary/LastTest.log
+          name: libsrcmlTests
+          path: build/Testing/libsrcmlTest.${{ env.LABEL }}.log
 
       - name: Generate Parser Tests
         shell: bash
@@ -106,8 +107,8 @@ jobs:
         continue-on-error: true
         run: |
           srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
-
+      - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
         with:
-          name: ParserTest.${{ env.LABEL }}.log
-          path: build/ParserTest.log
+          name: ParserTests
+          path: build/libsrcmlTest.${{ env.LABEL }}.log
