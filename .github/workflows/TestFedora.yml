@@ -7,7 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        tag: [rawhide,35,latest,34,33,32]
+        tag: [rawhide, 35, latest, 34, 33, 32]
     runs-on: ubuntu-latest
     container: srcml/fedora:${{ matrix.tag }}
     timeout-minutes: 10
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: FedoraDist
-          path: **.rpm
+          path: "**.rpm"
 
       # - name: Run docker image
       #   working-directory: dist
