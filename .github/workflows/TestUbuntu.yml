@@ -54,7 +54,7 @@ jobs:
       - name: Install using packages
         shell: bash
         run: |
-          sudo apt install ./build/dist/srcml*.rpm
+          apt install ./build/dist/srcml*.deb
 
       - name: Run Installed srcml
         shell: bash
