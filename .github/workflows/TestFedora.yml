@@ -7,9 +7,9 @@ jobs:
   package:
     strategy:
       matrix:
-        distribution: [fedora:rawhide, fedora:35, fedora:latest, fedora:34, fedora:33, fedora:32]
+        distribution: [rawhide, 35, latest, 34, 33, 32]
     runs-on: ubuntu-latest
-    container: srcml/${{ matrix.distribution }}
+    container: srcml/fedora:${{ matrix.distribution }}
     timeout-minutes: 10
     steps:
 
