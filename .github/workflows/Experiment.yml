@@ -1,5 +1,5 @@
 ---
-name: Test Fedora
+name: Test Single Use Fedora
 
 on: workflow_dispatch
 
@@ -7,7 +7,7 @@ jobs:
   package:
     strategy:
       matrix:
-        distribution: ["fedora:rawhide", "fedora:35", "fedora:latest", "fedora:34", "fedora:33", "fedora:32", "centos:7", "centos:8"]
+        distribution: ["fedora:35"]
     runs-on: ubuntu-latest
     container: srcml/${{ matrix.distribution }}
     timeout-minutes: 10
@@ -80,6 +80,10 @@ jobs:
         continue-on-error: true
         run: |
           ctest -VV
+      - name: Rerun any client test failures
+        if: ${{ failure() }}
+        run: |
+          ctest --rerun-failed
       - run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
         with:
