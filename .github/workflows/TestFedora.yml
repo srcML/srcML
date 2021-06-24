@@ -51,13 +51,13 @@ jobs:
           path: build/dist/*.rpm
 
       - name: Set Installer Fedora
-        if: ${{ contains(matrix.distribution, "fedora") }}
+        if: ${{ contains(matrix.distribution, 'fedora') }}
         shell: bash
         run: |
           echo "INSTALLER=dnf" >> $GITHUB_ENV
 
       - name: Set Installer CentOS
-        if: ${{ contains(matrix.distribution, "centos") }}
+        if: ${{ contains(matrix.distribution, 'centos') }}
         shell: bash
         run: |
           echo "INSTALLER=yum" >> $GITHUB_ENV
