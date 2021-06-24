@@ -50,10 +50,22 @@ jobs:
           name: FedoraDist
           path: build/dist/*.rpm
 
+      - name: Set Installer Fedora
+        if: ${{ contains(matrix.distribution, "fedora") }}
+        shell: bash
+        run: |
+          echo "INSTALLER=dnf" >> $GITHUB_ENV
+
+      - name: Set Installer CentOS
+        if: ${{ contains(matrix.distribution, "centos") }}
+        shell: bash
+        run: |
+          echo "INSTALLER=yum" >> $GITHUB_ENV
+
       - name: Install using packages
         shell: bash
         run: |
-          dnf install -y build/dist/srcml*.rpm
+          $INSTALLER install -y build/dist/srcml*.rpm
 
       - name: Run Installed srcml
         shell: bash
