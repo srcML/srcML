@@ -89,6 +89,7 @@ jobs:
 
       - name: Rerun any client test failures
         if: ${{ steps.client.outcome == 'failure' }}
+        working-directory: build
         run: |
           ctest --rerun-failed
 
