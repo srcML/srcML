@@ -76,19 +76,21 @@ jobs:
 
       - name: Client Tests on Installed srcml
         shell: bash
+        id: client
         working-directory: build
         continue-on-error: true
         run: |
           ctest -VV
-      - name: Rerun any client test failures
-        if: ${{ failure() }}
-        run: |
-          ctest --rerun-failed
       - run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
         with:
           name: ClientTests
           path: build/Testing/ClientTest.${{ env.LABEL }}.log
+
+      - name: Rerun any client test failures
+        if: ${{ steps.client.outcome == 'failure' }}
+        run: |
+          ctest --rerun-failed
 
       - name: Build libsrcml Tests
         shell: bash
