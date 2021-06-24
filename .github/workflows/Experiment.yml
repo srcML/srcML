@@ -7,7 +7,7 @@ jobs:
   package:
     strategy:
       matrix:
-        distribution: ["fedora:35"]
+        distribution: ["ubuntu:21.10", "fedora:35"]
     runs-on: ubuntu-latest
     container: srcml/${{ matrix.distribution }}
     timeout-minutes: 10
@@ -39,33 +39,45 @@ jobs:
         run: |
           ninja
 
-      - name: Package
+      - name: Package RPM
+        if: ${{ !contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         working-directory: build
         run: |
           cpack -G RPM
 
+      - name: Package DEB
+        if: ${{ contains(matrix.distribution, 'ubuntu') }}
+        shell: bash
+        working-directory: build
+        run: |
+          cpack -G DEB
+
       - uses: actions/upload-artifact@v2
+        continue-on-error: true
         with:
           name: FedoraDist
-          path: build/dist/*.rpm
+          path: |
+            build/dist/*.rpm
+            build/dist/*.deb
 
-      - name: Set Installer Fedora
+      - name: Install Fedora with dnf
         if: ${{ contains(matrix.distribution, 'fedora') }}
         shell: bash
         run: |
-          echo "INSTALLER=dnf" >> $GITHUB_ENV
+          dnf install -y build/dist/srcml*.rpm
 
-      - name: Set Installer CentOS
+      - name: Install CentOS with yum
         if: ${{ contains(matrix.distribution, 'centos') }}
         shell: bash
         run: |
-          echo "INSTALLER=yum" >> $GITHUB_ENV
+          yum install -y build/dist/srcml*.rpm
 
-      - name: Install using packages
+      - name: Install Ubuntu with apt
+        if: ${{ contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         run: |
-          $INSTALLER install -y build/dist/srcml*.rpm
+          apt install -y build/dist/srcml*.deb
 
       - name: Run Installed srcml
         shell: bash
@@ -91,7 +103,7 @@ jobs:
         if: ${{ steps.client.outcome == 'failure' }}
         working-directory: build
         run: |
-          ctest --rerun-failed
+          ctest --rerun-failed -VV
           cp build/Testing/Temporary/LastTest.log build/Testing/ClientTestR.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
         if: ${{ steps.client.outcome == 'failure' }}
