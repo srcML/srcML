@@ -77,7 +77,7 @@ jobs:
         if: ${{ contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         run: |
-          apt install -y build/dist/srcml*.deb
+          apt install -y ./build/dist/srcml*.deb
 
       - name: Run Installed srcml
         shell: bash
