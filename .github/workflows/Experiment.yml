@@ -92,6 +92,12 @@ jobs:
         working-directory: build
         run: |
           ctest --rerun-failed
+          cp build/Testing/Temporary/LastTest.log build/Testing/ClientTestR.${{ env.LABEL }}.log
+      - uses: actions/upload-artifact@v2
+        if: ${{ steps.client.outcome == 'failure' }}
+        with:
+          name: ClientTests
+          path: build/Testing/ClientTestR.${{ env.LABEL }}.log
 
       - name: Build libsrcml Tests
         shell: bash
