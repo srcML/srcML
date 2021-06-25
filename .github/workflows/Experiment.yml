@@ -10,6 +10,7 @@ jobs:
         distribution: ["ubuntu:21.10", "fedora:35"]
         arch: ["linux/amd64", "linux/arm64"]
     runs-on: ubuntu-latest
+    continue-on-error: true
     container:
       image: srcml/${{ matrix.distribution }}
       options: --platform ${{ matrix.arch }}
