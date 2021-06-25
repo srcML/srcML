@@ -8,10 +8,11 @@ jobs:
     strategy:
       matrix:
         distribution: ["ubuntu:21.10", "fedora:35"]
+        arch: ["linux/amd64", "linux/arm64"]
     runs-on: ubuntu-latest
     container:
       image: srcml/${{ matrix.distribution }}
-      options: --platform linux/arm64
+      options: --platform ${{ matrix.arch }}
 
     timeout-minutes: 10
     steps:
