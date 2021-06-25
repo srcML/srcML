@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: srcml/${{ matrix.distribution }}
-      options: --platform linux/arm64
+      options: --platform linux/amd64
 
     timeout-minutes: 10
     steps:
