@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: srcml/${{ matrix.distribution }}
-      options: --platform linux/amd64
+      options: --platform linux/arm64
 
     timeout-minutes: 10
     steps:
@@ -106,6 +106,7 @@ jobs:
       - name: Rerun any client test failures
         if: ${{ steps.client.outcome == 'failure' }}
         working-directory: build
+        continue-on-error: true
         run: |
           ctest --rerun-failed -VV
 
