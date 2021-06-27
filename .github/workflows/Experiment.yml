@@ -5,7 +5,7 @@ on: workflow_dispatch
 
 jobs:
   package:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     continue-on-error: true
     # container: 
     #   image: ubuntu:21.10
@@ -22,7 +22,7 @@ jobs:
         shell: bash
         run: |
           /usr/bin/docker pull ubuntu:21.10
-          /usr/bin/docker run --workdir /__w/srcML/srcML --platform linux/arm64 --entrypoint "tail" ubuntu:21.10 "-f" "/dev/null"
+          /usr/bin/docker run --platform linux/arm64/v8 ubuntu:21.10 uname -m
           /usr/bin/docker ps -a
 
       - name: Checkout Repository
