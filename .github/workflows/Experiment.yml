@@ -22,8 +22,10 @@ jobs:
         shell: bash
         run: |
           /usr/bin/docker pull ubuntu:21.10
-          /usr/bin/docker run --platform linux/arm64/v8 --entrypoint "tail" ubuntu:21.10 -f /dev/null
-          uname -m 
+          /usr/bin/docker create --platform linux/arm64/v8 --name arm --entrypoint "tail" ubuntu:21.10 -f /dev/null
+          /usr/bin/docker start arm
+          /usr/bin/docker ps --all 
+          /usr/bin/docker inspect all
 
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - shell: bash
+        run: uname -m
