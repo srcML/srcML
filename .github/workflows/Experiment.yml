@@ -21,7 +21,7 @@ jobs:
       - name: OS Version
         shell: bash
         run: |
-          /usr/bin/docker run --name 7bab646881c0477bafd4fce80a5a9ef6_ubuntu2110_4a677a --label 8a33c1 --workdir /__w/srcML/srcML --network github_network_b887ec97c7ab40a49b50a8d59fb5f121 --platform linux/arm64/v8 -e "HOME=/github/home" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work":"/__w" -v "/home/runner/runners/2.278.0/externals":"/__e":ro -v "/home/runner/work/_temp":"/__w/_temp" -v "/home/runner/work/_actions":"/__w/_actions" -v "/opt/hostedtoolcache":"/__t" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" --entrypoint "tail" ubuntu:21.10 "-f" "/dev/null"
+          /usr/bin/docker run --name 7bab646881c0477bafd4fce80a5a9ef6_ubuntu2110_4a677a --label 8a33c1 --workdir /__w/srcML/srcML --platform linux/arm64/v8 -e "HOME=/github/home" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work":"/__w" -v "/home/runner/runners/2.278.0/externals":"/__e":ro -v "/home/runner/work/_temp":"/__w/_temp" -v "/home/runner/work/_actions":"/__w/_actions" -v "/opt/hostedtoolcache":"/__t" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" --entrypoint "tail" ubuntu:21.10 "-f" "/dev/null"
           /usr/bin/docker ps -a
 
       - name: Checkout Repository
