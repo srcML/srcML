@@ -25,7 +25,7 @@ jobs:
           /usr/bin/docker create --platform linux/arm64/v8 --name arm --entrypoint "tail" ubuntu:21.10 -f /dev/null
           /usr/bin/docker start arm
           /usr/bin/docker ps --all 
-          /usr/bin/docker inspect all
+          /usr/bin/docker inspect arm
 
       - shell: bash
         run: uname -m
