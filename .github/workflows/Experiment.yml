@@ -21,7 +21,8 @@ jobs:
       - name: OS Version
         shell: bash
         run: |
-          /usr/bin/docker run --workdir /__w/srcML/srcML --platform linux/arm64/v8 -e "HOME=/github/home" -e GITHUB_ACTIONS=true -e CI=true -v "/opt/hostedtoolcache":"/__t" --entrypoint "tail" ubuntu:21.10 "-f" "/dev/null"
+          /usr/bin/docker pull ubuntu:21.10
+          /usr/bin/docker run --workdir /__w/srcML/srcML --platform linux/arm64/v8 -e "HOME=/github/home" -v "/opt/hostedtoolcache":"/__t" --entrypoint "tail" ubuntu:21.10 "-f" "/dev/null"
           /usr/bin/docker ps -a
 
       - name: Checkout Repository
