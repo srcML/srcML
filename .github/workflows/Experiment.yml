@@ -235,7 +235,8 @@ jobs:
         if: ${{ contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         run: |
-          docker exec arm apt install -y ./build/dist/srcml*.deb
+          docker exec arm pwd
+          docker exec arm apt install -y ./dist/srcml*.deb
 
       - name: Run Installed srcml
         shell: bash
