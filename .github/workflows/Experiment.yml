@@ -18,7 +18,7 @@ jobs:
         id: qemu
         uses: docker/setup-qemu-action@v1
 
-      - name: OS Version
+      - name: Start arm64 Docker
         shell: bash
         run: |
           /usr/bin/docker ps --all --quiet --no-trunc --filter "label=8a33c1"
@@ -31,5 +31,4 @@ jobs:
           /usr/bin/docker inspect arm
 
       - shell: bash
-        run: uname -m
-
+        run: docker exec arm uname -m
