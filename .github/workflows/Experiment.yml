@@ -4,212 +4,58 @@ name: Test Single Use Fedora
 on: workflow_dispatch
 
 jobs:
-  # package-amd64:
-  #   strategy:
-  #     matrix:
-  #       distribution: ["ubuntu:21.10", "fedora:35"]
-  #   runs-on: ubuntu-latest
-  #   continue-on-error: true
-  #   container: srcml/${{ matrix.distribution }}
-
-  #   timeout-minutes: 10
-  #   steps:
-
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
-
-  #     - name: OS Version
-  #       shell: bash
-  #       run: |
-  #         cat /etc/os-release
-  #         export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
-  #         echo "LABEL=$VALUE" >> $GITHUB_ENV
-
-  #     - name: Create build directory
-  #       shell: bash
-  #       run: mkdir build
-
-  #     - name: CMake Setup
-  #       shell: bash
-  #       working-directory: build
-  #       run: |
-  #         cmake .. -G Ninja
-
-  #     - name: Build
-  #       shell: bash
-  #       working-directory: build
-  #       run: |
-  #         ninja
-
-  #     - name: Package RPM
-  #       if: ${{ !contains(matrix.distribution, 'ubuntu') }}
-  #       shell: bash
-  #       working-directory: build
-  #       run: |
-  #         cpack -G RPM
-
-  #     - name: Package DEB
-  #       if: ${{ contains(matrix.distribution, 'ubuntu') }}
-  #       shell: bash
-  #       working-directory: build
-  #       run: |
-  #         cpack -G DEB
-
-  #     - uses: actions/upload-artifact@v2
-  #       continue-on-error: true
-  #       with:
-  #         name: FedoraDist
-  #         path: |
-  #           build/dist/*.rpm
-  #           build/dist/*.deb
-
-  #     - name: Install Fedora with dnf
-  #       if: ${{ contains(matrix.distribution, 'fedora') }}
-  #       shell: bash
-  #       run: |
-  #         dnf install -y build/dist/srcml*.rpm
-
-  #     - name: Install CentOS with yum
-  #       if: ${{ contains(matrix.distribution, 'centos') }}
-  #       shell: bash
-  #       run: |
-  #         yum install -y build/dist/srcml*.rpm
-
-  #     - name: Install Ubuntu with apt
-  #       if: ${{ contains(matrix.distribution, 'ubuntu') }}
-  #       shell: bash
-  #       run: |
-  #         apt install -y ./build/dist/srcml*.deb
-
-  #     - name: Run Installed srcml
-  #       shell: bash
-  #       working-directory: build
-  #       run: |
-  #         srcml --version
-  #         srcml --text="int a;" -l C++
-
-  #     - name: Client Tests on Installed srcml
-  #       shell: bash
-  #       id: client
-  #       working-directory: build
-  #       continue-on-error: true
-  #       run: |
-  #         ctest -VV
-  #     - name: Rename log file for upload
-  #       run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
-  #     - uses: actions/upload-artifact@v2
-  #       with:
-  #         name: ClientTests
-  #         path: build/Testing/ClientTest.${{ env.LABEL }}.log
-
-  #     - name: Rerun any client test failures
-  #       if: ${{ steps.client.outcome == 'failure' }}
-  #       working-directory: build
-  #       continue-on-error: true
-  #       run: |
-  #         ctest --rerun-failed -VV
-
-  #     - name: Build libsrcml Tests
-  #       shell: bash
-  #       working-directory: build
-  #       continue-on-error: true
-  #       run: |
-  #         cmake .. -DBUILD_LIBSRCML_TESTS=ON
-  #         cmake --build . --config Release --target build_libsrcml_tests
-
-  #     - name: Run libsrcml Tests on Installed libsrcml
-  #       shell: bash
-  #       working-directory: build
-  #       continue-on-error: true
-  #       run: |
-  #         ctest -R ^test_
-  #     - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
-  #     - uses: actions/upload-artifact@v2
-  #       with:
-  #         name: libsrcmlTests
-  #         path: build/Testing/libsrcmlTest.${{ env.LABEL }}.log
-
-  #     - name: Generate Parser Tests
-  #       shell: bash
-  #       working-directory: build
-  #       run: |
-  #         cmake .. -DBUILD_PARSER_TESTS=ON
-  #         cmake --build . --config Release --target gen_parser_tests
-
-  #     - name: Run Parser Tests
-  #       shell: bash
-  #       working-directory: build
-  #       continue-on-error: true
-  #       run: |
-  #         srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
-  #     - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
-  #     - uses: actions/upload-artifact@v2
-  #       with:
-  #         name: ParserTests
-  #         path: build/libsrcmlTest.${{ env.LABEL }}.log
-
-  package-arm64:
+  package-amd64:
     strategy:
       matrix:
         distribution: ["ubuntu:21.10", "fedora:35"]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     continue-on-error: true
+    container:
+      image: srcml/${{ matrix.distribution }}
+      options: --platform linux/arm64
 
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
 
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up QEMU
-        id: qemu
-        uses: docker/setup-qemu-action@v1
-
-      - name: Start arm64 Docker
-        shell: bash
-        run: |
-          docker ps --all --quiet --no-trunc --filter "label=8a33c1"
-          docker network prune --force --filter "label=8a33c1"
-          docker network create --label 8a33c1 srcmlnet
-          docker pull ubuntu:21.10
-          docker create --platform linux/arm64/v8 --cpus 2 --name arm --label 8a33c1 --workdir /__w/srcML/srcML/build --network srcmlnet  -e "HOME=/github/home" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work":"/__w" -v "/home/runner/runners/2.278.0/externals":"/__e":ro -v "/home/runner/work/_temp":"/__w/_temp" -v "/home/runner/work/_actions":"/__w/_actions" -v "/opt/hostedtoolcache":"/__t" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" --entrypoint "tail" srcml/${{ matrix.distribution }} "-f" "/dev/null"
-          docker start arm
-          docker ps --all
-          docker inspect arm
-
       - name: OS Version
         shell: bash
         run: |
-          docker exec arm cat /etc/os-release
-          docker exec arm uname -m
+          cat /etc/os-release
           export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
           echo "LABEL=$VALUE" >> $GITHUB_ENV
 
+      - name: Create build directory
+        shell: bash
+        run: mkdir build
+
       - name: CMake Setup
         shell: bash
+        working-directory: build
         run: |
-          docker exec arm pwd
-          docker exec arm cmake .. -G Ninja
+          cmake .. -G Ninja
 
       - name: Build
         shell: bash
         working-directory: build
         run: |
-          docker exec arm ninja
+          ninja
 
       - name: Package RPM
         if: ${{ !contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         working-directory: build
         run: |
-          docker exec arm cpack -G RPM
+          cpack -G RPM
 
       - name: Package DEB
         if: ${{ contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         working-directory: build
         run: |
-          docker exec arm cpack -G DEB
+          cpack -G DEB
 
       - uses: actions/upload-artifact@v2
         continue-on-error: true
@@ -223,28 +69,26 @@ jobs:
         if: ${{ contains(matrix.distribution, 'fedora') }}
         shell: bash
         run: |
-          docker exec arm dnf install -y build/dist/srcml*.rpm
+          dnf install -y build/dist/srcml*.rpm
 
       - name: Install CentOS with yum
         if: ${{ contains(matrix.distribution, 'centos') }}
         shell: bash
         run: |
-          docker exec arm yum install -y build/dist/srcml*.rpm
+          yum install -y build/dist/srcml*.rpm
 
       - name: Install Ubuntu with apt
         if: ${{ contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         run: |
-          docker exec arm ls -alhR dist
-          docker exec arm ninja install
-          docker exec arm ldconfig
+          apt install -y ./build/dist/srcml*.deb
 
       - name: Run Installed srcml
         shell: bash
         working-directory: build
         run: |
-          docker exec arm srcml --version
-          docker exec arm srcml --text="int a;" -l C++
+          srcml --version
+          srcml --text="int a;" -l C++
 
       - name: Client Tests on Installed srcml
         shell: bash
@@ -252,7 +96,7 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
-          docker exec arm ctest -VV
+          ctest -VV
       - name: Rename log file for upload
         run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
@@ -265,7 +109,7 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
-          docker exec arm ctest --rerun-failed -VV
+          ctest --rerun-failed -VV
 
       - name: Build libsrcml Tests
         shell: bash
@@ -280,7 +124,7 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
-          docker exec arm ctest -R ^test_
+          ctest -R ^test_
       - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
         with:
@@ -291,17 +135,175 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          docker exec arm cmake .. -DBUILD_PARSER_TESTS=ON
-          docker exec arm cmake --build . --config Release --target gen_parser_tests
+          cmake .. -DBUILD_PARSER_TESTS=ON
+          cmake --build . --config Release --target gen_parser_tests
 
       - name: Run Parser Tests
         shell: bash
         working-directory: build
         continue-on-error: true
         run: |
-          docker exec arm srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
+          srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
       - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
         with:
           name: ParserTests
           path: build/libsrcmlTest.${{ env.LABEL }}.log
+
+  # package-arm64:
+  #   strategy:
+  #     matrix:
+  #       distribution: ["ubuntu:21.10", "fedora:35"]
+  #   runs-on: ubuntu-latest
+  #   continue-on-error: true
+
+  #   timeout-minutes: 20
+  #   steps:
+
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up QEMU
+  #       id: qemu
+  #       uses: docker/setup-qemu-action@v1
+
+  #     - name: Start arm64 Docker
+  #       shell: bash
+  #       run: |
+  #         docker ps --all --quiet --no-trunc --filter "label=8a33c1"
+  #         docker network prune --force --filter "label=8a33c1"
+  #         docker network create --label 8a33c1 srcmlnet
+  #         docker pull ubuntu:21.10
+  #         docker create --platform linux/arm64/v8 --cpus 2 --name arm --label 8a33c1 --workdir /__w/srcML/srcML/build --network srcmlnet  -e "HOME=/github/home" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work":"/__w" -v "/home/runner/runners/2.278.0/externals":"/__e":ro -v "/home/runner/work/_temp":"/__w/_temp" -v "/home/runner/work/_actions":"/__w/_actions" -v "/opt/hostedtoolcache":"/__t" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" --entrypoint "tail" srcml/${{ matrix.distribution }} "-f" "/dev/null"
+  #         docker start arm
+  #         docker ps --all
+  #         docker inspect arm
+
+  #     - name: OS Version
+  #       shell: bash
+  #       run: |
+  #         docker exec arm cat /etc/os-release
+  #         docker exec arm uname -m
+  #         export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
+  #         echo "LABEL=$VALUE" >> $GITHUB_ENV
+
+  #     - name: CMake Setup
+  #       shell: bash
+  #       run: |
+  #         docker exec arm pwd
+  #         docker exec arm cmake .. -G Ninja
+
+  #     - name: Build
+  #       shell: bash
+  #       working-directory: build
+  #       run: |
+  #         docker exec arm ninja
+
+  #     - name: Package RPM
+  #       if: ${{ !contains(matrix.distribution, 'ubuntu') }}
+  #       shell: bash
+  #       working-directory: build
+  #       run: |
+  #         docker exec arm cpack -G RPM
+
+  #     - name: Package DEB
+  #       if: ${{ contains(matrix.distribution, 'ubuntu') }}
+  #       shell: bash
+  #       working-directory: build
+  #       run: |
+  #         docker exec arm cpack -G DEB
+
+  #     - uses: actions/upload-artifact@v2
+  #       continue-on-error: true
+  #       with:
+  #         name: FedoraDist
+  #         path: |
+  #           build/dist/*.rpm
+  #           build/dist/*.deb
+
+  #     - name: Install Fedora with dnf
+  #       if: ${{ contains(matrix.distribution, 'fedora') }}
+  #       shell: bash
+  #       run: |
+  #         docker exec arm dnf install -y build/dist/srcml*.rpm
+
+  #     - name: Install CentOS with yum
+  #       if: ${{ contains(matrix.distribution, 'centos') }}
+  #       shell: bash
+  #       run: |
+  #         docker exec arm yum install -y build/dist/srcml*.rpm
+
+  #     - name: Install Ubuntu with apt
+  #       if: ${{ contains(matrix.distribution, 'ubuntu') }}
+  #       shell: bash
+  #       run: |
+  #         docker exec arm ls -alhR dist
+  #         docker exec arm ninja install
+  #         docker exec arm ldconfig
+
+  #     - name: Run Installed srcml
+  #       shell: bash
+  #       working-directory: build
+  #       run: |
+  #         docker exec arm srcml --version
+  #         docker exec arm srcml --text="int a;" -l C++
+
+  #     - name: Client Tests on Installed srcml
+  #       shell: bash
+  #       id: client
+  #       working-directory: build
+  #       continue-on-error: true
+  #       run: |
+  #         docker exec arm ctest -VV
+  #     - name: Rename log file for upload
+  #       run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: ClientTests
+  #         path: build/Testing/ClientTest.${{ env.LABEL }}.log
+
+  #     - name: Rerun any client test failures
+  #       if: ${{ steps.client.outcome == 'failure' }}
+  #       working-directory: build
+  #       continue-on-error: true
+  #       run: |
+  #         docker exec arm ctest --rerun-failed -VV
+
+  #     - name: Build libsrcml Tests
+  #       shell: bash
+  #       working-directory: build
+  #       continue-on-error: true
+  #       run: |
+  #         cmake .. -DBUILD_LIBSRCML_TESTS=ON
+  #         cmake --build . --config Release --target build_libsrcml_tests
+
+  #     - name: Run libsrcml Tests on Installed libsrcml
+  #       shell: bash
+  #       working-directory: build
+  #       continue-on-error: true
+  #       run: |
+  #         docker exec arm ctest -R ^test_
+  #     - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: libsrcmlTests
+  #         path: build/Testing/libsrcmlTest.${{ env.LABEL }}.log
+
+  #     - name: Generate Parser Tests
+  #       shell: bash
+  #       working-directory: build
+  #       run: |
+  #         docker exec arm cmake .. -DBUILD_PARSER_TESTS=ON
+  #         docker exec arm cmake --build . --config Release --target gen_parser_tests
+
+  #     - name: Run Parser Tests
+  #       shell: bash
+  #       working-directory: build
+  #       continue-on-error: true
+  #       run: |
+  #         docker exec arm srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
+  #     - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: ParserTests
+  #         path: build/libsrcmlTest.${{ env.LABEL }}.log
