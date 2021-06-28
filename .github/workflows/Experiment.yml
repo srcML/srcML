@@ -25,10 +25,13 @@ jobs:
           /usr/bin/docker network prune --force --filter "label=8a33c1"
           /usr/bin/docker network create --label 8a33c1 github_network_006bf04ab0b3427c818ae378ba6c9d6a
           /usr/bin/docker pull ubuntu:21.10
-          /usr/bin/docker create --platform linux/arm64/v8 --label 8a33c1 --network github_network_006bf04ab0b3427c818ae378ba6c9d6a --name arm --workdir /__w/srcML/srcML -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work":"/__w" -v "/home/runner/runners/2.278.0/externals":"/__e":ro -v "/home/runner/work/_temp":"/__w/_temp" -v "/home/runner/work/_actions":"/__w/_actions" -v "/opt/hostedtoolcache":"/__t" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" --entrypoint "tail" ubuntu:21.10 -f /dev/null
+          /usr/bin/docker create --platform linux/arm64/v8 --name arm --label 8a33c1 --workdir /__w/srcML/srcML --network github_network_c32e7bf700f94f60bf61fb55f7c1589d  -e "HOME=/github/home" -e GITHUB_ACTIONS=true -e CI=true -v "/var/run/docker.sock":"/var/run/docker.sock" -v "/home/runner/work":"/__w" -v "/home/runner/runners/2.278.0/externals":"/__e":ro -v "/home/runner/work/_temp":"/__w/_temp" -v "/home/runner/work/_actions":"/__w/_actions" -v "/opt/hostedtoolcache":"/__t" -v "/home/runner/work/_temp/_github_home":"/github/home" -v "/home/runner/work/_temp/_github_workflow":"/github/workflow" --entrypoint "tail" ubuntu:21.10 "-f" "/dev/null"
           /usr/bin/docker start arm
           /usr/bin/docker ps --all 
           /usr/bin/docker inspect arm
+
+      - shell: bash
+        run: uname -m
 
       - shell: bash
         run: docker exec arm uname -m
