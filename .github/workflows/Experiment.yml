@@ -14,7 +14,6 @@ jobs:
       image: srcml/${{ matrix.distribution }}
       options: --platform linux/arm64
 
-    timeout-minutes: 10
     steps:
 
       - name: OS Version
