@@ -7,8 +7,8 @@ jobs:
   package:
     runs-on: ubuntu-latest
     continue-on-error: true
-    # container: 
-    #   image: ubuntu:21.10
+    container: 
+       image: ubuntu:21.10
     #   options: --platform linux/arm64/v8
 
     timeout-minutes: 10
