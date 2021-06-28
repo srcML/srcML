@@ -238,6 +238,7 @@ jobs:
           docker exec arm ls -alhR dist
           docker exec arm ninja install
           # docker exec arm apt install -y ./dist/srcml*.deb
+          docker exec arm ldconfig
 
       - name: Run Installed srcml
         shell: bash
