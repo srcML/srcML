@@ -185,10 +185,6 @@ jobs:
           export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
           echo "LABEL=$VALUE" >> $GITHUB_ENV
 
-      - name: Create build directory
-        shell: bash
-        run: mkdir build
-
       - name: CMake Setup
         shell: bash
         run: |
