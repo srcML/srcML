@@ -17,6 +17,14 @@ jobs:
     timeout-minutes: 10
     steps:
 
+      - name: OS Version
+        shell: bash
+        run: |
+          cat /etc/os-release
+          export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
+          echo "LABEL=$VALUE" >> $GITHUB_ENV
+          cat /etc/*release | grep ^ID
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
