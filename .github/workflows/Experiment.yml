@@ -7,7 +7,7 @@ jobs:
   package-amd64:
     strategy:
       matrix:
-        distribution: ["ubuntu:21.10", "fedora:35"]
+        distribution: ["ubuntu:20.04", "fedora:35"]
     runs-on: self-hosted
     continue-on-error: true
     container:
@@ -24,7 +24,6 @@ jobs:
           export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
           echo "LABEL=$VALUE" >> $GITHUB_ENV
           cat /etc/*release | grep ^ID
-          sleep 120
 
       - name: Checkout Repository
         uses: actions/checkout@v2
