@@ -48,7 +48,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          ninja
+          ninja -j 1
 
       - name: Package RPM
         if: ${{ !contains(matrix.distribution, 'ubuntu') }}
