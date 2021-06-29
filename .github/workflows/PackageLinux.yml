@@ -98,7 +98,7 @@ jobs:
       - name: Install
         shell: bash
         run: |
-          ${{ env.INSTALLCOMMAND }} build/dist/srcml*.${{ env.EXTENSION }}
+          ${{ env.INSTALLCOMMAND }} ./build/dist/srcml*.${{ env.EXTENSION }}
 
       - name: Run Installed srcml
         shell: bash
