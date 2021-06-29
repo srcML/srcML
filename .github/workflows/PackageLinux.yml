@@ -47,7 +47,7 @@ jobs:
         shell: bash
         run: |
           echo "GENERATOR=DEB" >> $GITHUB_ENV
-          echo "INSTALLCOMMAND='apt install -y'" >> $GITHUB_ENV
+          echo "INSTALLCOMMAND=apt install -y" >> $GITHUB_ENV
           echo "EXTENSION=deb" >> $GITHUB_ENV
 
       - name: Setup Fedora
@@ -55,7 +55,7 @@ jobs:
         shell: bash
         run: |
           echo "GENERATOR=RPM" >> $GITHUB_ENV
-          echo "INSTALLCOMMAND='dnf install -y'" >> $GITHUB_ENV
+          echo "INSTALLCOMMAND=dnf install -y" >> $GITHUB_ENV
           echo "EXTENSION=rpm" >> $GITHUB_ENV
 
       - name: Setup CentOS
@@ -63,7 +63,7 @@ jobs:
         shell: bash
         run: |
           echo "GENERATOR=RPM" >> $GITHUB_ENV
-          echo "INSTALLCOMMAND='yum install -y'" >> $GITHUB_ENV
+          echo "INSTALLCOMMAND=yum install -y" >> $GITHUB_ENV
           echo "EXTENSION=rpm" >> $GITHUB_ENV
 
       - name: Create build directory
