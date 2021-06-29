@@ -42,6 +42,30 @@ jobs:
           export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
           echo "LABEL=$VALUE" >> $GITHUB_ENV
 
+      - name: Setup Ubuntu
+        if: ${{ contains(matrix.distribution, 'ubuntu') }}
+        shell: bash
+        run: |
+          echo "GENERATOR=DEB" >> $GITHUB_ENV
+          echo "INSTALLCOMMAND='apt install -y'" >> $GITHUB_ENV
+          echo "EXTENSION=deb" >> $GITHUB_ENV
+
+      - name: Setup Fedora
+        if: ${{ contains(matrix.distribution, 'fedora') }}
+        shell: bash
+        run: |
+          echo "GENERATOR=RPM" >> $GITHUB_ENV
+          echo "INSTALLCOMMAND='dnf install -y'" >> $GITHUB_ENV
+          echo "EXTENSION=rpm" >> $GITHUB_ENV
+
+      - name: Setup CentOS
+        if: ${{ contains(matrix.distribution, 'centos') }}
+        shell: bash
+        run: |
+          echo "GENERATOR=RPM" >> $GITHUB_ENV
+          echo "INSTALLCOMMAND='yum install -y'" >> $GITHUB_ENV
+          echo "EXTENSION=rpm" >> $GITHUB_ENV
+
       - name: Create build directory
         shell: bash
         run: mkdir build
@@ -56,47 +80,25 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          ninja -j 1
+          ninja
 
-      - name: Package RPM
-        if: ${{ !contains(matrix.distribution, 'ubuntu') }}
+      - name: Package
         shell: bash
         working-directory: build
         run: |
-          cpack -G RPM
-
-      - name: Package DEB
-        if: ${{ contains(matrix.distribution, 'ubuntu') }}
-        shell: bash
-        working-directory: build
-        run: |
-          cpack -G DEB
+          cpack -G ${{ env.GENERATOR }}
 
       - uses: actions/upload-artifact@v2
         continue-on-error: true
         with:
-          name: FedoraDist
+          name: Packages
           path: |
-            build/dist/*.rpm
-            build/dist/*.deb
+            build/dist/*.${{ env.EXTENSION }}
 
-      - name: Install Fedora with dnf
-        if: ${{ contains(matrix.distribution, 'fedora') }}
+      - name: Install
         shell: bash
         run: |
-          dnf install -y build/dist/srcml*.rpm
-
-      - name: Install CentOS with yum
-        if: ${{ contains(matrix.distribution, 'centos') }}
-        shell: bash
-        run: |
-          yum install -y build/dist/srcml*.rpm
-
-      - name: Install Ubuntu with apt
-        if: ${{ contains(matrix.distribution, 'ubuntu') }}
-        shell: bash
-        run: |
-          apt install -y ./build/dist/srcml*.deb
+          ${{ env.INSTALLCOMMAND }} build/dist/srcml*.${{ env.EXTENSION }}
 
       - name: Run Installed srcml
         shell: bash
