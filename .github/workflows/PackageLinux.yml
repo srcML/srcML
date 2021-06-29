@@ -8,21 +8,21 @@ jobs:
     strategy:
       matrix:
         distribution:
-          - "fedora:rawhide"
+          # - "fedora:rawhide"
           - "fedora:35"
-          - "fedora:latest"
-          - "fedora:34"
-          - "fedora:33"
-          - "fedora:32"
-          - "centos:7"
+          # - "fedora:latest"
+          # - "fedora:34"
+          # - "fedora:33"
+          # - "fedora:32"
           - "centos:8"
+          # - "centos:7"
           - "ubuntu:21.10"
-          - "ubuntu:21.04"
-          - "ubuntu:20.10"
-          - "ubuntu:20.04"
-          - "ubuntu:18.04"
-          - "ubuntu:16.04"
-          - "ubuntu:14.04"
+          # - "ubuntu:21.04"
+          # - "ubuntu:20.10"
+          # - "ubuntu:20.04"
+          # - "ubuntu:18.04"
+          # - "ubuntu:16.04"
+          # - "ubuntu:14.04"
 
     runs-on: [ubuntu-latest]
     continue-on-error: true
