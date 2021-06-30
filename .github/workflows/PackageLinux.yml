@@ -1,13 +1,7 @@
 ---
 name: Package Linux amd64
 
-on:
-  workflow_dispatch:
-    inputs:
-      pattern:
-        description: 'Which platforms to generate'
-        required: false
-        default: ''
+on: workflow_dispatch
 
 jobs:
   package-linux:
@@ -29,14 +23,11 @@ jobs:
           # - "ubuntu:18.04"
           # - "ubuntu:16.04"
           # - "ubuntu:14.04"
-
-    if: ${{ github.event.inputs.pattern == '' || contains(matrix.distribution, github.event.inputs.pattern) }}
     runs-on: [ubuntu-latest]
     continue-on-error: true
     container:
       image: srcml/${{ matrix.distribution }}
       options: --platform linux/amd64
-
     steps:
 
       - name: Checkout Repository
