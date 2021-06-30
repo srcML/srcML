@@ -1,10 +1,17 @@
 ---
 name: Package Linux amd64
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      pattern:
+        description: 'Which platforms to generate'
+        required: false
+        default: ''
 
 jobs:
   package-linux:
+    if: ${{ github.event.inputs.pattern == '' || contains(matrix.distribution, github.event.inputs.pattern) }}
     strategy:
       matrix:
         distribution:
