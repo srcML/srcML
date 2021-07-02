@@ -1,5 +1,5 @@
 ---
-name: Package Linux amd64
+name: Package Linux arm64
 
 on: workflow_dispatch
 
