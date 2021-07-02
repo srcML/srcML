@@ -9,11 +9,11 @@ jobs:
       matrix:
         distribution:
           - "fedora:rawhide"
-          # - "fedora:35"
-          # - "fedora:latest"
-          # - "fedora:34"
+          - "fedora:35"
+          - "fedora:latest"
+          - "fedora:34"
           - "fedora:33"
-          # - "fedora:32"
+          - "fedora:32"
           # - "centos:8"
           # - "centos:7"
           # - "ubuntu:21.10"
