@@ -1,0 +1,22 @@
+---
+name: Single ARM
+
+on: workflow_dispatch
+
+jobs:
+  package-linux:
+    runs-on: [self-hosted]
+    continue-on-error: true
+    container:
+      image: fedora:34
+      options: --platform linux/arm64
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: OS Version
+        shell: bash
+        run: |
+          cat /etc/os-release
+          uname -m
