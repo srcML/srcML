@@ -111,6 +111,11 @@ if(MSVC)
     install(FILES ${SRCML_DLLS} DESTINATION lib COMPONENT DEVLIB)
 endif()
 
+message("DISTRO: ${DISTRO}")
+IF(DISTRO MATCHES "Ubuntu" AND CMAKE_INSTALL_LOCAL_ONLY)
+    message("SPECIAL BUNTU")
+endif()
+
 # strip libraries
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     if(APPLE)

@@ -21,6 +21,8 @@
 
 cmake_minimum_required(VERSION 3.15)
 
+set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
+
 # Handles problem of commandline tools interfering with Xcode includes
 if(APPLE)
     set(PKG_CONFIG_EXECUTABLE "/usr/bin/true")

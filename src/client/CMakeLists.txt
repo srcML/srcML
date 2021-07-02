@@ -84,6 +84,11 @@ else()
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
+# add Info.plist
+# if(APPLE)
+#     target_link_options(srcml PRIVATE LINKER:-sectcreate,__TEXT,__info_plist,${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
+# endif()
+
 # strip macOS for release
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     if(APPLE)
