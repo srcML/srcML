@@ -90,7 +90,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          ninja -j
+          ninja -j 0
 
       - name: Package
         shell: bash
