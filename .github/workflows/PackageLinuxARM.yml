@@ -8,21 +8,21 @@ jobs:
     strategy:
       matrix:
         distribution:
-          - "fedora:rawhide"
-          - "fedora:35"
-          - "fedora:latest"
-          - "fedora:34"
-          - "fedora:33"
-          - "fedora:32"
+          # - "fedora:rawhide"
+          # - "fedora:35"
+          # - "fedora:latest"
+          # - "fedora:34"
+          # - "fedora:33"
+          # - "fedora:32"
           # - "centos:8"
           # - "centos:7"
-          # - "ubuntu:21.10"
-          # - "ubuntu:21.04"
-          # - "ubuntu:20.10"
-          # - "ubuntu:20.04"
-          # - "ubuntu:18.04"
-          # - "ubuntu:16.04"
-          # - "ubuntu:14.04"
+          - "ubuntu:21.10"
+          - "ubuntu:21.04"
+          - "ubuntu:20.10"
+          - "ubuntu:20.04"
+          - "ubuntu:18.04"
+          - "ubuntu:16.04"
+          - "ubuntu:14.04"
           # - "opensuse:latest"
           # - "opensuse:15.3"
           # - "opensuse:15.2"
@@ -90,7 +90,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          ninja -j 0
+          ninja
 
       - name: Package
         shell: bash
