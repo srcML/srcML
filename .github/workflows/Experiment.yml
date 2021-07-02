@@ -1,36 +1,14 @@
 ---
-name: Package Linux arm64
+name: Experiment
 
 on: workflow_dispatch
 
 jobs:
   package-linux:
-    strategy:
-      matrix:
-        distribution:
-          - "fedora:rawhide"
-          - "fedora:35"
-          - "fedora:latest"
-          - "fedora:34"
-          - "fedora:33"
-          - "fedora:32"
-          - "centos:8"
-          - "centos:7"
-          - "ubuntu:21.10"
-          - "ubuntu:21.04"
-          - "ubuntu:20.10"
-          - "ubuntu:20.04"
-          - "ubuntu:18.04"
-          - "ubuntu:16.04"
-          - "ubuntu:14.04"
-          - "opensuse:latest"
-          - "opensuse:15.3"
-          - "opensuse:15.2"
-          - "opensuse:15.1"
     runs-on: [self-hosted]
     continue-on-error: true
     container:
-      image: srcml/${{ matrix.distribution }}
+      image: fedora:34
       options: --platform linux/arm64
     steps:
 
@@ -41,138 +19,4 @@ jobs:
         shell: bash
         run: |
           cat /etc/os-release
-          export VALUE=$(echo ${{ matrix.distribution }} | tr ':' '-')
-          echo "LABEL=$VALUE" >> $GITHUB_ENV
-
-      - name: Setup Ubuntu
-        if: ${{ contains(matrix.distribution, 'ubuntu') }}
-        shell: bash
-        run: |
-          echo "GENERATOR=DEB" >> $GITHUB_ENV
-          echo "INSTALLCOMMAND=apt install -y" >> $GITHUB_ENV
-          echo "EXTENSION=deb" >> $GITHUB_ENV
-
-      - name: Setup Fedora
-        if: ${{ contains(matrix.distribution, 'fedora') }}
-        shell: bash
-        run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
-          echo "INSTALLCOMMAND=dnf install -y" >> $GITHUB_ENV
-          echo "EXTENSION=rpm" >> $GITHUB_ENV
-
-      - name: Setup CentOS
-        if: ${{ contains(matrix.distribution, 'centos') }}
-        shell: bash
-        run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
-          echo "INSTALLCOMMAND=yum install -y" >> $GITHUB_ENV
-          echo "EXTENSION=rpm" >> $GITHUB_ENV
-
-      - name: Setup OpenSuse
-        if: ${{ contains(matrix.distribution, 'opensuse') }}
-        shell: bash
-        run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
-          echo "INSTALLCOMMAND=zypper install -y --allow-unsigned-rpm" >> $GITHUB_ENV
-          echo "EXTENSION=rpm" >> $GITHUB_ENV
-
-      - name: Create build directory
-        shell: bash
-        run: mkdir build
-
-      - name: CMake Setup
-        shell: bash
-        working-directory: build
-        run: |
-          cmake .. -G Ninja
-
-      - name: Build
-        shell: bash
-        working-directory: build
-        run: |
-          ninja
-
-      - name: Package
-        shell: bash
-        working-directory: build
-        run: |
-          cpack -G ${{ env.GENERATOR }}
-
-      - uses: actions/upload-artifact@v2
-        continue-on-error: true
-        with:
-          name: Packages
-          path: |
-            build/dist/*.${{ env.EXTENSION }}
-
-      - name: Install
-        shell: bash
-        run: |
-          ${{ env.INSTALLCOMMAND }} ./build/dist/srcml*.${{ env.EXTENSION }}
-
-      - name: Run Installed srcml
-        shell: bash
-        working-directory: build
-        run: |
-          srcml --version
-          srcml --text="int a;" -l C++
-
-      - name: Client Tests on Installed srcml
-        shell: bash
-        id: client
-        working-directory: build
-        continue-on-error: true
-        run: |
-          ctest -VV
-      - name: Rename log file for upload
-        run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
-      - uses: actions/upload-artifact@v2
-        with:
-          name: ClientTests
-          path: build/Testing/ClientTest.${{ env.LABEL }}.log
-
-      - name: Rerun any client test failures
-        if: ${{ steps.client.outcome == 'failure' }}
-        working-directory: build
-        continue-on-error: true
-        run: |
-          ctest --rerun-failed -VV
-
-      - name: Build libsrcml Tests
-        shell: bash
-        working-directory: build
-        continue-on-error: true
-        run: |
-          cmake .. -DBUILD_LIBSRCML_TESTS=ON
-          cmake --build . --config Release --target build_libsrcml_tests
-
-      - name: Run libsrcml Tests on Installed libsrcml
-        shell: bash
-        working-directory: build
-        continue-on-error: true
-        run: |
-          ctest -R ^test_
-      - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
-      - uses: actions/upload-artifact@v2
-        with:
-          name: libsrcmlTests
-          path: build/Testing/libsrcmlTest.${{ env.LABEL }}.log
-
-      - name: Generate Parser Tests
-        shell: bash
-        working-directory: build
-        run: |
-          cmake .. -DBUILD_PARSER_TESTS=ON
-          cmake --build . --config Release --target gen_parser_tests
-
-      - name: Run Parser Tests
-        shell: bash
-        working-directory: build
-        continue-on-error: true
-        run: |
-          srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
-      - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
-      - uses: actions/upload-artifact@v2
-        with:
-          name: ParserTests
-          path: build/libsrcmlTest.${{ env.LABEL }}.log
+          uname -m
