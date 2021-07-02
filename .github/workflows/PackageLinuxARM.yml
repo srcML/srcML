@@ -12,7 +12,7 @@ jobs:
           # - "fedora:35"
           # - "fedora:latest"
           # - "fedora:34"
-          # - "fedora:33"
+          - "fedora:33"
           # - "fedora:32"
           # - "centos:8"
           # - "centos:7"
