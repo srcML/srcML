@@ -27,7 +27,7 @@ jobs:
           - "opensuse:15.3"
           - "opensuse:15.2"
           - "opensuse:15.1"
-    runs-on: [ubuntu-latest]
+    runs-on: [self-hosted]
     continue-on-error: true
     container:
       image: srcml/${{ matrix.distribution }}
