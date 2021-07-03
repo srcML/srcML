@@ -99,9 +99,9 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         continue-on-error: true
-        if-no-files-found: warn
         with:
           name: Packages
+          if-no-files-found: warn
           path: |
             build/dist/*.${{ env.EXTENSION }}
 
@@ -127,9 +127,9 @@ jobs:
       - name: Rename log file for upload
         run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
-        if-no-files-found: warn
         with:
           name: ClientTests
+          if-no-files-found: warn
           path: build/Testing/ClientTest.${{ env.LABEL }}.log
 
       - name: Rerun any client test failures
@@ -155,9 +155,9 @@ jobs:
           ctest -R ^test_
       - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
-        if-no-files-found: warn
         with:
           name: libsrcmlTests
+          if-no-files-found: warn
           path: build/Testing/libsrcmlTest.${{ env.LABEL }}.log
 
       - name: Generate Parser Tests
@@ -175,7 +175,7 @@ jobs:
           srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
       - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
-        if-no-files-found: warn
         with:
           name: ParserTests
+          if-no-files-found: warn
           path: build/libsrcmlTest.${{ env.LABEL }}.log
