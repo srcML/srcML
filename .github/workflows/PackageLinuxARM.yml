@@ -99,6 +99,7 @@ jobs:
 
       - uses: actions/upload-artifact@v2
         continue-on-error: true
+        if-no-files-found: warn
         with:
           name: Packages
           path: |
@@ -126,6 +127,7 @@ jobs:
       - name: Rename log file for upload
         run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
+        if-no-files-found: warn
         with:
           name: ClientTests
           path: build/Testing/ClientTest.${{ env.LABEL }}.log
@@ -153,6 +155,7 @@ jobs:
           ctest -R ^test_
       - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
+        if-no-files-found: warn
         with:
           name: libsrcmlTests
           path: build/Testing/libsrcmlTest.${{ env.LABEL }}.log
@@ -172,6 +175,7 @@ jobs:
           srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
       - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
+        if-no-files-found: warn
         with:
           name: ParserTests
           path: build/libsrcmlTest.${{ env.LABEL }}.log
