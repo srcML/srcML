@@ -31,7 +31,6 @@ jobs:
     continue-on-error: true
     container:
       image: srcml/${{ matrix.distribution }}
-      options: --platform linux/arm64
     steps:
 
       - name: Checkout Repository
