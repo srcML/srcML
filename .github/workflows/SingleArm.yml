@@ -9,7 +9,6 @@ jobs:
     continue-on-error: true
     container:
       image: fedora:34
-      options: --platform linux/arm64
     steps:
 
       - name: Checkout Repository
