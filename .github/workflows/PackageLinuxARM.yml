@@ -123,7 +123,7 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
-          ctest -VV
+          ctest -j 10
       - name: Rename log file for upload
         run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
