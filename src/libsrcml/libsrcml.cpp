@@ -150,9 +150,13 @@ int srcml_version_number() {
  */
 int srcml(const char* input_filename, const char* output_filename) {
 
-    if (!input_filename || !output_filename) {
-
+    if (!input_filename || strcmp(input_filename, "") == 0) {
         global_archive.error_string = "No input file provided";
+        return SRCML_STATUS_INVALID_ARGUMENT;
+    }
+
+    if (!output_filename || strcmp(output_filename, "") == 0) {
+        global_archive.error_string = "No output file provided";
         return SRCML_STATUS_INVALID_ARGUMENT;
     }
 
