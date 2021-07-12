@@ -77,7 +77,7 @@ else()
 endif()
 
 if (BUILD_LIBSRCML_STATIC)
-    install(TARGETS libsrcml_static COMPONENT SRCML)
+    install(TARGETS libsrcml_static COMPONENT SRCMLDEV)
 endif()
 
 if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)
