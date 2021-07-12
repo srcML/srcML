@@ -90,7 +90,7 @@ set(CPACK_DEBIAN_SRCMLDEV_PACKAGE_DEPENDS "${CPACK_PACKAGE_NAME} (>= ${PROJECT_V
 
 # Recommended packages
 # Shared between client and dev packages
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, tar, man")
+set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, man")
 
 # Trigger required for library installed in client to initiate ldconfig
 set(TRIGGERS_FILE "${CMAKE_CURRENT_BINARY_DIR}/triggers")
