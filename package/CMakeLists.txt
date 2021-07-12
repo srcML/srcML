@@ -86,7 +86,7 @@ endif()
 message(STATUS "CPack generators: ${CPACK_GENERATOR}")
 
 # summary
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "tool to convert source code to/from the srcML format")
 
 # description
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
