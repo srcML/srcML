@@ -40,7 +40,15 @@ endif()
 # Requires permission by default user
 add_custom_target(publish_manpage COMMAND rsync --inplace ${CMAKE_BINARY_DIR}/srcml.1.gz gehry.sdml.cs.kent.edu:/var/www/html/sdml/build/${REMOTE_MANPAGE_NAME})
 
-find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn ${WINDOWS_DEP_PATH}/bin)
+# Setup the program used for ronn
+find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin /usr/local/bin ~/gems/bin/ronn ${WINDOWS_DEP_PATH}/bin)
+execute_process(COMMAND ${RONN_EXE} --version OUTPUT_VARIABLE RONN_EXE_VERSION_RAW_OUTPUT)
+string(REGEX MATCH "[0-9]*[.][0-9]*[.][0-9]*" RONN_EXE_VERSION "${RONN_EXE_VERSION_RAW_OUTPUT}")
+message(STATUS "The ronn version is v${RONN_EXE_VERSION}")
+set(RONN_EXE_REQUIRED_VERSION "0.9.1")
+if(${RONN_EXE_VERSION} VERSION_LESS ${RONN_EXE_REQUIRED_VERSION})
+    message(WARNING "The ronn executable must be greater than ${RONN_EXE_REQUIRED_VERSION}. See ronn-ng. Suggest disabling BUILD_CLIENT_DOC")
+endif()
 
 # Configure file properties used to configure the file srcml.cfg
 set(HELP_FLAG_LONG "help")
