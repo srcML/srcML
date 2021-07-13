@@ -22,7 +22,7 @@
 # add examples
 file(GLOB EXAMPLES "srcml_*.c")
 
-install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
+install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT SRCMLDEV)
 
 if(BUILD_EXAMPLES)
 

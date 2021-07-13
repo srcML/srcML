@@ -28,30 +28,12 @@ set(CPACK_STRIP_FILES TRUE)
 include(CPackComponent)
 cpack_add_component(SRCML
                     DISPLAY_NAME "srcml"
-                    DESCRIPTION "srcml cli program with required library"
+                    DESCRIPTION "cli program to convert source code to/from the srcML format"
                     REQUIRED)
 
-cpack_add_component_group(SRCMLDEV
-                    DISPLAY_NAME "Development"
-                    DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
-
-cpack_add_component(INCLUDE
-                    DISPLAY_NAME "srcml.h"
-                    DESCRIPTION "Include file, srcml.h"
-                    DISABLED
-                    GROUP SRCMLDEV)
-
-cpack_add_component(DEVLIBS
-                    DISPLAY_NAME "libsrcml.a"
-                    DESCRIPTION "Development libraries, i.e.., static library"
-                    DISABLED
-                    GROUP SRCMLDEV)
-
-cpack_add_component(EXAMPLES
-                    DISPLAY_NAME "libsrcml examples"
-                    DESCRIPTION "Include file, srcml.h"
-                    DISABLED
-                    GROUP SRCMLDEV)
+cpack_add_component(SRCMLDEV
+                    DISPLAY_NAME "srcml-dev"
+                    DESCRIPTION "Developing C++ programs with libsrcml")
 
 # especially for archives
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
