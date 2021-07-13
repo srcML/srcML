@@ -111,9 +111,8 @@ if(MSVC)
     install(FILES ${SRCML_DLLS} DESTINATION lib COMPONENT DEVLIB)
 endif()
 
-message("DISTRO: ${DISTRO}")
 IF(DISTRO MATCHES "Ubuntu" AND CMAKE_INSTALL_LOCAL_ONLY)
-    message("SPECIAL BUNTU")
+    # message("SPECIAL BUNTU")
 endif()
 
 # strip libraries
