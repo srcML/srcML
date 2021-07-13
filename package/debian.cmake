@@ -92,7 +92,31 @@ set(CPACK_DEBIAN_SRCMLDEV_PACKAGE_DEPENDS "${CPACK_PACKAGE_NAME} (>= ${PROJECT_V
 # Shared between client and dev packages
 set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, man")
 
+# Noop postinst and postrm since there doesn't seem to be a way to turn
+# off the default ldconfig call in CMake
+set(POSTINST_FILE "${CPACK_BINARY_DIR}/postinst")
+file(WRITE ${POSTINST_FILE}
+"#!/bin/sh
+
+set -e
+
+if [ \"$1\" = \"configure\" ]; then
+    true # ldconfig
+fi
+")
+set(POSTRM_FILE "${CPACK_BINARY_DIR}/postrm")
+file(WRITE ${POSTRM_FILE}
+"#!/bin/sh
+
+set -e
+
+if [ \"$1\" = \"remove\" ]; then
+    true # ldconfig
+fi
+")
+file(CHMOD ${POSTINST_FILE} ${POSTRM_FILE} PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
 # Trigger required for library installed in client to initiate ldconfig
 set(TRIGGERS_FILE "${CMAKE_CURRENT_BINARY_DIR}/triggers")
 file(WRITE "${TRIGGERS_FILE}" "activate-noawait ldconfig\n")
-set(CPACK_DEBIAN_SRCML_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE}")
+set(CPACK_DEBIAN_SRCML_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE};${POSTINST_FILE};${POSTRM_FILE}")
