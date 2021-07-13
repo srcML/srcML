@@ -65,20 +65,28 @@ set(CPACK_DEBIAN_SRCML_PACKAGE_PRIORITY "optional")
 set(CPACK_DEBIAN_SRCMLDEV_PACKAGE_PRIORITY "optional")
 
 # Copyright file - required by lintian
-install(FILES ${CMAKE_SOURCE_DIR}/package/copyright.DEBIAN DESTINATION share/doc/srcml RENAME copyright COMPONENT SRCML)
-install(FILES ${CMAKE_SOURCE_DIR}/package/copyright.DEBIAN DESTINATION share/doc/srcml RENAME copyright COMPONENT SRCMLDEV)
+install(FILES ${CMAKE_SOURCE_DIR}/package/copyright.srcml.Debian DESTINATION share/doc/srcml RENAME copyright COMPONENT SRCML)
+install(FILES ${CMAKE_SOURCE_DIR}/package/copyright.srcmldev.Debian DESTINATION share/doc/srcml-dev RENAME copyright COMPONENT SRCMLDEV)
 
 # Changelog file - required by lintian
-file(WRITE ${CMAKE_BINARY_DIR}/changelog.Debian
+file(WRITE ${CMAKE_BINARY_DIR}/changelog.srcml.Debian
 "srcml (1.0.0-1) UNRELEASED; urgency=medium
 
   * Initial release
 
  -- Michael L. Collard <collard@uakron.edu>  Mon, 2 Dec 2019 17:00:00 +0400
 ")
-execute_process(COMMAND gzip -n -9 -f ${CMAKE_BINARY_DIR}/changelog.Debian)
-install(FILES ${CMAKE_BINARY_DIR}/changelog.Debian.gz DESTINATION share/doc/srcml COMPONENT SRCML)
-install(FILES ${CMAKE_BINARY_DIR}/changelog.Debian.gz DESTINATION share/doc/srcml COMPONENT SRCMLDEV)
+execute_process(COMMAND gzip -n -9 -f ${CMAKE_BINARY_DIR}/changelog.srcml.Debian)
+install(FILES ${CMAKE_BINARY_DIR}/changelog.srcml.Debian.gz DESTINATION share/doc/srcml RENAME changelog.Debian.gz COMPONENT SRCML)
+file(WRITE ${CMAKE_BINARY_DIR}/changelog.srcmldev.Debian
+"srcml-dev (1.0.0-1) UNRELEASED; urgency=medium
+
+  * Initial release
+
+ -- Michael L. Collard <collard@uakron.edu>  Mon, 2 Dec 2019 17:00:00 +0400
+")
+execute_process(COMMAND gzip -n -9 -f ${CMAKE_BINARY_DIR}/changelog.srcmldev.Debian)
+install(FILES ${CMAKE_BINARY_DIR}/changelog.srcmldev.Debian.gz DESTINATION share/doc/srcml-dev RENAME changelog.Debian.gz COMPONENT SRCMLDEV)
 
 # Autogenerate dependency information
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
