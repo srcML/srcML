@@ -36,10 +36,16 @@ endif()
 
 include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_INSTALL_INCLUDEDIR})
 
+# Setup SHA1 include
+set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+set(SHA1_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/TinySHA1.hpp)
+if(NOT EXISTS ${SHA1_EXTERNAL})
+    file(DOWNLOAD https://raw.githubusercontent.com/mohaps/TinySHA1/master/TinySHA1.hpp ${SHA1_EXTERNAL})
+endif()
+
 # Building static and dynamic libraries for srcML.
 add_library(libsrcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-target_include_directories(libsrcml_static SYSTEM PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
 target_include_directories(libsrcml_static BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser)
 target_link_libraries(libsrcml_static PRIVATE ${LIBSRCML_LIBRARIES})
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
@@ -95,6 +101,7 @@ file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
 target_include_directories(libsrcml SYSTEM PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
 target_include_directories(libsrcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser)
+target_include_directories(libsrcml PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
 if(SRCML_BUILD_USEPCH)
     target_precompile_headers(libsrcml PRIVATE <srcmlns.hpp> <srcml_types.hpp> <srcml_sax2_utilities.hpp> <srcml_translator.hpp> <srcml_sax2_reader.hpp>)
 endif()

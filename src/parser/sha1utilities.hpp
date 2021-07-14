@@ -23,28 +23,15 @@
 #ifndef SHA1_UTILITIES_HPP
 #define SHA1_UTILITIES_HPP
 
-#include <type_traits>
-
 #ifdef _MSC_VER
-#include <windows.h>
-#include <Wincrypt.h>
-#elif defined(__MACH__) // Should this be __APPLE__?
-
-#include <CommonCrypto/CommonDigest.h>
-
-/** Use same symbols for openssl and CommonCrypto  */
-#define SHA_LONG CC_LONG
-#define SHA_CTX     CC_SHA1_CTX
-#define SHA1_Init   CC_SHA1_Init
-#define SHA1_Update CC_SHA1_Update
-#define SHA1_Final  CC_SHA1_Final
-
-#define SHA1(a,b,c) CC_SHA1(a,b,c)
-#define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
-
-#else
-#include <openssl/sha.h>
+    #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
 #endif
+#include <TinySHA1.hpp>
+#ifdef _MSC_VER
+    #pragma warning(enable : 4365)
+#endif
+
+#include <type_traits>
 
 static constexpr char hexchar[] = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
 #define HEXCHARASCII(md) \

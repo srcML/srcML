@@ -37,35 +37,6 @@
 #include <sha1utilities.hpp>
 
 #ifdef _MSC_VER
-#include <BaseTsd.h>
-typedef SSIZE_T ssize_t;
-#include <wincrypt.h>
-#include <Windows.h>
-#elif defined(__MACH__)
-#include <CommonCrypto/CommonDigest.h>
-
-/** Use same SHA_CTX symbol for openssl and CommonCrypto  */
-#define SHA_CTX CC_SHA1_CTX
-
-/** Use same SHA1_Init symbol for openssl and CommonCrypto  */
-#define SHA1_Init CC_SHA1_Init
-
-/** Use same SHA1_Update symbol for openssl and CommonCrypto  */
-#define SHA1_Update CC_SHA1_Update
-
-/** Use same SHA1_Final symbol for openssl and CommonCrypto  */
-#define SHA1_Final CC_SHA1_Final
-
-/** Use same LONG symbol for openssl and CommonCrypto  */
-#define SHA_LONG CC_LONG
-
-/** Use same SHA_DIGEST_LENGTH symbol for openssl and CommonCrypto  */
-#define SHA_DIGEST_LENGTH CC_SHA1_DIGEST_LENGTH
-#else
-#include <openssl/sha.h>
-#endif
-
-#ifdef _MSC_VER
 #    pragma warning(push,0)
 #    pragma warning(disable : 4619)
 #endif
@@ -155,15 +126,8 @@ private:
 
     int lastchar = 0;
 
-#ifdef _MSC_VER
-    /** msvc hash provider object */
-    HCRYPTPROV   crypt_provider;
-    /** msvc hash object */
-    HCRYPTHASH   crypt_hash;
-#else
-    /** openssl/CommonCrypto hash context */
-    SHA_CTX ctx;
-#endif
+    /** hash encoder */
+    sha1::SHA1 ctx;
 
     /** raw character buffer */
     std::vector<char> raw;
