@@ -123,11 +123,12 @@ if(SRCML_BUILD_USEPCH)
 endif()
 
 # Setup SHA1 include
-message("CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
 set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
 set(SHA1_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/TinySHA1.hpp)
 if(NOT EXISTS ${SHA1_EXTERNAL})
-    file(DOWNLOAD https://raw.githubusercontent.com/mohaps/TinySHA1/master/TinySHA1.hpp ${SHA1_EXTERNAL})
+    set(SHA1_URL https://raw.githubusercontent.com/mohaps/TinySHA1/master/TinySHA1.hpp)
+    message(STATUS "Download ${SHA1_URL}")
+    file(DOWNLOAD {SHA1_URL} ${SHA1_EXTERNAL})
 endif()
 
 target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml)
