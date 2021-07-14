@@ -23,7 +23,13 @@
 #ifndef SHA1_UTILITIES_HPP
 #define SHA1_UTILITIES_HPP
 
+#ifdef _MSC_VER
+    #pragma warning(disable : 4365)  // 'argument': conversion from 'int' to 'unsigned int', signed/unsigned mismatch
+#endif
 #include <TinySHA1.hpp>
+#ifdef _MSC_VER
+    #pragma warning(enable : 4365)
+#endif
 
 #include <type_traits>
 
