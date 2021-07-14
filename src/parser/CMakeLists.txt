@@ -122,7 +122,16 @@ if(SRCML_BUILD_USEPCH)
     endif()
 endif()
 
+# Setup SHA1 include
+message("CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+set(SHA1_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/TinySHA1.hpp)
+if(NOT EXISTS ${SHA1_EXTERNAL})
+    file(DOWNLOAD https://raw.githubusercontent.com/mohaps/TinySHA1/master/TinySHA1.hpp ${SHA1_EXTERNAL})
+endif()
+
 target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+
 if(MSVC)
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIRS})
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIR})
@@ -131,4 +140,5 @@ if(MSVC)
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CMAKE_GENERATED_SOURCE_DIR})
 else()
     target_include_directories(parser SYSTEM PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
+    target_include_directories(parser PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
 endif()

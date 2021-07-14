@@ -113,17 +113,6 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::opt
 
     // may be null
     this->encoding = encoding ? normalizeEncodingName(encoding) : "";
-
-    if (hashneeded) {
-#ifdef _MSC_VER
-        BOOL success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, 0);
-        if(!success && GetLastError() == NTE_BAD_KEYSET)
-            success = CryptAcquireContext(&crypt_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_NEWKEYSET);
-        CryptCreateHash(crypt_provider, CALG_SHA1, 0, 0, &crypt_hash);
-#else
-        SHA1_Init(&ctx);
-#endif
-    }
 }
 
 /**
@@ -304,11 +293,7 @@ size_t UTF8CharBuffer::readChars() {
 
     // hash only the read data, not the inbytesleft (from previous call)
     if (hashneeded) {
-#ifdef _MSC_VER
-        CryptHashData(crypt_hash, (BYTE *)raw.data() + inbytesleft, (DWORD) (raw.size() - inbytesleft), 0);
-#else
-        SHA1_Update(&ctx, raw.data() + inbytesleft, (SHA_LONG) (raw.size() - inbytesleft));
-#endif
+        ctx.processBytes(raw.data() + inbytesleft, raw.size() - inbytesleft);
     }
 
     // assume nothing to skip over
@@ -499,18 +484,8 @@ UTF8CharBuffer::~UTF8CharBuffer() {
         iconv_close(ic);
 
     if (hashneeded) {
-        unsigned char md[20];
-
-#ifdef _MSC_VER
-        DWORD        SHA_DIGEST_LENGTH;
-        DWORD        hash_length_size = sizeof(DWORD);
-        CryptGetHashParam(crypt_hash, HP_HASHSIZE, (BYTE *)&SHA_DIGEST_LENGTH, &hash_length_size, 0);
-        CryptGetHashParam(crypt_hash, HP_HASHVAL, (BYTE *)md, &SHA_DIGEST_LENGTH, 0);
-        CryptDestroyHash(crypt_hash);
-        CryptReleaseContext(crypt_provider, 0);
-#else
-        SHA1_Final(md, &ctx);
-#endif
+        uint8_t md[20];
+        ctx.getDigestBytes(md);
         const char outmd[] = { HEXCHARASCII(md), '\0'};
         hash = outmd;
     }
