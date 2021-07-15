@@ -19,7 +19,7 @@
 # 
 # The master CMake project file for srcML
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.18)
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
 

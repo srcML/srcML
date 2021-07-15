@@ -25,6 +25,11 @@ option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" ON)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
 
+# Turn on -fPIC and -fPIE
+include(CheckPIESupported)
+check_pie_supported()
+set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
+
 if(CLANG_TIME_TRACE)
     add_compile_options(-ftime-trace)
 endif()
@@ -148,7 +153,6 @@ endif()
 
 # standard compile options
 add_compile_options(
-    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fPIC>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wextra>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>
