@@ -95,6 +95,11 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_custom_command(TARGET srcml POST_BUILD
             COMMAND /usr/bin/strip -x $<TARGET_FILE:srcml>
             COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping $<TARGET_FILE:srcml>")
+    elseif(NOT WIN32)
+        # Removes things that the -s option cannot
+        add_custom_command(TARGET srcml POST_BUILD
+            COMMAND /usr/bin/strip --remove-section=.comment --remove-section=.note $<TARGET_FILE:srcml>
+            COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping $<TARGET_FILE:srcml>")
     endif()
 endif()
 
