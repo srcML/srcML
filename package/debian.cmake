@@ -96,9 +96,17 @@ set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY ">=")
 # Dependency for -dev package on client package
 set(CPACK_DEBIAN_SRCMLDEV_PACKAGE_DEPENDS "${CPACK_PACKAGE_NAME} (>= ${PROJECT_VERSION})")
 
-# Recommended packages
-# Shared between client and dev packages
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, man")
+# Recommended packages client
+set(CPACK_DEBIAN_SRCML_PACKAGE_RECOMMENDS "libxslt, man")
+
+# Suggested packages client
+set(CPACK_DEBIAN_SRCML_PACKAGE_SUGGESTS "zip, unzip, cpio")
+
+# Recommended packages srcml-dev
+set(CPACK_DEBIAN_SRCMLDEV_PACKAGE_RECOMMENDS "g++ | clang, libxslt")
+
+# Suggested packages srcml-dev
+set(CPACK_DEBIAN_SRCMLDEV_PACKAGE_SUGGESTS "libxml2-dev")
 
 # Noop postinst and postrm since there doesn't seem to be a way to turn
 # off the default ldconfig call in CMake
