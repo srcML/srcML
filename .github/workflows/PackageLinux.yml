@@ -48,7 +48,6 @@ jobs:
         if: ${{ contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         run: |
-          echo "GENERATOR=DEB" >> $GITHUB_ENV
           echo "INSTALLCOMMAND=apt install -y" >> $GITHUB_ENV
           echo "EXTENSION=deb" >> $GITHUB_ENV
 
@@ -56,7 +55,6 @@ jobs:
         if: ${{ contains(matrix.distribution, 'fedora') }}
         shell: bash
         run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
           echo "INSTALLCOMMAND=dnf install -y" >> $GITHUB_ENV
           echo "EXTENSION=rpm" >> $GITHUB_ENV
 
@@ -64,7 +62,6 @@ jobs:
         if: ${{ contains(matrix.distribution, 'centos') }}
         shell: bash
         run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
           echo "INSTALLCOMMAND=yum install -y" >> $GITHUB_ENV
           echo "EXTENSION=rpm" >> $GITHUB_ENV
 
@@ -72,7 +69,6 @@ jobs:
         if: ${{ contains(matrix.distribution, 'opensuse') }}
         shell: bash
         run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
           echo "INSTALLCOMMAND=zypper install -y --allow-unsigned-rpm" >> $GITHUB_ENV
           echo "EXTENSION=rpm" >> $GITHUB_ENV
 
@@ -96,7 +92,7 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          cpack -G ${{ env.GENERATOR }}
+          cpack
 
       - uses: actions/upload-artifact@v2
         continue-on-error: true
