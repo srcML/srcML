@@ -23,6 +23,8 @@ option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
 
 option(SRCML_BUILD_PCH "Use PCH (PreCompiled Headers" ON)
 
+option(SRCML_BUILD_UNITY "Use a unity build" ON)
+
 include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
 
 # Turn on -fPIC and -fPIE

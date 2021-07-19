@@ -105,6 +105,7 @@ target_include_directories(libsrcml PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
 if(SRCML_BUILD_PCH)
     target_precompile_headers(libsrcml PRIVATE <srcmlns.hpp> <srcml_types.hpp> <srcml_sax2_utilities.hpp> <srcml_translator.hpp> <srcml_sax2_reader.hpp>)
 endif()
+set_property(TARGET libsrcml PROPERTY UNITY_BUILD ${SRCML_BUILD_UNITY})
 
 add_dependencies(libsrcml parser)
 
