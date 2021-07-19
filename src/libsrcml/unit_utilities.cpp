@@ -85,6 +85,35 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
         bool inmode = mode.top() == COMMON || (revision == 0 && mode.top() == DELETE) || (revision == 1 && mode.top() == INSERT);
 
         // output previous non-tag text
+        if (inmode) {
+            if(!text_only) {
+                news.append(lp, static_cast<size_t>(p - lp));
+            } else {
+                const char * start_p = lp;
+                while(lp != p) {
+                    if(*lp == '&') {
+                        // append previous
+                        news.append(start_p, static_cast<size_t>(lp - start_p));
+                        ++lp;
+                        // determine escape
+                        char new_char = '<';
+                        if(*lp == 'g') {
+                            new_char = '>';
+                        } else if(*lp == 'a') {
+                            new_char = '&';
+                        }
+                        news += new_char;
+                        // should always be a ;
+                        while(*lp != ';') {
+                            ++lp;
+                        }
+                        start_p = lp + 1;
+                    }
+                    ++lp;
+                }
+                news.append(start_p, static_cast<size_t>(p - start_p));
+            }
+        }
         if (inmode)
             news.append(lp, static_cast<size_t>(p - lp));
 
