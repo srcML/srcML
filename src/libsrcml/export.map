@@ -1,1 +1,1 @@
-{ global: srcml_*; local: *; };
+{ global: srcml; srcml_*; local: *; };
