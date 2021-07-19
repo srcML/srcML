@@ -31,6 +31,7 @@ jobs:
     continue-on-error: true
     container:
       image: srcml/${{ matrix.distribution }}
+      options: --platform linux/amd64
     steps:
 
       - name: Checkout Repository
@@ -47,7 +48,6 @@ jobs:
         if: ${{ contains(matrix.distribution, 'ubuntu') }}
         shell: bash
         run: |
-          echo "GENERATOR=DEB" >> $GITHUB_ENV
           echo "INSTALLCOMMAND=apt install -y" >> $GITHUB_ENV
           echo "EXTENSION=deb" >> $GITHUB_ENV
 
@@ -55,7 +55,6 @@ jobs:
         if: ${{ contains(matrix.distribution, 'fedora') }}
         shell: bash
         run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
           echo "INSTALLCOMMAND=dnf install -y" >> $GITHUB_ENV
           echo "EXTENSION=rpm" >> $GITHUB_ENV
 
@@ -63,7 +62,6 @@ jobs:
         if: ${{ contains(matrix.distribution, 'centos') }}
         shell: bash
         run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
           echo "INSTALLCOMMAND=yum install -y" >> $GITHUB_ENV
           echo "EXTENSION=rpm" >> $GITHUB_ENV
 
@@ -71,7 +69,6 @@ jobs:
         if: ${{ contains(matrix.distribution, 'opensuse') }}
         shell: bash
         run: |
-          echo "GENERATOR=RPM" >> $GITHUB_ENV
           echo "INSTALLCOMMAND=zypper install -y --allow-unsigned-rpm" >> $GITHUB_ENV
           echo "EXTENSION=rpm" >> $GITHUB_ENV
 
@@ -95,20 +92,27 @@ jobs:
         shell: bash
         working-directory: build
         run: |
-          cpack -G ${{ env.GENERATOR }}
+          cpack
 
       - uses: actions/upload-artifact@v2
         continue-on-error: true
         with:
           name: Packages
-          if-no-files-found: warn
           path: |
             build/dist/*.${{ env.EXTENSION }}
 
       - name: Install
+        if: ${{ matrix.distribution != 'ubuntu:14.04' }}
         shell: bash
         run: |
           ${{ env.INSTALLCOMMAND }} ./build/dist/srcml*.${{ env.EXTENSION }}
+
+      - name: Ubuntu 14.04 Install
+        if: ${{ matrix.distribution == 'ubuntu:14.04' }}
+        shell: bash
+        run: |
+          dpkg -i ./build/dist/srcml_1*.${{ env.EXTENSION }}
+          dpkg -i ./build/dist/srcml-dev*.${{ env.EXTENSION }}
 
       - name: Run Installed srcml
         shell: bash
@@ -123,14 +127,12 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
-          ctest -j 10
+          ctest -VV
       - name: Rename log file for upload
         run: cp build/Testing/Temporary/LastTest.log build/Testing/ClientTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
-        continue-on-error: true
         with:
           name: ClientTests
-          if-no-files-found: warn
           path: build/Testing/ClientTest.${{ env.LABEL }}.log
 
       - name: Rerun any client test failures
@@ -143,7 +145,6 @@ jobs:
       - name: Build libsrcml Tests
         shell: bash
         working-directory: build
-        continue-on-error: true
         run: |
           cmake .. -DBUILD_LIBSRCML_TESTS=ON
           cmake --build . --config Release --target build_libsrcml_tests
@@ -156,10 +157,8 @@ jobs:
           ctest -R ^test_
       - run: cp build/Testing/Temporary/LastTest.log build/Testing/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
-        continue-on-error: true
         with:
           name: libsrcmlTests
-          if-no-files-found: warn
           path: build/Testing/libsrcmlTest.${{ env.LABEL }}.log
 
       - name: Generate Parser Tests
@@ -177,8 +176,6 @@ jobs:
           srcml --dev --parser-test test/parser/testsuite | tee ParserTest.log
       - run: cp build/ParserTest.log build/libsrcmlTest.${{ env.LABEL }}.log
       - uses: actions/upload-artifact@v2
-        continue-on-error: true
         with:
           name: ParserTests
-          if-no-files-found: warn
           path: build/libsrcmlTest.${{ env.LABEL }}.log
