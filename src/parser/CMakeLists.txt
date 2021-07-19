@@ -115,7 +115,7 @@ add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
     ${PARSER_SOURCE}
 )
-if(SRCML_BUILD_USEPCH)
+if(SRCML_BUILD_PCH)
     target_precompile_headers(parser PRIVATE <srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp>)
     if(NOT MSVC)
         target_precompile_headers(parser PRIVATE <UTF8CharBuffer.hpp>)

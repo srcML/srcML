@@ -21,7 +21,7 @@
 
 option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
 
-option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" ON)
+option(SRCML_BUILD_PCH "Use PCH (PreCompiled Headers" ON)
 
 include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
 
