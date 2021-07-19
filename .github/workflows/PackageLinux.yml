@@ -145,7 +145,6 @@ jobs:
       - name: Build libsrcml Tests
         shell: bash
         working-directory: build
-        continue-on-error: true
         run: |
           cmake .. -DBUILD_LIBSRCML_TESTS=ON
           cmake --build . --config Release --target build_libsrcml_tests
