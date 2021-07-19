@@ -102,9 +102,17 @@ jobs:
             build/dist/*.${{ env.EXTENSION }}
 
       - name: Install
+        if: ${{ matrix.distribution != "ubuntu:14.04" }}
         shell: bash
         run: |
           ${{ env.INSTALLCOMMAND }} ./build/dist/srcml*.${{ env.EXTENSION }}
+
+      - name: Ubuntu 14.04 Install
+        if: ${{ matrix.distribution == "ubuntu:14.04" }}
+        shell: bash
+        run: |
+          dpkg -i ./build/dist/srcml_1*.${{ env.EXTENSION }}
+          dpkg -i ./build/dist/srcml-dev*.${{ env.EXTENSION }}
 
       - name: Run Installed srcml
         shell: bash
