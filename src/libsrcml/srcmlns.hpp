@@ -29,6 +29,7 @@
 
 #include <string>
 #include <array>
+#include <vector>
 
 // Disable warnings from boost
 // Marked as external include, but still doesn't block all of them
@@ -37,10 +38,10 @@
 #   pragma warning (push, 0)
 #   pragma warning (disable : 5243)
 #endif
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/random_access_index.hpp>
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/member.hpp>
+// #include <boost/multi_index_container.hpp>
+// #include <boost/multi_index/random_access_index.hpp>
+// #include <boost/multi_index/hashed_index.hpp>
+// #include <boost/multi_index/member.hpp>
 #ifdef _MSC_VER
     #pragma warning (pop)
 #endif
@@ -68,24 +69,26 @@ namespace nstags
 }
 
 // data structure for namespaces, prefixes and uri's
-typedef boost::multi_index::multi_index_container<Namespace,
-    boost::multi_index::indexed_by<
-        // default access, indexing
-        boost::multi_index::random_access<
-            boost::multi_index::tag<nstags::position>
-        >,
-        // view based on prefix
-        boost::multi_index::hashed_non_unique<
-          boost::multi_index::tag<nstags::prefix>,
-          boost::multi_index::member<Namespace, std::string, &Namespace::prefix>
-        >,
-        // view based on uri
-        boost::multi_index::hashed_non_unique<
-          boost::multi_index::tag<nstags::uri>,
-          boost::multi_index::member<Namespace, std::string, &Namespace::uri>
-        >
-    >
-> Namespaces;
+// typedef boost::multi_index::multi_index_container<Namespace,
+//     boost::multi_index::indexed_by<
+//         // default access, indexing
+//         boost::multi_index::random_access<
+//             boost::multi_index::tag<nstags::position>
+//         >,
+//         // view based on prefix
+//         boost::multi_index::hashed_non_unique<
+//           boost::multi_index::tag<nstags::prefix>,
+//           boost::multi_index::member<Namespace, std::string, &Namespace::prefix>
+//         >,
+//         // view based on uri
+//         boost::multi_index::hashed_non_unique<
+//           boost::multi_index::tag<nstags::uri>,
+//           boost::multi_index::member<Namespace, std::string, &Namespace::uri>
+//         >
+//     >
+// > Namespaces;
+
+typedef std::vector<Namespace> Namespaces;
 
 /** xml declaration standalone attribute */
 const char* const XML_DECLARATION_STANDALONE = "yes";
@@ -181,6 +184,14 @@ std::string& srcml_uri_normalize(std::string & uri);
 
 // merge in the other namespace
 Namespaces& operator +=(Namespaces& ns, const Namespaces& otherns);
+
+Namespaces::iterator findNSURI(Namespaces& namespaces, const std::string& uri);
+
+Namespaces::iterator findNSPrefix(Namespaces& namespaces, const std::string& prefix);
+
+Namespaces::const_iterator findNSURI(const Namespaces& namespaces, const std::string& uri);
+
+Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, const std::string& prefix);
 
 // is a srcdiff archive
 bool issrcdiff(const Namespaces& namespaces);

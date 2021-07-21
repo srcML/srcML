@@ -20,7 +20,6 @@
 
 #include <srcml_sax2_reader.hpp>
 
-#include <srcmlns.hpp>
 #include <srcml.h>
 
 #include <stdlib.h>

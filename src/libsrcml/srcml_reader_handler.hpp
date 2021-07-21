@@ -31,7 +31,7 @@
 #include <unit_utilities.hpp>
 
 #include <libxml/parser.h>
-// #include <stdio.h>
+#include <stdio.h>
 #include <srcmlns.hpp>
 
 #include <string>
@@ -474,13 +474,20 @@ public :
                 }
 
                 // set the found prefix, plus mark it as used
-                auto&& view = unit->namespaces->get<nstags::uri>();
-                auto it = view.find(SRCML_CPP_NS_URI);
-                if (it != view.end()) {
-                    view.modify(it, [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                auto it = findNSURI(*unit->namespaces, SRCML_CPP_NS_URI);
+                if (it != unit->namespaces->end()) {
+                    it->flags |= NS_USED;
                 } else {
                     unit->namespaces->push_back({ state->cpp_prefix->c_str(), SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
                 }
+
+                // auto&& view = unit->namespaces->get<nstags::uri>();
+                // auto it = view.find(SRCML_CPP_NS_URI);
+                // if (it != view.end()) {
+                //     view.modify(it, [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                // } else {
+                //     unit->namespaces->push_back({ state->cpp_prefix->c_str(), SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+                // }
             }
 
             // pause

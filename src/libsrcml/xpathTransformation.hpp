@@ -31,8 +31,6 @@
 
 #include <libxml/parser.h>
 
-#include <srcmlns.hpp>
-
 #if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
 #include <dlfcn.h>
 #endif

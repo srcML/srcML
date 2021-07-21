@@ -31,16 +31,14 @@ Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
     for (const auto& ns : otherns) {
 
         // find where the new URI is in the default URI list, or not
-        auto&& view = namespaces.get<nstags::uri>();
-        auto it = view.find(ns.uri);
-        if (it != view.end()) {
+        auto it = findNSURI(namespaces, ns.uri);
+        if (it != namespaces.end()) {
 
-            // update the default prefix, but only the default prexi
-            auto&& default_view = default_namespaces.get<nstags::uri>();
-            auto default_it = default_view.find(ns.uri);
-            if (default_it == default_view.end() || it->prefix == default_it->prefix) {
-
-                view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags |= ns.flags; });
+            // update the default prefix, but only the default prefix
+            auto default_it = findNSURI(default_namespaces, ns.uri);
+            if (default_it == default_namespaces.end() || it->prefix == default_it->prefix) {
+                it->prefix = ns.prefix;
+                it->flags |= ns.flags;
             }
 
         } else {
@@ -48,6 +46,24 @@ Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
             // create a new entry for this URI
             namespaces.push_back({ ns.prefix, ns.uri, ns.flags });
         }
+
+        // auto&& view = namespaces.get<nstags::uri>();
+        // auto it = view.find(ns.uri);
+        // if (it != view.end()) {
+
+        //     // update the default prefix, but only the default prexi
+        //     auto&& default_view = default_namespaces.get<nstags::uri>();
+        //     auto default_it = default_view.find(ns.uri);
+        //     if (default_it == default_view.end() || it->prefix == default_it->prefix) {
+
+        //         view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags |= ns.flags; });
+        //     }
+
+        // } else {
+
+        //     // create a new entry for this URI
+        //     namespaces.push_back({ ns.prefix, ns.uri, ns.flags });
+        // }
     }
 
     return namespaces;
@@ -103,8 +119,54 @@ std::string& srcml_uri_normalize(std::string& uri) {
     return uri;
 }
 
-bool issrcdiff(const Namespaces& namespaces) {
-   auto& view = namespaces.get<nstags::uri>();
-   return view.find(SRCML_DIFF_NS_URI) != view.end();
+Namespaces::iterator findNSURI(Namespaces& namespaces, const std::string& uri) {
+
+    auto ns = std::find_if(namespaces.begin(), namespaces.end(), [uri](const Namespace& nsarg)->bool {
+        return nsarg.uri == uri; });
+
+    return ns;
 }
 
+Namespaces::iterator findNSPrefix(Namespaces& namespaces, const std::string& prefix) {
+
+    // find the last one (yes, could use reverse iterators, but then conversion to return type)
+    auto it = namespaces.end();
+    for (auto p = namespaces.begin(); p != namespaces.end(); ++p) {
+        if (p->prefix == prefix)
+            it = p;
+    }
+
+    return it;
+}
+
+Namespaces::const_iterator findNSURI(const Namespaces& namespaces, const std::string& uri) {
+
+    return std::find_if(namespaces.cbegin(), namespaces.cend(), [uri](const Namespace& nsarg)->bool {
+        return nsarg.uri == uri; });
+}
+
+Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, const std::string& prefix) {
+
+    // find the last one (yes, could use reverse iterators, but then conversion to return type)
+    auto it = namespaces.cend();
+    for (auto p = namespaces.cbegin(); p != namespaces.cend(); ++p) {
+        if (p->prefix == prefix)
+            it = p;
+    }
+
+    return it;
+}
+
+// Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, const std::string& prefix) {
+//     auto it = std::find_if(namespaces.crbegin(), namespaces.crend(), [prefix](const Namespace& nsarg)->bool {
+//         return nsarg.prefix == prefix; });
+
+//     return (it + 1).base();
+// }
+
+bool issrcdiff(const Namespaces& namespaces) {
+   // auto& view = namespaces.get<nstags::uri>();
+   // return view.find(SRCML_DIFF_NS_URI) != view.end();
+
+    return findNSURI(namespaces, SRCML_DIFF_NS_URI) != namespaces.end();
+}

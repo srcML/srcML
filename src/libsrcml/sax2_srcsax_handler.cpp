@@ -21,7 +21,6 @@
  */
 
 #include <sax2_srcsax_handler.hpp>
-#include <srcmlns.hpp>
 #include <string>
 #include <algorithm>
 #include <cstring>

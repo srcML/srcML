@@ -242,17 +242,27 @@ void srcMLOutput::outputProcessingInstruction() {
 void srcMLOutput::outputNamespaces() {
 
     // based on options, turn on specific namespaces (i.e., mark as used)
-    auto& view = namespaces.get<nstags::uri>();
-
     if (isoption(options, SRCML_OPTION_CPP_DECLARED)) {
-        view.find(SRCML_CPP_NS_URI)->flags |= NS_USED;
+        findNSURI(namespaces, SRCML_CPP_NS_URI)->flags |= NS_USED;
     }
 
     if (isoption(options, SRCML_OPTION_POSITION))
-        view.find(SRCML_POSITION_NS_URI)->flags |= NS_USED;
+        findNSURI(namespaces, SRCML_POSITION_NS_URI)->flags |= NS_USED;
 
     if (isoption(options, SRCML_OPTION_DEBUG))
-        view.find(SRCML_ERROR_NS_URI)->flags |= NS_USED;
+        findNSURI(namespaces, SRCML_ERROR_NS_URI)->flags |= NS_USED;
+
+    // auto& view = namespaces.get<nstags::uri>();
+
+    // if (isoption(options, SRCML_OPTION_CPP_DECLARED)) {
+    //     view.find(SRCML_CPP_NS_URI)->flags |= NS_USED;
+    // }
+
+    // if (isoption(options, SRCML_OPTION_POSITION))
+    //     view.find(SRCML_POSITION_NS_URI)->flags |= NS_USED;
+
+    // if (isoption(options, SRCML_OPTION_DEBUG))
+    //     view.find(SRCML_ERROR_NS_URI)->flags |= NS_USED;
 
     for (const auto& ns : namespaces) {
 
@@ -314,7 +324,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     didwrite = true;
 
     // start of main tag
-    std::string unitprefix = namespaces[SRC].getPrefix();
+    std::string unitprefix = namespaces[SRC].prefix;
     xmlTextWriterStartElementNS(xout, BAD_CAST (!unitprefix.empty() ? unitprefix.c_str() : 0), BAD_CAST "unit", 0);
     ++openelementcount;
 

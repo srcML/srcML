@@ -468,15 +468,35 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     // lookup by uri, if it already exists, update the prefix. If it doesn't exist, add it
-    auto& view = archive->namespaces.get<nstags::uri>();
-    auto it = view.find(uri);
-    if (it != view.end()) {
-        // change prefix of existing namespace
-        view.modify(it, [prefix](Namespace& ns) { ns.prefix = prefix; });
+    // prefix must be unique
+    auto ituri = findNSURI(archive->namespaces, uri);
+    auto itprefix = findNSPrefix(archive->namespaces, prefix);
+    if (ituri != archive->namespaces.end() && itprefix != archive->namespaces.end()) {
+        // existing prefix/uri, change prefix of existing namespace
+        ituri->prefix = prefix;
+        // std::iter_swap(ituri, itprefix);
+        // archive->namespaces.erase(itprefix);
+    } else if (ituri != archive->namespaces.end()) {
+        // change prefix for existing uri
+        ituri->prefix = prefix;
+    // } else if (itprefix != archive->namespaces.end()) {
+    //     // change uri for existing prefix
+    //      itprefix->uri = uri;
     } else {
         // add new namespace
         archive->namespaces.push_back({ prefix, uri, NS_REGISTERED });
+        // if (archive->namespaces.size() > 1 && itprefix != archive->namespaces.end())
+        //     std::iter_swap(archive->namespaces.end() - 1, itprefix);
     }
+    // auto& view = archive->namespaces.get<nstags::uri>();
+    // auto it = view.find(uri);
+    // if (it != view.end()) {
+    //     // change prefix of existing namespace
+    //     view.modify(it, [prefix](Namespace& ns) { ns.prefix = prefix; });
+    // } else {
+    //     // add new namespace
+    //     archive->namespaces.push_back({ prefix, uri, NS_REGISTERED });
+    // }
 
     // namespaces for options enable the options automatically
     std::string suri = uri;
@@ -711,10 +731,12 @@ const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archiv
     if (archive == nullptr || uri == nullptr)
         return 0;
 
-    const auto& view = archive->namespaces.get<nstags::uri>();
-    const auto it = view.find(uri);
+    auto it = findNSURI(archive->namespaces, std::string(uri));
+    return it != archive->namespaces.end() ? it->prefix.c_str() : 0;
+    // const auto& view = archive->namespaces.get<nstags::uri>();
+    // const auto it = view.find(uri);
 
-    return it != view.end() ? it->prefix.c_str() : 0;
+    // return it != view.end() ? it->prefix.c_str() : 0;
 }
 
 /**
@@ -749,10 +771,13 @@ const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archiv
     if (archive == nullptr || prefix == nullptr)
         return 0;
 
-    const auto& view = archive->namespaces.get<nstags::prefix>();
-    const auto& it = view.find(prefix);
+    auto it = findNSPrefix(archive->namespaces, std::string(prefix));
+    return it != archive->namespaces.end() ? it->uri.c_str() : 0;
 
-    return it != view.end() ? it->uri.c_str() : 0;
+    // const auto& view = archive->namespaces.get<nstags::prefix>();
+    // const auto& it = view.find(prefix);
+
+    // return it != view.end() ? it->uri.c_str() : 0;
 }
 
 /**
