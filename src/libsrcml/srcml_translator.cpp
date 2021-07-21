@@ -222,11 +222,6 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
         if (it != mergedns.end()) {
             mergedns.erase(it);
         }
-        // auto&& view = mergedns.get<nstags::uri>();
-        // auto it = view.find(SRCML_DIFF_NS_URI);
-        // if (it != view.end()) {
-        //     view.erase(it);
-        // }
     }
 
     std::string derivedLanguage = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();

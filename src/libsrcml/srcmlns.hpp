@@ -31,21 +31,6 @@
 #include <array>
 #include <vector>
 
-// Disable warnings from boost
-// Marked as external include, but still doesn't block all of them
-// The specific warnings are necessary
-#ifdef _MSC_VER
-#   pragma warning (push, 0)
-#   pragma warning (disable : 5243)
-#endif
-// #include <boost/multi_index_container.hpp>
-// #include <boost/multi_index/random_access_index.hpp>
-// #include <boost/multi_index/hashed_index.hpp>
-// #include <boost/multi_index/member.hpp>
-#ifdef _MSC_VER
-    #pragma warning (pop)
-#endif
-
 enum {
   NS_REQUIRED   = 1 << 0, // required for all srcML, and must be on the root
   NS_ROOT       = 1 << 1, // belongs on root tag only
@@ -67,26 +52,6 @@ namespace nstags
     struct uri {};
     struct position {};
 }
-
-// data structure for namespaces, prefixes and uri's
-// typedef boost::multi_index::multi_index_container<Namespace,
-//     boost::multi_index::indexed_by<
-//         // default access, indexing
-//         boost::multi_index::random_access<
-//             boost::multi_index::tag<nstags::position>
-//         >,
-//         // view based on prefix
-//         boost::multi_index::hashed_non_unique<
-//           boost::multi_index::tag<nstags::prefix>,
-//           boost::multi_index::member<Namespace, std::string, &Namespace::prefix>
-//         >,
-//         // view based on uri
-//         boost::multi_index::hashed_non_unique<
-//           boost::multi_index::tag<nstags::uri>,
-//           boost::multi_index::member<Namespace, std::string, &Namespace::uri>
-//         >
-//     >
-// > Namespaces;
 
 typedef std::vector<Namespace> Namespaces;
 

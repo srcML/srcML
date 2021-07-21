@@ -242,27 +242,14 @@ void srcMLOutput::outputProcessingInstruction() {
 void srcMLOutput::outputNamespaces() {
 
     // based on options, turn on specific namespaces (i.e., mark as used)
-    if (isoption(options, SRCML_OPTION_CPP_DECLARED)) {
+    if (isoption(options, SRCML_OPTION_CPP_DECLARED))
         findNSURI(namespaces, SRCML_CPP_NS_URI)->flags |= NS_USED;
-    }
 
     if (isoption(options, SRCML_OPTION_POSITION))
         findNSURI(namespaces, SRCML_POSITION_NS_URI)->flags |= NS_USED;
 
     if (isoption(options, SRCML_OPTION_DEBUG))
         findNSURI(namespaces, SRCML_ERROR_NS_URI)->flags |= NS_USED;
-
-    // auto& view = namespaces.get<nstags::uri>();
-
-    // if (isoption(options, SRCML_OPTION_CPP_DECLARED)) {
-    //     view.find(SRCML_CPP_NS_URI)->flags |= NS_USED;
-    // }
-
-    // if (isoption(options, SRCML_OPTION_POSITION))
-    //     view.find(SRCML_POSITION_NS_URI)->flags |= NS_USED;
-
-    // if (isoption(options, SRCML_OPTION_DEBUG))
-    //     view.find(SRCML_ERROR_NS_URI)->flags |= NS_USED;
 
     for (const auto& ns : namespaces) {
 

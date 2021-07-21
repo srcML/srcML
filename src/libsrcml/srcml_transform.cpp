@@ -646,16 +646,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             itomp->flags &= ~NS_USED;
         }
 
-        // auto& view = nunit->namespaces->get<nstags::uri>();
-        // auto itcpp = view.find(SRCML_CPP_NS_URI);
-        // if (itcpp != view.end()) {
-        //     view.modify(itcpp, [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
-        // }
-        // auto itomp = view.find(SRCML_OPENMP_NS_URI);
-        // if (itomp != view.end()) {
-        //     view.modify(itomp, [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
-        // }
-
         // special cases where the nodes are not written to the tree
 #ifdef _MSC_VER
 #   pragma warning(push)
@@ -706,11 +696,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 } else {
                     nunit->namespaces->push_back({ SRCML_CPP_NS_DEFAULT_PREFIX, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
                 }
-                // if (itcpp != view.end()) {
-                //     view.modify(itcpp, [](Namespace& thisns){ thisns.flags |= NS_USED; });
-                // } else {
-                //     nunit->namespaces->push_back({ SRCML_CPP_NS_DEFAULT_PREFIX, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
-                // }
             }
 
             // update the openmp namespace if actually used
@@ -721,11 +706,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 } else {
                     nunit->namespaces->push_back({ SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD });
                 }
-                // if (itomp != view.end()) {
-                //     view.modify(itomp, [](Namespace& thisns){ thisns.flags |= NS_USED; });
-                // } else {
-                //     nunit->namespaces->push_back({ SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD });
-                // }
             }
 
             break;

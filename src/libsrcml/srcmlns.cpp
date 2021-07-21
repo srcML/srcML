@@ -46,24 +46,6 @@ Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
             // create a new entry for this URI
             namespaces.push_back({ ns.prefix, ns.uri, ns.flags });
         }
-
-        // auto&& view = namespaces.get<nstags::uri>();
-        // auto it = view.find(ns.uri);
-        // if (it != view.end()) {
-
-        //     // update the default prefix, but only the default prexi
-        //     auto&& default_view = default_namespaces.get<nstags::uri>();
-        //     auto default_it = default_view.find(ns.uri);
-        //     if (default_it == default_view.end() || it->prefix == default_it->prefix) {
-
-        //         view.modify(it, [ns](Namespace& thisns){ thisns.prefix = ns.prefix; thisns.flags |= ns.flags; });
-        //     }
-
-        // } else {
-
-        //     // create a new entry for this URI
-        //     namespaces.push_back({ ns.prefix, ns.uri, ns.flags });
-        // }
     }
 
     return namespaces;
@@ -157,16 +139,7 @@ Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, const std:
     return it;
 }
 
-// Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, const std::string& prefix) {
-//     auto it = std::find_if(namespaces.crbegin(), namespaces.crend(), [prefix](const Namespace& nsarg)->bool {
-//         return nsarg.prefix == prefix; });
-
-//     return (it + 1).base();
-// }
-
 bool issrcdiff(const Namespaces& namespaces) {
-   // auto& view = namespaces.get<nstags::uri>();
-   // return view.find(SRCML_DIFF_NS_URI) != view.end();
 
     return findNSURI(namespaces, SRCML_DIFF_NS_URI) != namespaces.end();
 }
