@@ -277,13 +277,19 @@ check_exit() {
     set -e
 
     if [ $# -eq 2 ]; then
-        $diff <(echo -en "$2") $STDERR
+        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$2" > $tmpfile2
+        $diff $tmpfile2 $STDERR
         [ ! -s $STDOUT ]
     fi
 
     if [ $# -eq 3 ]; then
-        $diff <(echo -en "$2") $STDOUT
-        $diff <(echo -en "$3") $STDERR
+        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$2" > $tmpfile2
+        tmpfile3=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$3" > $tmpfile3
+        $diff $tmpfile2 $STDOUT
+        $diff $tmpfile3 $STDERR
     fi
 
     set +e
