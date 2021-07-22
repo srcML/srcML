@@ -41,7 +41,7 @@
 #else
     #define BASE_DEBUG
     #define SRCML_DEBUG(title, ch, len)
-    #define SRCSAX_DEBUG(title,m)
+    #define SRCSAX_DEBUG_BASE(title,m)
     #define SRCSAX_DEBUG_START(m)
     #define SRCSAX_DEBUG_END(m)
     #define SRCSAX_DEBUG_START_CHARS(ch,len)
