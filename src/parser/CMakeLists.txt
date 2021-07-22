@@ -121,7 +121,6 @@ if(SRCML_BUILD_PCH)
         target_precompile_headers(parser PRIVATE <UTF8CharBuffer.hpp>)
     endif()
 endif()
-set_property(TARGET parser PROPERTY UNITY_BUILD ${SRCML_BUILD_UNITY})
 
 # Setup SHA1 include
 set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
