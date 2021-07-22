@@ -166,9 +166,10 @@ check() {
 
         tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
+        $diff $tmpfile2 $1
+
         tmpfile3=$TEMPFILE.3
         echo -en "$3" > $tmpfile3
-        $diff $tmpfile2 $1
         $diff $tmpfile3 $STDERR
 
     # check <filename> stdoutstr
@@ -178,6 +179,7 @@ check() {
         tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
         $diff $tmpfile2 $1
+
         [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
@@ -185,14 +187,17 @@ check() {
 
         tmpfile1=$TEMPFILE.1
         echo -en "$1" > $tmpfile1
+        $diff $tmpfile1 $STDOUT
+
         tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
-        $diff $tmpfile1 $STDOUT
         $diff $tmpfile2 $STDERR
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
+
         $diff $1 $STDOUT
+
         [ ! -s $STDERR ]
 
     # check stdoutstr
@@ -201,6 +206,7 @@ check() {
         tmpfile1=$TEMPFILE.1
         echo -en "$1" > $tmpfile1
         $diff $tmpfile1 $STDOUT
+
         [ ! -s $STDERR ]
 
     else
@@ -282,15 +288,17 @@ check_exit() {
         tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
         $diff $tmpfile2 $STDERR
+
         [ ! -s $STDOUT ]
     fi
 
     if [ $# -eq 3 ]; then
         tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
+        $diff $tmpfile2 $STDOUT
+
         tmpfile3=$TEMPFILE.3
         echo -en "$3" > $tmpfile3
-        $diff $tmpfile2 $STDOUT
         $diff $tmpfile3 $STDERR
     fi
 
