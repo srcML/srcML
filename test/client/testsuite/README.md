@@ -6,7 +6,6 @@ set of special commands, defined in framework_test.sh:
 * check - main function to check results of the command, given the expected stdout and stderr as strings
 * check_exit - checks the return exit value, mostly for error routines
 * define - create a variable from a string of literal source code or srcML
-* readfile - read the contents of a file into a variable
 * createfile - creates a file from a string
 * rmfile - deletes a file
 * message - debugging messages
