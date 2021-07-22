@@ -309,13 +309,13 @@ check_exit() {
     set -e
 
     if [ $# -eq 2 ]; then
-        $diff <(echo -en "$2") $STDERR || $diff <(echo -en "$2") $STDERR
+        $diff <(echo -en "$2") $STDERR
         [ ! -s $STDOUT ]
     fi
 
     if [ $# -eq 3 ]; then
-        $diff <(echo -en "$2") $STDOUT || $diff <(echo -en "$2") $STDOUT
-        $diff <(echo -en "$3") $STDERR || $diff <(echo -en "$3") $STDERR
+        $diff <(echo -en "$2") $STDOUT
+        $diff <(echo -en "$3") $STDERR
     fi
 
     set +e
