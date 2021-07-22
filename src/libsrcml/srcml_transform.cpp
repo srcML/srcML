@@ -20,6 +20,7 @@
 
 #include <srcml.h>
 #include <srcml_types.hpp>
+#include <srcmlns.hpp>
 
 #ifdef _MSC_VER
 #include <io.h>
@@ -49,8 +50,6 @@
 #ifdef _MSC_VER
 #    pragma warning(pop)
 #endif
-
-#include <srcmlns.hpp>
 
 /**
  * Transformation result. Passed to srcml_unit_apply_transforms() to collect results of transformation
@@ -638,14 +637,13 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             nunit->namespaces = starting_namespaces;
 
         // mark unused cpp and omp until we examine the query result
-        auto& view = nunit->namespaces->get<nstags::uri>();
-        auto itcpp = view.find(SRCML_CPP_NS_URI);
-        if (itcpp != view.end()) {
-            view.modify(itcpp, [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
+        auto itcpp = findNSURI(*nunit->namespaces, std::string(SRCML_CPP_NS_URI));
+        if (itcpp != nunit->namespaces->end()) {
+            itcpp->flags &= ~NS_USED;
         }
-        auto itomp = view.find(SRCML_OPENMP_NS_URI);
-        if (itomp != view.end()) {
-            view.modify(itomp, [](Namespace& thisns){ thisns.flags &= ~NS_USED; });
+        auto itomp = findNSURI(*nunit->namespaces, std::string(SRCML_OPENMP_NS_URI));
+        if (itomp != nunit->namespaces->end()) {
+            itomp->flags &= ~NS_USED;
         }
 
         // special cases where the nodes are not written to the tree
@@ -693,8 +691,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // update the cpp namespace if actually used
             if (usesURI(fullresults->nodeTab[i], SRCML_CPP_NS_URI)) {
 
-                if (itcpp != view.end()) {
-                    view.modify(itcpp, [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                if (itcpp != nunit->namespaces->end()) {
+                    itcpp->flags |= NS_USED;
                 } else {
                     nunit->namespaces->push_back({ SRCML_CPP_NS_DEFAULT_PREFIX, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
                 }
@@ -703,8 +701,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // update the openmp namespace if actually used
             if (usesURI(fullresults->nodeTab[i], SRCML_OPENMP_NS_URI)) {
 
-                if (itomp != view.end()) {
-                    view.modify(itomp, [](Namespace& thisns){ thisns.flags |= NS_USED; });
+                if (itomp != nunit->namespaces->end()) {
+                    itomp->flags |= NS_USED;
                 } else {
                     nunit->namespaces->push_back({ SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD });
                 }

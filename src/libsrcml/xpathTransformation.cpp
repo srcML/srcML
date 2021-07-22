@@ -30,8 +30,6 @@
 
 #include <xpathTransformation.hpp>
 
-#include <srcmlns.hpp>
-
 #ifdef DLLOAD
 #include <dlfcn.h>
 #endif
