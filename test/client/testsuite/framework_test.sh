@@ -43,9 +43,6 @@ cd $TEMPDIR
 # make sure to find the srcml executable
 export PATH=.:$PATH
 
-# mktemp pattern
-TEMPDIR_PATTERN=$PWD'/.framework_test.XXXXXX'
-
 if [[ "$OSTYPE" == 'msys' ]]; then
     EOL="\r\n"
     export PATH=$PATH:"/c/Program Files/srcML/bin/"
@@ -157,6 +154,10 @@ check() {
 
     set -e
 
+    # testfile pattern
+    line=$(caller | cut -d' ' -f1)
+    TEMPFILE=$PWD'/.test.'$line
+
     # return stdout and stderr to standard streams
     uncapture_output
 
@@ -166,9 +167,9 @@ check() {
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
-        tmpfile3=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile3=$TEMPFILE.3
         echo -en "$3" > $tmpfile3
         $diff $tmpfile2 $1
         $diff $tmpfile3 $STDERR
@@ -177,7 +178,7 @@ check() {
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
         $diff $tmpfile2 $1
         [ ! -s $STDERR ]
@@ -185,9 +186,9 @@ check() {
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        tmpfile1=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile1=$TEMPFILE.1
         echo -en "$1" > $tmpfile1
-        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
         $diff $tmpfile1 $STDOUT
         $diff $tmpfile2 $STDERR
@@ -200,7 +201,7 @@ check() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        tmpfile1=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile1=$TEMPFILE.1
         echo -en "$1" > $tmpfile1
         $diff $tmpfile1 $STDOUT
         [ ! -s $STDERR ]
@@ -276,17 +277,21 @@ check_exit() {
 
     set -e
 
+    # testfile pattern
+    line=$(caller | cut -d' ' -f1)
+    TEMPFILE=$PWD'/.test.'$line
+
     if [ $# -eq 2 ]; then
-        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
         $diff $tmpfile2 $STDERR
         [ ! -s $STDOUT ]
     fi
 
     if [ $# -eq 3 ]; then
-        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile2=$TEMPFILE.2
         echo -en "$2" > $tmpfile2
-        tmpfile3=$(mktemp $TEMPDIR_PATTERN)
+        tmpfile3=$TEMPFILE.3
         echo -en "$3" > $tmpfile3
         $diff $tmpfile2 $STDOUT
         $diff $tmpfile3 $STDERR
