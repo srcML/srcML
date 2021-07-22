@@ -43,6 +43,9 @@ cd $TEMPDIR
 # make sure to find the srcml executable
 export PATH=.:$PATH
 
+# mktemp pattern
+TEMPDIR_PATTERN=$PWD'/.framework_test.XXXXXX'
+
 if [[ "$OSTYPE" == 'msys' ]]; then
     EOL="\r\n"
     export PATH=$PATH:"/c/Program Files/srcML/bin/"
@@ -160,27 +163,34 @@ check() {
     # trace the command
     firsthistoryentry
 
-    # NOTE: All diff checks with pipeline fail twice to avoid intermittent
-    #       '/dev/fd/63' errors
-
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        $diff <(echo -en "$2") $1
-        $diff <(echo -en "$3") $STDERR
+        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$2" > $tmpfile2
+        tmpfile3=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$3" > $tmpfile3
+        $diff $tmpfile2 $1
+        $diff $tmpfile3 $STDERR
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        $diff <(echo -en "$2") $1 # || $diff <(echo -en "$2") $1
+        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$2" > $tmpfile2
+        $diff $tmpfile2 $1
         [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        $diff <(echo -en "$1") $STDOUT
-        $diff <(echo -en "$2") $STDERR
+        tmpfile1=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$1" > $tmpfile1
+        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$2" > $tmpfile2
+        $diff $tmpfile1 $STDOUT
+        $diff $tmpfile2 $STDERR
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
@@ -190,7 +200,9 @@ check() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        $diff <(echo -en "$1") $STDOUT
+        tmpfile1=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$1" > $tmpfile1
+        $diff $tmpfile1 $STDOUT
         [ ! -s $STDERR ]
 
     else
@@ -234,21 +246,31 @@ check_ignore() {
     # check <filename> stdoutstr stderrstr
     if [ $# -ge 3 ]; then
 
-        $diff <(echo -en "$2") $1
-        $diff <(echo -en "$3") $STDERR
+        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$2" > $tmpfile2
+        tmpfile3=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$3" > $tmpfile3
+        $diff $tmpfile2 $1
+        $diff $tmpfile3 $STDERR
 
     # check <filename> stdoutstr
     # note: empty string reports as a valid file
     elif [ $# -ge 2 ] && [ "$1" != "" ] && [ -e "$1" ]; then
 
-        $diff <(echo -en "$2") $1
+        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$2" > $tmpfile2
+        $diff $tmpfile2 $1
 #        [ ! -s $STDERR ]
 
     # check stdoutstr stderrstr
     elif [ $# -ge 2 ]; then
 
-        $diff <(echo -en "$1") $STDOUT
-        $diff <(echo -en "$2") $STDERR
+        tmpfile1=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$1" > $tmpfile1
+        tmpfile2=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$2" > $tmpfile2
+        $diff $tmpfile1 $STDOUT
+        $diff $tmpfile2 $STDERR
 
     # check <filename>
     elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
@@ -258,7 +280,9 @@ check_ignore() {
     # check stdoutstr
     elif [ $# -ge 1 ]; then
 
-        $diff <(echo -en "$1") $STDOUT
+        tmpfile1=$(mktemp $TEMPDIR_PATTERN)
+        echo -en "$1" > $tmpfile1
+        $diff $tmpfile1 $STDOUT
  #       [ ! -s $STDERR ]
 
     else
