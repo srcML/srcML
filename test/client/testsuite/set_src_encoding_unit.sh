@@ -170,10 +170,10 @@ srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.xml
 check sub/chinese_characters_utf16.cpp
 
 srcml --src-encoding "UTF-16" sub/special_characters_utf16.xml -o sub/special_characters_utf16-srcml.cpp
-check_file_ignore sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.cpp
+check_file sub/special_characters_utf16-srcml.cpp sub/special_characters_utf16.cpp
 
 srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.xml -o sub/chinese_characters_utf16-srcml.cpp
-check_file_ignore sub/chinese_characters_utf16-srcml.cpp sub/chinese_characters_utf16.cpp
+check_file sub/chinese_characters_utf16-srcml.cpp sub/chinese_characters_utf16.cpp
 
 srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.xml
 check sub/chinese_characters_utf16.cpp

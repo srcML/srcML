@@ -256,38 +256,6 @@ check_file() {
 }
 
 ##
-# checks the result of a command
-#
-# If stdout is not specified, it is assumed to be empty
-# If stderr is not specified, it is assumed to be empty
-check_file_ignore() {
-
-    local exit_status=$?
-
-    # return stdout and stderr to standard streams
-    uncapture_output
-
-    # trace the command
-    firsthistoryentry
-
-    set -e
-
-    $diff $2 $1
-#    [ ! -s $STDERR ]
-
-    if [ $exit_status -ne 0 ]; then
-        exit 1
-    fi
-
-    set +e
-
-    # return to capturing stdout and stderr
-    capture_output
-
-    true
-}
-
-##
 # checks the exit status of a command
 #   $1 expected return value
 check_exit() {
