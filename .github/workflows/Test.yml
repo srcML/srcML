@@ -47,14 +47,14 @@ jobs:
         working-directory: build
         run: |
           export UseMultiToolTask=true
-          cmake ..
+          cmake .. -DCMAKE_UNITY_BUILD=ON
 
       - name: CMake Setup on Ubuntu/macOS
         shell: bash
         if: ${{ matrix.os != 'windows-latest' }}
         working-directory: build
         run: |
-          cmake .. -G Ninja
+          cmake .. -G Ninja -DCMAKE_UNITY_BUILD=ON
 
       - name: Build
         shell: bash
