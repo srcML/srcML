@@ -132,3 +132,9 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
         set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
     endif()
 endif()
+
+# Run ldconfig for install (not cpack) on Ubuntu
+if(DISTRO AND DISTRO MATCHES "Ubuntu")
+    install(CODE "message(STATUS \"Running: ldconfig\")")
+    install(CODE "execute_process(COMMAND ldconfig)")
+endif()
