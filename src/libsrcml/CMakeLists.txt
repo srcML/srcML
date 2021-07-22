@@ -140,3 +140,9 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
             COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping $<TARGET_FILE:libsrcml_static>")
     endif()
 endif()
+
+# Run ldconfig for install (not cpack) on Ubuntu
+if(DISTRO AND DISTRO MATCHES "Ubuntu")
+    install(CODE "message(STATUS \"Running: ldconfig\")")
+    install(CODE "execute_process(COMMAND ldconfig)")
+endif()

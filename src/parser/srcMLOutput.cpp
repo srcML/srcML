@@ -345,6 +345,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     }
 
     // list of attributes
+    std::string stabsize = std::to_string(tabsize);
     const char* const attrs[][2] = {
 
         { UNIT_ATTRIBUTE_REVISION, revision },
@@ -362,7 +363,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { UNIT_ATTRIBUTE_VERSION, version },
 
         // position tab setting
-        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? std::to_string(tabsize).c_str() : 0 },
+        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? stabsize.c_str() : 0 },
 
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
