@@ -23,6 +23,7 @@
 #include <srcml_cli.hpp>
 #include <src_prefix.hpp>
 #include <SRCMLStatus.hpp>
+#include <CPUCount.hpp>
 #include <algorithm>
 
 // tell cli11 to use boost optional
@@ -183,9 +184,21 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
         });
 
-    srcml_request.max_threads = 4;
-    app.add_option("--jobs,-j", srcml_request.max_threads,
-        "Allow up to NUM threads for source parsing")
+    // determine default max threads
+    int processorCount = CPUCount();
+    if (processorCount < 2)
+        srcml_request.max_threads = 2;
+    else if (processorCount == 2)
+        srcml_request.max_threads = 3;
+    else
+        srcml_request.max_threads = processorCount + 2;
+
+    // use max threads in help message
+    std::string jobsMsg = "Allow up to NUM threads for source parsing";
+    jobsMsg += " [default=";
+    jobsMsg += std::to_string(srcml_request.max_threads);
+    jobsMsg += " on this system]";
+    app.add_option("--jobs,-j", srcml_request.max_threads, jobsMsg)
         ->type_name("NUM")
         ->group("GENERAL OPTIONS");
 
