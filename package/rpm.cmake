@@ -40,19 +40,7 @@ if(DISTRO MATCHES "CentOS|Fedora")
     # CentOS and Fedora generate per-version naming
     set(CPACK_RPM_SRCML_FILE_NAME RPM-DEFAULT)
     set(CPACK_RPM_SRCMLDEV_FILE_NAME RPM-DEFAULT)
-    set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_RPM_SRCML_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
-    set(CPACK_ARCHIVE_SRCMLDEV_FILE_NAME "${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
 
-    # Archive packages are not generated with the distro name/version. So fix the archives to agree with the package naming
-    # Must be run AFTER RPM packages are built
-    add_custom_target(gen_package
-       COMMAND ${CMAKE_COMMAND} --build . --target package
-       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCML_PACKAGE_NAME}.spec`.tar.gz"
-       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCML_PACKAGE_NAME}.spec`.tar.bz2"
-       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCMLDEV_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}.spec`.tar.gz"
-       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCMLDEV_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}.spec`.tar.bz2"
-       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-       VERBATIM)
 else()
     # OpenSUSE does not generate per-version naming
     # Distribution version, e.g., lp152 for leap/15.2
@@ -65,9 +53,11 @@ else()
     set(BASE_SRCMLDEV_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-devel-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}")
     set(CPACK_RPM_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}.rpm")
     set(CPACK_RPM_SRCMLDEV_FILE_NAME "${BASE_SRCMLDEV_FILE_NAME}.rpm")
-    set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
-    set(CPACK_ARCHIVE_SRCMLDEV_FILE_NAME "${BASE_SRCMLDEV_FILE_NAME}")
 endif()
+
+# Rename ARCHIVE to include platform
+set(POSTBUILD_SCRIPT "${CMAKE_SOURCE_DIR}/package/rpm.post.cmake")
+set(CPACK_POST_BUILD_SCRIPTS "${POSTBUILD_SCRIPT}")
 
 # SRCML package is main, so no extension is added
 set(CPACK_RPM_MAIN_COMPONENT SRCML)
