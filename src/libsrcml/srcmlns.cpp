@@ -21,6 +21,7 @@
  */
 
 #include <srcmlns.hpp>
+#include <algorithm>
 
 // namespace form of immediate add
 // * Update prefixes
