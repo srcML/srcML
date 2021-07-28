@@ -35,24 +35,19 @@ set(CPACK_RPM_SRCML_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 set(CPACK_RPM_SRCMLDEV_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
 
 # Package filenames
-if(DISTRO MATCHES "CentOS|Fedora")
+set(CPACK_RPM_SRCML_FILE_NAME RPM-DEFAULT)
+set(CPACK_RPM_SRCMLDEV_FILE_NAME RPM-DEFAULT)
 
-    # CentOS and Fedora generate per-version naming
-    set(CPACK_RPM_SRCML_FILE_NAME RPM-DEFAULT)
-    set(CPACK_RPM_SRCMLDEV_FILE_NAME RPM-DEFAULT)
-
-else()
-    # OpenSUSE does not generate per-version naming
-    # Distribution version, e.g., lp152 for leap/15.2
+# Package filenames for OpenSUSE
+# OpenSUSE does not generate per-version naming
+# Distribution version, e.g., lp152 for leap/15.2
+if(DISTRO MATCHES "openSUSE")
     file(STRINGS "/etc/os-release" OS_RELEASE)
     string(REGEX MATCH "VERSION_ID=\"\([^\"]+\)\"" _ "${OS_RELEASE}")
     string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
     set(RPM_VERSION "lp${RPM_VERSION_NUMBER}")
-    # Package filenames
-    set(BASE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}")
-    set(BASE_SRCMLDEV_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-devel-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}")
-    set(CPACK_RPM_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}.rpm")
-    set(CPACK_RPM_SRCMLDEV_FILE_NAME "${BASE_SRCMLDEV_FILE_NAME}.rpm")
+    set(CPACK_RPM_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}.rpm")
+    set(CPACK_RPM_SRCMLDEV_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-devel-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}.rpm")
 endif()
 
 # Rename ARCHIVE to include platform
