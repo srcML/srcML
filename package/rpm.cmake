@@ -42,8 +42,7 @@ set(CPACK_RPM_SRCMLDEV_FILE_NAME RPM-DEFAULT)
 # OpenSUSE does not generate per-version naming
 # Distribution version, e.g., lp152 for leap/15.2
 if(DISTRO MATCHES "openSUSE")
-    file(STRINGS "/etc/os-release" OS_RELEASE)
-    string(REGEX MATCH "VERSION_ID=\"\([^\"]+\)\"" _ "${OS_RELEASE}")
+    file(STRINGS "/etc/os-release" OS_RELEASE REGEX "VERSION_ID=\"\([^\"]+\)\"")
     string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
     set(RPM_VERSION "lp${RPM_VERSION_NUMBER}")
     set(CPACK_RPM_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}.rpm")
