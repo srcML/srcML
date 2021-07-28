@@ -34,12 +34,9 @@ set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
                 CACHE INTERNAL "Libraries needed to build srcml")
 
 if(APPLE)
-    # list(APPEND SRCML_LIBRARIES pthread)
+    # list(APPEND SRCML_LIBRARIES)
 elseif(NOT WIN32)
     list(APPEND SRCML_LIBRARIES pthread)
-    # list(APPEND SRCML_LIBRARIES crypto pthread)
-# elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-#     list(APPEND SRCML_LIBRARIES ws2_32 crypto)
 else()
     list(APPEND SRCML_LIBRARIES ws2_32)
 endif()
