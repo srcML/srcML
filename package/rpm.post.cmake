@@ -5,8 +5,8 @@ if(CPACK_GENERATOR MATCHES "RPM")
     foreach(PACKAGE ${CPACK_PACKAGE_FILES})
 
         # Name of the package with no path and no extension
-        cmake_path(GET PACKAGE FILENAME PNAME)
-        cmake_path(GET PNAME STEM LAST_ONLY PACKAGE_BASE_NAME)
+        cmake_path(GET PACKAGE FILENAME PACKAGE_BASE_NAME)
+        cmake_path(REMOVE_EXTENSION PACKAGE_BASE_NAME LAST_ONLY)
 
         # Update the archive filenames based on the RPM filenames
         if(PACKAGE_BASE_NAME MATCHES "srcml-dev")
