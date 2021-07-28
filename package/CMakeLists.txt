@@ -62,6 +62,7 @@ else()
     elseif(DISTRO MATCHES "Ubuntu")
         set(CPACK_GENERATOR "DEB;TGZ;TBZ2")
     else()
+        # Make sure RPM is first, as the RPM name is used for the archive names
         set(CPACK_GENERATOR "RPM;TGZ;TBZ2")
     endif()
 endif()
