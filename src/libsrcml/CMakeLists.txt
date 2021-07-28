@@ -143,6 +143,6 @@ endif()
 
 # Run ldconfig for install (not cpack) on Ubuntu
 if(DISTRO AND DISTRO MATCHES "Ubuntu")
-    install(CODE "message(STATUS \"Running: ldconfig\")")
-    install(CODE "execute_process(COMMAND ldconfig)")
+    install(CODE "message(STATUS \"Running: ldconfig\")" COMPONENT LOCAL)
+    install(CODE "execute_process(COMMAND ldconfig)" COMPONENT LOCAL)
 endif()

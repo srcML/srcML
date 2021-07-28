@@ -20,6 +20,10 @@
 # Turn ON/OFF internal CPackDeb debugging
 set(CPACK_DEBIAN_PACKAGE_DEBUG OFF)
 
+# Remove component LOCAL which is not for packaging
+get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
+list(REMOVE_ITEM CPACK_COMPONENTS_ALL "LOCAL")
+
 # icon
 set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 
