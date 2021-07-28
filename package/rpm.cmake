@@ -20,6 +20,9 @@
 # Turn ON/OFF internal CPackRPM debugging
 set(CPACK_RPM_PACKAGE_DEBUG OFF)
 
+# Use a custom spec.in file to remove empty sections causing warnings
+set(CPACK_RPM_USER_BINARY_SPECFILE "${CMAKE_CURRENT_SOURCE_DIR}/srcml.spec.in")
+
 # icon
 set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 
