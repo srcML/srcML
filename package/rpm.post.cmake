@@ -4,17 +4,12 @@ if(CPACK_GENERATOR MATCHES "RPM")
 
     foreach(PACKAGE ${CPACK_PACKAGE_FILES})
 
-        # The package name is the prefix of the base name
-        cmake_path(GET PACKAGE FILENAME BASENAME)
-        string(REGEX MATCH "^[a-z]+([-][a-z]+)?" PACKAGE_NAME ${BASENAME})
-
-        # Using the PACKAGE_NAME spec file, extract the platform prefix
-        execute_process(COMMAND rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${PACKAGE_NAME}.spec
-                         OUTPUT_VARIABLE PACKAGE_BASE_NAME
-                         OUTPUT_STRIP_TRAILING_WHITESPACE)
+        # Name of the package with no path and no extension
+        cmake_path(GET PACKAGE FILENAME PNAME)
+        cmake_path(GET PNAME STEM LAST_ONLY PACKAGE_BASE_NAME)
 
         # Update the archive filenames based on the RPM filenames
-        if(PACKAGE_NAME MATCHES "srcml-dev")
+        if(PACKAGE_BASE_NAME MATCHES "srcml-dev")
             set(UPPERNAME "SRCMLDEV")
         else()
             set(UPPERNAME "SRCML")
