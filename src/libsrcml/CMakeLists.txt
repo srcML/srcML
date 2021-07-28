@@ -31,7 +31,7 @@ else()
 endif()
 
 if(NOT WIN32 AND NOT APPLE)
-    list(APPEND LIBSRCML_LIBRARIES rt crypto)
+    list(APPEND LIBSRCML_LIBRARIES rt)
 endif()
 
 include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_INSTALL_INCLUDEDIR})
