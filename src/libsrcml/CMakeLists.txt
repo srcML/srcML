@@ -72,7 +72,7 @@ if(MSVC)
 elseif(APPLE)
     set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/src/libsrcml/export_list" MACOSX_RPATH OFF)
 else()
-    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,--version-script=${CMAKE_SOURCE_DIR}/src/libsrcml/export.map")
+    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,--as-needed -Wl,--version-script=${CMAKE_SOURCE_DIR}/src/libsrcml/export.map")
 endif()
 
 # which types of libraries
