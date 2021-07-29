@@ -34,12 +34,19 @@ jobs:
           cmake --build . --config Release
 
       - name: Package
+        id: package
         shell: bash
+        continue-on-error: true
         working-directory: build
         run: |
           cpack -G WIX -V
-
       - uses: actions/upload-artifact@v2
+        if: steps.package.outcome != 'success'
+        with:
+          name: WIXLog
+          path: build\dist\_CPack_Packages\win64\WIX\wix.log
+      - uses: actions/upload-artifact@v2
+        if: steps.package.outcome == 'success'
         with:
           name: WindowsInstaller
           path: build\dist\srcML-Win.msi
