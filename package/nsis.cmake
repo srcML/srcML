@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # set icons
-install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION .)
+install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION . COMPONENT SRCML)
 set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
@@ -27,7 +27,7 @@ set(CPACK_NSIS_MODIFY_PATH ON)
 if(WIN32)
     set(MSVC_REDIST ${PROJECT_BINARY_DIR}/deps/tools/VC_redist.x64.exe)
     get_filename_component(vcredist_name "${MSVC_REDIST}" NAME)
-    install(PROGRAMS ${MSVC_REDIST} DESTINATION bin)
+    install(PROGRAMS ${MSVC_REDIST} DESTINATION bin COMPONENT SRCML )
     set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\${vcredist_name}\\\" /passive /norestart'")
 endif()
 # set contact in add/remove programs
