@@ -24,7 +24,7 @@ jobs:
         working-directory: build
         run: |
           export UseMultiToolTask=true
-          cmake ..
+          cmake .. -DCMAKE_UNITY_BUILD=ON
 
       - name: Build
         shell: bash
