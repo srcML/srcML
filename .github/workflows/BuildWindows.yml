@@ -5,23 +5,41 @@ on: workflow_dispatch
 
 jobs:
   build:
-    runs-on: windows-latest
-    timeout-minutes: 10
+    runs-on: [windows-latest]
+    timeout-minutes: 15
     steps:
 
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      - uses: microsoft/setup-msbuild@v1
+      - name: Setup msbuild
+        uses: microsoft/setup-msbuild@v1
 
-      - shell: bash
+      - name: Create build directory
+        shell: bash
         run: mkdir build
+
+      - name: CMake Setup
+        shell: bash
+        working-directory: build
+        run: |
+          export UseMultiToolTask=true
+          cmake ..
 
       - name: Build
         shell: bash
         working-directory: build
-        continue-on-error: true
         run: |
-          export EXTERNAL_INCLUDE="C:\Program Files (x86)\Windows Kits\10\Include;C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.29.30037\include"
           export UseMultiToolTask=true
-          cmake .. -DBUILD_LIBSRCML_TESTS=OFF
-          cmake --build . --verbose --config Release
+          cmake --build . --config Release
+
+      - name: Package
+        shell: bash
+        working-directory: build
+        run: |
+          cpack -G WIX -V
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: WindowsInstaller
+          path: build\dist\srcML-Win.msi
