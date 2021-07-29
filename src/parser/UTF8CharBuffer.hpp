@@ -36,6 +36,10 @@
 #include <iconv.h>
 #include <sha1utilities.hpp>
 
+#ifdef_MSC_VER
+typedef SSIZE_T ssize_t;
+#endif
+
 #ifdef _MSC_VER
 #    pragma warning(push,0)
 #    pragma warning(disable : 4619)
