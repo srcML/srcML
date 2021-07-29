@@ -36,7 +36,7 @@
 #include <iconv.h>
 #include <sha1utilities.hpp>
 
-#ifdef_MSC_VER
+#ifdef _MSC_VER
 typedef SSIZE_T ssize_t;
 #endif
 
