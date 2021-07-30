@@ -15,8 +15,16 @@ jobs:
       - name: Setup msbuild
         uses: microsoft/setup-msbuild@v1
 
+      - name: Cache Build
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: build
+          key: windows-package
+
       - name: Create build directory
         shell: bash
+        if: ${{ !steps.cache.outputs.cache-hit }}
         run: mkdir build
 
       - name: CMake Setup
