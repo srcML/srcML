@@ -32,7 +32,7 @@ jobs:
         working-directory: build
         run: |
           export UseMultiToolTask=true
-          cmake .. -DCMAKE_UNITY_BUILD=ON -DSRCML_BUILD_PCH=ON
+          cmake .. -DCMAKE_UNITY_BUILD=ON -DSRCML_BUILD_PCH=OFF
 
       - name: Build
         shell: bash
