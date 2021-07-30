@@ -40,18 +40,22 @@ bool curl_supported(const std::string& input_protocol) {
 namespace {
 
     bool go = false;
+    bool ready = false;
     std::condition_variable cv;
     std::mutex d;
 
     int waitCurl() {
         std::unique_lock<std::mutex> l(d);
-        cv.wait(l);
+        while (!ready)
+            cv.wait(l);
+        ready = false;
         return go;
     }
 
     void goCurl(bool flag) {
         std::unique_lock<std::mutex> l(d);
         go = flag;
+        ready = true;
         cv.notify_one();
     }
 
