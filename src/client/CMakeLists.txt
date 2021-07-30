@@ -61,8 +61,6 @@ endif()
 # Add coverage to default part of Debug
 if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
     target_link_libraries(srcml PRIVATE libsrcml_link ${SRCML_LIBRARIES} gcov)
-elseif(MSVC)
-    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES})
 else()
     target_link_libraries(srcml PRIVATE libsrcml_link ${SRCML_LIBRARIES})
 endif()
