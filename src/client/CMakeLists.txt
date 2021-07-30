@@ -58,12 +58,8 @@ if(SRCML_BUILD_PCH)
     target_precompile_headers(srcml PRIVATE <srcml_cli.hpp> <srcml_input_src.hpp> <srcml_pipe.hpp> <ParseQueue.hpp> <src_input_libarchive.hpp> <SRCMLStatus.hpp> <WriteQueue.hpp> <ParseRequest.hpp> <TraceLog.hpp> <curl/curl.h>)
 endif()
 
-# Add coverage to default part of Debug
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries(srcml PRIVATE libsrcml_link ${SRCML_LIBRARIES} gcov)
-else()
-    target_link_libraries(srcml PRIVATE libsrcml_link ${SRCML_LIBRARIES})
-endif()
+# Add the libraries the client uses
+target_link_libraries(srcml PRIVATE libsrcml_link ${SRCML_LIBRARIES})
 
 if(MSVC)
     set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
