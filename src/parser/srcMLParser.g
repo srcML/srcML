@@ -725,7 +725,7 @@ public:
     int current_line = -1;
     int nxt_token = -1;
     int last_consumed = -1;
-    bool wait_terminate_post = false;
+//    bool wait_terminate_post = false;
     bool cppif_duplicate = false;
     size_t number_finishing_elements = 0;
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > > finish_elements_add;
@@ -3554,7 +3554,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
             && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
                 startElement(SEMPTY);
 
-            wait_terminate_post = true;
+//            wait_terminate_post = true;
 
         }
         TERMINATE
@@ -3609,7 +3609,7 @@ terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_
             if (!in_issue_empty && inMode(MODE_END_AT_ENDIF))
                 endMode();
 
-            wait_terminate_post = false;
+//            wait_terminate_post = false;
 
         }
 ;
@@ -9384,7 +9384,7 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
             else end_order.push_back(RCURLY);
         }
 
-        if (LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_CONTROL))) {
+        if (LA(1) == TERMINATE && /* !wait_terminate_post && */ (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_CONTROL))) {
             end_order.push_back(TERMINATE);
 
         }
