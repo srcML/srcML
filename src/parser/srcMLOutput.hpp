@@ -37,9 +37,8 @@
 #ifdef _MSC_VER
 #   pragma warning(pop)
 #endif
-#include <srcMLParserTokenTypes.hpp>
-#include <antlr/TokenStream.hpp>
-#include <StreamMLParser.hpp>
+// #include <antlr/TokenStream.hpp>
+// #include <StreamMLParser.hpp>
 #include <TokenStream.hpp>
 
 #include <srcMLException.hpp>
@@ -75,7 +74,7 @@ struct Element {
  * Class for output of srcML. Consumes produced tokens.
  * progressively running the srcML parser and consuming tokens i.e. like a pull parser.
  */
-class srcMLOutput : public srcMLParserTokenTypes {
+class srcMLOutput {
 public:
     // constructor
     srcMLOutput(TokenStream* ints,
