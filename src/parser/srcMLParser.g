@@ -8910,6 +8910,7 @@ bracket_pair[] { ENTRY_DEBUG } :
         LBRACKET (bracket_pair | qmark | ~(QMARK | LBRACKET | RBRACKET))* RBRACKET
 ;
 
+/*
 // See if there is a semicolon terminating a statement inside a block at the top level
 nested_terminate[] {
 
@@ -8938,6 +8939,7 @@ nested_terminate[] {
 } :
         TERMINATE
 ;
+*/
 
 enum_preprocessing[bool decl] { ENTRY_DEBUG} :
 
