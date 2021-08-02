@@ -719,7 +719,7 @@ public:
     bool operatorname = false;
     std::stack<std::string> class_namestack;
 
-    bool skip_ternary = false;
+//    bool skip_ternary = false;
 
     int current_column = -1;
     int current_line = -1;
@@ -2053,8 +2053,8 @@ perform_ternary_check[] returns [bool is_ternary] {
 
     } catch(...) {}
 
-    if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
-        skip_ternary = true;
+//    if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
+//        skip_ternary = true;
 
     inputState->guessing--;
     rewind(start);
@@ -3437,7 +3437,7 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
                 startNoSkipElement(SCONTENT);
             }
         }
-        set_bool[skip_ternary, false]
+//        set_bool[skip_ternary, false]
 ;
 
 // end of a block.  Also indicates the end of some open elements.
@@ -3558,7 +3558,7 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
 
         }
         TERMINATE
-        set_bool[skip_ternary, false]
+//        set_bool[skip_ternary, false]
 ;
 
 // do the pre terminate processing
@@ -7850,7 +7850,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 // the expression part
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_control_incr = false; ENTRY_DEBUG } :
 
-       { !skip_ternary && !inMode(MODE_TERNARY_CONDITION)
+       { /* !skip_ternary && */ !inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression |
 
@@ -7923,7 +7923,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         }
 
         // can have (ternary) in a ternary condition
-        (options { greedy = true; } : { !skip_ternary && inMode(MODE_TERNARY_CONDITION)
+        (options { greedy = true; } : { /* !skip_ternary && */ inMode(MODE_TERNARY_CONDITION)
             && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
             && perform_ternary_check() }? ternary_expression)* |
 
