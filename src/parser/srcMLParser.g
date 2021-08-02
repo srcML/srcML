@@ -7580,8 +7580,8 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                 endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE);
 
                 // special case:  Get to here, in for-initalization.  Need an extra end mode
-                if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_CONTROL_CONDITION))
-                    endDownToModeSet(MODE_CONTROL_CONDITION);
+//                if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_CONTROL_CONDITION))
+//                    endDownToModeSet(MODE_CONTROL_CONDITION);
 
                 // don't markup since not a normal operator
                 markup = false;
