@@ -4669,11 +4669,11 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
         LBRACKET (COMMA)* RBRACKET |
 
-        { inLanguage(LANGUAGE_JAVA) }? annotation |
+        /* { inLanguage(LANGUAGE_JAVA) }? */ annotation |
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
+        { inLanguage(LANGUAGE_CXX) /* && next_token() == LBRACKET */}? attribute_cpp |
 
         pure_lead_type_identifier_no_specifiers
         )
@@ -5597,7 +5597,7 @@ compound_name_cpp[bool& iscompound] { namestack.fill(""); bool iscolon = false; 
             //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
-        { notdestructor = LA(1) == DESTOP; }
+//        { notdestructor = LA(1) == DESTOP; }
 ;
 exception
 catch[antlr::RecognitionException&] {
@@ -5710,7 +5710,7 @@ keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
             (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
-        { notdestructor = LA(1) == DESTOP; }
+//        { notdestructor = LA(1) == DESTOP; }
 ;
 exception
 catch[antlr::RecognitionException&] {
@@ -6166,7 +6166,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
-        { notdestructor }? sole_destop { notdestructor = false; } |
+//        { notdestructor }? sole_destop { notdestructor = false; } |
 
         { next_token() != LPAREN && next_token() != DOTDOTDOT }? sizeof_unary_expression |
 
@@ -7886,7 +7886,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
 
-        { notdestructor }? sole_destop { notdestructor = false; } |
+//        { notdestructor }? sole_destop { notdestructor = false; } |
 
         { next_token() != LPAREN && next_token() != DOTDOTDOT }? sizeof_unary_expression |
 
