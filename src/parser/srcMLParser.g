@@ -901,7 +901,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         template_declaration |
 
         // exception statements
-        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
+        try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
         namespace_definition |
@@ -6775,21 +6775,7 @@ try_statement[] { ENTRY_DEBUG } :
             startElement(STRY_BLOCK);
         }
         (TRY | CXX_TRY)
-;
-
-// try statement with resources
-try_statement_with_resource[] { ENTRY_DEBUG } :
-        {
-            // treat try block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
-
-            // start of the try statement
-            startElement(STRY_BLOCK);
-        }
-
-        TRY
-
-        for_like_statement_post 
+        ( { inLanguage(LANGUAGE_JAVA) }? for_like_statement_post)*
 ;
 
 // a checked statement
