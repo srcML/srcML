@@ -23,6 +23,11 @@ cmake_minimum_required(VERSION 3.18)
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET 10.14)
 
+# Detect if the user has specified CMAKE_OSX_ARCHITECTURES before the project()
+if(APPLE AND NOT DEFINED CMAKE_OSX_ARCHITECTURES)
+    set(CMAKE_OSX_ARCHITECTURES_NOTSET ON)
+endif()
+
 # Handles problem of commandline tools interfering with Xcode includes
 if(APPLE)
     set(PKG_CONFIG_EXECUTABLE "/usr/bin/true")

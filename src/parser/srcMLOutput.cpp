@@ -25,6 +25,7 @@
 */
 
 #include <srcMLOutput.hpp>
+#include <srcMLParserTokenTypes.hpp>
 #include <srcMLToken.hpp>
 #include <srcmlns.hpp>
 #include <srcml.h>
@@ -567,7 +568,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
 
     // unit element is handled specially
-    if (SUNIT == token->getType())
+    if (srcMLParserTokenTypes::SUNIT == token->getType())
         return;
 
     // find the token in the element map. If found and it has a name, then process the token
