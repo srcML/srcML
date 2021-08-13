@@ -23,6 +23,20 @@ option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
 
 option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" ON)
 
+# Big Sur and later OSX platforms can build for both x86 and arm64, so default to both
+string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
+if(APPLE AND CMAKE_OSX_ARCHITECTURES_NOTSET AND OS_VERSION GREATER_EQUAL "20")
+    include(CheckCXXCompilerFlag)
+
+    check_cxx_compiler_flag("-arch x86_64" Platform_Supports_x86_64)
+    check_cxx_compiler_flag("-arch arm64" Platform_Supports_arm64)
+
+    if(Platform_Supports_x86_64 AND Platform_Supports_arm64)
+        set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for Mac OS X" FORCE)
+        message(STATUS "Detected ability to build for multiple architectures: ${CMAKE_OSX_ARCHITECTURES}")
+    endif()
+endif()
+
 include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
 
 if(CLANG_TIME_TRACE)
