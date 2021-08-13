@@ -5,7 +5,7 @@ jobs:
         only:
           - develop
       docker:
-        - image: srcml/ubuntu_x86_64_base
+        - image: srcml/ubuntu:21.10
       steps:
         - checkout
         - run: apt-get update
