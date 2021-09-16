@@ -44,6 +44,8 @@
 #include <unordered_map>
 #include <srcmlns.hpp>
 #include <libxml/xmlwriter.h>
+#include <srcml_types.hpp>
+#include <srcml_macros.hpp>
 
 /**
  * anonymous enum for prefix positions
