@@ -36,6 +36,10 @@
 #include <iconv.h>
 #include <sha1utilities.hpp>
 
+#if _WIN64
+    #include <windows.h>
+#endif
+
 #ifdef _MSC_VER
 #    pragma warning(push,0)
 #    pragma warning(disable : 4619)
