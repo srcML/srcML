@@ -53,7 +53,7 @@ if(DISTRO MATCHES "CentOS|Fedora")
        COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCMLDEV_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}.spec`.tar.bz2"
        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
        VERBATIM)
-else()
+elseif(DISTRO MATCHES "OpenSUSE")
     # OpenSUSE does not generate per-version naming
     # Distribution version, e.g., lp152 for leap/15.2
     file(STRINGS "/etc/os-release" OS_RELEASE)
