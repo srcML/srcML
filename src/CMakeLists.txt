@@ -21,7 +21,7 @@
 
 option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
 
-option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" ON)
+option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" OFF)
 
 # Big Sur and later OSX platforms can build for both x86 and arm64, so default to both
 string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
