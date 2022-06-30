@@ -92,7 +92,7 @@ elseif(APPLE)
     # macOS Big Sur (20.*.*) and Catalina (19.*.*) include libarchive.a 3.3.*
     # Only need include files
     string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
-    if(NOT SRCML_BREW_LIBARCHIVE AND OS_VERSION GREATER_EQUAL "19")
+    if(NOT SRCML_BUILD_BREW_LIBARCHIVE AND OS_VERSION GREATER_EQUAL "19")
 
         # install via Apple opensource
         set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
