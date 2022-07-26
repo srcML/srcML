@@ -232,7 +232,7 @@ int src_input_libarchive(ParseQueue& queue,
         std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
         if (option(SRCML_COMMAND_NOARCHIVE))
-            prequest->disk_dir = srcml_request.output_filename;
+            prequest->disk_dir = srcml_request.output_filename.resource;
 
         if (srcml_request.att_filename || (filename != "-"))
             prequest->filename = filename;
