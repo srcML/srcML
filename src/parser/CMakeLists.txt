@@ -19,8 +19,8 @@
 # 
 # CMake files for building the parser
 
-# Find antlr binary
-find_program(ANTLR_EXE NAMES antlr runantlr cantlr antlr2 antlr.bat PATHS /usr/bin /opt/local/bin /usr/local/bin ${WINDOWS_DEP_PATH}/tools/antlr/277/bin)
+# Find antlr runtime
+set(ANTLR_EXE java -classpath "${ANTLR_EXTERNAL}/antlr.jar" antlr.Tool)
 message("-- ANTLR: ${ANTLR_EXE}")
 
 # Assume all C++ source files are parser
@@ -132,6 +132,16 @@ if(NOT EXISTS ${SHA1_EXTERNAL})
 endif()
 
 target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+
+file(GLOB ANTLR_SOURCE ${ANTLR_EXTERNAL}/lib/cpp/src/*.cpp)
+list(REMOVE_ITEM ANTLR_SOURCE "${ANTLR_EXTERNAL}/lib/cpp/src/dll.cpp")
+add_library(antlr OBJECT ${ANTLR_SOURCE})
+
+add_dependencies(parser antlr)
+target_link_libraries(parser OBJECT antlr)
+
+target_include_directories(antlr PUBLIC ${ANTLR_INCLUDE_DIR})
+target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml ${ANTLR_INCLUDE_DIR})
 
 if(MSVC)
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIRS})

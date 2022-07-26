@@ -54,7 +54,11 @@ endif()
 
 set(CMAKE_CXX_STANDARD 11)
 
+# Generated source from antlr and the parser
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
+
+# External code directory
+set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
 
 if(MSVC)
 
@@ -95,7 +99,6 @@ elseif(APPLE)
     if(NOT SRCML_BUILD_BREW_LIBARCHIVE AND OS_VERSION GREATER_EQUAL "19")
 
         # install via Apple opensource
-        set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
         set(LIBARCHIVE_VERSION "libarchive-83.40.4")
         set(LIBARCHIVE_URL "https://opensource.apple.com/source/libarchive/${LIBARCHIVE_VERSION}")
         if(NOT EXISTS ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
@@ -116,23 +119,7 @@ elseif(APPLE)
         message(FATAL_ERROR "LibArchive >= 3 is required. Install via homebrew\n% brew install libarchive\n")
     endif()
 
-    # Detect brew antlr2
-    if(BREW_RESULT EQUAL 0 AND EXISTS ${BREW_PREFIX}/opt/antlr@2)
-
-        list(APPEND CMAKE_PREFIX_PATH ${BREW_PREFIX}/opt/antlr@2
-                                      ${BREW_PREFIX}/opt/antlr@2/include
-                                      ${BREW_PREFIX}/opt/antlr@2/lib
-                                      ${BREW_PREFIX}/opt/antlr@2/bin)
-    else()
-        message("   Note: antlr2 not found. Please use brew to install antlr2: ")
-        message("      brew install antlr2")
-    endif()
-
 endif()
-
-# Find the lib and include directly
-find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib)
-find_path(ANTLR_INCLUDE_DIR NAMES antlr/LLkParser.hpp)
 
 # Locate packages
 find_package(LibArchive 3 REQUIRED)
@@ -152,6 +139,20 @@ if(LIBXSLT_FOUND)
     add_definitions(-DWITH_LIBXSLT)
 endif()
 
+# Setup ANTLR 2.7 library
+set(ANTLR_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7)
+if(NOT EXISTS ${ANTLR_EXTERNAL})
+    set(ANTLR_URL https://www.antlr2.org/download/antlr-2.7.7.tar.gz)
+    message(STATUS "Download ${ANTLR_URL}")
+    file(DOWNLOAD ${ANTLR_URL} ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz)
+    file(ARCHIVE_EXTRACT INPUT ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz
+        DESTINATION ${CMAKE_EXTERNAL_SOURCE_DIR})
+    file(REMOVE ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz)
+endif()
+
+set(ANTLR_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7)
+set(ANTLR_INCLUDE_DIR "${ANTLR_EXTERNAL}/lib/cpp/")
+
 set(LIBXML2_LIBRARIES ${LIBXML2_LIBRARIES} ${Iconv_LIBRARIES})
 
 if(NOT WIN32)
@@ -159,6 +160,11 @@ if(NOT WIN32)
                     ${Boost_INCLUDE_DIRS} ${Iconv_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIR}
                     ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ANTLR_INCLUDE_DIR})
 endif()
+
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(dir ${dirs})
+    message(STATUS "dir='${dir}'")
+endforeach()
 
 # standard compile options
 add_compile_options(
