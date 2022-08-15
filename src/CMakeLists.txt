@@ -147,6 +147,12 @@ if(NOT EXISTS ${ANTLR_EXTERNAL})
     file(DOWNLOAD ${ANTLR_URL} ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz)
     file(ARCHIVE_EXTRACT INPUT ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz
         DESTINATION ${CMAKE_EXTERNAL_SOURCE_DIR})
+
+    # Add needed include file for CharScanner.hpp
+    set(CHARSCANNER_HPP "${ANTLR_EXTERNAL}/lib/cpp/antlr/CharScanner.hpp")
+    file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
+    string(REPLACE "#include <antlr/config.hpp>" "#include <antlr/config.hpp>\n#include <strings.h>" FILE_CONTENTS "${FILE_CONTENTS}")
+    file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
     file(REMOVE ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz)
 endif()
 
