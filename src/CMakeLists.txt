@@ -153,6 +153,13 @@ if(NOT EXISTS ${ANTLR_EXTERNAL})
     file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
     string(REPLACE "#include <antlr/config.hpp>" "#include <antlr/config.hpp>\n#include <strings.h>" FILE_CONTENTS "${FILE_CONTENTS}")
     file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
+
+    # Remove pragma warning disable that is no longer valie
+    set(CONFIG_HPP "${ANTLR_EXTERNAL}/lib/cpp/antlr/config.hpp")
+    file(READ ${CONFIG_HPP} FILE_CONTENTS)
+    string(REPLACE "# pragma warning( disable : 4786 4231 )" "# pragma warning( disable : 4786 )" FILE_CONTENTS "${FILE_CONTENTS}")
+    file(WRITE ${CONFIG_HPP} "${FILE_CONTENTS}")
+
     file(REMOVE ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz)
 endif()
 
