@@ -48,12 +48,6 @@
     #define SRCSAX_DEBUG_END_CHARS(ch,len)
 #endif
 
-// libxml2 places elements into a dictionary
-// once initialized, can compare pointers instead of strings
-static const xmlChar* UNIT_ENTRY = nullptr;
-static const xmlChar* MACRO_LIST_ENTRY = nullptr;
-static const xmlChar* ESCAPE_ENTRY = nullptr;
-
 /**
  * factory
  *
@@ -191,9 +185,9 @@ void start_document(void* ctx) {
     SRCSAX_DEBUG_START("");
 
     // save for dictionary lookup of common elements
-    UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", (int) strlen("unit"));
-    MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", (int) strlen("macro-list"));
-    ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", (int) strlen("escape"));
+    state->UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", (int) strlen("unit"));
+    state->MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", (int) strlen("macro-list"));
+    state->ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", (int) strlen("escape"));
 
     // save the encoding from the input
     state->context->encoding = "UTF-8";
@@ -373,7 +367,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
 
     // if macros are found, then must return, process first
     // but stay in first_start_element, since this can be between root unit and nested unit
-    if (localname == MACRO_LIST_ENTRY) {
+    if (localname == state->MACRO_LIST_ENTRY) {
 
         state->context->handler->meta_tag(state->context, (const char*) localname, (const char*) prefix, (const char*) URI,
                                           nb_namespaces, namespaces, nb_attributes, attributes);
@@ -381,7 +375,7 @@ void first_start_element(void* ctx, const xmlChar* localname, const xmlChar* pre
     }
 
     // archive when the first element after the root is <unit>
-    state->context->is_archive = (localname == UNIT_ENTRY);
+    state->context->is_archive = (localname == state->UNIT_ENTRY);
 
     // turn off first_start_element() handling
     ctxt->sax->startElementNs = &start_element;
@@ -635,7 +629,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
         // Special element <escape char="0x0c"/> used to embed non-XML characters
         // extract the value of the char attribute and add to the src (text)
-        if (localname == ESCAPE_ENTRY) {
+        if (localname == state->ESCAPE_ENTRY) {
 
             std::string svalue((const char *)attributes[0 * 5 + 3], static_cast<std::size_t>(attributes[0 * 5 + 4] - attributes[0 * 5 + 3]));
 
@@ -694,7 +688,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
     SRCSAX_DEBUG_END(localname);
 
     // plain end element
-    if (localname != UNIT_ENTRY) {
+    if (localname != state->UNIT_ENTRY) {
         return;
     }
 

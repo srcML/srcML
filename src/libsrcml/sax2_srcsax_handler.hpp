@@ -103,6 +103,12 @@ struct sax2_srcsax_handler {
     boost::optional<std::string> cpp_prefix;
 
     bool rootcalled = false;
+
+    // libxml2 places elements into a dictionary
+    // once initialized, can compare pointers instead of strings
+    const xmlChar* UNIT_ENTRY = nullptr;
+    const xmlChar* MACRO_LIST_ENTRY = nullptr;
+    const xmlChar* ESCAPE_ENTRY = nullptr;
 };
 
 /**
