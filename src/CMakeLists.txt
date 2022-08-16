@@ -151,7 +151,7 @@ if(NOT EXISTS ${ANTLR_EXTERNAL})
     # Add needed include file for CharScanner.hpp
     set(CHARSCANNER_HPP "${ANTLR_EXTERNAL}/lib/cpp/antlr/CharScanner.hpp")
     file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
-    string(REPLACE "#include <antlr/config.hpp>" "#include <antlr/config.hpp>\n#include <strings.h>" FILE_CONTENTS "${FILE_CONTENTS}")
+    string(REPLACE "#include <antlr/config.hpp>" "#include <antlr/config.hpp>\n#include <string.h>" FILE_CONTENTS "${FILE_CONTENTS}")
     file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
 
     # Remove pragma warning disable that is no longer valie
