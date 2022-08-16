@@ -38,9 +38,10 @@
 #include <stddef.h> /* size_t */
 #include <sys/types.h> /* ssize_t */
 
-#if defined(WIN32) && !defined(__MINGW32__)
-#include <BaseTsd.h>
-typedef SSIZE_T ssize_t;
+#if !defined(_SSIZE_T_) && !defined(_SSIZE_T_DEFINED)
+typedef intptr_t ssize_t;
+# define _SSIZE_T_
+# define _SSIZE_T_DEFINED
 #endif
 
 #ifdef _MSC_VER
