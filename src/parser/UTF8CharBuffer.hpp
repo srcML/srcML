@@ -35,6 +35,7 @@
 #include <string>
 #include <iconv.h>
 #include <sha1utilities.hpp>
+#include <srcml.h>
 
 #ifdef _MSC_VER
 #    pragma warning(push,0)

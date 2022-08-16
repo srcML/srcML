@@ -48,7 +48,7 @@ if(NOT EXISTS ${SHA1_EXTERNAL})
 endif()
 
 # Building static and dynamic libraries for srcML.
-add_library(libsrcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:libsrcml>)
+add_library(libsrcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 target_include_directories(libsrcml_static BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser)
 target_link_libraries(libsrcml_static PRIVATE ${LIBSRCML_LIBRARIES})
