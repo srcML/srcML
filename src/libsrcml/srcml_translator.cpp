@@ -28,6 +28,13 @@
 #ifdef _MSC_VER
 #   pragma warning(push, 0)
 #endif
+#undef CONST
+#undef VOID
+#undef DELETE
+#undef INTERFACE
+#undef OUT
+#undef IN
+#undef THIS
 #include <KeywordLexer.hpp>
 #include <srcMLParser.hpp>
 #include <StreamMLParser.hpp>
