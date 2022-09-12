@@ -1,6 +1,6 @@
 # Building srcML
 
-srcML is built using cmake, www.cmake.org, (version 2.8.12 or above) and currently supports builds for
+srcML is built using cmake, www.cmake.org, (version 3.24 or above) and currently supports builds for
 macOS, Fedora, Ubuntu, CentOS, OpenSUSE, and Windows Visual Studio.
 
 Out of source builds (builds outside the source directory) are required. In source builds are not supported.
