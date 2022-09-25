@@ -60,28 +60,7 @@ set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
 # External code directory
 set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
 
-if(MSVC)
-
-    set(WINDOWS_DEP_PATH ${PROJECT_BINARY_DIR}/deps)
-
-    # Download project dependencies
-    set(WINDOWS_DEP_FILENAME VS2021_Dependencies-05-26-21.zip)
-    # set(WINDOWS_DEP_FILENAME VS2017_Dependencies-06_20_18.zip)
-    set(WINDOWS_DEP_URL http://www.sdml.cs.kent.edu/build/${WINDOWS_DEP_FILENAME})
-    if (NOT EXISTS ${WINDOWS_DEP_PATH}/tools) 
-        message("-- Download ${WINDOWS_DEP_URL}")
-        file(DOWNLOAD ${WINDOWS_DEP_URL} ${WINDOWS_DEP_FILENAME})
-        message("-- Unzip ${WINDOWS_DEP_URL} into ${WINDOWS_DEP_PATH}")
-        file(ARCHIVE_EXTRACT INPUT ${WINDOWS_DEP_FILENAME} DESTINATION ${PROJECT_BINARY_DIR})
-    endif()
-
-    # Use installed dependencies for find_*()
-    list(APPEND CMAKE_PREFIX_PATH ${WINDOWS_DEP_PATH}/release
-                                  ${WINDOWS_DEP_PATH}/release/lib
-                                  ${WINDOWS_DEP_PATH}/release/bin
-                                  ${WINDOWS_DEP_PATH}/include)
-
-elseif(APPLE)
+if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
 
     # Detect brew directories on macOS
     execute_process(COMMAND brew --prefix
