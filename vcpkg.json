@@ -8,6 +8,7 @@
     "libiconv",
     "lz4",
     "libxml2",
-    "libxslt"
+    "libxslt",
+    "booost-optional"
   ]
 }
