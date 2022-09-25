@@ -105,7 +105,7 @@ find_package(LibArchive 3 REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(CURL REQUIRED)
 find_package(Iconv REQUIRED)
-find_package(Boost COMPONENTS optional REQUIRED)
+find_package(Boost REQUIRED)
 
 if(DYNAMIC_LOAD_ENABLED)
     find_package(LibXslt)

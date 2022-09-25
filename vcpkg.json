@@ -9,6 +9,6 @@
     "lz4",
     "libxml2",
     "libxslt",
-    "booost-optional"
+    "boost-optional"
   ]
 }
