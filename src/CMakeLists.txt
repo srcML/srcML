@@ -48,10 +48,6 @@ if(NOT CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
     add_compile_options(/external:W0)
 endif()
 
-if(NOT DYNAMIC_LOAD_ENABLED)
-    add_definitions(-DNO_DLLOAD)
-endif()
-
 set(CMAKE_CXX_STANDARD 11)
 
 # Generated source from antlr and the parser
@@ -127,17 +123,7 @@ find_package(LibXml2 REQUIRED)
 find_package(CURL REQUIRED)
 find_package(Iconv REQUIRED)
 find_package(Boost REQUIRED)
-
-if(DYNAMIC_LOAD_ENABLED)
-    find_package(LibXslt)
-else()
-    find_package(LibXslt REQUIRED)
-endif()
-
-if(LIBXSLT_FOUND)
-    include_directories(SYSTEM ${LIBXSLT_INCLUDE_DIR})
-    add_definitions(-DWITH_LIBXSLT)
-endif()
+find_package(LibXslt REQUIRED)
 
 # Setup ANTLR 2.7 library
 set(ANTLR_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7)

@@ -38,8 +38,6 @@ include_directories(/usr/local/include)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_definitions(-DWITH_LIBXSLT)
-
 # standard compile options
 add_compile_options(
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fPIC>

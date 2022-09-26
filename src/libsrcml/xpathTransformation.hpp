@@ -23,17 +23,7 @@
 #ifndef INCLUDED_XPATHTRANSFORMATION_HPP
 #define INCLUDED_XPATHTRANSFORMATION_HPP
 
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-#define DLLOAD
-#else
-#undef DLLOAD
-#endif
-
 #include <libxml/parser.h>
-
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-#include <dlfcn.h>
-#endif
 
 #include <Transformation.hpp>
 #include <srcml_translator.hpp>
@@ -158,10 +148,6 @@ public:
 
 private:
     xmlXPathContextPtr createContext(xmlDocPtr doc) const;
-#ifdef DLLOAD
-    void* handle = nullptr;
-#endif
-
 };
 
 #endif

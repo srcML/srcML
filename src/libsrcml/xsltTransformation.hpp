@@ -23,12 +23,6 @@
 #ifndef INCLUDED_XSLTTRANSFORMATION_HPP
 #define INCLUDED_XSLTTRANSFORMATION_HPP
 
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-#define DLLOAD
-#else
-#undef DLLOAD
-#endif
-
 #include <Transformation.hpp>
 
 #include <libxml/parser.h>
@@ -41,15 +35,6 @@
 #include <libxslt/xsltInternals.h>
 #include <libxslt/xsltutils.h>
 #include <libexslt/exslt.h>
-
-#ifdef DLLOAD
-typedef xmlDocPtr (*xsltApplyStylesheetUser_t) (xsltStylesheetPtr,xmlDocPtr,const char **,const char *, FILE *, xsltTransformContextPtr);
-typedef xsltStylesheetPtr (*xsltParseStylesheetDoc_t) (xmlDocPtr);
-typedef void (*xsltCleanupGlobals_t)();
-typedef void (*xsltFreeStylesheet_t)(xsltStylesheetPtr);
-
-void dlexsltRegisterAll(void * handle);
-#endif
 
 #ifdef _MSC_VER
 #include <io.h>
@@ -93,22 +78,6 @@ public :
 private :
     xsltStylesheetPtr stylesheet = nullptr;
     const std::vector<std::string> params;
-#ifdef DLLOAD
-    void* libxslt_handle = nullptr;
-    void* libexslt_handle = nullptr;
-    xsltApplyStylesheetUser_t xsltApplyStylesheetUser;
-    xsltParseStylesheetDoc_t xsltParseStylesheetDoc;
-    xsltCleanupGlobals_t xsltCleanupGlobals;
-    xsltFreeStylesheet_t xsltFreeStylesheet;
-#endif
 };
-
-/**
- * dlexsltRegisterAll
- *
- * Allow for all exslt functions by dynamic load
- * of exslt library.
- */
-void dlexsltRegisterAll(void * handle);
 
 #endif
