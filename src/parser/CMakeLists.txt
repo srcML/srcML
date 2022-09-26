@@ -20,7 +20,8 @@
 # CMake files for building the parser
 
 # Find antlr runtime
-set(ANTLR_EXE java -classpath "${ANTLR_EXTERNAL}/antlr.jar" antlr.Tool)
+find_package(Java COMPONENTS Runtime REQUIRED)
+set(ANTLR_EXE ${Java_JAVA_EXECUTABLE} -classpath "${ANTLR_EXTERNAL}/antlr.jar" antlr.Tool)
 message("-- ANTLR: ${ANTLR_EXE}")
 
 # Assume all C++ source files are parser
