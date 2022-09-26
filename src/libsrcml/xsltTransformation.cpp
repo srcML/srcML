@@ -27,15 +27,11 @@
 
 #include <srcml_sax2_utilities.hpp>
 
-#ifdef DLLOAD
-#include <dlfcn.h>
-#else
 #include <libxslt/xslt.h>
 #include <libxslt/xsltInternals.h>
 #include <libxslt/xsltutils.h>
 #include <libxslt/transform.h>
 #include <libexslt/exslt.h>
-#endif
 
 #ifdef _MSC_VER
 #include <io.h>
@@ -51,61 +47,6 @@
  */
 xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xslt, const std::vector<std::string>& params)
         : params(params) {
-
-#ifdef DLLOAD
-
-    libxslt_handle = dlopen_libxslt();
-    if (!libxslt_handle) {
-        fprintf(stderr, "Unable to open libxslt library\n");
-        throw;
-    }
-
-    char* error;
-
-    dlerror();
-    *(void**)(&xsltApplyStylesheetUser) = dlsym(libxslt_handle, "xsltApplyStylesheetUser");
-    if ((error = dlerror()) != NULL) {
-        dlclose(libxslt_handle);
-        libxslt_handle = 0;
-        throw;
-    }
-
-    dlerror();
-    *(void**)(&xsltParseStylesheetDoc) = dlsym(libxslt_handle, "xsltParseStylesheetDoc");
-    if ((error = dlerror()) != NULL) {
-        dlclose(libxslt_handle);
-        libxslt_handle = 0;
-        throw;
-    }
-
-    dlerror();
-    *(void**)(&xsltCleanupGlobals) = dlsym(libxslt_handle, "xsltCleanupGlobals");
-    if ((error = dlerror()) != NULL) {
-        dlclose(libxslt_handle);
-        libxslt_handle = 0;
-        throw;
-    }
-
-    dlerror();
-    *(void**)(&xsltFreeStylesheet) = dlsym(libxslt_handle, "xsltFreeStylesheet");
-    if ((error = dlerror()) != NULL) {
-        dlclose(libxslt_handle);
-        libxslt_handle = 0;
-        throw;
-    }
-
-    libexslt_handle = dlopen_libexslt();
-
-    // allow for all exslt functions
-    typedef void (*exsltRegisterAll_t)();
-    dlerror();
-    exsltRegisterAll_t exsltRegisterAll;
-    *(void **) (&exsltRegisterAll) = dlsym(libexslt_handle, "exsltRegisterAll");
-    if ((error = dlerror()) != NULL) {
-        dlclose(libexslt_handle);
-        throw;
-    }
-#endif
 
     // allow for all exslt functions
     exsltRegisterAll();
@@ -126,11 +67,6 @@ xsltTransformation::~xsltTransformation() {
     xsltFreeStylesheet(stylesheet);
 
     xsltCleanupGlobals();
-
-#ifdef DLLOAD
-    dlclose(libxslt_handle);
-    dlclose(libexslt_handle);
-#endif
 }
 
 /**
