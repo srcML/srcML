@@ -38,10 +38,6 @@
 
 #include <memory>
 
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-#include <dlfcn.h>
-#endif
-
 // library constructor/destructor
 #if defined(__GNUC__)
 
@@ -798,13 +794,6 @@ int srcml_check_encoding(const char* encoding) {
  * @returns Return 1 on success and 0 on failure.
  */
 int srcml_check_xslt() {
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    void* handle = dlopen_libxslt();
-    if (!handle)
-        return 0;
-
-    dlclose(handle);
-#endif
 
     return 1;
 }
@@ -816,13 +805,6 @@ int srcml_check_xslt() {
  * @returns Return 1 on success and 0 on failure.
  */
 int srcml_check_exslt() {
-#if defined(__GNUG__) && !defined(__MINGW32__) && !defined(NO_DLLOAD)
-    void* handle = dlopen_libexslt();
-    if (!handle)
-        return 0;
-
-    dlclose(handle);
-#endif
 
     return 1;
 }
