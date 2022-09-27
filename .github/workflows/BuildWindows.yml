@@ -55,6 +55,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: wix.log
+          if: failure()
           path: build/dist/_CPack_Packages/win64/WIX/wix.log
       - uses: actions/upload-artifact@v3
         with:
