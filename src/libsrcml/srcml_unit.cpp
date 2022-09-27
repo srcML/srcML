@@ -28,6 +28,7 @@
 #include <cstring>
 #include <fcntl.h>
 #include <srcml_macros.hpp>
+#include <functional>
 
 /******************************************************************************
  *                                                                            *
