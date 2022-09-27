@@ -117,7 +117,7 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
     return output_template;
 }
 
-boost::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args, size_t ns_size) {
+std::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args, size_t ns_size) {
 
     size_t found = 0;
     bool first = true;
@@ -172,7 +172,7 @@ boost::optional<size_t> parse_templates(std::string& template_string, std::vecto
         }
     }
 
-    return boost::none;
+    return std::nullopt;
 }
 
 const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const std::string& arg) {

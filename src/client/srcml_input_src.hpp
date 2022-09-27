@@ -28,14 +28,7 @@
 #include <list>
 #include <vector>
 #include <sstream>
-#ifdef _MSC_VER
-#    pragma warning(push,0)
-#    pragma warning(disable : 4619)
-#endif
-#include <boost/optional.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include <optional>
 #include <src_prefix.hpp>
 #include <algorithm>
 #include <src_archive.hpp>
@@ -85,8 +78,8 @@ public:
     std::string resource;
     std::string plainfile;
     std::string extension;
-    boost::optional<FILE*> fileptr;
-    boost::optional<int> fd;
+    std::optional<FILE*> fileptr;
+    std::optional<int> fd;
     archive* arch;
     enum STATES state;
     std::list<std::string> compressions;

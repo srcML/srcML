@@ -34,7 +34,7 @@ int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_request_t& srcml_request,
                        const srcml_input_src& srcml_input,
-                       const boost::optional<size_t> & revision) {
+                       const std::optional<size_t> & revision) {
 
     // open the srcml input archive
     OpenFileLimiter::open();

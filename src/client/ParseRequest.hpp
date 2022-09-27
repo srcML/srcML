@@ -28,34 +28,27 @@
 #include <vector>
 #include <srcml_utilities.hpp>
 #include <memory>
-#ifdef _MSC_VER
-#    pragma warning(push,0)
-#    pragma warning(disable : 4619)
-#endif
-#include <boost/optional.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include <optional>
 
 struct ParseRequest {
     ParseRequest(std::vector<char>::size_type size = 0) : buffer(size) {}
 
     // Fields required by thread to process a unit
     std::string language;
-    boost::optional<std::string> filename;
-    boost::optional<std::string> url;
-    boost::optional<std::string> version;
+    std::optional<std::string> filename;
+    std::optional<std::string> url;
+    std::optional<std::string> version;
     std::vector<char> buffer;
     srcml_archive* srcml_arch = nullptr;
     std::unique_ptr<srcml_unit> unit;
-    boost::optional<std::string> disk_filename;
-    boost::optional<std::string> disk_dir;
+    std::optional<std::string> disk_filename;
+    std::optional<std::string> disk_dir;
     std::string parsertest_filename;
     int position = 0;
     int status = 0;
     double runtime = 0;
-    boost::optional<std::string> time_stamp;
-    boost::optional<std::string> errormsg;
+    std::optional<std::string> time_stamp;
+    std::optional<std::string> errormsg;
     bool needsparsing = true;
     srcml_transform_result* results = nullptr;
     std::shared_ptr<srcml_archive> input_archive;

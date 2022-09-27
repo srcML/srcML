@@ -31,7 +31,7 @@
 void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar** attributes);
 
 // Extract source code from srcml
-std::string extract_src(const std::string& srcml, boost::optional<int> revision = boost::none);
+std::string extract_src(const std::string& srcml, std::optional<int> revision = std::nullopt);
 std::string extract_revision(const char* srcml, int size, int revision, bool text_only = false);
 std::string attribute_revision(const std::string& attribute, int revision);
 

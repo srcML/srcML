@@ -27,14 +27,7 @@
 #include <srcml_cli.hpp>
 #include <srcml.h>
 #include <string>
-#ifdef _MSC_VER
-#    pragma warning(push,0)
-#    pragma warning(disable : 4619)
-#endif
-#include <boost/optional.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include <optional>
 #include <srcml_input_src.hpp>
 
 int src_input_filelist(ParseQueue& queue,

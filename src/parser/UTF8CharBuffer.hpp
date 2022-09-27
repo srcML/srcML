@@ -36,15 +36,7 @@
 #include <iconv.h>
 #include <sha1utilities.hpp>
 #include <srcml.h>
-
-#ifdef _MSC_VER
-#    pragma warning(push,0)
-#    pragma warning(disable : 4619)
-#endif
-#include <boost/optional.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include <optional>
 
 /**
  * UTF8FileError
@@ -89,11 +81,11 @@ public:
     typedef void * (*srcml_open_callback)(const char * filename);
 
     // Create a character buffer
-    UTF8CharBuffer(const char * ifilename, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
-    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
-    UTF8CharBuffer(FILE * file, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
-    UTF8CharBuffer(int fd, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
-    UTF8CharBuffer(void * context, srcml_read_callback, srcml_close_callback, const char * encoding, bool hashneeded, boost::optional<std::string>& hash);
+    UTF8CharBuffer(const char * ifilename, const char * encoding, bool hashneeded, std::optional<std::string>& hash);
+    UTF8CharBuffer(const char * c_buffer, size_t buffer_size, const char * encoding, bool hashneeded, std::optional<std::string>& hash);
+    UTF8CharBuffer(FILE * file, const char * encoding, bool hashneeded, std::optional<std::string>& hash);
+    UTF8CharBuffer(int fd, const char * encoding, bool hashneeded, std::optional<std::string>& hash);
+    UTF8CharBuffer(void * context, srcml_read_callback, srcml_close_callback, const char * encoding, bool hashneeded, std::optional<std::string>& hash);
 
     // Get the next character from the stream
     int getChar();
@@ -106,7 +98,7 @@ public:
     ~UTF8CharBuffer();
 
 private:
-    UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t outbuf_size);
+    UTF8CharBuffer(const char* encoding, bool hashneeded, std::optional<std::string>& hash, size_t outbuf_size);
 
     size_t readChars();
 
@@ -121,7 +113,7 @@ private:
 
     /** where to place computed hash */
     bool hashneeded = false;
-    boost::optional<std::string>& hash;
+    std::optional<std::string>& hash;
 
     int loc = 0;
 

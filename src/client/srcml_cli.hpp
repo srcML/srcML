@@ -26,14 +26,7 @@
 // #include <srcml.h>
 #include <string>
 #include <vector>
-#ifdef _MSC_VER
-#    pragma warning(push,0)
-#    pragma warning(disable : 4619)
-#endif
-#include <boost/optional.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include <optional>
 #include <iostream>
 #include <utility>
 #include <map>
@@ -108,37 +101,37 @@ const int CLI_STATUS_ERROR = 1;
 const int CLI_STATUS_INTERNAL_ERROR = 2;
 
 struct attribute {
-    boost::optional<std::string> prefix;
-    boost::optional<std::string> name;
-    boost::optional<std::string> value;
+    std::optional<std::string> prefix;
+    std::optional<std::string> name;
+    std::optional<std::string> value;
 };
 
 struct element {
-    boost::optional<std::string> prefix;
-    boost::optional<std::string> name;
+    std::optional<std::string> prefix;
+    std::optional<std::string> name;
 };
 
 // request for srcml client processing
 struct srcml_request_t {
     srcml_input_t input_sources;
 
-    boost::optional<std::size_t> stdindex;
+    std::optional<std::size_t> stdindex;
 
     int command = 0;
-    boost::optional<int> markup_options;
+    std::optional<int> markup_options;
 
     // unit attributes
-    boost::optional<std::string> att_language;
-    boost::optional<std::string> att_filename;
-    boost::optional<std::string> att_url;
-    boost::optional<std::string> att_xml_encoding;
-    boost::optional<std::string> att_version;
+    std::optional<std::string> att_language;
+    std::optional<std::string> att_filename;
+    std::optional<std::string> att_url;
+    std::optional<std::string> att_xml_encoding;
+    std::optional<std::string> att_version;
 
-    boost::optional<std::string> src_encoding;
+    std::optional<std::string> src_encoding;
 
-    boost::optional<size_t> eol;
+    std::optional<size_t> eol;
 
-    boost::optional<std::string> external;
+    std::optional<std::string> external;
 
     srcml_output_dest output_filename;
 
@@ -148,10 +141,10 @@ struct srcml_request_t {
     size_t tabs;
 
     // xml namespaces
-    boost::optional<std::string> xmlns_prefix_query;
+    std::optional<std::string> xmlns_prefix_query;
 
     // xml processing attributes
-    boost::optional<std::string> xml_processing;
+    std::optional<std::string> xml_processing;
 
     std::map<std::string,std::string> xmlns_namespaces;
 
@@ -160,14 +153,14 @@ struct srcml_request_t {
 
     // srcml transformation
     std::vector<std::string> transformations;
-    std::vector< std::pair< boost::optional<element>, boost::optional<attribute> > > xpath_query_support;
+    std::vector< std::pair< std::optional<element>, std::optional<attribute> > > xpath_query_support;
 
     int unit = 0;
     int max_threads;
 
-    boost::optional<std::string> pretty_format;
+    std::optional<std::string> pretty_format;
 
-    boost::optional<size_t> revision;
+    std::optional<size_t> revision;
 
     // pre-input
     char buf[4] = { 0 };

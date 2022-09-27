@@ -25,9 +25,6 @@
 #include <SRCMLStatus.hpp>
 #include <CPUCount.hpp>
 #include <algorithm>
-
-// tell cli11 to use boost optional
-#define CLI11_BOOST_OPTIONAL 1
 #include <CLI11.hpp>
 
 const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
@@ -466,7 +463,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
             srcml_request.transformations.push_back(src_prefix_add_uri("xpath", value));
-            srcml_request.xpath_query_support.push_back(std::make_pair(boost::none,boost::none));
+            srcml_request.xpath_query_support.push_back(std::make_pair(std::nullopt,std::nullopt));
         });
 
     app.add_option("--attribute",

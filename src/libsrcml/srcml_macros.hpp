@@ -24,7 +24,7 @@
  *
  * @returns the new optional<std::string>
  */
-#define optional_string_create(c_str) (c_str ? boost::optional<std::string>(std::string(c_str)) : boost::optional<std::string>())
+#define optional_string_create(c_str) (c_str ? std::optional<std::string>(std::string(c_str)) : std::optional<std::string>())
 
  /**
  * optional_get_c_str

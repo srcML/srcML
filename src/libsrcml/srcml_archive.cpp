@@ -186,7 +186,7 @@ int srcml_archive_set_src_encoding(struct srcml_archive* archive, const char* sr
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->src_encoding = src_encoding ? std::string(src_encoding) : boost::optional<std::string>();
+    archive->src_encoding = src_encoding ? std::string(src_encoding) : std::optional<std::string>();
 
     return SRCML_STATUS_OK;
 }
@@ -205,7 +205,7 @@ int srcml_archive_set_xml_encoding(struct srcml_archive* archive, const char* en
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->encoding = encoding ? std::string(encoding) : boost::optional<std::string>();
+    archive->encoding = encoding ? std::string(encoding) : std::optional<std::string>();
 
     return SRCML_STATUS_OK;
 }
@@ -265,7 +265,7 @@ int srcml_archive_set_version(struct srcml_archive* archive, const char* version
     if (version)
         archive->version = version;
     else
-        archive->version = boost::none;
+        archive->version = std::nullopt;
 
     return SRCML_STATUS_OK;
 }
