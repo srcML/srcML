@@ -115,7 +115,7 @@ if(NOT EXISTS ${ANTLR_EXTERNAL})
 
     # Add needed include file for CharScanner.hpp
     # Comment out use of std::binary_function, deprecated in C++11 and removed in C++17
-    set(CHARSCANNER_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/CharScanner.hpp")
+    set(CHARSCANNER_HPP "${ANTLR_EXTERNAL}/lib/cpp/antlr/CharScanner.hpp")
     file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
     string(REPLACE "#include <antlr/config.hpp>\n\n" "#include <antlr/config.hpp>\n#include <string.h>\n\n" FILE_CONTENTS "${FILE_CONTENTS}")
     string(REPLACE "class ANTLR_API CharScannerLiteralsLess : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool>"
