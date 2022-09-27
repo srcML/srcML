@@ -19,6 +19,8 @@
 # 
 # The master CMake project file for srcML
 
+set(VCPKG_BUILD_TYPE "release")
+
 cmake_minimum_required(VERSION 3.24)
 
 # Detect if the user has specified CMAKE_OSX_ARCHITECTURES before the project()
@@ -29,6 +31,17 @@ endif()
 # Handles problem of commandline tools interfering with Xcode includes
 if(APPLE)
     set(PKG_CONFIG_EXECUTABLE "/usr/bin/true")
+endif()
+
+# If performed here, before project(), then this prefix becomes part of the CMAKE_SYSTEM_PREFIX_PATH
+# and then the installed version of srcML can be found by the tests without building srcml.
+# Note that the default for the install prefix is "C:/Program Files (x86)/srcML", which contradicts
+# the CMake documentation (https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html)
+# Also note that without this, the install target places the files in "C:/Program Files (x86)/srcML",
+# while the package installer places it in "C:/Program Files/srcML"
+# Note that this overwrites any changes to the CMAKE_INSTALL_PREFIX from the command line cmake options.
+if(WIN32)
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files/srcML" CACHE PATH "Set Windows install dir" FORCE)
 endif()
 
 # Set libsrcml version from src/libsrcml/srcml.h

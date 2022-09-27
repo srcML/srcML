@@ -25,15 +25,7 @@
 
 #include <ParseRequest.hpp>
 #include <WriteQueue.hpp>
-#ifdef _MSC_VER
-#   pragma warning(push,0)
-#   pragma warning(disable : 5204)
-#   pragma warning(disable : 4355)
-#endif
 #include <ctpl_stl.h>
-#ifdef _MSC_VER
-#   pragma warning(pop)
-#endif
 #include <mutex>
 #include <srcml_consume.hpp>
 #include <memory>

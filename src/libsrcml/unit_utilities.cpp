@@ -68,7 +68,7 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
     }
 }
 
-#undef COMMON
+#undef DELETE
 
 enum { INSERT, DELETE, COMMON };
 

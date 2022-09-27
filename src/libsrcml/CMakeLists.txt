@@ -19,75 +19,76 @@
 # 
 # CMake files for the library libsrcml
 
-# strip executables
-# Note: Does not seem to have an effect, so post-build strip is added
-set(CPACK_STRIP_FILES ON)
+find_package(LibXml2 REQUIRED)
+find_package(LibXslt REQUIRED)
+find_package(Iconv REQUIRED)
 
-if(DYNAMIC_LOAD_ENABLED)
-    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Iconv_LIBRARIES} dl pthread
-                CACHE INTERNAL "Libraries needed to build libsrcml")
-elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${Iconv_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY} pthread
-                CACHE INTERNAL "Libraries needed to build libsrcml")
-else()
-    set(LIBSRCML_LIBRARIES ${LIBXML2_LIBRARIES} ${LIBXSLT_LIBRARIES} ${LIBXSLT_EXSLT_LIBRARY}
-                CACHE INTERNAL "Libraries needed to build libsrcml")
-endif()
+# libsrcml library
+file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
+add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
 
-if(NOT WIN32 AND NOT APPLE)
-    list(APPEND LIBSRCML_LIBRARIES rt crypto)
-endif()
+# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
+set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON>)
 
-include_directories(BEFORE . ${CMAKE_SOURCE_DIR}/src/parser ${CMAKE_INSTALL_INCLUDEDIR})
+# Use the libsrcml/srcml.h rather than the /usr/local/include/srcml.h
+target_include_directories(libsrcml BEFORE PRIVATE .)
 
-# Setup SHA1 include
-set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
-set(SHA1_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/TinySHA1.hpp)
-if(NOT EXISTS ${SHA1_EXTERNAL})
-    file(DOWNLOAD https://raw.githubusercontent.com/mohaps/TinySHA1/master/TinySHA1.hpp ${SHA1_EXTERNAL})
+# libsrcml dependencies
+target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt TinySHA1 parser $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:pthread>)
+
+# target_compile_options(libsrcml PUBLIC "-fvisibility=hidden")
+
+# precompiled header list of most commonly used
+if(SRCML_BUILD_USEPCH)
+    target_precompile_headers(libsrcml PRIVATE <srcmlns.hpp> <srcml_types.hpp> <srcml_sax2_utilities.hpp> <srcml_translator.hpp> <srcml_sax2_reader.hpp>)
 endif()
 
 # Building static and dynamic libraries for srcML.
-add_library(libsrcml_static STATIC $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> $<TARGET_OBJECTS:libsrcml>)
+add_library(libsrcml_static STATIC $<TARGET_OBJECTS:libsrcml>)
 set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-target_include_directories(libsrcml_static BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser)
-target_link_libraries(libsrcml_static PRIVATE ${LIBSRCML_LIBRARIES} LibXslt::LibXslt LibXslt::LibExslt)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries(libsrcml_static PRIVATE gcov)
-endif()
+target_link_libraries(libsrcml_static PUBLIC libsrcml PRIVATE parser antlr)
 
-add_library(libsrcml_shared SHARED $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> $<TARGET_OBJECTS:libsrcml>)
-set_target_properties(libsrcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-if(WIN32)
-    target_compile_options(libsrcml_shared PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIRS})
-    target_compile_options(libsrcml_shared PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIR})
-    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${ANTLR_INCLUDE_DIR})
-endif()
-target_link_libraries(libsrcml_shared PUBLIC ${LIBSRCML_LIBRARIES} LibXslt::LibXslt LibXslt::LibExslt)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries(libsrcml_shared PRIVATE gcov)
-endif()
+add_library(libsrcml_shared SHARED $<TARGET_OBJECTS:libsrcml>)
+set_target_properties(libsrcml_shared PROPERTIES
+    # All of these are not needed on Unix, but are needed on Windows
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+target_link_libraries(libsrcml_shared PUBLIC libsrcml PRIVATE parser antlr)
 
 set_target_properties(libsrcml_shared PROPERTIES VERSION "${PROJECT_VERSION}" SOVERSION "${PROJECT_VERSION_MAJOR}")
 
-if(MSVC)
-    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_DEBUG "/SAFESEH:NO")
-elseif(APPLE)
-    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/src/libsrcml/export_list" MACOSX_RPATH OFF)
+if(WIN32)
+    # On Windows, generate a debug of the release for the PDB file, but use optimization options
+    set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_RELEASE "/DEBUG /OPT:REF /OPT:ICF")
+    set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME libsrcmls LINK_FLAGS_RELEASE "/LTCG:OFF")
 else()
+    # The output name automatically prepends "lib"
     set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml)
+    set_target_properties(libsrcml_static PROPERTIES INTERPROCEDURAL_OPTIMIZATION ON)
+endif()
+
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_C_VISIBILITY_PRESET hidden)
+
+# Restrict exported symbols to those in the export list
+# The "-Wl" passes the option to the linker
+if(APPLE)
+    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES LINK_FLAGS "-Wl,-exported_symbols_list ${CMAKE_SOURCE_DIR}/src/libsrcml/export_list")
+elseif(NOT WIN32)
+    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES LINK_FLAGS "-Wl,--version-script=${CMAKE_SOURCE_DIR}/src/libsrcml/libsrcml.version")
 endif()
 
 # which types of libraries
-if(MSVC)
-    install(TARGETS libsrcml_shared COMPONENT SRCML)
+if(WIN32)
+    # libsrcml shared
+    install(TARGETS libsrcml_shared RUNTIME COMPONENT SRCML ARCHIVE COMPONENT DEVLIBS)
 else()
     install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
 endif()
 
-if (BUILD_LIBSRCML_STATIC)
-    install(TARGETS libsrcml_static COMPONENT SRCML)
-endif()
+# static library part of development
+install(TARGETS libsrcml_static COMPONENT DEVLIBS)
 
 if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)
     add_library(libsrcml_link ALIAS libsrcml_static)
@@ -95,45 +96,25 @@ else()
     add_library(libsrcml_link ALIAS libsrcml_shared)
 endif()
 
-if(APPLE)
-#    add_custom_command(TARGET libsrcml_shared POST_BUILD COMMAND /usr/bin/install_name_tool -id /usr/local/lib/libsrcml.dylib /usr/local/lib/libsrcml.dylib)
-endif()
-
-file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
-
-add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
-target_include_directories(libsrcml SYSTEM PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
-target_include_directories(libsrcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/parser)
-target_include_directories(libsrcml PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
-if(SRCML_BUILD_USEPCH)
-    target_precompile_headers(libsrcml PRIVATE <srcmlns.hpp> <srcml_types.hpp> <srcml_sax2_utilities.hpp> <srcml_translator.hpp> <srcml_sax2_reader.hpp>)
-endif()
-
-add_dependencies(libsrcml parser)
-
 # install the libsrcml include file
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT DEVLIBS)
 
-if(MSVC)
-    file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/release/bin/*.dll)
-    install(FILES ${SRCML_DLLS} DESTINATION bin COMPONENT SRCML)
-    file(GLOB SRCML_DLLS ${WINDOWS_DEP_PATH}/release/lib/*.lib)
-    install(FILES ${SRCML_DLLS} DESTINATION lib COMPONENT DEVLIB)
-endif()
-
-# strip libraries
-if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    if(APPLE)
-        add_custom_command(TARGET libsrcml_shared POST_BUILD
-            COMMAND /usr/bin/strip -x $<TARGET_FILE:libsrcml_shared>
-            COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping $<TARGET_FILE:libsrcml_shared>")
-    elseif(NOT WIN32)
-        set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE -s)
-    endif()
+# On Windows with vcpkg, install all the dlls that the vcpkg installed
+# NOTE: Would be better to use $<TARGET_RUNTIME_DLLS:libsrcml_shared>, but that does not include
+# indirect dependencies, e.g., bzip2 for libxml
+if(WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
+    file(GLOB VCPKG_SRCML_DEPENDENCIES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    install(FILES ${VCPKG_SRCML_DEPENDENCIES} DESTINATION bin COMPONENT SRCML)
 endif()
 
 # Run ldconfig for install (not cpack) on Ubuntu
+# The component is for ignoring in cpack
 if(DISTRO AND DISTRO MATCHES "Ubuntu")
-    install(CODE "message(STATUS \"Running: ldconfig\")")
-    install(CODE "execute_process(COMMAND ldconfig)")
+    find_program(LDCONFIG ldconfig)
+    if(LDCONFIG)
+        install(CODE "message(STATUS \"Running: ldconfig\")" COMPONENT HIDE)
+        install(CODE "execute_process(COMMAND ${LDCONFIG})" COMPONENT HIDE)
+    else()
+        install(CODE "message(NOTICE \"   NOTE: Unable to run ldconfig. Library libsrcml.so may not be found.\n   Suggest running ldconfig manually.\")" COMPONENT HIDE)
+    endif()
 endif()

@@ -28,15 +28,7 @@
 #define SRCML_TRANSLATOR_HPP
 
 #include <Language.hpp>
-#ifdef _MSC_VER
-#   pragma warning(push, 0)
-#   pragma warning(disable : 5204)
-#   pragma warning(disable : 4355)
-#endif
 #include <srcMLOutput.hpp>
-#ifdef _MSC_VER
-#   pragma warning(pop)
-#endif
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
 #include <srcml.h>

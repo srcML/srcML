@@ -27,24 +27,6 @@
 
 #include <libxml/parserInternals.h>
 
-/**
- * dlopen_libxslt
- *
- * Get a handle to libxslt dynamically loaded
- *
- * @returns Return handle on success and NULL on failure
- */
-void* dlopen_libxslt();
-
-/**
- * dlopen_libexslt
- *
- * Get a handle to libexslt dynamically loaded
- *
- * @returns Return handle on success and NULL on failure
- */
-void* dlopen_libexslt();
-
 int srcml_xpath(xmlParserInputBufferPtr input_buffer, const char * context_element, const char * xpath,
                 const char * prefix, const char * uri, const char * element, const char * attr_prefix, const char * attr_uri, const char * attr_name, const char * attr_value,
                 OPTION_TYPE options, srcml_archive* oarchive);

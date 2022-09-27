@@ -19,80 +19,57 @@
 # 
 # CMake files for the srcML client
 
-# strip executables
-set(CPACK_STRIP_FILES ON)
- 
-set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
+find_package(LibArchive 3 REQUIRED)
+find_package(CURL REQUIRED)
 
-set(CLI11_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/CLI11.hpp)
-if(NOT EXISTS ${CLI11_EXTERNAL})
-    file(DOWNLOAD https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp ${CLI11_EXTERNAL})
-endif()
-set(CTPL_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/ctpl_stl.h)
-if(NOT EXISTS ${CTPL_EXTERNAL})
-    file(DOWNLOAD https://raw.githubusercontent.com/vit-vit/CTPL/ctpl_v.0.0.2/ctpl_stl.h ${CTPL_EXTERNAL})
-endif()
+include(FetchContent)
+FetchContent_Declare(cli11
+  URL https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp
+  DOWNLOAD_NO_EXTRACT TRUE
+)
+FetchContent_MakeAvailable(cli11)
+add_library(cli11 INTERFACE IMPORTED)
+target_include_directories(cli11 SYSTEM INTERFACE ${cli11_SOURCE_DIR})
 
-set(SRCML_LIBRARIES ${LibArchive_LIBRARIES} ${CURL_LIBRARIES}
-                CACHE INTERNAL "Libraries needed to build srcml")
+# ctpl_stl external include
+include(FetchContent)
+FetchContent_Declare(ctpl_stl
+  GIT_REPOSITORY https://github.com/vit-vit/CTPL.git
+  GIT_TAG        v.0.0.2
+  GIT_SHALLOW    TRUE
+)
+FetchContent_MakeAvailable(ctpl_stl)
+add_library(ctpl_stl INTERFACE IMPORTED)
+target_include_directories(ctpl_stl SYSTEM INTERFACE ${ctpl_stl_SOURCE_DIR})
 
-if(APPLE)
-    # list(APPEND SRCML_LIBRARIES pthread)
-elseif(NOT WIN32)
-    list(APPEND SRCML_LIBRARIES pthread)
-    # list(APPEND SRCML_LIBRARIES crypto pthread)
-# elseif(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-#     list(APPEND SRCML_LIBRARIES ws2_32 crypto)
-else()
-    list(APPEND SRCML_LIBRARIES ws2_32)
-endif()
-
+# srcml executable
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
-
 add_executable(srcml ${CLIENT_SOURCE})
-if(MSVC)
-    target_compile_options(srcml PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CMAKE_EXTERNAL_SOURCE_DIR})
-    target_compile_options(srcml PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LibArchive_INCLUDE_DIRS})
-    target_compile_options(srcml PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LibArchive_INCLUDE_DIR})
-    target_compile_options(srcml PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CURL_INCLUDE_DIR})
-else()
-    target_include_directories(srcml SYSTEM PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
-endif()
 target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+target_link_libraries(srcml PRIVATE libsrcml_link LibArchive::LibArchive CURL::libcurl cli11 ctpl_stl)
+set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
+set_target_properties(srcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON>)
+
+# Largest impace for PCH builds of the client
 if(SRCML_BUILD_USEPCH)
     target_precompile_headers(srcml PRIVATE <srcml_cli.hpp> <srcml_input_src.hpp> <srcml_pipe.hpp> <ParseQueue.hpp> <src_input_libarchive.hpp> <SRCMLStatus.hpp> <WriteQueue.hpp> <ParseRequest.hpp> <TraceLog.hpp> <curl/curl.h>)
 endif()
 
-# Add coverage to default part of Debug
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_COMPILER_IS_GNUCXX)
-    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES} gcov)
-else()
-    target_link_libraries(srcml libsrcml_link ${SRCML_LIBRARIES})
+if(APPLE)
+    # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
+    set_target_properties(srcml PROPERTIES LINK_FLAGS "-exported_symbols_list /dev/null")
 endif()
+
+# Dependencies are installed via libsrcml
+install(TARGETS srcml COMPONENT SRCML)
+
+target_compile_options(srcml PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/wd4355> # this': used in base member initializer list
+    $<$<CXX_COMPILER_ID:MSVC>:/wd5204> # class has virtual functions, but its trivial destructor is not virtual
+)
 
 if(MSVC)
-    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-    add_custom_command(TARGET srcml POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${PROJECT_BINARY_DIR}/deps/$<CONFIGURATION>/bin"
-    $<TARGET_FILE_DIR:srcml>)
-elseif(APPLE)
-    # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
-    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-exported_symbols_list /dev/null")
-elseif(WIN32)
-    # @BUILD Why this when there is a MSVC case above?
-    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin LINK_FLAGS "-Wl,--allow-multiple-definition")
-else()
-    set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set_source_files_properties(srcml_cli.cpp PROPERTIES COMPILE_FLAGS /wd4866)
 endif()
-
-# strip macOS for release
-if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
-    if(APPLE)
-        add_custom_command(TARGET srcml POST_BUILD
-            COMMAND /usr/bin/strip -x $<TARGET_FILE:srcml>
-            COMMAND ${CMAKE_COMMAND} -E echo "-- Stripping $<TARGET_FILE:srcml>")
-    endif()
-endif()
-
-install(TARGETS srcml COMPONENT SRCML)

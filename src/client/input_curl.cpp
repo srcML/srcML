@@ -27,6 +27,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <limits.h>
 
 bool curl_supported(const std::string& input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
@@ -95,13 +96,9 @@ extern "C" {
 
         goCurl(true);
 
-    #ifndef WIN32
-        ssize_t result = write(data->outfd, ptr, size * nmemb);
-    #else
         if (size * nmemb > UINT_MAX)
             return 0;
         ssize_t result = write(data->outfd, ptr, static_cast<unsigned int>(size * nmemb));
-    #endif
 
         return result == -1 ? 0 : (size_t) result;
     }

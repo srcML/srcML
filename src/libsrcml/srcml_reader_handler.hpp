@@ -50,6 +50,8 @@
 #define ATTR_VALUE_START(pos) (pos * 5 + 3)
 #define ATTR_VALUE_END(pos) (pos * 5 + 4)
 
+#undef SRCSAX_DEBUG
+
 /**
  * srcsax_attribute
  *

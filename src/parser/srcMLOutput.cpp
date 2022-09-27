@@ -25,6 +25,13 @@
 */
 
 #include <srcMLOutput.hpp>
+#undef CONST
+#undef VOID
+#undef DELETE
+#undef INTERFACE
+#undef OUT
+#undef IN
+#undef THIS
 #include <srcMLParserTokenTypes.hpp>
 #include <srcMLToken.hpp>
 #include <srcmlns.hpp>

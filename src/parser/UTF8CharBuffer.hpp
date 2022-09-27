@@ -36,6 +36,7 @@
 #include <iconv.h>
 #include <sha1utilities.hpp>
 #include <srcml.h>
+
 #include <optional>
 
 /**

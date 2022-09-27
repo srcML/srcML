@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "srcml",
+  "version": "1.0.1",
+  "dependencies": [
+    "libarchive",
+    "curl",
+    "libiconv",
+    "lz4",
+    "libxml2",
+    "libxslt"
+  ]
+}
