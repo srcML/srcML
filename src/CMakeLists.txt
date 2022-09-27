@@ -1,7 +1,7 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2022 srcML, LLC. (www.srcML.org)
 # 
 # The srcML Toolkit is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,7 +19,8 @@
 # 
 # CMake files for building from source
 
-option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" OFF)
 
@@ -37,25 +38,11 @@ if(APPLE AND CMAKE_OSX_ARCHITECTURES_NOTSET AND OS_VERSION GREATER_EQUAL "20")
     endif()
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/src/libsrcml)
-
+# Clang profiling
+option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
 if(CLANG_TIME_TRACE)
     add_compile_options(-ftime-trace)
 endif()
-
-if(NOT CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
-    set(CMAKE_INCLUDE_SYSTEM_FLAG_CXX /external:I)
-    add_compile_options(/external:W0)
-endif()
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Generated source from antlr and the parser
-set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
-
-# External code directory
-set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
 
 if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
 
@@ -74,78 +61,59 @@ if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
     string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
     if(NOT SRCML_BUILD_BREW_LIBARCHIVE AND OS_VERSION GREATER_EQUAL "19")
 
-        # install via Apple opensource
-        set(LIBARCHIVE_VERSION "libarchive-83.40.4")
-        set(LIBARCHIVE_URL "https://opensource.apple.com/source/libarchive/${LIBARCHIVE_VERSION}")
-        if(NOT EXISTS ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
-            message("-- Download libarchive include files")
-            file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive.h)
-            file(DOWNLOAD ${LIBARCHIVE_URL}/libarchive/libarchive/archive_entry.h ${CMAKE_EXTERNAL_SOURCE_DIR}/archive_entry.h)
+        # Map from macOS version to libarchive number
+        if(OS_VERSION EQUAL 19)
+            # Catalina
+            set(LIBARCHIVE_VERSION "72.11.2")
+        elseif(OS_VERSION EQUAL 20)
+            # Big Sur
+            set(LIBARCHIVE_VERSION "83.40.4")
+        elseif(OS_VERSION EQUAL 21)
+            # Monterey
+            set(LIBARCHIVE_VERSION "83.40.4")
         endif()
 
-        list(APPEND CMAKE_PREFIX_PATH "${CMAKE_EXTERNAL_SOURCE_DIR}")
+        # fetch via Apple opensource
+        set(LIBARCHIVE_URL "https://opensource.apple.com/source/libarchive/libarchive-${LIBARCHIVE_VERSION}/libarchive/libarchive")
+        include(FetchContent)
+        FetchContent_Declare(libarchiveInclude1
+            URL ${LIBARCHIVE_URL}/archive.h
+            DOWNLOAD_NO_EXTRACT TRUE
+        )
+        FetchContent_MakeAvailable(libarchiveInclude1)
+        FetchContent_Declare(libarchiveInclude
+            URL ${LIBARCHIVE_URL}/archive_entry.h
+            SOURCE_DIR ${libarchiveinclude1_SOURCE_DIR}
+            DOWNLOAD_NO_EXTRACT TRUE
+        )
+        FetchContent_MakeAvailable(libarchiveInclude)
+
+        # Record so that LibArchive::LibArchive finds the headers
+        set(LibArchive_INCLUDE_DIR "${libarchiveinclude_SOURCE_DIR}")
+
+        unset(libarchiveInclude1)
+        unset(libarchiveInclude)
+        unset(LIBARCHIVE_VERSION)
+        unset(LIBARCHIVE_URL)
 
     # macOS versions before Catalina only have libarchive 2, and require homebrew
     # and use a static library
     elseif(BREW_RESULT EQUAL 0 AND EXISTS "${BREW_PREFIX}/opt/libarchive")
 
+        # Make sure LibArchive::LibArchive looks a brew first
         list(APPEND CMAKE_PREFIX_PATH "${BREW_PREFIX}/opt/libarchive")
 
     else()
+
         message(FATAL_ERROR "LibArchive >= 3 is required. Install via homebrew\n% brew install libarchive\n")
+
     endif()
 
 endif()
 
-# Locate packages
-find_package(LibArchive 3 REQUIRED)
-find_package(LibXml2 REQUIRED)
-find_package(CURL REQUIRED)
-find_package(Iconv REQUIRED)
-find_package(LibXslt REQUIRED)
-
-# Setup ANTLR 2.7 library
-set(ANTLR_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7)
-if(NOT EXISTS ${ANTLR_EXTERNAL})
-    set(ANTLR_URL https://www.antlr2.org/download/antlr-2.7.7.tar.gz)
-    message(STATUS "Download ${ANTLR_URL}")
-    file(DOWNLOAD ${ANTLR_URL} ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz)
-    file(ARCHIVE_EXTRACT INPUT ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz
-        DESTINATION ${CMAKE_EXTERNAL_SOURCE_DIR})
-
-    # Add needed include file for CharScanner.hpp
-    # Comment out use of std::binary_function, deprecated in C++11 and removed in C++17
-    set(CHARSCANNER_HPP "${ANTLR_EXTERNAL}/lib/cpp/antlr/CharScanner.hpp")
-    file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
-    string(REPLACE "#include <antlr/config.hpp>\n\n" "#include <antlr/config.hpp>\n#include <string.h>\n\n" FILE_CONTENTS "${FILE_CONTENTS}")
-    string(REPLACE "class ANTLR_API CharScannerLiteralsLess : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool>"
-                "class ANTLR_API CharScannerLiteralsLess /* : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool> */" FILE_CONTENTS "${FILE_CONTENTS}")
-    file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
-
-    # Remove pragma warning disable that is no longer valie
-    set(CONFIG_HPP "${ANTLR_EXTERNAL}/lib/cpp/antlr/config.hpp")
-    file(READ ${CONFIG_HPP} FILE_CONTENTS)
-    string(REPLACE "# pragma warning( disable : 4786 4231 )" "# pragma warning( disable : 4786 )" FILE_CONTENTS "${FILE_CONTENTS}")
-    file(WRITE ${CONFIG_HPP} "${FILE_CONTENTS}")
-
-    file(REMOVE ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7.tar.gz)
-endif()
-
-set(ANTLR_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/antlr-2.7.7)
-set(ANTLR_INCLUDE_DIR "${ANTLR_EXTERNAL}/lib/cpp/")
-
-set(LIBXML2_LIBRARIES ${LIBXML2_LIBRARIES} ${Iconv_LIBRARIES})
-
-if(NOT WIN32)
-    include_directories(SYSTEM ${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS}
-                    ${Iconv_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIR}
-                    ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIR} ${ANTLR_INCLUDE_DIR})
-endif()
-
-get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(dir ${dirs})
-    message(STATUS "dir='${dir}'")
-endforeach()
+# For Windows, install redist exe
+set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT SRCML)
+include(InstallRequiredSystemLibraries)
 
 # standard compile options
 add_compile_options(
@@ -160,8 +128,8 @@ add_compile_options(
     $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_NONSTDC_NO_WARNINGS> # disable read() warnings
 )
 
-# handle specific warnings
-option(ENABLE_BUILD_WARNINGS "Enable disabled build warnings" OFF)
+# specific warnings
+option(ENABLE_BUILD_WARNINGS "Enable build warnings" OFF)
 if(NOT ENABLE_BUILD_WARNINGS)
     add_compile_options(
         $<$<CXX_COMPILER_ID:MSVC>:/wd4068> # unknown pragma
@@ -187,17 +155,21 @@ if(NOT ENABLE_BUILD_WARNINGS)
     )
 endif()
 
-if(MSVC)
-
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        add_compile_options("/Od")
-        add_compile_options("/Zi")
-        add_compile_options("/MDd")
-    else()
-        add_compile_options("/O2")
-    endif()
-
+# CMake 3.24 URL download timestamp
+if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24")
+    cmake_policy(SET CMP0135 NEW)
 endif()
+
+# TinySHA1 external include
+include(FetchContent)
+FetchContent_Declare(TinySHA1
+  GIT_REPOSITORY https://github.com/mohaps/tinysha1
+  GIT_TAG        2795aa8de91b1797defdfbff61ed93b22b5ced81
+  GIT_SHALLOW    TRUE
+)
+FetchContent_MakeAvailable(TinySHA1)
+add_library(TinySHA1 INTERFACE IMPORTED)
+target_include_directories(TinySHA1 INTERFACE ${tinysha1_SOURCE_DIR})
 
 add_subdirectory(client)
 add_subdirectory(parser)

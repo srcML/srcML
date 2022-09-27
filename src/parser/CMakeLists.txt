@@ -19,13 +19,66 @@
 # 
 # CMake files for building the parser
 
-# Find antlr runtime
+find_package(LibXml2 REQUIRED)
+find_package(Iconv REQUIRED)
 find_package(Java COMPONENTS Runtime REQUIRED)
-set(ANTLR_EXE ${Java_JAVA_EXECUTABLE} -classpath "${ANTLR_EXTERNAL}/antlr.jar" antlr.Tool)
+
+# Setup ANTLR 2.7 library
+include(FetchContent)
+FetchContent_Declare(antlrsrc
+    URL https://www.antlr2.org/download/antlr-2.7.7.tar.gz
+)
+FetchContent_GetProperties(antlrsrc)
+if(NOT antlrsrc_POPULATED)
+    # Fetch the content using previously declared details
+    FetchContent_Populate(antlrsrc)
+
+    # Add needed include file for CharScanner.hpp
+    # Comment out use of std::binary_function, deprecated in C++11 and removed in C++17
+    set(CHARSCANNER_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/CharScanner.hpp")
+    file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
+    string(REPLACE "#include <antlr/config.hpp>\n\n" "#include <antlr/config.hpp>\n#include <string.h>\n\n" FILE_CONTENTS "${FILE_CONTENTS}")
+    string(REPLACE "class ANTLR_API CharScannerLiteralsLess : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool>"
+                "class ANTLR_API CharScannerLiteralsLess /* : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool> */" FILE_CONTENTS "${FILE_CONTENTS}")
+    file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
+
+    # Remove pragma warning disable that is no longer valid
+    set(CONFIG_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/config.hpp")
+    file(READ ${CONFIG_HPP} FILE_CONTENTS)
+    string(REPLACE "# pragma warning( disable : 4786 4231 )" "# pragma warning( disable : 4786 )" FILE_CONTENTS "${FILE_CONTENTS}")
+    file(WRITE ${CONFIG_HPP} "${FILE_CONTENTS}")
+endif()
+
+# antlr library
+file(GLOB ANTLR_SOURCE ${antlrsrc_SOURCE_DIR}/lib/cpp/src/*.cpp)
+list(REMOVE_ITEM ANTLR_SOURCE "${antlrsrc_SOURCE_DIR}/lib/cpp/src/dll.cpp")
+add_library(antlr OBJECT "${ANTLR_SOURCE}")
+target_include_directories(antlr SYSTEM PUBLIC "${antlrsrc_SOURCE_DIR}/lib/cpp/" SYSTEM PRIVATE "${antlrsrc_SOURCE_DIR}/lib/cpp/")
+
+# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
+set_target_properties(antlr PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON>)
+
+# Generated source from antlr and the parser
+set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
+
+# Find antlr runtime
+set(ANTLR_EXE ${Java_JAVA_EXECUTABLE} -classpath "${antlrsrc_SOURCE_DIR}/antlr.jar" antlr.Tool)
 message("-- ANTLR: ${ANTLR_EXE}")
 
-# Assume all C++ source files are parser
+# parser library
 file(GLOB PARSER_SOURCE *.hpp *.cpp)
+add_library(parser OBJECT
+    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
+    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
+    ${PARSER_SOURCE}
+)
+target_include_directories(parser SYSTEM PUBLIC ${antlrsrc_SOURCE_DIR}/lib/cpp)
+target_include_directories(parser PRIVATE . ${CMAKE_GENERATED_SOURCE_DIR} ${CMAKE_SOURCE_DIR}/src/libsrcml PUBLIC . SYSTEM PUBLIC ${CMAKE_GENERATED_SOURCE_DIR})
+target_link_libraries(parser PRIVATE LibXml2::LibXml2 TinySHA1 antlr)
+
+# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
+set_target_properties(parser PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON>)
 
 # 
 # RunAntlr
@@ -37,22 +90,13 @@ file(GLOB PARSER_SOURCE *.hpp *.cpp)
 #
 macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
 
-    if("${INCLUDE_GRAMMAR}" STREQUAL "")
-        # Handling windows relative path problem (Not sure why this is an issue but it's given me a headache).
-        add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" ${INPUT_FILES}
-            COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
-        )
-    else()
-        add_custom_command(OUTPUT  ${OUTPUT_FILES}
-            DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
-            COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
-        )
-    endif()
+    add_custom_command(OUTPUT  ${OUTPUT_FILES}
+        DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
+        COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
+    )
+
 endmacro(RunAntlr)
 
 macro(lexerFiles LEXER)
@@ -110,47 +154,42 @@ RunAntlr("${srcMLParserOutputFiles}"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
 
-add_library(parser OBJECT
-    ${CMAKE_GENERATED_SOURCE_DIR}/srcMLParser.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp
-    ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
-    ${PARSER_SOURCE}
-)
+# set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<NOT:$<CXX_COMPILER_ID:MSVC>,<UTFCharBuffer.hpp>>)
+
 if(SRCML_BUILD_USEPCH)
-    target_precompile_headers(parser PRIVATE <srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp>)
-    if(NOT MSVC)
-        target_precompile_headers(parser PRIVATE <UTF8CharBuffer.hpp>)
-    endif()
+    # Not sure why <UTF8CharBuffer> is non-MSVC. Perhaps an error when compiled
+    target_precompile_headers(parser PRIVATE <srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp> $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:<UTF8CharBuffer.hpp$<ANGLE-R>>)
 endif()
 
-# Setup SHA1 include
-set(CMAKE_EXTERNAL_SOURCE_DIR ${CMAKE_BINARY_DIR}/external)
-set(SHA1_EXTERNAL ${CMAKE_EXTERNAL_SOURCE_DIR}/TinySHA1.hpp)
-if(NOT EXISTS ${SHA1_EXTERNAL})
-    set(SHA1_URL https://raw.githubusercontent.com/mohaps/TinySHA1/master/TinySHA1.hpp)
-    message(STATUS "Download ${SHA1_URL}")
-    file(DOWNLOAD ${SHA1_URL} ${SHA1_EXTERNAL})
-endif()
-
-target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml)
-
-file(GLOB ANTLR_SOURCE ${ANTLR_EXTERNAL}/lib/cpp/src/*.cpp)
-list(REMOVE_ITEM ANTLR_SOURCE "${ANTLR_EXTERNAL}/lib/cpp/src/dll.cpp")
-add_library(antlr OBJECT ${ANTLR_SOURCE})
-
-add_dependencies(parser antlr)
-target_link_libraries(parser OBJECT antlr)
-
-target_include_directories(antlr PUBLIC ${ANTLR_INCLUDE_DIR})
-target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml ${ANTLR_INCLUDE_DIR})
-
-if(MSVC)
-    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIRS})
-    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIR})
-    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${ANTLR_INCLUDE_DIR})
-    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CMAKE_GENERATED_SOURCE_DIR})
-    target_compile_options(parser SYSTEM PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CMAKE_EXTERNAL_SOURCE_DIR})
-else()
-    target_include_directories(parser PRIVATE ${CMAKE_GENERATED_SOURCE_DIR})
-    target_include_directories(parser PRIVATE ${CMAKE_EXTERNAL_SOURCE_DIR})
+option(ENABLE_ANTLR_BUILD_WARNINGS "Enable disabled antlr library build warnings" OFF)
+if(NOT ENABLE_ANTLR_BUILD_WARNINGS)
+    target_compile_options(antlr PRIVATE
+        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-format>
+        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-misleading-indentation>
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # conversion from 'int' to 'unsigned int',
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4267> # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4458> # declaration of 'index' hides class member
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4242> # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100> # unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4355> # this': used in base member initializer list
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4477> # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5031> # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
+    )
+    target_compile_options(parser PRIVATE
+        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-unused-but-set-variable>
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # conversion from 'int' to 'unsigned int',
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4267> # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4458> # declaration of 'index' hides class member
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4242> # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100> # unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4355> # this': used in base member initializer list
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4477> # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd5031> # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
+    )
 endif()
