@@ -22,6 +22,7 @@
 
 #include <UTF8CharBuffer.hpp>
 
+#include <algorithm>
 #include <sha1utilities.hpp>
 #include <iostream>
 #include <fcntl.h>
@@ -30,9 +31,14 @@
 #include <string>
 #include <stdio.h>
 #include <cstring>
+#include <limits.h>
 
 #ifdef _MSC_VER
-#include <io.h>
+    #include <io.h>
+#else
+    #include <sys/types.h>
+    #include <sys/uio.h>
+    #include <unistd.h>
 #endif
 
 namespace {
