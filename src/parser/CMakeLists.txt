@@ -147,7 +147,6 @@ target_include_directories(parser PUBLIC . ${CMAKE_SOURCE_DIR}/src/libsrcml ${AN
 if(MSVC)
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIRS})
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIR})
-    target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${Boost_INCLUDE_DIR})
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${ANTLR_INCLUDE_DIR})
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CMAKE_GENERATED_SOURCE_DIR})
     target_compile_options(parser SYSTEM PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${CMAKE_EXTERNAL_SOURCE_DIR})

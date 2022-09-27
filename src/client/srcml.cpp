@@ -31,7 +31,6 @@
 #include <Timer.hpp>
 #include <SRCMLStatus.hpp>
 #include <curl/curl.h>
-#include <boost/version.hpp>
 #include <iostream>
 #include <csignal>
 #include <cmath>
@@ -74,8 +73,7 @@ int main(int argc, char * argv[]) {
                                << "srcml " << srcml_version_string() << '\n'
                                << "libsrcml " << srcml_version_string() << '\n'
                                <<  archive_version_string() << '\n'
-                               << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n'
-                               << "libboost " << BOOST_LIB_VERSION << '\n';
+                               << "libcurl " << curl_version_info(CURLVERSION_NOW)->version << '\n';
     }
 
     // for a single file request, copy the unit number to that input source

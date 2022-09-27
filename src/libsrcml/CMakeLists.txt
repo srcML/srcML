@@ -61,7 +61,6 @@ set_target_properties(libsrcml_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAK
 if(WIN32)
     target_compile_options(libsrcml_shared PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIRS})
     target_compile_options(libsrcml_shared PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${LIBXML2_INCLUDE_DIR})
-    target_compile_options(libsrcml_shared PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${Boost_INCLUDE_DIR})
     target_compile_options(parser PRIVATE ${CMAKE_INCLUDE_SYSTEM_FLAG_CXX}${ANTLR_INCLUDE_DIR})
 endif()
 target_link_libraries(libsrcml_shared PUBLIC ${LIBSRCML_LIBRARIES} LibXslt::LibXslt LibXslt::LibExslt)

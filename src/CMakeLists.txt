@@ -48,7 +48,8 @@ if(NOT CMAKE_INCLUDE_SYSTEM_FLAG_CXX)
     add_compile_options(/external:W0)
 endif()
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Generated source from antlr and the parser
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
@@ -101,7 +102,6 @@ find_package(LibArchive 3 REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(CURL REQUIRED)
 find_package(Iconv REQUIRED)
-find_package(Boost REQUIRED)
 find_package(LibXslt REQUIRED)
 
 # Setup ANTLR 2.7 library
@@ -135,8 +135,8 @@ set(LIBXML2_LIBRARIES ${LIBXML2_LIBRARIES} ${Iconv_LIBRARIES})
 
 if(NOT WIN32)
     include_directories(SYSTEM ${LibArchive_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS}
-                    ${Boost_INCLUDE_DIRS} ${Iconv_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIR}
-                    ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${ANTLR_INCLUDE_DIR})
+                    ${Iconv_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIR}
+                    ${LIBXML2_INCLUDE_DIR} ${CURL_INCLUDE_DIR} ${ANTLR_INCLUDE_DIR})
 endif()
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

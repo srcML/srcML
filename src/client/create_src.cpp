@@ -44,7 +44,7 @@
 #define WRITE _write
 #endif
 
-static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source, const boost::optional<size_t>& revision) {
+static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source, const std::optional<size_t>& revision) {
 
     OpenFileLimiter::open();
     std::unique_ptr<srcml_archive> arch(srcml_archive_create());
@@ -83,7 +83,7 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
         // So for Windows, convert to a FILE*. Note sure when to close the FILE*
         if (isCurl) {
             uninput.fileptr = fdopen(*(uninput.fd), "r");
-            uninput.fd = boost::none;
+            uninput.fd = std::nullopt;
         }
 #endif
 
@@ -100,7 +100,7 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
             // or cut short. 
             // So for Windows, convert to a FILE*. Note sure when to close the FILE*
             curinput.fileptr = fdopen(*(curinput.fd), "r");
-            curinput.fd = boost::none;
+            curinput.fd = std::nullopt;
         }
 #endif
         

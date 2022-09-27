@@ -28,6 +28,7 @@
 #include <cstring>
 #include <fcntl.h>
 #include <srcml_macros.hpp>
+#include <functional>
 
 /******************************************************************************
  *                                                                            *
@@ -485,7 +486,7 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
  * @returns Returns SRCML_STATUS_OK on success and SRCML_STATUS_IO_ERROR on failure.
  */
 static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filename,
-    std::function<UTF8CharBuffer*(const char* src_encoding, bool output_hash, boost::optional<std::string>& hash)> createUTF8CharBuffer) {
+    std::function<UTF8CharBuffer*(const char* src_encoding, bool output_hash, std::optional<std::string>& hash)> createUTF8CharBuffer) {
 
     // figure out the language based on unit, archive, registered languages
     int lang = unit->language ? srcml_check_language(unit->language->c_str())
@@ -564,7 +565,7 @@ int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename)
         return SRCML_STATUS_IO_ERROR;
     }
 
-    return srcml_unit_parse_internal(unit, src_filename, [src_fd](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
+    return srcml_unit_parse_internal(unit, src_filename, [src_fd](const char* encoding, bool output_hash, std::optional<std::string>& hash)-> UTF8CharBuffer* {
 
         return new UTF8CharBuffer(src_fd, encoding, output_hash, hash);
     });
@@ -586,7 +587,7 @@ int srcml_unit_parse_memory(struct srcml_unit* unit, const char* src_buffer, siz
     if (unit == nullptr || (buffer_size && src_buffer == nullptr))
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_unit_parse_internal(unit, 0, [src_buffer, buffer_size](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
+    return srcml_unit_parse_internal(unit, 0, [src_buffer, buffer_size](const char* encoding, bool output_hash, std::optional<std::string>& hash)-> UTF8CharBuffer* {
 
         return new UTF8CharBuffer(src_buffer ? src_buffer : "", buffer_size, encoding, output_hash, hash);
     });
@@ -607,7 +608,7 @@ int srcml_unit_parse_FILE(struct srcml_unit* unit, FILE* src_file) {
     if (unit == nullptr || src_file == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_unit_parse_internal(unit, 0, [src_file](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
+    return srcml_unit_parse_internal(unit, 0, [src_file](const char* encoding, bool output_hash, std::optional<std::string>& hash)-> UTF8CharBuffer* {
 
         return new UTF8CharBuffer(src_file, encoding, output_hash, hash);
     });
@@ -628,7 +629,7 @@ int srcml_unit_parse_fd(struct srcml_unit* unit, int src_fd) {
     if (unit == nullptr || src_fd < 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_unit_parse_internal(unit, 0, [src_fd](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
+    return srcml_unit_parse_internal(unit, 0, [src_fd](const char* encoding, bool output_hash, std::optional<std::string>& hash)-> UTF8CharBuffer* {
 
         return new UTF8CharBuffer(src_fd, encoding, output_hash, hash);
     });
@@ -652,7 +653,7 @@ int srcml_unit_parse_io(struct srcml_unit* unit, void * context, ssize_t (*read_
     if (unit == nullptr || context == nullptr || read_callback == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_unit_parse_internal(unit, 0, [context, read_callback, close_callback](const char* encoding, bool output_hash, boost::optional<std::string>& hash)-> UTF8CharBuffer* {
+    return srcml_unit_parse_internal(unit, 0, [context, read_callback, close_callback](const char* encoding, bool output_hash, std::optional<std::string>& hash)-> UTF8CharBuffer* {
 
         return new UTF8CharBuffer(context, read_callback, close_callback, encoding, output_hash, hash);
     });
@@ -905,7 +906,7 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
             optional_to_c_str(unit->archive->encoding, "UTF-8"),
             options,
             *(unit->namespaces),
-            boost::none,
+            std::nullopt,
             unit->archive->tabstop,
             unit->derived_language,
             optional_to_c_str(unit->revision),
