@@ -17,18 +17,40 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-# set icons
-install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION .)
-set(CPACK_NSIS_MUI_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
-set(CPACK_NSIS_MUI_UNIICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
-set(CPACK_NSIS_INSTALLED_ICON_NAME srcml_icon.ico)
+# package naming
+set(CPACK_SYSTEM_NAME "windows-x86_64")
 
-set(CPACK_NSIS_MODIFY_PATH ON)
-if(WIN32)
-    set(MSVC_REDIST ${PROJECT_BINARY_DIR}/deps/tools/VC_redist.x64.exe)
-    get_filename_component(vcredist_name "${MSVC_REDIST}" NAME)
-    install(PROGRAMS ${MSVC_REDIST} DESTINATION bin)
-    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "ExecWait '\\\"$INSTDIR\\\\bin\\\\${vcredist_name}\\\" /passive /norestart'")
-endif()
-# set contact in add/remove programs
-set(CPACK_NSIS_CONTACT "srcML <srcML.org>")
+# Windows is one package
+set(CPACK_ARCHIVE_COMPONENT_INSTALL OFF)
+
+# set icon
+install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION . COMPONENT SRCML)
+set(CPACK_WIX_PRODUCT_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
+
+# directory name
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "srcML")
+
+# Custom GUID
+# set(CPACK_WIX_PRODUCT_GUID "8EB65BD8-DF5B-4DED-A642-80BDBBDEB58C")
+
+# Custom GUID
+# set(CPACK_WIX_UPGRADE_GUID "8666C73A-223D-4E5A-BB14-D4740158066F")
+
+# Background on dialogs
+set(CPACK_WIX_UI_DIALOG "${CMAKE_CURRENT_SOURCE_DIR}/background.png")
+set(CPACK_WIX_UI_BANNER "${CMAKE_CURRENT_SOURCE_DIR}/banner.png")
+
+# ID of custom UI
+set(CPACK_WIX_UI_REF "srcMLUI_InstallDir")
+
+# Add to CMake registry so that other CMake files can use find_program()
+set(CPACK_WIX_CMAKE_PACKAGE_REGISTRY srcML)
+
+# Extra dialog for adding to path
+set(CPACK_WIX_EXTRA_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/srcml_extra_dialog.wxs" "${CMAKE_CURRENT_SOURCE_DIR}/install_dir.wxs")
+
+# Path for path environment
+set(CPACK_WIX_PATCH_FILE "${CMAKE_CURRENT_SOURCE_DIR}/patch_path_env.xml")
+
+# Template instead of default WiX template
+set(CPACK_WIX_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/WIX.template.in")

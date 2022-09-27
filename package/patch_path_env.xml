@@ -1,0 +1,28 @@
+<CPackWiXPatch>
+  <CPackWiXFragment Id="CM_DP_SRCML.bin">
+    <Component Id="srcMLSystemPathEntryCMP" KeyPath="yes" Guid="0F77E4EA-1D81-4588-ACE1-7476724259F2">
+
+      <Condition>ADD_SRCML_TO_PATH = "System"</Condition>
+
+      <Environment Id="srcMLSystemPathEntryENV" Action="set" Part="last"
+        Name="PATH" Value="[INSTALL_ROOT]bin"
+        Permanent="no"
+        System="yes"/>
+    </Component>
+
+    <Component Id="srcMLUserPathEntryCMP" KeyPath="yes" Guid="EBBD81B9-303A-4033-8B53-6336B2FCD988">
+
+      <Condition>ADD_SRCML_TO_PATH = "User"</Condition>
+
+      <Environment Id="srcMLUserPathEntryENV" Action="set" Part="last"
+        Name="PATH" Value="[INSTALL_ROOT]bin"
+        Permanent="no"
+        System="no"/>
+    </Component>
+  </CPackWiXFragment>
+
+  <CPackWiXFragment Id="#PRODUCTFEATURE">
+    <ComponentRef Id="srcMLSystemPathEntryCMP"/>
+    <ComponentRef Id="srcMLUserPathEntryCMP"/>
+  </CPackWiXFragment>
+</CPackWiXPatch>
