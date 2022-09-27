@@ -77,13 +77,9 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
     // write the data into the archive
     std::vector<char> buffer(4092);
     while (true) {
-#ifndef WIN32
-        auto s = read(*input_sources[0].fd, buffer.data(), (size_t) buffer.size());
-#else
         if (buffer.size() > UINT_MAX)
             break;
         auto s = read(*input_sources[0].fd, buffer.data(), static_cast<unsigned int>(buffer.size()));
-#endif
         if (s <= 0)
             break;
 

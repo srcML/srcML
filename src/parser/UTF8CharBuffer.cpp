@@ -143,13 +143,9 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool
     // setup callbacks, wrappers around read() and close()
     sio.context = new Context<int>(fd);
     sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
-#ifndef WIN32
-        return read(static_cast<Context<int>*>(context)->value, buf, insize);
-#else
         if (insize > UINT_MAX)
             return -1;
         return read(static_cast<Context<int>*>(context)->value, buf, static_cast<unsigned int>(insize));
-#endif
     };
     sio.close_callback = [](void* context) -> int {
         int fd = static_cast<Context<int>*>(context)->value;
@@ -231,13 +227,9 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, st
     // setup callbacks, wrappers around read()
     sio.context = new Context<int>(fd);
     sio.read_callback = [](void* context, void* buf, size_t readsize) -> ssize_t {
-#ifndef WIN32
-        return read(static_cast<Context<int>*>(context)->value, buf, readsize);
-#else
         if (readsize > UINT_MAX)
             return -1;
         return read(static_cast<Context<int>*>(context)->value, buf, static_cast<unsigned int>(readsize));
-#endif
     };
     sio.close_callback = [](void* context) -> int {
         delete static_cast<Context<int>*>(context);

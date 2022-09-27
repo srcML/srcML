@@ -790,15 +790,11 @@ public:
 
     virtual void consume() {
 
-        if (!skip_tokens_set.member(LA(1))) last_consumed = LA(1);
+        if (!skip_tokens_set.member((unsigned int) LA(1)))
+            last_consumed = LA(1);
         LLkParser::consume();
-
-
-
     }
-
 }
-
 
 /*
   start

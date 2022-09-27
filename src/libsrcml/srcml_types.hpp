@@ -24,6 +24,7 @@
 #include <srcml.h>
 #include <srcmlns.hpp>
 
+#include <libxml/tree.h>
 #include <libxslt/xslt.h>
 #include <libxslt/xsltInternals.h>
 #include <libxslt/xsltutils.h>

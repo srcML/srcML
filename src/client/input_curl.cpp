@@ -96,13 +96,9 @@ extern "C" {
 
         goCurl(true);
 
-    #ifndef WIN32
-        ssize_t result = write(data->outfd, ptr, size * nmemb);
-    #else
         if (size * nmemb > UINT_MAX)
             return 0;
         ssize_t result = write(data->outfd, ptr, static_cast<unsigned int>(size * nmemb));
-    #endif
 
         return result == -1 ? 0 : (size_t) result;
     }

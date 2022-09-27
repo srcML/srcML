@@ -26,7 +26,7 @@
 
 #include <srcml_translator.hpp>
 #ifdef _MSC_VER
-#   pragma warning(push, 0)
+// #   pragma warning(push, 0)
 #endif
 #undef CONST
 #undef VOID
@@ -39,7 +39,7 @@
 #include <srcMLParser.hpp>
 #include <StreamMLParser.hpp>
 #ifdef _MSC_VER
-#   pragma warning(pop)
+// #   pragma warning(pop)
 #endif
 #include <srcMLOutput.hpp>
 #include <srcmlns.hpp>

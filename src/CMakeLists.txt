@@ -24,17 +24,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" OFF)
 
-# Big Sur and later OSX platforms can build for both x86 and arm64, so default to both
+# Big Sur and later macOS can build for both x86 and arm64
 string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
-if(APPLE AND CMAKE_OSX_ARCHITECTURES_NOTSET AND OS_VERSION GREATER_EQUAL "20")
+if(APPLE AND OS_VERSION GREATER_EQUAL "20")
     include(CheckCXXCompilerFlag)
 
-    check_cxx_compiler_flag("-arch x86_64" Platform_Supports_x86_64)
-    check_cxx_compiler_flag("-arch arm64" Platform_Supports_arm64)
+    set(ARCHITECTURES "x86_64;arm64")
+    check_cxx_compiler_flag("-arch x86_64" PLATFORM_SUPPORTS_x86_64)
+    check_cxx_compiler_flag("-arch arm64" PLATFORM_SUPPORTS_arm64)
 
-    if(Platform_Supports_x86_64 AND Platform_Supports_arm64)
-        set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE STRING "Build architectures for Mac OS X" FORCE)
-        message(STATUS "Detected ability to build for multiple architectures: ${CMAKE_OSX_ARCHITECTURES}")
+    if(PLATFORM_SUPPORTS_x86_64 AND PLATFORM_SUPPORTS_arm64)
+        list(FIND CMAKE_OSX_ARCHITECTURES "x86_64" AMD_POSITION)
+        list(FIND CMAKE_OSX_ARCHITECTURES "arm64" ARM_POSITION)
+        if(AMD_POSITION EQUAL -1 OR ARM_POSITION EQUAL -1)
+            message(STATUS "Detected ability for a universal build. To do so, use -DCMAKE_OSX_ARCHITECTURE=\"${ARCHITECTURES}\"")
+        endif()
     endif()
 endif()
 
@@ -44,6 +48,9 @@ if(CLANG_TIME_TRACE)
     add_compile_options(-ftime-trace)
 endif()
 
+# For macOS Catalina and more recent, the provided libarchive is at least version 3.3
+# and all that is needed is the matching header files.
+# For earlier versions of macOS, brew must be used with a more recent libarchive.a
 if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
 
     # Detect brew directories on macOS
