@@ -68,7 +68,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
             // or cut short. 
             // So for Windows, convert to a FILE*. Note sure when to close the FILE*
             uninput.fileptr = fdopen(*(uninput.fd), "r");
-            uninput.fd = boost::none;
+            uninput.fd = std::nullopt;
 #endif
 
             uninput.fd = input_archive(uninput);

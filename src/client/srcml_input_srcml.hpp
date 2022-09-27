@@ -26,14 +26,7 @@
 
 #include <srcml_utilities.hpp>
 #include <memory>
-#ifdef _MSC_VER
-#    pragma warning(push,0)
-#    pragma warning(disable : 4619)
-#endif
-#include <boost/optional.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include <optional>
 #include <srcml_cli.hpp>
 
 class ParseQueue;
@@ -44,6 +37,6 @@ int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_request_t& srcml_request,
                        const srcml_input_src& srcml_input_source,
-                       const boost::optional<size_t> & revision);
+                       const std::optional<size_t> & revision);
 
 #endif

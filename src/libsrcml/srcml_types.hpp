@@ -60,14 +60,7 @@ const unsigned int SRCML_OPTION_DEFAULT_INTERNAL  = (SRCML_OPTION_ARCHIVE | SRCM
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
 
-#ifdef _MSC_VER
-#    pragma warning(push,0)
-#    pragma warning(disable : 4619)
-#endif
-#include <boost/optional.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -116,17 +109,17 @@ struct srcml_archive {
     SRCML_ARCHIVE_TYPE type = SRCML_ARCHIVE_INVALID;
 
     /** an attribute for the xml encoding */
-    boost::optional<std::string> encoding;
+    std::optional<std::string> encoding;
     /** source encoding */
-    boost::optional<std::string> src_encoding;
+    std::optional<std::string> src_encoding;
     /** an attribute for a revision */
-    boost::optional<std::string> revision = std::string(srcml_version_string());
+    std::optional<std::string> revision = std::string(srcml_version_string());
     /** an attribute for a language */
-    boost::optional<std::string> language;
+    std::optional<std::string> language;
     /** an attribute for a url path */
-    boost::optional<std::string> url;
+    std::optional<std::string> url;
     /** an attribute for a version string */
-    boost::optional<std::string> version;
+    std::optional<std::string> version;
     /** an array of name-value attribute pairs */
     std::vector<std::string> attributes;
 
@@ -140,7 +133,7 @@ struct srcml_archive {
     Namespaces namespaces = starting_namespaces;
 
     /** target/data pair for processing instruction */
-    boost::optional<std::pair<std::string, std::string> > processing_instruction;
+    std::optional<std::pair<std::string, std::string> > processing_instruction;
 
     /** an array of registered extension language pairs */
     language_extension_registry registered_languages = language_extension_registry();
@@ -157,7 +150,7 @@ struct srcml_archive {
     std::vector<std::shared_ptr<Transformation>> transformations;
 
     /** srcDiff revision number */
-    boost::optional<size_t> revision_number;
+    std::optional<size_t> revision_number;
 
     /** output buffer for io, filename, FILE*, and fd */
     xmlOutputBuffer* output_buffer = nullptr;
@@ -186,21 +179,21 @@ struct srcml_unit {
     srcml_archive* archive = nullptr;
 
     /** source encoding */
-    boost::optional<std::string> encoding;
+    std::optional<std::string> encoding;
     /** an attribute for a revision */
-    boost::optional<std::string> revision = std::string(srcml_version_string());
+    std::optional<std::string> revision = std::string(srcml_version_string());
     /** an attribute for a language */
-    boost::optional<std::string> language;
+    std::optional<std::string> language;
     /** an attribute name for a file */
-    boost::optional<std::string> filename;
+    std::optional<std::string> filename;
     /** an attribute for a url path */
-    boost::optional<std::string> url;
+    std::optional<std::string> url;
     /** an attribute for a version string */
-    boost::optional<std::string> version;
+    std::optional<std::string> version;
     /** an attribute for a timestamp string */
-    boost::optional<std::string> timestamp;
+    std::optional<std::string> timestamp;
     /** an attribute for a hash string */
-    boost::optional<std::string> hash;
+    std::optional<std::string> hash;
     /** an array of name-value attribute pairs */
     std::vector<std::string> attributes;
     /** the type of eol to output with source code */
@@ -215,7 +208,7 @@ struct srcml_unit {
     /** a unit srcMLTranslator for writing and parsing as a stream */
     srcml_translator* unit_translator = nullptr;
 
-    boost::optional<Namespaces> namespaces;
+    std::optional<Namespaces> namespaces;
 
     // if header attributes have been read
     bool read_header = false;
@@ -225,15 +218,15 @@ struct srcml_unit {
 
     /** srcml from read and after parsing */
     std::string srcml;
-    boost::optional<std::string> srcml_revision;
+    std::optional<std::string> srcml_revision;
     int currevision = -1;
-    boost::optional<std::string> srcml_fragment;
-    boost::optional<std::string> srcml_fragment_revision;
-    boost::optional<std::string> srcml_raw;
-    boost::optional<std::string> srcml_raw_revision;
+    std::optional<std::string> srcml_fragment;
+    std::optional<std::string> srcml_fragment_revision;
+    std::optional<std::string> srcml_raw;
+    std::optional<std::string> srcml_raw_revision;
 
     /** src from read */
-    boost::optional<std::string> src;
+    std::optional<std::string> src;
 
     /** record the begin and end of the actual content */
     // int instead of size_t since used with libxml2
@@ -258,12 +251,12 @@ struct srcml_unit {
  */
 int srcml_unit_set_hash (struct srcml_unit* unit, const char* hash);
 
-// helper conversions for boost::optional<std::string>
-inline const char* optional_to_c_str(const boost::optional<std::string>& s) {
+// helper conversions for std::optional<std::string>
+inline const char* optional_to_c_str(const std::optional<std::string>& s) {
     return s ? s->c_str() : 0;
 }
 
-inline const char* optional_to_c_str(const boost::optional<std::string>& s, const char* value) {
+inline const char* optional_to_c_str(const std::optional<std::string>& s, const char* value) {
     return s ? s->c_str() : value;
 }
 

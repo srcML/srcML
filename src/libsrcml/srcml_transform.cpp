@@ -42,14 +42,7 @@
 
 #include <algorithm>
 #include <vector>
-#ifdef _MSC_VER
-#    pragma warning(push,0)
-#    pragma warning(disable : 4619)
-#endif
-#include <boost/optional.hpp>
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif
+#include <optional>
 
 /**
  * Transformation result. Passed to srcml_unit_apply_transforms() to collect results of transformation
@@ -60,11 +53,11 @@ struct srcml_transform_result {
     /** Array of srcml units for type SRCML_RESULT_UNITS */
     std::vector<srcml_unit*> units;
     /** Result for type SRCML_RESULT_BOOLEAN */
-    boost::optional<int> boolValue;
+    std::optional<int> boolValue;
     /** Result for type SRCML_RESULT_NUMBER */
-    boost::optional<double> numberValue;
+    std::optional<double> numberValue;
     /** Result for type SRCML_RESULT_STRING */
-    boost::optional<std::string> stringValue;
+    std::optional<std::string> stringValue;
 };
 
 /**
@@ -627,7 +620,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         if (!lastresult.unitWrapped) {
             nunit->attributes.push_back("item");
             nunit->attributes.push_back(std::to_string(i + 1));
-            nunit->hash = boost::none;
+            nunit->hash = std::nullopt;
         }
 
         // when no namespace, use the starting namespaces

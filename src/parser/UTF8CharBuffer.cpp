@@ -108,7 +108,7 @@ namespace {
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::optional<std::string>& hash, size_t cooked_size)
+UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, std::optional<std::string>& hash, size_t cooked_size)
     : antlr::CharBuffer(std::cin), hashneeded(hashneeded), hash(hash), cooked_size(cooked_size) {
 
     // may be null
@@ -123,7 +123,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, boost::opt
  *
  * Constructor.  Setup input from filename and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool hashneeded, std::optional<std::string>& hash)
     : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
     if (!ifilename)
@@ -161,7 +161,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool
  *
  * Constructor.  Setup input from memory and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const char* encoding, bool hashneeded, std::optional<std::string>& hash)
     : UTF8CharBuffer(encoding, hashneeded, hash, buffer_size * 4) {
 
     if (!c_buffer)
@@ -189,7 +189,7 @@ UTF8CharBuffer::UTF8CharBuffer(const char* c_buffer, size_t buffer_size, const c
  *
  * Constructor.  Setup input from FILE * and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded, std::optional<std::string>& hash)
     : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
     if (!file)
@@ -216,7 +216,7 @@ UTF8CharBuffer::UTF8CharBuffer(FILE* file, const char* encoding, bool hashneeded
  *
  * Constructor.  Setup input from file descriptor and hashing if needed.
  */
-UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, std::optional<std::string>& hash)
     : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
     if (fd < 0)
@@ -248,7 +248,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, bo
  * Constructor.  Setup input from filename and hashing if needed.
  */
 UTF8CharBuffer::UTF8CharBuffer(void* context, srcml_read_callback read_callback, srcml_close_callback close_callback,
-     const char* encoding, bool hashneeded, boost::optional<std::string>& hash)
+     const char* encoding, bool hashneeded, std::optional<std::string>& hash)
     : UTF8CharBuffer(encoding, hashneeded, hash, SRCBUFSIZE * 4) {
 
     // requires only a read callback, not a close callback or a context

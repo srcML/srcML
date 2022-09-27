@@ -83,7 +83,7 @@ public:
                 const char* encoding,
                 OPTION_TYPE& option,
                 const std::vector<std::string>& attributes,
-                const boost::optional<std::pair<std::string, std::string>>& processing_instruction,
+                const std::optional<std::pair<std::string, std::string>>& processing_instruction,
                 size_t tabsize);
 
     void initNamespaces(const Namespaces& namespaces);
@@ -183,7 +183,7 @@ public:
     const std::vector<std::string> unit_attributes;
 
     /** pre-root processing instruction */
-    boost::optional<std::pair<std::string, std::string> > processing_instruction;
+    std::optional<std::pair<std::string, std::string> > processing_instruction;
 
     /** number of open elements */
     int openelementcount = 0;

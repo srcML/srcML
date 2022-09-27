@@ -124,12 +124,12 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
 
 struct extract_context {
     std::string s;
-    boost::optional<int> revision;
+    std::optional<int> revision;
     std::stack<int> mode;
 };
 
 // Extract source code from srcml
-std::string extract_src(const std::string& srcml, boost::optional<int> revision) {
+std::string extract_src(const std::string& srcml, std::optional<int> revision) {
 
     extract_context scontext;
     scontext.revision = revision;

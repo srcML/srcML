@@ -68,7 +68,7 @@ public:
                      const char* xml_encoding,
                      OPTION_TYPE& op,
                      const Namespaces& namespaces,
-                     boost::optional<std::pair<std::string, std::string> > processing_instruction,
+                     std::optional<std::pair<std::string, std::string> > processing_instruction,
                      size_t tabsize,
                      int language,
                      const char* revision,
