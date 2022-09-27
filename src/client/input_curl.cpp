@@ -27,6 +27,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <limits.h>
 
 bool curl_supported(const std::string& input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;

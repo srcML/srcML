@@ -26,6 +26,7 @@
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
 #include <memory>
+#include <limits.h>
 
 #if ARCHIVE_VERSION_NUMBER >= 3002000
 void compress_srcml(const srcml_request_t& /* srcml_request */,

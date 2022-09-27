@@ -30,6 +30,7 @@
 #include <string>
 #include <stdio.h>
 #include <cstring>
+#include <limits.h>
 
 #ifdef _MSC_VER
 #include <io.h>
