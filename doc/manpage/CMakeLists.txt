@@ -40,7 +40,7 @@ endif()
 # Requires permission by default user
 add_custom_target(publish_manpage COMMAND rsync --inplace ${CMAKE_BINARY_DIR}/srcml.1.gz gehry.sdml.cs.kent.edu:/var/www/html/sdml/build/${REMOTE_MANPAGE_NAME})
 
-find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn ${WINDOWS_DEP_PATH}/bin)
+find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn)
 
 # Configure file properties used to configure the file srcml.cfg
 set(HELP_FLAG_LONG "help")
