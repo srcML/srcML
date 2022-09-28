@@ -20,6 +20,9 @@
 # Turn ON/OFF internal CPackRPM debugging
 set(CPACK_RPM_PACKAGE_DEBUG OFF)
 
+# Multiple packages
+set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
+
 # icon
 set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 

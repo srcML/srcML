@@ -23,9 +23,6 @@
 # for installers that let you pick what to install
 # Development group, SRCMLDEV, is composed of multiple components
 
-# especially for archives
-set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
-
 # Package name
 set(CPACK_PACKAGE_NAME "srcml") 
 
