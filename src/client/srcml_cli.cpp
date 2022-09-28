@@ -98,14 +98,21 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // Cleanup the arguments for special cases:
     //      xmlns prefix: --xmlns:pre="URL" -> --xmlns=pre="URL"
     //      empty strings on long options, e.g., --text="" -> --text ""
+    //      grabbing filenames as option parameters, e.g., --text "a;" a.cpp, --xmlns="https://foo.com" a.cpp
     std::vector<std::string> commandline;
+    int xmlnsCounter = 0;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
 
         if (arg.substr(0, 8) == "--xmlns:") {
-            arg[7] = '=';
+            arg = "--xmlns" + std::to_string(xmlnsCounter) + "=" + arg.substr(8);
+            ++xmlnsCounter;
+        } else if (arg.rfind("--xmlns=", 0) == 0) {
+            arg = "--xmlns" + std::to_string(xmlnsCounter) + "=" + arg.substr(7);
+            ++xmlnsCounter;
         }
 
+        // empty string after equals is not shown, i.e., --xmlns="", so replace with two arguments
         if (arg.back() == '=') {
             commandline.push_back(arg.substr(0, arg.size() - 1));
             commandline.push_back("");
@@ -114,6 +121,25 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         }
     }
     std::reverse(commandline.begin(), commandline.end());
+
+    int textCounter = 0;
+    for (auto& p : commandline) {
+        if (p == "--text" || p.rfind("--text=", 0) == 0) {
+
+            p.insert(6, std::to_string(textCounter));
+            ++textCounter;
+
+        } else if (p == "-t") {
+
+            p = "--text" + std::to_string(textCounter);
+            ++textCounter;
+
+        } else if (p.rfind("-t=", 0) == 0) {
+
+            p = "--text" + std::to_string(textCounter) + p.substr(2);
+            ++textCounter;
+        }
+    }
 
     srcMLClI app{SRCML_HEADER, "srcml"};
     app.formatter(std::make_shared<srcMLFormatter>());
@@ -200,22 +226,30 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("GENERAL OPTIONS");
 
     // src2srcml_options "CREATING SRCML"
-    auto text =
     app.add_option("--text,-t",
         "Input source code from STRING, e.g., --text=\"int a;\"")
         ->type_name("STRING")
-        ->group("CREATING SRCML")
-        ->expected(1)
-        ->check([&](std::string value) {
-            if (!value.empty() && value[0] == '-') {
-                SRCMLstatus(ERROR_MSG, "srcml: --text: 1 required STRING missing");
-                exit(CLI_STATUS_ERROR);
-            }
-            return "";
-        })
-        ->each([&](std::string text) {
-            srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
-        });
+        ->group("CREATING SRCML");
+
+    // Enforce single argument, but allow multiple --text options
+    // --text0 .. --text${textCounter}
+    bool isText = false;
+    for (int i = 0; i < textCounter; ++i) {
+        app.add_option("--text" + std::to_string(i), "")
+            ->group("")
+            ->expected(1)
+            ->check([&](std::string value) {
+                if (!value.empty() && value[0] == '-') {
+                    SRCMLstatus(ERROR_MSG, "srcml: --text: 1 required STRING missing");
+                    exit(CLI_STATUS_ERROR);
+                }
+                return "";
+            })
+            ->each([&](std::string text) {
+                isText = true;
+                srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
+            });
+    }
 
     auto language =
     app.add_option("--language,-l", srcml_request.att_language,
@@ -323,18 +357,25 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     app.add_option("--xmlns", "Set the default namespace URI, or declare the PRE for namespace URI")
         ->type_name("URI, PRE=URI")
-        ->group("ENCODING")
-        ->expected(1)
-        ->each([&](const std::string& value) {
-            auto delim = value.find("=");
-            if (delim == std::string::npos) {
-                srcml_request.xmlns_namespaces[""] = value;
-                srcml_request.xmlns_namespace_uris[value] = "";
-            } else {
-                srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
-                srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
-            }
-        });
+        ->group("ENCODING");
+
+    // Enforce single argument, but allow multiple --xmlns options
+    // --xmlns0 .. --xmlns${xmlnsCounter}
+    for (int i = 0; i < xmlnsCounter; ++i) {
+        app.add_option("--xmlns" + std::to_string(i), "")
+            ->group("")
+            ->expected(1)
+            ->each([&](const std::string& value) {
+                auto delim = value.find("=");
+                if (delim == std::string::npos) {
+                    srcml_request.xmlns_namespaces[""] = value;
+                    srcml_request.xmlns_namespace_uris[value] = "";
+                } else {
+                    srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
+                    srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
+                }
+            });
+    }
 
     // metadata
     app.add_flag_callback("--list,-L",        [&]() { srcml_request.command |= SRCML_COMMAND_LIST; },
@@ -641,7 +682,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     }
 
     // make sure --text has an indication of language
-    if (!text->empty() && language->empty() && filename->empty()) {
+    if (isText && language->empty() && filename->empty()) {
         SRCMLstatus(ERROR_MSG, "srcml: --text requires --language or --filename to determine source language");
         exit(CLI_STATUS_ERROR);
     }

@@ -24,7 +24,7 @@ find_package(CURL REQUIRED)
 
 include(FetchContent)
 FetchContent_Declare(cli11
-  URL https://github.com/CLIUtils/CLI11/releases/download/v1.8.0/CLI11.hpp
+  URL https://github.com/CLIUtils/CLI11/releases/download/v2.2.0/CLI11.hpp
   DOWNLOAD_NO_EXTRACT TRUE
 )
 FetchContent_MakeAvailable(cli11)
