@@ -33,9 +33,10 @@ set(CPACK_RPM_PACKAGE_RELEASE "${SRCML_PACKAGE_RELEASE}")
 # Package names
 set(CPACK_RPM_SRCML_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 set(CPACK_RPM_SRCMLDEV_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
+message("DISTRO: ${DISTRO}")
 
 # Package filenames
-if(DISTRO MATCHES "CentOS|Fedora")
+if(DISTRO MATCHES "Fedora")
 
     file(STRINGS "/etc/os-release" OS_RELEASE)
     string(REGEX MATCH "VERSION_ID=\([^;]+\);" _ "${OS_RELEASE}")
@@ -46,13 +47,31 @@ if(DISTRO MATCHES "CentOS|Fedora")
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     set(RPM_NAME "fc${RPM_VERSION_NUMBER}.${ARCH_RELEASE}")
-    # CentOS and Fedora generate per-version naming
+    # Fedora generates per-version naming
     set(CPACK_RPM_SRCML_FILE_NAME RPM-DEFAULT)
     set(CPACK_RPM_SRCMLDEV_FILE_NAME RPM-DEFAULT)
     set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_RPM_SRCML_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_NAME}")
     set(CPACK_ARCHIVE_SRCMLDEV_FILE_NAME "${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_NAME}")
 
-elseif(DISTRO MATCHES "OpenSUSE")
+elseif(DISTRO MATCHES "CentOS")
+
+    file(STRINGS "/etc/os-release" OS_RELEASE)
+    string(REGEX MATCH "VERSION_ID=.\([0-9]+\)" _ "${OS_RELEASE}")
+    string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
+    set(RPM_VERSION "el${RPM_VERSION_NUMBER}")
+    execute_process(COMMAND /usr/bin/uname -p
+        OUTPUT_VARIABLE ARCH_RELEASE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(RPM_NAME "el${RPM_VERSION_NUMBER}.${ARCH_RELEASE}")
+    # CentOS generates per-version naming
+    set(CPACK_RPM_SRCML_FILE_NAME RPM-DEFAULT)
+    set(CPACK_RPM_SRCMLDEV_FILE_NAME RPM-DEFAULT)
+    set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_RPM_SRCML_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_NAME}")
+    set(CPACK_ARCHIVE_SRCMLDEV_FILE_NAME "${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_NAME}")
+
+elseif(DISTRO MATCHES "[O|o]penSUSE")
+
     # OpenSUSE does not generate per-version naming
     # Distribution version, e.g., lp152 for leap/15.2
     file(STRINGS "/etc/os-release" OS_RELEASE)
@@ -67,6 +86,11 @@ elseif(DISTRO MATCHES "OpenSUSE")
     set(CPACK_RPM_SRCMLDEV_FILE_NAME "${BASE_SRCMLDEV_FILE_NAME}.rpm")
     set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
     set(CPACK_ARCHIVE_SRCMLDEV_FILE_NAME "${BASE_SRCMLDEV_FILE_NAME}")
+
+else()
+
+    message(FATAL_ERROR "Unrecognized distro: ${DISTRO}")
+
 endif()
 
 # SRCML package is main, so no extension is added
