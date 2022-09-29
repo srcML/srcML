@@ -67,6 +67,9 @@ set(CPACK_PACKAGE_CONTACT "Software Development Laboratories srcML.org>")
 # package version
 # set as part of project()
 
+# icon
+set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
+
 # license
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/COPYING.txt)
 

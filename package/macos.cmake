@@ -17,9 +17,6 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-# icon
-set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
-
 # System name based on macOS and version
 execute_process(COMMAND /usr/bin/sw_vers -productVersion OUTPUT_VARIABLE OS_NUMERIC OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(CPACK_SYSTEM_NAME "macOS-${OS_NUMERIC}")
