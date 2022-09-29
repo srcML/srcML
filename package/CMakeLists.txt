@@ -119,6 +119,13 @@ if(NOT MSVC)
 
 endif()
 
+# Need to call ldconfig for install, but not for package
+# Component HIDE is not to be packaged
+if(DISTRO AND DISTRO MATCHES "Ubuntu")
+    get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
+    list(REMOVE_ITEM CPACK_COMPONENTS_ALL "HIDE")
+endif()
+
 # specific configurations
 if(CPACK_GENERATOR MATCHES "RPM")
     include(rpm.cmake)
