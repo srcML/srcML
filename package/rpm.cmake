@@ -40,32 +40,32 @@ set(CPACK_RPM_SRCMLDEV_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
 # Package filenames
 if(DISTRO MATCHES "CentOS|Fedora")
 
+    file(STRINGS "/etc/os-release" OS_RELEASE)
+    string(REGEX MATCH "VERSION_ID=\([^;]+\);" _ "${OS_RELEASE}")
+    string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
+    set(RPM_VERSION "fc${RPM_VERSION_NUMBER}")
+    execute_process(COMMAND /usr/bin/uname -p
+        OUTPUT_VARIABLE ARCH_RELEASE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(RPM_NAME "fc${RPM_VERSION_NUMBER}.${ARCH_RELEASE}")
     # CentOS and Fedora generate per-version naming
     set(CPACK_RPM_SRCML_FILE_NAME RPM-DEFAULT)
     set(CPACK_RPM_SRCMLDEV_FILE_NAME RPM-DEFAULT)
-    set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_RPM_SRCML_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
-    set(CPACK_ARCHIVE_SRCMLDEV_FILE_NAME "${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}")
+    set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_RPM_SRCML_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_NAME}")
+    set(CPACK_ARCHIVE_SRCMLDEV_FILE_NAME "${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_NAME}")
 
-    # Archive packages are not generated with the distro name/version. So fix the archives to agree with the package naming
-    # Must be run AFTER RPM packages are built
-    add_custom_target(gen_package
-       COMMAND ${CMAKE_COMMAND} --build . --target package
-       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCML_PACKAGE_NAME}.spec`.tar.gz"
-       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCML_PACKAGE_NAME}.spec`.tar.bz2"
-       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCMLDEV_FILE_NAME}.tar.gz dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}.spec`.tar.gz"
-       COMMAND bash -c "mv dist/${CPACK_ARCHIVE_SRCMLDEV_FILE_NAME}.tar.bz2 dist/`rpm --specfile dist/_CPack_Packages/Linux/RPM/SPECS/${CPACK_RPM_SRCMLDEV_PACKAGE_NAME}.spec`.tar.bz2"
-       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-       VERBATIM)
 elseif(DISTRO MATCHES "OpenSUSE")
     # OpenSUSE does not generate per-version naming
     # Distribution version, e.g., lp152 for leap/15.2
     file(STRINGS "/etc/os-release" OS_RELEASE)
     string(REGEX MATCH "VERSION_ID=\"\([^\"]+\)\"" _ "${OS_RELEASE}")
     string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
-    set(RPM_VERSION "lp${RPM_VERSION_NUMBER}")
+    set(RPM_NAME "lp${RPM_VERSION_NUMBER}")
+
     # Package filenames
-    set(BASE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}")
-    set(BASE_SRCMLDEV_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-devel-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}")
+    set(BASE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_NAME}")
+    set(BASE_SRCMLDEV_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-devel-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_NAME}")
     set(CPACK_RPM_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}.rpm")
     set(CPACK_RPM_SRCMLDEV_FILE_NAME "${BASE_SRCMLDEV_FILE_NAME}.rpm")
     set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
