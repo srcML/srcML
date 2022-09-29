@@ -19,10 +19,6 @@
 # 
 # CMake files for packages
 
-# Client component, SRCML, is just one component so it appears as on item
-# for installers that let you pick what to install
-# Development group, SRCMLDEV, is composed of multiple components
-
 # Package name
 set(CPACK_PACKAGE_NAME "srcml") 
 
