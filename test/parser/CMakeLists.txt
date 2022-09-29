@@ -19,14 +19,12 @@
 
 # Separate project driver for testing the parser outside of build
 if(NOT PROJECT_NAME MATCHES "^srcML")
-    project(srcML-Test-parser NONE)
     cmake_minimum_required(VERSION 3.24)
+    project(srcML-Test-parser NONE)
     enable_testing()
-    if(NOT WIN32)
-        set(SRCML_EXE "srcml")
-    else()
-        set(SRCML_EXE "srcml.exe")
-    endif()
+    find_program(SRCML_EXE NAMES srcml REQUIRED)
+elseif(SRCML_TEST_INSTALLED)
+    find_program(SRCML_EXE NAMES srcml REQUIRED)
 else()
     set(SRCML_EXE $<TARGET_FILE:srcml>)
 endif()

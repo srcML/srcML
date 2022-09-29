@@ -19,15 +19,15 @@
 
 # Separate project driver for testing libsrcml outside of build
 if(NOT PROJECT_NAME MATCHES "^srcML")
-    project(srcML-Test)
     cmake_minimum_required(VERSION 3.24)
+    project(srcML-Test)
     option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
     option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" ON)
     option(BUILD_PARSER_TESTS "Include tests for parser" ON)
     enable_testing()
-else()
-    include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src/libsrcml)
 endif()
+
+option(SRCML_TEST_INSTALLED "Test using installed version" OFF)
 
 if(BUILD_CLIENT_TESTS)
     add_subdirectory(client)
