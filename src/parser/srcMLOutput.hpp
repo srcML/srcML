@@ -32,8 +32,9 @@
 #include <srcMLException.hpp>
 #include <string>
 #include <unordered_map>
-#include <srcml_types.hpp>
+#include <srcml_options.hpp>
 #include <libxml/xmlwriter.h>
+#include <srcmlns.hpp>
 
 /**
  * anonymous enum for prefix positions

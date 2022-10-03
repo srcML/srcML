@@ -138,7 +138,7 @@ header "post_include_hpp" {
 #include <stack>
 #include <Language.hpp>
 #include <ModeStack.hpp>
-#include <srcml_types.hpp>
+#include <srcml_options.hpp>
 #undef CONST
 #undef VOID
 #undef DELETE
@@ -1077,7 +1077,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
         delegate_type[type_count] |
 
         // call
-        { isoption(parser_options, SRCML_OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
+        { isoption(parser_options, SRCML_PARSER_OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
         macro_call |
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
@@ -1934,7 +1934,7 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         type = CALL;
 
         // call syntax succeeded, however post call token is not legitimate
-        if (isoption(parser_options, SRCML_OPTION_CPP) &&
+        if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) &&
             (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
             || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
             || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
@@ -1955,11 +1955,11 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
 
         type = NOCALL;
 
-        if (isoption(parser_options, SRCML_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
+        if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
             type = MACRO;
 
         // single macro call followed by statement_cfg
-        else if (isoption(parser_options, SRCML_OPTION_CPP) && secondtoken != -1
+        else if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) && secondtoken != -1
                  && (keyword_token_set.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
                      || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
 
@@ -1984,7 +1984,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
         markend[postnametoken]
         set_bool[isempty, (LA(1) == LPAREN && next_token() == RPAREN) || (inLanguage(LANGUAGE_CXX) && LA(1) == LCURLY && next_token() == RCURLY)]
         (
-            { isoption(parser_options, SRCML_OPTION_CPP) }?
+            { isoption(parser_options, SRCML_PARSER_OPTION_CPP) }?
             // check for proper form of argument list
             (call_check_paren_pair[argumenttoken] set_int[call_count, call_count + 1])*
 
@@ -3071,7 +3071,7 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 // handle class header
 objective_c_class_header[] { ENTRY_DEBUG } :
 
-        { isoption(parser_options, SRCML_OPTION_CPP) }?
+        { isoption(parser_options, SRCML_PARSER_OPTION_CPP) }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call objective_c_class_header_base |
 
@@ -3287,7 +3287,7 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
 // handle class header
 class_header[] { ENTRY_DEBUG } :
 
-        { isoption(parser_options, SRCML_OPTION_CPP) && next_token() != DCOLON }?
+        { isoption(parser_options, SRCML_PARSER_OPTION_CPP) && next_token() != DCOLON }?
         (macro_call_check class_header_base LCURLY)=>
            macro_call class_header_base |
 
@@ -3794,7 +3794,7 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
 
         // start of argument for return or throw statement
         { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
-            isoption(parser_options, SRCML_OPTION_CPP) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
@@ -9499,7 +9499,7 @@ eol_post[int directive_token, bool markblockzero] {
                 ++cpp_ifcount;
 
                 // create new context for #if (and possible #else)
-                if (!isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing)
+                if (!isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && !inputState->guessing)
                     cppmode.push(cppmodeitem(size()));
 
                 break;
@@ -9517,7 +9517,7 @@ eol_post[int directive_token, bool markblockzero] {
                     cpp_ifcount = 1;
                 }
 
-                if (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing) {
+                if (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && !inputState->guessing) {
 
                     // create an empty cppmode for #if if one doesn't exist
                     if (cppmode.empty())
@@ -9544,7 +9544,7 @@ eol_post[int directive_token, bool markblockzero] {
                 if (cpp_skipelse && cpp_ifcount == 0)
                     cpp_skipelse = false;
 
-                if (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && !inputState->guessing &&
+                if (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && !inputState->guessing &&
                     !cppmode.empty()) {
 
                     // add new context for #endif in current #if
@@ -9568,9 +9568,9 @@ eol_post[int directive_token, bool markblockzero] {
                 - when guessing and in else (unless in zero block)
                 - when ??? for cppmode
         */
-        if ((!isoption(parser_options, SRCML_OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
-            (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && cpp_skipelse) ||
-            (isoption(parser_options, SRCML_OPTION_CPP_TEXT_ELSE) && inputState->guessing && cpp_skipelse) ||
+        if ((!isoption(parser_options, SRCML_PARSER_OPTION_CPP_MARKUP_IF0) && cpp_zeromode) ||
+            (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && cpp_skipelse) ||
+            (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && inputState->guessing && cpp_skipelse) ||
             (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse)
         ) {
             while (LA(1) != PREPROC && LA(1) != 1 /* EOF */)

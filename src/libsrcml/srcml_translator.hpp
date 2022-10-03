@@ -31,7 +31,7 @@
 #include <srcMLOutput.hpp>
 #include <srcml_types.hpp>
 #include <srcml_macros.hpp>
-#include <srcml.h>
+#include <srcml_options.hpp>
 
 #include <string>
 

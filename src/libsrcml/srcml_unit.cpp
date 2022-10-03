@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <srcml.h>
 #include <srcml_types.hpp>
+#include <srcml_options.hpp>
 #include <srcml_translator.hpp>
 #include <srcml_sax2_reader.hpp>
 #include <UTF8CharBuffer.hpp>

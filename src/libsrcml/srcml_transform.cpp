@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include <srcml.h>
+#include <srcml_options.hpp>
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 
