@@ -41,10 +41,10 @@
 #ifdef _MSC_VER
 // #   pragma warning(pop)
 #endif
-#include <srcMLOutput.hpp>
 #include <srcmlns.hpp>
 #include <srcml_types.hpp>
 #include <unit_utilities.hpp>
+#include <srcMLOutput.hpp>
 
 /**
  * srcml_translator

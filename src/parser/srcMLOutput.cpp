@@ -34,8 +34,7 @@
 #undef THIS
 #include <srcMLParserTokenTypes.hpp>
 #include <srcMLToken.hpp>
-#include <srcmlns.hpp>
-#include <srcml.h>
+#include <string.h>
 
 // Definition of elements, including name, URI, attributes, and special processing
 // Included to take advantage of inlined methods
@@ -220,7 +219,7 @@ int srcMLOutput::consume_next() {
 void srcMLOutput::outputXMLDecl() {
 
     // issue the xml declaration, but only if we want to
-    if (depth == 0 && !isoption(options, SRCML_OPTION_NO_XML_DECL))
+    if (depth == 0 && !isoption(options, SRCML_PARSER_OPTION_NO_XML_DECL))
         xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
 }
 
@@ -253,7 +252,7 @@ void srcMLOutput::outputNamespaces() {
     if (isoption(options, SRCML_OPTION_CPP_DECLARED))
         findNSURI(namespaces, SRCML_CPP_NS_URI)->flags |= NS_USED;
 
-    if (isoption(options, SRCML_OPTION_POSITION))
+    if (isoption(options, SRCML_PARSER_OPTION_POSITION))
         findNSURI(namespaces, SRCML_POSITION_NS_URI)->flags |= NS_USED;
 
     if (isoption(options, SRCML_OPTION_DEBUG))
@@ -330,7 +329,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
 
     // setup for tabs if used
     std::string tabattribute;
-    if (isoption(options, SRCML_OPTION_POSITION)) {
+    if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
         tabattribute = namespaces[POS].getPrefix();
         if (!tabattribute.empty())
             tabattribute += ":";
@@ -339,8 +338,8 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
 
     // setup for storing options in output
     std::array<std::pair<int, const char*>, 4> sep = {{
-        { SRCML_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
-        { SRCML_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
+        { SRCML_PARSER_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
+        { SRCML_PARSER_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
         { SRCML_OPTION_LINE,           "LINE" },
     }};
     std::string soptions;
@@ -371,7 +370,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { UNIT_ATTRIBUTE_VERSION, version },
 
         // position tab setting
-        { tabattribute.c_str(), isoption(options, SRCML_OPTION_POSITION) ? stabsize.c_str() : 0 },
+        { tabattribute.c_str(), isoption(options, SRCML_PARSER_OPTION_POSITION) ? stabsize.c_str() : 0 },
 
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
@@ -380,7 +379,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { UNIT_ATTRIBUTE_HASH, hash },
 
         // source encoding attribute
-        { UNIT_ATTRIBUTE_SOURCE_ENCODING, isoption(options, SRCML_OPTION_STORE_ENCODING) ? encoding : 0 },
+        { UNIT_ATTRIBUTE_SOURCE_ENCODING, isoption(options, SRCML_PARSER_OPTION_STORE_ENCODING) ? encoding : 0 },
 
         { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && !soptions.empty() ? soptions.c_str() : 0 },
 
@@ -537,7 +536,7 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
     if (name[0] == 0)
         return;
 
-    bool isposition = isoption(options, SRCML_OPTION_POSITION);
+    bool isposition = isoption(options, SRCML_PARSER_OPTION_POSITION);
 
     if (isstart(token) || isempty(token)) {
 

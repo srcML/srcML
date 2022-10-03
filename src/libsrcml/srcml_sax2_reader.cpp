@@ -20,8 +20,6 @@
 
 #include <srcml_sax2_reader.hpp>
 
-#include <srcml.h>
-
 #include <stdlib.h>
 #include <cstring>
 

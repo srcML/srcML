@@ -211,7 +211,7 @@ private:
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
 
-        if (isoption(options, SRCML_OPTION_POSITION)) {
+        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             ends.emplace(ntoken);
         }
 
@@ -225,7 +225,7 @@ private:
         ntoken->setLine(LT(1)->getLine());
         ntoken->setColumn(LT(1)->getColumn());
 
-        if (isoption(options, SRCML_OPTION_POSITION)) {
+        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             ends.emplace(ntoken);
         }
 
@@ -251,7 +251,7 @@ private:
             ntoken->setColumn(lasttypestartcolumn);
         }
 
-        if (isoption(options, SRCML_OPTION_POSITION)) {
+        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             ends.emplace(ntoken);
         }
 
@@ -272,7 +272,7 @@ private:
 
         // end position info is needed from the matching last end token
         // that was enqueued
-        if (isoption(options, SRCML_OPTION_POSITION)) {
+        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
 
             qetoken->endline = lastline;
@@ -299,7 +299,7 @@ private:
 
         // end position info is needed from the matching last end token
         // that was enqueued
-        if (isoption(options, SRCML_OPTION_POSITION)) {
+        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
             qetoken->endline = slastline;
             qetoken->endcolumn = slastcolumn;
@@ -505,7 +505,7 @@ private:
             return false;
 
         // preprocessor (unless we already are in one)
-        if (isoption(options, SRCML_OPTION_CPP) && srcMLParser::LA(1) == srcMLParser::PREPROC) {
+        if (isoption(options, SRCML_PARSER_OPTION_CPP) && srcMLParser::LA(1) == srcMLParser::PREPROC) {
 
             // start preprocessor handling
             inskip = true;
@@ -677,7 +677,7 @@ private:
         // to calculate end position, need to buffer until end token in reached
         // to prevent infinite loops, consume is called if no progress is made on the
         // current token, e.g., double max const();
-        if (isoption(options, SRCML_OPTION_POSITION)) {
+        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             auto curline = LT(1)->getLine();
             auto curcolumn = LT(1)->getColumn();
             while (ends.size() > 1) {

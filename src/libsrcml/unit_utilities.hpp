@@ -24,7 +24,6 @@
 #define INCLUDED_UNIT_UTILITIES_HPP
 
 #include <srcml_types.hpp>
-#include <srcml.h>
 #include <libxml/parser.h>
 
 // Update unit attributes with xml parsed attributes

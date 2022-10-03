@@ -45,9 +45,7 @@ header "pre_include_cpp" {
 header {
    #include <iostream>
    #include <antlr/TokenStreamSelector.hpp>
-   #include <srcml_types.hpp>
-   #include <srcml_macros.hpp>
-   #include <srcml.h>
+   #include <srcml_options.hpp>
 }
 
 options {

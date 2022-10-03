@@ -35,9 +35,15 @@
 #include <string>
 #include <iconv.h>
 #include <sha1utilities.hpp>
-#include <srcml.h>
 
 #include <optional>
+
+#include <sys/types.h> /* ssize_t */
+
+#if defined(WIN32) && !defined(__MINGW32__)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
 
 /**
  * UTF8FileError
