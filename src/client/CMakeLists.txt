@@ -45,7 +45,7 @@ target_include_directories(ctpl_stl SYSTEM INTERFACE ${ctpl_stl_SOURCE_DIR})
 # srcml executable
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
-target_include_directories(srcml BEFORE PRIVATE . ${CMAKE_SOURCE_DIR}/src/libsrcml)
+target_include_directories(srcml BEFORE PRIVATE .)
 target_link_libraries(srcml PRIVATE libsrcml_link LibArchive::LibArchive CURL::libcurl cli11 ctpl_stl)
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
