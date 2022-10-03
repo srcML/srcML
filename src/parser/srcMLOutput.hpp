@@ -32,9 +32,7 @@
 #include <srcMLException.hpp>
 #include <string>
 #include <unordered_map>
-#include <srcmlns.hpp>
 #include <srcml_types.hpp>
-#include <srcml_macros.hpp>
 #include <libxml/xmlwriter.h>
 
 /**
