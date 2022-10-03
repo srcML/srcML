@@ -6,17 +6,6 @@
 #endif
 
 /**
- * isoption
- * @param options the set options
- * @param flag options to query if set
- *
- * Predicate to query if options flag are set in options.
- *
- * @returns if options flag are set in options.
- */
-#define isoption(options, flag) (((options) & (flag)) > 0)
-
-/**
  * optional_string_create
  * @param c_str const char * to convert to optional<std::string>
  *

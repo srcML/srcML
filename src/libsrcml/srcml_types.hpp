@@ -89,6 +89,17 @@ typedef unsigned __int64 OPTION_TYPE;
 
 #endif
 
+/**
+ * isoption
+ * @param options the set options
+ * @param flag options to query if set
+ *
+ * Predicate to query if options flag are set in options.
+ *
+ * @returns if options flag are set in options.
+ */
+#define isoption(options, flag) (((options) & (flag)) > 0)
+
 class srcml_sax2_reader;
 class srcml_translator;
 
