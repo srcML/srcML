@@ -47,7 +47,6 @@ header {
    #include <antlr/TokenStreamSelector.hpp>
    #include <srcml_types.hpp>
    #include <srcml_macros.hpp>
-   #include <srcml.h>
 }
 
 options {
