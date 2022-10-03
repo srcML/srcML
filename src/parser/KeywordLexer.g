@@ -47,8 +47,6 @@ header {
     #include <antlr/TokenStreamSelector.hpp>
     #include <CommentTextLexer.hpp>
     #include <srcMLToken.hpp>
-    #include <srcml_types.hpp>
-    #include <srcml_macros.hpp>
     #undef CONST
     #undef VOID
     #undef DELETE
