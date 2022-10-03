@@ -139,7 +139,6 @@ header "post_include_hpp" {
 #include <Language.hpp>
 #include <ModeStack.hpp>
 #include <srcml_types.hpp>
-#include <srcml_macros.hpp>
 #undef CONST
 #undef VOID
 #undef DELETE

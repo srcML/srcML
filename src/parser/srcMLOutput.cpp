@@ -35,7 +35,6 @@
 #include <srcMLParserTokenTypes.hpp>
 #include <srcMLToken.hpp>
 #include <srcmlns.hpp>
-#include <srcml_macros.hpp>
 
 // Definition of elements, including name, URI, attributes, and special processing
 // Included to take advantage of inlined methods
