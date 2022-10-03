@@ -35,6 +35,7 @@
 #include <srcml_options.hpp>
 #include <libxml/xmlwriter.h>
 #include <srcmlns.hpp>
+#include <optional>
 
 /**
  * anonymous enum for prefix positions
