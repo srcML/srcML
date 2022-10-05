@@ -118,6 +118,8 @@ if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
 
 endif()
 
+find_program(iwyu_path NAMES include-what-you-use iwyu REQUIRED)
+
 # For Windows, install redist exe
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT SRCML)
 include(InstallRequiredSystemLibraries)
