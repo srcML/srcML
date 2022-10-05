@@ -108,23 +108,23 @@ include(CMakePackageConfigHelpers)
 
 install(EXPORT libsrcml_shared_Targets
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml"
-        NAMESPACE libsrcml::
-        FILE libsrcml-shared-targets.cmake
+        NAMESPACE LibsrcML::
+        FILE LibsrcML-shared-targets.cmake
         COMPONENT DEVLIBS)
 
 configure_package_config_file(
-    ${CMAKE_SOURCE_DIR}/libsrcmlConfig.cmake.in ${CMAKE_BINARY_DIR}/libsrcmlConfig.cmake
+    ${CMAKE_SOURCE_DIR}/LibsrcMLConfig.cmake.in ${CMAKE_BINARY_DIR}/LibsrcMLConfig.cmake
     INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml"
     NO_SET_AND_CHECK_MACRO
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
 write_basic_package_version_file(
-    ${CMAKE_BINARY_DIR}/libsrcmlConfigVersion.cmake
+    ${CMAKE_BINARY_DIR}/LibsrcMLConfigVersion.cmake
     VERSION "1.0.0"
     COMPATIBILITY "SameMajorVersion")
 
-install(FILES ${CMAKE_BINARY_DIR}/libsrcmlConfig.cmake ${CMAKE_BINARY_DIR}/libsrcmlConfigVersion.cmake
+install(FILES ${CMAKE_BINARY_DIR}/LibsrcMLConfig.cmake ${CMAKE_BINARY_DIR}/LibsrcMLConfigVersion.cmake
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml"
         COMPONENT DEVLIBS
 )
@@ -134,8 +134,8 @@ install(TARGETS libsrcml_static EXPORT libsrcml_static_Targets COMPONENT DEVLIBS
 
 install(EXPORT libsrcml_static_Targets
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml"
-        NAMESPACE libsrcml::
-        FILE libsrcml-static-targets.cmake
+        NAMESPACE LibsrcML::
+        FILE LibsrcML-static-targets.cmake
         COMPONENT DEVLIBS)
 
 if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)

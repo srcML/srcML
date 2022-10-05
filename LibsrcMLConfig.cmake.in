@@ -1,0 +1,82 @@
+@PACKAGE_INIT@
+
+cmake_minimum_required(VERSION 3.10)
+
+list(APPEND CMAKE_MODULE_PATH "@PACKAGE_cmakeModulesDir@")
+
+set(LibsrcML_KNOWN_COMPONENTS static shared)
+set(LibsrcML_COMPONENT_STATIC NO)
+set(LibsrcML_COMPONENT_SHARED NO)
+foreach (LibsrcML_COMPONENT IN LISTS ${CMAKE_FIND_PACKAGE_NAME}_FIND_COMPONENTS)
+    if (LibsrcML_COMPONENT IN_LIST LibsrcML_KNOWN_COMPONENTS)
+        set(LibsrcML_COMPONENT_${LibsrcML_COMPONENT} YES)
+    else ()
+        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE
+            "LibsrcML does not recognize component `${LibsrcML_COMPONENT}`.")
+        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+        return()
+    endif ()
+endforeach ()
+
+if (LibsrcML_COMPONENT_STATIC AND LibsrcML_COMPONENT_SHARED)
+    set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE
+        "LibsrcML components `static` and `shared` are mutually exclusive.")
+    set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+    return()
+endif ()
+
+set(LibsrcML_static_targets "${CMAKE_CURRENT_LIST_DIR}/LibsrcML-static-targets.cmake")
+set(LibsrcML_shared_targets "${CMAKE_CURRENT_LIST_DIR}/LibsrcML-shared-targets.cmake")
+
+macro(LibsrcML_load_targets type)
+    if (NOT EXISTS "${LibsrcML_${type}_targets}")
+        set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE
+            "LibsrcML `${type}` libraries were requested but not found.")
+        set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
+        return()
+    endif ()
+    include("${LibsrcML_${type}_targets}")
+endmacro()
+
+set(COMPONENT "")
+if (LibsrcML_COMPONENT_STATIC)
+    set(COMPONENT static)
+elseif (LibsrcML_COMPONENT_SHARED)
+    set(COMPONENT shared)
+elseif (DEFINED LibsrcML_SHARED_LIBS AND LibsrcML_SHARED_LIBS)
+    set(COMPONENT shared)
+elseif (DEFINED LibsrcML_SHARED_LIBS AND NOT LibsrcML_SHARED_LIBS)
+    set(COMPONENT static)
+elseif (BUILD_SHARED_LIBS)
+    if (EXISTS "${LibsrcML_shared_targets}")
+        set(COMPONENT shared)
+    else ()
+        set(COMPONENT static)
+    endif ()
+else ()
+    if (EXISTS "${LibsrcML_static_targets}")
+        set(COMPONENT static)
+    else ()
+        set(COMPONENT shared)
+    endif ()
+endif ()
+message("COMPONENT: ${COMPONENT}")
+LibsrcML_load_targets(${COMPONENT})
+
+find_path(LibsrcML_INCLUDE_DIR
+  NAMES srcml.h
+  PATHS
+  "[HKEY_LOCAL_MACHINE\\SOFTWARE\\GnuWin32\\srcML;InstallPath]/include"
+  DOC "libarchive include directory"
+)
+
+# Add the include file
+target_include_directories(LibsrcML::libsrcml_${COMPONENT} PUBLIC INTERFACE ${LibsrcML_INCLUDE_DIR})
+unset(LibsrcML_INCLUDE_DIR)
+
+# Find dependencies
+find_package(LibXml2 REQUIRED)
+find_package(Iconv REQUIRED)
+find_package(LibXslt REQUIRED)
+
+add_library(LibsrcML::LibsrcML ALIAS LibsrcML::libsrcml_${COMPONENT})
