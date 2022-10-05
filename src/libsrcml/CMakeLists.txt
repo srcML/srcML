@@ -32,7 +32,7 @@ target_include_directories(libsrcml PUBLIC .)
 set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON)
 
 # Use the libsrcml/srcml.h rather than the /usr/local/include/srcml.h
-target_include_directories(libsrcml BEFORE PRIVATE .)
+target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 # libsrcml dependencies
 target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt TinySHA1 parser $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:pthread>)
