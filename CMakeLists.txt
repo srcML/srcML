@@ -48,6 +48,9 @@ project(srcML VERSION "${CMAKE_MATCH_1}" HOMEPAGE_URL "https://www.srcML.org")
 
 message(STATUS "Project version: ${PROJECT_VERSION}")
 
+enable_testing()
+include(CTest)
+
 # Turn ON/OFF tests
 option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
 option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" OFF)
@@ -95,9 +98,6 @@ option(LINK_LIBSRCML_STATIC "Link srcml client, tests, and examples with static 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
-
-enable_testing()
-include(CTest)
 
 # Determine distribution
 # Does not work for all distributions, but does work for supported Linux distributions
