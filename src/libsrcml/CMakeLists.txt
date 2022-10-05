@@ -92,9 +92,9 @@ endif()
 install(TARGETS libsrcml_static COMPONENT DEVLIBS)
 
 if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)
-    add_library(libsrcml_link ALIAS libsrcml_static)
+    add_library(LibsrcML::LibsrcML ALIAS libsrcml_static)
 else()
-    add_library(libsrcml_link ALIAS libsrcml_shared)
+    add_library(LibsrcML::LibsrcML ALIAS libsrcml_shared)
 endif()
 
 # install the libsrcml include file
