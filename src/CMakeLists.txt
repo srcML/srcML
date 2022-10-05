@@ -124,7 +124,6 @@ include(InstallRequiredSystemLibraries)
 
 # standard compile options
 add_compile_options(
-    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fPIC>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wextra>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>
