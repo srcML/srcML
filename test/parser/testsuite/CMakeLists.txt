@@ -25,7 +25,7 @@ set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
 # copy starting set of test cases
 file(GLOB PARSE_TESTS *.xml)
-foreach(PATH IN LISTS ${PARSE_TESTS})
+foreach(PATH IN ITEMS ${PARSE_TESTS})
     get_filename_component(FILENAME ${PATH} NAME)
 
     # Set newline at LF since these are srcML files and srcML uses LF (as does XML)
@@ -55,7 +55,7 @@ macro(setlanguage INLANG URL)
     set(BASEFILE "${URL}.${INFILE_EXT}.xml")
 
     set(PRODUCT_LANGS ${ARGN})
-    foreach(LANG IN LISTS ${ARGN})
+    foreach(LANG IN ITEMS ${ARGN})
 
         # convert from language to extension
         lang2ext("${LANG}" LANGEXT)
@@ -113,7 +113,7 @@ message(STATUS "  Generating suite targets")
 
 # Process all tests in suite.txt according to their categories
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/suite.txt SUITE REGEX "^LANGUAGE_")
-foreach(GEN IN LISTS ${SUITE})
+foreach(GEN IN ITEMS ${SUITE})
 
     # split into category and url
     separate_arguments(GEN)
@@ -210,7 +210,7 @@ message(STATUS "  Generating context variation targets")
 set(CONTEXT_FILES)
 
 # Generate variations: formfeed, comment, block, etc.
-foreach(GENURL IN LISTS ${TESTFILES})
+foreach(GENURL IN ITEMS ${TESTFILES})
 
     # ${URL}.${LANGEXT}.xml
     get_filename_component(SRCFILENAME "${GENURL}" NAME_WLE)
