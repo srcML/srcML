@@ -19,6 +19,14 @@
 # 
 # CMake files for libsrcml examples
 
+cmake_minimum_required(VERSION 3.24)
+project(srcML-Examples-libsrcml)
+
+if(SRCML_TEST_INSTALLED OR NOT TARGET LibsrcML::LibsrcML)
+    include(libsrcml_find_package.cmake)
+    message(STATUS "Libsrcml Tests examples installed library ${LibsrcML_SOURCE_DIR}")
+endif()
+
 # add examples
 file(GLOB EXAMPLES "srcml_*.c")
 
@@ -36,4 +44,3 @@ if(BUILD_EXAMPLES OR PROJECT_IS_TOP_LEVEL)
     endforeach()
 
 endif()
-
