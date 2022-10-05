@@ -19,11 +19,10 @@
 # 
 # CMake files for libsrcml tests
 
-message("HERE LIBSRCML_LIBRARIES: ${LIBSRCML_LIBRARIES}")
 # Build and add tests
 add_custom_target(build_libsrcml_tests)
 file(GLOB LIB_TESTS test_*.cpp)
-foreach(LIB_TEST ${LIB_TESTS})
+foreach(LIB_TEST IN LISTS ${LIB_TESTS})
     get_filename_component(TEST_NAME ${LIB_TEST} NAME_WE)
     add_executable(${TEST_NAME} ${LIB_TEST})
     target_link_libraries(${TEST_NAME} PRIVATE LibsrcML::LibsrcML)
