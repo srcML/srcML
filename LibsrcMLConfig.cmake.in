@@ -65,9 +65,7 @@ LibsrcML_load_targets(${COMPONENT})
 
 find_path(LibsrcML_INCLUDE_DIR
   NAMES srcml.h
-  PATHS
-  "[HKEY_LOCAL_MACHINE\\SOFTWARE\\GnuWin32\\srcML;InstallPath]/include"
-  DOC "libarchive include directory"
+  DOC "libsrcml include directory"
 )
 
 # Add the include file
