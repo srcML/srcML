@@ -24,9 +24,11 @@
 cmake_minimum_required(VERSION 3.24)
 project(srcML-Test-libsrcml)
 enable_testing()
+
+if(SRCML_TEST_INSTALLED OR NOT TARGET LibsrcML::LibsrcML)
+    find_package(libsrcml REQUIRED ${SRCML_TEST_INSTALLED})
 endif()
 
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src/libsrcml)
 include_directories(.)
 
 set(CMAKE_CXX_STANDARD 11)
