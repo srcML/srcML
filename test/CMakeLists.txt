@@ -18,14 +18,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # Separate project driver for testing libsrcml outside of build
-if(NOT PROJECT_NAME MATCHES "^srcML")
-    cmake_minimum_required(VERSION 3.24)
-    project(srcML-Test)
-    option(BUILD_CLIENT_TESTS "Build srcml client tests" ON)
-    option(BUILD_LIBSRCML_TESTS "Build unit tests for libsrcml" ON)
-    option(BUILD_PARSER_TESTS "Include tests for parser" ON)
-    enable_testing()
-endif()
+cmake_minimum_required(VERSION 3.24)
+project(srcML-Test)
+enable_testing()
 
 option(SRCML_TEST_INSTALLED "Test using installed version" OFF)
 

@@ -18,12 +18,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # Separate project driver for testing the parser outside of build
-if(NOT PROJECT_NAME MATCHES "^srcML")
-    cmake_minimum_required(VERSION 3.24)
-    project(srcML-Test-parser NONE)
-    enable_testing()
-    find_program(SRCML_EXE NAMES srcml REQUIRED)
-elseif(SRCML_TEST_INSTALLED)
+cmake_minimum_required(VERSION 3.24)
+project(srcML-Test-parser NONE)
+enable_testing()
     find_program(SRCML_EXE NAMES srcml REQUIRED)
 else()
     set(SRCML_EXE $<TARGET_FILE:srcml>)
