@@ -24,14 +24,14 @@ enable_testing()
 
 option(SRCML_TEST_INSTALLED "Test using installed version" OFF)
 
-if(BUILD_CLIENT_TESTS)
+if(PROJECT_IS_TOP_LEVEL OR BUILD_CLIENT_TESTS)
     add_subdirectory(client)
 endif()
 
-if(BUILD_LIBSRCML_TESTS)
+if(PROJECT_IS_TOP_LEVEL OR BUILD_LIBSRCML_TESTS)
     add_subdirectory(libsrcml)
 endif()
 
-if(BUILD_PARSER_TESTS)
+if(PROJECT_IS_TOP_LEVEL OR BUILD_PARSER_TESTS)
     add_subdirectory(parser)
 endif()

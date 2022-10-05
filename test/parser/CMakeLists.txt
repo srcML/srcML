@@ -21,6 +21,8 @@
 cmake_minimum_required(VERSION 3.24)
 project(srcML-Test-parser NONE)
 enable_testing()
+
+if(PROJECT_IS_TOP_LEVEL OR SRCML_TEST_INSTALLED)
     find_program(SRCML_EXE NAMES srcml REQUIRED)
 else()
     set(SRCML_EXE $<TARGET_FILE:srcml>)
