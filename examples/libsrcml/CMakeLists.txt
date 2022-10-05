@@ -23,14 +23,14 @@ cmake_minimum_required(VERSION 3.24)
 project(srcML-Examples-libsrcml)
 
 if(SRCML_TEST_INSTALLED OR NOT TARGET LibsrcML::LibsrcML)
-    include(libsrcml_find_package.cmake)
-    message(STATUS "Libsrcml Tests examples installed library ${LibsrcML_SOURCE_DIR}")
+    find_package(libsrcml REQUIRED)
 endif()
 
 # add examples
 file(GLOB EXAMPLES "srcml_*.c")
 
 install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
+install(FILES CMakeLists.examples.txt DESTINATION share/srcml/examples RENAME CMakeLists.txt COMPONENT EXAMPLES)
 
 if(BUILD_EXAMPLES OR PROJECT_IS_TOP_LEVEL)
 
@@ -39,7 +39,7 @@ if(BUILD_EXAMPLES OR PROJECT_IS_TOP_LEVEL)
     foreach(EXAMPLE IN ITEMS ${EXAMPLES})
         get_filename_component(EXAMPLE_NAME ${EXAMPLE} NAME_WE)
         add_executable(${EXAMPLE_NAME} ${EXAMPLE})
-        target_link_libraries(${EXAMPLE_NAME} LibsrcML::LibsrcML)
+        target_link_libraries(${EXAMPLE_NAME} PRIVATE LibsrcML::LibsrcML)
         set_target_properties(${EXAMPLE_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
     endforeach()
 
