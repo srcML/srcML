@@ -34,8 +34,6 @@ target_include_directories(libsrcml
         .
 )
 
-set_property(TARGET libsrcml PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
-
 # With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
 set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON)
 
