@@ -106,15 +106,22 @@ endif()
 
 include(CMakePackageConfigHelpers)
 
+# directory to put the config files
+if(NOT WIN32)
+    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml")
+else()
+    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+endif()
+
 install(EXPORT libsrcml_shared_Targets
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml"
+        DESTINATION "${CONFIG_FILE_DESTINATION}"
         NAMESPACE LibsrcML::
         FILE LibsrcML-shared-targets.cmake
         COMPONENT DEVLIBS)
 
 configure_package_config_file(
     ${CMAKE_SOURCE_DIR}/LibsrcMLConfig.cmake.in ${CMAKE_BINARY_DIR}/LibsrcMLConfig.cmake
-    INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml"
+    INSTALL_DESTINATION "${CONFIG_FILE_DESTINATION}"
     NO_SET_AND_CHECK_MACRO
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
@@ -125,7 +132,7 @@ write_basic_package_version_file(
     COMPATIBILITY "SameMajorVersion")
 
 install(FILES ${CMAKE_BINARY_DIR}/LibsrcMLConfig.cmake ${CMAKE_BINARY_DIR}/LibsrcMLConfigVersion.cmake
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml"
+        DESTINATION "${CONFIG_FILE_DESTINATION}"
         COMPONENT DEVLIBS
 )
 
@@ -133,7 +140,7 @@ install(FILES ${CMAKE_BINARY_DIR}/LibsrcMLConfig.cmake ${CMAKE_BINARY_DIR}/Libsr
 install(TARGETS libsrcml_static EXPORT libsrcml_static_Targets COMPONENT DEVLIBS)
 
 install(EXPORT libsrcml_static_Targets
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml"
+        DESTINATION "${CONFIG_FILE_DESTINATION}"
         NAMESPACE LibsrcML::
         FILE LibsrcML-static-targets.cmake
         COMPONENT DEVLIBS)
