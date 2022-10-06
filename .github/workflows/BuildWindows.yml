@@ -121,7 +121,7 @@ jobs:
         working-directory: build2
         continue-on-error: true
         run: |
-          cmake "/c/Program Files/srcML/bin/share/srcml/examples" -G Ninja
+          cmake "/c/Program Files/srcML/share/srcml/examples" -G Ninja
           ninja
 
       # - name: Setup msys2 with additional client-test packages for Windows
