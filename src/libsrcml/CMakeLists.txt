@@ -110,7 +110,7 @@ include(CMakePackageConfigHelpers)
 if(NOT WIN32)
     set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml")
 else()
-    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_PREFIX}")
 endif()
 
 install(EXPORT libsrcml_shared_Targets
