@@ -108,11 +108,15 @@ endif()
 include(CMakePackageConfigHelpers)
 
 # directory to put the config files
-if(NOT WIN32)
-    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml")
-else()
+if(WIN32)
     set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_LIBDIR}/..")
+elseif(NOT APPLE)
+    set(CONFIG_FILE_DESTINATION "/usr/share/cmake/libsrcml")
+else()
+    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/libsrcml")
 endif()
+
+message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message("CONFIG_FILE_DESTINATION: ${CONFIG_FILE_DESTINATION}")
 
 install(EXPORT libsrcml_shared_Targets
@@ -122,18 +126,18 @@ install(EXPORT libsrcml_shared_Targets
         COMPONENT DEVLIBS)
 
 configure_package_config_file(
-    ${CMAKE_SOURCE_DIR}/LibsrcMLConfig.cmake.in ${CMAKE_BINARY_DIR}/LibsrcMLConfig.cmake
+    ${CMAKE_SOURCE_DIR}/LibsrcMLConfig.cmake.in ${CMAKE_BINARY_DIR}/libsrcmlConfig.cmake
     INSTALL_DESTINATION "${CONFIG_FILE_DESTINATION}"
     NO_SET_AND_CHECK_MACRO
     NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
 write_basic_package_version_file(
-    ${CMAKE_BINARY_DIR}/LibsrcMLConfigVersion.cmake
+    ${CMAKE_BINARY_DIR}/libsrcmlConfigVersion.cmake
     VERSION "1.0.0"
     COMPATIBILITY "SameMajorVersion")
 
-install(FILES ${CMAKE_BINARY_DIR}/LibsrcMLConfig.cmake ${CMAKE_BINARY_DIR}/LibsrcMLConfigVersion.cmake
+install(FILES ${CMAKE_BINARY_DIR}/libsrcmlConfig.cmake ${CMAKE_BINARY_DIR}/libsrcmlConfigVersion.cmake
         DESTINATION "${CONFIG_FILE_DESTINATION}"
         COMPONENT DEVLIBS
 )
