@@ -56,7 +56,8 @@ add_library(antlr OBJECT "${ANTLR_SOURCE}")
 target_include_directories(antlr SYSTEM PUBLIC "${antlrsrc_SOURCE_DIR}/lib/cpp/" SYSTEM PRIVATE "${antlrsrc_SOURCE_DIR}/lib/cpp/")
 
 # With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-set_target_properties(antlr PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON)
+set_target_properties(antlr PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON
+    OPTIMIZE_DEPENDENCIES YES)
 
 # Generated source from antlr and the parser
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
@@ -79,7 +80,8 @@ target_link_libraries(parser PRIVATE LibXml2::LibXml2 antlr)
 target_include_directories(parser PRIVATE $<TARGET_PROPERTY:TinySHA1,INTERFACE_INCLUDE_DIRECTORIES>)
 
 # With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-set_target_properties(parser PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON)
+set_target_properties(parser PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON
+    OPTIMIZE_DEPENDENCIES YES)
 
 # 
 # RunAntlr
