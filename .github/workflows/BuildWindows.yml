@@ -38,19 +38,6 @@ jobs:
           export UseMultiToolTask=true
           cmake .. -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_COMPILER=cl -DCMAKE_C_COMPILER=cl -DCMAKE_VERBOSE_MAKEFILE=ON
 
-      - name: View vcpkg cache
-        shell: bash
-        working-directory: build
-        continue-on-error: true
-        run: |
-          ls -lhR D:/a/srcML/b/vcpkg_cache
-          ls -lhR D:/a/srcML/srcML/vcpkg
-          ls -lhR D:/a/srcML/srcML/vcpkg/installed
-          ls -lhR D:/a/srcML/srcML/vcpkg/vcpkg_installed
-          ls -lhR D:/a/srcML/srcML/vcpkg/packages
-          ls -lhR D:/a/srcML/srcML/vcpkg/buildtrees
-          ls -lhR D:/a/srcML/srcML/vcpkg/downloads
-
       - name: Build
         shell: bash
         working-directory: build
