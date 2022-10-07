@@ -65,14 +65,20 @@ jobs:
       #     name: CPack
       #     path: build/dist/_CPack_Packages/
 
-      - name: Install package
-        working-directory: build/dist
+      # - name: Install package
+      #   working-directory: build/dist
+      #   continue-on-error: true
+      #   run: msiexec /i D:\a\srcML\srcML\build\dist\srcml-1.0.0-windows-x86_64.msi /quiet /norestart /L*vx .\msi.log
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: msi.log
+      #     path: build/dist/msi.log
+
+      - name: Install from build
+        working-directory: build
         continue-on-error: true
-        run: msiexec /i D:\a\srcML\srcML\build\dist\srcml-1.0.0-windows-x86_64.msi /quiet /norestart /L*vx .\msi.log
-      - uses: actions/upload-artifact@v3
-        with:
-          name: msi.log
-          path: build/dist/msi.log
+        run: |
+          cmake --build . --config Release --target install/strip
 
       - name: Clean build
         working-directory: build
