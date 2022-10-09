@@ -69,5 +69,7 @@ unset(LibsrcML_INCLUDE_DIR)
 find_package(LibXml2 REQUIRED)
 find_package(Iconv REQUIRED)
 find_package(LibXslt REQUIRED)
+find_package(Threads REQUIRED)
 
+# target_link_libraries(LibsrcML::libsrcml_${COMPONENT} PRIVATE Thread::Thread)
 add_library(LibsrcML::LibsrcML ALIAS LibsrcML::libsrcml_${COMPONENT})
