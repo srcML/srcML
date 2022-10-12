@@ -53,10 +53,10 @@ target_include_directories(srcML::libsrcml_${COMPONENT} PUBLIC INTERFACE ${srcML
 unset(LibsrcML_INCLUDE_DIR)
 
 # Find dependencies
-find_package(LibXml2 REQUIRED)
-find_package(Iconv REQUIRED)
-find_package(LibXslt REQUIRED)
-find_package(Threads REQUIRED)
+# find_package(LibXml2 REQUIRED)
+# find_package(Iconv REQUIRED)
+# find_package(LibXslt REQUIRED)
+# find_package(Threads REQUIRED)
 
 # target_link_libraries(srcML::libsrcml_${COMPONENT} PRIVATE Thread::Thread)
 set_target_properties(srcML::libsrcml_${COMPONENT} PROPERTIES IMPORTED_GLOBAL TRUE)
