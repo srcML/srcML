@@ -46,33 +46,24 @@ jobs:
           export UseMultiToolTask=true
           cmake --build . --config Release
 
-      # - name: Package
-      #   working-directory: build
-      #   continue-on-error: true
-      #   run: |
-      #     cpack -V
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: wix.log
-      #     if: failure()
-      #     path: build/dist/_CPack_Packages/win64/WIX/wix.log
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: Installers
-      #     path: build/dist/*.msi
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: CPack
-      #     path: build/dist/_CPack_Packages/
-
-      # - name: Install package
-      #   working-directory: build/dist
-      #   continue-on-error: true
-      #   run: msiexec /i D:\a\srcML\srcML\build\dist\srcml-1.0.0-windows-x86_64.msi /quiet /norestart /L*vx .\msi.log
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: msi.log
-      #     path: build/dist/msi.log
+      - name: Package
+        working-directory: build
+        continue-on-error: true
+        run: |
+          cpack -V
+      - uses: actions/upload-artifact@v3
+        with:
+          name: wix.log
+          if: failure()
+          path: build/dist/_CPack_Packages/win64/WIX/wix.log
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Installers
+          path: build/dist/*.msi
+      - uses: actions/upload-artifact@v3
+        with:
+          name: CPack
+          path: build/dist/_CPack_Packages/
 
       - name: Install from build
         working-directory: build
@@ -80,12 +71,12 @@ jobs:
         run: |
           cmake --build . --config Release --target install
 
-      - name: Clean build
-        working-directory: build
-        continue-on-error: true
-        run: |
-          cmake --build . --config Release --target clean
-          cmake . -DSRCML_TEST_INSTALLED=ON
+      # - name: Clean build
+      #   working-directory: build
+      #   continue-on-error: true
+      #   run: |
+      #     cmake --build . --config Release --target clean
+      #     cmake . -DSRCML_TEST_INSTALLED=ON
 
       - name: Set PATH for Windows
         shell: bash
@@ -128,6 +119,29 @@ jobs:
         continue-on-error: true
         run: |
           cmake "/c/Program Files/srcML/share/srcml/examples" -DsrcML_DIR="C:/Program Files/srcML/cmake" -G Ninja
+          ninja
+
+      - name: Install package
+        working-directory: build/dist
+        continue-on-error: true
+        run: msiexec /i D:\a\srcML\srcML\build\dist\srcml-1.0.0-windows-x86_64.msi /quiet /norestart /L*vx .\msi.log
+      - uses: actions/upload-artifact@v3
+        with:
+          name: msi.log
+          path: build/dist/msi.log
+
+      - name: Create build examples directory
+        shell: bash
+        continue-on-error: true
+        run: |
+          mkdir build3
+
+      - name: Build examples
+        shell: bash
+        working-directory: build3
+        continue-on-error: true
+        run: |
+          cmake "/c/Program Files/srcML/share/srcml/examples" -G Ninja
           ninja
 
       # - name: Setup msys2 with additional client-test packages for Windows
