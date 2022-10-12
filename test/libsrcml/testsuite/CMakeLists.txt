@@ -25,7 +25,7 @@ file(GLOB LIB_TESTS test_*.cpp)
 foreach(LIB_TEST IN ITEMS ${LIB_TESTS})
     get_filename_component(TEST_NAME ${LIB_TEST} NAME_WE)
     add_executable(${TEST_NAME} ${LIB_TEST})
-    target_link_libraries(${TEST_NAME} PRIVATE LibsrcML::LibsrcML)
+    target_link_libraries(${TEST_NAME} PRIVATE srcML::LibsrcML)
     set(TEST_DIR ${CMAKE_BINARY_DIR}/bin/tmp/${TEST_NAME})
     add_test(NAME libsrcml.${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>
              WORKING_DIRECTORY ${TEST_DIR})

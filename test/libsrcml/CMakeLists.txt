@@ -25,7 +25,7 @@ cmake_minimum_required(VERSION 3.24)
 project(srcML-Test-libsrcml)
 enable_testing()
 
-if(SRCML_TEST_INSTALLED OR NOT TARGET LibsrcML::LibsrcML)
+if(SRCML_TEST_INSTALLED OR NOT TARGET srcML::LibsrcML)
     find_package(libsrcml REQUIRED ${SRCML_TEST_INSTALLED})
 endif()
 
