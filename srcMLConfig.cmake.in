@@ -49,7 +49,7 @@ find_path(srcML_INCLUDE_DIR
 )
 
 # Add the include file
-# target_include_directories(srcML::libsrcml_${COMPONENT} PUBLIC INTERFACE ${srcML_INCLUDE_DIR})
+target_include_directories(srcML::libsrcml_${COMPONENT} PUBLIC INTERFACE ${srcML_INCLUDE_DIR})
 unset(LibsrcML_INCLUDE_DIR)
 
 # Find dependencies
