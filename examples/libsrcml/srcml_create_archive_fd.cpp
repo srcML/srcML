@@ -28,6 +28,12 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #ifdef _MSC_BUILD
+#ifndef S_IRUSR
+#define S_IRUSR _S_IREAD
+#endif
+#ifndef S_IWUSR
+#define S_IWUSR _S_IWRITE
+#endif
 #include <io.h>
 #else
 #include <unistd.h>
