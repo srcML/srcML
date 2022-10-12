@@ -27,7 +27,7 @@ if(SRCML_TEST_INSTALLED OR NOT TARGET LibsrcML::LibsrcML)
 endif()
 
 # add examples
-file(GLOB EXAMPLES "srcml_*.c")
+file(GLOB EXAMPLES "srcml_*.cpp")
 
 install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
 install(FILES CMakeLists.examples.txt DESTINATION share/srcml/examples RENAME CMakeLists.txt COMPONENT EXAMPLES)

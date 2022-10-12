@@ -1,5 +1,5 @@
 /**
- * @file srcml_direct_language_list.c
+ * @file srcml_archive_create_filename.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -19,18 +19,43 @@
  */
 
 /*
-  Example program of the use of the C API for srcML.
+  Example program of the use of the libsrcml C API.
 
-  A null-terminated list of the supported srcML source-code language.
+  Create an archive, file by file, with an output filename.
 */
 
-#include <stdio.h>
 #include <srcml.h>
 
 int main(int argc, char* argv[]) {
 
-    for (int i = 0; i < srcml_get_language_list_size(); ++i)
-        puts(srcml_get_language_list(i));
+    // create a new srcml archive structure
+    srcml_archive* archive = srcml_archive_create();
+
+    // open a srcML archive for output
+    srcml_archive_write_open_filename(archive, "project.xml");
+
+    // add all the files to the archive
+    for (int i = 1; i < argc; ++i) {
+
+        srcml_unit* unit = srcml_unit_create(archive);
+
+        // set the filename
+        srcml_unit_set_filename(unit, argv[i]);
+
+        // translate to srcml
+        srcml_unit_parse_filename(unit, argv[i]);
+
+        // append to the archive
+        srcml_archive_write_unit(archive, unit);
+
+        srcml_unit_free(unit);
+    }
+
+    // close the srcML archive
+    srcml_archive_close(archive);
+
+    // free the archives
+    srcml_archive_free(archive);
 
     return 0;
 }

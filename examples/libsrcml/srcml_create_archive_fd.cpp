@@ -1,5 +1,5 @@
 /**
- * @file srcml_archive_create_file.c
+ * @file srcml_archive_create_fd.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -19,48 +19,56 @@
  */
 
 /*
-  Example program of the use of the C API for srcML.
+  Example program of the use of the libsrcml C API.
 
-  Create an archive, file by file, with an output FILE*
+  Create an archive, file by file, with an output file descriptor
 */
 
 #include <srcml.h>
-#include <stdio.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#ifdef _MSC_BUILD
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 int main(int argc, char* argv[]) {
 
-    /* create a new srcml archive structure */
-    struct srcml_archive* archive = srcml_archive_create();
+    // create a new srcml archive structure
+    srcml_archive* archive = srcml_archive_create();
 
-    /* setup our output file using a FILE* */
-    FILE* srcml_output = fopen("project.xml", "w");
+    // setup our output file using a file descriptor
+    int srcml_output = open("project.xml", O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
 
-    /* open a srcML archive for output */
-    srcml_archive_write_open_FILE(archive, srcml_output);
+    // open a srcML archive for output
+    srcml_archive_write_open_fd(archive, srcml_output);
 
-    /* add all the files to the archive */
+    // add all the files to the archive
     for (int i = 1; i < argc; ++i) {
 
-        struct srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit* unit = srcml_unit_create(archive);
 
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
 
-        FILE* srcml_input = fopen(argv[i], "r");
-        srcml_unit_parse_FILE(unit, srcml_input);
+        // Translate to srcml
+        int srcml_input = open(argv[i], O_RDONLY, 0);
+        srcml_unit_parse_fd(unit, srcml_input);
 
+        // Append to the archive
         srcml_archive_write_unit(archive, unit);
 
         srcml_unit_free(unit);
-        fclose(srcml_input);
+        close(srcml_input);
     }
 
-    /* close the srcML archive */
+    // close the srcML archive
     srcml_archive_close(archive);
 
-    /* file can now be closed also */
-    fclose(srcml_output);
+    // file can now be closed also
+    close(srcml_output);
 
-    /* free the srcML archive data */
+    // free the archives
     srcml_archive_free(archive);
 
     return 0;

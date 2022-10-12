@@ -1,5 +1,5 @@
 /**
- * @file srcml_xslt.c
+ * @file srcml_direct_language_xml.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -19,29 +19,24 @@
  */
 
 /*
-  Example program of the use of the C API for srcML.
+  Example program of the use of the libsrcml C API.
 
-  XSLT usage.
+  A straightforward translation from the srcML format back to source code.
+  Translates the srcML file "a.cpp.xml" to the source-code file "a.cpp", however
+  in this case the language is specified:
+
+  * This creates a single-unit srcML file, i.e., a non-archive srcML
+  * The srcML attribute filename will be the name of the file passed as the first
+  parameter.
 */
 
 #include <srcml.h>
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
 
-    struct srcml_archive* iarchive = srcml_archive_create();
-    srcml_archive_read_open_filename(iarchive, "project.xml");
-    struct srcml_archive* oarchive = srcml_archive_clone(iarchive);
-    srcml_archive_write_open_filename(oarchive, "xslt.xml");
-
-    srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
-/*
-    srcml_apply_transforms(iarchive, oarchive);
-*/
-    srcml_archive_close(iarchive);
-    srcml_archive_close(oarchive);
-
-    srcml_archive_free(iarchive);
-    srcml_archive_free(oarchive);
+    // translate from a source-code file to a srcML file
+    srcml_set_language(SRCML_LANGUAGE_XML);
+    srcml("a.cpp.xml", "a.cpp");
 
     return 0;
 }

@@ -1,5 +1,5 @@
 /**
- * @file srcml_transform.c
+ * @file srcml_direct_language_list.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -19,31 +19,19 @@
  */
 
 /*
-  Example program of the use of the C API for srcML.
+  Example program of the use of the libsrcml C API.
 
-  Use XPath, XSLT, and RelaxNG.
+  A null-terminated list of the supported srcML source-code language.
 */
 
 #include <srcml.h>
+#include <iostream>
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
 
-    struct srcml_archive* iarchive = srcml_archive_create();
-    srcml_archive_read_open_filename(iarchive, "project.xml");
-    struct srcml_archive* oarchive = srcml_archive_clone(iarchive);
-    srcml_archive_write_open_filename(oarchive, "transform.xml");
-
-    srcml_append_transform_xpath(iarchive, "//src:unit");
-    srcml_append_transform_xslt_filename(iarchive, "copy.xsl");
-    srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
-/*
-    srcml_apply_transforms(iarchive, oarchive);
-*/
-    srcml_archive_close(iarchive);
-    srcml_archive_close(oarchive);
-
-    srcml_archive_free(iarchive);
-    srcml_archive_free(oarchive);
+    // output the supported srcML source-code languages
+    for (int i = 0; i < srcml_get_language_list_size(); ++i)
+        std::cout << srcml_get_language_list(i) << '\n';
 
     return 0;
 }

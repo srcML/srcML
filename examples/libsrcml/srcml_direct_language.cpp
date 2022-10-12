@@ -1,5 +1,5 @@
 /**
- * @file srcml_relaxng.c
+ * @file test_srcml_direct_language.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -19,29 +19,24 @@
  */
 
 /*
-  Example program of the use of the C API for srcML.
+  Example program of the use of the libsrcml C API.
 
-  RelaxNG usage.
+  A straightforward translation of source code to the srcML format.
+  Translates the file "a.cpp" to the srcML format in "a.cpp.xml", however
+  in this case the language is specified:
+
+  * This creates a single-unit srcML file, i.e., a non-archive srcML
+  * The srcML attribute filename will be the name of the file passed as the first
+  parameter.
 */
 
 #include <srcml.h>
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
 
-    struct srcml_archive* iarchive = srcml_archive_create();
-    srcml_archive_read_open_filename(iarchive, "project.xml");
-    struct srcml_archive* oarchive = srcml_archive_clone(iarchive);
-    srcml_archive_write_open_filename(oarchive, "relaxng.xml");
-
-    srcml_append_transform_relaxng_filename(iarchive, "schema.rng");
-/*
-    srcml_apply_transforms(iarchive, oarchive);
-*/
-    srcml_archive_close(iarchive);
-    srcml_archive_close(oarchive);
-
-    srcml_archive_free(iarchive);
-    srcml_archive_free(oarchive);
+    // translate from a source-code file to a srcML file
+    srcml_set_language(SRCML_LANGUAGE_CXX);
+    srcml("a.cpp", "a.cpp.xml");
 
     return 0;
 }

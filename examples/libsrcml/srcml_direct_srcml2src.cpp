@@ -1,5 +1,5 @@
 /**
- * @file srcml_direct_src2srcml.c
+ * @file srcml_direct_srcml2src.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -19,27 +19,22 @@
  */
 
 /*
-  Example program of the use of the C API for srcML.
+  Example program of the use of the libsrcml C API.
 
-  A straightforward translation of source code to the srcML format.
-  Translates the file "a.cpp" to the srcML format in "a.cpp.xml":
+  A straightforward translation from the srcML format back to source code.
+  Translates the srcML file "a.cpp.xml" to the source-code file "a.cpp":
 
-  * The language is determined automatically from the source file extension
   * This creates a single-unit srcML file, i.e., a non-archive srcML
   * The srcML attribute filename will be the name of the file passed as the first
   parameter.
 */
 
-#include <stdio.h>
 #include <srcml.h>
 
 int main(int argc, char* argv[]) {
 
-    /* Translate from a source-code file to a srcML file */
-    int error = srcml("a.cpp", "a.cpp.xml");
-
-    if (error)
-      puts(srcml_error_string());
+    // translate from a srcML file to a source-code file
+    srcml("a.cpp.xml", "a.cpp");
 
     return 0;
 }
