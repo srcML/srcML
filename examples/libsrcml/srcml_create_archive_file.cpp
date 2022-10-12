@@ -27,7 +27,9 @@
 #include <srcml.h>
 #include <stdio.h>
 
-#define _CRT_SECURE_NO_WARNINGS
+#ifdef _MSC_BUILD
+#pragma warning(disable : 4996)
+#endif
 
 int main(int argc, char* argv[]) {
 

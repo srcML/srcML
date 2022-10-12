@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #ifdef _MSC_BUILD
 #include <io.h>
+#pragma warning(disable : 4996)
 #else
 #include <unistd.h>
 #endif

@@ -28,6 +28,10 @@
 #include <stdio.h>
 #include <string>
 
+#ifdef _MSC_BUILD
+#pragma warning(disable : 4996)
+#endif
+
 int main(int argc, char* argv[]) {
 
     // create a new srcml archive structure
