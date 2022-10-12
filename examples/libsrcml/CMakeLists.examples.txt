@@ -20,87 +20,87 @@
 # CMake files for libsrcml examples
 
 # Any more recent cmake can be specified
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.11)
 
 project(srcML-Examples)
 
-# Produces the target LibsrcML::LibsrcML
+# Produces the target srcML::LibsrcML
 # Can also specify components. The default component is shared
-#   find_package(libsrcml COMPONENT shared REQUIRED)
-#   find_package(libsrcml COMPONENT static REQUIRED)
-find_package(libsrcml REQUIRED)
+#   find_package(srcml COMPONENT shared REQUIRED)
+#   find_package(srcml COMPONENT static REQUIRED)
+find_package(srcML REQUIRED)
 
 # Add each executable as a separate program
-# For each target, add the LibsrcML::LibsrcML library
+# For each target, add the srcML::LibsrcML library
 
-add_executable(srcml_xslt srcml_xslt.c)
-target_link_libraries(srcml_xslt PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_xslt srcml_xslt.cpp)
+target_link_libraries(srcml_xslt PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_xpath srcml_xpath.c)
-target_link_libraries(srcml_xpath PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_xpath srcml_xpath.cpp)
+target_link_libraries(srcml_xpath PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_transform srcml_transform.c)
-target_link_libraries(srcml_transform PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_transform srcml_transform.cpp)
+target_link_libraries(srcml_transform PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_split_archive srcml_split_archive.c)
-target_link_libraries(srcml_split_archive PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_split_archive srcml_split_archive.cpp)
+target_link_libraries(srcml_split_archive PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_sort_archive srcml_sort_archive.c)
-target_link_libraries(srcml_sort_archive PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_sort_archive srcml_sort_archive.cpp)
+target_link_libraries(srcml_sort_archive PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_relaxng srcml_relaxng.c)
-target_link_libraries(srcml_relaxng PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_relaxng srcml_relaxng.cpp)
+target_link_libraries(srcml_relaxng PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_read_archive_memory srcml_read_archive_memory.c)
-target_link_libraries(srcml_read_archive_memory PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_read_archive_memory srcml_read_archive_memory.cpp)
+target_link_libraries(srcml_read_archive_memory PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_read_archive_full srcml_read_archive_full.c)
-target_link_libraries(srcml_read_archive_full PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_read_archive_full srcml_read_archive_full.cpp)
+target_link_libraries(srcml_read_archive_full PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_read_archive_filename srcml_read_archive_filename.c)
-target_link_libraries(srcml_read_archive_filename PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_read_archive_filename srcml_read_archive_filename.cpp)
+target_link_libraries(srcml_read_archive_filename PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_read_archive_file srcml_read_archive_file.c)
-target_link_libraries(srcml_read_archive_file PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_read_archive_file srcml_read_archive_file.cpp)
+target_link_libraries(srcml_read_archive_file PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_read_archive_fd srcml_read_archive_fd.c)
-target_link_libraries(srcml_read_archive_fd PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_read_archive_fd srcml_read_archive_fd.cpp)
+target_link_libraries(srcml_read_archive_fd PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_list srcml_list.c)
-target_link_libraries(srcml_list PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_list srcml_list.cpp)
+target_link_libraries(srcml_list PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_direct_srcml2src srcml_direct_srcml2src.c)
-target_link_libraries(srcml_direct_srcml2src PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_direct_srcml2src srcml_direct_srcml2src.cpp)
+target_link_libraries(srcml_direct_srcml2src PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_direct_src2srcml srcml_direct_src2srcml.c)
-target_link_libraries(srcml_direct_src2srcml PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_direct_src2srcml srcml_direct_src2srcml.cpp)
+target_link_libraries(srcml_direct_src2srcml PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_direct_language_xml srcml_direct_language_xml.c)
-target_link_libraries(srcml_direct_language_xml PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_direct_language_xml srcml_direct_language_xml.cpp)
+target_link_libraries(srcml_direct_language_xml PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_direct_language_list srcml_direct_language_list.c)
-target_link_libraries(srcml_direct_language_list PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_direct_language_list srcml_direct_language_list.cpp)
+target_link_libraries(srcml_direct_language_list PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_direct_language srcml_direct_language.c)
-target_link_libraries(srcml_direct_language PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_direct_language srcml_direct_language.cpp)
+target_link_libraries(srcml_direct_language PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_create_archive_memory srcml_create_archive_memory.c)
-target_link_libraries(srcml_create_archive_memory PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_create_archive_memory srcml_create_archive_memory.cpp)
+target_link_libraries(srcml_create_archive_memory PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_create_archive_full srcml_create_archive_full.c)
-target_link_libraries(srcml_create_archive_full PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_create_archive_full srcml_create_archive_full.cpp)
+target_link_libraries(srcml_create_archive_full PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_create_archive_filename srcml_create_archive_filename.c)
-target_link_libraries(srcml_create_archive_filename PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_create_archive_filename srcml_create_archive_filename.cpp)
+target_link_libraries(srcml_create_archive_filename PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_create_archive_file srcml_create_archive_file.c)
-target_link_libraries(srcml_create_archive_file PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_create_archive_file srcml_create_archive_file.cpp)
+target_link_libraries(srcml_create_archive_file PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_create_archive_fd srcml_create_archive_fd.c)
-target_link_libraries(srcml_create_archive_fd PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_create_archive_fd srcml_create_archive_fd.cpp)
+target_link_libraries(srcml_create_archive_fd PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_copy_archive srcml_copy_archive.c)
-target_link_libraries(srcml_copy_archive PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_copy_archive srcml_copy_archive.cpp)
+target_link_libraries(srcml_copy_archive PRIVATE srcML::LibsrcML)
 
-add_executable(srcml_convenient srcml_convenient.c)
-target_link_libraries(srcml_convenient PRIVATE LibsrcML::LibsrcML)
+add_executable(srcml_convenient srcml_convenient.cpp)
+target_link_libraries(srcml_convenient PRIVATE srcML::LibsrcML)
