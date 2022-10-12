@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
     }
 
     // sort the units in the container by filename
-    std::sort(units.begin(), units.end(), [](const auto a, const auto b) {
+    std::sort(units.begin(), units.end(), [](const srcml_unit* a, const srcml_unit* b) {
         return std::string(srcml_unit_get_filename(a)) < std::string(srcml_unit_get_filename(b));
     });
 
