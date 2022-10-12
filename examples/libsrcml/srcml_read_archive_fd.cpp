@@ -35,7 +35,7 @@
 #ifndef S_IWUSR
 #define S_IWUSR _S_IWRITE
 #endif
-#define _SCL_SECURE_NO_WARNINGS
+#pragma warning(disable : 4996)
 #include <io.h>
 #else
 #include <unistd.h>
