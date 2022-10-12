@@ -78,7 +78,7 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
-          cmake --build . --config Release --target install/strip
+          cmake --build . --config Release --target install
 
       - name: Clean build
         working-directory: build
