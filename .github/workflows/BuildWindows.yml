@@ -126,28 +126,29 @@ jobs:
         working-directory: build2
         continue-on-error: true
         run: |
-          ./srcml_copy_archive.exe || echo $?
-          ./srcml_create_archive_fd.exe || echo $?
-          ./srcml_create_archive_file.exe || echo $?
-          ./srcml_create_archive_filename.exe || echo $?
-          ./srcml_create_archive_full.exe || echo $?
-          ./srcml_direct_language.exe || echo $?
-          ./srcml_direct_language_list.exe || echo $?
-          ./srcml_direct_language_xml.exe || echo $?
-          ./srcml_direct_src2srcml.exe || echo $?
-          ./srcml_direct_srcml2src.exe || echo $?
-          ./srcml_list.exe || echo $?
-          ./srcml_read_archive_fd.exe || echo $?
-          ./srcml_read_archive_file.exe || echo $?
-          ./srcml_read_archive_filename.exe || echo $?
-          ./srcml_read_archive_full.exe || echo $?
-          ./srcml_read_archive_memory.exe || echo $?
-          ./srcml_relaxng.exe || echo $?
-          ./srcml_sort_archive.exe || echo $?
-          ./srcml_split_archive.exe || echo $?
-          ./srcml_transform.exe || echo $?
-          ./srcml_xpath.exe || echo $?
-          ./srcml_xslt.exe || echo $?
+          ls *.exe
+          .\srcml_copy_archive.exe || echo $?
+          .\srcml_create_archive_fd.exe || echo $?
+          .\srcml_create_archive_file.exe || echo $?
+          .\srcml_create_archive_filename.exe || echo $?
+          .\srcml_create_archive_full.exe || echo $?
+          .\srcml_direct_language.exe || echo $?
+          .\srcml_direct_language_list.exe || echo $?
+          .\srcml_direct_language_xml.exe || echo $?
+          .\srcml_direct_src2srcml.exe || echo $?
+          .\srcml_direct_srcml2src.exe || echo $?
+          .\srcml_list.exe || echo $?
+          .\srcml_read_archive_fd.exe || echo $?
+          .\srcml_read_archive_file.exe || echo $?
+          .\srcml_read_archive_filename.exe || echo $?
+          .\srcml_read_archive_full.exe || echo $?
+          .\srcml_read_archive_memory.exe || echo $?
+          .\srcml_relaxng.exe || echo $?
+          .\srcml_sort_archive.exe || echo $?
+          .\srcml_split_archive.exe || echo $?
+          .\srcml_transform.exe || echo $?
+          .\srcml_xpath.exe || echo $?
+          .\srcml_xslt.exe || echo $?
 
       - name: Install package
         working-directory: build/dist
