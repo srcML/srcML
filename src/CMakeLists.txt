@@ -48,6 +48,10 @@ if(CLANG_TIME_TRACE)
     add_compile_options(-ftime-trace)
 endif()
 
+if(MSVC)
+    add_compile_options(Zc:throwingNew /Ob3)
+endif()
+
 # For macOS Catalina and more recent, the provided libarchive is at least version 3.3
 # and all that is needed is the matching header files.
 # For earlier versions of macOS, brew must be used with a more recent libarchive.a
