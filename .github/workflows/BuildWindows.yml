@@ -120,6 +120,7 @@ jobs:
         run: |
           cmake "/c/Program Files/srcML/share/srcml/examples" -DsrcML_DIR="C:/Program Files/srcML/cmake" -G Ninja
           ninja
+          ls srcml_ | xargs -I^ -t ./^
 
       - name: Install package
         working-directory: build/dist
@@ -143,6 +144,7 @@ jobs:
         run: |
           cmake "/c/Program Files/srcML/share/srcml/examples" -G Ninja
           ninja
+          ls srcml_ | xargs -I^ -t ./^
 
       # - name: Setup msys2 with additional client-test packages for Windows
       #   uses: msys2/setup-msys2@v2
