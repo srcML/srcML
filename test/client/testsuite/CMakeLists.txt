@@ -23,7 +23,7 @@
 file(GLOB CLIENT_TESTS *.sh)
 list(REMOVE_ITEM CLIENT_TESTS "${CMAKE_CURRENT_SOURCE_DIR}/framework_test.sh")
 
-foreach(CLIENT_TEST ${CLIENT_TESTS})
+foreach(CLIENT_TEST IN ITEMS ${CLIENT_TESTS})
     get_filename_component(TEST_NAME ${CLIENT_TEST} NAME)
 
     add_test(NAME srcml.${TEST_NAME} COMMAND ${CLIENT_TEST})

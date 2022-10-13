@@ -21,6 +21,9 @@
 
 find_package(LibArchive 3 REQUIRED)
 find_package(CURL REQUIRED)
+if(NOT MSVC)
+    find_package(Threads REQUIRED)
+endif()
 
 include(FetchContent)
 FetchContent_Declare(cli11
@@ -46,7 +49,11 @@ target_include_directories(ctpl_stl SYSTEM INTERFACE ${ctpl_stl_SOURCE_DIR})
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml BEFORE PRIVATE .)
-target_link_libraries(srcml PRIVATE libsrcml_link LibArchive::LibArchive CURL::libcurl cli11 ctpl_stl)
+target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl cli11 ctpl_stl)
+if(NOT MSVC)
+    target_link_libraries(srcml PRIVATE Threads::Threads)
+endif()
+
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library

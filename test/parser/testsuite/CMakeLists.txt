@@ -25,7 +25,7 @@ set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
 # copy starting set of test cases
 file(GLOB PARSE_TESTS *.xml)
-foreach(PATH ${PARSE_TESTS})
+foreach(PATH IN ITEMS ${PARSE_TESTS})
     get_filename_component(FILENAME ${PATH} NAME)
 
     # Set newline at LF since these are srcML files and srcML uses LF (as does XML)
@@ -55,7 +55,7 @@ macro(setlanguage INLANG URL)
     set(BASEFILE "${URL}.${INFILE_EXT}.xml")
 
     set(PRODUCT_LANGS ${ARGN})
-    foreach(LANG ${ARGN})
+    foreach(LANG IN ITEMS ${ARGN})
 
         # convert from language to extension
         lang2ext("${LANG}" LANGEXT)
@@ -113,7 +113,7 @@ message(STATUS "  Generating suite targets")
 
 # Process all tests in suite.txt according to their categories
 file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/suite.txt SUITE REGEX "^LANGUAGE_")
-foreach(GEN ${SUITE})
+foreach(GEN IN ITEMS ${SUITE})
 
     # split into category and url
     separate_arguments(GEN)
@@ -210,7 +210,7 @@ message(STATUS "  Generating context variation targets")
 set(CONTEXT_FILES)
 
 # Generate variations: formfeed, comment, block, etc.
-foreach(GENURL ${TESTFILES})
+foreach(GENURL IN ITEMS ${TESTFILES})
 
     # ${URL}.${LANGEXT}.xml
     get_filename_component(SRCFILENAME "${GENURL}" NAME_WLE)
@@ -220,7 +220,7 @@ foreach(GENURL ${TESTFILES})
     string(SUBSTRING "${EXTENSION}" 1 -1 LANGEXT)
 
     # Generate "formfeed" "comment" "block" "struct" "ifthenelse"
-    foreach(VARIATION "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
+    foreach(VARIATION IN ITEMS "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
         # preproc and struct do not work with Java
         if((LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc")) OR
            (LANGEXT STREQUAL "cs" AND VARIATION STREQUAL "struct"))

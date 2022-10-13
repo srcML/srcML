@@ -1,5 +1,5 @@
 /**
- * @file srcml_direct_language_list.c
+ * @file srcml_direct_language_list.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -19,18 +19,19 @@
  */
 
 /*
-  Example program of the use of the C API for srcML.
+  Example program of the use of the libsrcml C API.
 
   A null-terminated list of the supported srcML source-code language.
 */
 
-#include <stdio.h>
 #include <srcml.h>
+#include <iostream>
 
 int main(int argc, char* argv[]) {
 
+    // output the supported srcML source-code languages
     for (int i = 0; i < srcml_get_language_list_size(); ++i)
-        puts(srcml_get_language_list(i));
+        std::cout << srcml_get_language_list(i) << '\n';
 
     return 0;
 }

@@ -18,10 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
 # Separate project driver for testing the client outside of build
-if(NOT PROJECT_NAME MATCHES "^srcML")
-    cmake_minimum_required(VERSION 3.24)
-    project(srcML-Test-client NONE)
-    enable_testing()
-endif()
+cmake_minimum_required(VERSION 3.24)
+project(srcML-Test-client NONE)
+enable_testing()
 
 add_subdirectory(testsuite)

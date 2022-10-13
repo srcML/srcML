@@ -20,26 +20,21 @@
 # CMake files for libsrcml library
 
 # Separate project driver for testing libsrcml outside of build
-if(NOT PROJECT_NAME MATCHES "^srcML")
-    cmake_minimum_required(VERSION 3.24)
-    project(srcML-Test-libsrcml)
-    enable_testing()
+
+cmake_minimum_required(VERSION 3.24)
+project(srcML-Test-libsrcml)
+enable_testing()
+
+if(SRCML_TEST_INSTALLED OR NOT TARGET srcML::LibsrcML)
+    find_package(libsrcml REQUIRED ${SRCML_TEST_INSTALLED})
 endif()
 
-if(SRCML_TEST_INSTALLED OR NOT TARGET libsrcml_link)
-    find_library(LIBSRCML_LINK NAMES srcml libsrcml REQUIRED)
-else()
-    set(LIBSRCML_LINK libsrcml_link)
-endif()
-
-include_directories(BEFORE ${CMAKE_SOURCE_DIR}/src/libsrcml)
 include_directories(.)
 
 set(CMAKE_CXX_STANDARD 11)
 
 # standard compile options
 add_compile_options(
-    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fPIC>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wextra>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>

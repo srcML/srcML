@@ -1,5 +1,5 @@
 /**
- * @file srcml_read_archive_filename.c
+ * @file srcml_read_archive_full.cpp
  *
  * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
  *
@@ -19,39 +19,37 @@
  */
 
 /*
-  Example program of the use of the C API for srcML.
+  Example program of the use of the libsrcml C API.
 
   Take an archive and extract the invidual units and write to a filesystem.
 */
 
 #include <srcml.h>
+#include <string>
 
 int main(int argc, char* argv[]) {
 
-    /* create a new srcml archive structure */
-    struct srcml_archive* archive = srcml_archive_create();
-
-    /* open a srcML archive for input */
+    // open a srcML archive for input
+    srcml_archive* archive = srcml_archive_create();
     srcml_archive_read_open_filename(archive, "project.xml");
 
-    /* add all the files to the archive */
-    struct srcml_unit* unit = 0;
+    // create source files from all the code in the project
+    srcml_unit* unit = nullptr;
     while ((unit = srcml_archive_read_unit(archive))) {
 
-        /* can inquire about the current unit */
-        const char* language = srcml_unit_get_language(unit);
-        const char* filename = srcml_unit_get_filename(unit);
+        // inquire about the current unit
+        std::string filename = srcml_unit_get_filename(unit);
 
-        /* uparse and write to a file */
-        srcml_unit_unparse_filename(unit, filename);
+        // uparse and write to a file
+        srcml_unit_unparse_filename(unit, filename.data());
 
         srcml_unit_free(unit);
     }
 
-    /* close the srcML archive */
+    // close the srcML archive
     srcml_archive_close(archive);
 
-    /* free the srcML archive data */
+    // free the archives
     srcml_archive_free(archive);
 
     return 0;

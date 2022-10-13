@@ -433,6 +433,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         return;
 
     // collect cpp prefix
+    state->cpp_prefix = std::nullopt;
     for (int i = 0; i < nb_namespaces; ++i) {
 
         if (std::string((const char*) namespaces[i * 2 + 1]) == SRCML_CPP_NS_URI) {

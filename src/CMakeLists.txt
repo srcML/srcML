@@ -48,6 +48,11 @@ if(CLANG_TIME_TRACE)
     add_compile_options(-ftime-trace)
 endif()
 
+if(MSVC)
+    add_compile_options(/Zc:throwingNew)
+    string(REPLACE "Ob2" "Ob3" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+endif()
+
 # For macOS Catalina and more recent, the provided libarchive is at least version 3.3
 # and all that is needed is the matching header files.
 # For earlier versions of macOS, brew must be used with a more recent libarchive.a
@@ -124,7 +129,6 @@ include(InstallRequiredSystemLibraries)
 
 # standard compile options
 add_compile_options(
-    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-fPIC>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wextra>
     $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>

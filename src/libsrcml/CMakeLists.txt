@@ -26,16 +26,27 @@ find_package(Iconv REQUIRED)
 # libsrcml library
 file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
-target_include_directories(libsrcml PUBLIC .)
+target_include_directories(libsrcml
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+    PRIVATE
+        .
+)
 
 # With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON>)
+set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON
+    OPTIMIZE_DEPENDENCIES YES)
 
 # Use the libsrcml/srcml.h rather than the /usr/local/include/srcml.h
-target_include_directories(libsrcml BEFORE PRIVATE .)
+target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 # libsrcml dependencies
-target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt TinySHA1 parser $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:pthread>)
+target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt TinySHA1 parser)
+if(NOT MSVC)
+    find_package(Threads REQUIRED)
+    target_link_libraries(libsrcml PRIVATE Threads::Threads)
+endif()
 
 # target_compile_options(libsrcml PUBLIC "-fvisibility=hidden")
 
@@ -45,19 +56,25 @@ if(SRCML_BUILD_USEPCH)
 endif()
 
 # Building static and dynamic libraries for srcML.
-add_library(libsrcml_static STATIC $<TARGET_OBJECTS:libsrcml>)
-set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-target_link_libraries(libsrcml_static PUBLIC libsrcml PRIVATE parser antlr)
+add_library(libsrcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr>)
+set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin POSITION_INDEPENDENT_CODE ON)
+target_include_directories(libsrcml_static PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
+target_link_libraries(libsrcml_static PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt)
 
-add_library(libsrcml_shared SHARED $<TARGET_OBJECTS:libsrcml>)
+add_library(libsrcml_shared SHARED)
 set_target_properties(libsrcml_shared PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+
     # All of these are not needed on Unix, but are needed on Windows
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-target_link_libraries(libsrcml_shared PUBLIC libsrcml PRIVATE parser antlr)
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 
-set_target_properties(libsrcml_shared PROPERTIES VERSION "${PROJECT_VERSION}" SOVERSION "${PROJECT_VERSION_MAJOR}")
+    VERSION "${PROJECT_VERSION}"
+    SOVERSION "${PROJECT_VERSION_MAJOR}"
+)
+target_link_libraries(libsrcml_shared PRIVATE libsrcml parser antlr)
+target_include_directories(libsrcml_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 if(WIN32)
     # On Windows, generate a debug of the release for the PDB file, but use optimization options
@@ -83,18 +100,58 @@ endif()
 # which types of libraries
 if(WIN32)
     # libsrcml shared
-    install(TARGETS libsrcml_shared RUNTIME COMPONENT SRCML ARCHIVE COMPONENT DEVLIBS)
+    install(TARGETS libsrcml_shared EXPORT libsrcml_shared_Targets RUNTIME COMPONENT SRCML ARCHIVE COMPONENT DEVLIBS)
 else()
-    install(TARGETS libsrcml_shared LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
+    install(TARGETS libsrcml_shared EXPORT libsrcml_shared_Targets LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
 endif()
 
+include(CMakePackageConfigHelpers)
+
+# directory to put the config files
+if(WIN32)
+    set(CONFIG_FILE_DESTINATION "cmake")
+elseif(APPLE)
+    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/srcml/")
+else()
+    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/srcml")
+endif()
+
+install(EXPORT libsrcml_shared_Targets
+        DESTINATION "${CONFIG_FILE_DESTINATION}"
+        NAMESPACE srcML::
+        FILE srcML-shared-targets.cmake
+        COMPONENT DEVLIBS)
+
+configure_package_config_file(
+    ${CMAKE_SOURCE_DIR}/srcMLConfig.cmake.in ${CMAKE_BINARY_DIR}/srcMLConfig.cmake
+    INSTALL_DESTINATION "${CONFIG_FILE_DESTINATION}"
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+write_basic_package_version_file(
+    ${CMAKE_BINARY_DIR}/srcMLConfigVersion.cmake
+    VERSION "1.0.0"
+    COMPATIBILITY "SameMajorVersion")
+
+install(FILES ${CMAKE_BINARY_DIR}/srcMLConfig.cmake ${CMAKE_BINARY_DIR}/srcMLConfigVersion.cmake
+        DESTINATION "${CONFIG_FILE_DESTINATION}"
+        COMPONENT DEVLIBS
+)
+
 # static library part of development
-install(TARGETS libsrcml_static COMPONENT DEVLIBS)
+install(TARGETS libsrcml_static EXPORT libsrcml_static_Targets COMPONENT DEVLIBS)
+
+install(EXPORT libsrcml_static_Targets
+        DESTINATION "${CONFIG_FILE_DESTINATION}"
+        NAMESPACE srcML::
+        FILE srcML-static-targets.cmake
+        COMPONENT DEVLIBS)
 
 if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)
-    add_library(libsrcml_link ALIAS libsrcml_static)
+    add_library(srcML::LibsrcML ALIAS libsrcml_static)
 else()
-    add_library(libsrcml_link ALIAS libsrcml_shared)
+    add_library(srcML::LibsrcML ALIAS libsrcml_shared)
 endif()
 
 # install the libsrcml include file
