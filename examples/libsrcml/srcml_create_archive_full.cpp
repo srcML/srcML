@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     srcml_archive_register_namespace(archive, "doc", "http://www.sdml.info/srcML/doc");
 
     // open a srcML archive for output
-    srcml_archive_write_open_filename(archive, "project.xml");
+    srcml_archive_write_open_filename(archive, "newProject.xml");
 
     // add all files on the command line to the archive
     for (int i = 1; i < argc; ++i) {

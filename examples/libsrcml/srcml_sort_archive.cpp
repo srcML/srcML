@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
     });
 
     // open a srcML archive for output
-    srcml_archive_write_open_filename(sortedArchive, "projectSorted.xml");
+    srcml_archive_write_open_filename(sortedArchive, "sortedProject.xml");
 
     // copy the files from the container to the output archive
     // free them now since we did not before

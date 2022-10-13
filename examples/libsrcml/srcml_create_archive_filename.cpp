@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
     srcml_archive* archive = srcml_archive_create();
 
     // open a srcML archive for output
-    srcml_archive_write_open_filename(archive, "project.xml");
+    srcml_archive_write_open_filename(archive, "newProject.xml");
 
     // add all the files to the archive
     for (int i = 1; i < argc; ++i) {

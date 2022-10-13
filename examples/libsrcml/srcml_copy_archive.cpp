@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     srcml_archive* outputArchive = srcml_archive_clone(inputArchive);
 
     // open a srcML archive for output
-    srcml_archive_write_open_filename(outputArchive, "project2.xml");
+    srcml_archive_write_open_filename(outputArchive, "projectCopy.xml");
 
     // copy the files from the input archive to the output archive
     srcml_unit* unit = nullptr;
