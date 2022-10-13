@@ -120,6 +120,29 @@ jobs:
         run: |
           cmake "/c/Program Files/srcML/share/srcml/examples" -DsrcML_DIR="C:/Program Files/srcML/cmake" -G Ninja
           ninja
+          ./srcml_copy_archive.exe
+          ./srcml_create_archive_fd.exe
+          ./srcml_create_archive_file.exe
+          ./srcml_create_archive_filename.exe
+          ./srcml_create_archive_full.exe
+          ./srcml_direct_language.exe
+          ./srcml_direct_language_list.exe
+          ./srcml_direct_language_xml.exe
+          ./srcml_direct_src2srcml.exe
+          ./srcml_direct_srcml2src.exe
+          ./srcml_list.exe
+          ./srcml_read_archive_fd.exe
+          ./srcml_read_archive_file.exe
+          ./srcml_read_archive_filename.exe
+          ./srcml_read_archive_full.exe
+          ./srcml_read_archive_memory.exe
+          ./srcml_relaxng.exe
+          ./srcml_sort_archive.exe
+          ./srcml_split_archive.exe
+          ./srcml_transform.exe
+          ./srcml_xpath.exe
+          ./srcml_xslt.exe
+
           ls srcml_*.exe | xargs -I% -t bash -c './%'
 
       - name: Install package
@@ -144,7 +167,28 @@ jobs:
         run: |
           cmake "/c/Program Files/srcML/share/srcml/examples" -G Ninja
           ninja
-          ls srcml_*.exe | xargs -I% -t bash -c './%'
+          ./srcml_copy_archive.exe
+          ./srcml_create_archive_fd.exe
+          ./srcml_create_archive_file.exe
+          ./srcml_create_archive_filename.exe
+          ./srcml_create_archive_full.exe
+          ./srcml_direct_language.exe
+          ./srcml_direct_language_list.exe
+          ./srcml_direct_language_xml.exe
+          ./srcml_direct_src2srcml.exe
+          ./srcml_direct_srcml2src.exe
+          ./srcml_list.exe
+          ./srcml_read_archive_fd.exe
+          ./srcml_read_archive_file.exe
+          ./srcml_read_archive_filename.exe
+          ./srcml_read_archive_full.exe
+          ./srcml_read_archive_memory.exe
+          ./srcml_relaxng.exe
+          ./srcml_sort_archive.exe
+          ./srcml_split_archive.exe
+          ./srcml_transform.exe
+          ./srcml_xpath.exe
+          ./srcml_xslt.exe
 
       # - name: Setup msys2 with additional client-test packages for Windows
       #   uses: msys2/setup-msys2@v2
