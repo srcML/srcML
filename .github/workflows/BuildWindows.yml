@@ -120,6 +120,12 @@ jobs:
         run: |
           cmake "/c/Program Files/srcML/share/srcml/examples" -DsrcML_DIR="C:/Program Files/srcML/cmake" -G Ninja
           ninja
+
+      - name: Run examples
+        shell: bash
+        working-directory: build2
+        continue-on-error: true
+        run: |
           ./srcml_copy_archive.exe
           ./srcml_create_archive_fd.exe
           ./srcml_create_archive_file.exe
@@ -143,8 +149,6 @@ jobs:
           ./srcml_xpath.exe
           ./srcml_xslt.exe
 
-          ls srcml_*.exe | xargs -I% -t bash -c './%'
-
       - name: Install package
         working-directory: build/dist
         continue-on-error: true
@@ -167,6 +171,12 @@ jobs:
         run: |
           cmake "/c/Program Files/srcML/share/srcml/examples" -G Ninja
           ninja
+
+      - name: Run examples
+        shell: bash
+        working-directory: build3
+        continue-on-error: true
+        run: |
           ./srcml_copy_archive.exe
           ./srcml_create_archive_fd.exe
           ./srcml_create_archive_file.exe
