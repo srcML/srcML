@@ -108,3 +108,6 @@ target_link_libraries(srcml_copy_archive PRIVATE srcML::LibsrcML)
 
 add_executable(srcml_convenient srcml_convenient.cpp)
 target_link_libraries(srcml_convenient PRIVATE srcML::LibsrcML)
+
+# Copy data files for examples
+file(COPY decl_stmt.cpp expr.cpp define.cpp project.xml schema.rng copy.xsl DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")

@@ -35,8 +35,9 @@ int main(int argc, char* argv[]) {
 
     srcml_unit* unit = nullptr;
     while ((unit = srcml_archive_read_unit(archive))) {
-        std::string filename = srcml_unit_get_filename(unit);
-        std::cout << filename << '\n';
+        const char* filename = srcml_unit_get_filename(unit);
+        if (filename)
+            std::cout << filename << '\n';
 
         srcml_unit_free(unit);
     }

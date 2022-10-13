@@ -25,6 +25,7 @@
 */
 
 #include <srcml.h>
+#include <iostream>
 #include <string>
 
 int main(int argc, char* argv[]) {
@@ -47,7 +48,14 @@ int main(int argc, char* argv[]) {
     while ((unit = srcml_archive_read_unit(inputArchive))) {
 
         // split the input archive into an include archive and a non-include archive
-        const std::string filename = srcml_unit_get_filename(unit);
+        const char* rawFilename = srcml_unit_get_filename(unit);
+        if (!rawFilename) {
+            std::cerr << "Unit missing filename\n";
+            srcml_unit_free(unit);
+            continue;
+        }
+        std::string filename = rawFilename;
+
         std::string extension;
         const auto extensionPosition = filename.rfind('.');
         if (extensionPosition != std::string::npos) {

@@ -61,14 +61,12 @@ int main(int argc, char* argv[]) {
         // uparse and write to a file
         int srcml_output = open(filename.data(), O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
         srcml_unit_unparse_fd(unit, srcml_output);
-        close(srcml_output);
 
         srcml_unit_free(unit);
     }
 
     // close the srcML archive
     srcml_archive_close(archive);
-    close(srcml_input);
 
     // free the archive
     srcml_archive_free(archive);

@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     srcml_archive* archive = srcml_archive_create();
 
     // setup our output file using a FILE*
-    FILE* srcml_output = fopen("project.xml", "w");
+    FILE* srcml_output = fopen("newProject.xml", "w");
 
     // open a srcML archive for output
     srcml_archive_write_open_FILE(archive, srcml_output);

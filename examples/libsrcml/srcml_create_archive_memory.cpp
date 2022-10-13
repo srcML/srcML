@@ -25,16 +25,10 @@
 */
 
 #include <srcml.h>
-#include <iostream>
-#include <string.h>
-#include <fcntl.h>
 #include <stdlib.h>
-#ifdef _MSC_BUILD
-#include <io.h>
-#pragma warning(disable : 4996)
-#else
-#include <unistd.h>
-#endif
+#include <iostream>
+#include <fstream>
+#include <iterator>
 
 int main(int argc, char* argv[]) {
 
@@ -47,19 +41,14 @@ int main(int argc, char* argv[]) {
     // add all the files to the archive
     for (int i = 1; i < argc; ++i) {
 
+        // read the contents of the input file
+        std::ifstream ifs(argv[i]);
+        std::string contents(std::istreambuf_iterator<char>{ifs}, {});
+
+        // Translate to srcml and append to the archive
         srcml_unit* unit = srcml_unit_create(archive);
-
-        // Translate to srcml and append to the archive
-        char buffer[256];
-        int srcml_input = open(argv[i], O_RDONLY, 0);
-        int num_read = read(srcml_input, buffer, 256);
-        close(srcml_input);
         srcml_unit_set_language(unit, srcml_archive_check_extension(archive, argv[i]));
-
-        srcml_unit_parse_memory(unit, buffer, num_read);
-
-        // Translate to srcml and append to the archive
-
+        srcml_unit_parse_memory(unit, contents.data(), contents.size());
         srcml_archive_write_unit(archive, unit);
 
         srcml_unit_free(unit);

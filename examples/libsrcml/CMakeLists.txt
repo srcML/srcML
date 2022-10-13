@@ -31,6 +31,7 @@ file(GLOB EXAMPLES "srcml_*.cpp")
 
 install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
 install(FILES CMakeLists.examples.txt DESTINATION share/srcml/examples RENAME CMakeLists.txt COMPONENT EXAMPLES)
+install(FILES decl_stmt.cpp expr.cpp define.cpp project.xml copy.xsl schema.rng DESTINATION share/srcml/examples COMPONENT EXAMPLES)
 
 if(BUILD_EXAMPLES OR PROJECT_IS_TOP_LEVEL)
 
