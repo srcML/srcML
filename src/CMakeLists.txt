@@ -49,7 +49,9 @@ if(CLANG_TIME_TRACE)
 endif()
 
 if(MSVC)
-    add_compile_options(Zc:throwingNew /Ob3)
+    add_compile_options(/Zc:throwingNew)
+    string(REPLACE "/Ob2" "/Ob3" SRCML_INIT "${CMAKE_CXX_FLAGS_RELEASE_INIT}")
+    set(CMAKE_CXX_FLAGS_RELEASE_INIT "${SRCML_INIT}")
 endif()
 
 # For macOS Catalina and more recent, the provided libarchive is at least version 3.3
