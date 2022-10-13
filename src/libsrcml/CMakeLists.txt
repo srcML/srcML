@@ -116,9 +116,6 @@ else()
     set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/srcml")
 endif()
 
-message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
-message("CONFIG_FILE_DESTINATION: ${CONFIG_FILE_DESTINATION}")
-
 install(EXPORT libsrcml_shared_Targets
         DESTINATION "${CONFIG_FILE_DESTINATION}"
         NAMESPACE srcML::
