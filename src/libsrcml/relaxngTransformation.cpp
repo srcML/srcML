@@ -47,7 +47,7 @@ relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocP
  *
  * @returns true on success false on failure.
  */
-TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocPtr doc, int /* position */) const {
+TransformationResult relaxngTransformation::apply(xmlDocPtr doc, int /* position */) const {
 
     std::unique_ptr<xmlRelaxNGValidCtxt> rngctx(xmlRelaxNGNewValidCtxt(rng.get()));
     if (rngctx == nullptr)
