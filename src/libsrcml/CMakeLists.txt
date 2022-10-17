@@ -19,12 +19,16 @@
 # 
 # CMake files for the library libsrcml
 
+# Build options
+option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" ON)
+option(LINK_LIBSRCML_STATIC "Link srcml client, tests, and examples with static version of libsrcml" OFF)
+
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt REQUIRED)
 find_package(Iconv REQUIRED)
 
 # libsrcml library
-file(GLOB LIBSRCML_SOURCE *.h *.hpp *.cpp)
+file(GLOB LIBSRCML_SOURCE *.cpp)
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
 target_include_directories(libsrcml
     PUBLIC
@@ -42,7 +46,7 @@ set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CX
 target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 # libsrcml dependencies
-target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt TinySHA1 parser)
+target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt parser)
 if(NOT MSVC)
     find_package(Threads REQUIRED)
     target_link_libraries(libsrcml PRIVATE Threads::Threads)
