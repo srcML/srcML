@@ -40,7 +40,7 @@ if(WIN32)
 endif()
 
 # Set libsrcml version from src/libsrcml/srcml.h
-# Extract this first because manually setting major, minor, and patch leads to bugs
+# Extract this before project() because manually setting major, minor, and patch leads to bugs
 file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER REGEX "SRCML_VERSION_STRING")
 string(REGEX MATCH "\"([0-9.]+)\"" _ "${SRCML_HEADER}")
 
