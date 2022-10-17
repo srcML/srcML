@@ -91,7 +91,7 @@ set(CPACK_RPM_PACKAGE_RELEASE_DIST ON)
 set(CPACK_RPM_CHANGELOG_FILE "${CMAKE_CURRENT_SOURCE_DIR}/ChangeLog.txt")
 
 # License
-set(CPACK_RPM_PACKAGE_LICENSE "GPLv2+")
+set(CPACK_RPM_PACKAGE_LICENSE "GPL-3.0-only")
 
 # post install script for ldconfig
 # Note: Believe that newline is required
