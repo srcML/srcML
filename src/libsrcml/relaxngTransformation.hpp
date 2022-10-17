@@ -63,9 +63,8 @@ public :
     virtual TransformationResult apply(xmlDocPtr doc, int position) const;
 
 private :
-    std::unique_ptr<xmlRelaxNGValidCtxt> rngctx;
-    std::unique_ptr<xmlRelaxNGParserCtxt> relaxng_parser_ctxt;
-    std::unique_ptr<xmlRelaxNG> rng;
+    const std::unique_ptr<xmlRelaxNGParserCtxt> relaxng_parser_ctxt;
+    const std::unique_ptr<xmlRelaxNG> rng;
 };
 
 #endif

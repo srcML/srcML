@@ -30,18 +30,13 @@
  *
  * Constructor.
  */
-relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocPtr relaxng) {
+relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocPtr relaxng)
+    : relaxng_parser_ctxt(xmlRelaxNGNewDocParserCtxt(relaxng)), rng(xmlRelaxNGParse(relaxng_parser_ctxt.get())) {
 
-    relaxng_parser_ctxt = decltype(relaxng_parser_ctxt)(xmlRelaxNGNewDocParserCtxt(relaxng));
     if (relaxng_parser_ctxt == nullptr)
         throw;
 
-    rng = decltype(rng)(xmlRelaxNGParse(relaxng_parser_ctxt.get()));
     if (rng == nullptr)
-        throw;
-
-    rngctx = decltype(rngctx)(xmlRelaxNGNewValidCtxt(rng.get()));
-    if (rngctx == nullptr)
         throw;
 }
 
@@ -53,6 +48,10 @@ relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocP
  * @returns true on success false on failure.
  */
 TransformationResult relaxngTransformation::apply(xmlDocPtr doc, int /* position */) const {
+
+    std::unique_ptr<xmlRelaxNGValidCtxt> rngctx(xmlRelaxNGNewValidCtxt(rng.get()));
+    if (rngctx == nullptr)
+        throw;
 
     // 0 means it validated
     int n = xmlRelaxNGValidateDoc(rngctx.get(), doc);
