@@ -3,8 +3,6 @@
  * @file sha1utilities.hpp
  *
  * @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
- *
- * This file is part of the srcml command-line client.
  */
 
 #ifndef SHA1_UTILITIES_HPP
