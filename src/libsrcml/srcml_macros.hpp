@@ -1,3 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file srcml_macros.cpp
+ *
+ * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ */
+
 #ifndef INCLUDED_SRCML_MACROS_HPP
 #define INCLUDED_SRCML_MACROS_HPP
 
