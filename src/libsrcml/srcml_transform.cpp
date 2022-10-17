@@ -294,12 +294,12 @@ int srcml_append_transform_xslt_fd(srcml_archive* archive, int xslt_fd) {
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
-static int srcml_append_transform_relaxng_internal(srcml_archive* archive, xmlDocPtr doc) {
+static int srcml_append_transform_relaxng_internal(srcml_archive* archive, std::unique_ptr<xmlDoc> doc) {
 
     if (archive == NULL || doc == 0)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->transformations.push_back(std::unique_ptr<Transformation>(new relaxngTransformation(doc)));
+    archive->transformations.push_back(std::unique_ptr<Transformation>(new relaxngTransformation(doc.get())));
 
     return SRCML_STATUS_OK;
 }
@@ -323,7 +323,7 @@ int srcml_append_transform_relaxng_filename(srcml_archive* archive, const char* 
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_relaxng_internal(archive, doc.get());
+    return srcml_append_transform_relaxng_internal(archive, std::move(doc));
 }
 
 /**
@@ -346,7 +346,7 @@ int srcml_append_transform_relaxng_memory(srcml_archive* archive, const char* re
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_relaxng_internal(archive, doc.get());
+    return srcml_append_transform_relaxng_internal(archive, std::move(doc));
 }
 
 /**
@@ -369,7 +369,7 @@ int srcml_append_transform_relaxng_FILE(srcml_archive* archive, FILE* relaxng_fi
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_relaxng_internal(archive, doc.get());
+    return srcml_append_transform_relaxng_internal(archive, std::move(doc));
 }
 
 /**
@@ -391,7 +391,7 @@ int srcml_append_transform_relaxng_fd(srcml_archive* archive, int relaxng_fd) {
     if (doc == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    return srcml_append_transform_relaxng_internal(archive, doc.get());
+    return srcml_append_transform_relaxng_internal(archive, std::move(doc));
 }
 
 /**

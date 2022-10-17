@@ -52,7 +52,7 @@ relaxngTransformation::relaxngTransformation(/* OPTION_TYPE& options, */ xmlDocP
  *
  * @returns true on success false on failure.
  */
-TransformationResult relaxngTransformation::relaxngTransformation::apply(xmlDocPtr doc, int /* position */) const {
+TransformationResult relaxngTransformation::apply(xmlDocPtr doc, int /* position */) const {
 
     // 0 means it validated
     int n = xmlRelaxNGValidateDoc(rngctx.get(), doc);
