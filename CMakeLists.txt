@@ -58,6 +58,9 @@ endif()
 # used as defaults for installation and packaging
 include(GNUInstallDirs)
 
+# Call at root so testing can be run at root
+enable_testing()
+
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(doc)
