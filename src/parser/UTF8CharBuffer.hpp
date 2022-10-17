@@ -34,7 +34,11 @@
 #include <antlr/CharBuffer.hpp>
 #include <string>
 #include <iconv.h>
-#include <sha1utilities.hpp>
+#include <memory>
+
+namespace sha1 {
+    class SHA1;
+}
 
 #include <optional>
 
@@ -127,7 +131,7 @@ private:
     int lastchar = 0;
 
     /** hash encoder */
-    sha1::SHA1 ctx;
+    std::unique_ptr<sha1::SHA1> ctx;
 
     /** raw character buffer */
     std::vector<char> raw;

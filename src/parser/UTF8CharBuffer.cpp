@@ -119,6 +119,8 @@ UTF8CharBuffer::UTF8CharBuffer(const char* encoding, bool hashneeded, std::optio
 
     // may be null
     this->encoding = encoding ? normalizeEncodingName(encoding) : "";
+
+    ctx.reset(new sha1::SHA1());
 }
 
 /**
@@ -291,7 +293,7 @@ size_t UTF8CharBuffer::readChars() {
 
     // hash only the read data, not the inbytesleft (from previous call)
     if (hashneeded) {
-        ctx.processBytes(raw.data() + inbytesleft, raw.size() - inbytesleft);
+        ctx->processBytes(raw.data() + inbytesleft, raw.size() - inbytesleft);
     }
 
     // assume nothing to skip over
@@ -483,7 +485,7 @@ UTF8CharBuffer::~UTF8CharBuffer() {
 
     if (hashneeded) {
         uint8_t md[20];
-        ctx.getDigestBytes(md);
+        ctx->getDigestBytes(md);
         const char outmd[] = { HEXCHARASCII(md), '\0'};
         hash = outmd;
     }
