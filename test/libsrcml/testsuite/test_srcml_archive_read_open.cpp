@@ -288,6 +288,7 @@ int main(int, char* argv[]) {
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
+        close(fd);
     }
 
     {
@@ -300,6 +301,7 @@ int main(int, char* argv[]) {
     {
         int fd = open("project_ns.xml", O_RDONLY, 0);
         dassert(srcml_archive_read_open_fd(0, fd), SRCML_STATUS_INVALID_ARGUMENT);
+        close(fd);
     }
 
     /*

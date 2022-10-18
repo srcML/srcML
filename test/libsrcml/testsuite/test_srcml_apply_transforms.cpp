@@ -1511,6 +1511,7 @@ int main(int, char* argv[]) {
         fclose(f);
         fd = open("schema.rng", O_RDONLY, 0);
         srcml_append_transform_relaxng_fd(iarchive, fd);
+        close(fd);
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
