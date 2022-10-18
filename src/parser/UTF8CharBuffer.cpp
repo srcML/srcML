@@ -125,20 +125,20 @@ UTF8CharBuffer::UTF8CharBuffer(const char* ifilename, const char* encoding, bool
         throw UTF8FileError();
 
     // open the file
-    int fd = open(ifilename, O_RDONLY);
-    if (fd == -1)
+    intptr_t fd = open(ifilename, O_RDONLY);
+    if (fd == -1) {
         throw UTF8FileError();
+    }
 
     // setup callbacks, wrappers around read() and close()
-    sio.context = new Context<int>(fd);
+    sio.context = reinterpret_cast<void*>(fd);
     sio.read_callback = [](void* context, void* buf, size_t insize) -> ssize_t {
         if (insize > UINT_MAX)
             return -1;
-        return read(static_cast<Context<int>*>(context)->value, buf, static_cast<unsigned int>(insize));
+        return read(static_cast<int>(reinterpret_cast<intptr_t>(context)), buf, static_cast<unsigned int>(insize));
     };
     sio.close_callback = [](void* context) -> int {
-        int fd = static_cast<Context<int>*>(context)->value;
-        delete static_cast<Context<int>*>(context);
+        int fd = static_cast<int>(reinterpret_cast<intptr_t>(context));
         return close(fd);
     };
 }
@@ -463,7 +463,8 @@ const std::string& UTF8CharBuffer::getEncoding() const {
  * place in buffer if requested.
  */
 UTF8CharBuffer::~UTF8CharBuffer() {
-    if(sio.context) {
+
+    if (sio.context && sio.close_callback) {
         sio.close_callback(sio.context);
     }
 

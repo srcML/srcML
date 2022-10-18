@@ -546,15 +546,9 @@ int srcml_unit_parse_filename(struct srcml_unit* unit, const char* src_filename)
     if (unit == nullptr || src_filename == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    // open the file and use the file descriptor version
-    int src_fd = OPEN(src_filename, O_RDONLY, 0);
-    if (src_fd == -1) {
-        return SRCML_STATUS_IO_ERROR;
-    }
+    return srcml_unit_parse_internal(unit, src_filename, [src_filename](const char* encoding, bool output_hash, std::optional<std::string>& hash)-> UTF8CharBuffer* {
 
-    return srcml_unit_parse_internal(unit, src_filename, [src_fd](const char* encoding, bool output_hash, std::optional<std::string>& hash)-> UTF8CharBuffer* {
-
-        return new UTF8CharBuffer(src_fd, encoding, output_hash, hash);
+        return new UTF8CharBuffer(src_filename, encoding, output_hash, hash);
     });
 }
 
