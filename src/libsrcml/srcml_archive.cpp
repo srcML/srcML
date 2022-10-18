@@ -48,7 +48,7 @@ const char* srcml_archive_check_extension(const srcml_archive* archive, const ch
  */
 srcml_archive* srcml_archive_create() {
 
-    srcml_archive* archive;
+    srcml_archive* archive = nullptr;
     try {
 
         archive = new srcml_archive;

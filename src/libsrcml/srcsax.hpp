@@ -33,7 +33,7 @@ public:
     bool is_archive;
 
     /** the xml documents encoding */
-    const char* encoding;
+    const char* encoding = nullptr;
 
     /* Internal context handling NOT FOR PUBLIC USE */
 

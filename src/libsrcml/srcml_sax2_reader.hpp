@@ -33,10 +33,10 @@
 struct thread_args {
 
     /** control for sax processing */
-    srcSAXController* control;
+    srcSAXController* control = nullptr;
 
     /** handler with hooks for sax processing */
-    srcml_reader_handler* handler;
+    srcml_reader_handler* handler = nullptr;
 };
 
 /**

@@ -51,7 +51,7 @@ public:
 
 private:
     ctpl::thread_pool pool;
-    WriteQueue* wqueue;
+    WriteQueue* wqueue = nullptr;
     int counter = 0;
     std::mutex e;
 };
