@@ -32,10 +32,10 @@ void WriteQueue::schedule(std::shared_ptr<ParseRequest> pvalue) {
 
         // put this request into the queue
         q.push(pvalue);
-    }
 
-    // let the write processing know there is something
-    cv.notify_one();
+        // let the write processing know there is something
+        cv.notify_one();
+    }
 }
 
 void WriteQueue::stop() {
@@ -44,9 +44,9 @@ void WriteQueue::stop() {
         std::unique_lock<std::mutex> lock(qmutex);
 
         completed = true;
-    }
 
-    cv.notify_one();
+        cv.notify_one();
+    }
 
     write_thread.join();
 }
