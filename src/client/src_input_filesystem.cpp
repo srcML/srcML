@@ -18,7 +18,6 @@
 #include <list>
 #include <deque>
 #include <vector>
-#include <memory>
 #include <archive.h>
 #include <archive_entry.h>
 

@@ -12,7 +12,6 @@
 #include <archive.h>
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
-#include <memory>
 #include <libarchive_utilities.hpp>
 
 namespace {

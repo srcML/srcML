@@ -50,25 +50,25 @@ int src_input_text(ParseQueue& queue,
     while (ptext) {
 
         // form the parsing request
-        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
+        ParseRequest request;
 
         if (option(SRCML_COMMAND_NOARCHIVE))
-            prequest->disk_dir = srcml_request.output_filename.resource;
+            request.disk_dir = srcml_request.output_filename.resource;
 
-        prequest->filename = srcml_request.att_filename;
-        prequest->url = srcml_request.att_url;
-        prequest->version = srcml_request.att_version;
-        prequest->srcml_arch = srcml_arch;
-        prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
+        request.filename = srcml_request.att_filename;
+        request.url = srcml_request.att_url;
+        request.version = srcml_request.att_version;
+        request.srcml_arch = srcml_arch;
+        request.language = srcml_request.att_language ? *srcml_request.att_language : "";
 
-        if (prequest->language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
-                prequest->language = l;
+        if (request.language.empty())
+            if (const char* l = srcml_archive_check_extension(srcml_arch, request.filename->c_str()))
+                request.language = l;
 
-        prequest->status = 0;
+        request.status = 0;
 
         // fill up the parse request buffer
-        if (!prequest->status) {
+        if (!request.status) {
 
             // copy from the text directly into a buffer
             // perform newline and tab expansion
@@ -80,35 +80,35 @@ int src_input_text(ParseQueue& queue,
                     break;
                 }
                 // append up to the special char
-                prequest->buffer.insert(prequest->buffer.end(), ptext, epos);
+                request.buffer.insert(request.buffer.end(), ptext, epos);
 
                 // append the special character
                 ++epos;
                 switch (*epos) {
                 case 'n':
-                    prequest->buffer.push_back('\n');
+                    request.buffer.push_back('\n');
                     break;
                 case 't':
-                    prequest->buffer.push_back('\t');
+                    request.buffer.push_back('\t');
                     break;
                 case 'f':
-                    prequest->buffer.push_back('\f');
+                    request.buffer.push_back('\f');
                     break;
                 case 'a':
-                    prequest->buffer.push_back('\a');
+                    request.buffer.push_back('\a');
                     break;
                 case 'b':
-                    prequest->buffer.push_back('\b');
+                    request.buffer.push_back('\b');
                     break;
                 /* \e not directly supported in C, but echo command does */
                 case 'e':
-                    prequest->buffer.push_back('\x1B');
+                    request.buffer.push_back('\x1B');
                     break;
                 case 'r':
-                    prequest->buffer.push_back('\r');
+                    request.buffer.push_back('\r');
                     break;
                 case 'v':
-                    prequest->buffer.push_back('\v');
+                    request.buffer.push_back('\v');
                     break;
                 // byte with hex value from 1 to 2 charcters
                 case 'x':
@@ -120,8 +120,8 @@ int src_input_text(ParseQueue& queue,
                         ++offset;
                     }
                     if (offset == 0) {
-                        prequest->buffer.push_back('\\');
-                        prequest->buffer.push_back('x');
+                        request.buffer.push_back('\\');
+                        request.buffer.push_back('x');
                         break;
                     }
 
@@ -133,7 +133,7 @@ int src_input_text(ParseQueue& queue,
                         goto end;
                     }
 
-                    prequest->buffer.push_back((char) value);
+                    request.buffer.push_back((char) value);
 
                     epos += offset;
                     break;
@@ -172,8 +172,8 @@ int src_input_text(ParseQueue& queue,
                         ++offset;
                     }
                     if (offset == 0) {
-                        prequest->buffer.push_back('\\');
-                        prequest->buffer.push_back('0');
+                        request.buffer.push_back('\\');
+                        request.buffer.push_back('0');
                         break;
                     }
 
@@ -185,27 +185,27 @@ int src_input_text(ParseQueue& queue,
                         goto end;
                     }
 
-                    prequest->buffer.push_back(static_cast<char>(value));
+                    request.buffer.push_back(static_cast<char>(value));
 
                     epos += offset - 1;
                     break;
                 }
                 default:
-                    prequest->buffer.push_back('\\');
-                    prequest->buffer.push_back(*(epos));
+                    request.buffer.push_back('\\');
+                    request.buffer.push_back(*(epos));
                 }
                 ptext = epos + 1;
             }
 
             // finished with no '\\' remaining, so flush buffer
-            prequest->buffer.insert(prequest->buffer.end(), ptext, ptext + strlen(ptext));
+            request.buffer.insert(request.buffer.end(), ptext, ptext + strlen(ptext));
             ptext = 0;
         }
 
         // schedule for parsing
 end:    count += 1;
 
-        queue.schedule(prequest);
+        queue.schedule(std::move(request));
     }
 
     return count;

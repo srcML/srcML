@@ -12,7 +12,6 @@
 #define SRCML_INPUT_SRCML_HPP
 
 #include <srcml_utilities.hpp>
-#include <memory>
 #include <optional>
 #include <srcml_cli.hpp>
 

@@ -14,7 +14,6 @@
 #include <SRCMLStatus.hpp>
 #include <cstring>
 #include <libarchive_utilities.hpp>
-#include <memory>
 
 void unarchive_srcml(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,

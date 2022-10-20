@@ -13,7 +13,6 @@
 #include <archive_entry.h>
 #include <string>
 #include <SRCMLStatus.hpp>
-#include <memory>
 #include <libarchive_utilities.hpp>
 #include <srcml_utilities.hpp>
 

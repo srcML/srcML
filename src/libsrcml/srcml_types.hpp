@@ -118,6 +118,7 @@ struct srcml_archive {
  * such as the transformed or collected unit.
  */
 struct srcml_unit {
+
     /** the archive the unit is created from */
     srcml_archive* archive = nullptr;
 

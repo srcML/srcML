@@ -15,7 +15,6 @@
 #include <ctpl_stl.h>
 #include <mutex>
 #include <srcml_consume.hpp>
-#include <memory>
 #include <srcml_utilities.hpp>
 
 class ParseQueue {
@@ -24,7 +23,7 @@ public:
     ParseQueue(int max_threads, WriteQueue* write_queue)
         : pool(max_threads), wqueue(write_queue) {}
 
-    inline void schedule(std::shared_ptr<ParseRequest> pvalue) {
+    inline void schedule(ParseRequest&& value) {
 
         int next;
         {
@@ -32,16 +31,16 @@ public:
 
             next = ++counter;
         }
-        pvalue->position = next;
+        value.position = next;
 
         // error passthrough to output for proper output in trace
-        if (pvalue->status) {
-            pvalue->unit = 0;
-            wqueue->schedule(pvalue);
+        if (value.status) {
+            value.unit = 0;
+            wqueue->schedule(std::move(value));
             return;
         }
 
-        pool.push(srcml_consume, pvalue, wqueue);
+        pool.push(srcml_consume, std::move(value), wqueue);
     }
 
     inline void wait() {

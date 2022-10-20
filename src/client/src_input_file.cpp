@@ -22,30 +22,30 @@ int src_input_file(ParseQueue& queue,
     }
 
     // form the parsing request
-    std::shared_ptr<ParseRequest> prequest(new ParseRequest);
+    ParseRequest request;
 
     if (option(SRCML_COMMAND_NOARCHIVE)) {
-        prequest->disk_dir = srcml_request.output_filename.resource;
+        request.disk_dir = srcml_request.output_filename.resource;
     }
 
     if (srcml_request.att_filename)
-        prequest->filename = *srcml_request.att_filename;
+        request.filename = *srcml_request.att_filename;
     else if (input.resource != "_")
-        prequest->filename = input.resource;
+        request.filename = input.resource;
 
-    prequest->url = srcml_request.att_url;
-    prequest->version = srcml_request.att_version;
-    prequest->srcml_arch = srcml_arch;
-    prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
+    request.url = srcml_request.att_url;
+    request.version = srcml_request.att_version;
+    request.srcml_arch = srcml_arch;
+    request.language = srcml_request.att_language ? *srcml_request.att_language : "";
 
-    if (prequest->language.empty())
-        if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
-            prequest->language = l;
+    if (request.language.empty())
+        if (const char* l = srcml_archive_check_extension(srcml_arch, request.filename->c_str()))
+            request.language = l;
 
-    prequest->disk_filename = input.resource;
+    request.disk_filename = input.resource;
 
     // Hand request off to the processing queue
-    queue.schedule(prequest);
+    queue.schedule(std::move(request));
 
     return 1;
 }

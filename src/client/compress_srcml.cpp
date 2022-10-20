@@ -12,7 +12,6 @@
 #include <archive_entry.h>
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
-#include <memory>
 #include <limits.h>
 
 #if ARCHIVE_VERSION_NUMBER >= 3002000

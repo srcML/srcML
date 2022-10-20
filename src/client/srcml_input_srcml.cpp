@@ -93,23 +93,23 @@ int srcml_input_srcml(ParseQueue& queue,
         }
 
         // form the parsing request
-        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
-        prequest->srcml_arch = srcml_output_archive;
-        prequest->unit.swap(unit);
-        prequest->needsparsing = false;
-        prequest->input_archive = srcml_input_archive;
-        prequest->parsertest_filename = srcml_input.resource;
+        ParseRequest request;
+        request.srcml_arch = srcml_output_archive;
+        request.unit.swap(unit);
+        request.needsparsing = false;
+        request.input_archive = srcml_input_archive;
+        request.parsertest_filename = srcml_input.resource;
 
-        if (srcml_archive_get_url(prequest->input_archive.get()))
-            prequest->url = srcml_archive_get_url(prequest->input_archive.get());
+        if (srcml_archive_get_url(request.input_archive.get()))
+            request.url = srcml_archive_get_url(request.input_archive.get());
 
         // if the archive has a language (set by the user) then use that
         // this is a way of converting language
         if (srcml_archive_get_language(srcml_output_archive))
-            srcml_unit_set_language(prequest->unit.get(), srcml_archive_get_language(srcml_output_archive));
+            srcml_unit_set_language(request.unit.get(), srcml_archive_get_language(srcml_output_archive));
 
         // hand request off to the processing queue
-        queue.schedule(prequest);
+        queue.schedule(std::move(request));
 
         // one-time through for individual unit
         if (option(SRCML_COMMAND_PARSER_TEST) ? srcml_request.unit : srcml_input.unit)
