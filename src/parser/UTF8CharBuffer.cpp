@@ -29,11 +29,6 @@
 #endif
 
 namespace {
-    template<typename T>
-    struct Context {
-        Context(T v) : value(v) {}
-        T value;
-    };
 
     // indicates if the two given encodings are basically the same,
     // with a trivial encoding process
@@ -214,14 +209,13 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, st
         throw UTF8FileError();
 
     // setup callbacks, wrappers around read()
-    sio.context = new Context<int>(fd);
+    sio.context = reinterpret_cast<void*>(fd);
     sio.read_callback = [](void* context, void* buf, size_t readsize) -> ssize_t {
         if (readsize > UINT_MAX)
             return -1;
-        return read(static_cast<Context<int>*>(context)->value, buf, static_cast<unsigned int>(readsize));
+        return read(static_cast<int>(reinterpret_cast<intptr_t>(context)), buf, static_cast<unsigned int>(readsize));
     };
-    sio.close_callback = [](void* context) -> int {
-        delete static_cast<Context<int>*>(context);
+    sio.close_callback = [](void* /* context */) -> int {
         return 0;
     };
 }
