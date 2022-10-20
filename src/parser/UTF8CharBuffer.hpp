@@ -53,13 +53,13 @@ typedef int (*srcml_close_callback)(void * context);
 struct srcMLIO {
 
     /** hold void * context */
-    void* context;
+    void* context = nullptr;
 
     /** provided read callback */
-    srcml_read_callback read_callback;
+    srcml_read_callback read_callback = nullptr;
 
     /** provided close callback */
-    srcml_close_callback close_callback;
+    srcml_close_callback close_callback = nullptr;
 };
 
 /**
