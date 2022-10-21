@@ -13,9 +13,9 @@
 #include <ParseRequest.hpp>
 #include <WriteQueue.hpp>
 #include <ctpl_stl.h>
-#include <mutex>
 #include <srcml_consume.hpp>
 #include <srcml_utilities.hpp>
+#include <atomic>
 
 class ParseQueue {
 public:
@@ -25,13 +25,7 @@ public:
 
     inline void schedule(ParseRequest&& value) {
 
-        int next;
-        {
-            std::unique_lock<std::mutex> l(e);
-
-            next = ++counter;
-        }
-        value.position = next;
+        value.position = ++counter;
 
         // error passthrough to output for proper output in trace
         if (value.status) {
@@ -51,8 +45,7 @@ public:
 private:
     ctpl::thread_pool pool;
     WriteQueue* wqueue = nullptr;
-    int counter = 0;
-    std::mutex e;
+    std::atomic<int> counter = 0;
 };
 
 #endif
