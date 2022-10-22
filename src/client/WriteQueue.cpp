@@ -31,7 +31,7 @@ void WriteQueue::schedule(ParseRequest&& request) {
             maxposition = request.position;
 
         // put this request into the queue
-        q.push(std::move(const_cast<ParseRequest&>(request)));
+        q.push(std::move(request));
 
         // let the write processing know there is something
         cv.notify_one();
@@ -56,21 +56,23 @@ void WriteQueue::process() {
     int position = 0;
     while (1) {
 
-        // get a parse request to handle
-        ParseRequest value;
-        {
-            std::unique_lock<std::mutex> lock(qmutex);
-
-            while (q.empty() || (ordered && (q.top().position != position + 1))) {
-                if (q.empty() && completed)
-                    return;
-                cv.wait(lock);
-            }
-
-            value = std::move(const_cast<ParseRequest&>(q.top()));
-            q.pop();
-        }
         ++position;
+
+        // get a parse request to handle
+        std::unique_lock<std::mutex> lock(qmutex);
+
+        while (q.empty() || (ordered && (q.top().position != position))) {
+            if (q.empty() && completed)
+                return;
+            cv.wait(lock);
+        }
+
+        // move the request off the queue
+        ParseRequest value(std::move(const_cast<ParseRequest&>(q.top())));
+        q.pop();
+
+        // done accessing the queue
+        lock.unlock();
 
         // record real units written
         if (value.status == SRCML_STATUS_OK)
