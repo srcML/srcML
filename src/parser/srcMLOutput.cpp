@@ -422,32 +422,32 @@ void srcMLOutput::outputMacroList() {
  *
  * Callback to process/output text.
  */
-inline void srcMLOutput::processText(const std::string& str) {
+inline void srcMLOutput::processText(std::string_view str) {
 
-    if (strpbrk(str.c_str(), "<>&") == nullptr) {
+    auto p = str.begin();
+    auto lastp = p;
+    for (; p != str.end();) {
 
-        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) str.data(), (int)str.size());
-
-    } else {
-
-        // delimiter is not limited to chars, and must be escaped
-        std::string s;
-        for (char c : str) {
-
-            if (c == '<') {
-                s += "&lt;";
-            } else if (c == '>') {
-                s += "&gt;";
-            } else if (c == '&') {
-                s += "&amp;";
-            } else {
-                s += c;
-            }
+        if (*p == '<') {
+            xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
+            xmlTextWriterWriteRawLen(xout, BAD_CAST "&lt;", 4);
+            ++p;
+            lastp = p;
+        } else if (*p == '>') {
+            xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
+            xmlTextWriterWriteRawLen(xout, BAD_CAST "&gt;", 4);
+            ++p;
+            lastp = p;
+        } else if (*p == '&') {
+            xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
+            xmlTextWriterWriteRawLen(xout, BAD_CAST "&amp;", 5);
+            ++p;
+            lastp = p;
+        } else {
+            ++p;
         }
-
-        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) s.data(), (int)s.size());
-
     }
+    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
 }
 
 /**
