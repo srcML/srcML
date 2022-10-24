@@ -272,8 +272,8 @@ public :
 
                 while(!value.empty()) {
 
-                    std::string::size_type commaPos = value.find(",");
-                    std::string option = value.substr(0, commaPos);
+                    const auto commaPos = value.find(",");
+                    std::string option(value.substr(0, commaPos));
                     if (commaPos == std::string::npos)
                         value = "";
                     else
@@ -295,8 +295,8 @@ public :
                 ;
             else {
 
-                archive->attributes.push_back(attribute);
-                archive->attributes.push_back(value);
+                archive->attributes.emplace_back(attribute);
+                archive->attributes.emplace_back(value);
             }
         }
 

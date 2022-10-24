@@ -617,10 +617,10 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
         // extract the value of the char attribute and add to the src (text)
         if (localname == state->ESCAPE_ENTRY) {
 
-            std::string svalue((const char *)attributes[0 * 5 + 3], static_cast<std::size_t>(attributes[0 * 5 + 4] - attributes[0 * 5 + 3]));
+            std::string_view svalue((const char *)attributes[0 * 5 + 3], static_cast<std::size_t>(attributes[0 * 5 + 4] - attributes[0 * 5 + 3]));
 
             // use strtol() instead of atoi() since strtol() understands hex encoding of '0x0?'
-            char value = (char)strtol(svalue.c_str(), NULL, 0);
+            char value = (char)strtol(svalue.data(), NULL, 0);
 
             state->unitsrc.append(1, value);
         }

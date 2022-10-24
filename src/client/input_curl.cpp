@@ -15,11 +15,13 @@
 #include <condition_variable>
 #include <atomic>
 #include <limits.h>
+#include <string>
+#include <string_view>
 
-bool curl_supported(const std::string& input_protocol) {
+bool curl_supported(std::string_view input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
     for (int i = 0; curl_types[i] != nullptr; ++i) {
-        if (std::string(curl_types[i]) == input_protocol)
+        if (curl_types[i] == input_protocol)
             return true;
     }
     return false;

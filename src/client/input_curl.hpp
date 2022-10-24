@@ -11,8 +11,9 @@
 #define input_curl_HPP
 
 #include <srcml_input_src.hpp>
+#include <string_view>
 
-bool curl_supported(const std::string& input_protocol);
+bool curl_supported(std::string_view input_protocol);
 
 // adjust input for libcurl and libarchive decompressions
 int input_curl(srcml_input_src& input);

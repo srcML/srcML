@@ -10,6 +10,8 @@
 #include <unit_utilities.hpp>
 #include <libxml/parserInternals.h>
 #include <stack>
+#include <string_view>
+using namespace ::std::literals::string_view_literals;
 
 // Update unit attributes with xml parsed attributes
 void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar** attributes) {
@@ -17,24 +19,24 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
     // collect attributes
     for (int pos = 0; pos < num_attributes; ++pos) {
 
-        std::string attribute = (const char*) attributes[pos * 5];
+        std::string_view attribute = (const char*) attributes[pos * 5];
         std::string value((const char *)attributes[pos * 5 + 3], static_cast<size_t>(attributes[pos * 5 + 4] - attributes[pos * 5 + 3]));
 
-        if (attribute == "timestamp")
-            srcml_unit_set_timestamp(unit, value.c_str());
-        else if (attribute == "hash")
-            srcml_unit_set_hash(unit, value.c_str());
-        else if (attribute == "language")
-            srcml_unit_set_language(unit, value.c_str());
-        else if (attribute == "revision")
+        if (attribute == "timestamp"sv)
+            srcml_unit_set_timestamp(unit, value.data());
+        else if (attribute == "hash"sv)
+            srcml_unit_set_hash(unit, value.data());
+        else if (attribute == "language"sv)
+            srcml_unit_set_language(unit, value.data());
+        else if (attribute == "revision"sv)
             unit->revision = value;
-        else if (attribute == "filename")
-            srcml_unit_set_filename(unit, value.c_str());
-        else if (attribute == "url")
+        else if (attribute == "filename"sv)
+            srcml_unit_set_filename(unit, value.data());
+        else if (attribute == "url"sv)
             unit->url = value;
-        else if (attribute == "version")
-            srcml_unit_set_version(unit, value.c_str());
-        else if (attribute == "tabs" || attribute == "options" || attribute == "hash")
+        else if (attribute == "version"sv)
+            srcml_unit_set_version(unit, value.data());
+        else if (attribute == "tabs"sv || attribute == "options"sv || attribute == "hash"sv)
             ;
         else {
             // if we already have the attribute, then just update the value
@@ -48,8 +50,8 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
                 }
             }
             if (!found) {
-                unit->attributes.push_back(attribute);
-                unit->attributes.push_back(value);
+                unit->attributes.emplace_back(attribute);
+                unit->attributes.emplace_back(value);
             }
         }
     }
@@ -150,7 +152,7 @@ std::string extract_src(const std::string& srcml, std::optional<int> revision) {
         if (scontext == nullptr)
             return;
 
-        if (strcmp((const char*) localname, "escape") == 0 && strcmp((const char*) URI, SRCML_SRC_NS_URI) == 0) {
+        if ("escape"sv == (const char*) localname && "http://www.srcML.org/srcML/src"sv == (const char*) URI) {
             std::string svalue((const char *)attributes[0 * 5 + 3], static_cast<std::size_t>(attributes[0 * 5 + 4] - attributes[0 * 5 + 3]));
 
             // use strtol() instead of atoi() since strtol() understands hex encoding of '0x0?'

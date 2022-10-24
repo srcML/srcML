@@ -12,19 +12,19 @@
 
 #include <archive.h>
 #include <archive_entry.h>
-#include <string>
+#include <string_view>
 
 class mkDir {
 public:
     mkDir();
 
-    void mkdir(const std::string& path);
+    void mkdir(std::string_view path);
 
     ~mkDir();
 private:
     archive* arch;
     archive_entry* entry;
-    std::string last;
+    std::string_view last;
 };
 
 #endif

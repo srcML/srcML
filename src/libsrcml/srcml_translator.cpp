@@ -31,6 +31,8 @@
 #include <unit_utilities.hpp>
 #include <srcMLOutput.hpp>
 
+using namespace ::std::literals::string_view_literals;
+
 /**
  * srcml_translator
  * @param output_buffer general libxml2 output buffer
@@ -322,15 +324,22 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
     if (!is_outputting_unit || name == 0)
         return false;
 
-    if (strcmp(name, "unit") == 0)
+    if ("unit"sv == name)
         return false;
+
+    // if (strcmp(name, "unit") == 0)
+    //     return false;
 
     ++output_unit_depth;
 
     const char* used_uri = nullptr;
-    if (uri == nullptr || strcmp(SRCML_SRC_NS_URI, uri) != 0) {
+    if (uri == nullptr || "http://www.srcML.org/srcML/src"sv != uri) {
         used_uri = uri;
     }
+
+    // if (uri == nullptr || strcmp(SRCML_SRC_NS_URI, uri) != 0) {
+    //     used_uri = uri;
+    // }
 
     return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST used_uri) != -1;
 }

@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <srcml_macros.hpp>
 #include <functional>
+#include <string_view>
 
 /******************************************************************************
  *                                                                            *
@@ -370,7 +371,7 @@ const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
     if (!unit->srcml_fragment) {
 
         // find end of unit tag, e.g., end of "<unit ...>" or "<src:unit ...>"
-        std::string prefix = "";
+        // std::string_view prefix = "";
         auto pos = unit->srcml.find(">");
 
         int insert_attr_begin = 0;
