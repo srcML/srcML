@@ -451,9 +451,9 @@ int srcml_clear_transforms(srcml_archive* archive) {
     return SRCML_STATUS_OK;
 }
 
-static bool usesURI(xmlNode* cur_node, const std::string& URI);
+static bool usesURI(xmlNode* cur_node, std::string_view URI);
 
-static bool usesURIChildren(xmlNode* a_node, const std::string& URI) {
+static bool usesURIChildren(xmlNode* a_node, std::string_view URI) {
 
     for (xmlNode* cur_node = a_node; cur_node; cur_node = cur_node->next) {
 
@@ -468,7 +468,7 @@ static bool usesURIChildren(xmlNode* a_node, const std::string& URI) {
     return false;
 }
 
-static bool usesURI(xmlNode* cur_node, const std::string& URI) {
+static bool usesURI(xmlNode* cur_node, std::string_view URI) {
 
     if (cur_node->ns && cur_node->ns->prefix && URI == (const char*) cur_node->ns->href) {
         return true;

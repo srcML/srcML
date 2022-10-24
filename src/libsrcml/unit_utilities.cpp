@@ -160,7 +160,7 @@ std::string extract_src(const std::string& srcml, std::optional<int> revision) {
 
             scontext->s.append(1, value);
 
-        } else if (scontext->revision && strcmp((const char*) URI, SRCML_DIFF_NS_URI) == 0) {
+        } else if (scontext->revision && SRCML_DIFF_NS_URI == (const char*) URI) {
 
             if (std::string((const char*) localname) == "INSERT")
                 scontext->mode.push(INSERT);
