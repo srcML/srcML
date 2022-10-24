@@ -36,13 +36,6 @@ struct Namespace {
     std::string_view getPrefix() const { flags |= NS_USED; return prefix; }
 };
 
-namespace nstags
-{
-    struct prefix {};
-    struct uri {};
-    struct position {};
-}
-
 typedef std::vector<Namespace> Namespaces;
 
 /** xml declaration standalone attribute */
