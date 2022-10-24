@@ -328,13 +328,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Set output XML encoding. Default is UTF-8")
         ->type_name("ENCODING")
         ->group("ENCODING")
-        ->check([&](const std::string &value) {
+        ->check([&](const std::string &value)->std::string {
 
             if (value.empty() || srcml_check_encoding(value.data()) == 0) {
                 return std::string("invalid xml encoding \"") + value + "\"";
             }
 
-            return std::string("");
+            return "";
         });
 
     app.add_flag_callback("--no-xml-declaration",[&]() { *srcml_request.markup_options |= SRCML_OPTION_NO_XML_DECL; },

@@ -212,7 +212,7 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     // if a srcdiff revision, remove the srcdiff namespace
     if (unit->archive->revision_number) {
-        auto it = findNSURI(mergedns, std::string(SRCML_DIFF_NS_URI));
+        auto it = findNSURI(mergedns, SRCML_DIFF_NS_URI);
         if (it != mergedns.end()) {
             mergedns.erase(it);
         }

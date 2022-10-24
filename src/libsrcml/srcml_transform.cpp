@@ -615,11 +615,11 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             nunit->namespaces = starting_namespaces;
 
         // mark unused cpp and omp until we examine the query result
-        auto itcpp = findNSURI(*nunit->namespaces, std::string(SRCML_CPP_NS_URI));
+        auto itcpp = findNSURI(*nunit->namespaces, SRCML_CPP_NS_URI);
         if (itcpp != nunit->namespaces->end()) {
             itcpp->flags &= ~NS_USED;
         }
-        auto itomp = findNSURI(*nunit->namespaces, std::string(SRCML_OPENMP_NS_URI));
+        auto itomp = findNSURI(*nunit->namespaces, SRCML_OPENMP_NS_URI);
         if (itomp != nunit->namespaces->end()) {
             itomp->flags &= ~NS_USED;
         }

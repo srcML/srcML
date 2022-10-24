@@ -173,7 +173,7 @@ int srcml_archive_set_src_encoding(struct srcml_archive* archive, const char* sr
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->src_encoding = src_encoding ? std::string(src_encoding) : std::optional<std::string>();
+    archive->src_encoding = src_encoding ? std::string(src_encoding) : decltype(archive->src_encoding)();
 
     return SRCML_STATUS_OK;
 }
@@ -192,7 +192,7 @@ int srcml_archive_set_xml_encoding(struct srcml_archive* archive, const char* en
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->encoding = encoding ? std::string(encoding) : std::optional<std::string>();
+    archive->encoding = encoding ? std::string(encoding) : decltype(archive->encoding)();
 
     return SRCML_STATUS_OK;
 }
@@ -702,7 +702,7 @@ const char* srcml_archive_get_prefix_from_uri(const struct srcml_archive* archiv
     if (archive == nullptr || uri == nullptr)
         return 0;
 
-    auto it = findNSURI(archive->namespaces, std::string(uri));
+    auto it = findNSURI(archive->namespaces, uri);
     return it != archive->namespaces.end() ? it->prefix.data() : 0;
 }
 
@@ -738,7 +738,7 @@ const char* srcml_archive_get_uri_from_prefix(const struct srcml_archive* archiv
     if (archive == nullptr || prefix == nullptr)
         return 0;
 
-    auto it = findNSPrefix(archive->namespaces, std::string(prefix));
+    auto it = findNSPrefix(archive->namespaces, prefix);
     return it != archive->namespaces.end() ? it->uri.data() : 0;
 }
 

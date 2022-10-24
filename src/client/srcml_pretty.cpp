@@ -211,7 +211,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 
             const char* param = acquire_metadata(srcml_arch, nullptr, arg);
             if (param) {
-                header_params.push_back(std::string(param));
+                header_params.emplace_back(param);
             }
             else {
                 if (output_template.header_args.size() > 1)
@@ -248,7 +248,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                                 body_params.push_back("xmlns=" + std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
                             }
                             else{
-                                body_params.push_back("xmlns:" + std::string(srcml_archive_get_namespace_prefix(srcml_arch, i)) + "=" + std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
+                                body_params.push_back("xmlns:" + std::string(srcml_archive_get_namespace_prefix(srcml_arch, i)) + "=" + srcml_archive_get_namespace_uri(srcml_arch, i));
                             }
                         }
                     }
@@ -256,7 +256,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 else if (arg == "N:u") {
                     for (size_t i = 0; i < ns_size; ++i) {
                         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-                            body_params.push_back(std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
+                            body_params.emplace_back(srcml_archive_get_namespace_uri(srcml_arch, i));
                         }
                     }
                 }
@@ -264,10 +264,10 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                     for (size_t i = 0; i < ns_size; ++i) {
                         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
                             if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
-                                body_params.push_back("");
+                                body_params.emplace_back("");
                             }
                             else{
-                                body_params.push_back(std::string(srcml_archive_get_namespace_prefix(srcml_arch, i)));
+                                body_params.emplace_back(srcml_archive_get_namespace_prefix(srcml_arch, i));
                             }
                         }
                     }
@@ -275,11 +275,11 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 else {
                     const char* param = acquire_metadata(srcml_arch, unit.get(), arg);
                     if (param) {
-                        body_params.push_back(std::string(param));
+                        body_params.emplace_back(param);
                     }
                     else {
                         if (output_template.body_args.size() > 1)
-                            body_params.push_back("");
+                            body_params.emplace_back("");
                     }
                 }
             }
@@ -308,11 +308,11 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
             else {
                 const char* param = acquire_metadata(srcml_arch, nullptr, arg);
                 if (param) {
-                    footer_params.push_back(std::string(param));
+                    footer_params.emplace_back(param);
                 }
                 else {
                     if (output_template.footer_args.size() > 1)
-                        footer_params.push_back("");
+                        footer_params.emplace_back("");
                 }
             }
         }

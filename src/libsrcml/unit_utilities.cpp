@@ -162,9 +162,9 @@ std::string extract_src(const std::string& srcml, std::optional<int> revision) {
 
         } else if (scontext->revision && SRCML_DIFF_NS_URI == (const char*) URI) {
 
-            if (std::string((const char*) localname) == "INSERT")
+            if ((const char*) localname == "INSERT"sv)
                 scontext->mode.push(INSERT);
-            else if (std::string((const char*) localname) == "DELETE")
+            else if ((const char*) localname == "DELETE"sv)
                 scontext->mode.push(DELETE);
             else
                 scontext->mode.push(COMMON);
