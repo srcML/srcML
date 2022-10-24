@@ -424,30 +424,32 @@ void srcMLOutput::outputMacroList() {
  */
 inline void srcMLOutput::processText(std::string_view str) {
 
-    auto p = str.begin();
-    auto lastp = p;
-    for (; p != str.end();) {
+    // skip processing empty stings
+    if (str.empty())
+        return;
 
+    // output any '<', '>', or '&', or any text before
+    auto p = &str.data()[0];
+    auto lastp = p;
+    for (p = strpbrk(p, "<>&"); p != 0 && *p != 0; p = strpbrk(p, "<>&")) {
+
+        // output section before
+        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
+
+        // output special characters
         if (*p == '<') {
-            xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
             xmlTextWriterWriteRawLen(xout, BAD_CAST "&lt;", 4);
-            ++p;
-            lastp = p;
         } else if (*p == '>') {
-            xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
             xmlTextWriterWriteRawLen(xout, BAD_CAST "&gt;", 4);
-            ++p;
-            lastp = p;
         } else if (*p == '&') {
-            xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
             xmlTextWriterWriteRawLen(xout, BAD_CAST "&amp;", 5);
-            ++p;
-            lastp = p;
-        } else {
-            ++p;
         }
+        ++p;
+        lastp = p;
     }
-    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
+
+    // output remaining text after last '<', '>', or '&', or the entire string if these do not occur
+    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, &str.data()[str.size() - 1] - lastp + 1);
 }
 
 /**
