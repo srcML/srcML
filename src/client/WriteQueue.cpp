@@ -31,7 +31,7 @@ void WriteQueue::schedule(ParseRequest&& request) {
             maxposition = request.position;
 
         // put this request into the queue
-        q.push(std::move(request));
+        q.emplace(std::move(request));
 
         // let the write processing know there is something
         cv.notify_one();
