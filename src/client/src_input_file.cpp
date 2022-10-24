@@ -39,7 +39,7 @@ int src_input_file(ParseQueue& queue,
     request.language = srcml_request.att_language ? *srcml_request.att_language : "";
 
     if (request.language.empty())
-        if (const char* l = srcml_archive_check_extension(srcml_arch, request.filename->c_str()))
+        if (const char* l = srcml_archive_check_extension(srcml_arch, request.filename->data()))
             request.language = l;
 
     request.disk_filename = input.resource;

@@ -298,8 +298,8 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
             if (encoding.empty()) {
                 encoding = "UTF-8";
-            } else if (encoding != "UTF-8" && !compatibleEncodings(encoding.c_str(), "UTF-8")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.c_str());
+            } else if (encoding != "UTF-8" && !compatibleEncodings(encoding.data(), "UTF-8")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.data());
             }
         }
 
@@ -311,8 +311,8 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
             if (encoding.empty()) {
                 encoding = "UTF-16";
-            } else if (encoding != "UTF-16" && !compatibleEncodings(encoding.c_str(), "UTF-16")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.c_str());
+            } else if (encoding != "UTF-16" && !compatibleEncodings(encoding.data(), "UTF-16")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.data());
             }
         }
 
@@ -324,8 +324,8 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
             if (encoding.empty()) {
                 encoding = "UTF-32";
-            } else if (encoding != "UTF-32" && !compatibleEncodings(encoding.c_str(), "UTF-32")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.c_str());
+            } else if (encoding != "UTF-32" && !compatibleEncodings(encoding.data(), "UTF-32")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.data());
             }
         }
 
@@ -334,10 +334,10 @@ size_t UTF8CharBuffer::readChars() {
             encoding = "ISO-8859-1";
 
         // setup encoder from encoding to UTF-8
-        ic = iconv_open("UTF-8", encoding.c_str());
+        ic = iconv_open("UTF-8", encoding.data());
         if (ic == (iconv_t) -1) {
             if (errno == EINVAL) {
-                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.c_str());
+                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.data());
                 return 0;
             }
         }

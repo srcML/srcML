@@ -506,7 +506,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // create a DOM of the unit
-    std::shared_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
+    std::shared_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.data(), (int) unit->srcml.size(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
     if (doc == nullptr)
         return SRCML_STATUS_ERROR;
 
@@ -722,7 +722,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             starttag += ">";
 
             // parse the start tag updating the unit
-            xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.c_str(), (int) starttag.size());
+            xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.data(), (int) starttag.size());
             auto save_private = context->_private;
             context->_private = nunit;
             auto save_sax = context->sax;
@@ -820,7 +820,7 @@ const char* srcml_transform_get_string(struct srcml_transform_result* result) {
     if (!result->stringValue)
         return 0;
 
-    return result->stringValue->c_str();
+    return result->stringValue->data();
 }
 
 /**

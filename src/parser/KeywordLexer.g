@@ -326,17 +326,17 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
     for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
         if (user_macro_list[i + 1] == "src:macro")
-            literals[user_macro_list[i].c_str()] = MACRO_NAME;
+            literals[user_macro_list[i].data()] = MACRO_NAME;
         else if (user_macro_list[i + 1] == "src:name")
-            literals[user_macro_list[i].c_str()] = MACRO_TYPE_NAME;
+            literals[user_macro_list[i].data()] = MACRO_TYPE_NAME;
         else if (user_macro_list[i + 1] == "src:type")
-            literals[user_macro_list[i].c_str()] = MACRO_TYPE_NAME;
+            literals[user_macro_list[i].data()] = MACRO_TYPE_NAME;
         else if (user_macro_list[i + 1] == "src:case")
-            literals[user_macro_list[i].c_str()] = MACRO_CASE;
+            literals[user_macro_list[i].data()] = MACRO_CASE;
         else if (user_macro_list[i + 1] == "src:label")
-            literals[user_macro_list[i].c_str()] = MACRO_LABEL;
+            literals[user_macro_list[i].data()] = MACRO_LABEL;
         else if (user_macro_list[i + 1] == "src:specifier")
-            literals[user_macro_list[i].c_str()] = MACRO_SPECIFIER;
+            literals[user_macro_list[i].data()] = MACRO_SPECIFIER;
     }
 
     constexpr const keyword keyword_map[] = {

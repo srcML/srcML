@@ -165,7 +165,7 @@ public:
 
         for(int i = 0; i < lang2intcount; ++i)
             if (get_language_number(lang2int[i]) == language)
-                return get_language_string(lang2int[i]).c_str();
+                return get_language_string(lang2int[i]).data();
 
         return "";
     }

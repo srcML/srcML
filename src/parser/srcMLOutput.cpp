@@ -34,7 +34,7 @@ namespace {
             prefix += ns.prefix;
         }
 
-        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.c_str(), BAD_CAST ns.uri.c_str());
+        xmlTextWriterWriteAttribute(xout, BAD_CAST prefix.data(), BAD_CAST ns.uri.data());
     }
 
     // itoa-type function
@@ -219,8 +219,8 @@ void srcMLOutput::outputProcessingInstruction() {
 
         didwrite = true;
 
-        xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.c_str());
-        xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.c_str());
+        xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.data());
+        xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.data());
         xmlTextWriterEndPI(xout);
         xmlTextWriterWriteString(xout, BAD_CAST "\n");
     }
@@ -304,7 +304,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
 
     // start of main tag
     std::string unitprefix = namespaces[SRC].prefix;
-    xmlTextWriterStartElementNS(xout, BAD_CAST (!unitprefix.empty() ? unitprefix.c_str() : 0), BAD_CAST "unit", 0);
+    xmlTextWriterStartElementNS(xout, BAD_CAST (!unitprefix.empty() ? unitprefix.data() : 0), BAD_CAST "unit", 0);
     ++openelementcount;
 
     // output namespaces for root and nested units
@@ -355,7 +355,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         { UNIT_ATTRIBUTE_VERSION, version },
 
         // position tab setting
-        { tabattribute.c_str(), isoption(options, SRCML_PARSER_OPTION_POSITION) ? stabsize.c_str() : 0 },
+        { tabattribute.data(), isoption(options, SRCML_PARSER_OPTION_POSITION) ? stabsize.data() : 0 },
 
         // timestamp attribute
         { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
@@ -366,7 +366,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         // source encoding attribute
         { UNIT_ATTRIBUTE_SOURCE_ENCODING, isoption(options, SRCML_PARSER_OPTION_STORE_ENCODING) ? encoding : 0 },
 
-        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && !soptions.empty() ? soptions.c_str() : 0 },
+        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && !soptions.empty() ? soptions.data() : 0 },
 
     };
 
@@ -379,7 +379,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     }
 
     for(std::vector<std::string>::size_type pos = 0; pos < attributes.size(); pos += 2) {
-        xmlTextWriterWriteAttribute(xout, BAD_CAST attributes[pos].c_str(), BAD_CAST attributes[pos + 1].c_str());
+        xmlTextWriterWriteAttribute(xout, BAD_CAST attributes[pos].data(), BAD_CAST attributes[pos + 1].data());
     }
 
     if (output_macrolist)
@@ -410,8 +410,8 @@ void srcMLOutput::outputMacroList() {
     for(std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
 
         xmlTextWriterStartElement(xout, BAD_CAST "macro-list");
-        xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].c_str());
-        xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].c_str());
+        xmlTextWriterWriteAttribute(xout, BAD_CAST "token", BAD_CAST user_macro_list[i].data());
+        xmlTextWriterWriteAttribute(xout, BAD_CAST "type", BAD_CAST user_macro_list[i + 1].data());
         xmlTextWriterEndElement(xout);
     }
 }
@@ -496,14 +496,14 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     // highly optimized as this is output for every start tag
 
     // position start attribute, e.g. pos:start="1:4"
-    xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.c_str());
+    xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.data());
     xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
     xmlOutputBufferWrite(output_buffer, 1, ":");
     xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
     xmlOutputBufferWrite(output_buffer, 1, "\"");
 
     // position end attribute, e.g. pos:end="2:1"
-    xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.c_str());
+    xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.data());
     if (token->getLine() > stoken->endline) {
         xmlOutputBufferWriteString(output_buffer, "INVALID_POS(");
     }
@@ -572,10 +572,10 @@ inline void srcMLOutput::outputToken(const antlr::RefToken& token) {
         // process the token using the fields in the element
         processToken(token, eparts.name,
                     // use getPrefix() to record that this prefix was used
-                    namespaces[eparts.prefix].getPrefix().c_str(),
+                    namespaces[eparts.prefix].getPrefix().data(),
                     eparts.attr_name,
                     // if attribute name and no value, then take text from token
-                    eparts.attr_name && eparts.attr_value ? eparts.attr_value : token->getText().c_str(),
+                    eparts.attr_name && eparts.attr_value ? eparts.attr_value : token->getText().data(),
                     eparts.attr2_name,
                     eparts.attr2_value);
 

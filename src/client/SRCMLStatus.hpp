@@ -106,7 +106,7 @@ inline void SRCMLstatus(int msg_type, const std::string& format, T value, Args..
   // replace the first argument in the format with the value
   // note: Ignoring the format type
   std::ostringstream msg_text;
-  const char* s = format.c_str();
+  const char* s = format.data();
   while (s && *s) {
     if (*s == '%' && *++s != '%') {
       msg_text << value;

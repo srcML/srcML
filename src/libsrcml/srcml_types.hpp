@@ -197,11 +197,11 @@ int srcml_unit_set_hash (struct srcml_unit* unit, const char* hash);
 
 // helper conversions for std::optional<std::string>
 inline const char* optional_to_c_str(const std::optional<std::string>& s) {
-    return s ? s->c_str() : 0;
+    return s ? s->data() : 0;
 }
 
 inline const char* optional_to_c_str(const std::optional<std::string>& s, const char* value) {
-    return s ? s->c_str() : value;
+    return s ? s->data() : value;
 }
 
 // RAII for archives and units with std::unique_ptr<>

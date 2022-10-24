@@ -129,7 +129,7 @@ static int reparse_root(void* ctx) {
                     (const char*) prefix, (const char*) URI, nb_namespaces, namespaces, nb_attributes, attributes);
     };
 
-    xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(state->rootstarttag.c_str(), (int) state->rootstarttag.size());
+    xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(state->rootstarttag.data(), (int) state->rootstarttag.size());
     auto save_private = context->_private;
     context->_private = state;
     auto save_sax = context->sax;
@@ -288,7 +288,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         }
     }
 
-    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+    SRCML_DEBUG("UNIT", state->unitsrcml.data(), state->unitsrcml.size());
 
     SRCSAX_DEBUG_END(localname);
 
@@ -458,7 +458,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         }
     }
 
-    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+    SRCML_DEBUG("UNIT", state->unitsrcml.data(), state->unitsrcml.size());
 
     // where the content begins, past the start unit tag
     state->content_begin = (int) state->unitsrcml.size();
@@ -516,7 +516,7 @@ void end_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, const 
 
     SRCSAX_DEBUG_START(localname);
 
-    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+    SRCML_DEBUG("UNIT", state->unitsrcml.data(), state->unitsrcml.size());
 
     state->mode = END_UNIT;
 
@@ -611,7 +611,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
         state->unitsrcml.append((const char*) state->base, static_cast<std::size_t>(srcmllen));
 
-        SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+        SRCML_DEBUG("UNIT", state->unitsrcml.data(), state->unitsrcml.size());
 
         // Special element <escape char="0x0c"/> used to embed non-XML characters
         // extract the value of the char attribute and add to the src (text)
@@ -666,7 +666,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
         state->content_end = (int) state->unitsrcml.size() + 1;
         state->unitsrcml.append((const char*) state->base, static_cast<std::size_t>(srcmllen));
 
-        SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+        SRCML_DEBUG("UNIT", state->unitsrcml.data(), state->unitsrcml.size());
     }
 
     state->base = ctxt->input->cur;
@@ -797,7 +797,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
         state->base = ctxt->input->cur;
     }
 
-    SRCML_DEBUG("UNIT", state->unitsrcml.c_str(), state->unitsrcml.size());
+    SRCML_DEBUG("UNIT", state->unitsrcml.data(), state->unitsrcml.size());
 
     BASE_DEBUG
 

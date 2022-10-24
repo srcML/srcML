@@ -73,7 +73,7 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     } else {
 
-        status = archive_read_open_filename(arch.get(), input_file.c_str(), buffer_size);
+        status = archive_read_open_filename(arch.get(), input_file.data(), buffer_size);
     }
 
     if (status != ARCHIVE_OK) {
@@ -94,7 +94,7 @@ int src_input_libarchive(ParseQueue& queue,
     // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
     // which then hangs
     // Note: may need to fix in libsrcml
-    if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) | input_file.skip) {
+    if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.data())) | input_file.skip) {
         // if we are not verbose, then just end this attemp
         if (!(option(SRCML_COMMAND_VERBOSE))) {
             return 0;
@@ -195,18 +195,18 @@ int src_input_libarchive(ParseQueue& queue,
         // user specified a language, and is a file, text, or stdin
         // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
         if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin")
-             || srcml_archive_check_extension(srcml_arch, filename.c_str())))
+             || srcml_archive_check_extension(srcml_arch, filename.data())))
             language = *srcml_request.att_language;
 
         // if not explicitly set, language comes from extension
         // we have to do this ourselves, since libsrcml can't for memory
         if (language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
+            if (const char* l = srcml_archive_check_extension(srcml_arch, filename.data()))
                 language = l;
 
         // with a compressed non-archive, need to check the actual extension of the file
         if (language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.extension.c_str()))
+            if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.extension.data()))
                 language = l;
 
         // if we don't have a language, and are not verbose, then just end this attemp

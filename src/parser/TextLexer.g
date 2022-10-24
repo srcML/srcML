@@ -111,7 +111,7 @@ CONSTANTS :
     {
         //firstpreprocline = false;
         if (onpreprocline && isline) {
-            line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
+            line_number = atoi(text.substr(_begin, text.length()-_begin).data());
         }
     }
 ;

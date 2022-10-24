@@ -55,7 +55,7 @@ xpathTransformation::xpathTransformation(srcml_archive* /* oarchive */, const ch
 
     // create a namespace for the new element (if needed)
     if (element_uri) {
-        element_ns = xmlNewNs(NULL, (const xmlChar*) uri.c_str(), (const xmlChar*) prefix.c_str());
+        element_ns = xmlNewNs(NULL, (const xmlChar*) uri.data(), (const xmlChar*) prefix.data());
     }
 }
 
@@ -136,8 +136,8 @@ int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
 void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* /* attr_prefix */, const char* append_attr_uri) const {
 
     // grab current value
-    const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.c_str(), BAD_CAST append_attr_uri);
-    const char* newvalue = attr_value.c_str();
+    const char* value = (char*) xmlGetNsProp(node, BAD_CAST attr_name.data(), BAD_CAST append_attr_uri);
+    const char* newvalue = attr_value.data();
 
     // previous property
     std::string curvalue;
@@ -146,10 +146,10 @@ void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* 
         curvalue = value;
         curvalue += ' ';
         curvalue += attr_value;
-        newvalue = curvalue.c_str();
+        newvalue = curvalue.data();
     }
 
-    xmlNewNsProp(node, attr_ns, (const xmlChar *) attr_name.c_str(), (const xmlChar *) newvalue);
+    xmlNewNsProp(node, attr_ns, (const xmlChar *) attr_name.data(), (const xmlChar *) newvalue);
 }
 
 xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
@@ -178,8 +178,8 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
     // register standard prefixes for standard namespaces
     for (const auto& ns : default_namespaces) {
 
-        const char* registerURI = ns.uri.c_str();
-        const char* registerPrefix = ns.prefix.c_str();
+        const char* registerURI = ns.uri.data();
+        const char* registerPrefix = ns.prefix.data();
         if (ns.uri == SRCML_SRC_NS_URI)
             registerPrefix = "src";
 
@@ -240,7 +240,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
 
                 xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
-                append_attribute_to_node(onode, attr_prefix.c_str(), attr_value.c_str());
+                append_attribute_to_node(onode, attr_prefix.data(), attr_value.data());
             }
         }
         tresult.unitWrapped = true;
@@ -280,11 +280,11 @@ void xpathTransformation::addElementXPathResults(xmlDocPtr doc, xmlXPathObjectPt
         xmlNodePtr onode = result_nodes->nodesetval->nodeTab[i];
 
         // set up node to insert
-        xmlNodePtr element_node = xmlNewNode(element_ns, (const xmlChar*) element.c_str());
+        xmlNodePtr element_node = xmlNewNode(element_ns, (const xmlChar*) element.data());
 
         if (!attr_name.empty())
-            append_attribute_to_node(element_node, !attr_uri.empty() ? attr_prefix.c_str() : prefix.c_str(),
-                !attr_uri.empty() ? attr_uri.c_str() : uri.c_str());
+            append_attribute_to_node(element_node, !attr_uri.empty() ? attr_prefix.data() : prefix.data(),
+                !attr_uri.empty() ? attr_uri.data() : uri.data());
 
         // result node is not a unit
         if (a_node != onode) {

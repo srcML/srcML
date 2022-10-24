@@ -30,7 +30,7 @@
  *
  * @returns the c string
  */
-#define optional_get_c_str(str) (str ? str->c_str() : 0)
+#define optional_get_c_str(str) (str ? str->data() : 0)
 
 #ifndef _MSC_VER
 

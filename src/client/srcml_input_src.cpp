@@ -56,7 +56,7 @@ srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDE
 
     if (protocol == "file") {
         struct stat s;
-        exists = stat(resource.c_str(), &s) == 0;
+        exists = stat(resource.data(), &s) == 0;
 
         isdirectory = exists && S_ISDIR(s.st_mode);
     }
@@ -142,7 +142,7 @@ int srcml_archive_read_open(srcml_archive* arch, const srcml_input_src& input_so
     else if (contains<FILE*>(input_source))
         status = srcml_archive_read_open_FILE(arch, input_source);
     else
-        status = srcml_archive_read_open_filename(arch, input_source.c_str());
+        status = srcml_archive_read_open_filename(arch, input_source.data());
 
     return status;
 }

@@ -86,7 +86,7 @@ void srcml_write_request(ParseRequest&& request, TraceLog& log, const srcml_outp
         srcml_archive_enable_solitary_unit(output_archive);
         srcml_archive_disable_hash(output_archive);
 
-        srcml_archive_write_open_filename(output_archive, filename.c_str());
+        srcml_archive_write_open_filename(output_archive, filename.data());
     }
 
     // output scalar results
@@ -109,7 +109,7 @@ void srcml_write_request(ParseRequest&& request, TraceLog& log, const srcml_outp
                 else
                     s = std::to_string((int) srcml_transform_get_number(request.results));
 
-                srcml_archive_write_string(output_archive, s.c_str(), (int) s.size());
+                srcml_archive_write_string(output_archive, s.data(), (int) s.size());
 
                 // output a newline after every result
                 srcml_archive_write_string(output_archive, "\n", 1);

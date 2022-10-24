@@ -463,7 +463,7 @@ public :
                 if (it != unit->namespaces->end()) {
                     it->flags |= NS_USED;
                 } else {
-                    unit->namespaces->push_back({ state->cpp_prefix->c_str(), SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+                    unit->namespaces->push_back({ state->cpp_prefix->data(), SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
                 }
             }
 

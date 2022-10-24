@@ -120,7 +120,7 @@ int input_curl(srcml_input_src& input) {
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &write_info);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, our_curl_write_callback);
 
-        curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl_handle, CURLOPT_URL, url.data());
         curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
         curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);

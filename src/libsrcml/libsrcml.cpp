@@ -197,11 +197,11 @@ int srcml(const char* input_filename, const char* output_filename) {
         if (!((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
             && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
              || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
-           || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))) {
+           || (global_archive.language && strcmp(global_archive.language->data(), "xml") == 0))) {
 
             if (global_archive.language) {
                 global_archive.error_string = "Language '";
-                global_archive.error_string += global_archive.language->c_str();
+                global_archive.error_string += global_archive.language->data();
                 global_archive.error_string += "' is not supported.";
             } else
                 global_archive.error_string = "No language provided.";
@@ -805,7 +805,7 @@ int srcml_check_exslt() {
  *
  * @returns Return a string describing last recorded error for convenience functions.
  */
-const char* srcml_error_string() { return global_archive.error_string.c_str(); }
+const char* srcml_error_string() { return global_archive.error_string.data(); }
 
 /******************************************************************************
  *                                                                            *

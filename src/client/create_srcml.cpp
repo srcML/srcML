@@ -112,7 +112,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
         } else {
 
-            nstatus = srcml_archive_write_open_filename(srcml_arch.get(), destination.c_str());
+            nstatus = srcml_archive_write_open_filename(srcml_arch.get(), destination.data());
         }
         if (nstatus != SRCML_STATUS_OK)
             return;
@@ -121,14 +121,14 @@ void create_srcml(const srcml_request_t& srcml_request,
     // set options for the output srcml archive
 
     // xml encoding
-    if (srcml_request.att_xml_encoding && srcml_archive_set_xml_encoding(srcml_arch.get(), srcml_request.att_xml_encoding->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.att_xml_encoding && srcml_archive_set_xml_encoding(srcml_arch.get(), srcml_request.att_xml_encoding->data()) != SRCML_STATUS_OK) {
             // while stored as an attribute, xml encoding is an XML attribute, not a srcML attribute
             SRCMLstatus(ERROR_MSG, "srcml: invalid xml encoding '%s'for srcml archive", *srcml_request.att_xml_encoding);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     // source encoding
-    if (srcml_request.src_encoding && srcml_archive_set_src_encoding(srcml_arch.get(), srcml_request.src_encoding->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.src_encoding && srcml_archive_set_src_encoding(srcml_arch.get(), srcml_request.src_encoding->data()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid source encoding '%s' for srcml archive", *srcml_request.src_encoding);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
@@ -136,7 +136,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // for single input src archives (e.g., .tar), url attribute is the source url (if not already given)
     if (srcml_request.att_url) {
         std::string url = src_prefix_resource(*srcml_request.att_url);
-        if (srcml_archive_set_url(srcml_arch.get(), url.c_str()) != SRCML_STATUS_OK) {
+        if (srcml_archive_set_url(srcml_arch.get(), url.data()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid url attribute value '%s' for srcml archive", url);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
@@ -146,14 +146,14 @@ void create_srcml(const srcml_request_t& srcml_request,
         std::string url_name = src_prefix_resource(input_sources[0].filename);
         url_name = url_name.substr(url_name.find_first_not_of("./"));
 
-        if (srcml_archive_set_url(srcml_arch.get(), url_name.c_str()) != SRCML_STATUS_OK) {
+        if (srcml_archive_set_url(srcml_arch.get(), url_name.data()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid url '%s' for srcml archive", url_name);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
     }
 
     // version
-    if (srcml_request.att_version && srcml_archive_set_version(srcml_arch.get(), srcml_request.att_version->c_str()) != SRCML_STATUS_OK) {
+    if (srcml_request.att_version && srcml_archive_set_version(srcml_arch.get(), srcml_request.att_version->data()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid version attribute value for srcml archive");
             exit(SRCML_STATUS_INVALID_ARGUMENT);
     }
@@ -178,7 +178,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     }
 
     // language
-    auto language = srcml_request.att_language ? srcml_request.att_language->c_str() : SRCML_LANGUAGE_NONE;
+    auto language = srcml_request.att_language ? srcml_request.att_language->data() : SRCML_LANGUAGE_NONE;
     if (srcml_archive_set_language(srcml_arch.get(), language) != SRCML_STATUS_OK) {
         SRCMLstatus(ERROR_MSG, "srcml: invalid language '%s' for srcml archive", language);
         exit(SRCML_STATUS_INVALID_ARGUMENT);
@@ -235,7 +235,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         auto pos = ext.find('=');
         const auto& registerExtension = ext.substr(0, pos);
         const auto& registerLanguage = ext.substr(pos+1);
-        if (srcml_archive_register_file_extension(srcml_arch.get(), registerExtension.c_str(), registerLanguage.c_str()) != SRCML_STATUS_OK) {
+        if (srcml_archive_register_file_extension(srcml_arch.get(), registerExtension.data(), registerLanguage.data()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: unable to register file extension '%s' for language '%s' for srcml archive", registerExtension, registerLanguage);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
@@ -245,7 +245,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     for (const auto& ns : srcml_request.xmlns_namespaces) {
         const auto& namespacePrefix = ns.first;
         const auto& namespaceURI = ns.second;
-        if (srcml_archive_register_namespace(srcml_arch.get(), namespacePrefix.c_str(), namespaceURI.c_str()) != SRCML_STATUS_OK) {
+        if (srcml_archive_register_namespace(srcml_arch.get(), namespacePrefix.data(), namespaceURI.data()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: unable to register namespace '%s:%s' for srcml archive", namespacePrefix, namespaceURI);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
         }
@@ -283,7 +283,7 @@ void create_srcml(const srcml_request_t& srcml_request,
                 value.append("\"");
             }
 
-            srcml_append_transform_param(srcml_arch.get(), name.c_str(), value.c_str());
+            srcml_append_transform_param(srcml_arch.get(), name.data(), value.data());
 
         } else if (protocol == "relaxng") {
             if (apply_relaxng(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
@@ -300,7 +300,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     // but do not show default, as that depends on file contents
     if (srcml_request.src_encoding) {
         log.output("Source encoding:  ");
-        log.output(srcml_request.src_encoding->c_str());
+        log.output(srcml_request.src_encoding->data());
         log.output("\n");
     }
     log.output("XML encoding:  ");

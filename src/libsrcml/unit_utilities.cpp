@@ -156,7 +156,7 @@ std::string extract_src(const std::string& srcml, std::optional<int> revision) {
             std::string svalue((const char *)attributes[0 * 5 + 3], static_cast<std::size_t>(attributes[0 * 5 + 4] - attributes[0 * 5 + 3]));
 
             // use strtol() instead of atoi() since strtol() understands hex encoding of '0x0?'
-            char value = (char)strtol(svalue.c_str(), NULL, 0);
+            char value = (char)strtol(svalue.data(), NULL, 0);
 
             scontext->s.append(1, value);
 
@@ -171,7 +171,7 @@ std::string extract_src(const std::string& srcml, std::optional<int> revision) {
         }
     };
 
-    xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(srcml.c_str(), (int) srcml.size());
+    xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(srcml.data(), (int) srcml.size());
     auto save_private = context->_private;
     context->_private = &scontext;
     auto save_sax = context->sax;

@@ -56,7 +56,7 @@ public:
     bool operator==(const std::string& other) const { return other == filename; }
     bool operator!=(const char* other) const { return filename != other; }
 
-    const char* c_str() const { return resource.c_str(); }
+    const char* data() const { return resource.data(); }
 
     std::string filename;
     // only used by filesystem input

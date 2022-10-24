@@ -37,7 +37,7 @@ void pretty_print(const std::string& format, const std::vector<std::string>& arg
     // replace the first argument in the format with the value
     // note: Ignoring the format type
     std::ostringstream format_string;
-    const char* s = format.c_str();
+    const char* s = format.data();
     while (s && *s) {
         if (*s == '%' && *++s != '%' && !thisargs.empty()) {
             auto value = thisargs.back();

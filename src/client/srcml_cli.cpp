@@ -245,7 +245,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML")
         ->expected(1)
         ->check([&](std::string lang) {
-            if (lang.empty() || srcml_check_language(lang.c_str()) == 0) {
+            if (lang.empty() || srcml_check_language(lang.data()) == 0) {
                 SRCMLstatus(ERROR_MSG, "srcml: invalid language \"%s\"", lang);
                 exit(CLI_STATUS_ERROR);
             }
@@ -330,7 +330,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("ENCODING")
         ->check([&](const std::string &value) {
 
-            if (value.empty() || srcml_check_encoding(value.c_str()) == 0) {
+            if (value.empty() || srcml_check_encoding(value.data()) == 0) {
                 return std::string("invalid xml encoding \"") + value + "\"";
             }
 

@@ -47,7 +47,7 @@ void srcml_consume(int /* thread_pool_id */, ParseRequest& request, WriteQueue* 
 
     // language attribute, required if from memory
     if (srcml_unit_get_language(request.unit.get()) == 0 || srcml_unit_get_language(request.unit.get())[0] == '\0')
-        if ((request.status = srcml_unit_set_language(request.unit.get(), request.language.c_str())) != SRCML_STATUS_OK) {
+        if ((request.status = srcml_unit_set_language(request.unit.get(), request.language.data())) != SRCML_STATUS_OK) {
             request.unit.reset();
             write_queue->schedule(std::move(request));
             return;
@@ -65,7 +65,7 @@ void srcml_consume(int /* thread_pool_id */, ParseRequest& request, WriteQueue* 
             it = request.filename->begin();
         }
 
-        if ((request.status = srcml_unit_set_filename(request.unit.get(), request.filename->c_str())) != SRCML_STATUS_OK) {
+        if ((request.status = srcml_unit_set_filename(request.unit.get(), request.filename->data())) != SRCML_STATUS_OK) {
             request.unit.reset();
             write_queue->schedule(std::move(request));
             return;
@@ -73,7 +73,7 @@ void srcml_consume(int /* thread_pool_id */, ParseRequest& request, WriteQueue* 
     }
 
     // (optional) version attribute
-    if (request.version && ((request.status = srcml_unit_set_version(request.unit.get(), request.version->c_str())) != SRCML_STATUS_OK)) {
+    if (request.version && ((request.status = srcml_unit_set_version(request.unit.get(), request.version->data())) != SRCML_STATUS_OK)) {
         request.unit.reset();
         write_queue->schedule(std::move(request));
         return;
@@ -81,13 +81,13 @@ void srcml_consume(int /* thread_pool_id */, ParseRequest& request, WriteQueue* 
 
     // (optional) timestamp attribute
     if (request.time_stamp)
-        srcml_unit_set_timestamp(request.unit.get(), request.time_stamp->c_str());
+        srcml_unit_set_timestamp(request.unit.get(), request.time_stamp->data());
 
     // parse the buffer/file, timing as we go
     Timer parsetime;
 
     if (request.disk_filename) {
-        request.status = srcml_unit_parse_filename(request.unit.get(), request.disk_filename->c_str());
+        request.status = srcml_unit_parse_filename(request.unit.get(), request.disk_filename->data());
     }
     else if (request.needsparsing) {
 

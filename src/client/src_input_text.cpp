@@ -43,7 +43,7 @@ int src_input_text(ParseQueue& queue,
     const srcml_input_src& input) {
 
     std::string raw_text = src_prefix_resource(input.resource);
-    const char* ptext = raw_text.c_str();
+    const char* ptext = raw_text.data();
 
     // process text, which may have more than one input due to use of ASCII NUL ('\0')
     int count = 0;
@@ -62,7 +62,7 @@ int src_input_text(ParseQueue& queue,
         request.language = srcml_request.att_language ? *srcml_request.att_language : "";
 
         if (request.language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, request.filename->c_str()))
+            if (const char* l = srcml_archive_check_extension(srcml_arch, request.filename->data()))
                 request.language = l;
 
         request.status = 0;
