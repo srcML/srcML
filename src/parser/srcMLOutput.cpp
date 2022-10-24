@@ -292,7 +292,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* version, const char* timestamp,
                             const char* hash,
                             const char* encoding,
-                            const std::vector<std::string> & attributes,
+                            const std::vector<std::string>& attributes,
                             bool output_macrolist) {
 
     // go with default encoding
@@ -312,19 +312,21 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         outputNamespaces();
     }
 
-    // setup for storing options in output
-    std::array<std::pair<int, const char*>, 4> sep = {{
-        { SRCML_PARSER_OPTION_CPP_TEXT_ELSE,  "CPP_TEXT_ELSE" },
-        { SRCML_PARSER_OPTION_CPP_MARKUP_IF0, "CPP_MARKUP_IF0" },
-        { SRCML_OPTION_LINE,           "LINE" },
-    }};
+    // options
     std::string soptions;
-    for (const auto& pair : sep) {
-        if (isoption(options, pair.first)) {
-            if (!soptions.empty())
-                soptions += ",";
-            soptions += pair.second;
-        }
+    if (isoption(options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE))
+        soptions = "CPP_TEXT_ELSE";
+
+    if (isoption(options, SRCML_PARSER_OPTION_CPP_MARKUP_IF0)) {
+        if (!soptions.empty())
+            soptions += ",";
+        soptions = "CPP_MARKUP_IF0";
+    }
+
+    if (isoption(options, SRCML_OPTION_LINE)) {
+        if (!soptions.empty())
+            soptions += ",";
+        soptions = "LINE";
     }
 
     // revision standard attribute
