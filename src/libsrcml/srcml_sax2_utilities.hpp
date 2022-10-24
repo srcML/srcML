@@ -9,7 +9,6 @@
 #define INCLUDED_SRCML_SAX2_UTILITIES_HPP
 
 #include <srcml_types.hpp>
-#include <srcml_macros.hpp>
 #include <srcml.h>
 
 #include <libxml/parserInternals.h>

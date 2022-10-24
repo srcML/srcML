@@ -14,7 +14,6 @@
 #include <libxml2_utilities.hpp>
 #include <cstring>
 #include <fcntl.h>
-#include <srcml_macros.hpp>
 #include <functional>
 #include <string_view>
 
