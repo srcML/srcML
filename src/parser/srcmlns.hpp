@@ -125,7 +125,7 @@ constexpr inline auto UNIT_ATTRIBUTE_PATH = "item"sv;
 const std::array<std::string, 2> SRCML_URI_PREFIX = {{ "http://www.srcML.org/", "http://www.sdml.info/" }};
 
 // normalize the uri prefix to http://www.srcML.org/
-std::string& srcml_uri_normalize(std::string & uri);
+std::string& srcml_uri_normalize(std::string& uri);
 
 // merge in the other namespace
 Namespaces& operator +=(Namespaces& ns, const Namespaces& otherns);

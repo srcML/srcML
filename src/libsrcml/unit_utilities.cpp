@@ -118,7 +118,7 @@ struct extract_context {
 };
 
 // Extract source code from srcml
-std::string extract_src(const std::string& srcml, std::optional<int> revision) {
+std::string extract_src(std::string_view srcml, std::optional<int> revision) {
 
     extract_context scontext;
     scontext.revision = revision;
@@ -187,7 +187,7 @@ std::string extract_src(const std::string& srcml, std::optional<int> revision) {
     return scontext.s;
 }
 
-std::string attribute_revision(const std::string& attribute, int revision) {
+std::string_view attribute_revision(std::string_view attribute, int revision) {
 
     auto pos = attribute.find('|');
     if (pos == std::string::npos)
