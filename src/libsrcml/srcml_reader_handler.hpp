@@ -22,6 +22,7 @@
 #include <srcmlns.hpp>
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include <stack>
 
@@ -30,6 +31,8 @@
 #include <mutex>
 #include <condition_variable>
 #include <optional>
+
+using namespace ::std::literals::string_view_literals;
 
 #define ATTR_LOCALNAME(pos) (pos * 5)
 #define ATTR_PREFIX(pos) (pos * 5 + 1)
@@ -245,27 +248,27 @@ public :
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
-            std::string attribute = (const char*) attributes[pos * 5];
+            std::string_view attribute = (const char*) attributes[pos * 5];
             std::string value((const char *)attributes[pos * 5 + 3], static_cast<std::size_t>(attributes[pos * 5 + 4] - attributes[pos * 5 + 3]));
 
             // Note: these are ignore instead of placing in attributes.
-            if (attribute == "timestamp")
+            if (attribute == "timestamp"sv)
                 ;
-            else if (attribute == "language")
+            else if (attribute == "language"sv)
                 ;
-            else if (attribute == "revision")
+            else if (attribute == "revision"sv)
                 archive->revision = value;
-            else if (attribute == "filename")
+            else if (attribute == "filename"sv)
                 ;
-            else if (attribute == "url") {
-                srcml_archive_set_url(archive, value.c_str());
+            else if (attribute == "url"sv) {
+                srcml_archive_set_url(archive, value.data());
 
             }
-            else if (attribute == "version")
-                srcml_archive_set_version(archive, value.c_str());
-            else if (attribute == "tabs")
-                archive->tabstop = static_cast<std::size_t>(atoi(value.c_str()));
-            else if (attribute == "options") {
+            else if (attribute == "version"sv)
+                srcml_archive_set_version(archive, value.data());
+            else if (attribute == "tabs"sv)
+                archive->tabstop = static_cast<std::size_t>(atoi(value.data()));
+            else if (attribute == "options"sv) {
 
                 while(!value.empty()) {
 
@@ -276,19 +279,19 @@ public :
                     else
                         value = value.substr(value.find(",") + 1);
 
-                    if (option == "XMLDECL")
+                    if (option == "XMLDECL"sv)
                         archive->options |= SRCML_OPTION_NO_XML_DECL;
-                    else if (option == "NAMESPACEDECL")
+                    else if (option == "NAMESPACEDECL"sv)
                         archive->options |= SRCML_OPTION_NAMESPACE_DECL;
-                    else if (option == "CPP_TEXT_ELSE")
+                    else if (option == "CPP_TEXT_ELSE"sv)
                         archive->options |= SRCML_OPTION_CPP_TEXT_ELSE;
-                    else if (option == "CPP_MARKUP_IF0")
+                    else if (option == "CPP_MARKUP_IF0"sv)
                         archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
-                    else if (option == "LINE")
+                    else if (option == "LINE"sv)
                         archive->options |= SRCML_OPTION_LINE;
                 }
 
-            } else if (attribute == "hash")
+            } else if (attribute == "hash"sv)
                 ;
             else {
 
@@ -300,12 +303,12 @@ public :
         // collect namespaces
         for (int pos = 0; pos < num_namespaces; ++pos) {
 
-            std::string nsPrefix = (const char*) namespaces[pos * 2] ? (const char*) namespaces[pos * 2] : "";
+            std::string_view nsPrefix = (const char*) namespaces[pos * 2] ? (const char*) namespaces[pos * 2] : "";
             std::string nsURI = (const char*) namespaces[pos * 2 + 1] ? (const char*) namespaces[pos * 2 + 1] : "";
 
             srcml_uri_normalize(nsURI);
 
-            srcml_archive_register_namespace(archive, nsPrefix.c_str(), nsURI.c_str());
+            srcml_archive_register_namespace(archive, nsPrefix.data(), nsURI.data());
         }
 
 #ifdef SRCSAX_DEBUG
