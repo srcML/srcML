@@ -205,7 +205,7 @@ void srcMLOutput::outputXMLDecl() {
 
     // issue the xml declaration, but only if we want to
     if (depth == 0 && !isoption(options, SRCML_PARSER_OPTION_NO_XML_DECL))
-        xmlTextWriterStartDocument(xout, XML_VERSION, xml_encoding, XML_DECLARATION_STANDALONE);
+        xmlTextWriterStartDocument(xout, XML_VERSION.data(), xml_encoding, XML_DECLARATION_STANDALONE.data());
 }
 
 /**
@@ -303,22 +303,13 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     didwrite = true;
 
     // start of main tag
-    std::string unitprefix = namespaces[SRC].prefix;
+    std::string_view unitprefix = namespaces[SRC].prefix;
     xmlTextWriterStartElementNS(xout, BAD_CAST (!unitprefix.empty() ? unitprefix.data() : 0), BAD_CAST "unit", 0);
     ++openelementcount;
 
     // output namespaces for root and nested units
     if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
         outputNamespaces();
-    }
-
-    // setup for tabs if used
-    std::string tabattribute;
-    if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-        tabattribute = namespaces[POS].getPrefix();
-        if (!tabattribute.empty())
-            tabattribute += ":";
-        tabattribute += "tabs";
     }
 
     // setup for storing options in output
@@ -336,48 +327,62 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         }
     }
 
-    // list of attributes
-    std::string stabsize = std::to_string(tabsize);
-    const char* const attrs[][2] = {
-
-        { UNIT_ATTRIBUTE_REVISION, revision },
-
-        // language attribute
-        { UNIT_ATTRIBUTE_LANGUAGE, language },
-
-        // url attribute
-        { UNIT_ATTRIBUTE_URL, url },
-
-        // filename attribute
-        { UNIT_ATTRIBUTE_FILENAME, filename },
-
-        // version attribute
-        { UNIT_ATTRIBUTE_VERSION, version },
-
-        // position tab setting
-        { tabattribute.data(), isoption(options, SRCML_PARSER_OPTION_POSITION) ? stabsize.data() : 0 },
-
-        // timestamp attribute
-        { UNIT_ATTRIBUTE_TIMESTAMP, timestamp },
-
-        // hash attribute
-        { UNIT_ATTRIBUTE_HASH, hash },
-
-        // source encoding attribute
-        { UNIT_ATTRIBUTE_SOURCE_ENCODING, isoption(options, SRCML_PARSER_OPTION_STORE_ENCODING) ? encoding : 0 },
-
-        { UNIT_ATTRIBUTE_OPTIONS,  depth == 0 && !soptions.empty() ? soptions.data() : 0 },
-
-    };
-
-    // output attributes
-    for (unsigned int i = 0; i < sizeof(attrs) / sizeof(attrs[0]); ++i) {
-        if (!attrs[i][1])
-            continue;
-
-        xmlTextWriterWriteAttribute(xout, BAD_CAST attrs[i][0], BAD_CAST attrs[i][1]);
+    // revision standard attribute
+    if (revision) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_REVISION.data(), BAD_CAST revision);
     }
 
+    // language standard attribute
+    if (language) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_LANGUAGE.data(), BAD_CAST language);
+    }
+
+    // url standard attribute
+    if (url) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_URL.data(), BAD_CAST url);
+    }
+
+    // filename standard attribute
+    if (filename) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_FILENAME.data(), BAD_CAST filename);
+    }
+
+    // version standard attribute
+    if (version) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_VERSION.data(), BAD_CAST version);
+    }
+
+    // tabsize standard attribute
+    if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
+        std::string tabattribute(namespaces[POS].getPrefix());
+        if (!tabattribute.empty())
+            tabattribute += ":";
+        tabattribute += "tabs";
+        auto stabsize = std::to_string(tabsize);
+        xmlTextWriterWriteAttribute(xout, BAD_CAST tabattribute.data(), BAD_CAST stabsize.data());
+    }
+
+    // timestamp standard attribute
+    if (timestamp) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_TIMESTAMP.data(), BAD_CAST timestamp);
+    }
+
+    // hash standard attribute
+    if (hash) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_HASH.data(), BAD_CAST hash);
+    }
+
+    // encoding standard attribute
+    if (isoption(options, SRCML_PARSER_OPTION_STORE_ENCODING)) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_SOURCE_ENCODING.data(), BAD_CAST encoding);
+    }
+
+    // options standard attribute
+    if (depth == 0 && !soptions.empty()) {
+        xmlTextWriterWriteAttribute(xout, BAD_CAST UNIT_ATTRIBUTE_OPTIONS.data(), BAD_CAST soptions.data());
+    }
+
+    // custom attributes
     for(std::vector<std::string>::size_type pos = 0; pos < attributes.size(); pos += 2) {
         xmlTextWriterWriteAttribute(xout, BAD_CAST attributes[pos].data(), BAD_CAST attributes[pos + 1].data());
     }
@@ -489,7 +494,7 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     if (stoken->endline < stoken->getLine() || (stoken->endline == stoken->getLine() && stoken->endcolumn < stoken->getColumn()))
             return;
 
-    thread_local const std::string& prefix = namespaces[POS].prefix;
+    thread_local const std::string prefix(namespaces[POS].prefix);
     thread_local const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
     thread_local const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 

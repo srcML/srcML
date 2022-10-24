@@ -55,7 +55,7 @@ std::string& srcml_uri_normalize(std::string& uri) {
     return uri;
 }
 
-Namespaces::iterator findNSURI(Namespaces& namespaces, const std::string& uri) {
+Namespaces::iterator findNSURI(Namespaces& namespaces, std::string_view uri) {
 
     auto ns = std::find_if(namespaces.begin(), namespaces.end(), [uri](const Namespace& nsarg)->bool {
         return nsarg.uri == uri; });
@@ -63,7 +63,7 @@ Namespaces::iterator findNSURI(Namespaces& namespaces, const std::string& uri) {
     return ns;
 }
 
-Namespaces::iterator findNSPrefix(Namespaces& namespaces, const std::string& prefix) {
+Namespaces::iterator findNSPrefix(Namespaces& namespaces, std::string_view prefix) {
 
     // find the last one (yes, could use reverse iterators, but then conversion to return type)
     auto it = namespaces.end();
@@ -75,13 +75,13 @@ Namespaces::iterator findNSPrefix(Namespaces& namespaces, const std::string& pre
     return it;
 }
 
-Namespaces::const_iterator findNSURI(const Namespaces& namespaces, const std::string& uri) {
+Namespaces::const_iterator findNSURI(const Namespaces& namespaces, std::string_view uri) {
 
     return std::find_if(namespaces.cbegin(), namespaces.cend(), [uri](const Namespace& nsarg)->bool {
         return nsarg.uri == uri; });
 }
 
-Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, const std::string& prefix) {
+Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, std::string_view prefix) {
 
     // find the last one (yes, could use reverse iterators, but then conversion to return type)
     auto it = namespaces.cend();
