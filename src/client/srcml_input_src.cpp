@@ -8,6 +8,9 @@
  */
 
 #include <srcml_input_src.hpp>
+#include <string_view>
+
+using namespace ::std::literals::string_view_literals;
 
 #if defined(WIN32) || defined(WIN64)
 #include <sys/stat.h>
@@ -46,7 +49,7 @@ srcml_input_src::srcml_input_src(std::string_view other) {
     std::tie(protocol, resource) = src_prefix_split_uri(filename);
 
     // remove any query string
-    if (protocol != "text" && protocol != "filelist" && protocol != "stdin") {
+    if (protocol != "text"sv && protocol != "filelist"sv && protocol != "stdin"sv) {
         size_t query_pos = resource.find('?');
         if (query_pos != std::string::npos) {
             resource = resource.substr(0, query_pos);
@@ -54,7 +57,7 @@ srcml_input_src::srcml_input_src(std::string_view other) {
     }
     exists = false;
 
-    if (protocol == "file") {
+    if (protocol == "file"sv) {
         struct stat s;
         exists = stat(resource.data(), &s) == 0;
 
@@ -63,7 +66,7 @@ srcml_input_src::srcml_input_src(std::string_view other) {
 
     isdirectoryform = resource.back() == '/';
 
-    if (!isdirectory && protocol != "text") {
+    if (!isdirectory && protocol != "text"sv) {
 
         plainfile = resource;
 
@@ -81,15 +84,15 @@ srcml_input_src::srcml_input_src(std::string_view other) {
         }
     }
 
-    if (resource != "-" && protocol != "text")
-        state = (extension == ".xml" || extension == ".srcml") ? SRCML : SRC;
+    if (resource != "-"sv && protocol != "text"sv)
+        state = (extension == ".xml"sv || extension == ".srcml"sv) ? SRCML : SRC;
 
-    if (protocol == "text")
+    if (protocol == "text"sv)
         state = SRC;
 
-    if (protocol == "stdin")
+    if (protocol == "stdin"sv)
         fd = STDIN_FILENO;
-    if (protocol == "stdout")
+    if (protocol == "stdout"sv)
         fd = STDOUT_FILENO;
 }
 
