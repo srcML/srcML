@@ -41,7 +41,7 @@ enum STATES { INDETERMINATE, SRC, SRCML };
 class srcml_input_src {
 public:
 
-    srcml_input_src() : unit(0) {}
+    srcml_input_src() {}
     srcml_input_src(std::string_view other);
     srcml_input_src(std::string_view other, int fds);
     srcml_input_src(int fds);

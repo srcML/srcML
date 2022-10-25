@@ -93,7 +93,7 @@ srcml_input_src::srcml_input_src(std::string_view other) {
         fd = STDOUT_FILENO;
 }
 
-srcml_input_src::srcml_input_src(std::string_view other, int fds) : unit(0) {
+srcml_input_src::srcml_input_src(std::string_view other, int fds) {
 
     srcml_input_src s(other);
     s = fds;
@@ -101,7 +101,7 @@ srcml_input_src::srcml_input_src(std::string_view other, int fds) : unit(0) {
     *this = std::move(s);
 }
 
-srcml_input_src::srcml_input_src(int fds) : unit(0) {
+srcml_input_src::srcml_input_src(int fds) {
 
     srcml_input_src s("-");
     s = fds;
