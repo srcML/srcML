@@ -67,24 +67,24 @@ int srcml_handler_dispatch(ParseQueue& queue,
         return srcml_input_srcml(queue, srcml_arch, srcml_request, uninput, srcml_request.revision);
     }
 
-    if (input.protocol == "text") {
+    if (input.protocol == "text"sv) {
 
         return src_input_text(queue, srcml_arch, srcml_request, input);
     }
 
-    if (input.protocol == "filelist") {
+    if (input.protocol == "filelist"sv) {
 
         srcml_archive_disable_solitary_unit(srcml_arch);
 
         return src_input_filelist(queue, srcml_arch, srcml_request, input, destination);
     }
 
-    if (input.protocol == "file" && input.isdirectory) {
+    if (input.protocol == "file"sv && input.isdirectory) {
 
         return src_input_filesystem(queue, srcml_arch, srcml_request, input);
     }
 
-    if (input.protocol == "file" && input.archives.empty() && input.compressions.empty()) {
+    if (input.protocol == "file"sv && input.archives.empty() && input.compressions.empty()) {
 
         return src_input_file(queue, srcml_arch, srcml_request, input);
     }
@@ -286,7 +286,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
             srcml_append_transform_param(srcml_arch.get(), name.data(), value.data());
 
-        } else if (protocol == "relaxng") {
+        } else if (protocol == "relaxng"sv) {
             if (apply_relaxng(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
                 SRCMLstatus(ERROR_MSG, "srcml: error with relaxng transformation");
                 exit(1);

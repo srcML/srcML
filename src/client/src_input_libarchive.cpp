@@ -17,7 +17,10 @@
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
 #include <cstring>
+#include <string_view>
 #include <stdio.h>
+
+using namespace ::std::literals::string_view_literals;
 
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
@@ -163,7 +166,7 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // stdin, single files require a explicit filename
-        if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
+        if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-"sv) {
             SRCMLstatus(ERROR_MSG, "Language required for stdin single files");
             exit(1);
         }
@@ -174,7 +177,7 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // archive entry filename for non-archive input is "data"
-        if (filename.empty() || filename == "data") {
+        if (filename.empty() || filename == "data"sv) {
             filename = input_file.resource;
             auto it = filename.begin();
             while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
@@ -196,7 +199,7 @@ int src_input_libarchive(ParseQueue& queue,
 
         // user specified a language, and is a file, text, or stdin
         // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
-        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin")
+        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin"sv)
              || srcml_archive_check_extension(srcml_arch, filename.data())))
             language = *srcml_request.att_language;
 
@@ -223,7 +226,7 @@ int src_input_libarchive(ParseQueue& queue,
         if (option(SRCML_COMMAND_NOARCHIVE))
             request.disk_dir = srcml_request.output_filename.resource;
 
-        if (srcml_request.att_filename || (filename != "-"))
+        if (srcml_request.att_filename || (filename != "-"sv))
             request.filename = filename;
 
         request.url = srcml_request.att_url;

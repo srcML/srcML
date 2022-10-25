@@ -40,7 +40,7 @@ int srcml_input_srcml(ParseQueue& queue,
 
     open_status = srcml_archive_read_open(srcml_input_archive.get(), srcml_input);
     if (open_status != SRCML_STATUS_OK) {
-        if (srcml_input.protocol == "file" )
+        if (srcml_input.protocol == "file"sv)
             SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
         else
             SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
