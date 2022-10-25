@@ -13,6 +13,9 @@
 #include <CPUCount.hpp>
 #include <algorithm>
 #include <CLI11.hpp>
+#include <string_view>
+
+using namespace ::std::literals::string_view_literals;
 
 const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
@@ -91,7 +94,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
 
-        if (arg.substr(0, 8) == "--xmlns:") {
+        if (arg.substr(0, 8) == "--xmlns:"sv) {
             arg = "--xmlns" + std::to_string(xmlnsCounter) + "=" + arg.substr(8);
             ++xmlnsCounter;
         } else if (arg.rfind("--xmlns=", 0) == 0) {
@@ -111,12 +114,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     int textCounter = 0;
     for (auto& p : commandline) {
-        if (p == "--text" || p.rfind("--text=", 0) == 0) {
+        if (p == "--text"sv || p.rfind("--text=", 0) == 0) {
 
             p.insert(6, std::to_string(textCounter));
             ++textCounter;
 
-        } else if (p == "-t") {
+        } else if (p == "-t"sv) {
 
             p = "--text" + std::to_string(textCounter);
             ++textCounter;
@@ -145,19 +148,19 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->each([&](std::string filename) {
 
             // record the position of stdin
-            if (filename == "-" || filename == "stdin://-")
+            if (filename == "-"sv || filename == "stdin://-"sv)
                 srcml_request.stdindex = (int) srcml_request.input_sources.size();
 
             srcml_input_src input(filename);
 
             // xslt transformation file
-            if (input.extension == ".xsl") {
+            if (input.extension == ".xsl"sv) {
                 srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt", input.filename));
                 return;
             }
 
             // relaxng transformation file
-            if (input.extension == ".rng") {
+            if (input.extension == ".rng"sv) {
                 srcml_request.transformations.emplace_back(src_prefix_add_uri("relaxng", input.filename));
                 return;
             }
@@ -448,13 +451,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
         std::transform(value.begin(), value.end(), value.begin(), [](char c){ return static_cast<char>(std::tolower(c)); });
 
-        if (value == "auto") {
+        if (value == "auto"sv) {
             srcml_request.eol = SOURCE_OUTPUT_EOL_AUTO;
-        } else if (value == "lf" || value == "unix") {
+        } else if (value == "lf"sv || value == "unix"sv) {
             srcml_request.eol = SOURCE_OUTPUT_EOL_LF;
-        } else if (value == "cr") {
+        } else if (value == "cr"sv) {
             srcml_request.eol = SOURCE_OUTPUT_EOL_CR;
-        } else if (value == "crlf" || value == "windows") {
+        } else if (value == "crlf"sv || value == "windows"sv) {
             srcml_request.eol = SOURCE_OUTPUT_EOL_CRLF;
         } else {
             SRCMLstatus(ERROR_MSG, "srcml: EOL must be (default) AUTO, UNIX or LF, Windows or CRLF, or CR");
@@ -674,7 +677,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         exit(CLI_STATUS_ERROR);
     }
 
-    if (srcml_request.output_filename == "")
+    if (srcml_request.output_filename == ""sv)
         srcml_request.output_filename = "stdout://-";
 
     // if no input given, then artificially put a "-" into the list of input files
