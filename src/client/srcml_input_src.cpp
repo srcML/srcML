@@ -36,7 +36,7 @@ namespace {
     }
 }
 
-srcml_input_src::srcml_input_src(std::string_view other) : arch(0), state(INDETERMINATE), isdirectory(false), exists(false), isdirectoryform(false), unit(0) {
+srcml_input_src::srcml_input_src(std::string_view other) {
 
     skip = false;
 

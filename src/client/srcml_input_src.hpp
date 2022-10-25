@@ -70,15 +70,15 @@ public:
     std::string extension;
     std::optional<FILE*> fileptr;
     std::optional<int> fd;
-    archive* arch;
-    enum STATES state;
+    archive* arch = nullptr;
+    enum STATES state = INDETERMINATE;
     std::list<std::string> compressions;
     std::list<std::string> archives;
-    bool isdirectory;
-    bool exists;
-    bool isdirectoryform;
-    bool skip;
-    int unit;
+    bool isdirectory = false;
+    bool exists = false;
+    bool isdirectoryform = false;
+    bool skip = false;
+    int unit = 0;
 };
 
 struct srcMLReadArchiveError {
