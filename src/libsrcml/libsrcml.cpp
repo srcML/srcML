@@ -196,7 +196,7 @@ int srcml(const char* input_filename, const char* output_filename) {
         if (!((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
             && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
              || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
-           || (global_archive.language && strcmp(global_archive.language->data(), "xml") == 0))) {
+           || (global_archive.language && global_archive.language == "xml"sv))) {
 
             if (global_archive.language) {
                 global_archive.error_string = "Language '";
@@ -685,7 +685,7 @@ size_t srcml_get_srcdiff_revision() {
  *                                                                            *
  ******************************************************************************/
 
-static const char* langs[] = { "C", "C++", "C#", "Java", "Objective-C" };
+static std::string_view langs[] = { "C", "C++", "C#", "Java", "Objective-C" };
 
 /**
  * srcml_check_language
@@ -703,7 +703,7 @@ int srcml_check_language(const char* language) {
 
     // first find in public languages (ones in langs[], then get the number)
     for (size_t i = 0; i < srcml_get_language_list_size(); ++i)
-        if (strcmp(language, langs[i]) == 0)
+        if (language == langs[i])
             return Language::getLanguage(language);
 
     return 0;
@@ -732,9 +732,10 @@ size_t srcml_get_language_list_size() {
  */
 const char * srcml_get_language_list(size_t pos) {
 
-    if (pos >= srcml_get_language_list_size()) return NULL;
+    if (pos >= srcml_get_language_list_size())
+        return NULL;
 
-    return langs[pos];
+    return langs[pos].data();
 }
 
 /**

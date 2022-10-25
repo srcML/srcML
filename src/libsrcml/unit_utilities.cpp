@@ -63,7 +63,7 @@ enum { INSERT, DELETE, COMMON };
 
 std::string extract_revision(const char* srcml, int size, int revision, bool text_only) {
 
-    const char* DIFF_PREFIX = "diff:";
+    std::string_view DIFF_PREFIX = "diff:"sv;
 
     std::stack<int> mode;
     mode.push(COMMON);
@@ -85,9 +85,9 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
         p = (const char*) memchr(p, '>', static_cast<size_t>(size - (p - srcml)));
         ++p;
 
-        if (strncmp(sp + 1, DIFF_PREFIX, strlen(DIFF_PREFIX)) == 0) {
+        if (strncmp(sp + 1, DIFF_PREFIX.data(), DIFF_PREFIX.size()) == 0) {
 
-            const char* tstart = sp + 1 + strlen(DIFF_PREFIX);
+            const char* tstart = sp + 1 + DIFF_PREFIX.size();
 
             if (strncmp(tstart, "delete", 6) == 0) {
                 mode.push(DELETE);
@@ -97,7 +97,7 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
                 mode.push(COMMON);
             }
         }
-        else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX, strlen(DIFF_PREFIX)) == 0) {
+        else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX.data(), DIFF_PREFIX.size()) == 0) {
             mode.pop();
         }
         else {

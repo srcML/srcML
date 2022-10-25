@@ -11,14 +11,15 @@
 #define SRC_ARCHIVE_HPP
 
 #include <string>
+#include <string_view>
 struct archive;
 
-int archive_write_set_format_by_extension(struct archive*, const char* extension);
-int archive_write_set_compression_by_extension(struct archive*, const char* extension);
+int archive_write_set_format_by_extension(struct archive*, std::string_view extension);
+int archive_write_set_compression_by_extension(struct archive*, std::string_view extension);
 
-bool is_archive(const std::string& input_file_extension);
-bool is_compressed(const std::string& input_file_extension);
+bool is_archive(std::string_view input_file_extension);
+bool is_compressed(std::string_view input_file_extension);
 
-std::string language_to_std_extension(const char* extension);
+std::string_view language_to_std_extension(std::string_view extension);
 
 #endif

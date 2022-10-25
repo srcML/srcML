@@ -85,7 +85,7 @@ xpathTransformation::~xpathTransformation() {
  */
 void xpathTransformation::form_simple_xpath(xmlTextWriterPtr bufwriter, xmlNodePtr root_result_node) {
 
-    if ((!root_result_node) || (root_result_node->type != XML_ELEMENT_NODE) || (!root_result_node->name) || (strcmp((const char*) root_result_node->name, "unit") == 0)) {
+    if ((!root_result_node) || (root_result_node->type != XML_ELEMENT_NODE) || (!root_result_node->name) || ((const char*) root_result_node->name == "unit"sv)) {
         return;
     }
 
@@ -257,7 +257,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
         return tresult;
 
     if (result_nodes->nodesetval->nodeTab[0] && result_nodes->nodesetval->nodeTab[0]->name &&
-        strcmp((const char*) result_nodes->nodesetval->nodeTab[0]->name, "unit") == 0)
+        (const char*) result_nodes->nodesetval->nodeTab[0]->name == "unit"sv)
         tresult.unitWrapped = true;
 
     tresult.nodeset.reset(result_nodes->nodesetval);

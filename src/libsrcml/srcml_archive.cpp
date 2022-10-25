@@ -28,8 +28,8 @@ const char* srcml_archive_check_extension(const srcml_archive* archive, const ch
         return 0;
 
     Language language(archive->registered_languages.get_language_from_filename(filename));
-    const char* lang_string = language.getLanguageString();
-    return strcmp(lang_string, "") == 0 ? 0 : lang_string;
+    std::string_view lang_string = language.getLanguageString();
+    return lang_string.empty() ? 0 : lang_string.data();
 }
 
 /******************************************************************************

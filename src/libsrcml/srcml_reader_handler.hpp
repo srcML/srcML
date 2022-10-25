@@ -498,23 +498,23 @@ public :
                            int /* num_namespaces */, const xmlChar** /* namespaces */, int num_attributes,
                            const xmlChar** attributes) {
 
-        if (strcmp(localname, "macro-list") == 0) {
+        if (localname == "macro-list"sv) {
 
             std::string token;
             std::string type;
 
             for (int pos = 0; pos < num_attributes; ++pos) {
 
-                if (strcmp((const char*) attributes[ATTR_LOCALNAME(pos)], "token") == 0)
+                if ((const char*) attributes[ATTR_LOCALNAME(pos)] == "token"sv)
                     token.append((const char*) attributes[ATTR_VALUE_START(pos)], static_cast<std::size_t>(attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]));
-                else if (strcmp((const char*) attributes[ATTR_LOCALNAME(pos)], "type") == 0)
+                else if ((const char*) attributes[ATTR_LOCALNAME(pos)] == "type"sv)
                     type.append((const char*) attributes[ATTR_VALUE_START(pos)], static_cast<std::size_t>(attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]));
             }
 
             if (token != "" && type != "") {
 
-                archive->user_macro_list.push_back(token);
-                archive->user_macro_list.push_back(type);
+                archive->user_macro_list.push_back(std::move(token));
+                archive->user_macro_list.push_back(std::move(type));
             }
 
         }

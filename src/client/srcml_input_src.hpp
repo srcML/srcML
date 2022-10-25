@@ -12,6 +12,7 @@
 
 #include <srcml.h>
 #include <string>
+#include <string_view>
 #include <list>
 #include <vector>
 #include <sstream>
@@ -41,15 +42,17 @@ class srcml_input_src {
 public:
 
     srcml_input_src() : unit(0) {}
-    srcml_input_src(const std::string& other);
-    srcml_input_src(const std::string& other, int fds);
+    srcml_input_src(std::string_view other);
+    srcml_input_src(std::string_view other, int fds);
     srcml_input_src(int fds);
 
-    srcml_input_src& operator=(const std::string& other);
+    srcml_input_src& operator=(std::string_view other);
     srcml_input_src& operator=(FILE* other);
     srcml_input_src& operator=(int other);
 
+    operator std::string() const { return resource; }
     operator const std::string&() const { return resource; }
+    operator std::string_view() const { return resource; }
     operator FILE*() const { return *fileptr; }
     operator int() const { return *fd; }
 

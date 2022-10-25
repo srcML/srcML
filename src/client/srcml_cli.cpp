@@ -101,10 +101,10 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
         // empty string after equals is not shown, i.e., --xmlns="", so replace with two arguments
         if (arg.back() == '=') {
-            commandline.push_back(arg.substr(0, arg.size() - 1));
-            commandline.push_back("");
+            commandline.emplace_back(arg.substr(0, arg.size() - 1));
+            commandline.emplace_back("");
         } else {
-            commandline.push_back(arg);
+            commandline.emplace_back(arg);
         }
     }
     std::reverse(commandline.begin(), commandline.end());
@@ -152,17 +152,17 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
             // xslt transformation file
             if (input.extension == ".xsl") {
-                srcml_request.transformations.push_back(src_prefix_add_uri("xslt", input.filename));
+                srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt", input.filename));
                 return;
             }
 
             // relaxng transformation file
             if (input.extension == ".rng") {
-                srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", input.filename));
+                srcml_request.transformations.emplace_back(src_prefix_add_uri("relaxng", input.filename));
                 return;
             }
 
-            srcml_request.input_sources.push_back(input);
+            srcml_request.input_sources.emplace_back(input);
         });
 
     // general
@@ -234,7 +234,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             })
             ->each([&](std::string text) {
                 isText = true;
-                srcml_request.input_sources.push_back(src_prefix_add_uri("text", text));
+                srcml_request.input_sources.emplace_back(src_prefix_add_uri("text", text));
             });
     }
 
@@ -258,8 +258,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML")
         ->type_size(-1)
         ->each([&](const std::string& value) {
-            srcml_request.files_from.push_back(value);
-            srcml_request.input_sources.push_back(src_prefix_add_uri("filelist", value));
+            srcml_request.files_from.emplace_back(value);
+            srcml_request.input_sources.emplace_back(src_prefix_add_uri("filelist", value));
         });
 
     app.add_option("--register-ext", srcml_request.language_ext,
@@ -490,8 +490,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("XPATH")
         ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
-            srcml_request.transformations.push_back(src_prefix_add_uri("xpath", value));
-            srcml_request.xpath_query_support.push_back(std::make_pair(std::nullopt,std::nullopt));
+            srcml_request.transformations.emplace_back(src_prefix_add_uri("xpath", value));
+            srcml_request.xpath_query_support.emplace_back(std::make_pair(std::nullopt,std::nullopt));
         });
 
     app.add_option("--attribute",
@@ -581,7 +581,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
-            srcml_request.transformations.push_back(src_prefix_add_uri("xslt", value));
+            srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt", value));
         });
 
     app.add_option("--xslt-param",
@@ -590,7 +590,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("QUERY & TRANSFORMATION")
         ->needs(xslt)
         ->each([&](std::string value) {
-            srcml_request.transformations.push_back(src_prefix_add_uri("xslt-param", value));
+            srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt-param", value));
         });
 
     app.add_option("--relaxng",
@@ -598,7 +598,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
-            srcml_request.transformations.push_back(src_prefix_add_uri("relaxng", value));
+            srcml_request.transformations.emplace_back(src_prefix_add_uri("relaxng", value));
         });
 
     // debug
@@ -680,7 +680,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // if no input given, then artificially put a "-" into the list of input files
     if (srcml_request.input_sources.empty()) {
         srcml_request.stdindex = 0;
-        srcml_request.input_sources.push_back(srcml_input_src("stdin://-"));
+        srcml_request.input_sources.emplace_back(srcml_input_src("stdin://-"));
     }
 
     if (srcml_request.input_sources.size() == 1 && srcml_request.input_sources[0].isdirectory) {

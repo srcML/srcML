@@ -101,7 +101,7 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
         status = srcml_archive_read_open(arch.get(), input_source);
     }
     if (status != SRCML_STATUS_OK) {
-        SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
+        SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file " + std::string(src_prefix_resource(input_source.filename)));
         return 0;
     }
 

@@ -77,7 +77,9 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     }
 
     if (status != ARCHIVE_OK) {
-        SRCMLstatus(WARNING_MSG, "srcml: Unable to open file " + src_prefix_resource(input_file.filename));
+        std::string s("srcml: Unable to open file ");
+        s += src_prefix_resource(input_file.filename);
+        SRCMLstatus(WARNING_MSG, s);
         return 0;
     }
 

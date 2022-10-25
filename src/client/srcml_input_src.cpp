@@ -17,13 +17,13 @@
 #endif
 
 namespace {
-    std::string cur_extension(const std::string& filename) {
+    std::string cur_extension(std::string_view filename) {
 
         size_t pos = filename.rfind('.');
         if (pos == std::string::npos)
             return "";
 
-        return filename.substr(pos);
+        return std::string(filename.substr(pos));
     }
 
     void pop_extension(std::string& filename) {
@@ -36,7 +36,7 @@ namespace {
     }
 }
 
-srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDETERMINATE), isdirectory(false), exists(false), isdirectoryform(false), unit(0) {
+srcml_input_src::srcml_input_src(std::string_view other) : arch(0), state(INDETERMINATE), isdirectory(false), exists(false), isdirectoryform(false), unit(0) {
 
     skip = false;
 
@@ -93,7 +93,7 @@ srcml_input_src::srcml_input_src(const std::string& other) : arch(0), state(INDE
         fd = STDOUT_FILENO;
 }
 
-srcml_input_src::srcml_input_src(const std::string& other, int fds) : unit(0) {
+srcml_input_src::srcml_input_src(std::string_view other, int fds) : unit(0) {
 
     srcml_input_src s(other);
     s = fds;
@@ -109,7 +109,7 @@ srcml_input_src::srcml_input_src(int fds) : unit(0) {
     *this = std::move(s);
 }
 
-srcml_input_src& srcml_input_src::operator=(const std::string& other) { srcml_input_src t(other); *this = std::move(t); return *this; }
+srcml_input_src& srcml_input_src::operator=(std::string_view other) { srcml_input_src t(other); *this = std::move(t); return *this; }
 srcml_input_src& srcml_input_src::operator=(FILE* other) { fileptr = other; return *this; }
 srcml_input_src& srcml_input_src::operator=(int other) { fd = other; return *this; }
 

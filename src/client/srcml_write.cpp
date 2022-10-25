@@ -95,8 +95,8 @@ void srcml_write_request(ParseRequest&& request, TraceLog& log, const srcml_outp
         case SRCML_RESULT_BOOLEAN:
             {
                 // output as true/false with newline after every results
-                const char* boolresult = srcml_transform_get_bool(request.results) ? "true\n" : "false\n";
-                srcml_archive_write_string(output_archive, boolresult, (int) strlen(boolresult));
+                std::string_view boolresult = srcml_transform_get_bool(request.results) ? "true\n" : "false\n";
+                srcml_archive_write_string(output_archive, boolresult.data(), boolresult.size());
             }
             srcml_transform_free(request.results);
             return;
@@ -118,11 +118,11 @@ void srcml_write_request(ParseRequest&& request, TraceLog& log, const srcml_outp
             return;
 
         case SRCML_RESULT_STRING:
-            const char* s = (const char*) srcml_transform_get_string(request.results);
-            srcml_archive_write_string(output_archive, s, (int) strlen(s));
+            std::string_view s = srcml_transform_get_string(request.results);
+            srcml_archive_write_string(output_archive, s.data(), s.size());
 
             // if the string does not end in a newline, output one
-            if (s[strlen(s) - 1] != '\n')
+            if (s.back() != '\n')
                 srcml_archive_write_string(output_archive, "\n", 1);
 
             srcml_transform_free(request.results);
@@ -151,16 +151,16 @@ void srcml_write_request(ParseRequest&& request, TraceLog& log, const srcml_outp
         if ((!request.results || srcml_transform_get_unit_size(request.results) == 0) && request.unit) {
             int status = SRCML_STATUS_OK;
             if (option(SRCML_COMMAND_XML_FRAGMENT)) {
-                const char* s = srcml_unit_get_srcml_outer(request.unit.get());
-                status = srcml_archive_write_string(output_archive, s, (int) strlen(s));
-                if (s[strlen(s) - 1] != '\n') {
+                std::string_view s = srcml_unit_get_srcml_outer(request.unit.get());
+                status = srcml_archive_write_string(output_archive, s.data(), s.size());
+                if (s.back() != '\n') {
                     srcml_archive_write_string(output_archive, "\n", 1);
                 }
             } else if (option(SRCML_COMMAND_XML_RAW)) {
-                const char* s = srcml_unit_get_srcml_inner(request.unit.get());
-                status = srcml_archive_write_string(output_archive, s, (int) strlen(s));
+                std::string_view s = srcml_unit_get_srcml_inner(request.unit.get());
+                status = srcml_archive_write_string(output_archive, s.data(), s.size());
                 // when non-blank and does not end in newline, add one in
-                if (s[0] != '\0' && s[strlen(s) - 1] != '\n') {
+                if (!s.empty() && s.back() != '\n') {
                     srcml_archive_write_string(output_archive, "\n", 1);
                 }
             } else if (option(SRCML_COMMAND_CAT_XML)) {
@@ -181,10 +181,10 @@ void srcml_write_request(ParseRequest&& request, TraceLog& log, const srcml_outp
 
                     first = false;
                 }
-                const char* s = srcml_unit_get_srcml_inner(request.unit.get());
-                status = srcml_archive_write_string(output_archive, s, (int) strlen(s));
+                std::string_view s = srcml_unit_get_srcml_inner(request.unit.get());
+                status = srcml_archive_write_string(output_archive, s.data(), s.size());
                 // when non-blank and does not end in newline, add one in
-                if (s[0] != '\0' && s[strlen(s) - 1] != '\n') {
+                if (!s.empty() && s.back() != '\n') {
                     srcml_archive_write_string(output_archive, "\n", 1);
                 }
             } else {

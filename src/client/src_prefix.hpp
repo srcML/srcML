@@ -11,16 +11,17 @@
 #define SRC_PREFIX_HPP
 
 #include <string>
+#include <string_view>
 #include <tuple>
 
-std::string src_prefix_add_uri(const std::string& protocol, const std::string& resource);
+std::string src_prefix_add_uri(std::string_view protocol, std::string_view resource);
 
-std::string src_prefix_add_uri(const std::string& input_file);
+std::string src_prefix_add_uri(std::string_view input_file);
 
-std::tuple<std::string, std::string> src_prefix_split_uri(const std::string& input_file);
+std::tuple<std::string, std::string> src_prefix_split_uri(std::string_view input_file);
 
-std::string src_prefix_protocol(const std::string& input_file);
+std::string_view src_prefix_protocol(std::string_view input_file);
 
-std::string src_prefix_resource(const std::string& input_file);
+std::string_view src_prefix_resource(std::string_view input_file);
 
 #endif

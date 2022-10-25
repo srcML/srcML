@@ -244,7 +244,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 else if (arg == "N") {
                     for (size_t i = 0; i < ns_size; ++i) {
                         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-                            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
+                            if (srcml_archive_get_namespace_prefix(srcml_arch, i)[0] == '\0') {
                                 body_params.push_back("xmlns=" + std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
                             }
                             else{
@@ -263,7 +263,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 else if (arg == "N:p") {
                     for (size_t i = 0; i < ns_size; ++i) {
                         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-                            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
+                            if (srcml_archive_get_namespace_prefix(srcml_arch, i)[0] == '\0') {
                                 body_params.emplace_back("");
                             }
                             else{

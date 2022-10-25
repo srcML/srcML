@@ -13,14 +13,17 @@
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
+#include <string_view>
+
+using namespace ::std::literals::string_view_literals;
 
 namespace {
 
-    bool curl_supported_file(const std::string& input_protocol) {
+    bool curl_supported_file(std::string_view input_protocol) {
         const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
         for (int i = 0; curl_types[i] != nullptr; ++i) {
-            std::string curl(curl_types[i]);
-            if (curl != "file" && curl == input_protocol.data())
+            std::string_view curl(curl_types[i]);
+            if (curl != "file"sv && curl == input_protocol)
                 return true;
         }
         return false;

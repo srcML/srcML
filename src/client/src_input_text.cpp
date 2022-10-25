@@ -42,7 +42,7 @@ int src_input_text(ParseQueue& queue,
     const srcml_request_t& srcml_request,
     const srcml_input_src& input) {
 
-    std::string raw_text = src_prefix_resource(input.resource);
+    std::string raw_text(src_prefix_resource(input.resource));
     const char* ptext = raw_text.data();
 
     // process text, which may have more than one input due to use of ASCII NUL ('\0')

@@ -29,6 +29,9 @@
 #include <ParserTest.hpp>
 #include <cstring>
 #include <libarchive_utilities.hpp>
+#include <string_view>
+
+using namespace ::std::literals::string_view_literals;
 
 int srcml_handler_dispatch(ParseQueue& queue,
                           srcml_archive* srcml_arch,
@@ -135,7 +138,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // for single input src archives (e.g., .tar), url attribute is the source url (if not already given)
     if (srcml_request.att_url) {
-        std::string url = src_prefix_resource(*srcml_request.att_url);
+        std::string url(src_prefix_resource(*srcml_request.att_url));
         if (srcml_archive_set_url(srcml_arch.get(), url.data()) != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml: invalid url attribute value '%s' for srcml archive", url);
             exit(SRCML_STATUS_INVALID_ARGUMENT);
@@ -143,7 +146,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     } else if (input_sources.size() == 1 && input_sources[0].archives.size() > 0) {
 
         // Cleanup filename
-        std::string url_name = src_prefix_resource(input_sources[0].filename);
+        std::string url_name(src_prefix_resource(input_sources[0].filename));
         url_name = url_name.substr(url_name.find_first_not_of("./"));
 
         if (srcml_archive_set_url(srcml_arch.get(), url_name.data()) != SRCML_STATUS_OK) {
@@ -194,7 +197,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     //   only one input
     //   no cli request to make it an archive
     //   not a directory (if local file)
-    if (input_sources.size() == 1 && input_sources[0].protocol != "filelist" &&
+    if (input_sources.size() == 1 && input_sources[0].protocol != "filelist"sv &&
         !(srcml_request.markup_options && (*srcml_request.markup_options & SRCML_ARCHIVE)) &&
         !input_sources[0].isdirectory && input_sources[0].archives.empty()) {
 
@@ -255,24 +258,22 @@ void create_srcml(const srcml_request_t& srcml_request,
     std::size_t xpath_index = 0;
     for (const auto& trans : srcml_request.transformations) {
 
-        std::string protocol;
-        std::string resource;
-        std::tie(protocol, resource) = src_prefix_split_uri(trans);
+        auto [protocol, resource] = src_prefix_split_uri(trans);
 
-        if (protocol == "xpath") {
+        if (protocol == "xpath"sv) {
             if (apply_xpath(srcml_arch.get(), srcml_arch.get(), resource, srcml_request.xpath_query_support[xpath_index++], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
                 exit(1);
             }
 
         }
 
-        if (protocol == "xslt") {
+        if (protocol == "xslt"sv) {
             if (apply_xslt(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
                 exit(1);
             }
         }
 
-        if (protocol == "xslt-param") {
+        if (protocol == "xslt-param"sv) {
 
             // split resource into name and value
             auto pos = resource.find('=');
@@ -318,7 +319,7 @@ void create_srcml(const srcml_request_t& srcml_request,
     bool always_archive = option(SRCML_COMMAND_PARSER_TEST);
     for (const auto& input : input_sources) {
 
-        if (input.protocol == "filelist")
+        if (input.protocol == "filelist"sv)
             always_archive = true;
 
         int numhandled = srcml_handler_dispatch(parse_queue, srcml_arch.get(), srcml_request, input, destination);
@@ -340,8 +341,8 @@ void create_srcml(const srcml_request_t& srcml_request,
         status = -1;
 
     if (option(SRCML_COMMAND_CAT_XML)) {
-        const char* endtag = "</unit>\n";
-        srcml_archive_write_string(srcml_arch.get(), endtag, (int) strlen(endtag));
+        std::string_view endtag = "</unit>\n"sv;
+        srcml_archive_write_string(srcml_arch.get(), endtag.data(), endtag.size());
     }
 
     if (option(SRCML_COMMAND_PARSER_TEST)) {

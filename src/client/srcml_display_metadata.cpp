@@ -20,7 +20,7 @@
 
 namespace {
 
-    const char* value(const char* call) {
+    std::string_view value(const char* call) {
         return call ? call : "";
     }
 
