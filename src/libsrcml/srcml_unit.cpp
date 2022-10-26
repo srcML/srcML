@@ -706,11 +706,9 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
         // convert to the given eol
         std::string neol(0, ' ');
         neol.reserve(unit->src->size());
-
-        const std::string& src = *unit->src;
-        for (size_t i = 0; i < src.size(); ++i) {
-            if (src[i] != '\n') {
-                neol += src[i];
+        for (const auto c : *unit->src) {
+            if (c != '\n') {
+                neol += c;
             }
             else if (unit->eol == SOURCE_OUTPUT_EOL_LF) {
                 neol += '\n';
@@ -721,7 +719,7 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
             else if (unit->eol == SOURCE_OUTPUT_EOL_CRLF) {
                 neol += "\r\n";
             } else {
-                neol += src[i];
+                neol += c;
             }
         }
 
