@@ -32,7 +32,7 @@ Namespaces& operator+=(Namespaces& namespaces, const Namespaces& otherns) {
         } else {
 
             // create a new entry for this URI
-            namespaces.push_back({ ns.prefix, ns.uri, ns.flags });
+            namespaces.emplace_back(ns.prefix, ns.uri, ns.flags);
         }
     }
 

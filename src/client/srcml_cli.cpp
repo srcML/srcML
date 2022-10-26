@@ -677,7 +677,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         exit(CLI_STATUS_ERROR);
     }
 
-    if (srcml_request.output_filename == ""sv)
+    if (srcml_request.output_filename.protocol.empty())
         srcml_request.output_filename = "stdout://-";
 
     // if no input given, then artificially put a "-" into the list of input files

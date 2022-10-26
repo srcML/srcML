@@ -478,7 +478,7 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
         ituri->prefix = prefix;
     } else {
         // add new namespace
-        archive->namespaces.push_back({ prefix, uri, NS_REGISTERED });
+        archive->namespaces.emplace_back(prefix, uri, NS_REGISTERED);
     }
 
     // namespaces for options enable the options automatically
