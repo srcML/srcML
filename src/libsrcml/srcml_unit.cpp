@@ -38,7 +38,10 @@ int srcml_unit_set_src_encoding(struct srcml_unit* unit, const char* encoding) {
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->encoding = encoding ? std::string(encoding) : decltype(unit->encoding)();
+    if (encoding)
+        unit->encoding = encoding;
+    else
+        unit->encoding = decltype(unit->encoding)();
 
     return SRCML_STATUS_OK;
 }
@@ -58,7 +61,10 @@ int srcml_unit_set_language(struct srcml_unit* unit, const char* language) {
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->language = language ? std::string(language) : decltype(unit->language)();
+    if (language)
+        unit->language = language;
+    else
+        unit->language = decltype(unit->language)();
 
     return SRCML_STATUS_OK;
 }
@@ -78,7 +84,10 @@ int srcml_unit_set_filename(struct srcml_unit* unit, const char* filename) {
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->filename = filename ? std::string(filename) : decltype(unit->filename)();
+    if (filename)
+        unit->filename = filename;
+    else
+        unit->filename = decltype(unit->filename)();
 
     return SRCML_STATUS_OK;
 }
@@ -98,7 +107,10 @@ int srcml_unit_set_version(struct srcml_unit* unit, const char* version) {
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->version = version ? std::string(version) : decltype(unit->version)();
+    if (version)
+        unit->version = version;
+    else
+        unit->version = decltype(unit->version)();
 
     return SRCML_STATUS_OK;
 }
@@ -118,7 +130,10 @@ int srcml_unit_set_timestamp(struct srcml_unit* unit, const char* timestamp) {
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->timestamp = timestamp ? std::string(timestamp) : decltype(unit->timestamp)();
+    if (timestamp)
+        unit->timestamp = timestamp;
+    else
+        unit->timestamp = decltype(unit->timestamp)();
 
     return SRCML_STATUS_OK;
 }
@@ -138,7 +153,10 @@ int srcml_unit_set_hash(struct srcml_unit* unit, const char* hash) {
     if (unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    unit->hash = hash ? std::string(hash) : decltype(unit->hash)();
+    if (hash)
+        unit->hash = hash;
+    else
+        unit->hash = decltype(unit->hash)();
 
     return SRCML_STATUS_OK;
 }

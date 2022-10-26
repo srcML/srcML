@@ -13,7 +13,7 @@
 #include <srcml_utilities.hpp>
 #include <mkDir.hpp>
 
-void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
+void src_output_filesystem(srcml_archive* srcml_arch, std::string_view output_dir, TraceLog& log) {
 
     // construct the relative directory
     std::string prefix;

@@ -56,7 +56,7 @@ public:
     operator FILE*() const { return *fileptr; }
     operator int() const { return *fd; }
 
-    bool operator==(const std::string& other) const { return other == filename; }
+    bool operator==(std::string_view other) const { return other == filename; }
     bool operator!=(const char* other) const { return filename != other; }
 
     const char* data() const { return resource.data(); }
@@ -82,7 +82,7 @@ public:
 };
 
 struct srcMLReadArchiveError {
-    srcMLReadArchiveError(int status, const std::string& emsg)
+    srcMLReadArchiveError(int status, std::string_view emsg)
     : status(status), errmsg(emsg) {}
     int status;
     std::string errmsg;

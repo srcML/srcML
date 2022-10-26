@@ -173,7 +173,10 @@ int srcml_archive_set_src_encoding(struct srcml_archive* archive, const char* sr
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->src_encoding = src_encoding ? std::string(src_encoding) : decltype(archive->src_encoding)();
+    if (src_encoding)
+        archive->src_encoding = src_encoding;
+    else
+        archive->src_encoding = decltype(archive->src_encoding)();
 
     return SRCML_STATUS_OK;
 }
@@ -192,7 +195,10 @@ int srcml_archive_set_xml_encoding(struct srcml_archive* archive, const char* en
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->encoding = encoding ? std::string(encoding) : decltype(archive->encoding)();
+    if (encoding)
+        archive->encoding = encoding;
+    else
+        archive->encoding = decltype(archive->encoding)();
 
     return SRCML_STATUS_OK;
 }
@@ -211,7 +217,10 @@ int srcml_archive_set_language(struct srcml_archive* archive, const char* langua
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->language = language ? std::string(language) : decltype(archive->language)();
+    if (language)
+        archive->language = language;
+    else
+        archive->language = decltype(archive->language)();
 
     return SRCML_STATUS_OK;
 }
@@ -230,7 +239,10 @@ int srcml_archive_set_url (struct srcml_archive* archive, const char* url) {
     if (archive == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    archive->url = url ? std::string(url) : decltype(archive->url)();
+    if (url)
+        archive->url = url;
+    else
+        archive->url = decltype(archive->url)();
 
     return SRCML_STATUS_OK;
 }

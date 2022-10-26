@@ -17,7 +17,7 @@
 
 using namespace ::std::literals::string_view_literals;
 
-std::string expand_namespace(const std::string& separator, size_t ns_size) {
+std::string expand_namespace(std::string_view separator, size_t ns_size) {
     std::string ns = "";
     for (size_t i = 0; i < ns_size; ++i) {
         ns += "%s";
@@ -33,7 +33,7 @@ void show_carret_error(size_t pos) {
     SRCMLstatus(WARNING_MSG, spacing + "^");
 }
 
-void pretty_print(const std::string& format, const std::vector<std::string>& args) {
+void pretty_print(std::string_view format, const std::vector<std::string>& args) {
 
     std::vector<std::string> thisargs(args.rbegin(), args.rend());
 
@@ -56,8 +56,8 @@ void pretty_print(const std::string& format, const std::vector<std::string>& arg
     std::cout << format_string.str();
 }
 
-pretty_template_t split_template_sections(const std::string& pretty_input) {
-    std::string input_template = pretty_input;
+pretty_template_t split_template_sections(std::string_view pretty_input) {
+    std::string input_template(pretty_input);
 
     size_t header_pos = input_template.find("{");
     size_t footer_pos = input_template.find("}");
@@ -107,7 +107,7 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
     return output_template;
 }
 
-std::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args, size_t ns_size) {
+std::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, std::string_view allowed_args, size_t ns_size) {
 
     size_t found = 0;
     bool first = true;
@@ -165,7 +165,7 @@ std::optional<size_t> parse_templates(std::string& template_string, std::vector<
     return std::nullopt;
 }
 
-const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const std::string& arg) {
+const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, std::string_view arg) {
 
         if (arg == "f"sv)           // %f: file name attribute on the unit
             return srcml_unit_get_filename(srcml_unit);
@@ -325,7 +325,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     }
 }
 
-int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, const srcml_request_t& srcml_request) {
+int srcml_pretty(srcml_archive* srcml_arch, std::string_view pretty_input, const srcml_request_t& srcml_request) {
     int unit_num = srcml_request.unit;
     pretty_template_t output_template = split_template_sections(pretty_input);
     size_t ns_size = srcml_archive_get_namespace_size(srcml_arch);

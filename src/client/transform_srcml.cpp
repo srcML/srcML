@@ -14,7 +14,7 @@
 #include <string>
 #include <SRCMLStatus.hpp>
 
-int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::string& transform_input, const std::pair< std::optional<element>, std::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
+int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, std::string_view transform_input, const std::pair< std::optional<element>, std::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces) {
 
     auto element = xpath_support.first;
     auto attribute = xpath_support.second;
@@ -63,7 +63,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
     }
 
     // save for future xpath normalization
-    std::string nxpath = transform_input;
+    std::string nxpath(transform_input);
 
     // Call appropriate XPath transform
     if (element && attribute) {
@@ -105,7 +105,7 @@ int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, const std::stri
     }
 }
 
-int apply_xslt(srcml_archive* in_arch, const std::string& transform_input) {
+int apply_xslt(srcml_archive* in_arch, std::string_view transform_input) {
 
     // xslt has file input, which may need to be processed
     int status;
@@ -122,7 +122,7 @@ int apply_xslt(srcml_archive* in_arch, const std::string& transform_input) {
     return status;
 }
 
-int apply_relaxng(srcml_archive* in_arch, const std::string& transform_input) {
+int apply_relaxng(srcml_archive* in_arch, std::string_view transform_input) {
 
     // relaxng has file input, which may need to be processed
     int status;

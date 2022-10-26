@@ -34,7 +34,7 @@ using namespace ::std::literals::string_view_literals;
 int src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const std::string& raw_input) {
+                          std::string_view raw_input) {
 
     // with immediate directory "." lookup the current working directory
     std::string_view input = raw_input;
