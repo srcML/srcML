@@ -482,13 +482,12 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
     }
 
     // namespaces for options enable the options automatically
-    std::string suri = uri;
-    if (suri == SRCML_CPP_NS_URI) {
+    if (uri == SRCML_CPP_NS_URI) {
         archive->options |= SRCML_OPTION_CPP;
         archive->options |= SRCML_OPTION_CPP_DECLARED;
-    } else if (suri == SRCML_ERROR_NS_URI) {
+    } else if (uri == SRCML_ERROR_NS_URI) {
         archive->options |= SRCML_OPTION_DEBUG;
-    } else if (suri == SRCML_POSITION_NS_URI) {
+    } else if (uri == SRCML_POSITION_NS_URI) {
         archive->options |= SRCML_OPTION_POSITION;
     }
 
