@@ -10,7 +10,7 @@
 #include <srcml_pretty.hpp>
 #include <iostream>
 #include <vector>
-#include <cstring>
+#include <string>
 #include <string_view>
 #include <SRCMLStatus.hpp>
 #include <srcml_utilities.hpp>

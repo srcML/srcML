@@ -14,7 +14,6 @@
 #include <create_srcml.hpp>
 #include <libarchive_utilities.hpp>
 #include <iostream>
-#include <cstring>
 #include <archive.h>
 #include <archive_entry.h>
 #include <SRCMLStatus.hpp>

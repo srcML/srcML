@@ -17,7 +17,6 @@
 #include <srcml_input_src.hpp>
 #include <SRCMLStatus.hpp>
 #include <stdio.h>
-#include <cstring>
 #include <ParserTest.hpp>
 #include <OpenFileLimiter.hpp>
 #include <srcml_utilities.hpp>

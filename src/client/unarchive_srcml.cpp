@@ -12,7 +12,6 @@
 #include <archive.h>
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
-#include <cstring>
 #include <libarchive_utilities.hpp>
 
 void unarchive_srcml(const srcml_request_t& /* srcml_request */,

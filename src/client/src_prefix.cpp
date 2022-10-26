@@ -9,7 +9,6 @@
 
 #include <src_prefix.hpp>
 
-#include <cstring>
 #include <iostream>
 
 std::string_view PROTOCOL_SEPARATOR = "://";

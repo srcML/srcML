@@ -23,11 +23,9 @@
 #include <TraceLog.hpp>
 #include <input_file.hpp>
 #include <input_curl.hpp>
-// #include <iostream>
 #include <input_archive.hpp>
 #include <SRCMLStatus.hpp>
 #include <ParserTest.hpp>
-#include <cstring>
 #include <libarchive_utilities.hpp>
 #include <string_view>
 
