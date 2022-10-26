@@ -445,7 +445,7 @@ int UTF8CharBuffer::getChar() {
  *
  * @returns the used source encoding.
  */
-const std::string& UTF8CharBuffer::getEncoding() const {
+std::string_view UTF8CharBuffer::getEncoding() const {
 
     return encoding;
 }

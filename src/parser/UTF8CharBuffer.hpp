@@ -87,7 +87,7 @@ public:
     int getChar();
 
     // Get the used encoding
-    const std::string& getEncoding() const;
+    std::string_view getEncoding() const;
 
     int getLOC() { if (lastchar == '\n') return loc; else return loc + 1; }
 
