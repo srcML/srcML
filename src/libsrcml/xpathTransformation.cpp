@@ -108,13 +108,14 @@ void xpathTransformation::form_simple_xpath(xmlTextWriterPtr bufwriter, xmlNodeP
  */
 int xpathTransformation::child_offset(xmlNodePtr root_result_node) {
 
+    std::string_view rootName = (const char*) root_result_node->name;
     int child_count = 1;
     for(xmlNodePtr sibling_node = root_result_node->prev; sibling_node; sibling_node = sibling_node->prev) {
 
         if (sibling_node->type != XML_ELEMENT_NODE)
             continue;
 
-        if ((strcmp((const char*) root_result_node->name, (const char*) sibling_node->name) == 0) &&
+        if (rootName == (const char*) sibling_node->name &&
             ((root_result_node->ns == NULL && sibling_node->ns == NULL) || (root_result_node->ns->prefix == sibling_node->ns->prefix))) {
             ++child_count;
 
@@ -141,7 +142,7 @@ void xpathTransformation::append_attribute_to_node(xmlNodePtr node, const char* 
 
     // previous property
     std::string curvalue;
-    if (value && strcmp(value, newvalue)) {
+    if (value && std::string_view(value) != newvalue) {
 
         curvalue = value;
         curvalue += ' ';
