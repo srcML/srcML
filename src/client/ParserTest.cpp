@@ -16,13 +16,10 @@
 #include <iomanip>
 #include <ParserTest.hpp>
 #include <sstream>
-#include <cstring>
 #include <algorithm>
 #include <srcml_cli.hpp>
 #include <srcml_options.hpp>
 #include <srcml_utilities.hpp>
-
-#define str2arg(s) s, (int) strlen(s)
 
 void ParserTest::entry(const ParseRequest& request, srcml_archive* archive, srcml_unit* unit) {
 
@@ -169,12 +166,14 @@ void ParserTest::report(srcml_archive* archive) {
     bool color = !(SRCMLOptions::get() & SRCML_COMMAND_NO_COLOR);
 
     // error report
-    srcml_archive_write_string(archive, str2arg("\n\nErrors:\n"));
+    std::string_view errorsHeader = "\n\nErrors:\n";
+    srcml_archive_write_string(archive, errorsHeader.data(), errorsHeader.size());
     for (const auto& err : errors) {
         srcml_archive_write_string(archive, err.data(), (int) err.size());
     }
     // summary report
-    srcml_archive_write_string(archive, str2arg("\n\nSummary:\n"));
+    std::string_view summaryHeader = "\n\nSummary:\n";
+    srcml_archive_write_string(archive, summaryHeader.data(), summaryHeader.size());
     std::sort(summary.begin(), summary.end());
     for (const auto& err : summary) {
         srcml_archive_write_string(archive, err.data(), (int) err.size());
