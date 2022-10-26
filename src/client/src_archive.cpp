@@ -16,7 +16,7 @@
 namespace {
 
     // map from file extension to libarchive write format calls
-    std::unordered_map<std::string_view, int (*)(struct archive *)> format_callsmap = {
+    const std::unordered_map<std::string_view, int (*)(struct archive *)> format_callsmap = {
         { ".7z", archive_write_set_format_7zip },
         { ".ar", archive_write_set_format_ar_bsd },
         { ".cpio", archive_write_set_format_cpio },
@@ -37,7 +37,7 @@ namespace {
     };
 
     // map from file extension to libarchive write compression calls
-    std::unordered_map<std::string_view, int (*)(struct archive *)> compression_callsmap = {
+    const std::unordered_map<std::string_view, int (*)(struct archive *)> compression_callsmap = {
 
         { ".bz2" , archive_write_add_filter_bzip2 },
         { ".gz"  , archive_write_add_filter_gzip },
@@ -55,7 +55,7 @@ namespace {
     };
 
     // map from language to file extension
-    std::unordered_map<std::string_view, std::string_view> lang2ext = {
+    const std::unordered_map<std::string_view, std::string_view> lang2ext = {
         { "C", ".c" },
         { "C++", ".cpp" },
         { "C#", ".cs" },
