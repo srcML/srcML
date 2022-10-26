@@ -68,7 +68,7 @@ bool getCurlErrors() {
     with our own callback does not entail an additional copy
 */
 extern "C" {
-    size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
+    size_t our_curl_write_callback(char* ptr, size_t size, size_t nmemb, void* userdata) {
 
         curl_write_info* data = (curl_write_info*) userdata;
 

@@ -28,7 +28,7 @@ namespace {
         { ".taz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".tb2",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".tbz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
-        { ".tbz2", archive_write_set_format_pax_restricted }, // (archive w/ compression)
+        { ".tbz2", archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".tgz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".tlz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".txz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
@@ -43,12 +43,12 @@ namespace {
         { ".gz"  , archive_write_add_filter_gzip },
         { ".lz"  , archive_write_add_filter_lzma },
         { ".lzma", archive_write_add_filter_lzma },
-        { ".taz",  archive_write_add_filter_compress },  // (archive w/ compression)
-        { ".tb2",  archive_write_add_filter_bzip2 },  // (archive w/ compression)
-        { ".tbz2", archive_write_add_filter_bzip2 }, // (archive w/ compression)
-        { ".tgz",  archive_write_add_filter_gzip },  // (archive w/ compression)
-        { ".tlz",  archive_write_add_filter_lzma },  // (archive w/ compression)
-        { ".txz",  archive_write_add_filter_xz },  // (archive w/ compression)
+        { ".taz",  archive_write_add_filter_compress }, // (archive w/ compression)
+        { ".tb2",  archive_write_add_filter_bzip2 },    // (archive w/ compression)
+        { ".tbz2", archive_write_add_filter_bzip2 },    // (archive w/ compression)
+        { ".tgz",  archive_write_add_filter_gzip },     // (archive w/ compression)
+        { ".tlz",  archive_write_add_filter_lzma },     // (archive w/ compression)
+        { ".txz",  archive_write_add_filter_xz },       // (archive w/ compression)
         { ".xar",  archive_write_add_filter_xz },
         { ".xz"  , archive_write_add_filter_xz },
         { ".z"   , archive_write_add_filter_compress },

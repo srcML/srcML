@@ -149,4 +149,3 @@ int srcml_archive_read_open(srcml_archive* arch, const srcml_input_src& input_so
 
     return status;
 }
-

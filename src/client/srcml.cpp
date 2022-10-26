@@ -36,7 +36,7 @@ namespace {
     bool request_create_src        (const srcml_request_t&);
 }
 
-int main(int argc, char * argv[]) {
+int main(int argc, char* argv[]) {
 
     Timer runtime = Timer();
 
