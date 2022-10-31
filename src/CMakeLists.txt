@@ -63,13 +63,16 @@ if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
         # Map from macOS version to libarchive number
         if(OS_VERSION EQUAL 19)
             # Catalina
-            set(LIBARCHIVE_VERSION "72.11.2")
+            set(LIBARCHIVE_VERSION "72.140.1")
         elseif(OS_VERSION EQUAL 20)
             # Big Sur
-            set(LIBARCHIVE_VERSION "83.40.4")
+            set(LIBARCHIVE_VERSION "83.100.2")
         elseif(OS_VERSION EQUAL 21)
             # Monterey
-            set(LIBARCHIVE_VERSION "83.40.4")
+            set(LIBARCHIVE_VERSION "83.100.2")
+        elseif(OS_VERSION EQUAL 22)
+            # Ventura
+            set(LIBARCHIVE_VERSION "83.100.2")
         endif()
 
         # fetch via Apple opensource
