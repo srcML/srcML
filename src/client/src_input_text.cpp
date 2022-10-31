@@ -44,7 +44,6 @@ int src_input_text(ParseQueue& queue,
 
     std::string_view raw_text(src_prefix_resource(input.resource));
     auto pCurrentChar = raw_text.begin();
-    auto pEndChar = pCurrentChar;
 
     // process text, which may have more than one input due to use of ASCII NUL ('\0')
     int count = 0;
