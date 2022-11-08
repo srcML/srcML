@@ -279,7 +279,7 @@ void create_srcml(const srcml_request_t& srcml_request,
             std::string value = resource.substr(pos + 1);
             if (value[0] != '"') {
                 value.insert(0, 1, '"');
-                value.append("\"");
+                value += '"';
             }
 
             srcml_append_transform_param(srcml_arch.get(), name.data(), value.data());

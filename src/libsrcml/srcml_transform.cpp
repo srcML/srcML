@@ -423,9 +423,9 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
 
     archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
 
-    std::string parenvalue = "\"";
+    std::string parenvalue("\"");
     parenvalue += xpath_param_value;
-    parenvalue += "\"";
+    parenvalue += '\"';
 
     archive->transformations.back()->xsl_parameters.push_back(parenvalue);
 
@@ -632,9 +632,11 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         switch (fullresults->nodeTab[i]->type) {
         case XML_COMMENT_NODE:
 
-            nunit->srcml.assign("<!--");
+            for (auto c : "<!--"sv)
+                nunit->srcml += c;
             nunit->srcml.append((const char*) fullresults->nodeTab[i]->content);
-            nunit->srcml.append("-->");
+            for (auto c : "-->"sv)
+                nunit->srcml += c;
             break;
 
         case XML_TEXT_NODE:
@@ -645,9 +647,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         case XML_ATTRIBUTE_NODE:
 
             nunit->srcml.append((const char*) fullresults->nodeTab[i]->name);
-            nunit->srcml.append("=\"");
+            nunit->srcml += '=';
+            nunit->srcml += '"';
             nunit->srcml.append((const char*) fullresults->nodeTab[i]->children->content);
-            nunit->srcml.append("\"");
+            nunit->srcml += '"';
             break;
 
         default:
@@ -718,8 +721,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // note: it may be an empty tag already
             std::string starttag = nunit->srcml.substr(0, static_cast<std::size_t>(nunit->content_begin - 1));
             if (starttag.back() != '/')
-                starttag += "/";
-            starttag += ">";
+                starttag += '/';
+            starttag += '>';
 
             // parse the start tag updating the unit
             xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.data(), (int) starttag.size());

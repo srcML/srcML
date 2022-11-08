@@ -170,9 +170,9 @@ void start_document(void* ctx) {
     SRCSAX_DEBUG_START("");
 
     // save for dictionary lookup of common elements
-    state->UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", (int) strlen("unit"));
-    state->MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", (int) strlen("macro-list"));
-    state->ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", (int) strlen("escape"));
+    state->UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", "unit"sv.size());
+    state->MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", "macro-list"sv.size());
+    state->ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", "escape"sv.size());
 
     // save the encoding from the input
     state->context->encoding = "UTF-8";
@@ -250,13 +250,21 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     // calls after we know whether this is an archive or not
     state->rootstarttag.reserve(static_cast<std::size_t>(ctxt->input->cur - state->base + 2));
     state->rootstarttag.assign((const char*) state->base, static_cast<std::size_t>(ctxt->input->cur - state->base));
-    state->rootstarttag.append("/>");
+    state->rootstarttag += '/';
+    state->rootstarttag += '>';
 
     // record namespace string in an extensible list so we can add the per unit
     if (state->collect_unit_body) {
 
         // precalculate length
         int ns_length = nb_namespaces * 2;
+
+        // Convert to string_view
+        std::vector<std::string_view> namespaceStrings(ns_length);
+        for (int i = 0; i < ns_length; ++i) {
+            namespaceStrings[i] = namespaces[i] ? (const char*) namespaces[i] : "";
+        }
+
         std::size_t size = 0;
         for (int i = 0; i < ns_length; i += 2) {
 
@@ -265,26 +273,30 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             if (namespaces[i]) {
                 // state->rootnsstr += ":";
                 // state->rootnsstr += (const char*) namespaces[i];
-                size += 1 + (int) strlen((const char*) namespaces[i]);
+                size += 1 + namespaceStrings[i].size();
             }
             // state->rootnsstr += "=\"";
             // state->rootnsstr += (const char*) namespaces[i + 1];
             // state->rootnsstr += "\" ";
-            size += 2 + (int) strlen((const char*) namespaces[i + 1]) + 2;
+            size += 2 + namespaceStrings[i + 1].size() + 2;
         }
 
         state->rootnsstr.reserve(size);
 
         for (int i = 0; i < ns_length; i += 2) {
 
-            state->rootnsstr += "xmlns";
+            for (auto c : "xmlns"sv)
+                state->rootnsstr += c;
+
             if (namespaces[i]) {
-                state->rootnsstr += ":";
-                state->rootnsstr += (const char*) namespaces[i];
+                state->rootnsstr += ':';
+                state->rootnsstr += namespaceStrings[i];
             }
-            state->rootnsstr += "=\"";
-            state->rootnsstr += (const char*) namespaces[i + 1];
-            state->rootnsstr += "\" ";
+            for (auto c : "=\""sv)
+                state->rootnsstr += c;
+            state->rootnsstr += namespaceStrings[i + 1];
+            for (auto c : "\" "sv)
+                state->rootnsstr += c;
         }
     }
 
@@ -598,7 +610,7 @@ void start_element(void* ctx, const xmlChar* localname, const xmlChar* /* prefix
 
         // end previous start element
         if (state->base[0] == '>') {
-            state->unitsrcml.append(1, '>');
+            state->unitsrcml += '>';
             state->base += 1;
         }
 
@@ -768,7 +780,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     // end previous start element
     if (state->base[0] == '>') {
-        state->unitsrcml.append(1, '>');
+        state->unitsrcml += '>';
         state->base += 1;
     }
 
@@ -786,11 +798,14 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
         // whitespace and escaped characters
         if (*ch == '<')
-            state->unitsrcml.append("&lt;");
+            for (auto c : "&lt;"sv)
+                state->unitsrcml += c;
         else if (*ch == '>')
-            state->unitsrcml.append("&gt;");
+            for (auto c : "&gt;"sv)
+                state->unitsrcml += c;
         else if (*ch == '&')
-            state->unitsrcml.append("&amp;");
+            for (auto c : "&amp;"sv)
+                state->unitsrcml += c;
         else
             state->unitsrcml.append((const char*) ch, static_cast<std::size_t>(len));
 
@@ -828,9 +843,11 @@ void comment(void* ctx, const xmlChar* value) {
     if (state->collect_unit_body) {
 
         // take the value but note it could be part of inter-unit
-        state->unitsrcml.append("<!--");
+        for (auto c : "<!--"sv)
+            state->unitsrcml += c;
         state->unitsrcml.append((const char*) value);
-        state->unitsrcml.append("-->");
+        for (auto c : "-->"sv)
+            state->unitsrcml += c;
     }
 
     state->base = ctxt->input->cur;

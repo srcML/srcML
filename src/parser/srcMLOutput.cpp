@@ -318,13 +318,13 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
 
     if (isoption(options, SRCML_PARSER_OPTION_CPP_MARKUP_IF0)) {
         if (!soptions.empty())
-            soptions += ",";
+            soptions += ',';
         soptions = "CPP_MARKUP_IF0";
     }
 
     if (isoption(options, SRCML_OPTION_LINE)) {
         if (!soptions.empty())
-            soptions += ",";
+            soptions += ',';
         soptions = "LINE";
     }
 
@@ -357,8 +357,9 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
         std::string tabattribute(namespaces[POS].getPrefix());
         if (!tabattribute.empty())
-            tabattribute += ":";
-        tabattribute += "tabs";
+            tabattribute += ':';
+        for (auto c : "tabs"sv)
+            tabattribute += c;
         auto stabsize = std::to_string(tabsize);
         xmlTextWriterWriteAttribute(xout, BAD_CAST tabattribute.data(), BAD_CAST stabsize.data());
     }
@@ -435,27 +436,27 @@ inline void srcMLOutput::processText(std::string_view str) {
         return;
 
     // output any '<', '>', or '&', or any text before
-    auto p = &str.data()[0];
+    auto p = 0;
     auto lastp = p;
-    for (p = strpbrk(p, "<>&"); p != 0 && *p != 0; p = strpbrk(p, "<>&")) {
+    while ((p = str.find_first_of("<>&"sv, p)) != (int) str.npos) {
 
         // output section before
-        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, p - lastp);
+        xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) &str.data()[lastp], p - lastp);
 
         // output special characters
-        if (*p == '<') {
-            xmlTextWriterWriteRawLen(xout, BAD_CAST "&lt;", 4);
-        } else if (*p == '>') {
-            xmlTextWriterWriteRawLen(xout, BAD_CAST "&gt;", 4);
-        } else if (*p == '&') {
-            xmlTextWriterWriteRawLen(xout, BAD_CAST "&amp;", 5);
+        if (str[p] == '<') {
+            xmlTextWriterWriteRawLen(xout, BAD_CAST "&lt;", "&lt;"sv.size());
+        } else if (str[p] == '>') {
+            xmlTextWriterWriteRawLen(xout, BAD_CAST "&gt;", "&gt;"sv.size());
+        } else if (str[p] == '&') {
+            xmlTextWriterWriteRawLen(xout, BAD_CAST "&amp;", "&amp;"sv.size());
         }
         ++p;
         lastp = p;
     }
 
     // output remaining text after last '<', '>', or '&', or the entire string if these do not occur
-    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) lastp, &str.data()[str.size() - 1] - lastp + 1);
+    xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) &str.data()[lastp], str.size() - lastp);
 }
 
 /**

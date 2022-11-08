@@ -29,6 +29,7 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 class srcml_sax2_reader;

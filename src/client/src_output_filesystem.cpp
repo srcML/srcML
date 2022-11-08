@@ -40,7 +40,7 @@ void src_output_filesystem(srcml_archive* srcml_arch, std::string_view output_di
         path += pos != std::string::npos ? filename.substr(0, pos) : "";
 
         std::string fullfilename = prefix;
-        fullfilename += "/";
+        fullfilename += '/';
         fullfilename += filename;
 
         // use libarchive to create the file path

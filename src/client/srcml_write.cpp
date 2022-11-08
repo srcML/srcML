@@ -22,6 +22,9 @@
 #include <srcml_utilities.hpp>
 #include <mkDir.hpp>
 #include <cmath>
+#include <string_view>
+
+using namespace ::std::literals::string_view_literals;
 
 // Public consumption thread function
 void srcml_write_request(ParseRequest&& request, TraceLog& log, const srcml_output_dest& /* destination */) {
@@ -64,10 +67,11 @@ void srcml_write_request(ParseRequest&& request, TraceLog& log, const srcml_outp
         std::string filename;
         if (option(SRCML_COMMAND_TO_DIRECTORY)) {
             filename += *request.disk_dir;
-            filename += "/";
+            filename += '/';
         }
         filename += *request.filename;
-        filename += ".xml";
+        for (auto c : ".xml"sv)
+            filename += c;
 
         // create the output directory
         auto path = filename.substr(0, filename.find_last_of('/'));

@@ -199,18 +199,18 @@ int srcml(const char* input_filename, const char* output_filename) {
            || (global_archive.language && global_archive.language == "xml"sv))) {
 
             if (global_archive.language) {
-                global_archive.error_string = "Language '";
+                global_archive.error_string = "Language '"sv;
                 global_archive.error_string += global_archive.language->data();
-                global_archive.error_string += "' is not supported.";
+                global_archive.error_string += "' is not supported."sv;
             } else
-                global_archive.error_string = "No language provided.";
+                global_archive.error_string = "No language provided."sv;
 
             return SRCML_STATUS_INVALID_INPUT;
         }
 
         std::unique_ptr<srcml_archive> archive(srcml_archive_clone(&global_archive));
         if (!archive) {
-            global_archive.error_string = "Unable to create srcML archive";
+            global_archive.error_string = "Unable to create srcML archive"sv;
             return SRCML_STATUS_ERROR;
         }
 

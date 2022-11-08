@@ -992,10 +992,11 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
     unit->srcml.assign(start_tag);
 
     if (content_begin != content_end) {
-        unit->srcml.append(">");
+        unit->srcml += '>';
         unit->srcml.append(srcml + content_begin);
     } else {
-        unit->srcml.append("/>");
+        unit->srcml += '/';
+        unit->srcml += '>';
     }
 
     // content end is changed since the start unit tag was rewritten
