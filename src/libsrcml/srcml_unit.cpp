@@ -12,7 +12,6 @@
 #include <UTF8CharBuffer.hpp>
 #include <memory>
 #include <libxml2_utilities.hpp>
-#include <cstring>
 #include <fcntl.h>
 #include <functional>
 #include <string_view>
@@ -934,12 +933,12 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
     unit->content_begin = unit->unit_translator->output_buffer()->written + 1;
 
     // record end of content (after xmlns for srcML)
-    const char* s = (const char*) xmlBufferContent(unit->output_buffer);
-    auto pos = strstr(s, "xmlns") - s;
+    std::string_view s = (const char*) xmlBufferContent(unit->output_buffer);
+    auto pos = s.find("xmlns");
     unit->insert_begin = (int) pos;
-    auto firstquote = strchr(s + pos + 1, '\"') - s;
-    auto secondquote = strchr(s + firstquote + 1, '\"') - s;
-    unit->insert_end = (int) secondquote + 2;
+    auto firstquotePos = s.find("\"", pos + 1);
+    auto secondquotePos = s.find("\"", firstquotePos + 1);
+    unit->insert_end = (int) secondquotePos + 2;
 
     return SRCML_STATUS_OK;
 }
