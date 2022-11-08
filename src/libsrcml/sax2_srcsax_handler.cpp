@@ -446,8 +446,11 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
     state->unit_count += 1;
 
+    std::string_view localnameString(localname ? (const char*) localname : "");
+    std::string_view prefixString(prefix ? (const char*) prefix : "");
+
     // find end of unit tag name, e.g., end of "<unit" or "<src:unit"
-    int pos = (int) (1 + strlen((const char*) localname) + (prefix ? strlen((const char*) prefix) + 1 : 0) + 1);
+    int pos = (int) (1 + localnameString.size() + (!prefixString.empty() ? prefixString.size() + 1 : 0) + 1);
 
     if (pos >= 0) {
         // merge the namespaces from the root into this one
@@ -462,7 +465,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         state->unitsrcml.append((const char*) state->base + pos, static_cast<std::size_t>(ctxt->input->cur - state->base + 1 - pos));
 
         if (!state->context->is_archive) {
-            std::string& s = state->unitsrcml;
+            std::string_view s = state->unitsrcml;
             auto xmlnsPos = s.find("xmlns");
             auto firstquote = s.find("\"", xmlnsPos + 1);
             auto secondquote = s.find("\"", firstquote + 1);
