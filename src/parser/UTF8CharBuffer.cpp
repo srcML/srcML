@@ -68,7 +68,7 @@ namespace {
 #endif
 
     // some common aliases that libiconv does not accept
-    std::map<std::string, std::string> encodingAliases = {
+    std::map<std::string_view, std::string_view> encodingAliases = {
         { "UTF16", "UTF-16"},
         { "UCS2", "UCS-2"},
         { "UCS4", "UCS-4"},
@@ -83,7 +83,7 @@ namespace {
         if (search == encodingAliases.end())
             return str;
 
-        return search->second;
+        return std::string(search->second);
     }
 }
 
