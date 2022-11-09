@@ -10,7 +10,6 @@
  */
 
 header "pre_include_hpp" {
-   #include <cstring>
 }
 
 header "pre_include_cpp" {

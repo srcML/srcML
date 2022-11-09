@@ -21,7 +21,6 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
 
         std::string_view attribute = (const char*) attributes[pos * 5];
         std::string value((const char *)attributes[pos * 5 + 3], static_cast<size_t>(attributes[pos * 5 + 4] - attributes[pos * 5 + 3]));
-
         if (attribute == "timestamp"sv)
             srcml_unit_set_timestamp(unit, value.data());
         else if (attribute == "hash"sv)
@@ -51,7 +50,7 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
             }
             if (!found) {
                 unit->attributes.emplace_back(attribute);
-                unit->attributes.emplace_back(value);
+                unit->attributes.emplace_back(std::move(value));
             }
         }
     }
@@ -70,14 +69,14 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
 
     std::string news;
     const char* p = srcml;
-    const char* lp = p;
+    const char* lastp = p;
     while ((p = (const char*) memchr(p, '<', static_cast<size_t>(size - (p - srcml))))) {
 
         bool inmode = mode.top() == COMMON || (revision == 0 && mode.top() == DELETE) || (revision == 1 && mode.top() == INSERT);
 
         // output previous non-tag text
         if (inmode)
-            news.append(lp, static_cast<size_t>(p - lp));
+            news.append(lastp, static_cast<size_t>(p - lastp));
 
         auto sp = p;
 
@@ -105,7 +104,7 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
                 news.append(sp, static_cast<size_t>(p - sp));
         }
 
-        lp = p;
+        lastp = p;
     }
 
     return news;

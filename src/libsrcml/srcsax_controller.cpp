@@ -11,7 +11,6 @@
 #include <libxml/parserInternals.h>
 
 #include <functional>
-#include <cstring>
 
 /**
  * libxml_error
@@ -119,7 +118,7 @@ int srcsax_parse(srcsax_context* context) {
 
         xmlErrorPtr ep = xmlCtxtGetLastError(context->libxml2_context);
 
-        auto str_length = strlen(ep->message);
+        auto str_length = std::string_view(ep->message).size();
         ep->message[str_length - 1] = '\0';
 
         context->srcsax_error((const char *)ep->message, ep->code);

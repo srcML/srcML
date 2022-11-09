@@ -12,7 +12,6 @@
 
 //#include <fnmatch.h>
 #include <cstdio>
-#include <cstring>
 #include <string>
 #include <vector>
 

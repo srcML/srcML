@@ -780,7 +780,7 @@ int srcml_unit_unparse_memory(struct srcml_unit* unit, char** src_buffer, size_t
     (*src_buffer) = (char *) xmlBufferDetach(buffer);
     if (!(*src_buffer))
         return SRCML_STATUS_ERROR;
-    *src_size = strlen(*src_buffer);
+    *src_size = std::string_view(*src_buffer).size();
 
     xmlBufferFree(buffer);
 

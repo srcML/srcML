@@ -6,10 +6,7 @@
  */
 
 #include <srcml_sax2_reader.hpp>
-
 #include <stdlib.h>
-#include <cstring>
-
 #include <iostream>
 
 /**

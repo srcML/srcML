@@ -15,7 +15,6 @@
 #include <srcml_options.hpp>
 #include <iostream>
 #include <iomanip>
-#include <cstring>
 #include <srcml_utilities.hpp>
 
 namespace {

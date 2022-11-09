@@ -13,7 +13,6 @@
 
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
-#include <cstring>
 #include <stdlib.h>
 
 #include <vector>
@@ -192,7 +191,7 @@ int srcml(const char* input_filename, const char* output_filename) {
     } else {
 
         // check the extension for .xml or .srcml, non case-sensitive
-        size_t len = strlen(input_filename);
+        size_t len = std::string_view(input_filename).size();
         if (!((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
             && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
              || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
