@@ -10,7 +10,9 @@
 #include <unit_utilities.hpp>
 #include <libxml/parserInternals.h>
 #include <stack>
+#include <cstring>
 #include <string_view>
+
 using namespace ::std::literals::string_view_literals;
 
 // Update unit attributes with xml parsed attributes
@@ -124,8 +126,7 @@ std::string extract_src(std::string_view srcml, std::optional<int> revision) {
     scontext.mode.push(COMMON);
 
     // parse the srcml collecting the (now needed) src
-    xmlSAXHandler charactersax;
-    memset(&charactersax, 0, sizeof(charactersax));
+    xmlSAXHandler charactersax{};
     charactersax.initialized    = XML_SAX2_MAGIC;
 
     charactersax.ignorableWhitespace = charactersax.characters = [](void* ctx, const xmlChar* ch, int len) {

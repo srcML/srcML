@@ -332,7 +332,7 @@ public:
 // map from text of literal to token number, adjusted to language
 struct keyword { std::string_view text; int token; int language; };
 
-void changetotextlexer(int typeend, const std::string delimiter = "");
+void changetotextlexer(int typeend, std::string delimiter = "");
 
 virtual int testLiteralsTable(int ttype) const;
 virtual int testLiteralsTable(const std::string& txt, int ttype) const;
