@@ -48,7 +48,7 @@ header {
 
 header "post_include_cpp" {
 
-void KeywordLexer::changetotextlexer(int typeend, const std::string delim) {
+void KeywordLexer::changetotextlexer(int typeend, std::string delim) {
 
     selector->push("text"); 
     ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, delim, isline, line_number, options);
