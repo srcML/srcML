@@ -36,7 +36,7 @@ void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar*
             unit->url = value;
         else if (attribute == "version"sv)
             srcml_unit_set_version(unit, value.data());
-        else if (attribute == "tabs"sv || attribute == "options"sv || attribute == "hash"sv)
+        else if (attribute == "tabs"sv || attribute == "options"sv)
             ;
         else {
             // if we already have the attribute, then just update the value
