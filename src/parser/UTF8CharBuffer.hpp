@@ -18,6 +18,7 @@
 
 #include <antlr/CharBuffer.hpp>
 #include <string>
+#include <string_view>
 #include <iconv.h>
 #include <memory>
 
