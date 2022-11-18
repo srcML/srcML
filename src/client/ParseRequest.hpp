@@ -18,7 +18,9 @@
 #include <optional>
 
 struct ParseRequest {
-    ParseRequest(std::vector<char>::size_type size = 0) : buffer(size) {}
+    ParseRequest() = default;
+    ParseRequest(ParseRequest&& other) = default;
+    ParseRequest& operator=(ParseRequest&&) = default;
 
     // Fields required by thread to process a unit
     std::string language;
