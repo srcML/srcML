@@ -267,14 +267,14 @@ public :
                 archive->tabstop = static_cast<std::size_t>(atoi(value.data()));
             else if (attribute == "options"sv) {
 
-                while(!value.empty()) {
+                std::size_t commaPos = 0;
+                std::size_t prevCommaPos = 0;
+                while(prevCommaPos < value.size()) {
 
-                    const auto commaPos = value.find(",");
-                    std::string option(value.substr(0, commaPos));
-                    if (commaPos == std::string::npos)
-                        value = "";
-                    else
-                        value = value.substr(value.find(",") + 1);
+                    commaPos = value.find(",", commaPos);
+                    std::string_view option(&value[prevCommaPos], commaPos - prevCommaPos);
+                    prevCommaPos = commaPos;
+                    ++prevCommaPos;
 
                     if (option == "XMLDECL"sv)
                         archive->options |= SRCML_OPTION_NO_XML_DECL;
