@@ -99,7 +99,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
             {
                 // output as true/false with newline after every results
                 std::string_view boolresult = srcml_transform_get_bool(prequest->results) ? "true\n" : "false\n";
-                srcml_archive_write_string(output_archive, boolresult.data(), boolresult.size());
+                srcml_archive_write_string(output_archive, boolresult.data(), (int) boolresult.size());
             }
             srcml_transform_free(prequest->results);
             return;
@@ -122,7 +122,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
 
         case SRCML_RESULT_STRING:
             std::string_view s = srcml_transform_get_string(prequest->results);
-            srcml_archive_write_string(output_archive, s.data(), s.size());
+            srcml_archive_write_string(output_archive, s.data(), (int) s.size());
 
             // if the string does not end in a newline, output one
             if (s.back() != '\n')
@@ -155,13 +155,13 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
             int status = SRCML_STATUS_OK;
             if (option(SRCML_COMMAND_XML_FRAGMENT)) {
                 std::string_view s = srcml_unit_get_srcml_outer(prequest->unit.get());
-                status = srcml_archive_write_string(output_archive, s.data(), s.size());
+                status = srcml_archive_write_string(output_archive, s.data(), (int) s.size());
                 if (s.back() != '\n') {
                     srcml_archive_write_string(output_archive, "\n", 1);
                 }
             } else if (option(SRCML_COMMAND_XML_RAW)) {
                 std::string_view s = srcml_unit_get_srcml_inner(prequest->unit.get());
-                status = srcml_archive_write_string(output_archive, s.data(), s.size());
+                status = srcml_archive_write_string(output_archive, s.data(), (int) s.size());
                 // when non-blank and does not end in newline, add one in
                 if (!s.empty() && s.back() != '\n') {
                     srcml_archive_write_string(output_archive, "\n", 1);
@@ -185,7 +185,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
                     first = false;
                 }
                 std::string_view s = srcml_unit_get_srcml_inner(prequest->unit.get());
-                status = srcml_archive_write_string(output_archive, s.data(), s.size());
+                status = srcml_archive_write_string(output_archive, s.data(), (int) s.size());
                 // when non-blank and does not end in newline, add one in
                 if (!s.empty() && s.back() != '\n') {
                     srcml_archive_write_string(output_archive, "\n", 1);

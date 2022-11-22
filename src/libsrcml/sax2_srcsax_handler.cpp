@@ -170,9 +170,9 @@ void start_document(void* ctx) {
     SRCSAX_DEBUG_START("");
 
     // save for dictionary lookup of common elements
-    state->UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", "unit"sv.size());
-    state->MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", "macro-list"sv.size());
-    state->ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", "escape"sv.size());
+    state->UNIT_ENTRY       = xmlDictLookup(ctxt->dict, (const xmlChar*) "unit", (int)"unit"sv.size());
+    state->MACRO_LIST_ENTRY = xmlDictLookup(ctxt->dict, (const xmlChar*) "macro-list", (int)"macro-list"sv.size());
+    state->ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", (int)"escape"sv.size());
 
     // save the encoding from the input
     state->context->encoding = "UTF-8";

@@ -167,13 +167,13 @@ void ParserTest::report(srcml_archive* archive) {
 
     // error report
     std::string_view errorsHeader = "\n\nErrors:\n";
-    srcml_archive_write_string(archive, errorsHeader.data(), errorsHeader.size());
+    srcml_archive_write_string(archive, errorsHeader.data(), (int) errorsHeader.size());
     for (const auto& err : errors) {
         srcml_archive_write_string(archive, err.data(), (int) err.size());
     }
     // summary report
     std::string_view summaryHeader = "\n\nSummary:\n";
-    srcml_archive_write_string(archive, summaryHeader.data(), summaryHeader.size());
+    srcml_archive_write_string(archive, summaryHeader.data(), (int) summaryHeader.size());
     std::sort(summary.begin(), summary.end());
     for (const auto& err : summary) {
         srcml_archive_write_string(archive, err.data(), (int) err.size());

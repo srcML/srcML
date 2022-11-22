@@ -340,7 +340,7 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     if (option(SRCML_COMMAND_CAT_XML)) {
         std::string_view endtag = "</unit>\n"sv;
-        srcml_archive_write_string(srcml_arch.get(), endtag.data(), endtag.size());
+        srcml_archive_write_string(srcml_arch.get(), endtag.data(), (int) endtag.size());
     }
 
     if (option(SRCML_COMMAND_PARSER_TEST)) {
