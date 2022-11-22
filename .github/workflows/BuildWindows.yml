@@ -16,7 +16,7 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
 
       - name: Restore artifacts, or run vcpkg, build (and cache artifacts as post step)
-        uses: lukka/run-vcpkg@v10.3
+        uses: lukka/run-vcpkg@v10
         id: runvcpkg
         with:
           vcpkgGitCommitId: 'acc3bcf76b84ae5041c86ab55fe138ae7b8255c7'
