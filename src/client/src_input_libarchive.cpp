@@ -240,10 +240,10 @@ int src_input_libarchive(ParseQueue& queue,
             time_t mod_time(archive_entry_mtime(entry));
 
             //Standard ctime output and prune '/n' from string
-            char* c_time = ctime(&mod_time);
-            c_time[strlen(c_time) - 1] = 0;
-
-            prequest->time_stamp = c_time;
+            char s[1000];
+            struct tm * p = localtime(&mod_time);
+            strftime(s, 1000, "%c", p);
+            prequest->time_stamp = s;
         }
 
         // fill up the parse request buffer

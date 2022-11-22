@@ -211,7 +211,6 @@ int src_input_text(ParseQueue& queue,
 
             // finished with no '\\' remaining, so flush buffer
             prequest->buffer.insert(prequest->buffer.end(), pCurrentChar, raw_text.end());
-            pCurrentChar = 0;
         }
 
         // schedule for parsing
