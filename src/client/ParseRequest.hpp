@@ -18,9 +18,6 @@
 #include <optional>
 
 struct ParseRequest {
-    ParseRequest() = default;
-    ParseRequest(ParseRequest&& other) = default;
-    ParseRequest& operator=(ParseRequest&&) = default;
 
     // Fields required by thread to process a unit
     std::string language;

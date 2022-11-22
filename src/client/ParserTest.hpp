@@ -25,7 +25,7 @@ public:
 
     ParserTest() { line_count = 0; count = 0; total = 0; failed = 0; }
 
-    static void entry(const ParseRequest& request, srcml_archive* archive, srcml_unit* unit);
+    static void entry(const ParseRequest* request, srcml_archive* archive, srcml_unit* unit);
 
     static void report(srcml_archive* archive);
 

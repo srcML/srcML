@@ -21,16 +21,16 @@
 #include <srcml_options.hpp>
 #include <srcml_utilities.hpp>
 
-void ParserTest::entry(const ParseRequest& request, srcml_archive* archive, srcml_unit* unit) {
+void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcml_unit* unit) {
 
     bool color = !(SRCMLOptions::get() & SRCML_COMMAND_NO_COLOR);
 
-    if (request.url)
-        url = *request.url;
+    if (request->url)
+        url = *request->url;
 
-    if (previous_filename.empty() || (request.parsertest_filename != previous_filename)) {
+    if (previous_filename.empty() || (request->parsertest_filename != previous_filename)) {
 
-        previous_filename = request.parsertest_filename;
+        previous_filename = request->parsertest_filename;
         count = 0;
 
         if (!srcml_unit_get_language(unit))

@@ -53,26 +53,26 @@ int src_input_text(ParseQueue& queue,
         lastNull = false;
 
         // form the parsing request
-        ParseRequest request;
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
         if (option(SRCML_COMMAND_NOARCHIVE))
-            request.disk_dir = srcml_request.output_filename.resource;
+            prequest->disk_dir = srcml_request.output_filename.resource;
 
-        request.filename = srcml_request.att_filename;
-        request.url = srcml_request.att_url;
-        request.version = srcml_request.att_version;
-        request.srcml_arch = srcml_arch;
-        request.language = srcml_request.att_language ? *srcml_request.att_language : "";
+        prequest->filename = srcml_request.att_filename;
+        prequest->url = srcml_request.att_url;
+        prequest->version = srcml_request.att_version;
+        prequest->srcml_arch = srcml_arch;
+        prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
 
         // if there there is no language specified, then try to use the filename extension
-        if (request.language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, request.filename->data()))
-                request.language = l;
+        if (prequest->language.empty())
+            if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->data()))
+                prequest->language = l;
 
-        request.status = 0;
+        prequest->status = 0;
 
         // fill up the parse request buffer
-        if (!request.status) {
+        if (!prequest->status) {
 
             // copy from the text directly into a buffer
             // perform newline and tab expansion
@@ -82,7 +82,7 @@ int src_input_text(ParseQueue& queue,
                 auto escapePosition = std::find(pCurrentChar, raw_text.end(), '\\');
 
                 // append up to the special char
-                request.buffer.insert(request.buffer.end(), pCurrentChar, escapePosition);
+                prequest->buffer.insert(prequest->buffer.end(), pCurrentChar, escapePosition);
                 if (escapePosition == raw_text.end()) {
                     pCurrentChar = raw_text.end();
                     break;
@@ -92,29 +92,29 @@ int src_input_text(ParseQueue& queue,
                 ++escapePosition;
                 switch (*escapePosition) {
                 case 'n':
-                    request.buffer.push_back('\n');
+                    prequest->buffer.push_back('\n');
                     break;
                 case 't':
-                    request.buffer.push_back('\t');
+                    prequest->buffer.push_back('\t');
                     break;
                 case 'f':
-                    request.buffer.push_back('\f');
+                    prequest->buffer.push_back('\f');
                     break;
                 case 'a':
-                    request.buffer.push_back('\a');
+                    prequest->buffer.push_back('\a');
                     break;
                 case 'b':
-                    request.buffer.push_back('\b');
+                    prequest->buffer.push_back('\b');
                     break;
                 /* \e not directly supported in C, but echo command does */
                 case 'e':
-                    request.buffer.push_back('\x1B');
+                    prequest->buffer.push_back('\x1B');
                     break;
                 case 'r':
-                    request.buffer.push_back('\r');
+                    prequest->buffer.push_back('\r');
                     break;
                 case 'v':
-                    request.buffer.push_back('\v');
+                    prequest->buffer.push_back('\v');
                     break;
                 // byte with hex value from 1 to 2 characters
                 case 'x':
@@ -126,8 +126,8 @@ int src_input_text(ParseQueue& queue,
                         ++offset;
                     }
                     if (offset == 0) {
-                        request.buffer.push_back('\\');
-                        request.buffer.push_back('x');
+                        prequest->buffer.push_back('\\');
+                        prequest->buffer.push_back('x');
                         break;
                     }
 
@@ -142,7 +142,7 @@ int src_input_text(ParseQueue& queue,
                         goto end;
                     }
 
-                    request.buffer.push_back((char) value);
+                    prequest->buffer.push_back((char) value);
 
                     escapePosition += offset;
                     break;
@@ -181,8 +181,8 @@ int src_input_text(ParseQueue& queue,
                         ++offset;
                     }
                     if (offset == 0) {
-                        request.buffer.push_back('\\');
-                        request.buffer.push_back('0');
+                        prequest->buffer.push_back('\\');
+                        prequest->buffer.push_back('0');
                         break;
                     }
 
@@ -197,26 +197,27 @@ int src_input_text(ParseQueue& queue,
                         goto end;
                     }
 
-                    request.buffer.push_back(static_cast<char>(value));
+                    prequest->buffer.push_back(static_cast<char>(value));
 
                     escapePosition += offset - 1;
                     break;
                 }
                 default:
-                    request.buffer.push_back('\\');
-                    request.buffer.push_back(*(escapePosition));
+                    prequest->buffer.push_back('\\');
+                    prequest->buffer.push_back(*(escapePosition));
                 }
                 pCurrentChar = escapePosition + 1;
             }
 
             // finished with no '\\' remaining, so flush buffer
-            request.buffer.insert(request.buffer.end(), pCurrentChar, raw_text.end());
+            prequest->buffer.insert(prequest->buffer.end(), pCurrentChar, pCurrentChar + strlen(pCurrentChar));
+            pCurrentChar = 0;
         }
 
         // schedule for parsing
 end:    count += 1;
 
-        queue.schedule(std::move(request));
+        queue.schedule(prequest);
     }
 
     return count;

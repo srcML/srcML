@@ -21,101 +21,101 @@
 #include <Timer.hpp>
 
 // creates initial unit, parses, and then sends unit to write queue
-void srcml_consume(int /* thread_pool_id */, ParseRequest& request, WriteQueue* write_queue) {
+void srcml_consume(int /* thread_pool_id */, std::shared_ptr<ParseRequest> prequest, WriteQueue* write_queue) {
 
     // error passthrough to output for proper output in trace
-    if (request.status) {
-        request.unit.reset(0);
-        write_queue->schedule(std::move(request));
+    if (prequest->status) {
+        prequest->unit.reset(0);
+        write_queue->schedule(std::move(prequest));
         return;
     }
 
     std::string original_filename;
 
     // construct and parse the unit
-    request.status = SRCML_STATUS_OK;
+    prequest->status = SRCML_STATUS_OK;
 
     // create the unit if needed
-    if (!request.unit) {
-        request.unit.reset(srcml_unit_create(request.srcml_arch));
-        if (!request.unit) {
-            request.status = SRCML_STATUS_ERROR;
-            write_queue->schedule(std::move(request));
+    if (!prequest->unit) {
+        prequest->unit.reset(srcml_unit_create(prequest->srcml_arch));
+        if (!prequest->unit) {
+            prequest->status = SRCML_STATUS_ERROR;
+            write_queue->schedule(std::move(prequest));
             return;
         }
     }
 
     // language attribute, required if from memory
-    if (srcml_unit_get_language(request.unit.get()) == 0 || srcml_unit_get_language(request.unit.get())[0] == '\0')
-        if ((request.status = srcml_unit_set_language(request.unit.get(), request.language.data())) != SRCML_STATUS_OK) {
-            request.unit.reset();
-            write_queue->schedule(std::move(request));
+    if (srcml_unit_get_language(prequest->unit.get()) == 0 || srcml_unit_get_language(prequest->unit.get())[0] == '\0')
+        if ((prequest->status = srcml_unit_set_language(prequest->unit.get(), prequest->language.data())) != SRCML_STATUS_OK) {
+            prequest->unit.reset();
+            write_queue->schedule(std::move(prequest));
             return;
         }
 
     // (optional) filename attribute
-    if (request.filename) {
+    if (prequest->filename) {
 
-        original_filename = *request.filename;
+        original_filename = *prequest->filename;
 
         // Cleanup filename
-        auto it = request.filename->begin();
-        while (*it == '.' && std::next(it) != request.filename->end() && *std::next(it) == '/') {
-            request.filename->erase(it, std::next(std::next(it)));
-            it = request.filename->begin();
+        auto it = prequest->filename->begin();
+        while (*it == '.' && std::next(it) != prequest->filename->end() && *std::next(it) == '/') {
+            prequest->filename->erase(it, std::next(std::next(it)));
+            it = prequest->filename->begin();
         }
 
-        if ((request.status = srcml_unit_set_filename(request.unit.get(), request.filename->data())) != SRCML_STATUS_OK) {
-            request.unit.reset();
-            write_queue->schedule(std::move(request));
+        if ((prequest->status = srcml_unit_set_filename(prequest->unit.get(), prequest->filename->data())) != SRCML_STATUS_OK) {
+            prequest->unit.reset();
+            write_queue->schedule(std::move(prequest));
             return;
         }
     }
 
     // (optional) version attribute
-    if (request.version && ((request.status = srcml_unit_set_version(request.unit.get(), request.version->data())) != SRCML_STATUS_OK)) {
-        request.unit.reset();
-        write_queue->schedule(std::move(request));
+    if (prequest->version && ((prequest->status = srcml_unit_set_version(prequest->unit.get(), prequest->version->data())) != SRCML_STATUS_OK)) {
+        prequest->unit.reset();
+        write_queue->schedule(std::move(prequest));
         return;
     }
 
     // (optional) timestamp attribute
-    if (request.time_stamp)
-        srcml_unit_set_timestamp(request.unit.get(), request.time_stamp->data());
+    if (prequest->time_stamp)
+        srcml_unit_set_timestamp(prequest->unit.get(), prequest->time_stamp->data());
 
     // parse the buffer/file, timing as we go
     Timer parsetime;
 
-    if (request.disk_filename) {
-        request.status = srcml_unit_parse_filename(request.unit.get(), request.disk_filename->data());
+    if (prequest->disk_filename) {
+        prequest->status = srcml_unit_parse_filename(prequest->unit.get(), prequest->disk_filename->data());
     }
-    else if (request.needsparsing) {
+    else if (prequest->needsparsing) {
 
-        request.status = srcml_unit_parse_memory(request.unit.get(), request.buffer.data(), request.buffer.size());
+        prequest->status = srcml_unit_parse_memory(prequest->unit.get(), prequest->buffer.data(), prequest->buffer.size());
 
     }
-    if (request.status == SRCML_STATUS_INVALID_ARGUMENT) {
-        request.status = SRCML_STATUS_IO_ERROR;
-        request.errormsg = "";
-        request.unit.reset();
-        write_queue->schedule(std::move(request));
+    if (prequest->status == SRCML_STATUS_INVALID_ARGUMENT) {
+        prequest->status = SRCML_STATUS_IO_ERROR;
+        prequest->errormsg = "";
+        prequest->unit.reset();
+        write_queue->schedule(std::move(prequest));
         exit(1);
     }
-    if (request.status != SRCML_STATUS_OK) {
-        request.errormsg = "srcml: Unable to open file " + original_filename;
-        request.unit.reset();
-        write_queue->schedule(std::move(request));
+    if (prequest->status != SRCML_STATUS_OK) {
+        prequest->errormsg = "srcml: Unable to open file " + original_filename;
+        prequest->unit.reset();
+        write_queue->schedule(std::move(prequest));
         return;
     }
 
-    request.runtime = parsetime.cpu_time_elapsed();
+    prequest->runtime = parsetime.cpu_time_elapsed();
 
     // perform any transformations and add them to the request
-    srcml_unit_apply_transforms(request.srcml_arch, request.unit.get(), &(request.results));
-    if (request.results && srcml_transform_get_type(request.results) == SRCML_RESULT_NONE) {
-        request.unit.reset();
+    srcml_unit_apply_transforms(prequest->srcml_arch, prequest->unit.get(), &(prequest->results));
+    if (prequest->results && srcml_transform_get_type(prequest->results) == SRCML_RESULT_NONE) {
+        prequest->unit.reset();
     }
 
     // schedule unit for output
-    write_queue->schedule(std::move(request));
+    write_queue->schedule(std::move(prequest));
 }

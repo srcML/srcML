@@ -10,11 +10,12 @@
 #ifndef SRCML_WRITE_HPP
 #define SRCML_WRITE_HPP
 
+#include <memory>
 #include <srcml_input_src.hpp>
 
 struct ParseRequest;
 class TraceLog;
 
-void srcml_write_request(ParseRequest&& request, TraceLog&, const srcml_output_dest& destination);
+void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog&, const srcml_output_dest& destination);
 
 #endif

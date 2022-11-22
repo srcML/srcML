@@ -10,9 +10,10 @@
 #ifndef SRCML_CONSUME_HPP
 #define SRCML_CONSUME_HPP
 
+#include <memory>
 struct ParseRequest;
 class WriteQueue;
 
-void srcml_consume(int thread_pool_id, ParseRequest& request, WriteQueue*);
+void srcml_consume(int thread_pool_id, std::shared_ptr<ParseRequest> prequest, WriteQueue*);
 
 #endif

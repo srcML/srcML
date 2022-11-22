@@ -26,7 +26,7 @@ public:
     WriteQueue(TraceLog& log, const srcml_output_dest& destination, bool ordered = true);
 
     // writes out the current srcml
-    void schedule(ParseRequest&& pvalue);
+    void schedule(std::shared_ptr<ParseRequest> pvalue);
 
     // stop the write process, allowing it to finish up
     void stop();
@@ -43,7 +43,7 @@ public:
     bool ordered;
     std::thread write_thread;
     int maxposition;
-    std::priority_queue<ParseRequest, std::deque<ParseRequest>, bool (*)(const ParseRequest&, const ParseRequest&)> q;
+    std::priority_queue<std::shared_ptr<ParseRequest>, std::deque<std::shared_ptr<ParseRequest>>, bool (*)(std::shared_ptr<ParseRequest>, std::shared_ptr<ParseRequest>)> q;
     std::mutex qmutex;
     std::condition_variable cv;
     int total = 0;

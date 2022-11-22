@@ -23,18 +23,18 @@ public:
     ParseQueue(int max_threads, WriteQueue* write_queue)
         : pool(max_threads), wqueue(write_queue) {}
 
-    inline void schedule(ParseRequest&& value) {
+    inline void schedule(std::shared_ptr<ParseRequest> pvalue) {
 
-        value.position = ++counter;
+        pvalue->position = ++counter;
 
         // error passthrough to output for proper output in trace
-        if (value.status) {
-            value.unit = 0;
-            wqueue->schedule(std::move(value));
+        if (pvalue->status) {
+            pvalue->unit = 0;
+            wqueue->schedule(pvalue);
             return;
         }
 
-        pool.push(srcml_consume, std::move(value), wqueue);
+        pool.push(srcml_consume, pvalue, wqueue);
     }
 
     inline void wait() {

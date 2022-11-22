@@ -112,16 +112,16 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // form the parsing request
-        ParseRequest request;
-        request.filename = filename;
-        request.url = srcml_request.att_url;
-        request.version = srcml_request.att_version;
-        request.srcml_arch = srcml_arch;
-        request.language = "";
-        request.status = SRCML_STATUS_UNSET_LANGUAGE;
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
+        prequest->filename = filename;
+        prequest->url = srcml_request.att_url;
+        prequest->version = srcml_request.att_version;
+        prequest->srcml_arch = srcml_arch;
+        prequest->language = "";
+        prequest->status = SRCML_STATUS_UNSET_LANGUAGE;
 
         // schedule for parsing
-        queue.schedule(std::move(request));
+        queue.schedule(prequest);
 
         return 1;
     }
@@ -220,19 +220,19 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // form the parsing request
-        ParseRequest request;
+        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
         if (option(SRCML_COMMAND_NOARCHIVE))
-            request.disk_dir = srcml_request.output_filename.resource;
+            prequest->disk_dir = srcml_request.output_filename.resource;
 
         if (srcml_request.att_filename || (filename != "-"sv))
-            request.filename = filename;
+            prequest->filename = filename;
 
-        request.url = srcml_request.att_url;
-        request.version = srcml_request.att_version;
-        request.srcml_arch = srcml_arch;
-        request.language = language;
-        request.status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+        prequest->url = srcml_request.att_url;
+        prequest->version = srcml_request.att_version;
+        prequest->srcml_arch = srcml_arch;
+        prequest->language = language;
+        prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
         if (option(SRCML_COMMAND_TIMESTAMP)) {
 
@@ -240,17 +240,17 @@ int src_input_libarchive(ParseQueue& queue,
             time_t mod_time(archive_entry_mtime(entry));
 
             //Standard ctime output and prune '/n' from string
-            char s[1000];
-            struct tm * p = localtime(&mod_time);
-            strftime(s, 1000, "%c", p);
-            request.time_stamp = s;
+            char* c_time = ctime(&mod_time);
+            c_time[strlen(c_time) - 1] = 0;
+
+            prequest->time_stamp = c_time;
         }
 
         // fill up the parse request buffer
-        if (!status && !request.status) {
+        if (!status && !prequest->status) {
             // if we know the size, create the right sized data_buffer
             if (archive_entry_size_is_set(entry))
-                request.buffer.reserve((decltype(request.buffer)::size_type) archive_entry_size(entry));
+                prequest->buffer.reserve((decltype(prequest->buffer)::size_type) archive_entry_size(entry));
 
             const char* buffer;
             size_t size;
@@ -260,12 +260,12 @@ int src_input_libarchive(ParseQueue& queue,
             int64_t offset;
 #endif
             while (status == ARCHIVE_OK && archive_read_data_block(arch.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
-                request.buffer.insert(request.buffer.end(), buffer, buffer + size);
+                prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
             }
         }
 
         // schedule for parsing
-        queue.schedule(std::move(request));
+        queue.schedule(prequest);
 
         ++count;
     }
