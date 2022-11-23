@@ -126,7 +126,8 @@ std::string extract_src(std::string_view srcml, std::optional<int> revision) {
     scontext.mode.push(COMMON);
 
     // parse the srcml collecting the (now needed) src
-    xmlSAXHandler charactersax{};
+    xmlSAXHandler charactersax;
+    memset(&charactersax, 0, sizeof(charactersax));
     charactersax.initialized    = XML_SAX2_MAGIC;
 
     charactersax.ignorableWhitespace = charactersax.characters = [](void* ctx, const xmlChar* ch, int len) {

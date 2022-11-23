@@ -28,6 +28,7 @@
 #include <unit_utilities.hpp>
 
 #include <algorithm>
+#include <cstring>
 #include <vector>
 #include <optional>
 
@@ -700,7 +701,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
         // update the unit attributes with the transformed result based on the root tag
         if (lastresult.unitWrapped) {
-            xmlSAXHandler roottagsax{};
+            xmlSAXHandler roottagsax;
+            memset(&roottagsax, 0, sizeof(roottagsax));
             roottagsax.initialized    = XML_SAX2_MAGIC;
             roottagsax.startElementNs = [](void* ctx, const xmlChar* /* localname */, const xmlChar* /* prefix */, const xmlChar* /* URI */,
                              int /* nb_namespaces */, const xmlChar** /* namespaces */,
