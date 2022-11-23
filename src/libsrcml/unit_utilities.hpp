@@ -12,13 +12,14 @@
 
 #include <srcml_types.hpp>
 #include <libxml/parser.h>
+#include <string_view>
 
 // Update unit attributes with xml parsed attributes
 void unit_update_attributes(srcml_unit* unit, int num_attributes, const xmlChar** attributes);
 
 // Extract source code from srcml
-std::string extract_src(const std::string& srcml, std::optional<int> revision = std::nullopt);
+std::string extract_src(std::string_view srcml, std::optional<int> revision = std::nullopt);
 std::string extract_revision(const char* srcml, int size, int revision, bool text_only = false);
-std::string attribute_revision(const std::string& attribute, int revision);
+std::string_view attribute_revision(std::string_view attribute, int revision);
 
 #endif

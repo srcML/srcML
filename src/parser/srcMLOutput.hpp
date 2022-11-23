@@ -16,6 +16,7 @@
 #include <TokenStream.hpp>
 #include <srcMLException.hpp>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <srcml_options.hpp>
 #include <libxml/xmlwriter.h>
@@ -105,7 +106,7 @@ public:
 private:
     // standard processing of text
     void processText(const antlr::RefToken& token);
-    void processText(const std::string&);
+    void processText(std::string_view);
     void processText(const char* s, int size);
 
     // adds the position attributes to a token

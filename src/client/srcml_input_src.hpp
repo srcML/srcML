@@ -12,6 +12,7 @@
 
 #include <srcml.h>
 #include <string>
+#include <string_view>
 #include <list>
 #include <vector>
 #include <sstream>
@@ -40,23 +41,25 @@ enum STATES { INDETERMINATE, SRC, SRCML };
 class srcml_input_src {
 public:
 
-    srcml_input_src() : unit(0) {}
-    srcml_input_src(const std::string& other);
-    srcml_input_src(const std::string& other, int fds);
+    srcml_input_src() {}
+    srcml_input_src(std::string_view other);
+    srcml_input_src(std::string_view other, int fds);
     srcml_input_src(int fds);
 
-    srcml_input_src& operator=(const std::string& other);
+    srcml_input_src& operator=(std::string_view other);
     srcml_input_src& operator=(FILE* other);
     srcml_input_src& operator=(int other);
 
+    operator std::string() const { return resource; }
     operator const std::string&() const { return resource; }
+    operator std::string_view() const { return resource; }
     operator FILE*() const { return *fileptr; }
     operator int() const { return *fd; }
 
-    bool operator==(const std::string& other) const { return other == filename; }
+    bool operator==(std::string_view other) const { return other == filename; }
     bool operator!=(const char* other) const { return filename != other; }
 
-    const char* c_str() const { return resource.c_str(); }
+    const char* data() const { return resource.data(); }
 
     std::string filename;
     // only used by filesystem input
@@ -67,19 +70,19 @@ public:
     std::string extension;
     std::optional<FILE*> fileptr;
     std::optional<int> fd;
-    archive* arch;
-    enum STATES state;
+    archive* arch = nullptr;
+    enum STATES state = INDETERMINATE;
     std::list<std::string> compressions;
     std::list<std::string> archives;
-    bool isdirectory;
-    bool exists;
-    bool isdirectoryform;
-    bool skip;
-    int unit;
+    bool isdirectory = false;
+    bool exists = false;
+    bool isdirectoryform = false;
+    bool skip = false;
+    int unit = 0;
 };
 
 struct srcMLReadArchiveError {
-    srcMLReadArchiveError(int status, const std::string& emsg)
+    srcMLReadArchiveError(int status, std::string_view emsg)
     : status(status), errmsg(emsg) {}
     int status;
     std::string errmsg;

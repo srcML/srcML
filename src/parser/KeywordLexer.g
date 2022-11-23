@@ -8,7 +8,6 @@
  */
 
 header "pre_include_hpp" {
-    #include <cstring>
 }
 
 header "pre_include_cpp" {
@@ -29,6 +28,8 @@ header "pre_include_cpp" {
 
 header {
     #include <string>
+    #include <string_view>
+    #include <unordered_map>
     #include <Language.hpp>
     #include <UTF8CharBuffer.hpp>
     #include <antlr/TokenStreamSelector.hpp>
@@ -41,14 +42,32 @@ header {
     #undef OUT
     #undef IN
     #undef THIS
+
+    using namespace ::std::literals::string_view_literals;
 }
 
 header "post_include_cpp" {
 
-void KeywordLexer::changetotextlexer(int typeend, const std::string delim) {
+void KeywordLexer::changetotextlexer(int typeend, std::string delim) {
 
     selector->push("text"); 
     ((CommentTextLexer* ) (selector->getStream("text")))->init(typeend, onpreprocline, atstring, delim, isline, line_number, options);
+}
+
+int KeywordLexer::testLiteralsTable(int ttype) const {
+
+    const auto p = srcMLLiterals.find(text);
+    if (p != srcMLLiterals.end())
+        return p->second;
+    return ttype;
+}
+
+int KeywordLexer::testLiteralsTable(const std::string& txt, int ttype) const {
+
+    const auto p = srcMLLiterals.find(txt);
+    if (p != srcMLLiterals.end())
+        return p->second;
+    return ttype;
 }
 
 }
@@ -311,9 +330,12 @@ public:
     int currentmode;
 
 // map from text of literal to token number, adjusted to language
-struct keyword { char const * const text; int token; int language; };
+struct keyword { std::string_view text; int token; int language; };
 
-void changetotextlexer(int typeend, const std::string delimiter = "");
+void changetotextlexer(int typeend, std::string delimiter = "");
+
+virtual int testLiteralsTable(int ttype) const;
+virtual int testLiteralsTable(const std::string& txt, int ttype) const;
 
 KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
              std::vector<std::string> user_macro_list)
@@ -325,23 +347,23 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
     setTokenObjectFactory(srcMLToken::factory);
 
     for (std::vector<std::string>::size_type i = 0; i < user_macro_list.size(); i += 2) {
-        if (user_macro_list[i + 1] == "src:macro")
-            literals[user_macro_list[i].c_str()] = MACRO_NAME;
-        else if (user_macro_list[i + 1] == "src:name")
-            literals[user_macro_list[i].c_str()] = MACRO_TYPE_NAME;
-        else if (user_macro_list[i + 1] == "src:type")
-            literals[user_macro_list[i].c_str()] = MACRO_TYPE_NAME;
-        else if (user_macro_list[i + 1] == "src:case")
-            literals[user_macro_list[i].c_str()] = MACRO_CASE;
-        else if (user_macro_list[i + 1] == "src:label")
-            literals[user_macro_list[i].c_str()] = MACRO_LABEL;
-        else if (user_macro_list[i + 1] == "src:specifier")
-            literals[user_macro_list[i].c_str()] = MACRO_SPECIFIER;
+        if (user_macro_list[i + 1] == "src:macro"sv)
+            literals[user_macro_list[i].data()] = MACRO_NAME;
+        else if (user_macro_list[i + 1] == "src:name"sv)
+            literals[user_macro_list[i].data()] = MACRO_TYPE_NAME;
+        else if (user_macro_list[i + 1] == "src:type"sv)
+            literals[user_macro_list[i].data()] = MACRO_TYPE_NAME;
+        else if (user_macro_list[i + 1] == "src:case"sv)
+            literals[user_macro_list[i].data()] = MACRO_CASE;
+        else if (user_macro_list[i + 1] == "src:label"sv)
+            literals[user_macro_list[i].data()] = MACRO_LABEL;
+        else if (user_macro_list[i + 1] == "src:specifier"sv)
+            literals[user_macro_list[i].data()] = MACRO_SPECIFIER;
     }
 
     constexpr const keyword keyword_map[] = {
         // common keywords
-        { "if"           , IF            , LANGUAGE_ALL }, 
+        { "if"           , IF            , LANGUAGE_ALL },
         { "else"         , ELSE          , LANGUAGE_ALL }, 
 
         { "while"        , WHILE         , LANGUAGE_ALL }, 
@@ -672,12 +694,14 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
     // fill up the literals for the language that we are parsing
     for (unsigned int i = 0; i < (sizeof(keyword_map) / sizeof(keyword_map[0])); ++i)
-        if (inLanguage(keyword_map[i].language))
-            literals[keyword_map[i].text] = keyword_map[i].token;
+        if (inLanguage(keyword_map[i].language)) {
+            srcMLLiterals[keyword_map[i].text] = keyword_map[i].token;
+        }
 }
 
 private:
     antlr::TokenStreamSelector* selector;
+    std::unordered_map<std::string_view, int> srcMLLiterals;
 public:
     void setSelector(antlr::TokenStreamSelector* selector_) {
         selector = selector_;

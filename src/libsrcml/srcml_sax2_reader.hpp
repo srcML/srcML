@@ -13,7 +13,6 @@
 #include <srcSAXController.hpp>
 
 #include <srcml_types.hpp>
-#include <srcml_macros.hpp>
 #include <srcml.h>
 
 #include <libxml/xmlreader.h>

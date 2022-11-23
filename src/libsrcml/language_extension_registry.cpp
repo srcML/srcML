@@ -9,6 +9,9 @@
 
 #include <language_extension_registry.hpp>
 #include <algorithm>
+#include <string_view>
+
+using namespace ::std::literals::string_view_literals;
 
 /**
 * language_extension_registry
@@ -62,7 +65,7 @@ bool get_language_extension(const char * const inpath, std::string & extension)
 
     // remove any .gz extension
     // FIXME: Why are we doing this? Could be many types of these kind of extensions
-    if ((path.size() > 3) && (path.substr(path.size() - 3) == ".gz"))
+    if ((path.size() > 3) && (path.substr(path.size() - 3) == ".gz"sv))
         path.resize(path.size() - 3);
 
     // get the proper extension, not including the '.'

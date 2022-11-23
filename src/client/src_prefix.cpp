@@ -9,16 +9,20 @@
 
 #include <src_prefix.hpp>
 
-#include <cstring>
 #include <iostream>
 
-const char* PROTOCOL_SEPARATOR = "://";
+std::string_view PROTOCOL_SEPARATOR = "://";
 
-std::string src_prefix_add_uri(const std::string& protocol, const std::string& resource) {
-    return protocol + PROTOCOL_SEPARATOR + resource;
+std::string src_prefix_add_uri(std::string_view protocol, std::string_view resource) {
+
+    std::string s(protocol);
+    s += PROTOCOL_SEPARATOR;
+    s += resource;
+
+    return s;
 }
 
-std::string src_prefix_add_uri(const std::string& input_file) {
+std::string src_prefix_add_uri(std::string_view input_file) {
 
     // Only add a prefix if the input doesn't have one already (IE. http://)
     size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
@@ -33,10 +37,10 @@ std::string src_prefix_add_uri(const std::string& input_file) {
         }
     }
 
-    return input_file;
+    return std::string(input_file);
 }
 
-std::tuple<std::string, std::string> src_prefix_split_uri(const std::string& input_file){
+std::tuple<std::string, std::string> src_prefix_split_uri(std::string_view input_file){
     // Extract function split_uri(input_file, protocol, resource)
     size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
 
@@ -44,20 +48,20 @@ std::tuple<std::string, std::string> src_prefix_split_uri(const std::string& inp
         return std::tuple<std::string, std::string>("", input_file);
     }
 
-    return std::tuple<std::string, std::string>(input_file.substr(0, prefixPos), input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR)));
+    return std::tuple<std::string, std::string>(input_file.substr(0, prefixPos), input_file.substr(prefixPos + PROTOCOL_SEPARATOR.size()));
 }
 
-std::string src_prefix_resource(const std::string& input_file) {
+std::string_view src_prefix_resource(std::string_view input_file) {
 
     size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
 
     if (prefixPos == std::string::npos)
         return input_file;
 
-    return input_file.substr(prefixPos + strlen(PROTOCOL_SEPARATOR));
+    return input_file.substr(prefixPos + PROTOCOL_SEPARATOR.size());
 }
 
-std::string src_prefix_protocol(const std::string& input_file) {
+std::string_view src_prefix_protocol(std::string_view input_file) {
 
     size_t prefixPos = input_file.find(PROTOCOL_SEPARATOR);
 

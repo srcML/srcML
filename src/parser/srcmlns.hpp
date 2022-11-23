@@ -13,8 +13,11 @@
 #define INCLUDED_SRCMLNS_HPP
 
 #include <string>
+#include <string_view>
 #include <array>
 #include <vector>
+
+using namespace ::std::literals::string_view_literals;
 
 enum {
   NS_REQUIRED   = 1 << 0, // required for all srcML, and must be on the root
@@ -25,123 +28,115 @@ enum {
 };
 
 struct Namespace {
+    Namespace(std::string_view prefix, std::string_view uri, int flags)
+        : prefix(prefix), uri(uri), flags(flags) {}
     std::string prefix;
     std::string uri;
     mutable int flags;
-    const std::string& getPrefix() const { flags |= NS_USED; return prefix; }
+    std::string_view getPrefix() const { flags |= NS_USED; return prefix; }
 };
-
-namespace nstags
-{
-    struct prefix {};
-    struct uri {};
-    struct position {};
-}
 
 typedef std::vector<Namespace> Namespaces;
 
 /** xml declaration standalone attribute */
-const char* const XML_DECLARATION_STANDALONE = "yes";
+constexpr inline auto XML_DECLARATION_STANDALONE = "yes"sv;
 
 /** xml declaration version attribute= */
-const char* const XML_VERSION = "1.0";
+constexpr inline auto XML_VERSION = "1.0"sv;
 
 // srcML namespace URIs
 /** Default srcML namespace uri and default prefix */
-const char* const SRCML_SRC_NS_URI = "http://www.srcML.org/srcML/src";
+constexpr inline auto SRCML_SRC_NS_URI = "http://www.srcML.org/srcML/src"sv;
 
-const char* const SRCML_SRC_NS_DEFAULT_PREFIX = "";
+constexpr inline auto SRCML_SRC_NS_DEFAULT_PREFIX = ""sv;
 
 /** srcML preprocessor namespace uri and default prefix */
-const char* const SRCML_CPP_NS_URI = "http://www.srcML.org/srcML/cpp";
+constexpr inline auto SRCML_CPP_NS_URI = "http://www.srcML.org/srcML/cpp"sv;
 
-const char* const SRCML_CPP_NS_DEFAULT_PREFIX = "cpp";
+constexpr inline auto SRCML_CPP_NS_DEFAULT_PREFIX = "cpp"sv;
 
 /** srcML error namespace uri and default prefix */
-const char* const SRCML_ERROR_NS_URI = "http://www.srcML.org/srcML/error";
+constexpr inline auto SRCML_ERROR_NS_URI = "http://www.srcML.org/srcML/error"sv;
 
-const char* const SRCML_ERROR_NS_DEFAULT_PREFIX = "err";
+constexpr inline auto SRCML_ERROR_NS_DEFAULT_PREFIX = "err"sv;
 
 /** srcML position namespace uri and default prefix */
-const char* const SRCML_POSITION_NS_URI = "http://www.srcML.org/srcML/position";
+constexpr inline auto SRCML_POSITION_NS_URI = "http://www.srcML.org/srcML/position"sv;
 
-const char* const SRCML_POSITION_NS_DEFAULT_PREFIX = "pos";
+constexpr inline auto SRCML_POSITION_NS_DEFAULT_PREFIX = "pos"sv;
 
 /** srcML OpenMP namespace uri and default prefix */
-const char* const SRCML_OPENMP_NS_URI = "http://www.srcML.org/srcML/openmp";
+constexpr inline auto SRCML_OPENMP_NS_URI = "http://www.srcML.org/srcML/openmp"sv;
 
-const char* const SRCML_OPENMP_NS_DEFAULT_PREFIX = "omp";
+constexpr inline auto SRCML_OPENMP_NS_DEFAULT_PREFIX = "omp"sv;
 
 /** srcDiff namespace uri and default prefix */
-const char* const SRCML_DIFF_NS_URI = "http://www.srcML.org/srcDiff";
+constexpr inline auto SRCML_DIFF_NS_URI = "http://www.srcML.org/srcDiff"sv;
 
-const char* const SRCML_DIFF_NS_DEFAULT_PREFIX = "diff";
+constexpr inline auto SRCML_DIFF_NS_DEFAULT_PREFIX = "diff"sv;
 
 /** default namespaces */
 const Namespaces default_namespaces = {
-    { SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED },
-    { SRCML_CPP_NS_DEFAULT_PREFIX,      SRCML_CPP_NS_URI,      NS_STANDARD },
-    { SRCML_ERROR_NS_DEFAULT_PREFIX,    SRCML_ERROR_NS_URI,    NS_STANDARD | NS_ROOT },
-    { SRCML_POSITION_NS_DEFAULT_PREFIX, SRCML_POSITION_NS_URI, NS_STANDARD | NS_ROOT },
-    { SRCML_OPENMP_NS_DEFAULT_PREFIX,   SRCML_OPENMP_NS_URI,   NS_STANDARD },
+    Namespace(SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED),
+    Namespace(SRCML_CPP_NS_DEFAULT_PREFIX,      SRCML_CPP_NS_URI,      NS_STANDARD),
+    Namespace(SRCML_ERROR_NS_DEFAULT_PREFIX,    SRCML_ERROR_NS_URI,    NS_STANDARD | NS_ROOT),
+    Namespace(SRCML_POSITION_NS_DEFAULT_PREFIX, SRCML_POSITION_NS_URI, NS_STANDARD | NS_ROOT),
+    Namespace(SRCML_OPENMP_NS_DEFAULT_PREFIX,   SRCML_OPENMP_NS_URI,   NS_STANDARD),
 };
 
 const Namespaces starting_namespaces = {
-    { SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED },
+    Namespace(SRCML_SRC_NS_DEFAULT_PREFIX,     SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED),
 };
 
 // srcML standard attributes
 /** revision attribute */
-const char* const UNIT_ATTRIBUTE_REVISION = "revision";
+constexpr inline auto UNIT_ATTRIBUTE_REVISION = "revision"sv;
 
 /** language attribute */
-const char* const UNIT_ATTRIBUTE_LANGUAGE = "language";
+constexpr inline auto UNIT_ATTRIBUTE_LANGUAGE = "language"sv;
 
-/**url attribute */
-const char* const UNIT_ATTRIBUTE_URL = "url";
+/** url attribute */
+constexpr inline auto UNIT_ATTRIBUTE_URL = "url"sv;
 
 /** filename attribute */
-const char* const UNIT_ATTRIBUTE_FILENAME = "filename";
+constexpr inline auto UNIT_ATTRIBUTE_FILENAME = "filename"sv;
 
 /** version attribute */
-const char* const UNIT_ATTRIBUTE_VERSION = "version";
+constexpr inline auto UNIT_ATTRIBUTE_VERSION = "version"sv;
 
 /** options attribute */
-const char* const UNIT_ATTRIBUTE_OPTIONS = "options";
+constexpr inline auto UNIT_ATTRIBUTE_OPTIONS = "options"sv;
 
 /** timestamp attribute */
-const char* const UNIT_ATTRIBUTE_TIMESTAMP = "timestamp";
+constexpr inline auto UNIT_ATTRIBUTE_TIMESTAMP = "timestamp"sv;
 
 /** hash checksum attribute */
-const char* const UNIT_ATTRIBUTE_HASH = "hash";
+constexpr inline auto UNIT_ATTRIBUTE_HASH = "hash"sv;
 
 /** hash checksum attribute */
-const char* const UNIT_ATTRIBUTE_SOURCE_ENCODING = "src-encoding";
+constexpr inline auto UNIT_ATTRIBUTE_SOURCE_ENCODING = "src-encoding"sv;
 
 /** item (XPath) attribute */
-const char* const UNIT_ATTRIBUTE_ITEM = "item";
+constexpr inline auto UNIT_ATTRIBUTE_ITEM = "item"sv;
 
 /** item (XPath) attribute */
-const char* const UNIT_ATTRIBUTE_PATH = "item";
+constexpr inline auto UNIT_ATTRIBUTE_PATH = "item"sv;
 
 const std::array<std::string, 2> SRCML_URI_PREFIX = {{ "http://www.srcML.org/", "http://www.sdml.info/" }};
 
-// check if uri is same as srcML uri regardless of uri prefix
-bool is_srcml_namespace(const std::string& uri, const std::string& srcml_uri);
-
 // normalize the uri prefix to http://www.srcML.org/
-std::string& srcml_uri_normalize(std::string & uri);
+std::string& srcml_uri_normalize(std::string& uri);
 
 // merge in the other namespace
 Namespaces& operator +=(Namespaces& ns, const Namespaces& otherns);
 
-Namespaces::iterator findNSURI(Namespaces& namespaces, const std::string& uri);
+Namespaces::iterator findNSURI(Namespaces& namespaces, std::string_view uri);
 
-Namespaces::iterator findNSPrefix(Namespaces& namespaces, const std::string& prefix);
+Namespaces::iterator findNSPrefix(Namespaces& namespaces, std::string_view prefix);
 
-Namespaces::const_iterator findNSURI(const Namespaces& namespaces, const std::string& uri);
+Namespaces::const_iterator findNSURI(const Namespaces& namespaces, std::string_view uri);
 
-Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, const std::string& prefix);
+Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, std::string_view prefix);
 
 // is a srcdiff archive
 bool issrcdiff(const Namespaces& namespaces);

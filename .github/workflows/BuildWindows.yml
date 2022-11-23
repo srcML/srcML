@@ -10,13 +10,13 @@ jobs:
     steps:
 
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Windows
         uses: microsoft/setup-msbuild@v1.1
 
       - name: Restore artifacts, or run vcpkg, build (and cache artifacts as post step)
-        uses: lukka/run-vcpkg@v10.3
+        uses: lukka/run-vcpkg@v10
         id: runvcpkg
         with:
           vcpkgGitCommitId: 'acc3bcf76b84ae5041c86ab55fe138ae7b8255c7'
@@ -36,7 +36,7 @@ jobs:
         working-directory: build
         run: |
           export UseMultiToolTask=true
-          cmake .. -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_COMPILER=cl -DCMAKE_C_COMPILER=cl -DCMAKE_VERBOSE_MAKEFILE=ON
+          cmake .. -DVCPKG_BUILD_TYPE=release -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake -DCMAKE_CXX_COMPILER=cl -DCMAKE_C_COMPILER=cl
 
       - name: Build
         shell: bash
@@ -201,88 +201,88 @@ jobs:
           ./srcml_xpath.exe || echo $?
           ./srcml_xslt.exe || echo $?
 
-      # - name: Setup msys2 with additional client-test packages for Windows
-      #   uses: msys2/setup-msys2@v2
-      #   continue-on-error: true
-      #   with:
-      #     install: >-
-      #       zip
-      #       cpio
-      #       diffutils
-      #       util-linux
-      #       cmake
-      #       libxml2
+      - name: Setup msys2 with additional client-test packages for Windows
+        uses: msys2/setup-msys2@v2
+        continue-on-error: true
+        with:
+          install: >-
+            zip
+            cpio
+            diffutils
+            util-linux
+            cmake
+            libxml2
 
-      # - name: Windows Client Tests on Installed srcml
-      #   shell: msys2 {0}
-      #   working-directory: build
-      #   timeout-minutes: 10
-      #   continue-on-error: true
-      #   run: |
-      #     export SRCML_HOME="/c/Program Files/srcML/bin/"
-      #     ctest -C Release -VV
+      - name: Windows Client Tests on Installed srcml
+        shell: msys2 {0}
+        working-directory: build
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          export SRCML_HOME="/c/Program Files/srcML/bin/"
+          ctest -C Release -j 8
 
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ClientTest.windows-latest.log
-      #     path: build/Testing/Temporary/LastTest.log
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ClientTest.windows-latest.log
+          path: build/Testing/Temporary/LastTest.log
 
-      # - name: Build libsrcml Tests
-      #   shell: bash
-      #   working-directory: build
-      #   continue-on-error: true
-      #   run: |
-      #     export UseMultiToolTask=true
-      #     export PATH=$PATH:"/c/Program Files/srcML/bin/"
-      #     echo "C:\Program Files\srcML\bin" >> $GITHUB_PATH
-      #     SRCML_HOME="/c/Program Files/srcML/bin/"
-      #     cmake . -DBUILD_LIBSRCML_TESTS=ON
-      #     cmake --build . --config Release --target build_libsrcml_tests
+      - name: Build libsrcml Tests
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          export UseMultiToolTask=true
+          export PATH=$PATH:"/c/Program Files/srcML/bin/"
+          echo "C:\Program Files\srcML\bin" >> $GITHUB_PATH
+          SRCML_HOME="/c/Program Files/srcML/bin/"
+          cmake . -DBUILD_LIBSRCML_TESTS=ON
+          cmake --build . --config Release --target build_libsrcml_tests
 
-      # - name: Check dependents
-      #   shell: bash
-      #   working-directory: build
-      #   continue-on-error: true
-      #   run: |
-      #     dumpbin -dependents "/c/Program Files/srcML/bin/srcml.exe" || true
-      #     dumpbin -dependents "/c/Program Files/srcML/bin/archive.dll" || true
-      #     dumpbin -dependents "/c/Program Files/srcML/bin/libcurl.dll" || true
-      #     dumpbin -dependents "/c/Program Files/srcML/bin/libsrcml.dll" || true
-      #     dumpbin -dependents "/c/Program Files/srcML/bin/libxml2.dll" || true
-      #     dumpbin -dependents "/c/Program Files/srcML/bin/libexslt.dll" || true
-      #     dumpbin -dependents "/c/Program Files/srcML/bin/libxslt.dll" || true
-      #     dumpbin -dependents "/c/Program Files/srcML/bin/iconv-2.dll" || true
-      #     dumpbin -exports "/c/Program Files/srcML/bin/libsrcml.dll" || true
+      - name: Check dependents
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          dumpbin -dependents "/c/Program Files/srcML/bin/srcml.exe" || true
+          dumpbin -dependents "/c/Program Files/srcML/bin/archive.dll" || true
+          dumpbin -dependents "/c/Program Files/srcML/bin/libcurl.dll" || true
+          dumpbin -dependents "/c/Program Files/srcML/bin/libsrcml.dll" || true
+          dumpbin -dependents "/c/Program Files/srcML/bin/libxml2.dll" || true
+          dumpbin -dependents "/c/Program Files/srcML/bin/libexslt.dll" || true
+          dumpbin -dependents "/c/Program Files/srcML/bin/libxslt.dll" || true
+          dumpbin -dependents "/c/Program Files/srcML/bin/iconv-2.dll" || true
+          dumpbin -exports "/c/Program Files/srcML/bin/libsrcml.dll" || true
 
-      # - name: Run libsrcml Tests on Installed libsrcml
-      #   shell: bash
-      #   working-directory: build
-      #   continue-on-error: true
-      #   run: |
-      #     ctest -C Release -R ^test_
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: libsrcmlTest.windows-latest.log
-      #     path: build/Testing/Temporary/LastTest.log
+      - name: Run libsrcml Tests on Installed libsrcml
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          ctest -C Release -R ^test_
+      - uses: actions/upload-artifact@v3
+        with:
+          name: libsrcmlTest.windows-latest.log
+          path: build/Testing/Temporary/LastTest.log
 
-      # - name: Generate Parser Tests
-      #   shell: bash
-      #   working-directory: build
-      #   continue-on-error: true
-      #   run: |
-      #     export PATH=$PATH:"/c/Program Files/srcML/bin/"
-      #     ls -lh "/c/Program Files/srcML/bin/"
-      #     echo "C:\Program Files\srcML\bin" >> $GITHUB_PATH
-      #     cmake . -DBUILD_PARSER_TESTS=ON
-      #     cmake --build . --config Release --target gen_parser_tests
+      - name: Generate Parser Tests
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          export PATH=$PATH:"/c/Program Files/srcML/bin/"
+          ls -lh "/c/Program Files/srcML/bin/"
+          echo "C:\Program Files\srcML\bin" >> $GITHUB_PATH
+          cmake . -DBUILD_PARSER_TESTS=ON
+          cmake --build . --config Release --target gen_parser_tests
 
-      # - name: Run Parser Tests
-      #   shell: bash
-      #   working-directory: build
-      #   continue-on-error: true
-      #   run: |
-      #     srcml --parser-test test/parser/testsuite | tee ParserTest.log
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ParserTest.windows-latest.log
-      #     path: build/ParserTest.log
+      - name: Run Parser Tests
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          srcml --parser-test test/parser/testsuite | tee ParserTest.log
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ParserTest.windows-latest.log
+          path: build/ParserTest.log

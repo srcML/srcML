@@ -15,10 +15,10 @@
 #include <src_input_filesystem.hpp>
 #include <srcml_input_srcml.hpp>
 
+#include <string_view>
 #include <list>
 #include <deque>
 #include <vector>
-#include <memory>
 #include <archive.h>
 #include <archive_entry.h>
 
@@ -29,14 +29,16 @@
     #include <unistd.h>
 #endif
 
+using namespace ::std::literals::string_view_literals;
+
 int src_input_filesystem(ParseQueue& queue,
                           srcml_archive* srcml_arch,
                           const srcml_request_t& srcml_request,
-                          const std::string& raw_input) {
+                          std::string_view raw_input) {
 
     // with immediate directory "." lookup the current working directory
-    std::string input = raw_input;
-    if (input == ".") {
+    std::string_view input = raw_input;
+    if (input == "."sv) {
         char* cwd(getcwd(nullptr, 0));
         input = cwd;
         free(cwd);
@@ -52,7 +54,7 @@ int src_input_filesystem(ParseQueue& queue,
 #elif ARCHIVE_VERSION_NUMBER >= 3002000
     archive_read_disk_set_behavior(darchive, ARCHIVE_READDISK_NO_XATTR);
 #endif
-    archive_read_disk_open(darchive, input.c_str());
+    archive_read_disk_open(darchive, input.data());
 
     /* Null entry with archive_read_next_header() causes a segfault on ARCHIVE_VERSION_NUMBER < 300200
        Creating an entry and using archive_read_next_header2() works */

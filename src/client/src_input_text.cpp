@@ -11,7 +11,7 @@
 #include <srcml_options.hpp>
 #include <src_input_libarchive.hpp>
 #include <src_prefix.hpp>
-#include <cstring>
+#include <algorithm>
 
 static int hex2decimal(unsigned char c) {
 
@@ -42,12 +42,15 @@ int src_input_text(ParseQueue& queue,
     const srcml_request_t& srcml_request,
     const srcml_input_src& input) {
 
-    std::string raw_text = src_prefix_resource(input.resource);
-    const char* ptext = raw_text.c_str();
+    std::string_view raw_text(src_prefix_resource(input.resource));
+    auto pCurrentChar = raw_text.begin();
 
     // process text, which may have more than one input due to use of ASCII NUL ('\0')
     int count = 0;
-    while (ptext) {
+    bool lastNull = false;
+    while (pCurrentChar != raw_text.end() || count == 0 || lastNull) {
+
+        lastNull = false;
 
         // form the parsing request
         std::shared_ptr<ParseRequest> prequest(new ParseRequest);
@@ -61,8 +64,9 @@ int src_input_text(ParseQueue& queue,
         prequest->srcml_arch = srcml_arch;
         prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
 
+        // if there there is no language specified, then try to use the filename extension
         if (prequest->language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->c_str()))
+            if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->data()))
                 prequest->language = l;
 
         prequest->status = 0;
@@ -72,19 +76,21 @@ int src_input_text(ParseQueue& queue,
 
             // copy from the text directly into a buffer
             // perform newline and tab expansion
-            while (ptext) {
+            while (pCurrentChar != raw_text.end()) {
 
                 // find up to an escape
-                const char* epos = strchr(ptext, '\\');
-                if (!epos) {
+                auto escapePosition = std::find(pCurrentChar, raw_text.end(), '\\');
+
+                // append up to the special char
+                prequest->buffer.insert(prequest->buffer.end(), pCurrentChar, escapePosition);
+                if (escapePosition == raw_text.end()) {
+                    pCurrentChar = raw_text.end();
                     break;
                 }
-                // append up to the special char
-                prequest->buffer.insert(prequest->buffer.end(), ptext, epos);
 
                 // append the special character
-                ++epos;
-                switch (*epos) {
+                ++escapePosition;
+                switch (*escapePosition) {
                 case 'n':
                     prequest->buffer.push_back('\n');
                     break;
@@ -110,13 +116,13 @@ int src_input_text(ParseQueue& queue,
                 case 'v':
                     prequest->buffer.push_back('\v');
                     break;
-                // byte with hex value from 1 to 2 charcters
+                // byte with hex value from 1 to 2 characters
                 case 'x':
                 {
                     int value = 0;
                     int offset = 0;
-                    while (offset < 2 && isxdigit(*(epos + offset + 1))) {
-                        value = hex2decimal((unsigned char) *(epos + offset + 1)) + 16 * value;
+                    while (offset < 2 && isxdigit(*(escapePosition + offset + 1))) {
+                        value = hex2decimal((unsigned char) *(escapePosition + offset + 1)) + 16 * value;
                         ++offset;
                     }
                     if (offset == 0) {
@@ -126,7 +132,10 @@ int src_input_text(ParseQueue& queue,
                     }
 
                     if (value == 0) {
-                        ptext = epos + offset + 1;
+                        pCurrentChar = escapePosition + offset + 1;
+
+                        if (pCurrentChar == raw_text.end())
+                            lastNull = true;
 
                         srcml_archive_disable_solitary_unit(srcml_arch);
 
@@ -135,7 +144,7 @@ int src_input_text(ParseQueue& queue,
 
                     prequest->buffer.push_back((char) value);
 
-                    epos += offset;
+                    escapePosition += offset;
                     break;
                 }
                 // byte with octal value from 1 to 3 characters
@@ -151,7 +160,7 @@ int src_input_text(ParseQueue& queue,
                 case '7':
                 {
                     int value = 0;
-                    int offset = *epos == '0' ? 1 : 0;
+                    int offset = *escapePosition == '0' ? 1 : 0;
                     /*
                         Spec 6.4.4.4 Character constants:
 
@@ -166,9 +175,9 @@ int src_input_text(ParseQueue& queue,
 
                         So, we will allow both
                     */
-                    int maxlength = *epos == '0' ? 4 : 3;
-                    while (offset < maxlength && isodigit(*(epos + offset))) {
-                        value = (*(epos + offset) - '0') + 8 * value;
+                    int maxlength = *escapePosition == '0' ? 4 : 3;
+                    while (offset < maxlength && isodigit(*(escapePosition + offset))) {
+                        value = (*(escapePosition + offset) - '0') + 8 * value;
                         ++offset;
                     }
                     if (offset == 0) {
@@ -178,7 +187,10 @@ int src_input_text(ParseQueue& queue,
                     }
 
                     if (value == 0) {
-                        ptext = epos + offset;
+                        pCurrentChar = escapePosition + offset;
+
+                        if (pCurrentChar == raw_text.end())
+                            lastNull = true;
 
                         srcml_archive_disable_solitary_unit(srcml_arch);
 
@@ -187,19 +199,18 @@ int src_input_text(ParseQueue& queue,
 
                     prequest->buffer.push_back(static_cast<char>(value));
 
-                    epos += offset - 1;
+                    escapePosition += offset - 1;
                     break;
                 }
                 default:
                     prequest->buffer.push_back('\\');
-                    prequest->buffer.push_back(*(epos));
+                    prequest->buffer.push_back(*(escapePosition));
                 }
-                ptext = epos + 1;
+                pCurrentChar = escapePosition + 1;
             }
 
             // finished with no '\\' remaining, so flush buffer
-            prequest->buffer.insert(prequest->buffer.end(), ptext, ptext + strlen(ptext));
-            ptext = 0;
+            prequest->buffer.insert(prequest->buffer.end(), pCurrentChar, raw_text.end());
         }
 
         // schedule for parsing

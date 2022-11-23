@@ -16,6 +16,9 @@
 #include <srcml_cli.hpp>
 #include <SRCMLStatus.hpp>
 #include <OpenFileLimiter.hpp>
+#include <string_view>
+
+using namespace ::std::literals::string_view_literals;
 
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
@@ -37,7 +40,7 @@ int srcml_input_srcml(ParseQueue& queue,
 
     open_status = srcml_archive_read_open(srcml_input_archive.get(), srcml_input);
     if (open_status != SRCML_STATUS_OK) {
-        if (srcml_input.protocol == "file" )
+        if (srcml_input.protocol == "file"sv)
             SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml file %s", src_prefix_resource(srcml_input.filename));
         else
             SRCMLstatus(ERROR_MSG, "srcml: Unable to open srcml URL %s", srcml_input.filename);
@@ -55,7 +58,7 @@ int srcml_input_srcml(ParseQueue& queue,
         for (size_t i = 0; i < nsSize; ++i) {
 
             // ignore srcDiff URL, since it will not be on the output
-            if (revision && srcml_archive_get_namespace_uri(srcml_input_archive.get(), i) == std::string("http://www.srcML.org/srcDiff"))
+            if (revision && srcml_archive_get_namespace_uri(srcml_input_archive.get(), i) == "http://www.srcML.org/srcDiff"sv)
                 continue;
 
             // register the input srcml archive namespace

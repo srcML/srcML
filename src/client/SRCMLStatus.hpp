@@ -61,7 +61,7 @@ public:
       // }
     }
 
-    static void log(int msg_type, const std::string& msg_text) {
+    static void log(int msg_type, std::string_view msg_text) {
 
       // Only print debug messages if the debug mode is enabled
       if ((msg_type == DEBUG_MSG) && !(option(SRCML_DEBUG_MODE)))
@@ -95,18 +95,18 @@ inline SRCMLStatus SRCMLstatus(int msg_type) {
   return SRCMLStatus();
 }
 
-inline void SRCMLstatus(int msg_type, const std::string& msg_text) {
+inline void SRCMLstatus(int msg_type, std::string_view msg_text) {
 
   SRCMLStatus::log(msg_type, msg_text);
 }
 
 template<typename T, typename... Args>
-inline void SRCMLstatus(int msg_type, const std::string& format, T value, Args... args) {
+inline void SRCMLstatus(int msg_type, std::string_view format, T value, Args... args) {
 
   // replace the first argument in the format with the value
   // note: Ignoring the format type
   std::ostringstream msg_text;
-  const char* s = format.c_str();
+  const char* s = format.data();
   while (s && *s) {
     if (*s == '%' && *++s != '%') {
       msg_text << value;

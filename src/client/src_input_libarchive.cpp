@@ -16,8 +16,10 @@
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
-#include <cstring>
+#include <string_view>
 #include <stdio.h>
+
+using namespace ::std::literals::string_view_literals;
 
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
@@ -73,11 +75,13 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     } else {
 
-        status = archive_read_open_filename(arch.get(), input_file.c_str(), buffer_size);
+        status = archive_read_open_filename(arch.get(), input_file.data(), buffer_size);
     }
 
     if (status != ARCHIVE_OK) {
-        SRCMLstatus(WARNING_MSG, "srcml: Unable to open file " + src_prefix_resource(input_file.filename));
+        std::string s("srcml: Unable to open file ");
+        s += src_prefix_resource(input_file.filename);
+        SRCMLstatus(WARNING_MSG, s);
         return 0;
     }
 
@@ -94,7 +98,7 @@ int src_input_libarchive(ParseQueue& queue,
     // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
     // which then hangs
     // Note: may need to fix in libsrcml
-    if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.c_str())) | input_file.skip) {
+    if ((!contains<int>(input_file) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.data())) | input_file.skip) {
         // if we are not verbose, then just end this attemp
         if (!(option(SRCML_COMMAND_VERBOSE))) {
             return 0;
@@ -161,7 +165,7 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // stdin, single files require a explicit filename
-        if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-") {
+        if (filename == "data" && !srcml_request.att_language && input_file.filename == "stdin://-"sv) {
             SRCMLstatus(ERROR_MSG, "Language required for stdin single files");
             exit(1);
         }
@@ -172,7 +176,7 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // archive entry filename for non-archive input is "data"
-        if (filename.empty() || filename == "data") {
+        if (filename.empty() || filename == "data"sv) {
             filename = input_file.resource;
             auto it = filename.begin();
             while (*it == '.' && std::next(it) != filename.end() && *std::next(it) == '/') {
@@ -194,19 +198,19 @@ int src_input_libarchive(ParseQueue& queue,
 
         // user specified a language, and is a file, text, or stdin
         // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
-        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin")
-             || srcml_archive_check_extension(srcml_arch, filename.c_str())))
+        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin"sv)
+             || srcml_archive_check_extension(srcml_arch, filename.data())))
             language = *srcml_request.att_language;
 
         // if not explicitly set, language comes from extension
         // we have to do this ourselves, since libsrcml can't for memory
         if (language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, filename.c_str()))
+            if (const char* l = srcml_archive_check_extension(srcml_arch, filename.data()))
                 language = l;
 
         // with a compressed non-archive, need to check the actual extension of the file
         if (language.empty())
-            if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.extension.c_str()))
+            if (const char* l = srcml_archive_check_extension(srcml_arch, input_file.extension.data()))
                 language = l;
 
         // if we don't have a language, and are not verbose, then just end this attemp
@@ -221,7 +225,7 @@ int src_input_libarchive(ParseQueue& queue,
         if (option(SRCML_COMMAND_NOARCHIVE))
             prequest->disk_dir = srcml_request.output_filename.resource;
 
-        if (srcml_request.att_filename || (filename != "-"))
+        if (srcml_request.att_filename || (filename != "-"sv))
             prequest->filename = filename;
 
         prequest->url = srcml_request.att_url;
@@ -236,10 +240,10 @@ int src_input_libarchive(ParseQueue& queue,
             time_t mod_time(archive_entry_mtime(entry));
 
             //Standard ctime output and prune '/n' from string
-            char* c_time = ctime(&mod_time);
-            c_time[strlen(c_time) - 1] = 0;
-
-            prequest->time_stamp = c_time;
+            char s[1000];
+            struct tm * p = localtime(&mod_time);
+            strftime(s, 1000, "%c", p);
+            prequest->time_stamp = s;
         }
 
         // fill up the parse request buffer

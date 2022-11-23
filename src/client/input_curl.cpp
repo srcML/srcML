@@ -15,11 +15,13 @@
 #include <condition_variable>
 #include <atomic>
 #include <limits.h>
+#include <string>
+#include <string_view>
 
-bool curl_supported(const std::string& input_protocol) {
+bool curl_supported(std::string_view input_protocol) {
     const char* const* curl_types = curl_version_info(CURLVERSION_NOW)->protocols;
     for (int i = 0; curl_types[i] != nullptr; ++i) {
-        if (std::string(curl_types[i]) == input_protocol)
+        if (curl_types[i] == input_protocol)
             return true;
     }
     return false;
@@ -66,7 +68,7 @@ bool getCurlErrors() {
     with our own callback does not entail an additional copy
 */
 extern "C" {
-    size_t our_curl_write_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
+    size_t our_curl_write_callback(char* ptr, size_t size, size_t nmemb, void* userdata) {
 
         curl_write_info* data = (curl_write_info*) userdata;
 
@@ -118,7 +120,7 @@ int input_curl(srcml_input_src& input) {
         curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, &write_info);
         curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, our_curl_write_callback);
 
-        curl_easy_setopt(curl_handle, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl_handle, CURLOPT_URL, url.data());
         curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
         curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);

@@ -17,7 +17,6 @@
 #include <map>
 #include <string>
 #include <stdio.h>
-#include <cstring>
 #include <limits.h>
 
 #ifdef _MSC_VER
@@ -27,6 +26,8 @@
     #include <sys/uio.h>
     #include <unistd.h>
 #endif
+
+using namespace ::std::literals::string_view_literals;
 
 namespace {
 
@@ -69,7 +70,7 @@ namespace {
 #endif
 
     // some common aliases that libiconv does not accept
-    std::map<std::string, std::string> encodingAliases = {
+    std::map<std::string_view, std::string_view> encodingAliases = {
         { "UTF16", "UTF-16"},
         { "UCS2", "UCS-2"},
         { "UCS4", "UCS-4"},
@@ -84,7 +85,7 @@ namespace {
         if (search == encodingAliases.end())
             return str;
 
-        return search->second;
+        return std::string(search->second);
     }
 }
 
@@ -209,7 +210,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, st
         throw UTF8FileError();
 
     // setup callbacks, wrappers around read()
-    sio.context = reinterpret_cast<void*>(fd);
+    sio.context = reinterpret_cast<void*>(static_cast<intptr_t>(fd));
     sio.read_callback = [](void* context, void* buf, size_t readsize) -> ssize_t {
         if (readsize > UINT_MAX)
             return -1;
@@ -298,8 +299,8 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
             if (encoding.empty()) {
                 encoding = "UTF-8";
-            } else if (encoding != "UTF-8" && !compatibleEncodings(encoding.c_str(), "UTF-8")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.c_str());
+            } else if (encoding != "UTF-8"sv && !compatibleEncodings(encoding.data(), "UTF-8")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.data());
             }
         }
 
@@ -311,8 +312,8 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
             if (encoding.empty()) {
                 encoding = "UTF-16";
-            } else if (encoding != "UTF-16" && !compatibleEncodings(encoding.c_str(), "UTF-16")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.c_str());
+            } else if (encoding != "UTF-16"sv && !compatibleEncodings(encoding.data(), "UTF-16")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.data());
             }
         }
 
@@ -324,8 +325,8 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
             if (encoding.empty()) {
                 encoding = "UTF-32";
-            } else if (encoding != "UTF-32" && !compatibleEncodings(encoding.c_str(), "UTF-32")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.c_str());
+            } else if (encoding != "UTF-32"sv && !compatibleEncodings(encoding.data(), "UTF-32")) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.data());
             }
         }
 
@@ -334,10 +335,10 @@ size_t UTF8CharBuffer::readChars() {
             encoding = "ISO-8859-1";
 
         // setup encoder from encoding to UTF-8
-        ic = iconv_open("UTF-8", encoding.c_str());
+        ic = iconv_open("UTF-8", encoding.data());
         if (ic == (iconv_t) -1) {
             if (errno == EINVAL) {
-                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.c_str());
+                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.data());
                 return 0;
             }
         }
@@ -445,7 +446,7 @@ int UTF8CharBuffer::getChar() {
  *
  * @returns the used source encoding.
  */
-const std::string& UTF8CharBuffer::getEncoding() const {
+std::string_view UTF8CharBuffer::getEncoding() const {
 
     return encoding;
 }

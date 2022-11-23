@@ -14,7 +14,6 @@
 #include <create_srcml.hpp>
 #include <libarchive_utilities.hpp>
 #include <iostream>
-#include <cstring>
 #include <archive.h>
 #include <archive_entry.h>
 #include <SRCMLStatus.hpp>
@@ -22,10 +21,10 @@
 int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
                         const srcml_request_t& srcml_request,
-                        const std::string& input_file,
+                        std::string_view input_file,
                         const srcml_output_dest& destination) {
 
-    std::unique_ptr<archive> arch(libarchive_input_file(input_file));
+    std::unique_ptr<archive> arch(libarchive_input_file(srcml_input_src(input_file)));
     if (!arch)
         return -1;
 
@@ -43,7 +42,7 @@ int src_input_filelist(ParseQueue& queue,
     }
 
     if (status != ARCHIVE_OK) {
-        SRCMLstatus(ERROR_MSG, "srcml: Invalid filelist " + input_file);
+        SRCMLstatus(ERROR_MSG, "srcml: Invalid filelist " + std::string(input_file));
         return -1;
     }
 

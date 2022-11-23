@@ -15,12 +15,11 @@
 #include <srcml_options.hpp>
 #include <iostream>
 #include <iomanip>
-#include <cstring>
 #include <srcml_utilities.hpp>
 
 namespace {
 
-    const char* value(const char* call) {
+    std::string_view value(const char* call) {
         return call ? call : "";
     }
 
@@ -147,7 +146,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         else if (contains<FILE*>(input)){
             status = srcml_archive_read_open_FILE(srcml_arch.get(), input);
         } else {
-            status = srcml_archive_read_open_filename(srcml_arch.get(), (src_prefix_resource(input).c_str()));
+            status = srcml_archive_read_open_filename(srcml_arch.get(), (src_prefix_resource(input).data()));
         }
         if (status != SRCML_STATUS_OK) {
             SRCMLstatus(ERROR_MSG, "srcml input cannot not be opened.");
@@ -215,7 +214,7 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         }
 
         if (srcml_request.xmlns_prefix_query) {
-            const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch.get(), srcml_request.xmlns_prefix_query->c_str());
+            const char* prefix = srcml_archive_get_prefix_from_uri(srcml_arch.get(), srcml_request.xmlns_prefix_query->data());
             if (prefix) {
                 std::cout << prefix << '\n';
             }

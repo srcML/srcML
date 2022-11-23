@@ -12,9 +12,7 @@
 #include <archive.h>
 #include <input_curl.hpp>
 #include <SRCMLStatus.hpp>
-#include <cstring>
 #include <libarchive_utilities.hpp>
-#include <memory>
 
 void unarchive_srcml(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
@@ -55,7 +53,7 @@ void unarchive_srcml(const srcml_request_t& /* srcml_request */,
         status = archive_read_open_fd(libarchive_srcml.get(), input_sources[0], buffer_size);
     } else {
 
-        status = archive_read_open_filename(libarchive_srcml.get(), input_sources[0].resource.c_str(), buffer_size);
+        status = archive_read_open_filename(libarchive_srcml.get(), input_sources[0].resource.data(), buffer_size);
     }
     if (status != ARCHIVE_OK) {
         SRCMLstatus(ERROR_MSG, std::to_string(status));

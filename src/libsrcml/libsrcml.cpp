@@ -9,12 +9,10 @@
 
 #include <srcml.h>
 #include <srcml_types.hpp>
-#include <srcml_macros.hpp>
 #include <srcml_sax2_utilities.hpp>
 
 #include <Language.hpp>
 #include <language_extension_registry.hpp>
-#include <cstring>
 #include <stdlib.h>
 
 #include <vector>
@@ -193,25 +191,25 @@ int srcml(const char* input_filename, const char* output_filename) {
     } else {
 
         // check the extension for .xml or .srcml, non case-sensitive
-        size_t len = strlen(input_filename);
+        size_t len = std::string_view(input_filename).size();
         if (!((len > 4 && tolower(input_filename[len - 1]) == 'l' && tolower(input_filename[len - 2]) == 'm'
             && ((tolower(input_filename[len - 3]) == 'x' && input_filename[len - 4] == '.')
              || (tolower(input_filename[len - 3]) == 'c' && tolower(input_filename[len - 4]) == 'r' && tolower(input_filename[len - 5]) == 's' && tolower(input_filename[len - 6]) == '.')))
-           || (global_archive.language && strcmp(global_archive.language->c_str(), "xml") == 0))) {
+           || (global_archive.language && global_archive.language == "xml"sv))) {
 
             if (global_archive.language) {
-                global_archive.error_string = "Language '";
-                global_archive.error_string += global_archive.language->c_str();
-                global_archive.error_string += "' is not supported.";
+                global_archive.error_string = "Language '"sv;
+                global_archive.error_string += global_archive.language->data();
+                global_archive.error_string += "' is not supported."sv;
             } else
-                global_archive.error_string = "No language provided.";
+                global_archive.error_string = "No language provided."sv;
 
             return SRCML_STATUS_INVALID_INPUT;
         }
 
         std::unique_ptr<srcml_archive> archive(srcml_archive_clone(&global_archive));
         if (!archive) {
-            global_archive.error_string = "Unable to create srcML archive";
+            global_archive.error_string = "Unable to create srcML archive"sv;
             return SRCML_STATUS_ERROR;
         }
 
@@ -686,7 +684,7 @@ size_t srcml_get_srcdiff_revision() {
  *                                                                            *
  ******************************************************************************/
 
-static const char* langs[] = { "C", "C++", "C#", "Java", "Objective-C" };
+static std::string_view langs[] = { "C", "C++", "C#", "Java", "Objective-C" };
 
 /**
  * srcml_check_language
@@ -704,7 +702,7 @@ int srcml_check_language(const char* language) {
 
     // first find in public languages (ones in langs[], then get the number)
     for (size_t i = 0; i < srcml_get_language_list_size(); ++i)
-        if (strcmp(language, langs[i]) == 0)
+        if (language == langs[i])
             return Language::getLanguage(language);
 
     return 0;
@@ -733,9 +731,10 @@ size_t srcml_get_language_list_size() {
  */
 const char * srcml_get_language_list(size_t pos) {
 
-    if (pos >= srcml_get_language_list_size()) return NULL;
+    if (pos >= srcml_get_language_list_size())
+        return NULL;
 
-    return langs[pos];
+    return langs[pos].data();
 }
 
 /**
@@ -805,7 +804,7 @@ int srcml_check_exslt() {
  *
  * @returns Return a string describing last recorded error for convenience functions.
  */
-const char* srcml_error_string() { return global_archive.error_string.c_str(); }
+const char* srcml_error_string() { return global_archive.error_string.data(); }
 
 /******************************************************************************
  *                                                                            *

@@ -11,7 +11,6 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <srcml.h>
-#include <memory>
 #include <OpenFileLimiter.hpp>
 
 // std::shared_ptr deleter for srcml archive

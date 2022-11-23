@@ -12,7 +12,6 @@
 #include <sax2_srcsax_handler.hpp>
 
 #include <srcml_types.hpp>
-#include <srcml_macros.hpp>
 #include <srcml.h>
 
 #include <unit_utilities.hpp>
@@ -22,14 +21,15 @@
 #include <srcmlns.hpp>
 
 #include <string>
+#include <string_view>
 #include <vector>
 #include <stack>
-
-// #include <cstring>
 
 #include <mutex>
 #include <condition_variable>
 #include <optional>
+
+using namespace ::std::literals::string_view_literals;
 
 #define ATTR_LOCALNAME(pos) (pos * 5)
 #define ATTR_PREFIX(pos) (pos * 5 + 1)
@@ -245,67 +245,67 @@ public :
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
-            std::string attribute = (const char*) attributes[pos * 5];
+            std::string_view attribute = (const char*) attributes[pos * 5];
             std::string value((const char *)attributes[pos * 5 + 3], static_cast<std::size_t>(attributes[pos * 5 + 4] - attributes[pos * 5 + 3]));
 
             // Note: these are ignore instead of placing in attributes.
-            if (attribute == "timestamp")
+            if (attribute == "timestamp"sv)
                 ;
-            else if (attribute == "language")
+            else if (attribute == "language"sv)
                 ;
-            else if (attribute == "revision")
+            else if (attribute == "revision"sv)
                 archive->revision = value;
-            else if (attribute == "filename")
+            else if (attribute == "filename"sv)
                 ;
-            else if (attribute == "url") {
-                srcml_archive_set_url(archive, value.c_str());
+            else if (attribute == "url"sv) {
+                srcml_archive_set_url(archive, value.data());
 
             }
-            else if (attribute == "version")
-                srcml_archive_set_version(archive, value.c_str());
-            else if (attribute == "tabs")
-                archive->tabstop = static_cast<std::size_t>(atoi(value.c_str()));
-            else if (attribute == "options") {
+            else if (attribute == "version"sv)
+                srcml_archive_set_version(archive, value.data());
+            else if (attribute == "tabs"sv)
+                archive->tabstop = static_cast<std::size_t>(atoi(value.data()));
+            else if (attribute == "options"sv) {
 
-                while(!value.empty()) {
+                std::size_t commaPos = 0;
+                std::size_t prevCommaPos = 0;
+                while(prevCommaPos < value.size()) {
 
-                    std::string::size_type commaPos = value.find(",");
-                    std::string option = value.substr(0, commaPos);
-                    if (commaPos == std::string::npos)
-                        value = "";
-                    else
-                        value = value.substr(value.find(",") + 1);
+                    commaPos = value.find(",", commaPos);
+                    std::string_view option(&value[prevCommaPos], commaPos - prevCommaPos);
+                    prevCommaPos = commaPos;
+                    ++prevCommaPos;
 
-                    if (option == "XMLDECL")
+                    if (option == "XMLDECL"sv)
                         archive->options |= SRCML_OPTION_NO_XML_DECL;
-                    else if (option == "NAMESPACEDECL")
+                    else if (option == "NAMESPACEDECL"sv)
                         archive->options |= SRCML_OPTION_NAMESPACE_DECL;
-                    else if (option == "CPP_TEXT_ELSE")
+                    else if (option == "CPP_TEXT_ELSE"sv)
                         archive->options |= SRCML_OPTION_CPP_TEXT_ELSE;
-                    else if (option == "CPP_MARKUP_IF0")
+                    else if (option == "CPP_MARKUP_IF0"sv)
                         archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
-                    else if (option == "LINE")
+                    else if (option == "LINE"sv)
                         archive->options |= SRCML_OPTION_LINE;
                 }
 
-            } else if (attribute == "hash")
+            } else if (attribute == "hash"sv)
                 ;
             else {
 
-                archive->attributes.push_back(attribute);
-                archive->attributes.push_back(value);
+                archive->attributes.emplace_back(attribute);
+                archive->attributes.emplace_back(value);
             }
         }
 
         // collect namespaces
         for (int pos = 0; pos < num_namespaces; ++pos) {
 
-            std::string nsPrefix = (const char*) namespaces[pos * 2] ? (const char*) namespaces[pos * 2] : "";
+            std::string_view nsPrefix = (const char*) namespaces[pos * 2] ? (const char*) namespaces[pos * 2] : "";
             std::string nsURI = (const char*) namespaces[pos * 2 + 1] ? (const char*) namespaces[pos * 2 + 1] : "";
 
             srcml_uri_normalize(nsURI);
 
-            srcml_archive_register_namespace(archive, nsPrefix.c_str(), nsURI.c_str());
+            srcml_archive_register_namespace(archive, nsPrefix.data(), nsURI.data());
         }
 
 #ifdef SRCSAX_DEBUG
@@ -460,7 +460,7 @@ public :
                 if (it != unit->namespaces->end()) {
                     it->flags |= NS_USED;
                 } else {
-                    unit->namespaces->push_back({ state->cpp_prefix->c_str(), SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+                    unit->namespaces->emplace_back(state->cpp_prefix->data(), SRCML_CPP_NS_URI, NS_USED | NS_STANDARD);
                 }
             }
 
@@ -496,23 +496,23 @@ public :
                            int /* num_namespaces */, const xmlChar** /* namespaces */, int num_attributes,
                            const xmlChar** attributes) {
 
-        if (strcmp(localname, "macro-list") == 0) {
+        if (localname == "macro-list"sv) {
 
             std::string token;
             std::string type;
 
             for (int pos = 0; pos < num_attributes; ++pos) {
 
-                if (strcmp((const char*) attributes[ATTR_LOCALNAME(pos)], "token") == 0)
+                if ((const char*) attributes[ATTR_LOCALNAME(pos)] == "token"sv)
                     token.append((const char*) attributes[ATTR_VALUE_START(pos)], static_cast<std::size_t>(attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]));
-                else if (strcmp((const char*) attributes[ATTR_LOCALNAME(pos)], "type") == 0)
+                else if ((const char*) attributes[ATTR_LOCALNAME(pos)] == "type"sv)
                     type.append((const char*) attributes[ATTR_VALUE_START(pos)], static_cast<std::size_t>(attributes[ATTR_VALUE_END(pos)] - attributes[ATTR_VALUE_START(pos)]));
             }
 
             if (token != "" && type != "") {
 
-                archive->user_macro_list.push_back(token);
-                archive->user_macro_list.push_back(type);
+                archive->user_macro_list.push_back(std::move(token));
+                archive->user_macro_list.push_back(std::move(type));
             }
 
         }
@@ -527,7 +527,7 @@ public :
      */
     virtual void processingInstruction(const char* target, const char* data) {
 
-        srcml_archive_set_processing_instruction(archive, (const char*)target, (const char *)data);
+        srcml_archive_set_processing_instruction(archive, (const char*)target, (const char*)data);
 
     }
 

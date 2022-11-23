@@ -18,7 +18,6 @@
 #include <optional>
 
 struct ParseRequest {
-    ParseRequest(std::vector<char>::size_type size = 0) : buffer(size) {}
 
     // Fields required by thread to process a unit
     std::string language;

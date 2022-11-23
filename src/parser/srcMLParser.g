@@ -116,6 +116,7 @@ header "pre_include_cpp" {
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
 #include <string>
+#include <string_view>
 #include <deque>
 #include <array>
 #include <stack>
@@ -130,6 +131,8 @@ header "post_include_hpp" {
 #undef IN
 #undef THIS
 
+using namespace ::std::literals::string_view_literals;
+
 //#define DEBUG_PARSER
 
 // Macros to introduce trace statements
@@ -139,11 +142,11 @@ public:
     RuleTrace(int guessing, int token, int rd, std::string text, const char* fun, int line) :
         guessing(guessing), token(token), rd(rd), text(text), fun(fun), line(line) {
 
-        fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.c_str(), rd, "", fun, line);
+        fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.data(), rd, "", fun, line);
     }
 
     ~RuleTrace() {
-        fprintf(stderr, "  END: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.c_str(), rd, "", fun, line);
+        fprintf(stderr, "  END: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.data(), rd, "", fun, line);
     }
 private:
     int guessing;
@@ -4549,9 +4552,8 @@ pattern_check_core[int& token,      /* second token, after name (always returned
 
 // C# global attribute target
 check_global_attribute[] returns [bool flag] {
-        const std::string& s = LT(1)->getText();
 
-        flag = s == "module" || s == "assembly";
+        flag =  LT(1)->getText() == "module"sv || LT(1)->getText() == "assembly"sv;
 } :;
 
 /*
@@ -7514,7 +7516,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         (
             OPERATORS | ASSIGNMENT | TEMPOPS |
             TEMPOPE (options { greedy = true;  } : ({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
-             | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == ">>=" }? ASSIGNMENT))? |
+             | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == ">>="sv }? ASSIGNMENT))? |
             EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
@@ -8007,7 +8009,7 @@ complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCOMPLEX);
         }
-        COMPLEX_NUMBER ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == CONSTANTS }? OPERATORS CONSTANTS)?
+        COMPLEX_NUMBER ({ (LT(1)->getText() == "+"sv || LT(1)->getText() == "-"sv) && next_token() == CONSTANTS }? OPERATORS CONSTANTS)?
   
 ;
 
@@ -8023,7 +8025,7 @@ literal[bool markup = true] { LightweightElement element(this); TokenPosition tp
             }
 
         }
-        CONSTANTS ({ (LT(1)->getText() == "+" || LT(1)->getText() == "-") && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  if (markup) tp.setType(SCOMPLEX); })?
+        CONSTANTS ({ (LT(1)->getText() == "+"sv || LT(1)->getText() == "-"sv) && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  if (markup) tp.setType(SCOMPLEX); })?
 ;
 
 
@@ -9592,7 +9594,7 @@ line_continuation[] { ENTRY_DEBUG } :
 // condition in cpp
 cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG } :
 
-        set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"]
+        set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"sv]
 
         cpp_complete_expression
 ;

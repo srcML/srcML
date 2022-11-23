@@ -111,7 +111,7 @@ CONSTANTS :
     {
         //firstpreprocline = false;
         if (onpreprocline && isline) {
-            line_number = atoi(text.substr(_begin, text.length()-_begin).c_str()); 
+            line_number = atoi(text.substr(_begin, text.length()-_begin).data());
         }
     }
 ;
@@ -121,10 +121,10 @@ NAME options { testLiterals = true; } :
     ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
     ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
     (
-        { text == "L" || text == "U" || text == "u" || text == "u8" }?
+        { text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv }?
         { $setType(STRING_START); } STRING_START |
 
-        { inLanguage(LANGUAGE_CXX) && (text == "R" || text == "u8R" || text == "LR" || text == "UR" || text == "uR") }?
+        { inLanguage(LANGUAGE_CXX) && (text == "R"sv || text == "u8R"sv || text == "LR"sv || text == "UR"sv || text == "uR"sv) }?
         { $setType(STRING_START); } RAW_STRING_START
     )?
 ;

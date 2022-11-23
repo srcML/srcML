@@ -17,10 +17,10 @@ mkDir::mkDir() {
     archive_entry_set_perm(entry, 0744);
 }
 
-void mkDir::mkdir(const std::string& path) {
+void mkDir::mkdir(std::string_view path) {
 
     if (last != path) {
-        archive_entry_set_pathname(entry, path.c_str());
+        archive_entry_set_pathname(entry, path.data());
         archive_write_header(arch, entry);
         archive_write_finish_entry(arch);
     }

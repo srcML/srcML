@@ -10,11 +10,14 @@
 #include <srcml_pretty.hpp>
 #include <iostream>
 #include <vector>
-#include <cstring>
+#include <string>
+#include <string_view>
 #include <SRCMLStatus.hpp>
 #include <srcml_utilities.hpp>
 
-std::string expand_namespace(const std::string& separator, size_t ns_size) {
+using namespace ::std::literals::string_view_literals;
+
+std::string expand_namespace(std::string_view separator, size_t ns_size) {
     std::string ns = "";
     for (size_t i = 0; i < ns_size; ++i) {
         ns += "%s";
@@ -30,14 +33,14 @@ void show_carret_error(size_t pos) {
     SRCMLstatus(WARNING_MSG, spacing + "^");
 }
 
-void pretty_print(const std::string& format, const std::vector<std::string>& args) {
+void pretty_print(std::string_view format, const std::vector<std::string>& args) {
 
     std::vector<std::string> thisargs(args.rbegin(), args.rend());
 
     // replace the first argument in the format with the value
     // note: Ignoring the format type
     std::ostringstream format_string;
-    const char* s = format.c_str();
+    const char* s = format.data();
     while (s && *s) {
         if (*s == '%' && *++s != '%' && !thisargs.empty()) {
             auto value = thisargs.back();
@@ -53,8 +56,8 @@ void pretty_print(const std::string& format, const std::vector<std::string>& arg
     std::cout << format_string.str();
 }
 
-pretty_template_t split_template_sections(const std::string& pretty_input) {
-    std::string input_template = pretty_input;
+pretty_template_t split_template_sections(std::string_view pretty_input) {
+    std::string input_template(pretty_input);
 
     size_t header_pos = input_template.find("{");
     size_t footer_pos = input_template.find("}");
@@ -104,7 +107,7 @@ pretty_template_t split_template_sections(const std::string& pretty_input) {
     return output_template;
 }
 
-std::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, const std::string& allowed_args, size_t ns_size) {
+std::optional<size_t> parse_templates(std::string& template_string, std::vector<std::string>& section_args, std::string_view allowed_args, size_t ns_size) {
 
     size_t found = 0;
     bool first = true;
@@ -138,7 +141,7 @@ std::optional<size_t> parse_templates(std::string& template_string, std::vector<
 
             template_arg += template_string[found + 1];
 
-            if (template_arg == "N") {
+            if (template_arg == "N"sv) {
                 replace_arg = expand_namespace(" ", ns_size);
                 if ((found + 3) < template_string.length()) {
                     if (template_string[found + 2] == ':' && template_string[found + 3] == 'u'){
@@ -162,36 +165,36 @@ std::optional<size_t> parse_templates(std::string& template_string, std::vector<
     return std::nullopt;
 }
 
-const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, const std::string& arg) {
+const char* acquire_metadata(srcml_archive* srcml_arch, srcml_unit* srcml_unit, std::string_view arg) {
 
-        if (arg == "f")           // %f: file name attribute on the unit
+        if (arg == "f"sv)           // %f: file name attribute on the unit
             return srcml_unit_get_filename(srcml_unit);
 
-        if (arg == "h")           // %h: hash attribute on the unit
+        if (arg == "h"sv)           // %h: hash attribute on the unit
             return srcml_unit_get_hash(srcml_unit);
 
-        if (arg == "l")           // %l: unit language
+        if (arg == "l"sv)           // %l: unit language
             return srcml_unit_get_language(srcml_unit);
 
-        if (arg == "S")           // %S: source encoding attribute on the archive
+        if (arg == "S"sv)           // %S: source encoding attribute on the archive
             return srcml_archive_get_src_encoding(srcml_arch);
 
-        if (arg == "s")           // %s: source encoding attribute on the unit
+        if (arg == "s"sv)           // %s: source encoding attribute on the unit
             return srcml_unit_get_src_encoding(srcml_unit);
 
-        if (arg == "t")           // %t: timestamp on the unit
+        if (arg == "t"sv)           // %t: timestamp on the unit
             return srcml_unit_get_timestamp(srcml_unit);
 
-        if (arg == "U")           // %U: url attribute on the archive
+        if (arg == "U"sv)           // %U: url attribute on the archive
             return srcml_archive_get_url(srcml_arch);
 
-        if (arg == "V")           // %V: version attribute on the archive
+        if (arg == "V"sv)           // %V: version attribute on the archive
             return srcml_archive_get_version(srcml_arch);
 
-        if (arg == "v")           // %v: version attribute on the unit
+        if (arg == "v"sv)           // %v: version attribute on the unit
             return srcml_unit_get_version(srcml_unit);
 
-        if (arg == "X")           // %X: XML encoding on the archive
+        if (arg == "X"sv)           // %X: XML encoding on the archive
             return srcml_archive_get_xml_encoding(srcml_arch);
 
     return "???";
@@ -211,7 +214,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 
             const char* param = acquire_metadata(srcml_arch, nullptr, arg);
             if (param) {
-                header_params.push_back(std::string(param));
+                header_params.emplace_back(param);
             }
             else {
                 if (output_template.header_args.size() > 1)
@@ -238,36 +241,36 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     if (output_template.body) {
         while (unit) {
             for (const auto& arg : output_template.body_args) {
-                if (arg == "i") {
+                if (arg == "i"sv) {
                     body_params.push_back(std::to_string(unit_count));
                 }
-                else if (arg == "N") {
+                else if (arg == "N"sv) {
                     for (size_t i = 0; i < ns_size; ++i) {
                         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-                            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
+                            if (srcml_archive_get_namespace_prefix(srcml_arch, i)[0] == '\0') {
                                 body_params.push_back("xmlns=" + std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
                             }
                             else{
-                                body_params.push_back("xmlns:" + std::string(srcml_archive_get_namespace_prefix(srcml_arch, i)) + "=" + std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
+                                body_params.push_back("xmlns:" + std::string(srcml_archive_get_namespace_prefix(srcml_arch, i)) + "=" + srcml_archive_get_namespace_uri(srcml_arch, i));
                             }
                         }
                     }
                 }
-                else if (arg == "N:u") {
+                else if (arg == "N:u"sv) {
                     for (size_t i = 0; i < ns_size; ++i) {
                         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-                            body_params.push_back(std::string(srcml_archive_get_namespace_uri(srcml_arch, i)));
+                            body_params.emplace_back(srcml_archive_get_namespace_uri(srcml_arch, i));
                         }
                     }
                 }
-                else if (arg == "N:p") {
+                else if (arg == "N:p"sv) {
                     for (size_t i = 0; i < ns_size; ++i) {
                         if (srcml_archive_get_namespace_uri(srcml_arch, i)) {
-                            if (strcmp(srcml_archive_get_namespace_prefix(srcml_arch, i), "") == 0) {
-                                body_params.push_back("");
+                            if (srcml_archive_get_namespace_prefix(srcml_arch, i)[0] == '\0') {
+                                body_params.emplace_back("");
                             }
                             else{
-                                body_params.push_back(std::string(srcml_archive_get_namespace_prefix(srcml_arch, i)));
+                                body_params.emplace_back(srcml_archive_get_namespace_prefix(srcml_arch, i));
                             }
                         }
                     }
@@ -275,11 +278,11 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
                 else {
                     const char* param = acquire_metadata(srcml_arch, unit.get(), arg);
                     if (param) {
-                        body_params.push_back(std::string(param));
+                        body_params.emplace_back(param);
                     }
                     else {
                         if (output_template.body_args.size() > 1)
-                            body_params.push_back("");
+                            body_params.emplace_back("");
                     }
                 }
             }
@@ -302,17 +305,17 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
 
     if (output_template.footer) {
         for (const auto& arg : output_template.footer_args) {
-            if (arg == "C") {
+            if (arg == "C"sv) {
                 footer_params.push_back(std::to_string(unit_count + 1));
             }
             else {
                 const char* param = acquire_metadata(srcml_arch, nullptr, arg);
                 if (param) {
-                    footer_params.push_back(std::string(param));
+                    footer_params.emplace_back(param);
                 }
                 else {
                     if (output_template.footer_args.size() > 1)
-                        footer_params.push_back("");
+                        footer_params.emplace_back("");
                 }
             }
         }
@@ -322,7 +325,7 @@ void display_template(srcml_archive* srcml_arch, pretty_template_t& output_templ
     }
 }
 
-int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, const srcml_request_t& srcml_request) {
+int srcml_pretty(srcml_archive* srcml_arch, std::string_view pretty_input, const srcml_request_t& srcml_request) {
     int unit_num = srcml_request.unit;
     pretty_template_t output_template = split_template_sections(pretty_input);
     size_t ns_size = srcml_archive_get_namespace_size(srcml_arch);

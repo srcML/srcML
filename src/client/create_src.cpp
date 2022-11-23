@@ -101,7 +101,7 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
         status = srcml_archive_read_open(arch.get(), input_source);
     }
     if (status != SRCML_STATUS_OK) {
-        SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file " + src_prefix_resource(input_source.filename));
+        SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file " + std::string(src_prefix_resource(input_source.filename)));
         return 0;
     }
 
@@ -153,7 +153,7 @@ void create_src(const srcml_request_t& srcml_request,
             // set encoding for source output
             // NOTE: How this is done may change in the future
             if (srcml_request.src_encoding)
-                srcml_archive_set_src_encoding(arch.get(), srcml_request.src_encoding->c_str());
+                srcml_archive_set_src_encoding(arch.get(), srcml_request.src_encoding->data());
 
             // if requested eol, then use that
             if (srcml_request.eol)
@@ -198,13 +198,13 @@ void create_src(const srcml_request_t& srcml_request,
         // set encoding for source output
         // NOTE: How this is done may change in the future
         if (srcml_request.src_encoding)
-            srcml_archive_set_src_encoding(arch.get(), srcml_request.src_encoding->c_str());
+            srcml_archive_set_src_encoding(arch.get(), srcml_request.src_encoding->data());
 
         // if requested eol, then use that
         if (srcml_request.eol)
             srcml_unit_set_eol(unit.get(), *srcml_request.eol);
 
-        int status = srcml_unit_unparse_filename(unit.get(), destination.c_str());
+        int status = srcml_unit_unparse_filename(unit.get(), destination.data());
         if (status) {
             SRCMLstatus(ERROR_MSG, "srcml: unable to open output file " + destination.resource);
             exit(1);
@@ -222,17 +222,17 @@ void create_src(const srcml_request_t& srcml_request,
 
         // setup format
         for (const auto& ext : destination.archives)
-            archive_write_set_format_by_extension(ar.get(), ext.c_str());
+            archive_write_set_format_by_extension(ar.get(), ext.data());
 
         // setup compressions
         for (const auto& ext : destination.compressions)
-            archive_write_set_compression_by_extension(ar.get(), ext.c_str());
+            archive_write_set_compression_by_extension(ar.get(), ext.data());
 
         int status = ARCHIVE_OK;
         if (contains<int>(destination)) {
             status = archive_write_open_fd(ar.get(), destination);
         } else {
-            status = archive_write_open_filename(ar.get(), destination.resource.c_str());
+            status = archive_write_open_filename(ar.get(), destination.resource.data());
         }
         if (status != ARCHIVE_OK) {
             SRCMLstatus(ERROR_MSG, std::to_string(status));

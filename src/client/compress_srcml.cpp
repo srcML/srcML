@@ -12,7 +12,6 @@
 #include <archive_entry.h>
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
-#include <memory>
 #include <limits.h>
 
 #if ARCHIVE_VERSION_NUMBER >= 3002000
@@ -31,14 +30,14 @@ void compress_srcml(const srcml_request_t& /* srcml_request */,
 
     // setup compressions
     for (const auto& ext : destination.compressions)
-        archive_write_set_compression_by_extension(ar.get(), ext.c_str());
+        archive_write_set_compression_by_extension(ar.get(), ext.data());
 
     // open the new archive based on input source
     int status = ARCHIVE_OK;
     if (contains<int>(destination)) {
         status = archive_write_open_fd(ar.get(), destination);
     } else {
-        status = archive_write_open_filename(ar.get(), destination.resource.c_str());
+        status = archive_write_open_filename(ar.get(), destination.resource.data());
     }
     if (status != ARCHIVE_OK) {
         SRCMLstatus(ERROR_MSG, std::to_string(status));

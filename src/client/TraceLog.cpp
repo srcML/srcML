@@ -42,7 +42,7 @@ TraceLog& operator<<(TraceLog& tlog, char c) {
     return tlog;
 }
 
-TraceLog& operator<<(TraceLog& tlog, const std::string& s) {
+TraceLog& operator<<(TraceLog& tlog, std::string_view s) {
 
     if (!tlog.enabled)
         return tlog;

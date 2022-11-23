@@ -13,7 +13,7 @@
 #include <srcml_utilities.hpp>
 #include <mkDir.hpp>
 
-void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_dir, TraceLog& log) {
+void src_output_filesystem(srcml_archive* srcml_arch, std::string_view output_dir, TraceLog& log) {
 
     // construct the relative directory
     std::string prefix;
@@ -40,7 +40,7 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
         path += pos != std::string::npos ? filename.substr(0, pos) : "";
 
         std::string fullfilename = prefix;
-        fullfilename += "/";
+        fullfilename += '/';
         fullfilename += filename;
 
         // use libarchive to create the file path
@@ -49,6 +49,6 @@ void src_output_filesystem(srcml_archive* srcml_arch, const std::string& output_
         // unparse directory to filename
         log << ++count << fullfilename;
 
-        srcml_unit_unparse_filename(unit.get(), fullfilename.c_str());
+        srcml_unit_unparse_filename(unit.get(), fullfilename.data());
     }
 }

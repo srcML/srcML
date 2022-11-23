@@ -11,11 +11,12 @@
 #include <archive.h>
 #include <cerrno>
 #include <unordered_map>
+#include <string_view>
 
 namespace {
 
     // map from file extension to libarchive write format calls
-    std::unordered_map<std::string, int (*)(struct archive *)> format_callsmap = {
+    const std::unordered_map<std::string_view, int (*)(struct archive *)> format_callsmap = {
         { ".7z", archive_write_set_format_7zip },
         { ".ar", archive_write_set_format_ar_bsd },
         { ".cpio", archive_write_set_format_cpio },
@@ -27,7 +28,7 @@ namespace {
         { ".taz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".tb2",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".tbz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
-        { ".tbz2", archive_write_set_format_pax_restricted }, // (archive w/ compression)
+        { ".tbz2", archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".tgz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".tlz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
         { ".txz",  archive_write_set_format_pax_restricted },  // (archive w/ compression)
@@ -36,25 +37,25 @@ namespace {
     };
 
     // map from file extension to libarchive write compression calls
-    std::unordered_map<std::string, int (*)(struct archive *)> compression_callsmap = {
+    const std::unordered_map<std::string_view, int (*)(struct archive *)> compression_callsmap = {
 
         { ".bz2" , archive_write_add_filter_bzip2 },
         { ".gz"  , archive_write_add_filter_gzip },
         { ".lz"  , archive_write_add_filter_lzma },
         { ".lzma", archive_write_add_filter_lzma },
-        { ".taz",  archive_write_add_filter_compress },  // (archive w/ compression)
-        { ".tb2",  archive_write_add_filter_bzip2 },  // (archive w/ compression)
-        { ".tbz2", archive_write_add_filter_bzip2 }, // (archive w/ compression)
-        { ".tgz",  archive_write_add_filter_gzip },  // (archive w/ compression)
-        { ".tlz",  archive_write_add_filter_lzma },  // (archive w/ compression)
-        { ".txz",  archive_write_add_filter_xz },  // (archive w/ compression)
+        { ".taz",  archive_write_add_filter_compress }, // (archive w/ compression)
+        { ".tb2",  archive_write_add_filter_bzip2 },    // (archive w/ compression)
+        { ".tbz2", archive_write_add_filter_bzip2 },    // (archive w/ compression)
+        { ".tgz",  archive_write_add_filter_gzip },     // (archive w/ compression)
+        { ".tlz",  archive_write_add_filter_lzma },     // (archive w/ compression)
+        { ".txz",  archive_write_add_filter_xz },       // (archive w/ compression)
         { ".xar",  archive_write_add_filter_xz },
         { ".xz"  , archive_write_add_filter_xz },
         { ".z"   , archive_write_add_filter_compress },
     };
 
     // map from language to file extension
-    std::unordered_map<std::string, const char *> lang2ext = {
+    const std::unordered_map<std::string_view, std::string_view> lang2ext = {
         { "C", ".c" },
         { "C++", ".cpp" },
         { "C#", ".cs" },
@@ -63,27 +64,27 @@ namespace {
 
 }
 
-int archive_write_set_format_by_extension(struct archive* ar, const char* extension) {
+int archive_write_set_format_by_extension(struct archive* ar, std::string_view extension) {
 
     auto it = format_callsmap.find(extension);
     if (it != format_callsmap.end())
         return (it->second)(ar);
 
-    archive_set_error(ar, EINVAL, "No such format for this extension '%s'", extension);
+    archive_set_error(ar, EINVAL, "No such format for this extension '%s'", extension.data());
     return ARCHIVE_FATAL;
 }
 
-int archive_write_set_compression_by_extension(struct archive* ar, const char* extension) {
+int archive_write_set_compression_by_extension(struct archive* ar, std::string_view extension) {
 
     auto it = compression_callsmap.find(extension);
     if (it != compression_callsmap.end())
         return (it->second)(ar);
 
-    archive_set_error(ar, EINVAL, "No such compression for this extension '%s'", extension);
+    archive_set_error(ar, EINVAL, "No such compression for this extension '%s'", extension.data());
     return ARCHIVE_FATAL;
 }
 
-std::string language_to_std_extension(const char* extension) {
+std::string_view language_to_std_extension(std::string_view extension) {
 
     auto it = lang2ext.find(extension);
     if (it != lang2ext.end())
@@ -92,12 +93,12 @@ std::string language_to_std_extension(const char* extension) {
     return "";
 }
 
-bool is_archive(const std::string& extension) {
+bool is_archive(std::string_view extension) {
 
     return format_callsmap.find(extension) != format_callsmap.end();
 }
 
-bool is_compressed(const std::string& extension) {
+bool is_compressed(std::string_view extension) {
 
     return compression_callsmap.find(extension) != compression_callsmap.end();
 }

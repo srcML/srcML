@@ -68,7 +68,7 @@ TransformationResult xsltTransformation::apply(xmlDocPtr doc, int /* position */
     // convert to c-array of c-strings, null terminated
     std::vector<const char*> cparams(xsl_parameters.size() + 1);
     for (size_t i = 0; i < xsl_parameters.size(); ++i) {
-        cparams[i] = xsl_parameters[i].c_str();
+        cparams[i] = xsl_parameters[i].data();
     }
     cparams.back() = 0;
 

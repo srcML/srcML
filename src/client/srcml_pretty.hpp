@@ -48,6 +48,6 @@ const std::string valid_header_args = "FNSUVX";
 const std::string valid_body_args = "FfhilNSstUVvX";
 const std::string valid_footer_args = "CFNSUVX";
 
-int srcml_pretty(srcml_archive* srcml_arch, const std::string& pretty_input, const srcml_request_t& srcml_request);
+int srcml_pretty(srcml_archive* srcml_arch, std::string_view pretty_input, const srcml_request_t& srcml_request);
 
 #endif

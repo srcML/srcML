@@ -28,6 +28,7 @@
 #include <unit_utilities.hpp>
 
 #include <algorithm>
+#include <cstring>
 #include <vector>
 #include <optional>
 
@@ -423,9 +424,9 @@ int srcml_append_transform_stringparam(srcml_archive* archive, const char* xpath
 
     archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
 
-    std::string parenvalue = "\"";
+    std::string parenvalue("\"");
     parenvalue += xpath_param_value;
-    parenvalue += "\"";
+    parenvalue += '\"';
 
     archive->transformations.back()->xsl_parameters.push_back(parenvalue);
 
@@ -451,9 +452,9 @@ int srcml_clear_transforms(srcml_archive* archive) {
     return SRCML_STATUS_OK;
 }
 
-static bool usesURI(xmlNode* cur_node, const std::string& URI);
+static bool usesURI(xmlNode* cur_node, std::string_view URI);
 
-static bool usesURIChildren(xmlNode* a_node, const std::string& URI) {
+static bool usesURIChildren(xmlNode* a_node, std::string_view URI) {
 
     for (xmlNode* cur_node = a_node; cur_node; cur_node = cur_node->next) {
 
@@ -468,7 +469,7 @@ static bool usesURIChildren(xmlNode* a_node, const std::string& URI) {
     return false;
 }
 
-static bool usesURI(xmlNode* cur_node, const std::string& URI) {
+static bool usesURI(xmlNode* cur_node, std::string_view URI) {
 
     if (cur_node->ns && cur_node->ns->prefix && URI == (const char*) cur_node->ns->href) {
         return true;
@@ -506,7 +507,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // create a DOM of the unit
-    std::shared_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.c_str(), (int) unit->srcml.size(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
+    std::shared_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.data(), (int) unit->srcml.size(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
     if (doc == nullptr)
         return SRCML_STATUS_ERROR;
 
@@ -615,11 +616,11 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             nunit->namespaces = starting_namespaces;
 
         // mark unused cpp and omp until we examine the query result
-        auto itcpp = findNSURI(*nunit->namespaces, std::string(SRCML_CPP_NS_URI));
+        auto itcpp = findNSURI(*nunit->namespaces, SRCML_CPP_NS_URI);
         if (itcpp != nunit->namespaces->end()) {
             itcpp->flags &= ~NS_USED;
         }
-        auto itomp = findNSURI(*nunit->namespaces, std::string(SRCML_OPENMP_NS_URI));
+        auto itomp = findNSURI(*nunit->namespaces, SRCML_OPENMP_NS_URI);
         if (itomp != nunit->namespaces->end()) {
             itomp->flags &= ~NS_USED;
         }
@@ -632,9 +633,11 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         switch (fullresults->nodeTab[i]->type) {
         case XML_COMMENT_NODE:
 
-            nunit->srcml.assign("<!--");
+            for (auto c : "<!--"sv)
+                nunit->srcml += c;
             nunit->srcml.append((const char*) fullresults->nodeTab[i]->content);
-            nunit->srcml.append("-->");
+            for (auto c : "-->"sv)
+                nunit->srcml += c;
             break;
 
         case XML_TEXT_NODE:
@@ -645,9 +648,10 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         case XML_ATTRIBUTE_NODE:
 
             nunit->srcml.append((const char*) fullresults->nodeTab[i]->name);
-            nunit->srcml.append("=\"");
+            nunit->srcml += '=';
+            nunit->srcml += '"';
             nunit->srcml.append((const char*) fullresults->nodeTab[i]->children->content);
-            nunit->srcml.append("\"");
+            nunit->srcml += '"';
             break;
 
         default:
@@ -672,7 +676,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 if (itcpp != nunit->namespaces->end()) {
                     itcpp->flags |= NS_USED;
                 } else {
-                    nunit->namespaces->push_back({ SRCML_CPP_NS_DEFAULT_PREFIX, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD });
+                    nunit->namespaces->emplace_back(SRCML_CPP_NS_DEFAULT_PREFIX, SRCML_CPP_NS_URI, NS_USED | NS_STANDARD);
                 }
             }
 
@@ -682,7 +686,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                 if (itomp != nunit->namespaces->end()) {
                     itomp->flags |= NS_USED;
                 } else {
-                    nunit->namespaces->push_back({ SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD });
+                    nunit->namespaces->emplace_back(SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD);
                 }
             }
 
@@ -718,11 +722,11 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             // note: it may be an empty tag already
             std::string starttag = nunit->srcml.substr(0, static_cast<std::size_t>(nunit->content_begin - 1));
             if (starttag.back() != '/')
-                starttag += "/";
-            starttag += ">";
+                starttag += '/';
+            starttag += '>';
 
             // parse the start tag updating the unit
-            xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.c_str(), (int) starttag.size());
+            xmlParserCtxtPtr context = xmlCreateMemoryParserCtxt(starttag.data(), (int) starttag.size());
             auto save_private = context->_private;
             context->_private = nunit;
             auto save_sax = context->sax;
@@ -820,7 +824,7 @@ const char* srcml_transform_get_string(struct srcml_transform_result* result) {
     if (!result->stringValue)
         return 0;
 
-    return result->stringValue->c_str();
+    return result->stringValue->data();
 }
 
 /**
