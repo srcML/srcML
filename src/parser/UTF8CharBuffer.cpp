@@ -210,7 +210,7 @@ UTF8CharBuffer::UTF8CharBuffer(int fd, const char* encoding, bool hashneeded, st
         throw UTF8FileError();
 
     // setup callbacks, wrappers around read()
-    sio.context = reinterpret_cast<void*>(fd);
+    sio.context = reinterpret_cast<void*>(static_cast<intptr_t>(fd));
     sio.read_callback = [](void* context, void* buf, size_t readsize) -> ssize_t {
         if (readsize > UINT_MAX)
             return -1;
