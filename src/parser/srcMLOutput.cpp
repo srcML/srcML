@@ -436,9 +436,9 @@ inline void srcMLOutput::processText(std::string_view str) {
         return;
 
     // output any '<', '>', or '&', or any text before
-    auto p = 0;
+    std::size_t p = 0;
     auto lastp = p;
-    while ((p = str.find_first_of("<>&"sv, p)) != (int) str.npos) {
+    while ((p = str.find_first_of("<>&"sv, p)) != str.npos) {
 
         // output section before
         xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) &str.data()[lastp], p - lastp);

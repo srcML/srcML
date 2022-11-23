@@ -260,7 +260,7 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
         int ns_length = nb_namespaces * 2;
 
         // Convert to string_view
-        std::vector<std::string_view> namespaceStrings(ns_length);
+        std::vector<std::string_view> namespaceStrings(static_cast<std::size_t>(ns_length));
         for (int i = 0; i < ns_length; ++i) {
             namespaceStrings[i] = namespaces[i] ? (const char*) namespaces[i] : "";
         }
@@ -273,12 +273,12 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
             if (namespaces[i]) {
                 // state->rootnsstr += ":";
                 // state->rootnsstr += (const char*) namespaces[i];
-                size += 1 + namespaceStrings[i].size();
+                size += 1 + namespaceStrings[static_cast<std::size_t>(i)].size();
             }
             // state->rootnsstr += "=\"";
             // state->rootnsstr += (const char*) namespaces[i + 1];
             // state->rootnsstr += "\" ";
-            size += 2 + namespaceStrings[i + 1].size() + 2;
+            size += 2 + namespaceStrings[static_cast<std::size_t>(i) + 1].size() + 2;
         }
 
         state->rootnsstr.reserve(size);
@@ -290,11 +290,11 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
             if (namespaces[i]) {
                 state->rootnsstr += ':';
-                state->rootnsstr += namespaceStrings[i];
+                state->rootnsstr += namespaceStrings[static_cast<std::size_t>(i)];
             }
             for (auto c : "=\""sv)
                 state->rootnsstr += c;
-            state->rootnsstr += namespaceStrings[i + 1];
+            state->rootnsstr += namespaceStrings[static_cast<std::size_t>(i) + 1];
             for (auto c : "\" "sv)
                 state->rootnsstr += c;
         }
