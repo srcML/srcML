@@ -46,12 +46,30 @@ if(SRCML_BUILD_USEPCH)
     target_precompile_headers(libsrcml PRIVATE <srcmlns.hpp> <srcml_types.hpp> <srcml_sax2_utilities.hpp> <srcml_translator.hpp> <srcml_sax2_reader.hpp>)
 endif()
 
-# Building static and dynamic libraries for srcML.
-add_library(libsrcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr>)
-set_target_properties(libsrcml_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin POSITION_INDEPENDENT_CODE ON)
+# Building static library for srcML
+
+# Merge all object code into one object file to build static library from
+# Use this to build static library as it 1) hides filenames 2) hides symbols that are internal only
+add_custom_command(
+  OUTPUT libsrcml.o
+  COMMAND ld -r $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> -o libsrcml.o
+  DEPENDS libsrcml parser antlr
+  COMMAND_EXPAND_LISTS
+)
+
+add_library(libsrcml_static STATIC libsrcml.o)
+set_target_properties(libsrcml_static PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    POSITION_INDEPENDENT_CODE ON
+    LINKER_LANGUAGE CXX
+    CXX_VISIBILITY_PRESET hidden
+    C_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
+)
 target_include_directories(libsrcml_static PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 target_link_libraries(libsrcml_static PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt)
 
+# Building shared library for srcML
 add_library(libsrcml_shared SHARED)
 set_target_properties(libsrcml_shared PROPERTIES
     POSITION_INDEPENDENT_CODE ON
@@ -63,6 +81,10 @@ set_target_properties(libsrcml_shared PROPERTIES
 
     VERSION "${PROJECT_VERSION}"
     SOVERSION "${PROJECT_VERSION_MAJOR}"
+
+    CXX_VISIBILITY_PRESET hidden
+    C_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN ON
 )
 target_link_libraries(libsrcml_shared PRIVATE libsrcml parser antlr)
 target_include_directories(libsrcml_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
@@ -76,9 +98,6 @@ else()
     set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml)
     set_target_properties(libsrcml_static PROPERTIES INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
-
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_C_VISIBILITY_PRESET hidden)
 
 # Restrict exported symbols to those in the export list
 # The "-Wl" passes the option to the linker
