@@ -33,7 +33,6 @@ void src_output_filesystem(srcml_archive* srcml_arch, std::string_view output_di
             continue;
 
         // construct the full, relative filename
-        std::string filename = cfilename;
         std::filesystem::path path(prefix);
         path /= cfilename;
 
