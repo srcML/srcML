@@ -7,8 +7,8 @@
  * This file is part of the srcml command-line client.
  */
 
-#ifndef ARCHIVE_OPEN_HPP
-#define ARCHIVE_OPEN_HPP
+#ifndef OPENFILELIMITER_HPP
+#define OPENFILELIMITER_HPP
 
 #include <mutex>
 #include <condition_variable>
@@ -43,4 +43,3 @@ private:
 };
 
 #endif
-

@@ -20,9 +20,9 @@
 #include <ParserTest.hpp>
 #include <OpenFileLimiter.hpp>
 #include <srcml_utilities.hpp>
-#include <mkDir.hpp>
 #include <cmath>
 #include <string_view>
+#include <filesystem>
 
 using namespace ::std::literals::string_view_literals;
 
@@ -64,20 +64,20 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
     // open the archive (if per-unit)
     if (prequest->unit && option(SRCML_COMMAND_NOARCHIVE)) {
 
-        std::string filename;
+        // full path include directory, filename (with existing extension), and xml extension
+        std::filesystem::path path;
         if (option(SRCML_COMMAND_TO_DIRECTORY)) {
-            filename += *prequest->disk_dir;
-            filename += '/';
+            path /= *prequest->disk_dir;
         }
-        filename += *prequest->filename;
-        for (auto c : ".xml"sv)
-            filename += c;
+        path /= *prequest->filename;
+        path += ".xml"sv;
 
-        // create the output directory
-        auto path = filename.substr(0, filename.find_last_of('/'));
-        {
-            mkDir dir;
-            dir.mkdir(path);
+        // create the output path
+        auto directory = path;
+        directory.remove_filename();
+        std::error_code ec;
+        if (!std::filesystem::create_directories(directory, ec) && ec.value() != 0) {
+            SRCMLstatus(ERROR_MSG, "Unable to create directory %s", directory.c_str());
         }
 
         // call file limiter now that we are actually putting a value into cloned
@@ -89,7 +89,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
         srcml_archive_enable_solitary_unit(output_archive);
         srcml_archive_disable_hash(output_archive);
 
-        srcml_archive_write_open_filename(output_archive, filename.data());
+        srcml_archive_write_open_filename(output_archive, path.c_str());
     }
 
     // output scalar results
