@@ -1,0 +1,35 @@
+# Add needed include file for CharScanner.hpp
+# Comment out use of std::binary_function, deprecated in C++11 and removed in C++17 in CharScanner.hpp
+# Remove pragma warning disable that is no longer valid in config.hpp
+diff -r -u a/lib/cpp/antlr/CharScanner.hpp b/lib/cpp/antlr/CharScanner.hpp
+--- b/lib/cpp/antlr/CharScanner.hpp
++++ b/lib/cpp/antlr/CharScanner.hpp
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <antlr/config.hpp>
++#include <string.h>
+ 
+ #include <map>
+ 
+@@ -64,7 +65,7 @@
+ 
+ /** Functor for the literals map
+  */
+-class ANTLR_API CharScannerLiteralsLess : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool> {
++class ANTLR_API CharScannerLiteralsLess /* : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool> */ {
+ private:
+ 	const CharScanner* scanner;
+ public:
+diff -r -u a/lib/cpp/antlr/config.hpp b/lib/cpp/antlr/config.hpp
+--- a/lib/cpp/antlr/config.hpp
++++ b/lib/cpp/antlr/config.hpp
+@@ -52,7 +52,7 @@
+ // This warning really gets on my nerves.
+ // It's the one about symbol longer than 256 chars, and it happens
+ // all the time with STL.
+-# pragma warning( disable : 4786 4231 )
++# pragma warning( disable : 4786 )
+ // this shuts up some DLL interface warnings for STL
+ # pragma warning( disable : 4251 )
+ 

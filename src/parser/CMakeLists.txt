@@ -23,34 +23,13 @@ find_package(Java COMPONENTS Runtime REQUIRED)
 
 # Setup ANTLR 2.7 library
 include(FetchContent)
+set(FETCHCONTENT_QUIET FALSE)
 FetchContent_Declare(antlrsrc
     URL https://www.antlr2.org/download/antlr-2.7.7.tar.gz
+    PATCH_COMMAND patch -p 1 -i ${CMAKE_CURRENT_SOURCE_DIR}/antlr.patch
+    URL_HASH MD5=01cc9a2a454dd33dcd8c856ec89af090
 )
-FetchContent_GetProperties(antlrsrc)
-if(NOT antlrsrc_POPULATED)
-    # Fetch the content using previously declared details
-    FetchContent_Populate(antlrsrc)
-
-    if (NOT antlrsrc_PATCHED)
-        # Add needed include file for CharScanner.hpp
-        # Comment out use of std::binary_function, deprecated in C++11 and removed in C++17
-        set(CHARSCANNER_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/CharScanner.hpp")
-        file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
-        string(REPLACE "#include <antlr/config.hpp>\n\n" "#include <antlr/config.hpp>\n#include <string.h>\n\n" FILE_CONTENTS "${FILE_CONTENTS}")
-        string(REPLACE "class ANTLR_API CharScannerLiteralsLess : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool>"
-                    "class ANTLR_API CharScannerLiteralsLess /* : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool> */" FILE_CONTENTS "${FILE_CONTENTS}")
-        file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
-
-        # Remove pragma warning disable that is no longer valid
-        set(CONFIG_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/config.hpp")
-        file(READ ${CONFIG_HPP} FILE_CONTENTS)
-        string(REPLACE "# pragma warning( disable : 4786 4231 )" "# pragma warning( disable : 4786 )" FILE_CONTENTS "${FILE_CONTENTS}")
-        file(WRITE ${CONFIG_HPP} "${FILE_CONTENTS}")
-
-        # Mark so that further patches are not performed
-        set(antlrsrc_PATCHED TRUE CACHE BOOL "Indicates that Antlr source was patched" FORCE)
-    endif()
-endif()
+FetchContent_MakeAvailable(antlrsrc)
 
 # antlr library
 file(GLOB ANTLR_SOURCE ${antlrsrc_SOURCE_DIR}/lib/cpp/src/*.cpp)
@@ -172,6 +151,7 @@ if(NOT ENABLE_ANTLR_BUILD_WARNINGS)
     target_compile_options(antlr PRIVATE
         $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-format>
         $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-misleading-indentation>
+        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-deprecated-declarations>
         $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # conversion from 'int' to 'unsigned int',
         $<$<CXX_COMPILER_ID:MSVC>:/wd4267> # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
         $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
