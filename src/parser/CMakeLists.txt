@@ -28,10 +28,7 @@ FetchContent_Declare(antlrsrc
     PATCH_COMMAND patch -p 1 -i ${CMAKE_CURRENT_SOURCE_DIR}/antlr.patch
     USES_TERMINAL_PATCH ON
 )
-FetchContent_GetProperties(antlrsrc)
-if(NOT antlrsrc_POPULATED)
-    FetchContent_Populate(antlrsrc)
-endif()
+FetchContent_MakeAvailable(antlrsrc)
 
 # antlr library
 file(GLOB ANTLR_SOURCE ${antlrsrc_SOURCE_DIR}/lib/cpp/src/*.cpp)
