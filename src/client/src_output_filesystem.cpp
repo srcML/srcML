@@ -48,9 +48,9 @@ void src_output_filesystem(srcml_archive* srcml_arch, std::string_view output_di
         // unparse directly to the file
         // log before so error is on last shown filename
         log << ++count << path.string().c_str();
-        int result = srcml_unit_unparse_filename(unit.get(), path.c_str());
+        int result = srcml_unit_unparse_filename(unit.get(), path.string().c_str());
         if (result != SRCML_STATUS_OK) {
-           SRCMLstatus(ERROR_MSG, "Unable to extract file %s", path.c_str());
+           SRCMLstatus(ERROR_MSG, "Unable to extract file %s", path.string().c_str());
         }
     }
 }

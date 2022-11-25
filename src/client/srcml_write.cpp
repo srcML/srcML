@@ -89,7 +89,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
         srcml_archive_enable_solitary_unit(output_archive);
         srcml_archive_disable_hash(output_archive);
 
-        srcml_archive_write_open_filename(output_archive, path.c_str());
+        srcml_archive_write_open_filename(output_archive, path.string().c_str());
     }
 
     // output scalar results
