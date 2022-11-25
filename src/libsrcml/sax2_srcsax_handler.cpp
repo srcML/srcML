@@ -261,24 +261,24 @@ void start_root(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
 
         // Convert to string_view
         std::vector<std::string_view> namespaceStrings(static_cast<std::size_t>(ns_length));
-        for (int i = 0; i < ns_length; ++i) {
+        for (std::size_t i = 0; i < static_cast<std::size_t>(ns_length); ++i) {
             namespaceStrings[i] = namespaces[i] ? (const char*) namespaces[i] : "";
         }
 
         std::size_t size = 0;
-        for (int i = 0; i < ns_length; i += 2) {
+        for (std::size_t i = 0; i < static_cast<std::size_t>(ns_length); i += 2) {
 
             // state->rootnsstr += "xmlns";
             size += 5;
             if (namespaces[i]) {
                 // state->rootnsstr += ":";
                 // state->rootnsstr += (const char*) namespaces[i];
-                size += 1 + namespaceStrings[static_cast<std::size_t>(i)].size();
+                size += 1 + namespaceStrings[i].size();
             }
             // state->rootnsstr += "=\"";
             // state->rootnsstr += (const char*) namespaces[i + 1];
             // state->rootnsstr += "\" ";
-            size += 2 + namespaceStrings[static_cast<std::size_t>(i) + 1].size() + 2;
+            size += 2 + namespaceStrings[i + 1].size() + 2;
         }
 
         state->rootnsstr.reserve(size);
