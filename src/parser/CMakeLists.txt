@@ -23,10 +23,11 @@ find_package(Java COMPONENTS Runtime REQUIRED)
 
 # Setup ANTLR 2.7 library
 include(FetchContent)
+set(FETCHCONTENT_QUIET FALSE)
 FetchContent_Declare(antlrsrc
     URL https://www.antlr2.org/download/antlr-2.7.7.tar.gz
     PATCH_COMMAND patch -p 1 -i ${CMAKE_CURRENT_SOURCE_DIR}/antlr.patch
-    USES_TERMINAL_PATCH ON
+    URL_HASH MD5=01cc9a2a454dd33dcd8c856ec89af090
 )
 FetchContent_MakeAvailable(antlrsrc)
 
