@@ -19,6 +19,7 @@
 #include <libexslt/exslt.h>
 
 #include <Transformation.hpp>
+#include <srcMLSplitter.hpp>
 
 #include <memory>
 
@@ -89,7 +90,9 @@ struct srcml_archive {
     srcml_translator* translator = nullptr;
 
     /** a srcMLReader for reading */
-    srcml_sax2_reader* reader = nullptr;
+    // srcml_sax2_reader* reader = nullptr;
+
+    srcMLSplitter* splitter = nullptr;
 
     std::vector<std::shared_ptr<Transformation>> transformations;
 

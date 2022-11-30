@@ -9,7 +9,7 @@
 #include <srcml_types.hpp>
 #include <srcmlns.hpp>
 #include <srcml_translator.hpp>
-#include <srcml_sax2_reader.hpp>
+// #include <srcml_sax2_reader.hpp>
 #include <libxml/encoding.h>
 
 /**
@@ -108,10 +108,10 @@ void srcml_archive_free(struct srcml_archive* archive) {
     if (archive->xbuffer)
         xmlBufferFree(archive->xbuffer);
 
-    if (archive->reader) {
-        delete archive->reader;
-        archive->reader = nullptr;
-    }
+    // if (archive->reader) {
+    //     delete archive->reader;
+    //     archive->reader = nullptr;
+    // }
 
     if (archive == nullptr)
         return;
@@ -141,7 +141,7 @@ srcml_archive* srcml_archive_clone(const struct srcml_archive* archive) {
 
     new_archive->type = SRCML_ARCHIVE_INVALID;
     new_archive->translator = nullptr;
-    new_archive->reader = nullptr;
+    // new_archive->reader = nullptr;
     new_archive->output_buffer = nullptr;
     new_archive->xbuffer = nullptr;
     new_archive->buffer = nullptr;
@@ -1039,7 +1039,7 @@ static int srcml_archive_read_open_internal(struct srcml_archive* archive, std::
 
     try {
 
-        archive->reader = new srcml_sax2_reader(archive, std::move(input));
+        archive->splitter = new srcMLSplitter(input.release());
 
     } catch(...) {
 
@@ -1205,8 +1205,8 @@ int srcml_archive_write_unit(struct srcml_archive* archive, struct srcml_unit* u
         return SRCML_STATUS_UNINITIALIZED_UNIT;
 
     // if we haven't read a unit yet, go ahead and try
-    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_body(unit);
+    // if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    //     unit->archive->reader->read_body(unit);
     if (!unit->read_body) {
         return SRCML_STATUS_UNINITIALIZED_UNIT;
     }
@@ -1272,15 +1272,11 @@ struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
         return nullptr;
 
     std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive));
-    int not_done = 0;
-    if (!unit->read_header)
-        not_done = archive->reader->read_header(unit.get());
-
-    archive->reader->read_body(unit.get());
-
-    if (!not_done || !unit->read_body) {
+    int result = archive->splitter->nextUnit(unit.get());
+    unit->read_body = true;
+    unit->read_header = true;
+    if (result == 0)
         return nullptr;
-    }
 
     return unit.release();
 }
@@ -1305,7 +1301,8 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
     // read the header only of a temporary unit
     std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive));
 
-    int not_done = archive->reader->read_header(unit.get());
+    int result = archive->splitter->nextUnit(unit.get());
+    int not_done = result == -1; //archive->reader->read_header(unit.get());
     if (!not_done) {
         return 0;
     }

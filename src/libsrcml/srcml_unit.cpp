@@ -348,8 +348,8 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
     if (unit == nullptr || (!unit->read_body && !unit->read_header))
         return 0;
 
-    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_body(unit);
+    // if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    //     unit->archive->reader->read_body(unit);
 
     if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
         if (!unit->srcml_revision || unit->currevision != (int) *unit->archive->revision_number)
@@ -377,8 +377,8 @@ const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
     if (unit == nullptr || (!unit->read_body && !unit->read_header))
         return 0;
 
-    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_body(unit);
+    // if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    //     unit->archive->reader->read_body(unit);
 
     // size of resulting raw version (no unit tag)
     auto rawsize = unit->srcml.size() - (unit->insert_end - unit->insert_begin);
@@ -444,8 +444,8 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
     if (unit == nullptr || (!unit->read_body && !unit->read_header))
         return 0;
 
-    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
-        unit->archive->reader->read_body(unit);
+    // if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+    //     unit->archive->reader->read_body(unit);
 
     auto start = unit->content_begin;
 
@@ -683,8 +683,8 @@ static int srcml_unit_unparse_internal(struct srcml_unit* unit, std::function<xm
 
     try {
 
-        if (!unit->read_body)
-            unit->archive->reader->read_body(unit);
+        // if (!unit->read_body)
+        //     unit->archive->reader->read_body(unit);
 
     } catch(...) {
 
