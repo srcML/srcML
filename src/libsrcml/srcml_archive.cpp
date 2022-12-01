@@ -1039,7 +1039,7 @@ static int srcml_archive_read_open_internal(struct srcml_archive* archive, std::
 
     try {
 
-        archive->splitter = new srcMLSplitter(input.release());
+        archive->splitter = new srcMLSplitter(archive, input.release());
 
     } catch(...) {
 
@@ -1088,6 +1088,7 @@ int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* bu
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     xmlCharEncoding encoding = archive->encoding ? xmlParseCharEncoding(archive->encoding->data()) : XML_CHAR_ENCODING_NONE;
+
     std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateMem(buffer, (int)buffer_size, encoding));
 
     // buffer stuff
@@ -1109,7 +1110,6 @@ int srcml_archive_read_open_memory(struct srcml_archive* archive, const char* bu
         input->buffer = xmlBufferCreate();
 #endif
 
-        xmlParserInputBufferGrow(input.get(), buffer_size > 4096 ? (int)buffer_size : 4096);
     }
 
     return srcml_archive_read_open_internal(archive, std::move(input));
@@ -1275,7 +1275,7 @@ struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
     int result = archive->splitter->nextUnit(unit.get());
     unit->read_body = true;
     unit->read_header = true;
-    if (result == 0)
+    if (result == 0 || result == 3)
         return nullptr;
 
     return unit.release();
@@ -1302,10 +1302,8 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
     std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive));
 
     int result = archive->splitter->nextUnit(unit.get());
-    int not_done = result == -1; //archive->reader->read_header(unit.get());
-    if (!not_done) {
+    if (result == 0)
         return 0;
-    }
 
     return 1;
 }

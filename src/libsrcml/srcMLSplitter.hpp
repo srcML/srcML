@@ -19,9 +19,9 @@ struct srcml_unit;
 
 class srcMLSplitter {
 public:
-    srcMLSplitter(xmlParserInputBufferPtr inputBuffer = nullptr);
+    srcMLSplitter(srcml_archive* archive, xmlParserInputBufferPtr inputBuffer = nullptr);
     void setSkip() { skipMode = true; }
-    int nextUnit(srcml_unit* unit);
+    int nextUnit(srcml_unit* unit, bool stopRoot = false);
     // std::string_view unitLanguage() const { return language; }
     // std::string_view unitFilename() const { return filename; }
     // int unitLOC() const { return loc; }
@@ -30,7 +30,7 @@ public:
         fprintf(stderr, "DEBUG:  %s %s %d totalBytes: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) totalBytes);
     }
 public:
-    srcml_archive* archive = nullptr;
+    srcml_archive* archive;
     xmlParserInputBufferPtr inputBuffer = nullptr;
     int refillContent(std::string_view& content);
     std::string_view content;
@@ -42,6 +42,11 @@ public:
     int depth = 0;
     int lastRead = 0;
     bool skipMode = false;
+    bool isDone = false;
+    bool firstAfterRoot = false;
+    srcml_unit* unitSave = nullptr;
+    bool inUnit = false;
+    const char* unitStart = nullptr;
 };
 
 #endif

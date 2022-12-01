@@ -32,11 +32,10 @@ const std::bitset<128> xmlNameMask("00000111111111111111111111111110100001111111
 constexpr auto WHITESPACE = " \n\t\r"sv;
 constexpr auto NAMEEND = "> /\":=\n\t\r"sv;
 
-const std::string_view spaces("           ");
 // trace parsing
 #ifdef TRACE
 #undef TRACE
-#define HEADER(m) std::clog << std::setw(10) << std::left << m << '\t' << loc << '\t' << depth << spaces.substr(0, depth) << " "
+#define HEADER(m) std::clog << std::setw(10) << std::left << m << '\t' << loc << '\t' << depth << std::string_view("       ").substr(0, depth) << " "
 #define TRACE0() ""
 #define TRACE1(l1, n1)                         l1 << ":|" << n1 << "| "
 #define TRACE2(l1, n1, l2, n2)                 TRACE1(l1,n1)             << TRACE1(l2,n2)
@@ -59,10 +58,8 @@ typedef SSIZE_T ssize_t;
 #define READ _read
 #endif
 
-srcMLSplitter::srcMLSplitter(xmlParserInputBufferPtr inputBuffer)
-: inputBuffer(inputBuffer) {
-
-    archive = new srcml_archive();
+srcMLSplitter::srcMLSplitter(srcml_archive* archive, xmlParserInputBufferPtr inputBuffer)
+: archive(archive), inputBuffer(inputBuffer) {
 
     // parse before root
     TRACE("START DOCUMENT");
@@ -71,7 +68,7 @@ srcMLSplitter::srcMLSplitter(xmlParserInputBufferPtr inputBuffer)
         std::cerr << "parser error : File input error\n";
         exit(1);
     }
-    if (bytesRead == 0) {
+    if (bytesRead == 0 && content.empty()) {
         std::cerr << "parser error : Empty file\n";
         exit(1);
     }
@@ -136,6 +133,7 @@ srcMLSplitter::srcMLSplitter(xmlParserInputBufferPtr inputBuffer)
             }
             if (attr2 == "encoding"sv) {
                 encoding = content.substr(0, valueEndPosition);
+                archive->encoding = encoding;
             } else if (attr2 == "standalone"sv) {
                 standalone = content.substr(0, valueEndPosition);
             } else {
@@ -225,14 +223,31 @@ srcMLSplitter::srcMLSplitter(xmlParserInputBufferPtr inputBuffer)
         content.remove_prefix(">"sv.size());
         content.remove_prefix(content.find_first_not_of(WHITESPACE));
     }
+    unitSave = new srcml_unit;
+    inUnit = false;
+    nextUnit(unitSave, true);
+    firstAfterRoot = true;
+    inUnit = true;
 }
 
-int srcMLSplitter::nextUnit(srcml_unit* unit) {
+int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
 
+    if (isDone)
+        return 0;
+
+    if (firstAfterRoot) {
+        unit->filename = std::move(unitSave->filename);
+        unit->hash = std::move(unitSave->hash);
+        unit->language = std::move(unitSave->language);
+        unit->version = std::move(unitSave->version);
+        firstAfterRoot = false;
+    }
+
+    unit->encoding = archive->encoding;
     std::string srcml;
     std::string src;
-    bool inUnit = false;
-    const char* unitStart = nullptr;
+    // bool inUnit = false;
+    // const char* unitStart = nullptr;
     while (true) {
 
         if (doneReading) {
@@ -276,8 +291,9 @@ int srcMLSplitter::nextUnit(srcml_unit* unit) {
             assert(content.compare(0, escapedCharacter.size(), escapedCharacter) == 0);
             content.remove_prefix(escapedCharacter.size());
             [[maybe_unused]] const std::string_view characters(unescapedCharacter);
-            if (inUnit)
+            if (inUnit) {
                 src += characters;
+            }
             TRACE("CHARACTERS", "characters", characters);
             ++textSize;
         } else if (content[0] != '<') {
@@ -383,7 +399,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit) {
             content.remove_prefix("?>"sv.size());
         } else if (content[1] == '/' /* && content[0] == '<' */) {
             // parse end tag
-            auto savePrevSize = srcml.size();
+            auto savePrevSize = &content[0] - unitStart + 1;
             assert(content.compare(0, "</"sv.size(), "</"sv) == 0);
             content.remove_prefix("</"sv.size());
             if (content[0] == ':') {
@@ -505,8 +521,10 @@ int srcMLSplitter::nextUnit(srcml_unit* unit) {
                     [[maybe_unused]] const std::string_view uri(content.substr(0, valueEndPosition));
                     TRACE("NAMESPACE", "prefix", prefix, "uri", uri);
 
-                    // srcml_uri_normalize(uri);
-                    // srcml_archive_register_namespace(archive, prefix.data(), uri.data());
+                    std::string suri(uri);
+                    std::string sprefix(prefix);
+                    srcml_uri_normalize(suri);
+                    srcml_archive_register_namespace(archive, sprefix.data(), suri.data());
 
                     content.remove_prefix(valueEndPosition);
                     assert(content.compare(0, "\""sv.size(), "\""sv) == 0);
@@ -560,6 +578,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit) {
                     TRACE("ATTRIBUTE", "prefix", prefix, "qname", qName, "localName", localName, "value", value);
                     // process Root Unit
                     if (depth == 0) {
+
                         // Note: these are ignore instead of placing in attributes.
                         if (localName == "timestamp"sv)
                             ;
@@ -570,13 +589,17 @@ int srcMLSplitter::nextUnit(srcml_unit* unit) {
                         else if (localName == "filename"sv)
                             ;
                         else if (localName == "url"sv) {
-                            srcml_archive_set_url(archive, value.data());
+                            std::string svalue(value);
+                            srcml_archive_set_url(archive, svalue.data());
                         }
-                        else if (localName == "version"sv)
-                            srcml_archive_set_version(archive, value.data());
-                        else if (localName == "tabs"sv)
-                            archive->tabstop = static_cast<std::size_t>(atoi(value.data()));
-                        else if (localName == "options"sv) {
+                        else if (localName == "version"sv) {
+                            std::string svalue(value);
+                            srcml_archive_set_version(archive, svalue.data());
+                            srcml_unit_set_version(unit, svalue.data());
+                        } else if (localName == "tabs"sv) {
+                            std::string svalue(value);
+                            archive->tabstop = static_cast<std::size_t>(atoi(svalue.data()));
+                        } else if (localName == "options"sv) {
 
                             std::size_t commaPos = 0;
                             std::size_t prevCommaPos = 0;
@@ -615,6 +638,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit) {
                             unit->hash = value;
                         else if (localName == "language"sv)
                             unit->language = value;
+                        else if (localName == "version"sv)
+                            unit->version = value;
                     }
                     content.remove_prefix(valueEndPosition);
                     content.remove_prefix("\""sv.size());
@@ -623,7 +648,13 @@ int srcMLSplitter::nextUnit(srcml_unit* unit) {
             }
             if (content[0] == '>') {
                 content.remove_prefix(">"sv.size());
+                if (unitLocalName == "unit"sv)
+                    unit->content_begin = &content[0] - unitStart;
+                int saveDepth = depth;
                 ++depth;
+                if (saveDepth == 0 && stopRoot) {
+                    return 2;
+                }
             } else if (content[0] == '/' && content[1] == '>') {
                 assert(content.compare(0, "/>"sv.size(), "/>") == 0);
                 content.remove_prefix("/>"sv.size());
@@ -690,7 +721,9 @@ int srcMLSplitter::nextUnit(srcml_unit* unit) {
     }
     TRACE("END DOCUMENT");
 
-    return 0;
+    isDone = true;
+
+    return isArchive ? 0 : 3;
 }
 
 int srcMLSplitter::refillContent(std::string_view& content) {
