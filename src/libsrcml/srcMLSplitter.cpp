@@ -246,6 +246,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         unit->hash = std::move(unitSave->hash);
         unit->language = std::move(unitSave->language);
         unit->version = std::move(unitSave->version);
+        unit->timestamp = std::move(unitSave->timestamp);
+        unit->content_begin = unitSave->content_begin;
         firstAfterRoot = false;
     }
 
@@ -459,7 +461,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 unit->content_end = savePrevSize;
                 srcml.append(unitStart, std::distance(unitStart, &content[0]));
                 unitStart = &content[0];
-                content.remove_prefix(content.find_first_not_of(WHITESPACE));
+                content.remove_prefix(std::max<int>(0, content.find_first_not_of(WHITESPACE)));
                 unit->srcml = std::move(srcml);
                 unit->src = std::move(src);
                 return 2;
@@ -490,8 +492,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 std::cerr << "parser error: StartTag: invalid element name\n";
                 return 1;
             }
-            [[maybe_unused]] const std::string_view prefix(qName.substr(0, colonPosition));
-            [[maybe_unused]] const std::string_view localName(qName.substr(colonPosition ? colonPosition + 1 : 0, nameEndPosition));
+            [[maybe_unused]] const std::string_view prefix(qName.substr(0, colonPosition - 1));
+            [[maybe_unused]] const std::string_view localName(qName.substr(colonPosition ? colonPosition: 0, nameEndPosition));
             if (localName == "unit"sv) {
 
                 if (inUnit)
@@ -670,6 +672,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                             unit->language = value;
                         else if (localName == "version"sv)
                             unit->version = value;
+                        else if (localName == "timestamp"sv)
+                            unit->timestamp = value;
                     }
                     content.remove_prefix(valueEndPosition);
                     content.remove_prefix("\""sv.size());
