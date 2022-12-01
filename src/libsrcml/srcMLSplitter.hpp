@@ -47,6 +47,7 @@ public:
     srcml_unit* unitSave = nullptr;
     bool inUnit = false;
     const char* unitStart = nullptr;
+    std::string saveCharacters;
 };
 
 #endif

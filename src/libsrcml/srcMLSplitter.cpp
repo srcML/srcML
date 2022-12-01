@@ -223,6 +223,12 @@ srcMLSplitter::srcMLSplitter(srcml_archive* archive, xmlParserInputBufferPtr inp
         content.remove_prefix(">"sv.size());
         content.remove_prefix(content.find_first_not_of(WHITESPACE));
     }
+
+    /*
+      Anything before the root unit, including the (optional) XML declaration and comments
+      are parsed. However, we need to parse the root element for a non-archive unit,
+      plus the first nested unit for an archive. The nextUnit() knows how to do this.
+    */
     unitSave = new srcml_unit;
     inUnit = false;
     nextUnit(unitSave, true);
@@ -244,8 +250,9 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
     }
 
     unit->encoding = archive->encoding;
-    std::string srcml;
-    std::string src;
+    std::string srcml = saveCharacters;
+    std::string src = saveCharacters;
+    saveCharacters.clear();
     // bool inUnit = false;
     // const char* unitStart = nullptr;
     while (true) {
@@ -308,6 +315,14 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 unit->loc += static_cast<int>(std::count(characters.cbegin(), characters.cend(), '\n'));
             loc = unit->loc;
             textSize += static_cast<int>(characters.size());
+            // check for nested unit is false
+            if (stopRoot) {
+                if (characters.find_first_not_of(WHITESPACE) != characters.npos ) {
+                    srcml_archive_enable_solitary_unit(archive);
+                    return 2;
+                }
+                saveCharacters = characters;
+            }
             content.remove_prefix(characters.size());
         } else if (content[1] == '!' /* && content[0] == '<' */ && content[2] == '-' && content[3] == '-') {
             // parse XML comment
@@ -343,6 +358,11 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             content.remove_prefix("-->"sv.size());
         } else if (content[1] == '!' /* && content[0] == '<' */ && content[2] == '[' && content[3] == 'C' && content[4] == 'D' &&
                    content[5] == 'A' && content[6] == 'T' && content[7] == 'A' && content[8] == '[') {
+            // check for nested unit is false
+            if (stopRoot) {
+                srcml_archive_enable_solitary_unit(archive);
+                return 2;
+            }
             // parse CDATA
             content.remove_prefix("<![CDATA["sv.size());
             std::size_t tagEndPosition = content.find("]]>"sv);
@@ -398,6 +418,11 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             assert(content.compare(0, "?>"sv.size(), "?>"sv) == 0);
             content.remove_prefix("?>"sv.size());
         } else if (content[1] == '/' /* && content[0] == '<' */) {
+            // check for nested unit is false
+            if (stopRoot) {
+                srcml_archive_enable_solitary_unit(archive);
+                return 2;
+            }
             // parse end tag
             auto savePrevSize = &content[0] - unitStart + 1;
             assert(content.compare(0, "</"sv.size(), "</"sv) == 0);
@@ -445,14 +470,14 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             // parse start tag
             assert(content.compare(0, "<"sv.size(), "<"sv) == 0);
             auto preserveStart = &content[0];
-            content.remove_prefix("<"sv.size());
-            if (content[0] == ':') {
+            // content.remove_prefix("<"sv.size());
+            if (content[0 + 1] == ':') {
                 std::cerr << "parser error : Invalid start tag name\n";
                 return 1;
             }
-            std::size_t nameEndPosition = content.find_first_of(NAMEEND);
+            std::size_t nameEndPosition = content.find_first_of(NAMEEND, 1);
             if (nameEndPosition == content.size()) {
-                std::cerr << "parser error : Unterminated start tag '" << content.substr(0, nameEndPosition) << "'\n";
+                std::cerr << "parser error : Unterminated start tag '" << content.substr(1, nameEndPosition) << "'\n";
                 return 1;
             }
             size_t colonPosition = 0;
@@ -460,7 +485,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 colonPosition = nameEndPosition;
                 nameEndPosition = content.find_first_of(NAMEEND, nameEndPosition + 1);
             }
-            const std::string_view qName(content.substr(0, nameEndPosition));
+            const std::string_view qName(content.substr(0 + 1, nameEndPosition - 1));
             if (qName.empty()) {
                 std::cerr << "parser error: StartTag: invalid element name\n";
                 return 1;
@@ -478,7 +503,12 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 unit->loc = 0;
                 loc = 0;
                 unitStart = preserveStart;
+            } else if (stopRoot) {
+                // check for nested unit is false
+                srcml_archive_enable_solitary_unit(archive);
+                return 2;
             }
+            // content.remove_prefix("<"sv.size());
             std::string_view unitLocalName = localName;
             TRACE("START TAG", "qName", qName, "prefix", prefix, "localName", localName);
             content.remove_prefix(nameEndPosition);
@@ -575,7 +605,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                         char escapeValue = (char)strtol(value.data(), NULL, 0);
                         src += escapeValue;
                     }
-                    TRACE("ATTRIBUTE", "prefix", prefix, "qname", qName, "localName", localName, "value", value);
+                    TRACE("ATTRIBUTE", "qName", qName, "prefix", prefix, "localName", localName, "value", value);
                     // process Root Unit
                     if (depth == 0) {
 
@@ -648,13 +678,17 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             }
             if (content[0] == '>') {
                 content.remove_prefix(">"sv.size());
-                if (unitLocalName == "unit"sv)
+                if (unitLocalName == "unit"sv) {
                     unit->content_begin = &content[0] - unitStart;
-                int saveDepth = depth;
-                ++depth;
-                if (saveDepth == 0 && stopRoot) {
-                    return 2;
+
+                    // check for nested unit is true
+                    if (stopRoot && depth > 0) {
+                        saveCharacters.clear();
+                        srcml_archive_disable_solitary_unit(archive);
+                        return 2;
+                    }
                 }
+                ++depth;
             } else if (content[0] == '/' && content[1] == '>') {
                 assert(content.compare(0, "/>"sv.size(), "/>") == 0);
                 content.remove_prefix("/>"sv.size());
