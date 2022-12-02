@@ -255,6 +255,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
     std::string srcml = saveCharacters;
     std::string src = saveCharacters;
     saveCharacters.clear();
+    unit->loc = saveLOC;
+    saveLOC = 0;
     // bool inUnit = false;
     // const char* unitStart = nullptr;
     while (true) {
@@ -324,6 +326,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                     return 2;
                 }
                 saveCharacters = characters;
+                saveLOC = unit->loc;
             }
             content.remove_prefix(characters.size());
         } else if (content[1] == '!' /* && content[0] == '<' */ && content[2] == '-' && content[3] == '-') {
@@ -464,6 +467,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 content.remove_prefix(std::max<int>(0, content.find_first_not_of(WHITESPACE)));
                 unit->srcml = std::move(srcml);
                 unit->src = std::move(src);
+                if (!unit->src->empty() && unit->src->back() != '\n')
+                    ++unit->loc;
                 return 2;
             }
             if (depth == 0)
@@ -758,6 +763,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         return 1;
     }
     TRACE("END DOCUMENT");
+    if (!unit->src->empty() && unit->src->back() != '\n')
+        ++unit->loc;
 
     isDone = true;
 

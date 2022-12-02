@@ -48,6 +48,7 @@ public:
     bool inUnit = false;
     const char* unitStart = nullptr;
     std::string saveCharacters;
+    int saveLOC = 0;
 };
 
 #endif
