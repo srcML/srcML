@@ -702,9 +702,6 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 assert(content.compare(0, "/>"sv.size(), "/>") == 0);
                 content.remove_prefix("/>"sv.size());
                 TRACE("END TAG", "qName", qName, "prefix", prefix, "localName", localName);
-                if (depth == 0)
-                    break;
-
                 if (inUnit && localName == "unit"sv) {
                     inUnit = false;
                     srcml.append(unitStart, std::distance(unitStart, &content[0]));
