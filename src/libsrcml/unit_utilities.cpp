@@ -121,6 +121,9 @@ struct extract_context {
 // Extract source code from srcml
 std::string extract_src(std::string_view srcml, std::optional<int> revision) {
 
+    if (srcml.empty())
+        return "";
+
     extract_context scontext;
     scontext.revision = revision;
     scontext.mode.push(COMMON);
