@@ -310,6 +310,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             // parse character non-entity references
             assert(content[0] != '<' && content[0] != '&');
             std::size_t characterEndPosition = content.find_first_of("<&");
+            assert(characterEndPosition > 0);
             const std::string_view characters(content.substr(0, characterEndPosition));
             if (inUnit)
                 src += characters;
@@ -428,7 +429,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 return 2;
             }
             // parse end tag
-            auto savePrevSize = &content[0] - unitStart + 1;
+            auto savePrevSize = srcml.size() + &content[0] - unitStart + 1;
             assert(content.compare(0, "</"sv.size(), "</"sv) == 0);
             content.remove_prefix("</"sv.size());
             if (content[0] == ':') {
@@ -770,7 +771,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
 int srcMLSplitter::refillContent(std::string_view& content) {
 
     // mark the part of the buffers already consumed
-    const int shrinkSize = content.empty() ? lastRead : &content[0] - (const char*) xmlBufContent(inputBuffer->buffer);
+    const int shrinkSize = lastRead - content.size();
     xmlBufShrink(inputBuffer->buffer, shrinkSize);
 
     // read and append to current data
@@ -783,7 +784,7 @@ int srcMLSplitter::refillContent(std::string_view& content) {
     }
 
     // record for shrinkSize on next call
-    lastRead = bytesRead;
+    lastRead = bytesRead + content.size();
 
     // set content to the start of the buffer
     content = std::string_view((const char*) xmlBufContent(inputBuffer->buffer), xmlBufUse(inputBuffer->buffer));
