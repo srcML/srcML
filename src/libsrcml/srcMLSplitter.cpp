@@ -694,6 +694,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                     // check for nested unit is true
                     if (stopRoot && depth > 0) {
                         saveCharacters.clear();
+                        saveLOC = 0;
                         srcml_archive_disable_solitary_unit(archive);
                         return 2;
                     }
