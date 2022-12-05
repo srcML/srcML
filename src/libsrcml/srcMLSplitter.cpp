@@ -251,7 +251,6 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         firstAfterRoot = false;
     }
 
-    unit->encoding = archive->encoding;
     std::string srcml = saveCharacters;
     std::string src = saveCharacters;
     saveCharacters.clear();
