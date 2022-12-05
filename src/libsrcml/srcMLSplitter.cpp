@@ -765,7 +765,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
 
     isDone = true;
 
-    return isArchive ? 0 : 3;
+    return 0;
 }
 
 int srcMLSplitter::refillContent(std::string_view& content) {
