@@ -241,6 +241,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
     if (isDone)
         return 0;
 
+    bool saveFirstAfterRoot = firstAfterRoot;
     if (firstAfterRoot) {
         unit->filename = std::move(unitSave->filename);
         unit->hash = std::move(unitSave->hash);
@@ -765,7 +766,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
 
     isDone = true;
 
-    return 0;
+    return saveFirstAfterRoot ? 2 : 0;
 }
 
 int srcMLSplitter::refillContent(std::string_view& content) {
