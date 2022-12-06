@@ -26,6 +26,8 @@ public:
     // std::string_view unitFilename() const { return filename; }
     // int unitLOC() const { return loc; }
 
+    void insertRootNamespaces(const srcml_archive* archive, srcml_unit* unit, std::string& srcml);
+
     ~srcMLSplitter() {
         fprintf(stderr, "DEBUG:  %s %s %d totalBytes: %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) totalBytes);
     }
@@ -49,6 +51,9 @@ public:
     const char* unitStart = nullptr;
     std::string saveCharacters;
     int saveLOC = 0;
+    std::string archiveNamespaceString;
+    int unitNamespaceInsertionPoint = 0;
+    std::string saveUnitStart;
 };
 
 #endif

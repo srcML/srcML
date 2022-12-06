@@ -20,6 +20,7 @@
 #include <libxml/parserInternals.h>
 #include <libxml/xmlIO.h>
 #include <libxml/tree.h>
+#include <srcmlns.hpp>
 
 // provides literal string operator""sv
 using namespace std::literals::string_view_literals;
@@ -252,9 +253,10 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         firstAfterRoot = false;
     }
 
-    std::string srcml = saveCharacters;
+    std::string srcml = saveUnitStart + saveCharacters;
     std::string src = saveCharacters;
     saveCharacters.clear();
+    saveUnitStart.clear();
     unit->loc = saveLOC;
     saveLOC = 0;
     // bool inUnit = false;
@@ -323,6 +325,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             // check for nested unit is false
             if (stopRoot) {
                 if (characters.find_first_not_of(WHITESPACE) != characters.npos ) {
+                    unit->namespaces = archive->namespaces;
                     srcml_archive_enable_solitary_unit(archive);
                     return 2;
                 }
@@ -366,6 +369,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                    content[5] == 'A' && content[6] == 'T' && content[7] == 'A' && content[8] == '[') {
             // check for nested unit is false
             if (stopRoot) {
+                unit->namespaces = archive->namespaces;
                 srcml_archive_enable_solitary_unit(archive);
                 return 2;
             }
@@ -426,6 +430,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         } else if (content[1] == '/' /* && content[0] == '<' */) {
             // check for nested unit is false
             if (stopRoot) {
+                unit->namespaces = archive->namespaces;
                 srcml_archive_enable_solitary_unit(archive);
                 return 2;
             }
@@ -511,8 +516,10 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 unit->loc = 0;
                 loc = 0;
                 unitStart = preserveStart;
+                unitNamespaceInsertionPoint = nameEndPosition;
             } else if (stopRoot) {
                 // check for nested unit is false
+                unit->namespaces = archive->namespaces;
                 srcml_archive_enable_solitary_unit(archive);
                 return 2;
             }
@@ -562,7 +569,18 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                     std::string suri(uri);
                     std::string sprefix(prefix);
                     srcml_uri_normalize(suri);
-                    srcml_archive_register_namespace(archive, sprefix.data(), suri.data());
+                    if (isArchive) {
+                        if (!unit->namespaces)
+                            unit->namespaces = Namespaces();
+                        int flags = 0;
+                        if (findNSURI(default_namespaces, suri) != default_namespaces.end())
+                            flags = NS_STANDARD;
+                        else
+                            flags = NS_REGISTERED;
+                        unit->namespaces->emplace_back(sprefix.data(), suri.data(), flags);
+                    } else {
+                        srcml_archive_register_namespace(archive, sprefix.data(), suri.data());
+                    }
 
                     content.remove_prefix(valueEndPosition);
                     assert(content.compare(0, "\""sv.size(), "\""sv) == 0);
@@ -686,10 +704,19 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                     content.remove_prefix(content.find_first_not_of(WHITESPACE));
                 }
             }
+            if (localName == "unit"sv) {
+                srcml.append(unitStart, unitNamespaceInsertionPoint);
+                unitStart += unitNamespaceInsertionPoint;
+                saveUnitStart = srcml;
+                if (isArchive) {
+                    insertRootNamespaces(archive, unit, srcml);
+                }
+            }
             if (content[0] == '>') {
                 content.remove_prefix(">"sv.size());
                 if (unitLocalName == "unit"sv) {
-                    unit->content_begin = &content[0] - unitStart;
+                    unit->content_begin = &content[0] - unitStart + srcml.size();
+
 
                     // check for nested unit is true
                     if (stopRoot && depth > 0) {
@@ -792,4 +819,47 @@ int srcMLSplitter::refillContent(std::string_view& content) {
     content = std::string_view((const char*) xmlBufContent(inputBuffer->buffer), xmlBufUse(inputBuffer->buffer));
 
     return bytesRead;
+}
+
+void srcMLSplitter::insertRootNamespaces(const srcml_archive* archive, srcml_unit* unit, std::string& srcml) {
+
+    // if the unit has namespaces, then use those
+    Namespaces mergedns;
+
+    if (unit->namespaces) {
+        for (const auto& ns : archive->namespaces) {
+
+            auto it = findNSURI(*unit->namespaces, ns.uri);
+            if (it == unit->namespaces->end()) {
+
+                // create a new entry for this URI
+                mergedns.emplace_back(ns.prefix, ns.uri, ns.flags);
+            }
+        }
+    } else {
+        mergedns = archive->namespaces;
+    }
+
+    archiveNamespaceString = "";
+    for (const auto& ns : mergedns) {
+
+        archiveNamespaceString += ' ';
+        archiveNamespaceString += "xmlns";
+        if (!ns.prefix.empty()) {
+            archiveNamespaceString += ':';
+            archiveNamespaceString += ns.prefix;
+        }
+        archiveNamespaceString += '=';
+        archiveNamespaceString += '"';
+        archiveNamespaceString += ns.uri;
+        archiveNamespaceString += '"';
+    }
+
+    if (!archiveNamespaceString.empty()) {
+        srcml.append(archiveNamespaceString);
+        unit->insert_begin = unitNamespaceInsertionPoint;
+        unit->insert_end = srcml.size();
+        // unitStart += srcml.size();
+        saveUnitStart = srcml;
+    }
 }
