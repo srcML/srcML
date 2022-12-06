@@ -250,6 +250,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         unit->version = std::move(unitSave->version);
         unit->timestamp = std::move(unitSave->timestamp);
         unit->content_begin = unitSave->content_begin;
+        unit->namespaces = unitSave->namespaces;
         firstAfterRoot = false;
     }
 
