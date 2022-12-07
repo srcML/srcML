@@ -243,6 +243,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         return 0;
 
     bool saveFirstAfterRoot = firstAfterRoot;
+    bool unitSaveUsed = false;
     if (firstAfterRoot) {
         unit->filename = std::move(unitSave->filename);
         unit->hash = std::move(unitSave->hash);
@@ -253,6 +254,9 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         unit->content_begin = unitSave->content_begin;
         unit->namespaces = unitSave->namespaces;
         firstAfterRoot = false;
+        unitSaveUsed = true;
+        // if (pastRoot)
+        //     return 2;
     }
 
     std::string srcml = saveUnitStart + saveCharacters;
@@ -477,7 +481,9 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 unit->src = std::move(src);
                 if (!unit->src->empty() && unit->src->back() != '\n')
                     ++unit->loc;
-                return 2;
+                if (depth > 0) {
+                    return 2;
+                }
             }
             if (depth == 0)
                 break;
@@ -724,6 +730,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                     if (stopRoot && depth > 0) {
                         saveCharacters.clear();
                         saveLOC = 0;
+                        ++depth;
                         srcml_archive_disable_solitary_unit(archive);
                         return 2;
                     }
@@ -733,6 +740,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 assert(content.compare(0, "/>"sv.size(), "/>") == 0);
                 content.remove_prefix("/>"sv.size());
                 TRACE("END TAG", "qName", qName, "prefix", prefix, "localName", localName);
+
                 if (inUnit && localName == "unit"sv) {
                     inUnit = false;
                     srcml.append(unitStart, std::distance(unitStart, &content[0]));
@@ -742,9 +750,17 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                     unit->srcml = std::move(srcml);
                     unit->src = std::move(src);
                     assert(depth < 2);
-                    if (stopRoot)
+                    if (stopRoot) {
+                        emptyRoot = true;
                         srcml_archive_enable_solitary_unit(archive);
+                    }
+
+                    if (stopRoot)
+                        saveFirstAfterRoot = false;
                     return 2;
+                } else if (localName == "unit"sv) {
+                    if (depth == 0)
+                        pastRoot = true;
                 }
             }
         } else {
@@ -798,21 +814,25 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
 
     isDone = true;
 
-    if (saveFirstAfterRoot) {
+    if (saveFirstAfterRoot /* && !unitSaveUsed */) {
+        if (!unitSaveUsed) {
+            unit->filename = std::move(unitSave->filename);
+            unit->hash = std::move(unitSave->hash);
 
-        unit->filename = std::move(unitSave->filename);
-        unit->hash = std::move(unitSave->hash);
-
-        unit->language = std::move(unitSave->language);
-        unit->version = std::move(unitSave->version);
-        unit->timestamp = std::move(unitSave->timestamp);
-        unit->content_begin = unitSave->content_begin;
-        unit->namespaces = unitSave->namespaces;
-        unit->srcml = std::move(unitSave->srcml);
-        unit->src = std::move(unitSave->src);
-        srcml_archive_enable_solitary_unit(archive);
+            unit->language = std::move(unitSave->language);
+            unit->version = std::move(unitSave->version);
+            unit->timestamp = std::move(unitSave->timestamp);
+            unit->content_begin = unitSave->content_begin;
+            unit->namespaces = unitSave->namespaces;
+            unit->srcml = std::move(unitSave->srcml);
+            unit->src = std::move(unitSave->src);
+            srcml_archive_enable_solitary_unit(archive);
+        }
         return 2;
     }
+
+    if (emptyRoot)
+        return 2;
 
     return 0;
 }

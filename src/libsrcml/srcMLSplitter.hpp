@@ -54,6 +54,8 @@ public:
     std::string archiveNamespaceString;
     int unitNamespaceInsertionPoint = 0;
     std::string saveUnitStart;
+    bool pastRoot = false;
+    bool emptyRoot = false;
 };
 
 #endif
