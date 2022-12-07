@@ -246,6 +246,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
     if (firstAfterRoot) {
         unit->filename = std::move(unitSave->filename);
         unit->hash = std::move(unitSave->hash);
+
         unit->language = std::move(unitSave->language);
         unit->version = std::move(unitSave->version);
         unit->timestamp = std::move(unitSave->timestamp);
@@ -741,6 +742,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                     unit->srcml = std::move(srcml);
                     unit->src = std::move(src);
                     assert(depth < 2);
+                    if (stopRoot)
+                        srcml_archive_enable_solitary_unit(archive);
                     return 2;
                 }
             }
@@ -795,7 +798,23 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
 
     isDone = true;
 
-    return saveFirstAfterRoot ? 2 : 0;
+    if (saveFirstAfterRoot) {
+
+        unit->filename = std::move(unitSave->filename);
+        unit->hash = std::move(unitSave->hash);
+
+        unit->language = std::move(unitSave->language);
+        unit->version = std::move(unitSave->version);
+        unit->timestamp = std::move(unitSave->timestamp);
+        unit->content_begin = unitSave->content_begin;
+        unit->namespaces = unitSave->namespaces;
+        unit->srcml = std::move(unitSave->srcml);
+        unit->src = std::move(unitSave->src);
+        srcml_archive_enable_solitary_unit(archive);
+        return 2;
+    }
+
+    return 0;
 }
 
 int srcMLSplitter::refillContent(std::string_view& content) {
