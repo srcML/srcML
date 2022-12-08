@@ -56,6 +56,7 @@ public:
     std::string saveUnitStart;
     bool pastRoot = false;
     bool emptyRoot = false;
+    bool finishedRoot = false;
 };
 
 #endif

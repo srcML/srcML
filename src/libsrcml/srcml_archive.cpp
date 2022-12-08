@@ -1275,7 +1275,7 @@ struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
     int result = archive->splitter->nextUnit(unit.get());
     unit->read_body = true;
     unit->read_header = true;
-    if (result == 0 || result == 3)
+    if (result == 0 || result == 1 || result == 3)
         return nullptr;
 
     return unit.release();
@@ -1302,7 +1302,7 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
     std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive));
 
     int result = archive->splitter->nextUnit(unit.get());
-    if (result == 0)
+    if (result == 0 || result == 1)
         return 0;
 
     return 1;
