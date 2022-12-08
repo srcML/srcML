@@ -239,10 +239,8 @@ srcMLSplitter::srcMLSplitter(srcml_archive* archive, xmlParserInputBufferPtr inp
 
 int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
 
-
     if (isDone)
         return 0;
-
 
     bool saveFirstAfterRoot = firstAfterRoot;
     bool unitSaveUsed = false;
@@ -261,7 +259,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         //     return 2;
     }
 
-    std::string srcml = saveUnitStart + saveCharacters;
+    std::string srcml = saveUnitStart /* + saveCharacters */;
     std::string src = saveCharacters;
     saveCharacters.clear();
     saveUnitStart.clear();
@@ -728,7 +726,6 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                 content.remove_prefix(">"sv.size());
                 if (unitLocalName == "unit"sv) {
                     unit->content_begin = &content[0] - unitStart + srcml.size();
-
 
                     // check for nested unit is true
                     if (stopRoot && depth > 0) {
