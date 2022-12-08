@@ -247,12 +247,12 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
     if (firstAfterRoot) {
         unit->filename = std::move(unitSave->filename);
         unit->hash = std::move(unitSave->hash);
-
         unit->language = std::move(unitSave->language);
         unit->version = std::move(unitSave->version);
         unit->timestamp = std::move(unitSave->timestamp);
         unit->content_begin = unitSave->content_begin;
-        unit->namespaces = unitSave->namespaces;
+        unit->namespaces = std::move(unitSave->namespaces);
+        unit->attributes = std::move(unitSave->attributes);
         firstAfterRoot = false;
         unitSaveUsed = true;
         // if (pastRoot)
@@ -708,6 +708,12 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                             unit->version = value;
                         else if (localName == "timestamp"sv)
                             unit->timestamp = value;
+                        else if (localName == "revision"sv)
+                            unit->revision = value;
+                        else if (depth > 0) {
+                            unit->attributes.emplace_back(localName);
+                            unit->attributes.emplace_back(value);
+                        }
                     }
                     content.remove_prefix(valueEndPosition);
                     content.remove_prefix("\""sv.size());
