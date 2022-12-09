@@ -255,6 +255,9 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
         unit->attributes = std::move(unitSave->attributes);
         firstAfterRoot = false;
         unitSaveUsed = true;
+        unit->srcml = std::move(unitSave->srcml);
+        unit->src = std::move(unitSave->src);
+
         // if (pastRoot)
         //     return 2;
     }
