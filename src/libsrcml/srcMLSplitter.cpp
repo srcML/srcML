@@ -473,6 +473,10 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             content.remove_prefix(nameEndPosition);
             content.remove_prefix(std::max<int>(0, content.find_first_not_of(WHITESPACE)));
             assert(content.compare(0, ">"sv.size(), ">"sv) == 0);
+            if (content[0] != '>') {
+                std::cerr << "Error Parsing: expected '>'\n";
+                return 1;
+            }
             content.remove_prefix(">"sv.size());
             if (inUnit && localName == "unit"sv) {
                 inUnit = false;
