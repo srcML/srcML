@@ -255,8 +255,10 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrcml, bool collectSrc
         unit->attributes = std::move(unitSave->attributes);
         firstAfterRoot = false;
         unitSaveUsed = true;
-        unit->srcml = std::move(unitSave->srcml);
-        unit->src = std::move(unitSave->src);
+        if (collectSrcml)
+            unit->srcml = std::move(unitSave->srcml);
+        if (collectSrc)
+            unit->src = std::move(unitSave->src);
 
         // if (pastRoot)
         //     return 2;
@@ -293,7 +295,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrcml, bool collectSrc
                 unitStart = &content[0];
             }
         }
-        if (content[0] == '&') {
+        if (collectSrc && content[0] == '&') {
             // parse character entity references
             std::string_view unescapedCharacter;
             std::string_view escapedCharacter;
@@ -321,7 +323,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrcml, bool collectSrc
         } else if (content[0] != '<') {
             // parse character non-entity references
             assert(content[0] != '<' && content[0] != '&');
-            std::size_t characterEndPosition = content.find_first_of("<&");
+            std::size_t characterEndPosition = content.find_first_of(collectSrc ? "<&" : "<");
             assert(characterEndPosition > 0);
             const std::string_view characters(content.substr(0, characterEndPosition));
             if (collectSrc && inUnit)
@@ -485,9 +487,11 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrcml, bool collectSrc
                     srcml.append(unitStart, std::distance(unitStart, &content[0]));
                 unitStart = &content[0];
                 content.remove_prefix(std::max<int>(0, content.find_first_not_of(WHITESPACE)));
-                unit->srcml = std::move(srcml);
-                unit->src = std::move(src);
-                if (!unit->src->empty() && unit->src->back() != '\n')
+                if (collectSrcml)
+                    unit->srcml = std::move(srcml);
+                if (collectSrc)
+                    unit->src = std::move(src);
+                if (unit->src && !unit->src->empty() && unit->src->back() != '\n')
                     ++unit->loc;
                 if (depth > 0) {
                     return 2;
@@ -763,8 +767,10 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrcml, bool collectSrc
                     unitStart = &content[0];
                     unit->content_begin = (int) srcml.size();
                     content.remove_prefix(std::max<int>(0, content.find_first_not_of(WHITESPACE)));
-                    unit->srcml = std::move(srcml);
-                    unit->src = std::move(src);
+                    if (collectSrcml)
+                        unit->srcml = std::move(srcml);
+                    if (collectSrc)
+                        unit->src = std::move(src);
                     assert(depth < 2);
                     if (stopRoot) {
                         emptyRoot = true;
@@ -829,7 +835,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrcml, bool collectSrc
         return 1;
     }
     TRACE("END DOCUMENT");
-    if (!unit->src->empty() && unit->src->back() != '\n')
+    if (unit->src && !unit->src->empty() && unit->src->back() != '\n')
         ++unit->loc;
 
     isDone = true;
@@ -844,8 +850,10 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrcml, bool collectSrc
             unit->timestamp = std::move(unitSave->timestamp);
             unit->content_begin = unitSave->content_begin;
             unit->namespaces = unitSave->namespaces;
-            unit->srcml = std::move(unitSave->srcml);
-            unit->src = std::move(unitSave->src);
+            if (collectSrcml)
+                unit->srcml = std::move(unitSave->srcml);
+            if (collectSrc)
+                unit->src = std::move(unitSave->src);
             srcml_archive_enable_solitary_unit(archive);
         }
         return 2;

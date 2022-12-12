@@ -1272,7 +1272,7 @@ struct srcml_unit* srcml_archive_read_unit(struct srcml_archive* archive) {
         return nullptr;
 
     std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive));
-    int result = archive->splitter->nextUnit(unit.get());
+    int result = archive->splitter->nextUnit(unit.get(), true, false);
     unit->read_body = true;
     unit->read_header = true;
     if (result == 0 || result == 1 || result == 3)
