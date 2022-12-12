@@ -21,7 +21,7 @@ class srcMLSplitter {
 public:
     srcMLSplitter(srcml_archive* archive, xmlParserInputBufferPtr inputBuffer = nullptr);
     void setSkip() { skipMode = true; }
-    int nextUnit(srcml_unit* unit, bool collectSrc = true, bool stopRoot = false);
+    int nextUnit(srcml_unit* unit, bool collectSrcml = true, bool collectSrc = true, bool stopRoot = false);
     // std::string_view unitLanguage() const { return language; }
     // std::string_view unitFilename() const { return filename; }
     // int unitLOC() const { return loc; }

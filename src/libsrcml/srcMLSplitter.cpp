@@ -232,12 +232,12 @@ srcMLSplitter::srcMLSplitter(srcml_archive* archive, xmlParserInputBufferPtr inp
     */
     unitSave = new srcml_unit;
     inUnit = false;
-    nextUnit(unitSave, true, true);
+    nextUnit(unitSave, true, true, true);
     firstAfterRoot = true;
     inUnit = true;
 }
 
-int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
+int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrcml, bool collectSrc, bool stopRoot) {
 
     if (isDone)
         return 0;
@@ -276,7 +276,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
             if (content.empty())
                 break;
         } else if (content.size() < BLOCK_SIZE) {
-            if (inUnit) {
+            if (collectSrcml && inUnit) {
                 srcml.append(unitStart, std::distance(unitStart, &content[0]));
             }
             // refill content preserving unprocessed
@@ -348,7 +348,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
             content.remove_prefix("<!--"sv.size());
             std::size_t tagEndPosition = content.find("-->"sv);
             if (tagEndPosition == content.npos && !doneReading) {
-                if (inUnit) {
+                if (collectSrcml && inUnit) {
                     srcml.append(unitStart, std::distance(unitStart, &content[0]));
                 }
                 // refill content preserving unprocessed
@@ -386,7 +386,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
             content.remove_prefix("<![CDATA["sv.size());
             std::size_t tagEndPosition = content.find("]]>"sv);
             if (tagEndPosition == content.npos && !doneReading) {
-                if (inUnit) {
+                if (collectSrcml && inUnit) {
                     srcml.append(unitStart, std::distance(unitStart, &content[0]));
                 }
                 // refill content preserving unprocessed
@@ -481,7 +481,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
             if (inUnit && localName == "unit"sv) {
                 inUnit = false;
                 unit->content_end = savePrevSize;
-                srcml.append(unitStart, std::distance(unitStart, &content[0]));
+                if (collectSrcml)
+                    srcml.append(unitStart, std::distance(unitStart, &content[0]));
                 unitStart = &content[0];
                 content.remove_prefix(std::max<int>(0, content.find_first_not_of(WHITESPACE)));
                 unit->srcml = std::move(srcml);
@@ -728,7 +729,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
                 }
             }
             if (localName == "unit"sv) {
-                srcml.append(unitStart, unitNamespaceInsertionPoint);
+                if (collectSrcml)
+                    srcml.append(unitStart, unitNamespaceInsertionPoint);
                 unitStart += unitNamespaceInsertionPoint;
                 saveUnitStart = srcml;
                 if (isArchive) {
@@ -756,7 +758,8 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
                 TRACE("EMPTY END TAG", "qName", qName, "prefix", prefix, "localName", localName);
                 if (inUnit && localName == "unit"sv) {
                     inUnit = false;
-                    srcml.append(unitStart, std::distance(unitStart, &content[0]));
+                    if (collectSrcml)
+                        srcml.append(unitStart, std::distance(unitStart, &content[0]));
                     unitStart = &content[0];
                     unit->content_begin = (int) srcml.size();
                     content.remove_prefix(std::max<int>(0, content.find_first_not_of(WHITESPACE)));
@@ -791,7 +794,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
         assert(content.compare(0, "<!--"sv.size(), "<!--"sv) == 0);
         std::size_t tagEndPosition = content.find("-->"sv);
         if (tagEndPosition == content.npos && !doneReading) {
-            if (inUnit) {
+            if (collectSrcml && inUnit) {
                 srcml.append(unitStart, std::distance(unitStart, &content[0]));
             }
             // refill content preserving unprocessed
