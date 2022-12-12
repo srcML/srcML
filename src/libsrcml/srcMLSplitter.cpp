@@ -232,12 +232,12 @@ srcMLSplitter::srcMLSplitter(srcml_archive* archive, xmlParserInputBufferPtr inp
     */
     unitSave = new srcml_unit;
     inUnit = false;
-    nextUnit(unitSave, true);
+    nextUnit(unitSave, true, true);
     firstAfterRoot = true;
     inUnit = true;
 }
 
-int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
+int srcMLSplitter::nextUnit(srcml_unit* unit, bool collectSrc, bool stopRoot) {
 
     if (isDone)
         return 0;
@@ -313,7 +313,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             assert(content.compare(0, escapedCharacter.size(), escapedCharacter) == 0);
             content.remove_prefix(escapedCharacter.size());
             [[maybe_unused]] const std::string_view characters(unescapedCharacter);
-            if (inUnit) {
+            if (collectSrc && inUnit) {
                 src += characters;
             }
             TRACE("CHARACTERS", "characters", characters);
@@ -324,7 +324,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
             std::size_t characterEndPosition = content.find_first_of("<&");
             assert(characterEndPosition > 0);
             const std::string_view characters(content.substr(0, characterEndPosition));
-            if (inUnit)
+            if (collectSrc && inUnit)
                 src += characters;
             TRACE("CHARACTERS", "characters", characters);
             if (inUnit)
@@ -643,7 +643,7 @@ int srcMLSplitter::nextUnit(srcml_unit* unit, bool stopRoot) {
                     }
                     [[maybe_unused]] const std::string_view value(content.substr(0, valueEndPosition));
                     // convert special srcML escaped element to characters
-                    if (unitLocalName == "escape"sv && localName == "char"sv && inUnit) {
+                    if (collectSrc && unitLocalName == "escape"sv && localName == "char"sv && inUnit) {
                         // use strtol() instead of atoi() since strtol() understands hex encoding of '0x0?'
                         char escapeValue = (char)strtol(value.data(), NULL, 0);
                         src += escapeValue;

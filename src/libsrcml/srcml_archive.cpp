@@ -1301,7 +1301,7 @@ int srcml_archive_skip_unit(struct srcml_archive* archive) {
     // read the header only of a temporary unit
     std::unique_ptr<srcml_unit> unit(srcml_unit_create(archive));
 
-    int result = archive->splitter->nextUnit(unit.get());
+    int result = archive->splitter->nextUnit(unit.get(), false);
     if (result == 0 || result == 1)
         return 0;
 
