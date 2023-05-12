@@ -22,7 +22,13 @@
 #include <srcml_utilities.hpp>
 #include <cmath>
 #include <string_view>
-#include <filesystem>
+#if defined(__GNUC__) && (__GNUC__ == 7) && (__GNUC_MINOR__ == 5) && (__GNUC_PATCHLEVEL__ == 0)
+    #include <experimental/filesystem>
+    namespace fs = std::experimental::filesystem;
+#else
+    #include <filesystem>
+    namespace fs = std::filesystem;
+#endif
 
 using namespace ::std::literals::string_view_literals;
 
@@ -65,7 +71,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
     if (prequest->unit && option(SRCML_COMMAND_NOARCHIVE)) {
 
         // full path include directory, filename (with existing extension), and xml extension
-        std::filesystem::path path;
+        fs::path path;
         if (option(SRCML_COMMAND_TO_DIRECTORY)) {
             path /= *prequest->disk_dir;
         }
@@ -76,7 +82,7 @@ void srcml_write_request(std::shared_ptr<ParseRequest> prequest, TraceLog& log, 
         auto directory = path;
         directory.remove_filename();
         std::error_code ec;
-        if (!std::filesystem::create_directories(directory, ec) && ec.value() != 0) {
+        if (!fs::create_directories(directory, ec) && ec.value() != 0) {
             SRCMLstatus(ERROR_MSG, "Unable to create directory %s", directory.c_str());
         }
 

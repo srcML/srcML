@@ -41,6 +41,11 @@ if(NOT MSVC)
     target_link_libraries(srcml PRIVATE Threads::Threads)
 endif()
 
+# Link the stdc++fs library if on gcc 7.5.0
+if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
+    target_link_libraries(srcml PRIVATE stdc++fs)
+endif()
+
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
