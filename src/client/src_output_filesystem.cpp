@@ -12,7 +12,13 @@
 #include <iostream>
 #include <srcml_utilities.hpp>
 #include <SRCMLStatus.hpp>
-#include <filesystem>
+#if defined(__GNUC__) && (__GNUC__ == 7) && (__GNUC_MINOR__ == 5) && (__GNUC_PATCHLEVEL__ == 0)
+    #include <experimental/filesystem>
+    namespace fs = std::experimental::filesystem;
+#else
+    #include <filesystem>
+    namespace fs = std::filesystem;
+#endif
 
 void src_output_filesystem(srcml_archive* srcml_arch, std::string_view output_dir, TraceLog& log) {
 
@@ -33,14 +39,14 @@ void src_output_filesystem(srcml_archive* srcml_arch, std::string_view output_di
             continue;
 
         // construct the full, relative filename
-        std::filesystem::path path(prefix);
+        fs::path path(prefix);
         path /= cfilename;
 
         // create the file path
         auto directory = path;
         directory.remove_filename();
         std::error_code ec;
-        if (!std::filesystem::create_directories(directory, ec) && ec.value() != 0) {
+        if (!fs::create_directories(directory, ec) && ec.value() != 0) {
             SRCMLstatus(ERROR_MSG, "Unable to create directory %s", directory.c_str());
             continue;
         }
