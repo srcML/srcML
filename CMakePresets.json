@@ -151,10 +151,12 @@
     {
       "name": "msvc",
       "displayName": "MSVC",
+      "inherits": ["vcpkg"],
       "description": "Default build options for MSVC",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
-      "toolchainFile": "toolchain-msvc.cmake",
       "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_C_COMPILER": "cl",
         // /Wall
         // /D_CRT_SECURE_NO_WARNINGS  # disable strcpy() warnings
         // /D_CRT_NONSTDC_NO_WARNINGS # disable read() warnings
