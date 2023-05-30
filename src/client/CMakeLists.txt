@@ -51,9 +51,9 @@ set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_D
 # With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
 set_target_properties(srcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON>)
 
-# Largest impace for PCH builds of the client
-if(SRCML_BUILD_USEPCH)
-    target_precompile_headers(srcml PRIVATE <srcml_cli.hpp> <srcml_input_src.hpp> <srcml_pipe.hpp> <ParseQueue.hpp> <src_input_libarchive.hpp> <SRCMLStatus.hpp> <WriteQueue.hpp> <ParseRequest.hpp> <TraceLog.hpp> <curl/curl.h>)
+# PreCompiled Headers configuration of the client
+if (SRCML_CLIENT_PCH)
+    target_precompile_headers(srcml PRIVATE "${SRCML_CLIENT_PCH}")
 endif()
 
 if(APPLE)

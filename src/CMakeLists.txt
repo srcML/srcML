@@ -9,8 +9,6 @@
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(SRCML_BUILD_USEPCH "Use PCH (PreCompiled Headers" OFF)
-
 # Big Sur and later macOS can build for both x86 and arm64
 string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
 if(APPLE AND OS_VERSION GREATER_EQUAL "20")

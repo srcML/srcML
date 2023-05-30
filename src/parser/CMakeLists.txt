@@ -60,6 +60,12 @@ target_include_directories(parser SYSTEM PUBLIC ${antlrsrc_SOURCE_DIR}/lib/cpp)
 target_include_directories(parser PRIVATE . ${CMAKE_GENERATED_SOURCE_DIR} PUBLIC . SYSTEM PUBLIC ${CMAKE_GENERATED_SOURCE_DIR})
 target_link_libraries(parser PRIVATE LibXml2::LibXml2 antlr)
 target_include_directories(parser PRIVATE $<TARGET_PROPERTY:TinySHA1,INTERFACE_INCLUDE_DIRECTORIES>)
+# set_target_properties(parser PROPERTIES POSITION_INDEPENDENT_CODE ON OPTIMIZE_DEPENDENCIES YES)
+
+# PreCompiled Headers configuration of the parser
+if (SRCML_PARSER_PCH)
+    target_precompile_headers(parser PRIVATE "${SRCML_PARSER_PCH}")
+endif()
 
 # With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
 set_target_properties(parser PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON
