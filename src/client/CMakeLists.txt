@@ -46,15 +46,9 @@ file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml BEFORE PRIVATE .)
 target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl cli11 ctpl_stl)
-# Link the stdc++fs library if on gcc 7.5.0
-if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
-    target_link_libraries(srcml PRIVATE stdc++fs)
-endif()
 
+# Put executable in bin directory
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-set_target_properties(srcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON>)
 
 # PreCompiled Headers configuration of the client
 if (SRCML_CLIENT_PCH)
