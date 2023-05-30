@@ -6,10 +6,6 @@
 # 
 # CMake files for the library libsrcml
 
-# Build options
-option(BUILD_LIBSRCML_STATIC "Build a static version of libsrcml" ON)
-option(LINK_LIBSRCML_STATIC "Link srcml client, tests, and examples with static version of libsrcml" OFF)
-
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt REQUIRED)
 find_package(Iconv REQUIRED)
@@ -141,11 +137,12 @@ install(EXPORT libsrcml_static_Targets
         FILE srcML-static-targets.cmake
         COMPONENT DEVLIBS)
 
-if(LINK_LIBSRCML_STATIC AND BUILD_LIBSRCML_STATIC)
-    add_library(srcML::LibsrcML ALIAS libsrcml_static)
+if(BUILD_SHARED_LIBS)
+    set(SRCML_LIBSRCML_LINK_DEFAULT "libsrcml_shared")
 else()
-    add_library(srcML::LibsrcML ALIAS libsrcml_shared)
+    set(SRCML_LIBSRCML_LINK_DEFAULT "libsrcml_static")
 endif()
+add_library(srcML::LibsrcML ALIAS "${SRCML_LIBSRCML_LINK_DEFAULT}")
 
 # install the libsrcml include file
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT DEVLIBS)
