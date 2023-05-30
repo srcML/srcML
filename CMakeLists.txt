@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 3.24)
 # Also note that without this, the install target places the files in "C:/Program Files (x86)/srcML",
 # while the package installer places it in "C:/Program Files/srcML"
 # Note that this overwrites any changes to the CMAKE_INSTALL_PREFIX from the command line cmake options.
-if(WIN32)
+if(WIN32 AND NOT DEFINED CMAKE_INSTALL_PREFIX)
   set(CMAKE_INSTALL_PREFIX "C:/Program Files/srcML" CACHE PATH "Set Windows install dir" FORCE)
 endif()
 
