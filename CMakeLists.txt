@@ -42,7 +42,7 @@ endif()
 
 # Determine distribution
 # Does not work for all distributions, but does work for supported Linux distributions
-if(EXISTS /etc/os-release)
+if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
     file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
 endif()
 
