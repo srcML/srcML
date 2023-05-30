@@ -25,10 +25,6 @@ target_include_directories(libsrcml
         .
 )
 
-# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON
-    OPTIMIZE_DEPENDENCIES YES)
-
 # Use the libsrcml/srcml.h rather than the /usr/local/include/srcml.h
 target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 

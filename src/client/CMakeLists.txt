@@ -56,10 +56,9 @@ if (SRCML_CLIENT_PCH)
     target_precompile_headers(srcml PRIVATE "${SRCML_CLIENT_PCH}")
 endif()
 
-if(APPLE)
-    # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
-    set_target_properties(srcml PROPERTIES LINK_FLAGS "-exported_symbols_list /dev/null")
-endif()
+# Set the flags for the srcml client
+target_compile_options(srcml PRIVATE "${SRCML_CLIENT_COMPILE_FLAGS}")
+set_target_properties(srcml PROPERTIES LINK_FLAGS "${SRCML_CLIENT_LINK_FLAGS}")
 
 # Dependencies are installed via libsrcml
 install(TARGETS srcml COMPONENT SRCML)
