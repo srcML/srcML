@@ -84,6 +84,10 @@ set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_S
 # Apply preset linker flags for libsrcml
 set_target_properties(libsrcml_shared libsrcml_static PROPERTIES LINK_FLAGS "${SRCML_LIBSRCML_LINK_FLAGS}")
 
+# PreCompiled Headers configuration of libsrcml
+if (SRCML_LIBSRCML_PCH)
+    target_precompile_headers(libsrcml_shared PRIVATE "${SRCML_LIBSRCML_PCH}")
+    target_precompile_headers(libsrcml_static PRIVATE "${SRCML_LIBSRCML_PCH}")
 endif()
 
 # which types of libraries
