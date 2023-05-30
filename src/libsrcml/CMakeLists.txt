@@ -101,13 +101,7 @@ endif()
 include(CMakePackageConfigHelpers)
 
 # directory to put the config files
-if(WIN32)
-    set(CONFIG_FILE_DESTINATION "cmake")
-elseif(APPLE)
-    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/srcml/")
-else()
-    set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/srcml")
-endif()
+set(CONFIG_FILE_DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/srcml")
 
 install(EXPORT libsrcml_shared_Targets
         DESTINATION "${CONFIG_FILE_DESTINATION}"
