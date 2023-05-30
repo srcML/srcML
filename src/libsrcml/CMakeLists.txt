@@ -35,9 +35,10 @@ target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::Li
 
 # Merge all object code into one object file to build static library from
 # Use this to build static library as it 1) hides filenames 2) hides symbols that are internal only
+set(LIBSRCML_OBJECT_FILENAME libsrcml${CMAKE_CXX_OUTPUT_EXTENSION})
 add_custom_command(
-  OUTPUT libsrcml.o
-  COMMAND ld -r $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> -o libsrcml.o
+  OUTPUT ${LIBSRCML_OBJECT_FILENAME}
+  COMMAND ld -r $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> -o ${LIBSRCML_OBJECT_FILENAME}
   DEPENDS libsrcml parser antlr
   COMMAND_EXPAND_LISTS
 )
