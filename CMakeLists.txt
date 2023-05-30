@@ -12,11 +12,6 @@ endif()
 
 cmake_minimum_required(VERSION 3.24)
 
-# Handles problem of commandline tools interfering with Xcode includes
-if(APPLE)
-    set(PKG_CONFIG_EXECUTABLE "/usr/bin/true")
-endif()
-
 # If performed here, before project(), then this prefix becomes part of the CMAKE_SYSTEM_PREFIX_PATH
 # and then the installed version of srcML can be found by the tests without building srcml.
 # Note that the default for the install prefix is "C:/Program Files (x86)/srcML", which contradicts
