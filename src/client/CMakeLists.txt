@@ -8,9 +8,6 @@
 
 find_package(LibArchive 3 REQUIRED)
 find_package(CURL REQUIRED)
-if(NOT MSVC)
-    find_package(Threads REQUIRED)
-endif()
 
 include(FetchContent)
 FetchContent_Declare(cli11
@@ -37,10 +34,6 @@ file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml BEFORE PRIVATE .)
 target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl cli11 ctpl_stl)
-if(NOT MSVC)
-    target_link_libraries(srcml PRIVATE Threads::Threads)
-endif()
-
 # Link the stdc++fs library if on gcc 7.5.0
 if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
     target_link_libraries(srcml PRIVATE stdc++fs)

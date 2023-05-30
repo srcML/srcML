@@ -30,11 +30,6 @@ target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURR
 
 # libsrcml dependencies
 target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt parser)
-if(NOT MSVC)
-    find_package(Threads REQUIRED)
-    target_link_libraries(libsrcml PRIVATE Threads::Threads)
-endif()
-
 # target_compile_options(libsrcml PUBLIC "-fvisibility=hidden")
 
 # precompiled header list of most commonly used
