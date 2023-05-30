@@ -9,24 +9,6 @@
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Big Sur and later macOS can build for both x86 and arm64
-string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
-if(APPLE AND OS_VERSION GREATER_EQUAL "20")
-    include(CheckCXXCompilerFlag)
-
-    set(ARCHITECTURES "x86_64;arm64")
-    check_cxx_compiler_flag("-arch x86_64" PLATFORM_SUPPORTS_x86_64)
-    check_cxx_compiler_flag("-arch arm64" PLATFORM_SUPPORTS_arm64)
-
-    if(PLATFORM_SUPPORTS_x86_64 AND PLATFORM_SUPPORTS_arm64)
-        list(FIND CMAKE_OSX_ARCHITECTURES "x86_64" AMD_POSITION)
-        list(FIND CMAKE_OSX_ARCHITECTURES "arm64" ARM_POSITION)
-        if(AMD_POSITION EQUAL -1 OR ARM_POSITION EQUAL -1)
-            message(STATUS "Detected ability for a universal build. To do so, use -DCMAKE_OSX_ARCHITECTURE=\"${ARCHITECTURES}\"")
-        endif()
-    endif()
-endif()
-
 # Clang profiling
 option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
 if(CLANG_TIME_TRACE)
