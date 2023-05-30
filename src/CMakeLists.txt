@@ -2,7 +2,7 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2013-2022 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
 # 
 # CMake files for building from source
 
