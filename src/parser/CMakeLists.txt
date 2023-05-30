@@ -65,6 +65,8 @@ if (SRCML_PARSER_PCH)
     target_precompile_headers(parser PRIVATE "${SRCML_PARSER_PCH}")
 endif()
 
+target_compile_options(antlr PRIVATE ${SRCML_ANTLR_DISABLED_WARNINGS})
+target_compile_options(parser PRIVATE ${SRCML_PARSER_DISABLED_WARNINGS})
 
 # 
 # RunAntlr
