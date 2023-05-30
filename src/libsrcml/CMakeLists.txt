@@ -76,14 +76,14 @@ target_link_libraries(libsrcml_shared PRIVATE libsrcml parser antlr)
 target_include_directories(libsrcml_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 if(WIN32)
-    # On Windows, generate a debug of the release for the PDB file, but use optimization options
-    set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME libsrcml LINK_FLAGS_RELEASE "/DEBUG /OPT:REF /OPT:ICF")
-    set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME libsrcmls LINK_FLAGS_RELEASE "/LTCG:OFF")
+    set(SRCML_LIBSRCML_SHARED_OUTPUT_NAME "libsrcml")
+    set(SRCML_LIBSRCML_STATIC_OUTPUT_NAME "libsrcmls")
 else()
-    # The output name automatically prepends "lib"
-    set_target_properties(libsrcml_shared libsrcml_static PROPERTIES OUTPUT_NAME srcml)
-    set_target_properties(libsrcml_static PROPERTIES INTERPROCEDURAL_OPTIMIZATION ON)
+    set(SRCML_LIBSRCML_SHARED_OUTPUT_NAME "srcml")
+    set(SRCML_LIBSRCML_STATIC_OUTPUT_NAME "srcml")
 endif()
+set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_SHARED_OUTPUT_NAME}" LINK_FLAGS_RELEASE "${SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE}")
+set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_STATIC_OUTPUT_NAME}" LINK_FLAGS_RELEASE "${SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE}")
 
 # Restrict exported symbols to those in the export list
 # The "-Wl" passes the option to the linker
