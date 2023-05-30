@@ -6,7 +6,9 @@
 # 
 # The master CMake project file for srcML
 
-set(VCPKG_BUILD_TYPE "release")
+if(DEFINED ENV{VCPKG_ROOT} OR DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(VCPKG_BUILD_TYPE "release")
+endif()
 
 cmake_minimum_required(VERSION 3.24)
 
