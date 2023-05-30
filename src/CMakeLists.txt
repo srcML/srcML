@@ -16,10 +16,6 @@ include(InstallRequiredSystemLibraries)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 
-# CMake 3.24 URL download timestamp
-if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24")
-    cmake_policy(SET CMP0135 NEW)
-endif()
 # Exeternally defined compile and link options
 add_compile_options("${SRCML_GLOBAL_COMPILE_OPTIONS}")
 add_link_options("${SRCML_GLOBAL_LINK_OPTIONS}")
