@@ -77,39 +77,39 @@ set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 # Generate user and development tar.gz's
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
-if(NOT MSVC)
-    # Client component, SRCML, is just one component so it appears as on item
-    # for installers that let you pick what to install
-    # Development group, SRCMLDEV, is composed of multiple components
-    include(CPackComponent)
-    cpack_add_component(SRCML
-                        DISPLAY_NAME "srcml"
-                        DESCRIPTION "srcml cli program with required library"
-                        REQUIRED)
+# Client component, SRCML, is just one component so it appears as on item
+# for installers that let you pick what to install
+# Development group, SRCMLDEV, is composed of multiple components
+include(CPackComponent)
+cpack_add_component(SRCML
+                    DISPLAY_NAME "srcml"
+                    DESCRIPTION "srcml cli program with required library"
+                    REQUIRED)
 
-    cpack_add_component_group(SRCMLDEV
-                        DISPLAY_NAME "Development"
-                        DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
+cpack_add_component_group(SRCMLDEV
+                    DISPLAY_NAME "Development"
+                    DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
 
-    cpack_add_component(INCLUDE
-                        DISPLAY_NAME "srcml.h"
-                        DESCRIPTION "Include file, srcml.h"
-                        DISABLED
-                        GROUP SRCMLDEV)
+cpack_add_component(INCLUDE
+                    DISPLAY_NAME "srcml.h"
+                    DESCRIPTION "Include file, srcml.h"
+                    DISABLED
+                    GROUP SRCMLDEV)
 
-    cpack_add_component(DEVLIBS
-                        DISPLAY_NAME "libsrcml.a"
-                        DESCRIPTION "Development libraries, i.e.., static library"
-                        DISABLED
-                        GROUP SRCMLDEV)
+cpack_add_component(DEVLIBS
+                    DISPLAY_NAME "libsrcml.a"
+                    DESCRIPTION "Development libraries, i.e.., static library"
+                    DISABLED
+                    GROUP SRCMLDEV)
 
-    cpack_add_component(EXAMPLES
-                        DISPLAY_NAME "libsrcml examples"
-                        DESCRIPTION "Include file, srcml.h"
-                        DISABLED
-                        GROUP SRCMLDEV)
+cpack_add_component(EXAMPLES
+                    DISPLAY_NAME "libsrcml examples"
+                    DESCRIPTION "Include file, srcml.h"
+                    DISABLED
+                    GROUP SRCMLDEV)
 
-endif()
+configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
+set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
 # specific configurations
 if (CPACK_GENERATOR MATCHES "RPM")
