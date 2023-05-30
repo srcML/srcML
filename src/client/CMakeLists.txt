@@ -6,6 +6,18 @@
 # 
 # CMake files for the srcML client
 
+# if(NOT srcML::LibsrcML)
+#     find_package(srcml REQUIRED)
+# endif()
+
+# Configure libarchive on macOS
+if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
+    set(APPLE_NON_VCPKG ON)
+endif()
+if(APPLE_NON_VCPKG)
+    include(macos-libarchive.cmake)
+endif()
+
 find_package(LibArchive 3 REQUIRED)
 find_package(CURL REQUIRED)
 
