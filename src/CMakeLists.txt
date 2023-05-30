@@ -9,12 +9,6 @@
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Clang profiling
-option(CLANG_TIME_TRACE "Enable clang profiling." OFF)
-if(CLANG_TIME_TRACE)
-    add_compile_options(-ftime-trace)
-endif()
-
 if(MSVC)
     add_compile_options(/Zc:throwingNew)
     string(REPLACE "Ob2" "Ob3" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
