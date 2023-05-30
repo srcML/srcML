@@ -30,10 +30,6 @@ target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURR
 
 # libsrcml dependencies
 target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt parser)
-# precompiled header list of most commonly used
-if(SRCML_BUILD_USEPCH)
-    target_precompile_headers(libsrcml PRIVATE <srcmlns.hpp> <srcml_types.hpp> <srcml_sax2_utilities.hpp> <srcml_translator.hpp> <srcml_sax2_reader.hpp>)
-endif()
 
 # Building static library for srcML
 
