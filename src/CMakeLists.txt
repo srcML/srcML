@@ -115,43 +115,8 @@ endif()
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT SRCML)
 include(InstallRequiredSystemLibraries)
 
-# standard compile options
-add_compile_options(
-    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
-    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wextra>
-    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-pedantic>
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-    $<$<CXX_COMPILER_ID:MSVC>:/Wall>
-    $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_SECURE_NO_WARNINGS>  # disable strcpy() warnings
-    $<$<CXX_COMPILER_ID:MSVC>:/D_CRT_NONSTDC_NO_WARNINGS> # disable read() warnings
-)
-
-# specific warnings
-option(ENABLE_BUILD_WARNINGS "Enable build warnings" OFF)
-if(NOT ENABLE_BUILD_WARNINGS)
-    add_compile_options(
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4068> # unknown pragma
-        # $<$<CXX_COMPILER_ID:MSVC>:/wd4101> # unreferenced local variable
-        # $<$<CXX_COMPILER_ID:MSVC>:/wd4519> # unmarked inlining notification warning
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4514> # removed inline function not called (in one context)
-            # $<$<CXX_COMPILER_ID:MSVC>:/wd4668> # preprocessor symbol not defined but used in an #if
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4710> # unmarked inlining notification warning
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4820> # byte padding
-        $<$<CXX_COMPILER_ID:MSVC>:/wd5039> # pointer or reference to potentially throwing function passed to 'extern "C"' function under -EHc
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4711> # selected for automatic inline expansion
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4706> # assigment within conditional expression
-
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4625> # copy constructor was implicitly defined as deleted
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4626> # assignment operator was implicitly defined as deleted
-        $<$<CXX_COMPILER_ID:MSVC>:/wd5026> # move constructor was implicitly defined as deleted
-        $<$<CXX_COMPILER_ID:MSVC>:/wd5027> # move assignment operator was implicitly defined as deleted
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4668> # is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4868> # compiler may not enforce left-to-right evaluation order in braced initializer list
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4371> # layout of class may have changed from a previous version of the compiler due to better packing of member
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4623> # default constructor was implicitly defined as deleted
-        $<$<CXX_COMPILER_ID:MSVC>:/wd5045> # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
-    )
-endif()
 
 # CMake 3.24 URL download timestamp
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24")

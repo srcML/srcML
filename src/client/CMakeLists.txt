@@ -64,11 +64,6 @@ endif()
 # Dependencies are installed via libsrcml
 install(TARGETS srcml COMPONENT SRCML)
 
-target_compile_options(srcml PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/wd4355> # this': used in base member initializer list
-    $<$<CXX_COMPILER_ID:MSVC>:/wd5204> # class has virtual functions, but its trivial destructor is not virtual
-)
-
 if(MSVC)
     set_source_files_properties(srcml_cli.cpp PROPERTIES COMPILE_FLAGS /wd4866)
 endif()
