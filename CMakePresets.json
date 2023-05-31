@@ -68,7 +68,6 @@
         // With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
         "SRCML_GLOBAL_COMPILE_OPTIONS": "",
         "SRCML_GLOBAL_LINK_OPTIONS": "",
-        // /wd4100 # unreferenced formal parameter
         // /wd4242 # 'argument': conversion from 'T' to '_Elem', possible loss of data
         // /wd4244 # 'argument': conversion from 'T' to '_Elem', possible loss of data
         // /wd4244 # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
@@ -81,8 +80,7 @@
         // /wd4530 # C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
         // /wd4577 # 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
         // /wd5031 # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
-        "SRCML_ANTLR_DISABLED_WARNINGS": "/wd4100;/wd4242;/wd4244;/wd4244;/wd4267;/wd4355;/wd4365;/wd4365;/wd4458;/wd4477;/wd4530;/wd4577;/wd5031;",
-        // /wd4100 # unreferenced formal parameter
+        "SRCML_ANTLR_DISABLED_WARNINGS": "/wd4242;/wd4244;/wd4244;/wd4267;/wd4355;/wd4365;/wd4365;/wd4458;/wd4477;/wd4530;/wd4577;/wd5031;",
         // /wd4242 # 'argument': conversion from 'T' to '_Elem', possible loss of data
         // /wd4244 # 'argument': conversion from 'T' to '_Elem', possible loss of data
         // /wd4244 # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
@@ -99,7 +97,7 @@
         // /wd5031 # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
         // /wd5262 # implicit fall-through occurs here; are you missing a break statement? Use [[fallthrough]] when a break statement is intentionally omitted between cases
         // /wd5264 # 'int const `char const * __cdecl `anonymous namespace'::positoa(int)'::`2'::SIZE': 'const' variable is not used
-        "SRCML_PARSER_DISABLED_WARNINGS": "/wd4100;/wd4242;/wd4244;/wd4244;/wd4267;/wd4355;/wd4365;/wd4365;/wd4458;/wd4459;/wd4477;/wd4530;/wd4577;/wd4701;/wd5031;/wd5262;/wd5264;",
+        "SRCML_PARSER_DISABLED_WARNINGS": "/wd4242;/wd4244;/wd4244;/wd4267;/wd4355;/wd4365;/wd4365;/wd4458;/wd4459;/wd4477;/wd4530;/wd4577;/wd4701;/wd5031;/wd5262;/wd5264;",
         "SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF",
         "SRCML_LIBSRCML_STATIC_LINK_FLAGS_RELEASE": "/LTCG:OFF",
         // wd4355 # this': used in base member initializer list
