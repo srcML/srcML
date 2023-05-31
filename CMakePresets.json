@@ -68,29 +68,29 @@
         // With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
         "SRCML_GLOBAL_COMPILE_OPTIONS": "",
         "SRCML_GLOBAL_LINK_OPTIONS": "",
-        // /wd4100> # unreferenced formal parameter
-        // /wd4242> # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        // /wd4244> # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        // /wd4244> # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
-        // /wd4267> # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-        // /wd4355> # this': used in base member initializer list
-        // /wd4365> # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
-        // /wd4365> # conversion from 'int' to 'unsigned int',
-        // /wd4458> # declaration of 'index' hides class member
-        // /wd4477> # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
-        // /wd5031> # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
-        "SRCML_ANTLR_DISABLED_WARNINGS": "/wd4100>;/wd4242>;/wd4244>;/wd4244>;/wd4267>;/wd4355>;/wd4365>;/wd4365>;/wd4458>;/wd4477>;/wd5031>",
-        // /wd4100> # unreferenced formal parameter
-        // /wd4242> # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        // /wd4244> # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        // /wd4244> # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
-        // /wd4267> # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-        // /wd4355> # this': used in base member initializer list
-        // /wd4365> # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
-        // /wd4365> # conversion from 'int' to 'unsigned int',
-        // /wd4458> # declaration of 'index' hides class member
-        // /wd4477> # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
-        // /wd5031> # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
+        // /wd4100 # unreferenced formal parameter
+        // /wd4242 # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        // /wd4244 # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        // /wd4244 # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
+        // /wd4267 # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+        // /wd4355 # this': used in base member initializer list
+        // /wd4365 # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
+        // /wd4365 # conversion from 'int' to 'unsigned int',
+        // /wd4458 # declaration of 'index' hides class member
+        // /wd4477 # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
+        // /wd5031 # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
+        "SRCML_ANTLR_DISABLED_WARNINGS": "/wd4100;/wd4242;/wd4244;/wd4244;/wd4267;/wd4355;/wd4365;/wd4365;/wd4458;/wd4477;/wd5031>",
+        // /wd4100 # unreferenced formal parameter
+        // /wd4242 # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        // /wd4244 # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        // /wd4244 # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
+        // /wd4267 # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+        // /wd4355 # this': used in base member initializer list
+        // /wd4365 # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
+        // /wd4365 # conversion from 'int' to 'unsigned int',
+        // /wd4458 # declaration of 'index' hides class member
+        // /wd4477 # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
+        // /wd5031 # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
         "SRCML_PARSER_DISABLED_WARNINGS": "/wd4100;/wd4242;/wd4244;/wd4244;/wd4267;/wd4355;/wd4365;/wd4365;/wd4458;/wd4477;/wd5031;",
         "SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF",
         "SRCML_LIBSRCML_STATIC_LINK_FLAGS_RELEASE": "/LTCG:OFF",
