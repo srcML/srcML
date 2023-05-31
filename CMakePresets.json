@@ -7,145 +7,30 @@
   },
   "configurePresets": [
     {
-      "name": "ccache",
-      "hidden": true,
-      "description": "ccache setup",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER_LAUNCHER": "ON"
-      }
-    },
-    {
-      "name": "linux",
-      // "hidden": true,
-      "description": "Default build options for Linux",
-      "generator": "Ninja",
-      "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "-Wall -Wextra -pedantic",
-        // "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON",
-        "SRCML_ANTLR_DISABLED_WARNINGS": "-Wno-format;-Wno-misleading-indentation;-Wno-deprecated-declarations",
-        "SRCML_PARSER_DISABLED_WARNINGS": "-Wno-unused-but-set-variable"
-      }
-    },
-    {
-      "name": "pch",
-      "description": "Use PCH",
-      "cacheVariables": {
-        // Determined via clang-trace
-        "SRCML_CLIENT_PCH": "<srcml_cli.hpp>;<srcml_input_src.hpp>;<srcml_pipe.hpp>;<ParseQueue.hpp>;<src_input_libarchive.hpp>;<SRCMLStatus.hpp>;<WriteQueue.hpp>;<ParseRequest.hpp>;<TraceLog.hpp>;<curl/curl.h>",
-        "SRCML_LIBSRCML_PCH": "<srcmlns.hpp>;<srcml_types.hpp>;<srcml_sax2_utilities.hpp>;<srcml_translator.hpp>;<srcml_sax2_reader.hpp>",
-        "SRCML_PARSER_PCH": "<srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp> <UTF8CharBuffer.hpp>"
-      }
-    },
-    {
-      "name": "gcc",
-      "inherits": "linux",
-      "displayName": "GCC",
-      "description": "Default build options for GCC",
-      "toolchainFile": "toolchain-gcc.cmake",
-      "cacheVariables": {
-        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,--version-script=${sourceDir}/src/libsrcml/libsrcml.version"
-      }
-    },
-    {
-      "name": "gcc-release",
-      "inherits": ["gcc", "lto"],
-      "displayName": "GCC Release",
-      "description": "Default build options for GCC release",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
       "name": "ubuntu-release",
-      "inherits": ["gcc-release"],
-      "displayName": "GCC Release",
-      "description": "Default build options for GCC release",
-      "cacheVariables": {
-        "CPACK_GENERATOR": "DEB;TGZ;TBZ2"
-      }
+      "displayName": "Ubuntu Release",
+      "description": "Default build options for Ubuntu release",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "inherits": ["gcc-release"]
     },
     {
       "name": "rpm-release",
-      "inherits": ["gcc-release"],
       "displayName": "GCC Release",
       "description": "Default build options for GCC release",
-      "cacheVariables": {
-        "CPACK_GENERATOR": "RPM;TGZ;TBZ2"
-      }
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "inherits": ["gcc-release"]
     },
     {
-      "name": "clang",
-      "inherits": "linux",
-      "displayName": "Clang",
-      "description": "Default build options for Clang",
-      "cacheVariables": {
-        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,-exported_symbols_list ${sourceDir}/src/libsrcml/export_list"
-      }
-    },
-    {
-      "name": "clang-trace",
-      "inherits": "clang",
-      "displayName": "Clang Trace",
-      "description": "Default build options for Clang trace",
-      "cacheVariables": {
-        "CMAKE_C_FLAGS": "-ftime-trace",
-        "CMAKE_CXX_FLAGS": "-ftime-trace"
-      }
-    },
-    {
-      "name": "macos-universal",
-      "displayName": "macOS Universal Binary",
-      "description": "Universal binary for macOS",
+      "name": "macos-release",
+      "inherits": ["clang-release"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "hidden": true,
+      "displayName": "macOS Release",
+      "description": "Default build options for macOS release",
       "cacheVariables": {
-        // Build for both x86 and arm64
-        "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64"
-      }
-    },
-    {
-      "name": "clang-release",
-      "inherits": ["clang", "lto"],
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "displayName": "Clang Release",
-      "description": "Default build options for Clang release",
-      "cacheVariables": {
-        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
+        // "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
         "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
         "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "clang-release-ccache",
-      "inherits": ["clang-release", "ccache"],
-      "displayName": "Clang Release ccache",
-      "description": "Default build options for Clang release with ccache"
-    },
-    {
-      "name": "lto",
-      "hidden": true,
-      "cacheVariables": {
-        "SRCML_GLOBAL_COMPILE_OPTIONS": "-flto",
-        "SRCML_GLOBAL_LINK_OPTIONS": "-flto;-dead_strip"
-      }
-    },
-    {
-      "name": "macos-fixxcodeconflicts",
-      "cacheVariables": {
-        "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
-      }
-    },
-    {
-      "name": "vcpkg",
-      "hidden": true,
-      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-    },
-    {
-      "name": "macos-vcpkg",
-      "inherits": ["clang-release", "vcpkg"],
-      "cacheVariables": {
-        "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
       }
     },
     {
@@ -212,6 +97,131 @@
         // wd4355 # this': used in base member initializer list
         // wd5204 # class has virtual functions, but its trivial destructor is not virtual
         "SRCML_CLIENT_LINK_FLAGS": "/wd4355;/wd5204"
+      }
+    },
+    {
+      "name": "ccache",
+      "hidden": true,
+      "description": "ccache setup",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER_LAUNCHER": "ON"
+      }
+    },
+    {
+      "name": "linux",
+      "description": "Default build options for Linux",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -pedantic",
+        // "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON",
+        "SRCML_ANTLR_DISABLED_WARNINGS": "-Wno-format;-Wno-misleading-indentation;-Wno-deprecated-declarations",
+        "SRCML_PARSER_DISABLED_WARNINGS": "-Wno-unused-but-set-variable"
+      }
+    },
+    {
+      "name": "pch",
+      "description": "Use PCH",
+      "hidden": true,
+      "cacheVariables": {
+        // Determined via clang-trace
+        "SRCML_CLIENT_PCH": "<srcml_cli.hpp>;<srcml_input_src.hpp>;<srcml_pipe.hpp>;<ParseQueue.hpp>;<src_input_libarchive.hpp>;<SRCMLStatus.hpp>;<WriteQueue.hpp>;<ParseRequest.hpp>;<TraceLog.hpp>;<curl/curl.h>",
+        "SRCML_LIBSRCML_PCH": "<srcmlns.hpp>;<srcml_types.hpp>;<srcml_sax2_utilities.hpp>;<srcml_translator.hpp>;<srcml_sax2_reader.hpp>",
+        "SRCML_PARSER_PCH": "<srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp> <UTF8CharBuffer.hpp>"
+      }
+    },
+    {
+      "name": "gcc",
+      "inherits": ["linux"],
+      "displayName": "GCC",
+      "description": "Default build options for GCC",
+      "toolchainFile": "toolchain-gcc.cmake",
+      "cacheVariables": {
+        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,--version-script=${sourceDir}/src/libsrcml/libsrcml.version"
+      }
+    },
+    {
+      "name": "gcc-release",
+      "inherits": ["gcc", "lto"],
+      "displayName": "GCC Release",
+      "description": "Default build options for GCC release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "clang",
+      "inherits": ["linux"],
+      "displayName": "Clang",
+      "description": "Default build options for Clang",
+      "cacheVariables": {
+        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,-exported_symbols_list ${sourceDir}/src/libsrcml/export_list"
+      }
+    },
+    {
+      "name": "clang-trace",
+      "inherits": ["clang"],
+      "displayName": "Clang Trace",
+      "description": "Default build options for Clang trace",
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-ftime-trace",
+        "CMAKE_CXX_FLAGS": "-ftime-trace"
+      }
+    },
+    {
+      "name": "macos-universal",
+      "displayName": "macOS Universal Binary",
+      "description": "Universal binary for macOS",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "hidden": true,
+      "cacheVariables": {
+        // Build for both x86 and arm64
+        "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64"
+      }
+    },
+    {
+      "name": "clang-release",
+      "inherits": ["clang", "lto"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "displayName": "Clang Release",
+      "description": "Default build options for Clang release",
+      "cacheVariables": {
+        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
+        // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
+        "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "clang-release-ccache",
+      "inherits": ["clang-release", "ccache"],
+      "displayName": "Clang Release ccache",
+      "description": "Default build options for Clang release with ccache"
+    },
+    {
+      "name": "lto",
+      "hidden": true,
+      "cacheVariables": {
+        "SRCML_GLOBAL_COMPILE_OPTIONS": "-flto",
+        "SRCML_GLOBAL_LINK_OPTIONS": "-flto;-dead_strip"
+      }
+    },
+    {
+      "name": "macos-fixxcodeconflicts",
+      "cacheVariables": {
+        "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
+      }
+    },
+    {
+      "name": "vcpkg",
+      "hidden": true,
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "macos-vcpkg",
+      "inherits": ["clang-release", "vcpkg"],
+      "cacheVariables": {
+        "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
       }
     }
   ],
