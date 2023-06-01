@@ -36,9 +36,9 @@
     {
       "name": "msvc",
       "displayName": "MSVC",
-      "inherits": ["vcpkg"],
       "description": "Default build options for MSVC",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "toolchainFile": "toolchain-msvc.cmake",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "cl",
         "CMAKE_C_COMPILER": "cl",
