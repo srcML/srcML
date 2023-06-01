@@ -7,7 +7,12 @@
 # MSVC-specific tool configuration
 
 # Use vcpkg
-include("${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+if(DEFINED ENV{VCPKG_ROOT})
+    message(STATUS "Building with vcpkg")
+    include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+else()
+    message(ERROR "VCPKG_ROOT not defined")
+endif()
 
 # Change to /Ob3 from /Ob2 optimization for MSVC release
 string(REPLACE "/Ob2" "/Ob3" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
