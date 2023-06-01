@@ -109,14 +109,5 @@ elseif (APPLE)
     include(macos.cmake)
 endif()
 
-# # Perform any platform-specific fixes or updating of the installer
-# # THis noop version basically just runs the normal packaging, e.g., cpack
-# if(NOT TARGET gen_package)
-#     add_custom_target(gen_package
-#        COMMAND ${CMAKE_COMMAND} --build . --target package
-#        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-#        VERBATIM)
-# endif()
-
 # needs to be last so not overwritten
 include(CPack)
