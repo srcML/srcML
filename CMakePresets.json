@@ -223,10 +223,28 @@
   ],
   "packagePresets": [
     {
-      "name": "ci-sdk",
-      "configurePreset": "linux",
-      "generators": [ "7Z", "ZIP" ],
-      "configurations": [ "Debug", "Release" ]
+      "name": "rpm",
+      "configurePreset": "rpm-release",
+      "generators": [ "RPM", "TGZ", "TBZ2" ],
+      "configurations": [ "Release" ]
+    },
+    {
+      "name": "deb",
+      "configurePreset": "ubuntu-release",
+      "generators": [ "DEB", "TGZ", "TBZ2" ],
+      "configurations": [ "Release" ]
+    },
+    {
+      "name": "macos",
+      "configurePreset": "macos-release",
+      "generators": [ "productbuild", "TGZ", "TBZ2" ],
+      "configurations": [ "Release" ]
+    },
+    {
+      "name": "msvc",
+      "configurePreset": "msvc",
+      "generators": [ "WIX", "ZIP" ],
+      "configurations": [ "Release" ]
     }
   ]
 }
