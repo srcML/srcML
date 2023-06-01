@@ -25,22 +25,6 @@ set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
 # desktop links
 set(CPACK_CREATE_DESKTOP_LINKS "${CPACK_PACKAGE_NAME}")
 
-# Generator settings
-if(WIN32)
-    set(CPACK_GENERATOR "WIX;ZIP")
-elseif(APPLE)
-    set(CPACK_GENERATOR "productbuild;TGZ;TBZ2")
-else()
-    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-        set(CPACK_GENERATOR "TGZ;TBZ2")
-    elseif(DISTRO MATCHES "Ubuntu")
-        set(CPACK_GENERATOR "DEB;TGZ;TBZ2")
-    else()
-        set(CPACK_GENERATOR "RPM;TGZ;TBZ2")
-    endif()
-endif()
-message(STATUS "CPack generators: ${CPACK_GENERATOR}")
-
 # summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 
@@ -110,6 +94,9 @@ cpack_add_component(EXAMPLES
 
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
+
+# Generator settings
+message(STATUS "CPack generators: ${CPACK_GENERATOR}")
 
 # specific configurations
 if (CPACK_GENERATOR MATCHES "RPM")
