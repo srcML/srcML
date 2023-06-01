@@ -13,3 +13,5 @@ set(COMPILE_OPTIONS "/Zc:throwingNew")
 
 set(CONFIG_FILE_DESTINATION "cmake")
 
+# MSVC stopped automatically defining this
+add_definitions(-DWIN32)
