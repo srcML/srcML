@@ -17,7 +17,7 @@ endif()
 # Change to /Ob3 from /Ob2 optimization for MSVC release
 string(REPLACE "/Ob2" "/Ob3" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 
-set(COMPILE_OPTIONS "/Zc:throwingNew")
+add_compile_options(/Zc:throwingNew /EHsc)
 
 set(CONFIG_FILE_DESTINATION "cmake")
 
