@@ -27,6 +27,9 @@ set(CPACK_ARCHIVE_COMPONENT_INSTALL OFF)
 install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION . COMPONENT SRCML)
 set(CPACK_WIX_PRODUCT_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 
+# Prevent start menu shortcut
+set(CPACK_WIX_PROGRAM_MENU_FOLDER "")
+
 # directory name
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "srcML")
 
