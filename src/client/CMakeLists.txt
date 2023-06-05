@@ -63,16 +63,7 @@ set_target_properties(srcml PROPERTIES LINK_FLAGS "${SRCML_CLIENT_LINK_FLAGS}")
 install(TARGETS srcml COMPONENT SRCML)
 
 # On Windows with vcpkg, install all the dlls that the vcpkg used
-if(WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
-
-    # Install the libsrcml library depdencies
-    set(VCPKG_SRCML_DEPENDENCIES "libarchive;libcurl;liblzma;zlib;bzip2")
-    foreach(LIBRARY IN ITEMS ${VCPKG_SRCML_DEPENDENCIES})
-        message("INSTALL: ${LIBRARY}")
-        install(FILES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION bin COMPONENT SRCML)
-    endforeach()
-
-endif()
+# Handled in libsrcml
 
 if(MSVC)
     set_source_files_properties(srcml_cli.cpp PROPERTIES COMPILE_FLAGS /wd4866)
