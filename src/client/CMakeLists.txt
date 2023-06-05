@@ -64,8 +64,14 @@ install(TARGETS srcml COMPONENT SRCML)
 
 # On Windows with vcpkg, install all the dlls that the vcpkg used
 if(WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
-    # Install the direct library dependencies
-    install(FILES $<TARGET_RUNTIME_DLLS:libsrcml_shared> DESTINATION bin COMPONENT SRCML)
+
+    # Install the libsrcml library depdencies
+    set(VCPKG_SRCML_DEPENDENCIES "libarchive;libcurl;liblzma;zlib;bzip2")
+    foreach(LIBRARY IN ITEMS ${VCPKG_SRCML_DEPENDENCIES})
+        message("INSTALL: ${LIBRARY}")
+        install(FILES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION bin COMPONENT SRCML)
+    endforeach()
+
 endif()
 
 if(MSVC)

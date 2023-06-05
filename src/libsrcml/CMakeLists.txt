@@ -150,15 +150,15 @@ add_library(srcML::LibsrcML ALIAS "${SRCML_LIBSRCML_LINK_DEFAULT}")
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT DEVLIBS)
 
 # On Windows with vcpkg, install all the dlls that the vcpkg installed
-# NOTE: Would be better to use $<TARGET_RUNTIME_DLLS:libsrcml_shared>, but that does not include
-# indirect dependencies, e.g., bzip2 for libxml
 if(WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
 
-    # Install the direct library dependencies
-    install(FILES $<TARGET_RUNTIME_DLLS:libsrcml_shared> DESTINATION bin COMPONENT SRCML)
+    # Install the libsrcml library depdencies
+    set(VCPKG_SRCML_DEPENDENCIES "libxml2;libiconf;liblzma;zlib")
+    foreach(LIBRARY IN ITEMS ${VCPKG_SRCML_DEPENDENCIES})
+        message("INSTALL: ${LIBRARY}")
+        install(FILES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}" DESTINATION bin COMPONENT SRCML)
+    endforeach()
 
-    # file(GLOB VCPKG_SRCML_DEPENDENCIES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    # install(FILES ${VCPKG_SRCML_DEPENDENCIES} DESTINATION bin COMPONENT SRCML)
 endif()
 
 # Run ldconfig for install (not cpack) on Ubuntu
