@@ -30,6 +30,9 @@ set(CPACK_WIX_PRODUCT_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 # Prevent start menu shortcut
 unset(CPACK_WIX_PROGRAM_MENU_FOLDER)
 
+set(CPACK_START_MENU_SHORTCUTS "")
+set(CPACK_DESKTOP_SHORTCUTS "")
+
 # directory name
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "srcML")
 
