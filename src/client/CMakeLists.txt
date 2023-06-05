@@ -59,8 +59,14 @@ endif()
 target_compile_options(srcml PRIVATE "${SRCML_CLIENT_COMPILE_FLAGS}")
 set_target_properties(srcml PROPERTIES LINK_FLAGS "${SRCML_CLIENT_LINK_FLAGS}")
 
-# Dependencies are installed via libsrcml
+# Install the client
 install(TARGETS srcml COMPONENT SRCML)
+
+# On Windows with vcpkg, install all the dlls that the vcpkg used
+if(WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
+    # Install the direct library dependencies
+    install(FILES $<TARGET_RUNTIME_DLLS:libsrcml_shared> DESTINATION bin COMPONENT SRCML)
+endif()
 
 if(MSVC)
     set_source_files_properties(srcml_cli.cpp PROPERTIES COMPILE_FLAGS /wd4866)
