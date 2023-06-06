@@ -16,11 +16,11 @@ set(CPACK_PACKAGE_NAME "srcml")
 # Note: Update when package is updated, but not contents
 set(SRCML_PACKAGE_RELEASE 1)
 
-# executables and text label
-set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
+# # executables and text label
+# set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
 
-# desktop links
-set(CPACK_CREATE_DESKTOP_LINKS "${CPACK_PACKAGE_NAME}")
+# # desktop links
+# set(CPACK_CREATE_DESKTOP_LINKS "${CPACK_PACKAGE_NAME}")
 
 # summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")

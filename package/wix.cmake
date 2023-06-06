@@ -7,8 +7,8 @@
 # CPack configuration for WIX installers
 
 # Turn off start menu and possibly desktop links
-unset(CPACK_PACKAGE_EXECUTABLES)
-unset(CPACK_CREATE_DESKTOP_LINKS)
+# unset(CPACK_PACKAGE_EXECUTABLES)
+# unset(CPACK_CREATE_DESKTOP_LINKS)
 
 # package naming
 set(CPACK_SYSTEM_NAME "windows-x86_64")
