@@ -17,6 +17,9 @@
 # along with the srcML Toolkit; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
+# Turn off start menu and possibly desktop links
+unset(CPACK_PACKAGE_EXECUTABLES)
+
 # package naming
 set(CPACK_SYSTEM_NAME "windows-x86_64")
 
