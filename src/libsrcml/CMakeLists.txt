@@ -77,7 +77,7 @@ target_include_directories(libsrcml_shared PUBLIC $<BUILD_INTERFACE:${CMAKE_CURR
 
 if(WIN32)
     set(SRCML_LIBSRCML_SHARED_OUTPUT_NAME "libsrcml")
-    set(SRCML_LIBSRCML_STATIC_OUTPUT_NAME "libsrcmls")
+    set(SRCML_LIBSRCML_STATIC_OUTPUT_NAME "libsrcml_static")
 else()
     set(SRCML_LIBSRCML_SHARED_OUTPUT_NAME "srcml")
     set(SRCML_LIBSRCML_STATIC_OUTPUT_NAME "srcml")
