@@ -1,13 +1,10 @@
-##
+# SPDX-License-Identifier: GPL-3.0-only
+#
 # @file package.cmake
-# 
+#
 # @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
-# 
-# CMake files for packages
-
-# Client component, SRCML, is just one component so it appears as on item
-# for installers that let you pick what to install
-# Development group, SRCMLDEV, is composed of multiple components
+#
+# CPack configuration for all installers
 
 # especially for archives
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
