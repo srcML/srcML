@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# @file nsis.cmake
+# @file wix.cmake
 #
 # @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
 #
