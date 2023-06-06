@@ -54,9 +54,6 @@ set(CPACK_STRIP_FILES ON)
 # output directory
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
-# output directory
-set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
-
 # Generate user and development tar.gz's
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
