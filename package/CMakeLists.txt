@@ -101,5 +101,9 @@ endforeach()
 
 message(STATUS "CPack generators: ${CPACK_GENERATOR}")
 
+# Hide the LOCAL components
+get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
+list(REMOVE_ITEM CPACK_COMPONENTS_ALL "LOCAL")
+
 # needs to be last so not overwritten
 include(CPack)
