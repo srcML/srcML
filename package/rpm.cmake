@@ -6,6 +6,15 @@
 # 
 # CPack configuration for RPM installers
 
+# Exclude other platforms
+if(NOT UNIX OR NOT DISTRO OR DISTRO MATCHES "Ubuntu")
+    return()
+endif()
+
+# Update the generator list
+list(APPEND CPACK_GENERATOR "RPM;TGZ;TBZ2")
+list(REMOVE_DUPLICATES CPACK_GENERATOR)
+
 # Turn ON/OFF internal CPackRPM debugging
 set(CPACK_RPM_PACKAGE_DEBUG OFF)
 

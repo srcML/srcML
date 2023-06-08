@@ -10,6 +10,15 @@
 # unset(CPACK_PACKAGE_EXECUTABLES)
 # unset(CPACK_CREATE_DESKTOP_LINKS)
 
+# Exclude other platforms
+if(NOT WIN32)
+    return()
+endif()
+
+# Update the generator list
+list(APPEND CPACK_GENERATOR "WIX;ZIP")
+list(REMOVE_DUPLICATES CPACK_GENERATOR)
+
 # package naming
 set(CPACK_SYSTEM_NAME "windows-x86_64")
 

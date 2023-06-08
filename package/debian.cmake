@@ -6,6 +6,15 @@
 #
 # CPack configuration for Debian installers
 
+# Exclude other platforms
+if(NOT UNIX OR NOT DISTRO OR NOT DISTRO MATCHES "Ubuntu")
+    return()
+endif()
+
+# Update the generator list
+list(APPEND CPACK_GENERATOR "DEB;TGZ;TBZ2")
+list(REMOVE_DUPLICATES CPACK_GENERATOR)
+
 # Turn ON/OFF internal CPackDeb debugging
 set(CPACK_DEBIAN_PACKAGE_DEBUG OFF)
 
