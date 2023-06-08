@@ -34,7 +34,7 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
-set(CPACK_PACKAGE_CONTACT "Software Development Laboratories srcML.org>")
+set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcML.org>")
  
 # package version
 # set as part of project()
@@ -88,22 +88,18 @@ cpack_add_component(EXAMPLES
                     DISABLED
                     GROUP SRCMLDEV)
 
+# Copy and rename the README file for the proper extension
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
-# Generator settings
-message(STATUS "CPack generators: ${CPACK_GENERATOR}")
+# Generators are defined in the *.cpack files
+set(CPACK_GENERATOR)
+file(GLOB INSTALLERS "*.cpack")
+foreach(INSTALLER IN ITEMS ${INSTALLERS})
+    include(${INSTALLER})
+endforeach()
 
-# specific configurations
-if (CPACK_GENERATOR MATCHES "RPM")
-    include(rpm.cmake)
-elseif (CPACK_GENERATOR MATCHES "DEB")
-    include(debian.cmake)
-elseif (WIN32)
-    include(wix.cmake)
-elseif (APPLE)
-    include(macos.cmake)
-endif()
+message(STATUS "CPack generators: ${CPACK_GENERATOR}")
 
 # needs to be last so not overwritten
 include(CPack)

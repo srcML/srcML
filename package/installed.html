@@ -3,7 +3,7 @@
 <head>
 
 <style>
-p {
+p, li {
     font-size : 10pt;
 }
 body { font-family: Helvetica, Sans-Serif; }
@@ -20,9 +20,10 @@ code {
 
 <h2>srcml</h2>
 
-<p>The srcml command-line program is now installed. Consult the man page (<code>man srcml</code>) for more information. Example usage:</p>
+<p>You have successfully installed the srcml command-line program. For more details, please refer to the man page (man srcml). Here's an example of how to use it:</p>
 
-<pre><code class="console"># Convert from a source file to srcML
+<pre><code class="console">
+# Convert from a source file to srcML
 srcml main.cpp -o main.cpp.xml
 
 # Convert from srcML back to source code
@@ -39,11 +40,12 @@ srcml --verbose project -o project.xml
 
 <h2>Development</h2>
 
-<p>If you installed the Development package, you can write applications directly using libsrcml. The package includes:</p>
+<p>If you have installed the Development package, you have the ability to write applications using libsrcml directly. This package includes the following:
+</p>
 
 <ul>
-<li><code>srcml.h</code> Include file</li>
-<li><code>libsrcml.a</code> Static library</li>
+<li>The include file <code>srcml.h</code></li>
+<li>The static library <code>libsrcml.a</code></li>
 <li>Examples in /usr/local/share/srcml</li>
 </ul>
 
