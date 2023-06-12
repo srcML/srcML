@@ -30,7 +30,9 @@
         // "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
         "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        // Build for both x86 and arm64
+        "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64"
       }
     },
     {
