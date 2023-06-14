@@ -27,9 +27,10 @@ endif()
 # Requires permission by default user
 add_custom_target(publish_manpage COMMAND rsync --inplace ${CMAKE_BINARY_DIR}/srcml.1.gz gehry.sdml.cs.kent.edu:/var/www/html/sdml/build/${REMOTE_MANPAGE_NAME})
 
-find_program(RONN_EXE REQUIRED NAMES ronn ronn.exe PATHS /bin /usr/bin ~/gems/bin/ronn)
+find_program(PANDOC_EXE REQUIRED NAMES pandoc pandoc.exe)
 
 # Configure file properties used to configure the file srcml.cfg
+set(CLIENT_VERSION "1.0.0")
 set(HELP_FLAG_LONG "help")
 set(HELP_FLAG_SHORT "h")
 set(VERSION_FLAG_LONG "version")
@@ -121,17 +122,19 @@ set(STATUS_ERROR "1")
 set(STATUS_INTERNAL_ERROR "2")
 set(PRETTY_FLAG_LONG "pretty")
 
-# Custom commands for creating things using the ronn executable
+# Custom commands for creating things using pandoc
 configure_file(${CMAKE_SOURCE_DIR}/doc/manpage/srcml.cfg ${CMAKE_BINARY_DIR}/srcml.md)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.1
-    COMMAND ${RONN_EXE} ${CMAKE_BINARY_DIR}/srcml.1.md --manual=srcml
+    COMMAND ${PANDOC_EXE} -s -t man ${CMAKE_BINARY_DIR}/srcml.1.md --output ${CMAKE_BINARY_DIR}/srcml.1
+    COMMENT Generating ${CMAKE_BINARY_DIR}/srcml.1
     DEPENDS ${CMAKE_BINARY_DIR}/srcml.1.md
 )
 
 configure_file(${CMAKE_SOURCE_DIR}/doc/manpage/srcml.cfg ${CMAKE_BINARY_DIR}/srcml.1.md)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/srcml.html 
-    COMMAND ${RONN_EXE} ${CMAKE_BINARY_DIR}/srcml.md --manual=srcml
-    DEPENDS ${CMAKE_BINARY_DIR}/srcml.md
+    COMMAND ${PANDOC_EXE} -s -t html ${CMAKE_BINARY_DIR}/srcml.1.md --output ${CMAKE_BINARY_DIR}/srcml.html
+    COMMENT Generating ${CMAKE_BINARY_DIR}/srcml.html
+    DEPENDS ${CMAKE_BINARY_DIR}/srcml.1.md
 )
 
 add_custom_target(doc_manpage ALL DEPENDS ${CMAKE_BINARY_DIR}/srcml.1.gz ${CMAKE_BINARY_DIR}/srcml.html)
