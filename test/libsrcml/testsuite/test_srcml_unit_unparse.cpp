@@ -397,6 +397,102 @@ int main(int, char* argv[]) {
     }
 
     /*
+      srcml_unit_get_src
+      srcml_unit_get_src_size
+    */
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_read_open_filename(archive, "project.xml");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+
+        const char* s = srcml_unit_get_src(unit);
+        ssize_t size = srcml_unit_get_src_size(unit);
+        dassert(size, 3);
+        dassert(s, src);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_read_open_filename(archive, "project_utf8.xml");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        srcml_unit_set_src_encoding(unit, "UTF-8");
+
+        const char* s = srcml_unit_get_src(unit);
+        ssize_t size = srcml_unit_get_src_size(unit);
+        dassert(size, 10);
+        dassert(s, utf8_src);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_read_open_filename(archive, "project_latin_from_utf8.xml");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+        srcml_unit_set_src_encoding(unit, "UTF-8");
+
+        const char* s = srcml_unit_get_src(unit);
+        dassert(s, utf8_src);
+        ssize_t size = srcml_unit_get_src_size(unit);
+        dassert(size, 10);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_read_open_filename(archive, "project.xml");
+        srcml_unit* unit = srcml_archive_read_unit(archive);
+
+        const char* s = srcml_unit_get_src(unit);
+        dassert(s, src);
+        ssize_t size = srcml_unit_get_src_size(unit);
+        dassert(size, 3);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_read_open_filename(archive, "project.xml");
+        srcml_unit* unit = srcml_unit_create(archive);
+
+        const char* s = srcml_unit_get_src(unit);
+        dassert(s, 0);
+        ssize_t size = srcml_unit_get_src_size(unit);
+        dassert(size, -1);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+
+        const char* s = srcml_unit_get_src(unit);
+        dassert(s, 0);
+        ssize_t size = srcml_unit_get_src_size(unit);
+        dassert(size, -1);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    /*
       srcml_unit_unparse_FILE
     */
 
