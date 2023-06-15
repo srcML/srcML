@@ -170,3 +170,9 @@ LIBSRCML_1.0 {
         srcml_memory_free;
     local: *;
 };
+
+LIBSRCML_1.1 {
+    global:
+        srcml_unit_get_src;
+        srcml_unit_get_src_size;
+} LIBSRCML_1.0;

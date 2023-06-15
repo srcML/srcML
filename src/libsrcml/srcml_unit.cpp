@@ -657,6 +657,56 @@ int srcml_unit_parse_io(struct srcml_unit* unit, void * context, ssize_t (*read_
     });
 }
 
+/**
+ * Get the source from this unit
+ * @note The source is in UTF-8 and does not follow the source encoding
+ * @note If other encodings are needed, use srcml_unit_unparse_memory()
+ * @param unit A srcml unit opened for reading
+ * @return The source
+ * @return Null on failure
+ */
+const char* srcml_unit_get_src(struct srcml_unit* unit) {
+
+    if (unit == nullptr || (!unit->read_body && !unit->read_header))
+        return nullptr;
+
+    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+        unit->archive->reader->read_body(unit);
+
+    // if this unit was parsed from source, then the src does not exist
+    // generate this source from the srcml
+    if (!unit->src) {
+        unit->src = extract_src(unit->srcml);
+    }
+
+    return unit->src->data();
+}
+
+/**
+ * Get the source size from this unit
+ * @note The size of the source is for UTF-8 encoding and does not follow the source encoding
+ * @note If the size of other encodings are needed, use srcml_unit_unparse_memory()
+ * @param unit A srcml unit opened for reading
+ * @return The source size
+ * @return -1 on failure
+ */
+ssize_t srcml_unit_get_src_size(struct srcml_unit* unit) {
+
+    if (unit == nullptr || (!unit->read_body && !unit->read_header))
+        return -1;
+
+    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+        unit->archive->reader->read_body(unit);
+
+    // if this unit was parsed from source, then the src does not exist
+    // generate this source from the srcml
+    if (!unit->src) {
+        unit->src = extract_src(unit->srcml);
+    }
+
+    return unit->src->size();
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Unit unparsing functions                         *
