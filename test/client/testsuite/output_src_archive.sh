@@ -41,11 +41,34 @@ else
     printf "a;\n\0b;\n" > expected_output
 fi
 
+# have to get null byte into test case result
+if [[ "$OSTYPE" == 'msys' ]]; then
+    printf "a;\r\nb;\r\n" > expected_output_newline
+else
+    printf "a;\nb;\n" > expected_output_newline
+fi
+
 srcml --output-src sub/a.cpp.xml > ab
+check_file ab expected_output_newline
+rmfile ab
+
+srcml --output-src sub/a.cpp.xml --print0 > ab
+check_file ab expected_output
+rmfile ab
+
+srcml --output-src sub/a.cpp.xml -Z > ab
 check_file ab expected_output
 rmfile ab
 
 srcml -S sub/a.cpp.xml > ab
+check_file ab expected_output_newline
+rmfile ab
+
+srcml -S sub/a.cpp.xml --print0 > ab
+check_file ab expected_output
+rmfile ab
+
+srcml -S sub/a.cpp.xml -Z > ab
 check_file ab expected_output
 rmfile ab
 
@@ -62,6 +85,14 @@ srcml -U 2 -S sub/a.cpp.xml
 check "$srcb"
 
 cat sub/a.cpp.xml | srcml -S > ab
+check_file ab expected_output_newline
+rmfile ab
+
+cat sub/a.cpp.xml | srcml -S --print0 > ab
+check_file ab expected_output
+rmfile ab
+
+cat sub/a.cpp.xml | srcml -S -Z > ab
 check_file ab expected_output
 rmfile ab
 
