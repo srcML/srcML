@@ -205,12 +205,6 @@
       "description": "Default build options for Clang release with ccache"
     },
     {
-      "name": "macos-fixxcodeconflicts",
-      "cacheVariables": {
-        "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
-      }
-    },
-    {
       "name": "vcpkg",
       "hidden": true,
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
