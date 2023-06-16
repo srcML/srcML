@@ -604,6 +604,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.transformations.emplace_back(src_prefix_add_uri("relaxng", value));
         });
 
+    // separate output with nulls
+    app.add_flag_callback("--print0,-Z",    [&]() { srcml_request.command |= SRCML_COMMAND_NULL; },
+        "Separate output with an ASCII NULL ('\0')")
+        ->group("EXTRACTING SOURCE CODE");
+
     // debug
     app.add_flag_callback("--dev",          [&]() { srcml_request.command |= SRCML_DEBUG_MODE; },
         "Enable developer debug mode")

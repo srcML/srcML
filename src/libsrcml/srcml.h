@@ -1487,7 +1487,7 @@ LIBSRCML_DECL int srcml_unit_parse_fd(struct srcml_unit* unit, int src_fd);
  * @param read_callback a read callback function
  * @param close_callback a close callback function
  * @return SRCML_STATUS_OK on success
- * @return Status error code on failure.
+ * @return Status error code on failure
  */
 LIBSRCML_DECL int srcml_unit_parse_io(struct srcml_unit* unit, void * context, ssize_t (*read_callback)(void * context, void * buffer, size_t len), int (*close_callback)(void * context));
 /**@}*/
@@ -1495,6 +1495,26 @@ LIBSRCML_DECL int srcml_unit_parse_io(struct srcml_unit* unit, void * context, s
 /**@{ @name Convert srcML to source code
       @brief srcML in a srcml unit is converted back to source code, and stored in a variety of output destinations
       */
+
+/**
+ * Get the source from this unit
+ * @note The source is in UTF-8 encoding and does not follow the source encoding
+ * @note If other encodings are needed, use srcml_unit_unparse_memory()
+ * @param unit A srcml unit opened for reading
+ * @return The source
+ * @return Null on failure
+ */
+LIBSRCML_DECL const char* srcml_unit_get_src(struct srcml_unit* unit);
+
+/**
+ * Get the source size from this unit
+ * @note The size of the source is for UTF-8 encoding and does not follow the source encoding
+ * @note If the size of other encodings are needed, use srcml_unit_unparse_memory()
+ * @param unit A srcml unit opened for reading
+ * @return The source size
+ * @return -1 on failure
+ */
+LIBSRCML_DECL ssize_t srcml_unit_get_src_size(struct srcml_unit* unit);
 
 /**
  * Convert the srcML in a unit into source code and place it into a filename
