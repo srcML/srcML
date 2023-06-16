@@ -23,23 +23,43 @@ find_package(Java COMPONENTS Runtime REQUIRED)
 
 # Setup ANTLR 2.7 library
 include(FetchContent)
-set(FETCHCONTENT_QUIET FALSE)
 FetchContent_Declare(antlrsrc
     URL https://www.antlr2.org/download/antlr-2.7.7.tar.gz
-    PATCH_COMMAND patch -p 1 -i ${CMAKE_CURRENT_SOURCE_DIR}/antlr.patch
     URL_HASH MD5=01cc9a2a454dd33dcd8c856ec89af090
 )
-FetchContent_MakeAvailable(antlrsrc)
+FetchContent_GetProperties(antlrsrc)
+if(NOT antlrsrc_POPULATED)
+    # Fetch the content using previously declared details
+    FetchContent_Populate(antlrsrc)
+
+    if (NOT antlrsrc_PATCHED)
+        # Add needed include file for CharScanner.hpp
+        # Comment out use of std::binary_function, deprecated in C++11 and removed in C++17
+        set(CHARSCANNER_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/CharScanner.hpp")
+        file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
+        string(REPLACE "#include <antlr/config.hpp>\n\n" "#include <antlr/config.hpp>\n#include <string.h>\n\n" FILE_CONTENTS "${FILE_CONTENTS}")
+        string(REPLACE "class ANTLR_API CharScannerLiteralsLess : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool>"
+                    "class ANTLR_API CharScannerLiteralsLess /* : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool> */" FILE_CONTENTS "${FILE_CONTENTS}")
+        file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
+
+        # Remove pragma warning disable that is no longer valid
+        set(CONFIG_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/config.hpp")
+        file(READ ${CONFIG_HPP} FILE_CONTENTS)
+        string(REPLACE "# pragma warning( disable : 4786 4231 )" "# pragma warning( disable : 4786 )" FILE_CONTENTS "${FILE_CONTENTS}")
+        file(WRITE ${CONFIG_HPP} "${FILE_CONTENTS}")
+
+        # Mark so that further patches are not performed
+        set(antlrsrc_PATCHED TRUE CACHE BOOL "Indicates that Antlr source was patched" FORCE)
+    endif()
+endif()
 
 # antlr library
+add_library(antlr OBJECT)
 file(GLOB ANTLR_SOURCE ${antlrsrc_SOURCE_DIR}/lib/cpp/src/*.cpp)
 list(REMOVE_ITEM ANTLR_SOURCE "${antlrsrc_SOURCE_DIR}/lib/cpp/src/dll.cpp")
-add_library(antlr OBJECT "${ANTLR_SOURCE}")
+target_sources(antlr PRIVATE "${ANTLR_SOURCE}")
 target_include_directories(antlr SYSTEM PUBLIC "${antlrsrc_SOURCE_DIR}/lib/cpp/" SYSTEM PRIVATE "${antlrsrc_SOURCE_DIR}/lib/cpp/")
-
-# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-set_target_properties(antlr PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON
-    OPTIMIZE_DEPENDENCIES YES)
+# set_target_properties(antlr PROPERTIES POSITION_INDEPENDENT_CODE ON OPTIMIZE_DEPENDENCIES YES)
 
 # Generated source from antlr and the parser
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
@@ -60,10 +80,15 @@ target_include_directories(parser SYSTEM PUBLIC ${antlrsrc_SOURCE_DIR}/lib/cpp)
 target_include_directories(parser PRIVATE . ${CMAKE_GENERATED_SOURCE_DIR} PUBLIC . SYSTEM PUBLIC ${CMAKE_GENERATED_SOURCE_DIR})
 target_link_libraries(parser PRIVATE LibXml2::LibXml2 antlr)
 target_include_directories(parser PRIVATE $<TARGET_PROPERTY:TinySHA1,INTERFACE_INCLUDE_DIRECTORIES>)
+# set_target_properties(parser PROPERTIES POSITION_INDEPENDENT_CODE ON OPTIMIZE_DEPENDENCIES YES)
 
-# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-set_target_properties(parser PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON> POSITION_INDEPENDENT_CODE ON
-    OPTIMIZE_DEPENDENCIES YES)
+# PreCompiled Headers configuration of the parser
+if (SRCML_PARSER_PCH)
+    target_precompile_headers(parser PRIVATE "${SRCML_PARSER_PCH}")
+endif()
+
+target_compile_options(antlr PRIVATE ${SRCML_ANTLR_DISABLED_WARNINGS})
+target_compile_options(parser PRIVATE ${SRCML_PARSER_DISABLED_WARNINGS})
 
 # 
 # RunAntlr
@@ -138,44 +163,3 @@ RunAntlr("${srcMLParserOutputFiles}"
     "srcMLParser.g;${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp"
     "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
 )
-
-# set_target_properties(libsrcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<NOT:$<CXX_COMPILER_ID:MSVC>,<UTFCharBuffer.hpp>>)
-
-if(SRCML_BUILD_USEPCH)
-    # Not sure why <UTF8CharBuffer> is non-MSVC. Perhaps an error when compiled
-    target_precompile_headers(parser PRIVATE <srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp> $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:<UTF8CharBuffer.hpp$<ANGLE-R>>)
-endif()
-
-option(ENABLE_ANTLR_BUILD_WARNINGS "Enable disabled antlr library build warnings" OFF)
-if(NOT ENABLE_ANTLR_BUILD_WARNINGS)
-    target_compile_options(antlr PRIVATE
-        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-format>
-        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-misleading-indentation>
-        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-deprecated-declarations>
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # conversion from 'int' to 'unsigned int',
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4267> # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4458> # declaration of 'index' hides class member
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4242> # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100> # unreferenced formal parameter
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4355> # this': used in base member initializer list
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4477> # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd5031> # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
-    )
-    target_compile_options(parser PRIVATE
-        $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wno-unused-but-set-variable>
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # conversion from 'int' to 'unsigned int',
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4267> # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'unsigned int' to '_Elem', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4458> # declaration of 'index' hides class member
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4242> # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4100> # unreferenced formal parameter
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4355> # this': used in base member initializer list
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4365> # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4477> # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
-        $<$<CXX_COMPILER_ID:MSVC>:/wd5031> # #pragma warning(pop): likely mismatch, popping warning state pushed in different file
-    )
-endif()

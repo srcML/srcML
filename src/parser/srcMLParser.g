@@ -3446,7 +3446,7 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
-            bool anonymous_class = (inMode(MODE_CLASS) | inMode(MODE_ENUM)) && inMode(MODE_END_AT_BLOCK);
+            bool anonymous_class = (inMode(MODE_CLASS) || inMode(MODE_ENUM)) && inMode(MODE_END_AT_BLOCK);
 
             // some statements end with the block
             if (inMode(MODE_END_AT_BLOCK)) {
@@ -8748,7 +8748,7 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
             else
                startElement(STEMPLATE_PARAMETER);
 
-            if (inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C))
+            if (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C))
                startElement(SEXPRESSION);
         }
         (options { greedy = true; } :

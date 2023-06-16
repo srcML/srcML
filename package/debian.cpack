@@ -1,27 +1,22 @@
-##
+# SPDX-License-Identifier: GPL-3.0-only
+#
 # @file debian.cmake
 #
 # @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
-# 
-# The srcML Toolkit is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-# 
-# The srcML Toolkit is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+# CPack configuration for Debian installers
+
+# Exclude other platforms
+if(NOT UNIX OR NOT DISTRO OR NOT DISTRO MATCHES "Ubuntu")
+    return()
+endif()
+
+# Update the generator list
+list(APPEND CPACK_GENERATOR "DEB;TGZ;TBZ2")
+list(REMOVE_DUPLICATES CPACK_GENERATOR)
 
 # Turn ON/OFF internal CPackDeb debugging
 set(CPACK_DEBIAN_PACKAGE_DEBUG OFF)
-
-# icon
-set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 
 # Generate user and SRCMLDEV rpms
 # Note: Yes, this is CPACK_DEB_, not CPACK_DEBIAN
@@ -44,9 +39,16 @@ string(REGEX MATCH "ID=\([a-z]+\)" _ "${OS_RELEASE}")
 set(OS_RELEASE_ID "${CMAKE_MATCH_1}")
 set(DEBIAN_VERSION "${OS_RELEASE_ID}${OS_RELEASE_VERSION_ID}")
 
+# Architecture
+if(CMAKE_SYSTEM_PROCESSOR EQUAL "aarch64")
+    set(SRCML_SYSTEM_ARCHITECTURE "arm64")
+else()
+    set(SRCML_SYSTEM_ARCHITECTURE "amd64")
+endif()
+
 # Package filenames
-set(BASE_SRCML_FILE_NAME "${CPACK_DEBIAN_SRCML_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${DEBIAN_VERSION}")
-set(BASE_SRCMLDEV_FILE_NAME "${CPACK_DEBIAN_SRCMLDEV_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${DEBIAN_VERSION}")
+set(BASE_SRCML_FILE_NAME "${CPACK_DEBIAN_SRCML_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${DEBIAN_VERSION}_${CMAKE_SYSTEM_PROCESSOR}")
+set(BASE_SRCMLDEV_FILE_NAME "${CPACK_DEBIAN_SRCMLDEV_PACKAGE_NAME}_${PROJECT_VERSION}-${CPACK_DEBIAN_PACKAGE_RELEASE}_${DEBIAN_VERSION}_${CMAKE_SYSTEM_PROCESSOR}")
 set(CPACK_DEBIAN_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}.deb")
 set(CPACK_DEBIAN_SRCMLDEV_FILE_NAME "${BASE_SRCMLDEV_FILE_NAME}.deb")
 set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")

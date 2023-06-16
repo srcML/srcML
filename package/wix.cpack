@@ -1,21 +1,23 @@
-##
-# @file nsis.cmake
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# @file wix.cmake
 #
 # @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
-# 
-# The srcML Toolkit is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-# 
-# The srcML Toolkit is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-# 
-# You should have received a copy of the GNU General Public License
-# along with the srcML Toolkit; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+#
+# CPack configuration for WIX installers
+
+# Turn off start menu and possibly desktop links
+# unset(CPACK_PACKAGE_EXECUTABLES)
+# unset(CPACK_CREATE_DESKTOP_LINKS)
+
+# Exclude other platforms
+if(NOT WIN32)
+    return()
+endif()
+
+# Update the generator list
+list(APPEND CPACK_GENERATOR "WIX;ZIP")
+list(REMOVE_DUPLICATES CPACK_GENERATOR)
 
 # package naming
 set(CPACK_SYSTEM_NAME "windows-x86_64")
@@ -26,6 +28,12 @@ set(CPACK_ARCHIVE_COMPONENT_INSTALL OFF)
 # set icon
 install(FILES ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico DESTINATION . COMPONENT SRCML)
 set(CPACK_WIX_PRODUCT_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
+
+# Prevent start menu shortcut
+unset(CPACK_WIX_PROGRAM_MENU_FOLDER)
+
+set(CPACK_START_MENU_SHORTCUTS "")
+set(CPACK_DESKTOP_SHORTCUTS "")
 
 # directory name
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "srcML")

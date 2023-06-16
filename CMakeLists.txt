@@ -2,18 +2,15 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
 # 
 # The master CMake project file for srcML
 
-set(VCPKG_BUILD_TYPE "release")
+if(DEFINED ENV{VCPKG_ROOT} OR DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(VCPKG_BUILD_TYPE "release")
+endif()
 
 cmake_minimum_required(VERSION 3.24)
-
-# Handles problem of commandline tools interfering with Xcode includes
-if(APPLE)
-    set(PKG_CONFIG_EXECUTABLE "/usr/bin/true")
-endif()
 
 # If performed here, before project(), then this prefix becomes part of the CMAKE_SYSTEM_PREFIX_PATH
 # and then the installed version of srcML can be found by the tests without building srcml.
@@ -22,7 +19,7 @@ endif()
 # Also note that without this, the install target places the files in "C:/Program Files (x86)/srcML",
 # while the package installer places it in "C:/Program Files/srcML"
 # Note that this overwrites any changes to the CMAKE_INSTALL_PREFIX from the command line cmake options.
-if(WIN32)
+if(WIN32 AND NOT DEFINED CMAKE_INSTALL_PREFIX)
   set(CMAKE_INSTALL_PREFIX "C:/Program Files/srcML" CACHE PATH "Set Windows install dir" FORCE)
 endif()
 
@@ -45,7 +42,7 @@ endif()
 
 # Determine distribution
 # Does not work for all distributions, but does work for supported Linux distributions
-if(EXISTS /etc/os-release)
+if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
     file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
 endif()
 

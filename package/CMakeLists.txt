@@ -1,13 +1,18 @@
-##
+# SPDX-License-Identifier: GPL-3.0-only
+#
 # @file package.cmake
-# 
+#
 # @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
-# 
-# CMake files for packages
+#
+# CPack configuration for all installers
 
-# Client component, SRCML, is just one component so it appears as on item
-# for installers that let you pick what to install
-# Development group, SRCMLDEV, is composed of multiple components
+# Copy preset file to build directory
+configure_file(${CMAKE_SOURCE_DIR}/CMakePresets.json ${CMAKE_BINARY_DIR} COPYONLY)
+
+# Copy user preset file to the build directory if it exists
+if(EXISTS ${CMAKE_SOURCE_DIR}/CMakeUserPresets.json)
+    configure_file(${CMAKE_SOURCE_DIR}/CMakeUserPresets.json ${CMAKE_BINARY_DIR} COPYONLY)
+endif()
 
 # especially for archives
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
@@ -19,28 +24,6 @@ set(CPACK_PACKAGE_NAME "srcml")
 # Note: Update when package is updated, but not contents
 set(SRCML_PACKAGE_RELEASE 1)
 
-# executables and text label
-set(CPACK_PACKAGE_EXECUTABLES srcml;srcML)
-
-# desktop links
-set(CPACK_CREATE_DESKTOP_LINKS "${CPACK_PACKAGE_NAME}")
-
-# Generator settings
-if(WIN32)
-    set(CPACK_GENERATOR "WIX;ZIP")
-elseif(APPLE)
-    set(CPACK_GENERATOR "productbuild;TGZ;TBZ2")
-else()
-    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-        set(CPACK_GENERATOR "TGZ;TBZ2")
-    elseif(DISTRO MATCHES "Ubuntu")
-        set(CPACK_GENERATOR "DEB;TGZ;TBZ2")
-    else()
-        set(CPACK_GENERATOR "RPM;TGZ;TBZ2")
-    endif()
-endif()
-message(STATUS "CPack generators: ${CPACK_GENERATOR}")
-
 # summary
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcML Toolkit")
 
@@ -51,7 +34,7 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
-set(CPACK_PACKAGE_CONTACT "Software Development Laboratories srcML.org>")
+set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcML.org>")
  
 # package version
 # set as part of project()
@@ -71,65 +54,56 @@ set(CPACK_STRIP_FILES ON)
 # output directory
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
-# output directory
-set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
-
 # Generate user and development tar.gz's
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
-if(NOT MSVC)
-    # Client component, SRCML, is just one component so it appears as on item
-    # for installers that let you pick what to install
-    # Development group, SRCMLDEV, is composed of multiple components
-    include(CPackComponent)
-    cpack_add_component(SRCML
-                        DISPLAY_NAME "srcml"
-                        DESCRIPTION "srcml cli program with required library"
-                        REQUIRED)
+# Client component, SRCML, is just one component so it appears as on item
+# for installers that let you pick what to install
+# Development group, SRCMLDEV, is composed of multiple components
+include(CPackComponent)
+cpack_add_component(SRCML
+                    DISPLAY_NAME "srcml"
+                    DESCRIPTION "srcml cli program with required library"
+                    REQUIRED)
 
-    cpack_add_component_group(SRCMLDEV
-                        DISPLAY_NAME "Development"
-                        DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
+cpack_add_component_group(SRCMLDEV
+                    DISPLAY_NAME "Development"
+                    DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
 
-    cpack_add_component(INCLUDE
-                        DISPLAY_NAME "srcml.h"
-                        DESCRIPTION "Include file, srcml.h"
-                        DISABLED
-                        GROUP SRCMLDEV)
+cpack_add_component(INCLUDE
+                    DISPLAY_NAME "srcml.h"
+                    DESCRIPTION "Include file, srcml.h"
+                    DISABLED
+                    GROUP SRCMLDEV)
 
-    cpack_add_component(DEVLIBS
-                        DISPLAY_NAME "libsrcml.a"
-                        DESCRIPTION "Development libraries, i.e.., static library"
-                        DISABLED
-                        GROUP SRCMLDEV)
+cpack_add_component(DEVLIBS
+                    DISPLAY_NAME "libsrcml.a"
+                    DESCRIPTION "Development libraries, i.e.., static library"
+                    DISABLED
+                    GROUP SRCMLDEV)
 
-    cpack_add_component(EXAMPLES
-                        DISPLAY_NAME "libsrcml examples"
-                        DESCRIPTION "Include file, srcml.h"
-                        DISABLED
-                        GROUP SRCMLDEV)
+cpack_add_component(EXAMPLES
+                    DISPLAY_NAME "libsrcml examples"
+                    DESCRIPTION "Include file, srcml.h"
+                    DISABLED
+                    GROUP SRCMLDEV)
 
-endif()
+# Copy and rename the README file for the proper extension
+configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
+set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
-# specific configurations
-if (CPACK_GENERATOR MATCHES "RPM")
-    include(rpm.cmake)
-elseif (CPACK_GENERATOR MATCHES "DEB")
-    include(debian.cmake)
-elseif (WIN32)
-    include(nsis.cmake)
-elseif (APPLE)
-    include(macos.cmake)
-endif()
+# Generators are defined in the *.cpack files
+set(CPACK_GENERATOR)
+file(GLOB INSTALLERS "*.cpack")
+foreach(INSTALLER IN ITEMS ${INSTALLERS})
+    include(${INSTALLER})
+endforeach()
 
-# Perform any platform-specific fixes or updating of the installer
-# THis noop version basically just runs the normal packaging, e.g., cpack
-if(NOT TARGET gen_package)
-    add_custom_target(gen_package
-       COMMAND ${CMAKE_COMMAND} --build . --target package
-       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-       VERBATIM)
-endif()
+message(STATUS "CPack generators: ${CPACK_GENERATOR}")
+
+# Hide the LOCAL components
+get_cmake_property(CPACK_COMPONENTS_ALL COMPONENTS)
+list(REMOVE_ITEM CPACK_COMPONENTS_ALL "LOCAL")
 
 # needs to be last so not overwritten
 include(CPack)

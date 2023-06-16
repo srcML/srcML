@@ -6,11 +6,20 @@
 # 
 # CMake files for the srcML client
 
+# if(NOT srcML::LibsrcML)
+#     find_package(srcml REQUIRED)
+# endif()
+
+# Configure libarchive on macOS
+if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
+    set(APPLE_NON_VCPKG ON)
+endif()
+if(APPLE_NON_VCPKG)
+    include(macos-libarchive.cmake)
+endif()
+
 find_package(LibArchive 3 REQUIRED)
 find_package(CURL REQUIRED)
-if(NOT MSVC)
-    find_package(Threads REQUIRED)
-endif()
 
 include(FetchContent)
 FetchContent_Declare(cli11
@@ -37,37 +46,24 @@ file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml BEFORE PRIVATE .)
 target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl cli11 ctpl_stl)
-if(NOT MSVC)
-    target_link_libraries(srcml PRIVATE Threads::Threads)
-endif()
 
-# Link the stdc++fs library if on gcc 7.5.0
-if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
-    target_link_libraries(srcml PRIVATE stdc++fs)
-endif()
-
+# Put executable in bin directory
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-set_target_properties(srcml PROPERTIES INTERPROCEDURAL_OPTIMIZATION $<IF:$<CXX_COMPILER_ID:MSVC>,OFF,ON>)
-
-# Largest impace for PCH builds of the client
-if(SRCML_BUILD_USEPCH)
-    target_precompile_headers(srcml PRIVATE <srcml_cli.hpp> <srcml_input_src.hpp> <srcml_pipe.hpp> <ParseQueue.hpp> <src_input_libarchive.hpp> <SRCMLStatus.hpp> <WriteQueue.hpp> <ParseRequest.hpp> <TraceLog.hpp> <curl/curl.h>)
+# PreCompiled Headers configuration of the client
+if (SRCML_CLIENT_PCH)
+    target_precompile_headers(srcml PRIVATE "${SRCML_CLIENT_PCH}")
 endif()
 
-if(APPLE)
-    # Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
-    set_target_properties(srcml PROPERTIES LINK_FLAGS "-exported_symbols_list /dev/null")
-endif()
+# Set the flags for the srcml client
+target_compile_options(srcml PRIVATE "${SRCML_CLIENT_COMPILE_FLAGS}")
+set_target_properties(srcml PROPERTIES LINK_FLAGS "${SRCML_CLIENT_LINK_FLAGS}")
 
-# Dependencies are installed via libsrcml
+# Install the client
 install(TARGETS srcml COMPONENT SRCML)
 
-target_compile_options(srcml PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/wd4355> # this': used in base member initializer list
-    $<$<CXX_COMPILER_ID:MSVC>:/wd5204> # class has virtual functions, but its trivial destructor is not virtual
-)
+# On Windows with vcpkg, install all the dlls that the vcpkg used
+# Handled in libsrcml
 
 if(MSVC)
     set_source_files_properties(srcml_cli.cpp PROPERTIES COMPILE_FLAGS /wd4866)
