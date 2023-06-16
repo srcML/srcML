@@ -146,7 +146,7 @@
     },
     {
       "name": "gcc-release",
-      "inherits": ["gcc", "lto"],
+      "inherits": ["gcc"],
       "displayName": "GCC Release",
       "description": "Default build options for GCC release",
       "cacheVariables": {
@@ -185,7 +185,7 @@
     },
     {
       "name": "clang-release",
-      "inherits": ["clang", "lto"],
+      "inherits": ["clang"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "displayName": "Clang Release",
       "description": "Default build options for Clang release",
@@ -193,7 +193,9 @@
         "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
         "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "SRCML_GLOBAL_COMPILE_OPTIONS": "-flto",
+        "SRCML_GLOBAL_LINK_OPTIONS": "-flto;-dead_strip"
       }
     },
     {
@@ -201,14 +203,6 @@
       "inherits": ["clang-release", "ccache"],
       "displayName": "Clang Release ccache",
       "description": "Default build options for Clang release with ccache"
-    },
-    {
-      "name": "lto",
-      "hidden": true,
-      "cacheVariables": {
-        "SRCML_GLOBAL_COMPILE_OPTIONS": "-flto",
-        "SRCML_GLOBAL_LINK_OPTIONS": "-flto;-dead_strip"
-      }
     },
     {
       "name": "macos-fixxcodeconflicts",
