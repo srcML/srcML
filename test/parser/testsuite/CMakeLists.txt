@@ -268,12 +268,6 @@ add_custom_target(clean_parser_tests
                   COMMENT "Clean all generated parser testfiles"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-set(TESTSUITE *.xml)
-
-set(FLAGS "")
-if(WIN32)
-     set(FLAGS "--no-color")
-#
 # run parser tests
 set(SRCML_PARSER_TEST_TESTSUITE *.xml)
 find_program(BASH_EXE bash)
