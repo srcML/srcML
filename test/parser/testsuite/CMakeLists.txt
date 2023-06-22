@@ -268,46 +268,33 @@ add_custom_target(clean_parser_tests
                   COMMENT "Clean all generated parser testfiles"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-set(TESTSUITE *.xml)
+# run parser tests
+set(SRCML_PARSER_TEST_TESTSUITE *.xml)
+find_program(BASH_EXE bash)
+if(${BASH_EXE_FOUND})
+    # If the SRCML_PARSER_TEST_LANGUAGE exists, use the current value to limit to that language
+    # If not, then no language is specified
+    add_custom_target(run_parser_tests
+                      COMMAND bash -c "${SRCML_EXE} --parser-test $([[ -z $$SRCML_PARSER_TEST_LANGUAGE ]] || echo \"--language $$SRCML_PARSER_TEST_LANGUAGE\") ${SRCML_PARSER_TEST_FLAGS} ${SRCML_PARSER_TEST_TESTSUITE}"
+                      COMMENT "Run all parser test cases"
+                      DEPENDS gen_parser_tests
+                      USES_TERMINAL
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-set(FLAGS "")
-if(WIN32)
-     set(FLAGS "--no-color")
+elseif(DEFINED ENV{SRCML_PARSER_TEST_LANGUAGE})
+    # If the SRCML_PARSER_TEST_LANGUAGE exists, use the current value when cmake is run to limit to that language
+    add_custom_target(run_parser_tests
+                      COMMAND ${SRCML_EXE} --parser-test --language $$SRCML_PARSER_TEST_LANGUAGE ${SRCML_PARSER_TEST_FLAGS} ${SRCML_PARSER_TEST_TESTSUITE}
+                      COMMENT "Run all parser test cases"
+                      DEPENDS gen_parser_tests
+                      USES_TERMINAL
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+else()
+    # Do not limit to a language
+    add_custom_target(run_parser_tests
+                      COMMAND ${SRCML_EXE} --parser-test ${SRCML_PARSER_TEST_FLAGS} ${SRCML_PARSER_TEST_TESTSUITE}
+                      COMMENT "Run all parser test cases"
+                      DEPENDS gen_parser_tests
+                      USES_TERMINAL
+                      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 endif()
-
-# targets to manage parser testing
-add_custom_target(run_parser_tests        COMMENT "Run all parser test cases"
-                         COMMAND ${SRCML_EXE} --parser-test ${FLAGS} ${TESTSUITE}
-                         DEPENDS gen_parser_tests
-                         USES_TERMINAL
-                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(run_parser_tests_c      COMMENT "Run C parser test cases"
-                         COMMAND ${SRCML_EXE} --parser-test ${FLAGS} --language=C    ${TESTSUITE}
-                         DEPENDS gen_parser_tests
-                         USES_TERMINAL
-                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(run_parser_tests_cpp    COMMENT "Run C++ parser test cases"
-                         COMMAND ${SRCML_EXE} --parser-test ${FLAGS} --language=C++  ${TESTSUITE}
-                         DEPENDS gen_parser_tests
-                         USES_TERMINAL
-                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(run_parser_tests_C++    COMMENT "Run C++ parser test cases"
-                         COMMAND ${SRCML_EXE} --parser-test ${FLAGS} --language=C++  ${TESTSUITE}
-                         DEPENDS gen_parser_tests
-                         USES_TERMINAL
-                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(run_parser_tests_java   COMMENT "Run Java parser test cases"
-                         COMMAND ${SRCML_EXE} --parser-test ${FLAGS} --language=Java ${TESTSUITE}
-                         DEPENDS gen_parser_tests
-                         USES_TERMINAL
-                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(run_parser_tests_cs     COMMENT "Run C\# language parser test cases"
-                         COMMAND ${SRCML_EXE} --parser-test ${FLAGS} --language=C\#  ${TESTSUITE}
-                         DEPENDS gen_parser_tests
-                         USES_TERMINAL
-                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-add_custom_target(run_parser_tests_CSHARP COMMENT "Run C\# language parser test cases"
-                         COMMAND ${SRCML_EXE} --parser-test ${FLAGS} --language=C\#  ${TESTSUITE}
-                         DEPENDS gen_parser_tests
-                         USES_TERMINAL
-                         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
