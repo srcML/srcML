@@ -11,8 +11,8 @@ message(STATUS "Generating Parser Testfiles:")
 set(XSLT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../xsl")
 
 # copy starting set of test cases
-file(GLOB PARSE_TESTS *.xml)
-foreach(PATH IN ITEMS ${PARSE_TESTS})
+file(GLOB DEFINED_TEST_FILES *.xml)
+foreach(PATH IN ITEMS ${DEFINED_TEST_FILES})
     get_filename_component(FILENAME ${PATH} NAME)
 
     # Set newline at LF since these are srcML files and srcML uses LF (as does XML)
@@ -20,8 +20,6 @@ foreach(PATH IN ITEMS ${PARSE_TESTS})
     # Do not use COPYFILE_ONLY as it changes the line endings
     configure_file(${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} NEWLINE_STYLE LF)
 endforeach()
-
-set(TESTFILES)
 
 # convert from input language to input extension
 set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m")
@@ -38,7 +36,7 @@ macro(setlanguage INLANG URL)
     # convert from input language to input extension
     lang2ext("${INLANG}" INFILE_EXT)
 
-    # assumes a C++ base
+    # assume a C++ base
     set(BASEFILE "${URL}.${INFILE_EXT}.xml")
 
     set(PRODUCT_LANGS ${ARGN})
@@ -52,13 +50,14 @@ macro(setlanguage INLANG URL)
         # set(PRODUCT "${PRODURL}.${LANGEXT}.xml")
         set(OUTFILE "${URL}.${LANGEXT}.xml")
 
+        # generate new language file
         add_custom_command(COMMAND ${SRCML_EXE} --output-srcml --language=${LANG} ${BASEFILE} -o ${OUTFILE}
                     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${BASEFILE}
                     OUTPUT ${OUTFILE}
                     COMMENT "Generating parser testfile ${OUTFILE} from ${BASEFILE}"
                     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-        list(APPEND TESTFILES "${OUTFILE}")
+        track("${OUTFILE}")
     endforeach()
 endmacro()
 
@@ -80,7 +79,14 @@ macro(transform OUTFILE INFILE URL XSLT)
                        COMMENT "Generating parser testfile ${OUTFILE} from ${INFILE}"
                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
-    list(APPEND TESTFILES "${OUTFILE}")
+    track("${OUTFILE}")
+endmacro()
+
+# Track all generated files
+set(GENERATED_TEST_FILES)
+macro(track URL)
+    list(APPEND GENERATED_TEST_FILES "${URL}")
+    set(GENERATED_TEST_FILES "${GENERATED_TEST_FILES}" PARENT_SCOPE)
 endmacro()
 
 # Generate special transformations
@@ -110,73 +116,31 @@ foreach(GEN IN ITEMS ${SUITE})
 
     if(CATEGORY STREQUAL "LANGUAGE_ALL_BASE")
 
-        # base is C++, so these just get added
-        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
 
-        # explicitly generated
-        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP")
-
-        # exist, just add to list
-        list(APPEND TESTFILES "${URL}.cs.xml")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP_GEN")
-
-        # explicitly generated
-        #list(APPEND TESTFILES "${URL}.cs.xml")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_CXX")
-
-        # exist, just add to list
-        list(APPEND TESTFILES "${URL}.cpp.xml")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CXX_FAMILY")
 
-        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C#")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_NOP")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
 
-        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C" "C#" "Objective-C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY_NO_SHARP")
 
-        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C" "Objective-C")
- 
+
     elseif(CATEGORY STREQUAL "LANGUAGE_C_ONLY")
 
-        list(APPEND TESTFILES "${URL}.c.xml")
         setlanguage("C" "${URL}" "Objective-C")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_JAVA")
-
-        list(APPEND TESTFILES "${URL}.java.xml")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_JAVA_GEN")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C")
-
-        list(APPEND TESTFILES "${URL}.m.xml")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C_GEN")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OO")
 
-        # base is C++, so these just get added
-        list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C#" "Java")
-
 
     elseif(CATEGORY STREQUAL "LANGUAGE_TRANSFORM")
 
@@ -186,31 +150,36 @@ foreach(GEN IN ITEMS ${SUITE})
 
 endforeach()
 
-list(SORT TESTFILES)
-
-# this should not be necessary, but without it there are some issues
-# with empty srcML files
-list(REMOVE_DUPLICATES TESTFILES)
+set(ALLFILES ${DEFINED_TEST_FILES})
+list(APPEND ALLFILES ${GENERATED_TEST_FILES})
+list(SORT ALLFILES)
 
 message(STATUS "  Generating context variation targets")
 
-set(CONTEXT_FILES)
-
 # Generate variations: formfeed, comment, block, etc.
-foreach(GENURL IN ITEMS ${TESTFILES})
+foreach(GENURL IN ITEMS ${ALLFILES})
 
     # ${URL}.${LANGEXT}.xml
     get_filename_component(SRCFILENAME "${GENURL}" NAME_WLE)
     get_filename_component(URL "${SRCFILENAME}" NAME_WLE)
     get_filename_component(EXTENSION "${SRCFILENAME}" LAST_EXT)
+
+    if(URL STREQUAL "comment_eof" OR URL STREQUAL "puretypedecl" OR URL STREQUAL "throws_java")
+        continue()
+    endif()
+
     # remove '.'
     string(SUBSTRING "${EXTENSION}" 1 -1 LANGEXT)
 
     # Generate "formfeed" "comment" "block" "struct" "ifthenelse"
     foreach(VARIATION IN ITEMS "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
         # preproc and struct do not work with Java
+        # struct does not work with C#
+        # visual_cxx_asm and openmp do not work with preproc
         if((LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc")) OR
-           (LANGEXT STREQUAL "cs" AND VARIATION STREQUAL "struct"))
+           (LANGEXT STREQUAL "cs" AND VARIATION STREQUAL "struct") OR
+           URL STREQUAL "visual_cxx_asm" AND VARIATION STREQUAL "preproc" OR
+           URL STREQUAL "openmp" AND VARIATION STREQUAL "preproc")
             continue()
         endif()
 
@@ -218,53 +187,44 @@ foreach(GENURL IN ITEMS ${TESTFILES})
             COMMAND ${SRCML_EXE} --output-srcml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
                      -o ${URL}.${VARIATION}.${LANGEXT}.xml
             COMMENT "Generating parser testfile ${URL}.${VARIATION}.${LANGEXT}.xml from ${GENURL}"
-            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
+            DEPENDS ${GENURL}
+            # DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
             WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
             OUTPUT ${URL}.${VARIATION}.${LANGEXT}.xml
         )
-        list(APPEND CONTEXT_FILES ${URL}.${VARIATION}.${LANGEXT}.xml)
+        track(${URL}.${VARIATION}.${LANGEXT}.xml)
     endforeach()
+
+    # No all for elseif
+    if(URL STREQUAL "elseif")
+        continue()
+    endif()
 
     # all is generated separately because it does not use an XSLT transformation
     add_custom_command(
         COMMAND ${SRCML_EXE} --cat --url=${URL}.all ${GENURL} -o ${URL}.all.${LANGEXT}.xml
         COMMENT "Generating parser testfile ${URL}.all.${LANGEXT}.xml from ${GENURL}"
-        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
+        DEPENDS ${GENURL}
+        # DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         OUTPUT ${URL}.all.${LANGEXT}.xml
     )
-    list(APPEND CONTEXT_FILES ${URL}.all.${LANGEXT}.xml)
+    track(${URL}.all.${LANGEXT}.xml)
 
 endforeach()
 
-# specify the build directory, as the WORKING_DIRECTORY does not always seem to
-# be used in the DEPENDS
-list(TRANSFORM CONTEXT_FILES PREPEND "${CMAKE_CURRENT_BINARY_DIR}/")
+list(LENGTH GENERATED_TEST_FILES LENGTH)
+message(STATUS "  Generated test files: ${LENGTH}")
 
-# display number of parser testfiles
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/.count "echo '-- Total Parser Testfiles: ' | tr -d '\n'; ls *.xml | wc -l | tr -d ' '")
-add_custom_command(
-    COMMAND . ./.count
-    COMMENT ""
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${CONTEXT_FILES}
-    OUTPUT parser_testfile_count
-)
-
-# generate the parser tests
-if(NOT WIN32)
-add_custom_target(gen_parser_tests DEPENDS parser_testfile_count
+# generate parser tests
+add_custom_target(gen_parser_tests
+                  DEPENDS ${GENERATED_TEST_FILES}
                   COMMENT "Generated parser testfile target"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-else()
-add_custom_target(gen_parser_tests DEPENDS ${CONTEXT_FILES}
-                  COMMENT "Generated parser testfile target"
-                  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
-endif()
 
-# clean all parser tests, original and generated
+# clean parser tests
 add_custom_target(clean_parser_tests
-                  COMMAND ${CMAKE_COMMAND} -E remove *.xml
+                  COMMAND ${CMAKE_COMMAND} -E remove ${GENERATED_TEST_FILES}
                   COMMENT "Clean all generated parser testfiles"
                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
