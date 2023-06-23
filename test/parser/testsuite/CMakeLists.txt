@@ -96,11 +96,13 @@ message(STATUS "  Generating special transformation targets")
 # Do not use file(COPY) as it changes the line endings
 # Do not use COPYFILE_ONLY as it changes the line endings
 configure_file(${CMAKE_CURRENT_BINARY_DIR}/constructor_base.cpp.xml ${CMAKE_CURRENT_BINARY_DIR}/constructor.cpp.xml NEWLINE_STYLE LF)
+track(constructor.cpp.xml)
 
 add_custom_command(COMMAND ${SRCML_EXE} --language=Java --output-srcml finally_cs.cs.xml -o finally_java.java.xml
                    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/finally_cs.cs.xml
                    OUTPUT finally_java.java.xml
                    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+track(finally_java.java.xml)
 
 message(STATUS "  Generating suite targets")
 
