@@ -18,7 +18,7 @@ endif()
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
 
 # Package name
-set(CPACK_PACKAGE_NAME "srcml") 
+set(CPACK_PACKAGE_NAME "srcml")
 
 # Package release number (NOT srcml or libsrcml release)
 # Note: Update when package is updated, but not contents
@@ -35,7 +35,7 @@ set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
 set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcML.org>")
- 
+
 # package version
 # set as part of project()
 
@@ -50,7 +50,7 @@ set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
 
 # strip executables
 set(CPACK_STRIP_FILES ON)
- 
+
 # output directory
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
@@ -64,7 +64,8 @@ include(CPackComponent)
 cpack_add_component(SRCML
                     DISPLAY_NAME "srcml"
                     DESCRIPTION "srcml cli program with required library"
-                    REQUIRED)
+                    )
+                    # REQUIRED)
 
 cpack_add_component_group(SRCMLDEV
                     DISPLAY_NAME "Development"

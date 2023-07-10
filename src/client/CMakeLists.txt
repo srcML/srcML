@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: GPL-3.0-only
 ##
 # @file CMakeLists.txt
-# 
+#
 # @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
-# 
+#
 # CMake files for the srcML client
 
 # if(NOT srcML::LibsrcML)
@@ -60,7 +60,7 @@ target_compile_options(srcml PRIVATE "${SRCML_CLIENT_COMPILE_FLAGS}")
 set_target_properties(srcml PROPERTIES LINK_FLAGS "${SRCML_CLIENT_LINK_FLAGS}")
 
 # Install the client
-install(TARGETS srcml COMPONENT SRCML)
+install(TARGETS srcml DESTINATION / COMPONENT SRCML)
 
 # On Windows with vcpkg, install all the dlls that the vcpkg used
 # Handled in libsrcml
