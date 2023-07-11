@@ -18,12 +18,21 @@
 #include <libarchive_utilities.hpp>
 #include <string_view>
 #include <stdio.h>
+#include <string_view>
+#include <optional>
+#include <memory>
 
 using namespace ::std::literals::string_view_literals;
 
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
-    std::unique_ptr<archive> arch(archive_read_new());
+    if (input_file.parchive) {
+        return input_file.parchive;
+    }
+
+    std::unique_ptr<archive> arch;
+
+    arch.reset(archive_read_new());
 
     archive_read_support_format_ar(arch.get());
     archive_read_support_format_cpio(arch.get());
@@ -131,16 +140,23 @@ int src_input_libarchive(ParseQueue& queue,
         return 0;
     }
 
+    auto inBuffer = input_file.buffer;
+
     /* In general, go through this once for each time the header can be read
        Exception: if empty, go through the loop exactly once */
     int count = 0;
     archive_entry *entry;
 
-    int status = ARCHIVE_OK;
-    while (status == ARCHIVE_OK &&
-           (((status = archive_read_next_header(arch.get(), &entry)) == ARCHIVE_OK) ||
-            (status == ARCHIVE_EOF && !count))) {
+    if (input_file.pentry)
+        entry = input_file.pentry;
 
+    int status = ARCHIVE_OK;
+    bool first = true;
+    while ((first && input_file.preReadLibarchive) || !inBuffer.empty() || (status == ARCHIVE_OK &&
+           (((status = archive_read_next_header(arch.get(), &entry)) == ARCHIVE_OK) ||
+            (status == ARCHIVE_EOF && !count)))) {
+
+        first = false;
         if (status == ARCHIVE_EOF && getCurlErrors())
             return 0;
 
@@ -152,11 +168,12 @@ int src_input_libarchive(ParseQueue& queue,
         }
 
         // skip any directories
-        if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR)
+        if (status == ARCHIVE_OK && archive_entry_filetype(entry) == AE_IFDIR) {
             continue;
+        }
 
         // default is filename from archive entry (if not empty)
-        std::string filename = status == ARCHIVE_OK ? archive_entry_pathname(entry) : "";
+        std::string filename = status == ARCHIVE_OK && archive_entry_pathname(entry) ? archive_entry_pathname(entry) : "";
 
         // starting in libarchive 3.4 gz compression, although ARCHIVE_FORMAT_RAW, has an
         // entry. For consisten behavior, ignore this for now
@@ -219,55 +236,120 @@ int src_input_libarchive(ParseQueue& queue,
             continue;
         }
 
-        // form the parsing request
-        std::shared_ptr<ParseRequest> prequest(new ParseRequest);
+        std::optional<std::string_view> svBuffer = inBuffer;
+        inBuffer.remove_prefix(inBuffer.size());
 
-        if (option(SRCML_COMMAND_NOARCHIVE))
-            prequest->disk_dir = srcml_request.output_filename.resource;
+        while (true) {
 
-        if (srcml_request.att_filename || (filename != "-"sv))
-            prequest->filename = filename;
+            // form the parsing request
+            std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
-        prequest->url = srcml_request.att_url;
-        prequest->version = srcml_request.att_version;
-        prequest->srcml_arch = srcml_arch;
-        prequest->language = language;
-        prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
+            if (option(SRCML_COMMAND_NOARCHIVE))
+                prequest->disk_dir = srcml_request.output_filename.resource;
 
-        if (option(SRCML_COMMAND_TIMESTAMP)) {
+            if (srcml_request.att_filename || (filename != "-"sv))
+                prequest->filename = filename;
 
-            //Long time provided by libarchive needs to be time_t
-            time_t mod_time(archive_entry_mtime(entry));
+            prequest->url = srcml_request.att_url;
+            prequest->version = srcml_request.att_version;
+            prequest->srcml_arch = srcml_arch;
+            prequest->language = language;
+            prequest->status = !language.empty() ? 0 : SRCML_STATUS_UNSET_LANGUAGE;
 
-            //Standard ctime output and prune '/n' from string
-            char s[1000];
-            struct tm * p = localtime(&mod_time);
-            strftime(s, 1000, "%c", p);
-            prequest->time_stamp = s;
-        }
+            if (option(SRCML_COMMAND_TIMESTAMP)) {
 
-        // fill up the parse request buffer
-        if (!status && !prequest->status) {
-            // if we know the size, create the right sized data_buffer
-            if (archive_entry_size_is_set(entry))
-                prequest->buffer.reserve((decltype(prequest->buffer)::size_type) archive_entry_size(entry));
+                //Long time provided by libarchive needs to be time_t
+                time_t mod_time(archive_entry_mtime(entry));
 
-            const char* buffer;
-            size_t size;
-#if ARCHIVE_VERSION_NUMBER < 3000000
-            off_t offset;
-#else
-            int64_t offset;
-#endif
-            while (status == ARCHIVE_OK && archive_read_data_block(arch.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
-                prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+                //Standard ctime output and prune '/n' from string
+                char s[1000];
+                struct tm * p = localtime(&mod_time);
+                strftime(s, 1000, "%c", p);
+                prequest->time_stamp = s;
             }
+
+            // fill up the parse request buffer
+            if (svBuffer || (!status && !prequest->status)) {
+
+                // when there are saved buffer contents
+                if (svBuffer) {
+
+                    // copy up until null
+                    const auto nullPositionIterator = std::find(svBuffer->begin(), svBuffer->end(), '\0');
+                    prequest->buffer.insert(prequest->buffer.end(), svBuffer->begin(), nullPositionIterator);
+
+                    // adjust the save buffer
+                    if (nullPositionIterator == svBuffer->end()) {
+
+                        // No null found, so clear the save buffer and proceed with more reads
+                        svBuffer.reset();
+
+                    } else {
+
+                        // Since a null, input is multiple files
+                        srcml_archive_disable_solitary_unit(srcml_arch);
+                        srcml_archive_enable_hash(srcml_arch);
+
+                        // Null found, so remove this part and issue as a request
+                        svBuffer->remove_prefix(nullPositionIterator - svBuffer->begin() + 1);
+
+                        goto schedule;
+                    }
+                }
+
+                // if we know the size, create the right sized data_buffer
+                if (archive_entry_size_is_set(entry))
+                    prequest->buffer.reserve((decltype(prequest->buffer)::size_type) archive_entry_size(entry));
+
+                const char* buffer;
+                size_t size;
+#if ARCHIVE_VERSION_NUMBER < 3000000
+                off_t offset;
+#else
+                int64_t offset;
+#endif
+
+                while (status == ARCHIVE_OK && archive_read_data_block(arch.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
+
+                    // check for null
+                    auto nullPosition = std::find(buffer, buffer + size, '\0');
+                    if (nullPosition != buffer + size) {
+
+                        // now an archive
+                        srcml_archive_disable_solitary_unit(srcml_arch);
+                        srcml_archive_enable_hash(srcml_arch);
+
+                        // create request around pre-null
+                        prequest->buffer.insert(prequest->buffer.end(), buffer, nullPosition);
+
+                        // save the remaining buffer
+                        svBuffer = std::string_view(nullPosition + 1, (buffer + size) - (nullPosition + 1));
+
+                        break;
+                    }
+                    prequest->buffer.insert(prequest->buffer.end(), buffer, buffer + size);
+                }
+            }
+
+schedule:
+
+            // create the unit if needed
+            if (!prequest->unit) {
+                prequest->unit.reset(srcml_unit_create(prequest->srcml_arch));
+                if (!prequest->unit) {
+                    prequest->status = SRCML_STATUS_ERROR;
+                }
+            }
+
+            // schedule for parsing
+            queue.schedule(prequest);
+
+            ++count;
+
+            // when there is no save buffer contents
+            if (!svBuffer)
+                break;
         }
-
-        // schedule for parsing
-        queue.schedule(prequest);
-
-        ++count;
     }
 
     return count;

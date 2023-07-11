@@ -165,7 +165,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
                 return;
             }
 
-            srcml_request.input_sources.emplace_back(input);
+            srcml_request.input_sources.push_back(std::move(input));
         });
 
     // general

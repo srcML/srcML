@@ -15,7 +15,7 @@ int input_archive(const srcml_input_src& input) {
 
     srcml_input_src uninput = input;
 
-    if (!input.archives.empty() || !input.compressions.empty()) {
+    if (input.fd || !input.archives.empty() || !input.compressions.empty()) {
 
         srcml_pipe(uninput, unarchive_srcml);
     }
