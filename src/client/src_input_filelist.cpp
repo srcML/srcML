@@ -24,7 +24,7 @@ int src_input_filelist(ParseQueue& queue,
                         std::string_view input_file,
                         const srcml_output_dest& destination) {
 
-    std::shared_ptr<archive> arch(libarchive_input_file(srcml_input_src(input_file)));
+    std::unique_ptr<archive> arch(libarchive_input_file(srcml_input_src(input_file)));
     if (!arch)
         return -1;
 
