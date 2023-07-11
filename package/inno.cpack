@@ -36,4 +36,4 @@ set(CPACK_INNOSETUP_SETUP_AlwaysShowDirOnReadyPage ON)
 set(CPACK_INNOSETUP_SETUP_AlwaysShowGroupOnReadyPage ON)
 
 # Extend functionality with custom script
-set(CPACK_INNOSETUP_EXTRA_SCRIPTS ${CMAKE_SOURCE_DIR}/package/INNOExtensionScript.iss)
+set(CPACK_INNOSETUP_EXTRA_SCRIPTS ${CMAKE_SOURCE_DIR}/package/inno_extension_script.iss)
