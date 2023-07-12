@@ -99,6 +99,12 @@ void open_stdin_libarchive(srcml_input_src& input_source) {
     int64_t offset;
 #endif
     status = archive_read_data_block(stdinArchive.get(), (const void**) &buffer, &size, &offset);
+
+    // empty input produces wrong size
+    if (archive_format(stdinArchive.get()) == ARCHIVE_FORMAT_EMPTY) {
+        size = 0;
+    }
+
     std::string_view firstBlock(buffer, size);
 
     // store part already read in
