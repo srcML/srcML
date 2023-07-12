@@ -43,13 +43,6 @@ set(CPACK_COMPONENT_EXAMPLES_REQUIRED TRUE)
 # Setup will always show the selected directory in the list of settings on the Ready to Install wizard page
 set(CPACK_INNOSETUP_SETUP_AlwaysShowDirOnReadyPage ON)
 
-# Setup will display a Don't create a Start Menu folder check box on the Select Start Menu Folder wizard page
-# set(CPACK_INNOSETUP_SETUP_AllowNoIcons ON)
-
-# Setup will always show the selected Start Menu folder name in the list of settings on the Ready to Install wizard page
-# If no Start Menu folder is going to be created by Setup, this directive is effectively ignored.
-# set(CPACK_INNOSETUP_SETUP_AlwaysShowGroupOnReadyPage ON)
-
 # Extend functionality with custom script, inno_extension_script.iss
 set(CPACK_INNOSETUP_EXTRA_SCRIPTS ${CMAKE_BINARY_DIR}/inno_extension_script.iss)
 
@@ -73,10 +66,6 @@ Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environmen
 [Code]
 procedure InitializeWizard;
 begin
-  // select all components for install
-  WizardForm.ComponentsList.Checked[0] := True; // Development
-  WizardForm.ComponentsList.Checked[1] := True; // libsrcml.a
-  WizardForm.ComponentsList.Checked[2] := True; // lisrcml examples
-  // WizardForm.ComponentsList.Checked[3] := True; // srcml
+  WizardSelectComponents('SRCML,SRCMLDEV\DEVLIBS,SRCMLDEV\EXAMPLES');
 end;
 ]=])

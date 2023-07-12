@@ -63,9 +63,7 @@ set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 include(CPackComponent)
 cpack_add_component(SRCML
                     DISPLAY_NAME "srcml"
-                    DESCRIPTION "srcml cli program with required library"
-                    )
-                    # REQUIRED)
+                    DESCRIPTION "srcml cli program with required library")
 
 cpack_add_component_group(SRCMLDEV
                     DISPLAY_NAME "Development"
