@@ -15,25 +15,68 @@ endif()
 list(APPEND CPACK_GENERATOR "INNOSETUP")
 list(REMOVE_DUPLICATES CPACK_GENERATOR)
 
-# package naming
+# Package naming
 set(CPACK_SYSTEM_NAME "windows-x86_64")
 
-# Windows is one package
-set(CPACK_ARCHIVE_COMPONENT_INSTALL OFF)
+# Use modern wizard
+set(CPACK_INNOSETUP_USE_MODERN_WIZARD ON)
 
-# Set the installer icon file
+# Enable welcome page
+set(CPACK_INNOSETUP_SETUP_DisableWelcomePage OFF)
+
+# The path to a custom installer .ico file. This is displayed in the file explorer
 set(CPACK_INNOSETUP_ICON_FILE ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
-set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon.ico)
 
-# Setup will display a Don't create a Start Menu folder check box on the Select Start Menu Folder wizard page
-set(CPACK_INNOSETUP_SETUP_AllowNoIcons ON)
+# A branding image that will be displayed inside the installer (used by GUI installers).
+# This is displayed in the upper right-hand corner of each page
+set(CPACK_PACKAGE_ICON ${CMAKE_SOURCE_DIR}/package/srcml_icon_inno.bmp)
+
+# The welcome page display image
+set(CPACK_INNOSETUP_SETUP_WizardImageFile ${CMAKE_SOURCE_DIR}/package/background_new.bmp)
+
+# Make installation components required
+set(CPACK_COMPONENT_SRCML_REQUIRED TRUE)
+set(CPACK_COMPONENT_INCLUDE_REQUIRED TRUE)
+set(CPACK_COMPONENT_DEVLIBS_REQUIRED TRUE)
+set(CPACK_COMPONENT_EXAMPLES_REQUIRED TRUE)
 
 # Setup will always show the selected directory in the list of settings on the Ready to Install wizard page
 set(CPACK_INNOSETUP_SETUP_AlwaysShowDirOnReadyPage ON)
 
+# Setup will display a Don't create a Start Menu folder check box on the Select Start Menu Folder wizard page
+# set(CPACK_INNOSETUP_SETUP_AllowNoIcons ON)
+
 # Setup will always show the selected Start Menu folder name in the list of settings on the Ready to Install wizard page
 # If no Start Menu folder is going to be created by Setup, this directive is effectively ignored.
-set(CPACK_INNOSETUP_SETUP_AlwaysShowGroupOnReadyPage ON)
+# set(CPACK_INNOSETUP_SETUP_AlwaysShowGroupOnReadyPage ON)
 
-# Extend functionality with custom script
-set(CPACK_INNOSETUP_EXTRA_SCRIPTS ${CMAKE_SOURCE_DIR}/package/inno_extension_script.iss)
+# Extend functionality with custom script, inno_extension_script.iss
+set(CPACK_INNOSETUP_EXTRA_SCRIPTS ${CMAKE_BINARY_DIR}/inno_extension_script.iss)
+
+# Generate inno_extension_script.iss
+file(WRITE ${CMAKE_BINARY_DIR}/inno_extension_script.iss
+[=[
+[Setup]
+ChangesEnvironment=yes
+
+[Tasks]
+Name: "addtosystempath"; Description: "Add srcML to the system PATH for all users"; Flags: exclusive
+Name: "addtouserpath"; Description: "Add srcML to the system PATH for the current user"; Flags: exclusive
+Name: "dontaddtopath"; Description: "Do not add srcML to the system PATH"; Flags: exclusive
+
+[Registry]
+Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}"; Check: IsTaskSelected('addtosystempath')
+// TODO: Implement user path
+// Root: HKLM; Subkey: "HKEY_CURRENT_USER\Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}"; Check: IsTaskSelected('addtouserpath')
+// TODO: Implement don't add to path
+
+[Code]
+procedure InitializeWizard;
+begin
+  // select all components for install
+  WizardForm.ComponentsList.Checked[0] := True; // Development
+  WizardForm.ComponentsList.Checked[1] := True; // libsrcml.a
+  WizardForm.ComponentsList.Checked[2] := True; // lisrcml examples
+  // WizardForm.ComponentsList.Checked[3] := True; // srcml
+end;
+]=])

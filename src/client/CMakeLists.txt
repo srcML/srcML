@@ -60,7 +60,7 @@ target_compile_options(srcml PRIVATE "${SRCML_CLIENT_COMPILE_FLAGS}")
 set_target_properties(srcml PROPERTIES LINK_FLAGS "${SRCML_CLIENT_LINK_FLAGS}")
 
 # Install the client
-install(TARGETS srcml DESTINATION / COMPONENT SRCML)
+install(TARGETS srcml COMPONENT SRCML)
 
 # On Windows with vcpkg, install all the dlls that the vcpkg used
 # Handled in libsrcml
