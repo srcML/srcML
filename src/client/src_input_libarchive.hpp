@@ -18,6 +18,7 @@
 #include <ParseQueue.hpp>
 #include <srcml_input_src.hpp>
 #include <src_archive.hpp>
+#include <memory>
 
 archive* libarchive_input_file(const srcml_input_src& input_file);
 

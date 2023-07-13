@@ -135,6 +135,8 @@ _srcml_unit_get_timestamp
 _srcml_unit_get_hash
 _srcml_unit_get_loc
 _srcml_unit_get_eol
+_srcml_unit_get_src
+_srcml_unit_get_src_size
 _srcml_unit_get_srcml
 _srcml_unit_get_srcml_outer
 _srcml_unit_get_srcml_inner

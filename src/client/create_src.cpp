@@ -141,6 +141,7 @@ void create_src(const srcml_request_t& srcml_request,
         }
 
         int count = 0;
+        char lastchar = '\0';
         while (1) {
             std::unique_ptr<srcml_unit> unit(srcml_archive_read_unit(arch.get()));
             if (srcml_request.unit && !unit) {
@@ -159,9 +160,16 @@ void create_src(const srcml_request_t& srcml_request,
             if (srcml_request.eol)
                 srcml_unit_set_eol(unit.get(), *srcml_request.eol);
 
-            // null separator before every unit (except the first)
-            if (count) {
+            // before source null output separator
+            if (count && option(SRCML_COMMAND_NULL)) {
                 if (write(1, "", 1) == -1) {
+                    SRCMLstatus(ERROR_MSG, "Unable to write to stdout");
+                    break;
+                }
+            }
+
+            if (count && !option(SRCML_COMMAND_NULL)) {
+                if (lastchar != '\n' && write(1, "\n", 1) == -1) {
                     SRCMLstatus(ERROR_MSG, "Unable to write to stdout");
                     break;
                 }
@@ -170,11 +178,24 @@ void create_src(const srcml_request_t& srcml_request,
             // unparse directly to the destintation
             srcml_unit_unparse_fd(unit.get(), destination);
 
+            // after source newline
+            if (!option(SRCML_COMMAND_NULL)) {
+                const auto size = srcml_unit_get_src_size(unit.get());
+                lastchar = size ? srcml_unit_get_src(unit.get())[size - 1] : '\0';
+            }
+
             // get out if only one unit
             if (srcml_request.unit)
                 break;
 
             ++count;
+        }
+
+        if (count > 1 && !option(SRCML_COMMAND_NULL)) {
+            if (lastchar != '\n' && write(1, "\n", 1) == -1) {
+                SRCMLstatus(ERROR_MSG, "Unable to write to stdout");
+                exit(1);
+            }
         }
 
     } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {

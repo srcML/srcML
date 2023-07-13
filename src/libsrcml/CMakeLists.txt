@@ -32,6 +32,7 @@ message("CMAKE_OSX_ARCHITECTURES: ${CMAKE_OSX_ARCHITECTURES}")
 
 # Merge all object code into one object file to build static library from
 # Use this to build static library as it 1) hides filenames 2) hides symbols that are internal only
+set(LIBSRCML_OBJECTS $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr>)
 if(NOT MSVC)
     set(LIBSRCML_OBJECT_FILENAME libsrcml${CMAKE_CXX_OUTPUT_EXTENSION})
 
@@ -39,8 +40,8 @@ if(NOT MSVC)
         # Generate a single-object library for both architectures, then combine them into one
         add_custom_command(
           OUTPUT ${LIBSRCML_OBJECT_FILENAME}
-          COMMAND ld -r -arch arm64 $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> -o libsrcml.arm64.o
-          COMMAND ld -r -arch x86_64 $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> -o libsrcml.x86_64.o
+          COMMAND ld -r -arch arm64 ${LIBSRCML_OBJECTS} -o libsrcml.arm64.o
+          COMMAND ld -r -arch x86_64 ${LIBSRCML_OBJECTS} -o libsrcml.x86_64.o
           COMMAND lipo -create libsrcml.arm64.o libsrcml.x86_64.o -output ${LIBSRCML_OBJECT_FILENAME}
           DEPENDS libsrcml parser antlr
           COMMAND_EXPAND_LISTS
@@ -48,16 +49,15 @@ if(NOT MSVC)
     else()
         add_custom_command(
           OUTPUT ${LIBSRCML_OBJECT_FILENAME}
-          COMMAND ld -r $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> -o ${LIBSRCML_OBJECT_FILENAME}
+          COMMAND ld -r ${LIBSRCML_OBJECTS} -o ${LIBSRCML_OBJECT_FILENAME}
           DEPENDS libsrcml parser antlr
           COMMAND_EXPAND_LISTS
         )
     endif()
 
-    add_library(libsrcml_static STATIC ${LIBSRCML_OBJECT_FILENAME})
-else()
-    add_library(libsrcml_static STATIC $<TARGET_OBJECTS:libsrcml> $<TARGET_OBJECTS:parser> $<TARGET_OBJECTS:antlr> )
+    set(LIBSRCML_OBJECTS ${LIBSRCML_OBJECT_FILENAME})
 endif()
+add_library(libsrcml_static STATIC ${LIBSRCML_OBJECTS})
 set_target_properties(libsrcml_static PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     POSITION_INDEPENDENT_CODE ON
