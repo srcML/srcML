@@ -1,0 +1,23 @@
+<Fragment>
+    <UI>
+        <UIRef Id="WixUI_Common" />
+        <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+        <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+        <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+        <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+        <Property Id="WixUI_Mode" Value="InstallDir" />
+
+        <!-- Redefine the finish dialog -->
+        <DialogRef Id="FinishDlg" />
+        <Publish Dialog="FinishDlg" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+        <Dialog Id="FinishDlg" Width="370" Height="270" Title="!(loc.FinishDlg_Title)">
+            <!-- ...existing dialog layout... -->
+
+            <Control Id="OptionalInfo" Type="ScrollableText" X="20" Y="140" Width="330" Height="40" Sunken="yes" TabSkip="no">
+                <Text SourceFile="installed.rtf" />
+            </Control>
+        </Dialog>
+    </UI>
+</Fragment>
