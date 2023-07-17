@@ -16,9 +16,9 @@ endif()
 # add examples
 file(GLOB EXAMPLES "srcml_*.cpp")
 
-install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT EXAMPLES)
-install(FILES CMakeLists.examples.txt DESTINATION share/srcml/examples RENAME CMakeLists.txt COMPONENT EXAMPLES)
-install(FILES decl_stmt.cpp expr.cpp define.cpp project.xml copy.xsl schema.rng DESTINATION share/srcml/examples COMPONENT EXAMPLES)
+install(FILES ${EXAMPLES} DESTINATION share/srcml/examples COMPONENT DEVLIBS)
+install(FILES CMakeLists.examples.txt DESTINATION share/srcml/examples RENAME CMakeLists.txt COMPONENT DEVLIBS)
+install(FILES decl_stmt.cpp expr.cpp define.cpp project.xml copy.xsl schema.rng DESTINATION share/srcml/examples COMPONENT DEVLIBS)
 
 file(COPY decl_stmt.cpp expr.cpp define.cpp project.xml schema.rng copy.xsl DESTINATION "${CMAKE_BINARY_DIR}/bin")
 

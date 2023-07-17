@@ -64,7 +64,6 @@ include(CPackComponent)
 cpack_add_install_type(CLIENT DISPLAY_NAME "srcml cli")
 cpack_add_install_type(DEVELOPER DISPLAY_NAME "development")
 
-
 cpack_add_component(SRCML
                     DISPLAY_NAME "srcml client"
                     DESCRIPTION "srcml cli program with required libraries"
@@ -74,11 +73,6 @@ cpack_add_component(SRCML
 cpack_add_component(DEVLIBS
                     DISPLAY_NAME "libsrcml development"
                     DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
-                    INSTALL_TYPES DEVELOPER)
-
-cpack_add_component(EXAMPLES
-                    DISPLAY_NAME "libsrcml examples"
-                    DESCRIPTION "Code examples of using libsrcml"
                     INSTALL_TYPES DEVELOPER)
 
 # Copy and rename the README file for the proper extension
