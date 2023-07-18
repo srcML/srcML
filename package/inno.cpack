@@ -63,6 +63,8 @@ Name: "dontaddtopath"; Description: "Do not add srcML to the system PATH"; Flags
 Root: HKLM; Subkey: "SYSTEM\CurrentControlSet\Control\Session Manager\Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\bin"; Check: ShouldAddToSystemPath
 // Adding to current user path
 Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}\bin"; Check: ShouldAddToUserPath
+// Adding CMake Registry Key
+Root: HKLM; Subkey: "Software\Kitware\CMake\Packages\srcML"; ValueType: string; ValueName: "InstalledDir"; ValueData: ExpandConstant('{app}'); Check: WizardIsComponentSelected('DEVLIBS'); Flags: uninsdeletekey;
 
 [Code]
 function ShouldAddToSystemPath: Boolean;
@@ -113,7 +115,7 @@ begin
   if CurPageID = wpFinished then
   begin
     InfoLabel.Caption :=
-    'The path to the srcml command-line program is ' + ExpandConstant('{app}') + '\bin\srcml.exe. Here''s some examples of how to use it:'#13#10#13#10 +
+    'The srcml command-line program is at ' + ExpandConstant('{app}') + '\bin\srcml.exe'#13#10#13#10 +
     '# Convert from a source file to srcML'#13#10 +
     'srcml main.cpp -o main.cpp.xml'#13#10 +
     '# Convert from srcML back to source code'#13#10 +
@@ -123,20 +125,20 @@ begin
     '# Convert entire project to srcML'#13#10 +
     'srcml --verbose project -o project.xml'#13#10#13#10;
 
-    if WizardIsComponentSelected('libsrcml development') then
+    if WizardIsComponentSelected('DEVLIBS') then
     begin
       InfoLabel.Caption := InfoLabel.Caption +
-      'You installed the libsrcml development package, you have the ability to write applications that directly use libsrcml. This contains the following:'#13#10 +
-      '* The include file srcml.h'#13#10 +
-      '* The static library libsrcml_static.lib'#13#10 +
-      '* CMake configuration files'#13#10;
-    end;
+      'The libsrcml development package installed:'#13#10#13#10 +
+      '* The include file srcml.h in ' + ExpandConstant('{app}') + '\include'#13#10 +
+      '* The static library libsrcml_static.lib in ' + ExpandConstant('{app}') + '\lib'#13#10 +
+      '* The libsrcml examples in ' + ExpandConstant('{app}') + '\share\srcml'#13#10 +
+      '* CMake configuration files registered enabling the use of find_package(srcML REQUIRED)';
+    end
 
-    if WizardIsComponentSelected('libsrcml examples') then
+    else
     begin
       InfoLabel.Caption := InfoLabel.Caption +
-      'In addition, the libsrcml examples are installed in:'#13#10 +
-      '    ' + ExpandConstant('{app}') + '\share\srcml';
+      'The libsrcml development package was not installed. To install, rerun the installer and select the libsrcml development package.';
     end;
 
   end;

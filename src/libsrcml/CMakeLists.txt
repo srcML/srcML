@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: GPL-3.0-only
 ##
 # @file CMakeLists.txt
-# 
+#
 # @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
-# 
+#
 # CMake files for the library libsrcml
 
 find_package(LibXml2 REQUIRED)
@@ -100,7 +100,7 @@ set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_S
 set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_STATIC_OUTPUT_NAME}")
 
 if(DEFINED SRCML_LIBSRCML_COMPILE_FLAGS)
-    target_compile_options(libsrcml_shared PRIVATE ${SRCML_LIBSRCML_COMPILE_FLAGS})
+    target_compile_options(libsrcml PRIVATE ${SRCML_LIBSRCML_COMPILE_FLAGS})
 endif()
 
 if(DEFINED SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE)
