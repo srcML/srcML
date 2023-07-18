@@ -99,6 +99,10 @@ endif()
 set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_SHARED_OUTPUT_NAME}")
 set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_STATIC_OUTPUT_NAME}")
 
+if(DEFINED SRCML_LIBSRCML_COMPILE_FLAGS)
+    target_compile_options(libsrcml_shared PRIVATE ${SRCML_LIBSRCML_COMPILE_FLAGS})
+endif()
+
 if(DEFINED SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE)
     set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE "${SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE}")
 endif()
