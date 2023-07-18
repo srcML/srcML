@@ -103,7 +103,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         }
 
         // empty string after equals is not shown, i.e., --xmlns="", so replace with two arguments
-        if (arg.back() == '=') {
+        if (arg == "--xmlns="sv || arg == "--text="sv) {
             commandline.emplace_back(arg.substr(0, arg.size() - 1));
             commandline.emplace_back("");
         } else {
