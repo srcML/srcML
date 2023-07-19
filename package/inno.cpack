@@ -131,6 +131,7 @@ begin
       'The libsrcml development package installed:'#13#10#13#10 +
       '* The include file srcml.h in ' + ExpandConstant('{app}') + '\include'#13#10 +
       '* The static library libsrcml_static.lib in ' + ExpandConstant('{app}') + '\lib'#13#10 +
+      '* The debug file libsrcml.pdb in ' + ExpandConstant('{app}') + '\bin'#13#10 +
       '* The libsrcml examples in ' + ExpandConstant('{app}') + '\share\srcml'#13#10 +
       '* CMake configuration files registered enabling the use of find_package(srcML REQUIRED)';
     end
