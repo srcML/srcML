@@ -67,7 +67,7 @@ int src_input_text(ParseQueue& queue,
         std::shared_ptr<ParseRequest> prequest(new ParseRequest);
 
         if (option(SRCML_COMMAND_NOARCHIVE))
-            prequest->disk_dir = srcml_request.output_filename;
+            prequest->disk_dir = srcml_request.output_filename.resource;
 
         prequest->filename = srcml_request.att_filename;
         prequest->url = srcml_request.att_url;
