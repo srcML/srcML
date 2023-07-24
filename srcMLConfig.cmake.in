@@ -6,8 +6,8 @@ list(APPEND CMAKE_MODULE_PATH "@PACKAGE_cmakeModulesDir@")
 
 # Check the components
 set(LibsrcML_KNOWN_COMPONENTS static shared)
-set(LibsrcML_COMPONENT_STATIC NO)
-set(LibsrcML_COMPONENT_SHARED NO)
+set(LibsrcML_COMPONENT_static NO)
+set(LibsrcML_COMPONENT_shared NO)
 foreach (LibsrcML_COMPONENT IN LISTS ${CMAKE_FIND_PACKAGE_NAME}_FIND_COMPONENTS)
     if (LibsrcML_COMPONENT IN_LIST LibsrcML_KNOWN_COMPONENTS)
         set(LibsrcML_COMPONENT_${LibsrcML_COMPONENT} YES)
@@ -20,7 +20,7 @@ foreach (LibsrcML_COMPONENT IN LISTS ${CMAKE_FIND_PACKAGE_NAME}_FIND_COMPONENTS)
 endforeach()
 
 # Not allowed to specify both static and shared components
-if(LibsrcML_COMPONENT_STATIC AND LibsrcML_COMPONENT_SHARED)
+if(LibsrcML_COMPONENT_static AND LibsrcML_COMPONENT_shared)
     set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE
         "srcML components `static` and `shared` are mutually exclusive.")
     set(${CMAKE_FIND_PACKAGE_NAME}_FOUND FALSE)
@@ -28,7 +28,7 @@ if(LibsrcML_COMPONENT_STATIC AND LibsrcML_COMPONENT_SHARED)
 endif()
 
 set(COMPONENT "shared")
-if (LibsrcML_COMPONENT_STATIC)
+if (LibsrcML_COMPONENT_static)
     set(COMPONENT "static")
 endif()
 
@@ -52,10 +52,13 @@ find_path(srcML_INCLUDE_DIR
 # Add the include file
 target_include_directories(srcML::libsrcml_${COMPONENT} PUBLIC INTERFACE ${srcML_INCLUDE_DIR})
 
-# Find dependencies
-# find_package(LibXml2 REQUIRED)
-# find_package(Iconv REQUIRED)
-# find_package(LibXslt REQUIRED)
+# For the libsrcml shared library, the external shared libraries are private to it and already built
+# For the libsrcml static library, the external shared libraries must be linked to the executable
+if(LibsrcML_COMPONENT_static)
+    find_package(LibXml2 REQUIRED)
+    find_package(Iconv REQUIRED)
+    find_package(LibXslt REQUIRED)
+endif()
 
 set_target_properties(srcML::libsrcml_${COMPONENT} PROPERTIES IMPORTED_GLOBAL TRUE)
 add_library(srcML::LibsrcML ALIAS srcML::libsrcml_${COMPONENT})
