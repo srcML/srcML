@@ -201,3 +201,7 @@ check "\x1be;\x1b"
 # escaped \r
 srcml -l C++ --text="\rr;" | srcml
 check "\nr;"
+
+# ends in '='
+srcml -l C++ --text="PDF =" | srcml
+check "PDF ="
