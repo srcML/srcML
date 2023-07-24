@@ -45,7 +45,8 @@ include("${LibsrcML_${COMPONENT}_targets}")
 
 find_path(srcML_INCLUDE_DIR
   NAMES srcml.h
-  PATHS "${CMAKE_CURRENT_LIST_DIR}/../include"
+  PATHS "${CMAKE_CURRENT_LIST_DIR}/../../../include"
+  NO_DEFAULT_PATH
   DOC "libsrcml include directory"
 )
 
