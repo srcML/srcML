@@ -20,4 +20,4 @@ file(COPY decl_stmt.cpp expr.cpp define.cpp project.xml schema.rng copy.xsl DEST
 
 # Add each executable as a separate program
 # For each target, add the srcML::LibsrcML library
-
+add_custom_target(run)
