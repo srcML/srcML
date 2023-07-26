@@ -95,6 +95,7 @@
         // /wd5262 # implicit fall-through occurs here; are you missing a break statement? Use [[fallthrough]] when a break statement is intentionally omitted between cases
         // /wd5264 # 'int const `char const * __cdecl `anonymous namespace'::positoa(int)'::`2'::SIZE': 'const' variable is not used
         "SRCML_PARSER_DISABLED_WARNINGS": "/wd4267;/wd4365;/wd4459;/wd4530;/wd4577;/wd4701;/wd5262;/wd5264",
+        "SRCML_LIBSRCML_COMPILE_FLAGS": "/Zi",
         "SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF",
         "SRCML_LIBSRCML_STATIC_LINK_FLAGS_RELEASE": "/LTCG:OFF",
         // wd4355 # this': used in base member initializer list
