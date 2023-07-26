@@ -43,9 +43,12 @@ if (NOT EXISTS "${LibsrcML_${COMPONENT}_targets}")
 endif()
 include("${LibsrcML_${COMPONENT}_targets}")
 
+# Path depends on location of include directory for install. Custom path
+# here is for Windows non-default directory install
+# Default paths should work for Linux/macOS
 find_path(srcML_INCLUDE_DIR
   NAMES srcml.h
-  PATHS "${CMAKE_CURRENT_LIST_DIR}/../include"
+  PATHS "${CMAKE_CURRENT_LIST_DIR}/../../../include"
   DOC "libsrcml include directory"
 )
 
