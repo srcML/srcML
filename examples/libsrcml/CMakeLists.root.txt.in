@@ -1,0 +1,23 @@
+##
+# @file CMakeLists.txt
+#
+
+# Any more recent cmake can be specified
+cmake_minimum_required(VERSION 3.11)
+
+project(srcML-Examples)
+
+# Produces the target srcML::LibsrcML
+# Can also specify components. The default component is shared
+#   find_package(srcml COMPONENT shared REQUIRED)
+#   find_package(srcml COMPONENT static REQUIRED)
+find_package(srcML REQUIRED)
+
+set(CMAKE_CXX_STANDARD          11)
+
+# Copy data files for examples
+file(COPY decl_stmt.cpp expr.cpp define.cpp project.xml schema.rng copy.xsl DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
+# Add each executable as a separate program
+# For each target, add the srcML::LibsrcML library
+

@@ -1,0 +1,23 @@
+##
+# @file CMakeLists.txt
+
+# Any more-recent cmake can be specified
+cmake_minimum_required(VERSION 3.11)
+
+project(${EXAMPLE_NAME})
+
+# Produces the target srcML::LibsrcML
+# Can also specify a component for shared (default) or static
+#   find_package(srcML COMPONENTS shared REQUIRED)
+#   find_package(srcML COMPONENTS static REQUIRED)
+find_package(srcML REQUIRED)
+
+# Create the executable ${EXAMPLE_NAME}
+add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}.cpp)
+
+# Add the srcML::LibsrcML library
+# This gives access to srcml.h and either the shared or static libsrcml library
+target_link_libraries(${EXAMPLE_NAME} PRIVATE srcML::LibsrcML)
+
+# Add run command
+add_custom_target(run COMMAND $<TARGET_FILE:${EXAMPLE_NAME}> DEPENDS ${EXAMPLE_NAME} USES_TERMINAL)
