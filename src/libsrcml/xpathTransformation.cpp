@@ -161,6 +161,60 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
 }
 #pragma GCC diagnostic push
 
+// isInline() XPath extension function
+void isInline(xmlXPathParserContextPtr ctxt, int nargs) {
+    // check if the number of arguments is correct
+    if (nargs != 1) {
+        xmlXPathSetArityError(ctxt);
+        return;
+    }
+
+    // pop the argument from the stack
+    xmlXPathObjectPtr obj = valuePop(ctxt);
+
+    // check if the argument is a nodeset
+    if (obj->type != XPATH_NODESET) {
+        xmlXPathFreeObject(obj);
+        xmlXPathSetTypeError(ctxt);
+        return;
+    }
+
+    // The XPath expression you want to evaluate
+    xmlChar* xpathExpr = BAD_CAST "src:type/src:specifier='inline' or src:specifier='inline'";
+    int isInline = 0;
+
+    // Loop through all the nodes in the nodeset
+    for (int i = 0; i < obj->nodesetval->nodeNr; i++) {
+
+        xmlNodePtr node = obj->nodesetval->nodeTab[i];
+
+        // temporarily set the context node to the current node
+        xmlNodePtr oldNode = ctxt->context->node;
+        ctxt->context->node = node;
+
+        // evaluate the XPath expression on the temporary context node
+        xmlXPathObject* result = xmlXPathEvalExpression(xpathExpr, ctxt->context);
+
+        // restore the context node
+        ctxt->context->node = oldNode;
+
+        // find any true results
+        if (result != NULL && result->type == XPATH_BOOLEAN && result->boolval) {
+            isInline = 1;
+            xmlXPathFreeObject(result);
+            break;
+        }
+
+        xmlXPathFreeObject(result);
+    }
+
+    // Free the input object
+    xmlXPathFreeObject(obj);
+
+    // Push the result back to the stack.
+    valuePush(ctxt, xmlXPathNewBoolean(isInline));
+}
+
 /**
  * apply
  *
@@ -194,6 +248,10 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
 
         xmlXPathRegisterNs(context.get(), p->prefix, p->href);
     }
+
+    // register extension functions
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isInline", BAD_CAST "http://www.srcML.org/srcML/src", isInline);
+    xmlXPathRegisterNs(context.get(), BAD_CAST "src", BAD_CAST "http://www.srcML.org/srcML/src");
 
     // evaluate the xpath
     std::unique_ptr<xmlXPathObject> result_nodes(xmlXPathCompiledEval(compiled_xpath, context.get()));
