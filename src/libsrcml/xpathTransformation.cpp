@@ -278,7 +278,7 @@ void isProtected(xmlXPathParserContextPtr ctxt, int nargs) {
 }
 
 // XPath extension function handler
-void extensionBooleanFunctionHandler(xmlXPathParserContextPtr ctxt, int nargs, const static xmlChar* xpathExpr) {
+void extensionBooleanFunctionHandler(xmlXPathParserContextPtr ctxt, int nargs, const xmlChar* xpathExpr) {
     // check if the number of arguments is correct
     if (nargs != 1) {
         xmlXPathSetArityError(ctxt);

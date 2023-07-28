@@ -163,6 +163,6 @@ void isPrivate(xmlXPathParserContextPtr ctxt, int nargs);
 void isProtected(xmlXPathParserContextPtr ctxt, int nargs);
 
 // XPath extension function handler
-void extensionBooleanFunctionHandler(xmlXPathParserContextPtr ctxt, int nargs, const static xmlChar* xpathExpr);
+void extensionBooleanFunctionHandler(xmlXPathParserContextPtr ctxt, int nargs, const xmlChar* xpathExpr);
 
 #endif
