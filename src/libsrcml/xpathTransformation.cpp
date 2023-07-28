@@ -161,8 +161,124 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
 }
 #pragma GCC diagnostic push
 
+// isStatic() XPath extension function
+void isStatic(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "src:type/src:specifier='static' or (src:specifier='static' and (self::src:class or self::src:constructor) or (self::src:decl_stmt and src:decl/src:type/src:specifier='static'))";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
 // isInline() XPath extension function
 void isInline(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "src:type/src:specifier='inline' or src:specifier='inline'";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isPureVirtual() XPath extension function
+void isPureVirtual(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(self::src:function or self::src:function_decl) and ((ancestor::src:unit[1]/@language='C++' and src:literal=0) or (ancestor::src:unit[1]/@language='C#' and parent::src:block/parent::src:interface or src:type/src:specifier='abstract') or (ancestor::src:unit[1]/@language='Java' and parent::src:block/parent::src:interface))";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isExplicit() XPath extension function
+void isExplicit(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "src:specifier='explicit' or src:type/src:specifier='explicit' or src:expr/src:specifier='explicit'";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isDeleted() XPath extension function
+void isDeleted(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "src:specifier='delete'";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isConstant() XPath extension function
+void isConstant(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(self::src:decl or self::src:decl_stmt or self::src:function or self::src:function_decl) and (src:decl/src:type/src:specifier='const' or src:type/src:specifier='const' or src:specifier='const') or (ancestor::src:unit[1]/@language='Java' and src:specifier='final')";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isConst() XPath extension function
+void isConst(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(self::src:decl or self::src:decl_stmt or self::src:function or self::src:function_decl) and (src:decl/src:type/src:specifier='const' or src:type/src:specifier='const' or src:specifier='const')";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isFinal() XPath extension function
+void isFinal(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(self::src:decl or self::src:decl_stmt or self::src:function or self::src:function_decl) and (ancestor::src:unit[1]/@language='Java' and src:specifier='final')";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isOperatorFunction() XPath extension function
+void isOperatorFunction(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(self::src:function or self::src:function_decl) and @type='operator'";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isCopyConstructor() XPath extension function
+void isCopyConstructor(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "src:name = src:parameter_list/src:parameter/src:decl/src:type/src:name and (src:parameter_list/src:parameter/src:decl/src:type/src:modifier!='&&' or not(src:parameter_list/src:parameter/src:decl/src:type/src:modifier)) and (not(src:parameter_list/src:parameter[position() > 1 and not(src:decl/src:init)]) or count(src:parameter_list/src:parameter)=1)";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isMoveConstructor() XPath extension function
+void isMoveConstructor(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "src:parameter_list/src:parameter/src:decl/src:type/src:modifier='&&' and not(src:parameter_list/src:parameter[position() > 1 and not(src:decl/src:init)])";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isDefaultConstructor() XPath extension function
+void isDefaultConstructor(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(self::src:constructor or self::src:constructor_decl) and not(src:parameter_list/src:parameter[not(src:decl/src:init)])";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isCopyAssignmentOperator() XPath extension function
+void isCopyAssignmentOperator(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "@type='operator' and src:name/src:name='=' and (src:parameter_list/src:parameter/src:decl/src:type/src:modifier[1]!='&&' or not(src:parameter_list/src:parameter/src:decl/src:type/src:modifier)) and count(src:parameter_list/src:parameter)=1 and src:parameter_list/src:parameter/src:decl/src:type/src:name=src:type/src:name";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isMoveAssignmentOperator() XPath extension function
+void isMoveAssignmentOperator(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "@type='operator' and src:name/src:name='=' and src:parameter_list/src:parameter/src:decl/src:type/src:modifier[1]='&&' and src:parameter_list/src:parameter/src:decl/src:type/src:name=src:type/src:name";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isMethod() XPath extension function
+void isMethod(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(self::src:function or self::src:function_decl) and (../parent::src:block/parent::src:class or parent::src:block/parent::src:class)";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isFreeFunction() XPath extension function
+void isFreeFunction(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "not(ancestor-or-self::src:class) and (self::src:function or self::src:function_decl)";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isStatement() XPath extension function
+void isStatement(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "self::src:assert or self::src:block or self::src:break or self::src:case or self::src:checked or self::src:continue or self::src:default or self::src:do or self::src:empty_stmt or self::src:expr_stmt or self::src:finally or self::src:fixed or self::src:for or self::src:foreach or self::src:goto or self::src:if_stmt or self::src:label or self::src:lock or self::src:return or self::src:switch or self::src:unchecked or self::src:unsafe or self::src:using_stmt or self::src:while";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isDeclaration() XPath extension function
+void isDeclaration(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "self::src:function_decl or self::src:decl_stmt or self::src:class_decl or self::src:struct_decl or self::src:typedef";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isDefault() XPath extension function
+void isDefault(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "src:specifier='default'";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isMutable() XPath extension function
+void isMutable(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "src:specifier='mutable'";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isPublic() XPath extension function
+void isPublic(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(ancestor::src:unit[1]/@language='C++' and parent::src:public) or (ancestor::src:unit[1]/@language=('C#' or 'Java') and src:type/src:specifier='public')";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isPrivate() XPath extension function
+void isPrivate(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(ancestor::src:unit[1]/@language='C++' and parent::src:private) or (ancestor::src:unit[1]/@language=('C#' or 'Java') and src:type/src:specifier='private')";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+// isProtected() XPath extension function
+void isProtected(xmlXPathParserContextPtr ctxt, int nargs) {
+    const static xmlChar* xpathExpr = BAD_CAST "(ancestor::src:unit[1]/@language='C++' and parent::src:protected) or (ancestor::src:unit[1]/@language=('C#' or 'Java') and src:type/src:specifier='protected')";
+    extensionBooleanFunctionHandler(ctxt, nargs, xpathExpr);
+}
+
+// XPath extension function handler
+void extensionBooleanFunctionHandler(xmlXPathParserContextPtr ctxt, int nargs, const static xmlChar* xpathExpr) {
     // check if the number of arguments is correct
     if (nargs != 1) {
         xmlXPathSetArityError(ctxt);
@@ -179,9 +295,7 @@ void isInline(xmlXPathParserContextPtr ctxt, int nargs) {
         return;
     }
 
-    // The XPath expression you want to evaluate
-    xmlChar* xpathExpr = BAD_CAST "src:type/src:specifier='inline' or src:specifier='inline'";
-    int isInline = 0;
+    int flag = 0;
 
     // Loop through all the nodes in the nodeset
     for (int i = 0; i < obj->nodesetval->nodeNr; i++) {
@@ -200,7 +314,7 @@ void isInline(xmlXPathParserContextPtr ctxt, int nargs) {
 
         // find any true results
         if (result != NULL && result->type == XPATH_BOOLEAN && result->boolval) {
-            isInline = 1;
+            flag = 1;
             xmlXPathFreeObject(result);
             break;
         }
@@ -212,7 +326,7 @@ void isInline(xmlXPathParserContextPtr ctxt, int nargs) {
     xmlXPathFreeObject(obj);
 
     // Push the result back to the stack.
-    valuePush(ctxt, xmlXPathNewBoolean(isInline));
+    valuePush(ctxt, xmlXPathNewBoolean(flag));
 }
 
 /**
@@ -250,7 +364,29 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
     }
 
     // register extension functions
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isStatic", BAD_CAST "http://www.srcML.org/srcML/src", isStatic);
     xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isInline", BAD_CAST "http://www.srcML.org/srcML/src", isInline);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isPureVirtual", BAD_CAST "http://www.srcML.org/srcML/src", isPureVirtual);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isExplicit", BAD_CAST "http://www.srcML.org/srcML/src", isExplicit);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isDeleted", BAD_CAST "http://www.srcML.org/srcML/src", isDeleted);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isConstant", BAD_CAST "http://www.srcML.org/srcML/src", isConstant);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isConst", BAD_CAST "http://www.srcML.org/srcML/src", isConst);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isFinal", BAD_CAST "http://www.srcML.org/srcML/src", isFinal);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isOperatorFunction", BAD_CAST "http://www.srcML.org/srcML/src", isOperatorFunction);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isOperatorFunction", BAD_CAST "http://www.srcML.org/srcML/src", isOperatorFunction);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isMoveConstructor", BAD_CAST "http://www.srcML.org/srcML/src", isMoveConstructor);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isDefaultConstructor", BAD_CAST "http://www.srcML.org/srcML/src", isDefaultConstructor);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isCopyAssignmentOperator", BAD_CAST "http://www.srcML.org/srcML/src", isCopyAssignmentOperator);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isMoveAssignmentOperator", BAD_CAST "http://www.srcML.org/srcML/src", isMoveAssignmentOperator);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isMethod", BAD_CAST "http://www.srcML.org/srcML/src", isMethod);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isFreeFunction", BAD_CAST "http://www.srcML.org/srcML/src", isFreeFunction);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isStatement", BAD_CAST "http://www.srcML.org/srcML/src", isStatement);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isDeclaration", BAD_CAST "http://www.srcML.org/srcML/src", isDeclaration);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isDefault", BAD_CAST "http://www.srcML.org/srcML/src", isDefault);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isMutable", BAD_CAST "http://www.srcML.org/srcML/src", isMutable);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isPublic", BAD_CAST "http://www.srcML.org/srcML/src", isPublic);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isPrivate", BAD_CAST "http://www.srcML.org/srcML/src", isPrivate);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isProtected", BAD_CAST "http://www.srcML.org/srcML/src", isProtected);
     xmlXPathRegisterNs(context.get(), BAD_CAST "src", BAD_CAST "http://www.srcML.org/srcML/src");
 
     // evaluate the xpath

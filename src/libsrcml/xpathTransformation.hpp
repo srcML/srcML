@@ -137,4 +137,32 @@ private:
     xmlXPathContextPtr createContext(xmlDocPtr doc) const;
 };
 
+// XPath extension function declarations
+void isStatic(xmlXPathParserContextPtr ctxt, int nargs);
+void isInline(xmlXPathParserContextPtr ctxt, int nargs);
+void isPureVirtual(xmlXPathParserContextPtr ctxt, int nargs);
+void isExplicit(xmlXPathParserContextPtr ctxt, int nargs);
+void isDeleted(xmlXPathParserContextPtr ctxt, int nargs);
+void isConstant(xmlXPathParserContextPtr ctxt, int nargs);
+void isConst(xmlXPathParserContextPtr ctxt, int nargs);
+void isFinal(xmlXPathParserContextPtr ctxt, int nargs);
+void isOperatorFunction(xmlXPathParserContextPtr ctxt, int nargs);
+void isCopyConstructor(xmlXPathParserContextPtr ctxt, int nargs);
+void isMoveConstructor(xmlXPathParserContextPtr ctxt, int nargs);
+void isDefaultConstructor(xmlXPathParserContextPtr ctxt, int nargs);
+void isCopyAssignmentOperator(xmlXPathParserContextPtr ctxt, int nargs);
+void isMoveAssignmentOperator(xmlXPathParserContextPtr ctxt, int nargs);
+void isMethod(xmlXPathParserContextPtr ctxt, int nargs);
+void isFreeFunction(xmlXPathParserContextPtr ctxt, int nargs);
+void isStatement(xmlXPathParserContextPtr ctxt, int nargs);
+void isDeclaration(xmlXPathParserContextPtr ctxt, int nargs);
+void isDefault(xmlXPathParserContextPtr ctxt, int nargs);
+void isMutable(xmlXPathParserContextPtr ctxt, int nargs);
+void isPublic(xmlXPathParserContextPtr ctxt, int nargs);
+void isPrivate(xmlXPathParserContextPtr ctxt, int nargs);
+void isProtected(xmlXPathParserContextPtr ctxt, int nargs);
+
+// XPath extension function handler
+void extensionBooleanFunctionHandler(xmlXPathParserContextPtr ctxt, int nargs, const static xmlChar* xpathExpr);
+
 #endif
