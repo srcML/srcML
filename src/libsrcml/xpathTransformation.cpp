@@ -373,7 +373,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
     xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isConst", BAD_CAST "http://www.srcML.org/srcML/src", isConst);
     xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isFinal", BAD_CAST "http://www.srcML.org/srcML/src", isFinal);
     xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isOperatorFunction", BAD_CAST "http://www.srcML.org/srcML/src", isOperatorFunction);
-    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isOperatorFunction", BAD_CAST "http://www.srcML.org/srcML/src", isOperatorFunction);
+    xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isCopyConstructor", BAD_CAST "http://www.srcML.org/srcML/src", isCopyConstructor);
     xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isMoveConstructor", BAD_CAST "http://www.srcML.org/srcML/src", isMoveConstructor);
     xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isDefaultConstructor", BAD_CAST "http://www.srcML.org/srcML/src", isDefaultConstructor);
     xmlXPathRegisterFuncNS(context.get(), BAD_CAST "isCopyAssignmentOperator", BAD_CAST "http://www.srcML.org/srcML/src", isCopyAssignmentOperator);
