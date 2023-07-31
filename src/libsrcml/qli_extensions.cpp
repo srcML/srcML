@@ -102,7 +102,7 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
     // token
     std::unique_ptr<xmlNodeSet> node_set(xmlXPathPopNodeSet(ctxt));
     const xmlNode* node = node_set.get()->nodeTab[0];
-    const std::string token = get_node_text(node);
+    const std::string token(trim_whitespace(get_node_text(node)));
     const auto node_ptr = reinterpret_cast<std::uintptr_t>(node);
 
     // @NOTE Add comment
@@ -127,7 +127,7 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
 
     // remove prefix
     // @ASSUMPTION Prefix has to start at the beginning
-    if (!prefix.empty() && token.size() >= prefix.size() && token.compare(0, prefix.size(), prefix) == 0) {
+    if (!prefix.empty() && (token.size() < prefix.size() || token.compare(0, prefix.size(), prefix) != 0)) {
         xmlXPathReturnBoolean(ctxt, false);
         return;
     }
@@ -135,7 +135,7 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
 
     // remove postfix
     // @ASSUMPTION Postfix has to start at the beginning
-    if (!postfix.empty() && token.size() >= postfix.size() && token.compare(token.size() - postfix.size(), postfix.size(), postfix) == 0) {
+    if (!postfix.empty() && (token.size() < postfix.size() || token.compare(token.size() - postfix.size(), postfix.size(), postfix) != 0)) {
         xmlXPathReturnBoolean(ctxt, false);
         return;
     }
