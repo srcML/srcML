@@ -27,14 +27,15 @@ size_t UnificationTable::size_of_variable_bucket(std::string_view variable_ident
     return numberBucket->second.size();
 }
 
-// // Returns if any variable bucket has 2 or more number buckets
-// bool UnificationTable::will_unification_occur() {
-//     for (const auto& variable : bucket) {
-//         if (variable.second.size() > 1)
-//             return true;
-//     }
-//     return false;
-// }
+// Returns if any variable bucket has 2 or more number buckets
+bool UnificationTable::will_unification_occur() {
+
+    for (const auto& variable : bucket) {
+        if (variable.second.size() > 1)
+            return true;
+    }
+    return false;
+}
 
 // Adds a token list to a number bucket
 void UnificationTable::add_to_number_bucket(std::string_view variable_identifier, int order) {

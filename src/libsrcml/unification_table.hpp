@@ -30,7 +30,8 @@ public:
     void add_to_variable_bucket(std::string_view);
 
     size_t size_of_variable_bucket(std::string_view);
-    // bool will_unification_occur();
+
+    bool will_unification_occur();
 
     void add_to_number_bucket(std::string_view, int);
 
