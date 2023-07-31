@@ -20,6 +20,8 @@
 #include <libxml2_utilities.hpp>
 #include <memory>
 
+#include <qli_extensions.hpp>
+
 const char* const xpathTransformation::simple_xpath_attribute_name = "location";
 
 #define stringOrNull(m) (m ? m : "")
@@ -194,6 +196,12 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
 
         xmlXPathRegisterNs(context.get(), p->prefix, p->href);
     }
+
+    // register srcQL extension functions
+    xmlXPathRegisterNs(context.get(),(xmlChar*)"qli",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation");
+    xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"add-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&add_element);
+    xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"clear",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&clear_elements);
+    xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"is-valid-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&is_valid_element);
 
     // evaluate the xpath
     std::unique_ptr<xmlXPathObject> result_nodes(xmlXPathCompiledEval(compiled_xpath, context.get()));
