@@ -20,10 +20,11 @@ void UnificationTable::add_to_variable_bucket(std::string_view variable_identifi
 // Gets number of number buckets added to a variable bucket
 size_t UnificationTable::size_of_variable_bucket(std::string_view variable_identifier) {
 
-    const auto it = bucket.find(variable_identifier);
-    if (it == bucket.end())
+    const auto numberBucket = bucket.find(variable_identifier);
+    if (numberBucket == bucket.end())
         return 0;
-    return it->second.size();
+
+    return numberBucket->second.size();
 }
 
 // // Returns if any variable bucket has 2 or more number buckets
@@ -37,15 +38,24 @@ size_t UnificationTable::size_of_variable_bucket(std::string_view variable_ident
 
 // Adds a token list to a number bucket
 void UnificationTable::add_to_number_bucket(std::string_view variable_identifier, int order) {
+
+    const auto numberBucket = bucket.find(variable_identifier);
+    if (numberBucket == bucket.end())
+        return;
+
     // Does NOT perform checks to see if token list already exists
     // at the order location
-    bucket.find(variable_identifier)->second.emplace(order, token_list());
+    numberBucket->second.emplace(order, token_list());
 }
 
 // Clears a token list in a number bucket
 void UnificationTable::clear_token_list(std::string_view variable_identifier, int order) {
 
-    auto& current = bucket.find(variable_identifier)->second;
+    auto numberBucket = bucket.find(variable_identifier);
+    if (numberBucket == bucket.end())
+        return;
+
+    auto& current = numberBucket->second;
     auto currentOrder = current.find(order);
     if (currentOrder != current.end()) {
         currentOrder->second.clear();
@@ -57,7 +67,7 @@ void UnificationTable::add_to_token_list(std::string_view variable_identifier, i
 
     // Do NOT insert if element is already in
     auto& bucketOrder = bucket.find(variable_identifier)->second[order];
-    for(const auto& element : bucketOrder) {
+    for (const auto& element : bucketOrder) {
         if (element.second == address)
             return;
     }
@@ -83,7 +93,7 @@ bool UnificationTable::does_element_match_variable(std::string_view variable_ide
             if (first == prev_order_element.first) {
 
                 // adding a chained address will cause chained_addresses.size() > order
-                if (chained_addresses.size() == order)
+                if (chained_addresses.size() == (size_t) order)
                     return false;
 
                 chained_addresses.emplace(prev_order_element.second);
@@ -91,7 +101,7 @@ bool UnificationTable::does_element_match_variable(std::string_view variable_ide
             }
         }
     }
-    return chained_addresses.size() == order;
+    return chained_addresses.size() == (size_t) order;
 }
 
 // bool UnificationTable::does_element_match_in_order(std::string_view variable_identifier, int order, const unique_element& element) {
