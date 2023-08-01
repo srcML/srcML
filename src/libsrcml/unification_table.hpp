@@ -29,9 +29,9 @@ public:
 
     void add_to_variable_bucket(std::string_view);
 
-    size_t size_of_variable_bucket(std::string_view);
+    size_t size_of_variable_bucket(std::string_view) const;
 
-    bool will_unification_occur();
+    bool will_unification_occur() const;
 
     void add_to_number_bucket(std::string_view, int);
 
@@ -39,10 +39,10 @@ public:
 
     void add_to_token_list(std::string_view, int, std::string_view, std::uintptr_t);
 
-    bool does_element_match_variable(std::string_view, int, std::string_view first, uintptr_t second);
+    bool does_element_match_variable(std::string_view, int, std::string_view first, uintptr_t second) const;
     // bool does_element_match_in_order(std::string_view, int, const unique_element&);
 
-    int get_last_used(std::string_view);
+    int get_last_used(std::string_view) const;
     void set_last_used(std::string_view, int);
 
     void empty_buckets();
