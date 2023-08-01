@@ -91,13 +91,15 @@ bool UnificationTable::does_element_match_variable(std::string_view variable_ide
     const auto bucketVar = bucket.find(variable_identifier);
     for (int i = order - 1; i > 0; --i) {
         for (const auto& prev_order_element : bucketVar->second[i]) {
-            if (first == prev_order_element.first) {
+            if (first == prev_order_element.first &&
+               chained_addresses.count(prev_order_element.second) == 0) {
 
                 // adding a chained address will cause chained_addresses.size() > order
                 if (chained_addresses.size() == (size_t) order)
                     return false;
 
                 chained_addresses.emplace(prev_order_element.second);
+                first = prev_order_element.first;
                 break;
             }
         }
