@@ -12,9 +12,6 @@ void UnificationTable::add_to_variable_bucket(std::string_view variable_identifi
 
     // if doesn't exist, add
     bucket.try_emplace(std::string(variable_identifier));
-
-    // Also add to last_used
-    last_used.try_emplace(std::string(variable_identifier), 0);
 }
 
 // Gets number of number buckets added to a variable bucket
@@ -122,14 +119,6 @@ bool UnificationTable::does_element_match_variable(std::string_view variable_ide
 //     }
 //     return true;
 // }
-
-int UnificationTable::get_last_used(std::string_view variable_identifier) const {
-    return last_used.find(variable_identifier)->second;
-}
-
-void UnificationTable::set_last_used(std::string_view variable_identifier, int order) {
-    last_used.find(variable_identifier)->second = order;
-}
 
 void UnificationTable::empty_buckets() {
 

@@ -114,17 +114,6 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
         table.add_to_number_bucket(bucket, number);
     }
 
-    // clear all but the first bucket
-    const size_t last = table.get_last_used(bucket);
-    const auto size = table.size_of_variable_bucket(bucket);
-    if (number == 1 && last == size) {
-        // clear all but the first bucket
-        for (size_t i = 1; i < size; ++i) {
-            table.clear_token_list(bucket, i);
-        }
-    }
-    table.set_last_used(bucket, number);
-
     // handle token via std::string_view for efficent trimming
     std::string_view tokenView(token);
 

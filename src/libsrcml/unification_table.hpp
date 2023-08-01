@@ -21,7 +21,6 @@ typedef std::pair<std::string, std::uintptr_t> unique_element;
 typedef std::vector<unique_element> token_list;
 typedef std::unordered_map<int, token_list> number_bucket;
 typedef std::map<std::string, number_bucket, std::less<>> variable_bucket;
-typedef std::map<std::string, int, std::less<>> last_bucket;
 
 class UnificationTable {
 public:
@@ -42,9 +41,6 @@ public:
     bool does_element_match_variable(std::string_view, int, std::string_view first, uintptr_t second) const;
     // bool does_element_match_in_order(std::string_view, int, const unique_element&);
 
-    int get_last_used(std::string_view) const;
-    void set_last_used(std::string_view, int);
-
     void empty_buckets();
     void empty_bucket(std::string_view);
 
@@ -54,7 +50,6 @@ public:
 
 private:
     variable_bucket bucket;
-    last_bucket last_used;
 };
 
 #endif
