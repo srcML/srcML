@@ -52,8 +52,11 @@ void get_node_text(const xmlNode* top_node, std::string& text, bool top) {
     for (const xmlNode* node = top_node; node != NULL && (!top || node == top_node); node = node->next) {
         if (node->type == XML_TEXT_NODE) {
             xmlChar* t = xmlNodeGetContent(node);
-            text += trim_whitespace((const char*) t);
-            text += ' ';
+            std::string_view st((const char*) t);
+            if (st.find_first_not_of(" \t\n\r") != st.npos) {
+                text += trim_whitespace((const char*) t);
+                text += ' ';
+            }
             xmlFree(t);
         }
         if (node->children) {
