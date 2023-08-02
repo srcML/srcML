@@ -17,10 +17,14 @@
 #ifndef SRCQL_UNIFICATION_TABLE_HPP
 #define SRCQL_UNIFICATION_TABLE_HPP
 
-typedef std::pair<std::string, std::uintptr_t> unique_element;
-typedef std::vector<unique_element> token_list;
-typedef std::unordered_map<int, token_list> number_bucket;
-typedef std::map<std::string, number_bucket, std::less<>> variable_bucket;
+struct unique_element {
+    std::string token;
+    std::uintptr_t address;
+};
+
+using token_list = std::vector<unique_element>;
+using number_bucket = std::unordered_map<int, token_list>;
+using variable_bucket = std::map<std::string, number_bucket, std::less<>>;
 
 class UnificationTable {
 public:
