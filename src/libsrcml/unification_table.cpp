@@ -46,20 +46,6 @@ void UnificationTable::add_to_number_bucket(std::string_view variable_identifier
     numberBucket->second.emplace(order, token_list());
 }
 
-// Clears a token list in a number bucket
-void UnificationTable::clear_token_list(std::string_view variable_identifier, int order) {
-
-    auto numberBucket = bucket.find(variable_identifier);
-    if (numberBucket == bucket.end())
-        return;
-
-    auto& current = numberBucket->second;
-    auto currentOrder = current.find(order);
-    if (currentOrder != current.end()) {
-        currentOrder->second.clear();
-    }
-}
-
 // Adds a token-address pair to a token list
 void UnificationTable::add_to_token_list(std::string_view variable_identifier, int order, std::string_view token, std::uintptr_t address) {
 
@@ -105,23 +91,6 @@ bool UnificationTable::does_element_match_variable(std::string_view variable_ide
 
     return true;
 }
-
-// bool UnificationTable::does_element_match_in_order(std::string_view variable_identifier, int order, const unique_element& element) {
-
-//     if (order == 1)
-//         return true;
-
-//     int count = 0;
-//     for (const auto& prev_order_element : bucket.find(variable_identifier)->second[order - 1]) {
-
-//         if (prev_order_element.first == element.first)
-//             ++count;
-
-//         if (prev_order_element.second == element.second)
-//             return count >= order;
-//     }
-//     return true;
-// }
 
 void UnificationTable::empty_buckets() {
 

@@ -38,12 +38,9 @@ public:
 
     void add_to_number_bucket(std::string_view, int);
 
-    void clear_token_list(std::string_view, int);
-
     void add_to_token_list(std::string_view, int, std::string_view, std::uintptr_t);
 
     bool does_element_match_variable(std::string_view, int, std::string_view first, uintptr_t second) const;
-    // bool does_element_match_in_order(std::string_view, int, const unique_element&);
 
     void empty_buckets();
     void empty_bucket(std::string_view);
