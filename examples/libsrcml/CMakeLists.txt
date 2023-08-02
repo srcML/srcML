@@ -88,4 +88,4 @@ foreach(EXAMPLE IN ITEMS ${EXAMPLES})
 endforeach()
 
 # Install the CMake build file for all of the examples
-install(FILES "${EXAMPLE_ROOT}/CMakeLists.txt" DESTINATION "${LIBSRCML_EXAMPLES_DIRECTORY}")
+install(FILES "${EXAMPLE_ROOT}/CMakeLists.txt" DESTINATION "${LIBSRCML_EXAMPLES_DIRECTORY}" COMPONENT DEVLIBS)
