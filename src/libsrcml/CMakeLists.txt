@@ -128,6 +128,7 @@ if(WIN32)
 else()
     install(TARGETS libsrcml_shared EXPORT libsrcml_shared_Targets LIBRARY COMPONENT SRCML NAMELINK_COMPONENT DEVLIBS)
 endif()
+install(FILES $<TARGET_PDB_FILE:libsrcml_shared> DESTINATION bin OPTIONAL COMPONENT DEVLIBS)
 
 include(CMakePackageConfigHelpers)
 
