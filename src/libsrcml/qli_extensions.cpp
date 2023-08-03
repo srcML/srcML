@@ -130,14 +130,14 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
     tokenView = trim_whitespace(tokenView);
 
     // remove prefix
-    if (!prefix.empty() && (tokenView.size() < prefix.size() || tokenView.compare(0, prefix.size(), prefix) != 0)) {
+    if (tokenView.compare(0, prefix.size(), prefix) != 0) {
         xmlXPathReturnBoolean(ctxt, false);
         return;
     }
     tokenView.remove_prefix(prefix.length());
 
     // remove postfix
-    if (!postfix.empty() && (tokenView.size() < postfix.size() || tokenView.compare(tokenView.size() - postfix.size(), postfix.size(), postfix) != 0)) {
+    if (tokenView.compare(tokenView.size() - postfix.size(), postfix.size(), postfix) != 0) {
         xmlXPathReturnBoolean(ctxt, false);
         return;
     }
