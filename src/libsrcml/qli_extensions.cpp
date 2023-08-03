@@ -36,41 +36,52 @@ namespace std {
     };
 };
 
-std::string_view trim_whitespace(std::string_view str) {
+namespace {
+    // remove leading and trailing whitespace
+    std::string_view trim_whitespace(std::string_view str) {
 
-    const auto first = str.find_first_not_of(" \t\n\r");
-    if (first == std::string::npos)
-        return "";
+        const auto first = str.find_first_not_of(" \t\n\r");
+        if (first == std::string::npos)
+            return "";
 
-    const auto last = str.find_last_not_of(" \t\n\r");
+        const auto last = str.find_last_not_of(" \t\n\r");
 
-    return str.substr(first, (last - first + 1));
-}
+        return str.substr(first, (last - first + 1));
+    }
 
-void get_node_text(const xmlNode* top_node, std::string& text, bool top) {
+    // node text with normalized whitespace
+    void get_node_text(const xmlNode* top_node, std::string& text, bool top) {
 
-    for (const xmlNode* node = top_node; node != NULL && (!top || node == top_node); node = node->next) {
-        if (node->type == XML_TEXT_NODE) {
-            xmlChar* t = xmlNodeGetContent(node);
-            std::string_view st((const char*) t);
-            if (st.find_first_not_of(" \t\n\r") != st.npos) {
-                text += trim_whitespace(st);
-                text += ' ';
+        // process list of nodes
+        for (const xmlNode* node = top_node; node != NULL && (!top || node == top_node); node = node->next) {
+            if (node->type == XML_TEXT_NODE) {
+                xmlChar* t = xmlNodeGetContent(node);
+                std::string_view st((const char*) t);
+
+                // add normalized whitespace to the text
+                if (st.find_first_not_of(" \t\n\r") != st.npos) {
+                    text += trim_whitespace(st);
+                    text += ' ';
+                }
+                xmlFree(t);
             }
-            xmlFree(t);
-        }
-        if (node->children) {
-            get_node_text(node->children, text, false);
+
+            // process children depth first
+            if (node->children) {
+                get_node_text(node->children, text, false);
+            }
         }
     }
-}
 
-std::string get_node_text(const xmlNode* top_node) {
+    // node text with normalized whitespace
+    std::string get_node_text(const xmlNode* top_node) {
 
-    std::string s;
-    get_node_text(top_node, s, true);
-    return s;
-}
+        // use single string to avoid copying
+        std::string s;
+        get_node_text(top_node, s, true);
+        return s;
+    }
+};
 
 void add_element(xmlXPathParserContext* ctxt, int nargs) {
 
@@ -119,7 +130,6 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
     tokenView = trim_whitespace(tokenView);
 
     // remove prefix
-    // @ASSUMPTION Prefix has to start at the beginning
     if (!prefix.empty() && (tokenView.size() < prefix.size() || tokenView.compare(0, prefix.size(), prefix) != 0)) {
         xmlXPathReturnBoolean(ctxt, false);
         return;
@@ -127,19 +137,19 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
     tokenView.remove_prefix(prefix.length());
 
     // remove postfix
-    // @ASSUMPTION Postfix has to start at the beginning
     if (!postfix.empty() && (tokenView.size() < postfix.size() || tokenView.compare(tokenView.size() - postfix.size(), postfix.size(), postfix) != 0)) {
         xmlXPathReturnBoolean(ctxt, false);
         return;
     }
     tokenView.remove_suffix(postfix.length());
 
-    // @NOTE Add comment
+    // if the variable matches the token, add to the tokens
     const bool valid = table.does_element_match_variable(bucket, number, tokenView, node_ptr);
     if (valid) {
         table.add_to_token_list(bucket, number, tokenView, node_ptr);
     }
 
+    // return if token matches
     xmlXPathReturnBoolean(ctxt, valid);
 }
 
@@ -163,6 +173,7 @@ void clear_elements(xmlXPathParserContext* ctxt, int nargs) {
         xmlFree(var);
     }
 
+    // always true
     xmlXPathReturnBoolean(ctxt, true);
 }
 
@@ -187,5 +198,6 @@ void is_valid_element(xmlXPathParserContext* ctxt, int nargs) {
                                 "modifier"sv == nodeName ||
                                 "specifier"sv == nodeName);
 
+    // return whether element is valid
     xmlXPathReturnBoolean(ctxt, !invalidElement);
 }

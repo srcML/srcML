@@ -67,19 +67,19 @@ void UnificationTable::add_to_token_list(std::string_view variable_identifier, i
 // OR
 //     The intended placement of the element is 1, which makes it
 //         automatically valid
-bool UnificationTable::does_element_match_variable(std::string_view variable_identifier, int order, std::string_view first, uintptr_t second) const {
+bool UnificationTable::does_element_match_variable(std::string_view variable_identifier, int order, std::string_view token, uintptr_t address) const {
 
     // automatically valid
     if (order == 1)
         return true;
 
-    std::set<uintptr_t> chained_addresses{second};
+    std::set<uintptr_t> chained_addresses{address};
     const auto bucketVar = bucket.find(variable_identifier);
     for (int i = order - 1; i > 0; --i) {
         bool inserted = false;
         for (const auto& prev_order_element : bucketVar->second.find(i)->second) {
 
-            if (first == prev_order_element.token && chained_addresses.emplace(prev_order_element.address).second) {
+            if (token == prev_order_element.token && chained_addresses.emplace(prev_order_element.address).second) {
                 inserted = true;
                 break;
             }
