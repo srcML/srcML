@@ -115,42 +115,61 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
 
     // token
     std::unique_ptr<xmlNodeSet> node_set(xmlXPathPopNodeSet(ctxt));
-    const xmlNode* node = node_set.get()->nodeTab[0];
-    const std::string token(get_node_text(node));
-    const auto node_ptr = reinterpret_cast<std::uintptr_t>(node);
 
-    // @NOTE Add comment
-    table.add_to_variable_bucket(bucket);
-    if (table.size_of_variable_bucket(bucket) < number) {
-        table.add_to_number_bucket(bucket, number);
-    }
+    bool isValid = false;
+    for (int i = 0; i < node_set.get()->nodeNr; ++i) {
 
-    // handle token via std::string_view for efficent trimming
-    std::string_view tokenView(token);
-    tokenView = trim_whitespace(tokenView);
+        const xmlNode* node = node_set.get()->nodeTab[i];
 
-    // remove prefix
-    if (tokenView.compare(0, prefix.size(), prefix) != 0) {
-        xmlXPathReturnBoolean(ctxt, false);
-        return;
-    }
-    tokenView.remove_prefix(prefix.length());
+        // check for invalid elements
+        const std::string_view nodeURI((char *) node->ns->href);
+        const std::string_view nodeName((char*) node->name);
+        const bool invalidElement = "http://www.srcML.org/srcML/src"sv == nodeURI && (
+                                    "operator"sv == nodeName ||
+                                    "comment"sv == nodeName ||
+                                    "modifier"sv == nodeName ||
+                                    "specifier"sv == nodeName);
+        if (invalidElement) {
+            xmlXPathReturnBoolean(ctxt, false);
+            return;
+        }
 
-    // remove postfix
-    if (tokenView.compare(tokenView.size() - postfix.size(), postfix.size(), postfix) != 0) {
-        xmlXPathReturnBoolean(ctxt, false);
-        return;
-    }
-    tokenView.remove_suffix(postfix.length());
+        const std::string token(get_node_text(node));
+        const auto node_ptr = reinterpret_cast<std::uintptr_t>(node);
 
-    // if the variable matches the token, add to the tokens
-    const bool valid = table.does_element_match_variable(bucket, number, tokenView, node_ptr);
-    if (valid) {
-        table.add_to_token_list(bucket, number, tokenView, node_ptr);
+        // @NOTE Add comment
+        table.add_to_variable_bucket(bucket);
+        if (table.size_of_variable_bucket(bucket) < number) {
+            table.add_to_number_bucket(bucket, number);
+        }
+
+        // handle token via std::string_view for efficent trimming
+        std::string_view tokenView(token);
+        tokenView = trim_whitespace(tokenView);
+
+        // remove prefix
+        if (tokenView.compare(0, prefix.size(), prefix) != 0) {
+            continue;
+        }
+        tokenView.remove_prefix(prefix.length());
+
+        // remove postfix
+        if (tokenView.compare(tokenView.size() - postfix.size(), postfix.size(), postfix) != 0) {
+            continue;
+        }
+        tokenView.remove_suffix(postfix.length());
+
+        // if the variable matches the token, add to the tokens
+        const bool valid = table.does_element_match_variable(bucket, number, tokenView, node_ptr);
+        if (valid) {
+            table.add_to_token_list(bucket, number, tokenView, node_ptr);
+        }
+
+        isValid = isValid || valid;
     }
 
     // return if token matches
-    xmlXPathReturnBoolean(ctxt, valid);
+    xmlXPathReturnBoolean(ctxt, isValid);
 }
 
 void clear_elements(xmlXPathParserContext* ctxt, int nargs) {
@@ -185,6 +204,9 @@ void is_valid_element(xmlXPathParserContext* ctxt, int nargs) {
     }
 
     const std::unique_ptr<xmlNodeSet> node_set(xmlXPathPopNodeSet(ctxt));
+    xmlXPathReturnBoolean(ctxt, true);
+    return;
+
     // @TODO Might there be more than one node?
     assert(node_set.get()->nodeNr == 1);
     const xmlNode* node = node_set.get()->nodeTab[0];
