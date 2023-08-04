@@ -18,7 +18,7 @@
 #define SRCQL_UNIFICATION_TABLE_HPP
 
 struct unique_element {
-    std::string token;
+    std::string_view token;
     std::uintptr_t address;
 };
 

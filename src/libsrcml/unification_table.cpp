@@ -57,7 +57,7 @@ void UnificationTable::add_to_token_list(std::string_view variable_identifier, i
     }
 
     // add the unique element
-    unique_element added{ std::string(token), address };
+    unique_element added{ token, address };
     bucketOrder.push_back(std::move(added));
 }
 
@@ -79,7 +79,7 @@ bool UnificationTable::does_element_match_variable(std::string_view variable_ide
         bool inserted = false;
         for (const auto& prev_order_element : bucketVar->second.find(i)->second) {
 
-            if (token == prev_order_element.token && chained_addresses.emplace(prev_order_element.address).second) {
+            if (token.data() == prev_order_element.token.data() && chained_addresses.emplace(prev_order_element.address).second) {
                 inserted = true;
                 break;
             }

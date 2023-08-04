@@ -11,6 +11,7 @@
 #include <string>
 #include <string_view>
 #include <set>
+#include <unordered_set>
 #include <iostream>
 #include <algorithm>
 #include <cassert>
@@ -124,11 +125,10 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
         // check for invalid elements
         const std::string_view nodeURI((char *) node->ns->href);
         const std::string_view nodeName((char*) node->name);
-        const bool invalidElement = "http://www.srcML.org/srcML/src"sv == nodeURI && (
-                                    "operator"sv == nodeName ||
+        const bool invalidElement = ("operator"sv == nodeName ||
                                     "comment"sv == nodeName ||
                                     "modifier"sv == nodeName ||
-                                    "specifier"sv == nodeName);
+                                    "specifier"sv == nodeName) && "http://www.srcML.org/srcML/src"sv == nodeURI;
         if (invalidElement) {
             xmlXPathReturnBoolean(ctxt, false);
             return;
@@ -159,10 +159,19 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
         }
         tokenView.remove_suffix(postfix.length());
 
+        thread_local std::unordered_set<std::string> tokens;
+
+        const auto itpair = tokens.insert(token.size() == tokenView.size() ? std::move(token) : std::string(tokenView));
+
+        // std::cerr << "TOKEN: " << *(itpair.first) << '\n';
+
+        // if (tokens.size() > 1000)
+        //     fprintf(stderr, "DEBUG:  %s %s %d tokens.size(): %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) tokens.size());
+
         // if the variable matches the token, add to the tokens
-        const bool valid = table.does_element_match_variable(bucket, number, tokenView, node_ptr);
+        const bool valid = table.does_element_match_variable(bucket, number, *(itpair.first), node_ptr);
         if (valid) {
-            table.add_to_token_list(bucket, number, tokenView, node_ptr);
+            table.add_to_token_list(bucket, number, *(itpair.first), node_ptr);
         }
 
         isValid = isValid || valid;
