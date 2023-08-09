@@ -90,7 +90,7 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<typedef>typedef <function_decl><type><name>int</name></type> (<modifier>*</modifier><name>ENGINE_CTRL_FUNC_PTR</name>) <macro><name>D</name><argument_list>(<argument>a</argument>)</argument_list></macro> <parameter_list>(<parameter><decl><type><name>ENGINE</name> <modifier>*</modifier></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>long</name></type></decl></parameter>, <parameter><decl><type><name>void</name> <modifier>*</modifier></type></decl></parameter>, <parameter><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>f</name>)<parameter_list>()</parameter_list></function_decl></parameter>)</parameter_list>;</function_decl></typedef>
+<typedef>typedef <function_decl><type><name>int</name></type> (<modifier>*</modifier><name>ENGINE_CTRL_FUNC_PTR</name>) <macro><name>D</name><argument_list>(<argument><name>a</name></argument>)</argument_list></macro> <parameter_list>(<parameter><decl><type><name>ENGINE</name> <modifier>*</modifier></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>long</name></type></decl></parameter>, <parameter><decl><type><name>void</name> <modifier>*</modifier></type></decl></parameter>, <parameter><function_decl><type><name>void</name></type> (<modifier>*</modifier><name>f</name>)<parameter_list>()</parameter_list></function_decl></parameter>)</parameter_list>;</function_decl></typedef>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">

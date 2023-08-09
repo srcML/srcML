@@ -31,13 +31,13 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
 <block>{<block_content>
-<return>return <macro><name>snprintf</name> <argument_list>(<argument>buf</argument>, <argument>size</argument>,
-         <argument>({ char *s;
-                 switch (urb-&gt;dev-&gt;speed) {
-                 case USB_SPEED_LOW:    s = <literal type="string">"ls"</literal>; break;
-                 default:               s = <literal type="string">"?"</literal>; break;
-                 }; s; })</argument>,
-         <argument>urb-&gt;actual_length</argument>, <argument>urb-&gt;transfer_buffer_length</argument>)</argument_list></macro>;</return>
+<return>return <macro><name>snprintf</name> <argument_list>(<argument><name>buf</name></argument>, <argument><name>size</name></argument>,
+         <argument>({ <name>char</name> *<name>s</name>;
+                 switch (<name>urb</name>-&gt;<name>dev</name>-&gt;<name>speed</name>) {
+                 case <name>USB_SPEED_LOW</name>:    <name>s</name> = <literal type="string">"ls"</literal>; break;
+                 default:               <name>s</name> = <literal type="string">"?"</literal>; break;
+                 }; <name>s</name>; })</argument>,
+         <argument><name>urb</name>-&gt;<name>actual_length</name></argument>, <argument><name>urb</name>-&gt;<name>transfer_buffer_length</name></argument>)</argument_list></macro>;</return>
 </block_content>}</block>
 </unit>
 

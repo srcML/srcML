@@ -6742,7 +6742,10 @@ macro_call_contents[] {
             start = true;
         }
 
-        if (literal_tokens_set.member(LA(1)))
+        // markup expression/declaration parts of literals, names, and operators
+        if (identifier_list_tokens_set.member(LA(1)))
+            identifier();
+        else if (literal_tokens_set.member(LA(1)))
             literals();
         else
             consume();

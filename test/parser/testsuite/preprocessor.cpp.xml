@@ -161,7 +161,7 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
 <decl_stmt><decl><type><name>int</name></type> <name>g</name></decl>;</decl_stmt>
-<cpp:if>#<cpp:directive>if</cpp:directive> <expr><macro><name>a</name><argument_list>(<argument>b c</argument>)</argument_list></macro></expr></cpp:if>
+<cpp:if>#<cpp:directive>if</cpp:directive> <expr><macro><name>a</name><argument_list>(<argument><name>b</name> <name>c</name></argument>)</argument_list></macro></expr></cpp:if>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
