@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="macro.keyword">
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><name>a</name></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument>const</argument>)</argument_list></macro> <return>return;</return></unit>
+
+<!-- sole bar operator -->
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>|</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<!-- sole question mark operator -->
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>?</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<!-- sole tilde operator -->
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>~</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<!-- sole member pointer operator -->
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>-&gt;</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<!-- sole member_pointer_dereferenceoperator -->
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>-&gt;*</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<!-- sole dot dereference operator -->
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>.*</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>=</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>&lt;</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>&gt;</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>*</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>&amp;</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>..</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>&amp;&amp;</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>|</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>...</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>+</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>/</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>-</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+<unit revision="1.0.0" language="C++"><macro><name>process</name><argument_list>(<argument><operator>^</operator></argument>)</argument_list></macro> <return>return;</return></unit>
+
+</unit>

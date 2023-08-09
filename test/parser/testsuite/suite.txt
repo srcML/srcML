@@ -296,3 +296,6 @@ LANGUAGE_TRANSFORM throw_base_m.m.xml throw_base.cpp.xml throw keyword2mkeyword.
 LANGUAGE_TRANSFORM dynamic_m.m.xml synthesize_m.m.xml dynamic synthesize2dynamic.xsl
 
 LANGUAGE_TRANSFORM return.cpp.xml return_base.cpp.xml return insertexpr.xsl expr_filename=\"${CMAKE_CURRENT_BINARY_DIR}/expression.cpp.xml\"
+
+# Markup in macros
+LANGUAGE_C_FAMILY_NO_SHARP macro_submarkup

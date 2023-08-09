@@ -735,6 +735,8 @@ public:
     static const antlr::BitSet decl_specifier_tokens_set;
     static const antlr::BitSet identifier_list_tokens_set;
     static const antlr::BitSet whitespace_token_set;
+    static const antlr::BitSet operator_token_set;
+    static const antlr::BitSet operator_extra_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -6743,13 +6745,33 @@ macro_call_contents[] {
         }
 
         // markup expression/declaration parts of literals, names, and operators
-        if (identifier_list_tokens_set.member(LA(1)))
+        if (identifier_list_tokens_set.member(LA(1))) {
             identifier();
-        else if (literal_tokens_set.member(LA(1)))
+        } else if (literal_tokens_set.member(LA(1))) {
             literals();
-        else
-            consume();
+        } else if (operator_token_set.member(LA(1))) {
+            general_operators();
+        } else if (operator_extra_token_set.member(LA(1))) {
 
+            if (LA(1) == BAR )
+                bar();
+            else if (LA(1) == QMARK)
+                qmark_marked();
+            else if (LA(1) == DESTOP)
+                sole_destop();
+            else if (LA(1) == PERIOD)
+                period();
+            else if (LA(1) == TRETURN)
+                member_pointer();
+            else if (LA(1) == MPDEREF)
+                member_pointer_dereference();
+            else if (LA(1) == DOTDEREF)
+                dot_dereference();
+            else
+                consume();
+        } else {
+            consume();
+        }
     }
 
 } :;

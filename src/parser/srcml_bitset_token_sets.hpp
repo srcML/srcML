@@ -154,4 +154,58 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::DOXYGEN_COMMENT_START
 )
 
+token_set(srcMLParser, operator_token_set,
+    srcMLParser::OPERATORS, srcMLParser::ASSIGNMENT, srcMLParser::TEMPOPS,
+    srcMLParser::TEMPOPE,
+    srcMLParser::ASSIGNMENT,
+    srcMLParser::EQUAL, /* srcMLParser::MULTIMM |*/ srcMLParser::DESTOP, /* srcMLParser::MEMBERPOINTER |*/ srcMLParser::MULTOPS, srcMLParser::REFOPS, srcMLParser::DOTDOT, srcMLParser::RVALUEREF, srcMLParser::BAR,
+
+    // others are not combined
+    srcMLParser::NEW, srcMLParser::DELETE, srcMLParser::IN, srcMLParser::IS, srcMLParser::STACKALLOC, srcMLParser::AS, srcMLParser::AWAIT, srcMLParser::LAMBDA, srcMLParser::DOTDOTDOT,
+
+    // Objective-C
+    srcMLParser::CSPEC, srcMLParser::MSPEC,
+
+    // Apple
+    srcMLParser::BLOCKOP
+)
+
+token_set(srcMLParser, operator_extra_token_set,
+
+    // ( operator
+    // srcMLParser::LPAREN,
+
+    // | opreator
+    srcMLParser::BAR,
+
+    /* srcMLParser::COMMA */
+
+    // : operator
+    // srcMLParser::COLON,
+
+    // ? operator
+    srcMLParser::QMARK,
+
+    // ~ operator
+    srcMLParser::DESTOP,
+
+    // ) operator
+    // srcMLParser::RPAREN,
+
+    // Dot (.) operator
+    srcMLParser::PERIOD,
+
+    // -> operator
+    srcMLParser::TRETURN,
+
+    // ->* operator
+    srcMLParser::MPDEREF,
+
+    // .* operator
+    srcMLParser::DOTDEREF
+
+    // :: namespace operator
+    // srcMLParser::DCOLON
+)
+
 #endif
