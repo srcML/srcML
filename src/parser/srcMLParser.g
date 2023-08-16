@@ -722,6 +722,7 @@ public:
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > > finish_elements_add;
     bool in_template_param = false;
     int start_count = 0;
+    int native_count = 0;
 
     static const antlr::BitSet keyword_name_token_set;
     static const antlr::BitSet keyword_token_set;
@@ -4095,6 +4096,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
     int posin = 0;
     int fla = 0;
 
+    native_count = 0;
     try {
 
         pattern_check_core(token, fla, type_count, specifier_count, attribute_count, template_count, type, inparam, sawtemplate, sawcontextual, posin);
@@ -4106,6 +4108,9 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         }
 
     }
+
+    if (type == NONE && native_count && (native_count + specifier_count) == (type_count + 1))
+        type = VARIABLE;
 
     if (type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
         type = NONE;
@@ -4379,6 +4384,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
                 // typical type name
                 { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                 set_bool[operatorname, false]
+
                 compound_name set_bool[foundpure]
                 set_bool[isoperator, isoperator || (inLanguage(LANGUAGE_CXX_FAMILY) && 
                              operatorname)] 
@@ -4532,7 +4538,7 @@ pattern_check_core[int& token,      /* second token, after name (always returned
             { real_type_count == 0 && specifier_count == 0 && attribute_count == 0 }? (objective_c_method set_int[fla, LA(1)] throw_exception[fla != TERMINATE && fla != LCURLY])
 
         )
-    
+
         // default to variable in function body.  However, if anonymous function (does not end in :) not a variable
         throw_exception[(inTransparentMode(MODE_FUNCTION_BODY) && type == VARIABLE && fla == TERMINATE)
             || (inLanguage(LANGUAGE_JAVA) && inMode(MODE_ENUM) && (fla == COMMA || fla == TERMINATE))]
@@ -4575,7 +4581,6 @@ set_int[int& name, int value, bool condition = true] { if (condition) name = val
 set_bool[bool& variable, bool value = true] { variable = value; } :;
 
 trace[const char*s ] { std::cerr << s << std::endl; } :;
-
 
 trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
 /*traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
@@ -5407,7 +5412,9 @@ identifier_list[] { ENTRY_DEBUG } :
             */
 
             //Qt
-            EMIT | FOREACH | SIGNAL | FOREVER
+            EMIT | FOREACH | SIGNAL | FOREVER |
+
+            NATIVETYPENAME set_int[native_count, native_count + 1]
 ;
 
 // most basic name
@@ -7229,7 +7236,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
 ;
 
 // declaration type
-variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEBUG } :
+variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
     {
         if (type_count == 0) {
 
@@ -7266,10 +7273,26 @@ variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEB
                 (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) { decTypeCount(); })*
                 class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
         lead_type_identifier | EVENT)
-    { if (!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+    {
+
+        if (!inTransparentMode(MODE_TYPEDEF)) decTypeCount();
+
+        // If we end the type and the following token is a NATIVETYPENAME, e.g., "int", then include it as part of the type (NOT the name)
+        if (getTypeCount() == 0 && (LA(1) == NATIVETYPENAME || LA(1) == CONST)) {
+            incTypeCount();
+        }
+    }
 
     (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-    (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
+    (options { generateAmbigWarnings = false; } : keyword_name | {
+        } type_identifier) { decTypeCount();
+
+        // If we end the type and the following token is a NATIVETYPENAME, e.g., "int", then include it as part of the type (NOT the name)
+        if (getTypeCount() == 0 && (LA(1) == NATIVETYPENAME || LA(1) == CONST)) {
+            incTypeCount();
+        }
+
+        })*
     update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
@@ -8343,7 +8366,14 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
             { !class_tokens_set.member(LA(1)) }?
                 (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) set_int[type_count, type_count - 1])*
                 class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
-         type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+         type_identifier) set_int[type_count, type_count - 1] {
+
+            // If we end the type and the following token is a NATIVETYPENAME, e.g., "int", then include it as part of the type (NOT the name)
+            if (type_count == 0 && LA(1) == NATIVETYPENAME) {
+                set_int(type_count, type_count + 1);
+            }
+
+            }(options { greedy = true;} : eat_type[type_count])?)
 
         // sometimes there is no parameter name.  if so, we need to eat it
         ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |

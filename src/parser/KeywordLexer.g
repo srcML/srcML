@@ -313,6 +313,9 @@ tokens {
     OMP_OMP;
 
     ASSIGNMENT; // +=, -=, etc.
+
+    // Native types
+    NATIVETYPENAME;
 }
 
 {
@@ -690,6 +693,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // OpenMp
         { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY }, 
 
+        // Native type names
+        { "int"          , NATIVETYPENAME    , LANGUAGE_CXX },
+        { "long"         , NATIVETYPENAME    , LANGUAGE_CXX },
+        { "short"        , NATIVETYPENAME    , LANGUAGE_CXX },
+        { "char"         , NATIVETYPENAME    , LANGUAGE_CXX },
+        { "signed"       , NATIVETYPENAME    , LANGUAGE_CXX },
+        { "unsigned"     , NATIVETYPENAME    , LANGUAGE_CXX },
    };
 
     // fill up the literals for the language that we are parsing
