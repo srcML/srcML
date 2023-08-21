@@ -506,6 +506,15 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         result->boolValue = false;
     }
 
+    // find the position of the item attribute, if it exists
+    std::size_t currentItemPosition = unit->attributes.size();
+    for (std::size_t i = 0; i < unit->attributes.size(); i += 2) {
+        if (unit->attributes[i] == "item"sv) {
+            currentItemPosition = i;
+            break;
+        }
+    }
+
     // create a DOM of the unit
     std::shared_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.data(), (int) unit->srcml.size(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
     if (doc == nullptr)
@@ -606,9 +615,17 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         auto nunit = srcml_unit_clone(unit);
         nunit->read_body = nunit->read_header = true;
         if (!lastresult.unitWrapped) {
-            nunit->attributes.push_back("item");
-            nunit->attributes.push_back(std::to_string(i + 1));
-            nunit->hash = std::nullopt;
+
+            // update or add item attribute
+            if (currentItemPosition != unit->attributes.size()) {
+                if (fullresults->nodeNr > 1) {
+                    nunit->attributes[currentItemPosition + 1] += '-';
+                    nunit->attributes[currentItemPosition + 1] += std::to_string(i + 1);
+                }
+            } else {
+                nunit->attributes.push_back("item");
+                nunit->attributes.push_back(std::to_string(i + 1));
+            }
         }
 
         // when no namespace, use the starting namespaces
