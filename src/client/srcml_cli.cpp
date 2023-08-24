@@ -251,6 +251,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             ->group("")
             ->expected(1)
             ->check([&](std::string value) {
+
                 if (!value.empty() && value[0] == '-') {
                     SRCMLstatus(ERROR_MSG, "srcml: --text: 1 required STRING missing");
                     exit(CLI_STATUS_ERROR);
@@ -259,7 +260,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             })
             ->each([&](std::string text) {
                 isText = true;
-                srcml_request.input_sources.emplace_back(src_prefix_add_uri("text", text));
+                srcml_request.input_sources.insert(srcml_request.input_sources.begin(), { src_prefix_add_uri("text", text) });
             });
     }
 
