@@ -24,6 +24,77 @@
 
 using namespace ::std::literals::string_view_literals;
 
+/*
+    Parse a YAML header. Assume the entire header is passed, including the '---' demarcations
+*/
+std::unordered_map<std::string_view, std::string_view> parseYAMLHeader(std::string_view header) {
+
+    // remove start and end blocks of header
+    header.remove_prefix(4);
+    header.remove_suffix(4);
+
+    // process each key-value pair
+    std::unordered_map<std::string_view, std::string_view> keyValuePairs;
+    int lineSize = 0;
+    while (!header.empty()) {
+
+        // current line
+        const auto eol = header.find('\n');
+        if (eol <= 0)
+            break;
+        std::string_view line(header.begin(), eol);
+        lineSize = line.size();
+
+        // trim leading whitespace
+        line.remove_prefix(line.find_first_not_of(' '));
+
+        // remove any comments
+        const auto commentStart = line.find('#');
+        if (commentStart != line.npos)
+            line.remove_suffix(line.size() - commentStart);
+
+        // find the key-value separator skipping over quoted keys
+        int startPos = 0;
+        if (line[0] == '"') {
+            const auto endKey = line.find('"', 1);
+            if (endKey != line.npos)
+                startPos = endKey + 1;
+        }
+        const auto separator = line.find(':', startPos);
+        if (separator != line.npos) {
+
+            // split into rough key and value
+            std::string_view key = line.substr(0, separator);
+            std::string_view value = line.substr(separator + 1);
+
+            // trim tailing whitespaces from key
+            key.remove_suffix(key.size() - key.find_last_not_of(' ') - 1);
+
+            // trim whitespaces from value
+            value.remove_prefix(value.find_first_not_of(' '));
+            value.remove_suffix(value.size() - value.find_last_not_of(' ') - 1);
+
+            // remove optional quotes
+            if (key.front() == '\"') {
+                key.remove_prefix(1);
+                key.remove_suffix(key.back() == '\"');
+            }
+            if (value.front() == '\"') {
+                value.remove_prefix(1);
+                value.remove_suffix(value.back() == '\"');
+            }
+
+            // insert polished key-value
+            keyValuePairs[key] = value;
+        }
+
+        // completed this line
+        header.remove_prefix(lineSize + 1);
+    }
+
+    return keyValuePairs;
+}
+
 archive* libarchive_input_file(const srcml_input_src& input_file) {
 
     if (input_file.parchive) {
@@ -338,6 +409,79 @@ schedule:
                 prequest->unit.reset(srcml_unit_create(prequest->srcml_arch));
                 if (!prequest->unit) {
                     prequest->status = SRCML_STATUS_ERROR;
+                }
+            }
+
+            // process a YAML header
+            auto& buffer = prequest->buffer;
+            if (buffer.size() > 7 && buffer[0] == '-' && buffer[1] == '-' && buffer[2] == '-') {
+
+                auto endpos = std::search(buffer.begin() + 3, buffer.end(), "---"sv.begin(), "---"sv.end());
+                if (endpos != buffer.end()) {
+
+                    std::string header(buffer.begin(), endpos + 3 + 1);
+                    auto parsedData = parseYAMLHeader(header);
+
+                    bool isHeader = false;
+                    for (const auto& [key, value] : parsedData) {
+                        if (value == "http://www.srcML.org/srcML/src") {
+                            isHeader = true;
+                            break;
+                        }
+                    }
+
+                    if (isHeader) {
+                        buffer.erase(buffer.begin(), buffer.begin() + header.size());
+
+                        parsedData.erase("documentType");
+
+                        // filename
+                        auto search = parsedData.find("filename");
+                        if (search != parsedData.end()) {
+                            prequest->filename = search->second;
+                            // parsedData.erase("filename");
+                        }
+
+                        // language
+                        search = parsedData.find("language");
+                        if (search != parsedData.end()) {
+                            prequest->language = search->second;
+                            // parsedData.erase("language");
+                        }
+
+                        // src-version
+                        search = parsedData.find("src-version");
+                        if (search != parsedData.end()) {
+                            prequest->version = search->second;
+                            // parsedData.erase("src-version");
+                        }
+
+                        for (const auto &kv : parsedData) {
+                            // std::cout << kv.first << "|" << kv.second << std::endl;
+
+                            if (kv.first.substr(0, "xmlns:"sv.size()) == "xmlns:"sv) {
+
+                                const std::string prefix(kv.first.substr("xmlns:"sv.size()));
+                                const std::string url(kv.second);
+
+                                srcml_unit_register_namespace(prequest->unit.get(), prefix.data(), url.data());
+
+                            } else {
+
+                                const auto separator = kv.first.find(':');
+                                if (separator != kv.first.npos) {
+
+                                    const std::string prefix(kv.first.substr(0, separator));
+                                    const std::string name(kv.first.substr(separator + 1));
+                                    std::string value(kv.second);
+
+                                    srcml_unit_add_attribute(prequest->unit.get(), prefix.c_str(), name.c_str(), value.c_str());
+                                    // prequest->namespaceValues.push_back(XMLNamespaceValue{ prefix.data(), name.data(), value.data() });
+                                }
+                            }
+                        }
+
+                    }
                 }
             }
 

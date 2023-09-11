@@ -18,6 +18,11 @@
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
 #include <srcml_utilities.hpp>
+#include <cassert>
+#include <inttypes.h>
+#include <string_view>
+
+using namespace ::std::literals::string_view_literals;
 
 #include <stdio.h>
 #if !defined(_MSC_VER)
@@ -30,6 +35,103 @@
 #define READ _read
 #define WRITE _write
 #endif
+
+static std::string createYAMLHeader(const srcml_archive* arch, const srcml_unit* unit) {
+
+    std::string header = "---\n";
+
+    // output srcML namespace first
+    for (size_t i = 0; i < srcml_archive_get_namespace_size(arch); ++i) {
+        if ("http://www.srcML.org/srcML/src"sv.compare(srcml_archive_get_namespace_uri(arch, i)) != 0)
+            continue;
+        auto prefix = srcml_archive_get_namespace_prefix(arch, i);
+        bool isDefault = prefix && ""sv.compare(prefix) == 0;
+        if (!isDefault)
+            header += '"';
+        header += "xmlns";
+        if (!isDefault) {
+            header += ':';
+            header += prefix;
+            header += '"';
+        }
+        header += ": \"";
+        header += srcml_archive_get_namespace_uri(arch, i);
+        header += "\"\n";
+        break;
+    }
+
+    // output custom namespaces
+    for (size_t i = 0; i < srcml_archive_get_namespace_size(arch); ++i) {
+        if ("http://www.srcML.org/srcML/src"sv.compare(srcml_archive_get_namespace_uri(arch, i)) == 0)
+            continue;
+        auto prefix = srcml_archive_get_namespace_prefix(arch, i);
+        bool isDefault = prefix && ""sv.compare(prefix) == 0;
+        if (!isDefault)
+            header += '"';
+        header += "xmlns";
+        if (!isDefault) {
+            header += ':';
+            header += prefix;
+            header += '"';
+        }
+        header += ": \"";
+        header += srcml_archive_get_namespace_uri(arch, i);
+        header += "\"\n";
+    }
+
+    // output custom namespaces
+    for (size_t i = 0; i < srcml_unit_get_namespace_size(unit); ++i) {
+        if ("http://www.srcML.org/srcML/src"sv.compare(srcml_unit_get_namespace_uri(unit, i)) == 0)
+            continue;
+        auto prefix = srcml_unit_get_namespace_prefix(unit, i);
+        bool isDefault = prefix && ""sv.compare(prefix) == 0;
+        if (!isDefault)
+            header += '"';
+        header += "xmlns";
+        if (!isDefault) {
+            header += ':';
+            header += prefix;
+            header += '"';
+        }
+        header += ": \"";
+        header += srcml_unit_get_namespace_uri(unit, i);
+        header += "\"\n";
+    }
+
+    const auto language = srcml_unit_get_language(unit);
+    if (language) {
+        header += "language: \"";
+        header += language;
+        header += "\"\n";
+    }
+    const auto filename = srcml_unit_get_filename(unit);
+    if (filename) {
+        header += "filename: \"";
+        header += filename;
+        header += "\"\n";
+    }
+    const auto src_version = srcml_unit_get_version(unit);
+    if (src_version) {
+        header += "src_version: \"";
+        header += src_version;
+        header += "\"\n";
+    }
+
+    // output custom attributes
+    for (size_t i = 0; i < srcml_unit_get_attribute_size(unit); ++i) {
+        header += "\"";
+        header += srcml_unit_get_attribute_prefix(unit, i);
+        header += ":";
+        header += srcml_unit_get_attribute_name(unit, i);
+        header += "\": \"";
+        header += srcml_unit_get_attribute_value(unit, i);
+        header += "\"\n";
+    }
+
+    header += "---\n";
+
+    return header;
+}
 
 static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source, const std::optional<size_t>& revision) {
 
@@ -90,7 +192,7 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
             curinput.fd = std::nullopt;
         }
 #endif
-        
+
         curinput.fd = input_archive(curinput);
     }
 
@@ -129,7 +231,6 @@ void create_src(const srcml_request_t& srcml_request,
                destination.compressions.empty() && destination.archives.empty()) {
 
         // srcml->src extract to stdout
-
         auto arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
 
         // move to the correct unit
@@ -166,6 +267,13 @@ void create_src(const srcml_request_t& srcml_request,
                     SRCMLstatus(ERROR_MSG, "Unable to write to stdout");
                     break;
                 }
+            }
+
+            // output the text header if requested
+            if (option(SRCML_COMMAND_HEADER)) {
+
+                const auto header = createYAMLHeader(arch.get(), unit.get());
+                write(destination, header.data(), header.size());
             }
 
             if (count && !option(SRCML_COMMAND_NULL)) {
