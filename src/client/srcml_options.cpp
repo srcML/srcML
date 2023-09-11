@@ -9,4 +9,4 @@
 
 #include <srcml_options.hpp>
 
-int SRCMLOptions::opt;
+uint_fast64_t SRCMLOptions::opt;
