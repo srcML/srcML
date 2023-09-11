@@ -606,8 +606,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         auto nunit = srcml_unit_clone(unit);
         nunit->read_body = nunit->read_header = true;
         if (!lastresult.unitWrapped) {
-            nunit->attributes.push_back("item");
-            nunit->attributes.push_back(std::to_string(i + 1));
+            nunit->attributes.emplace_back("", "", "item", std::to_string(i + 1));
             nunit->hash = std::nullopt;
         }
 

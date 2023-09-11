@@ -468,18 +468,7 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
 
     // lookup by uri, if it already exists, update the prefix. If it doesn't exist, add it
     // prefix must be unique
-    auto ituri = findNSURI(archive->namespaces, uri);
-    auto itprefix = findNSPrefix(archive->namespaces, prefix);
-    if (ituri != archive->namespaces.end() && itprefix != archive->namespaces.end()) {
-        // existing prefix/uri, change prefix of existing namespace
-        ituri->prefix = prefix;
-    } else if (ituri != archive->namespaces.end()) {
-        // change prefix for existing uri
-        ituri->prefix = prefix;
-    } else {
-        // add new namespace
-        archive->namespaces.emplace_back(prefix, uri, NS_REGISTERED);
-    }
+    addNamespace(archive->namespaces, uri, prefix);
 
     // namespaces for options enable the options automatically
     if (uri == SRCML_CPP_NS_URI) {
@@ -492,6 +481,95 @@ int srcml_archive_register_namespace(struct srcml_archive* archive, const char* 
     }
 
     return SRCML_STATUS_OK;
+}
+
+/**
+ * Add the attribute to the archive
+ * @param archive A srcml_archive
+ * @param prefix An XML namespace prefix of the attribute
+ * @param name The attribute name
+ * @param value The attribute value
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure.
+ */
+int srcml_archive_add_attribute(struct srcml_archive* archive, const char* prefix, const char* name, const char* value) {
+
+    if (archive == nullptr || prefix == nullptr || name == nullptr || value == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    // URI for this prefix must be declared
+    const auto& uriNS = findNSPrefix(archive->namespaces, prefix);
+    if (uriNS == archive->namespaces.end())
+        return SRCML_STATUS_UNASSIGNED_PREFIX;
+
+    // add/update custom attribute
+    addAttribute(archive->attributes, uriNS->uri, prefix, name, value);
+
+    return SRCML_STATUS_OK;
+}
+
+/**
+ * Number of custom attributes
+ * @param archive A srcml_archive
+ * @return The number of attributes or 0 if archive is NULL
+ */
+size_t srcml_archive_get_attribute_size(const struct srcml_archive* archive) {
+
+    if (archive == nullptr)
+        return 0;
+
+    return archive->attributes.size();
+}
+
+/**
+ * Prefix of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The prefix for the given position, or NULL
+ */
+const char* srcml_archive_get_attribute_prefix(const struct srcml_archive* archive, size_t pos) {
+
+    if (archive == nullptr)
+        return nullptr;
+
+    if (pos > archive->attributes.size())
+        return nullptr;
+
+    return archive->attributes[pos].prefix.c_str();
+}
+
+/**
+ * Name of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The name for the given position, or NULL
+ */
+const char* srcml_archive_get_attribute_name(const struct srcml_archive* archive, size_t pos) {
+
+    if (archive == nullptr)
+        return nullptr;
+
+    if (pos > archive->attributes.size())
+        return nullptr;
+
+    return archive->attributes[pos].name.c_str();
+}
+
+/**
+ * Value of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The value for the given position, or NULL
+ */
+const char* srcml_archive_get_attribute_value(const struct srcml_archive* archive, size_t pos) {
+
+    if (archive == nullptr)
+        return nullptr;
+
+    if (pos > archive->attributes.size())
+        return nullptr;
+
+    return archive->attributes[pos].value.c_str();
 }
 
 /**

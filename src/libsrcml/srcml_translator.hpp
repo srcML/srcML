@@ -51,7 +51,7 @@ public:
                      const char* url,
                      const char* filename,
                      const char* version,
-                     const std::vector<std::string>& attributes,
+                     const Attributes& attributes,
                      const char* timestamp,
                      const char* hash,
                      const char* encoding);
@@ -105,7 +105,7 @@ private:
     const char* encoding = nullptr;
 
     /** an array of name-value attribute pairs */
-    const std::vector<std::string>& attributes;
+    const Attributes& attributes;
 
     Namespaces namespaces;
 

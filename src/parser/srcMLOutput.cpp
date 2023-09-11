@@ -72,11 +72,11 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const char* language,
                          const char* xml_enc,
                          OPTION_TYPE& op,
-                         const std::vector<std::string>& attributes,
+                         const Attributes& attributes,
                          const std::optional<std::pair<std::string, std::string>>& processing_instruction,
                          size_t ts)
     : input(ints), output_buffer(output_buffer), unit_language(language),
-      options(op), xml_encoding(xml_enc), unit_attributes(attributes), processing_instruction(processing_instruction),
+      options(op), xml_encoding(xml_enc), attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
     // open the output text writer stream
@@ -291,7 +291,7 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
                             const char* version, const char* timestamp,
                             const char* hash,
                             const char* encoding,
-                            const std::vector<std::string>& attributes,
+                            const Attributes& attributes,
                             bool output_macrolist) {
 
     // go with default encoding
@@ -385,8 +385,15 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
     }
 
     // custom attributes
-    for(std::vector<std::string>::size_type pos = 0; pos < attributes.size(); pos += 2) {
-        xmlTextWriterWriteAttribute(xout, BAD_CAST attributes[pos].data(), BAD_CAST attributes[pos + 1].data());
+    for (const auto& attribute : attributes) {
+        std::string qName;
+        if (!attribute.prefix.empty()) {
+            qName += attribute.prefix;
+            qName += ':';
+        }
+        qName += attribute.name;
+
+        xmlTextWriterWriteAttribute(xout, BAD_CAST qName.data(), BAD_CAST attribute.value.data());
     }
 
     if (output_macrolist)

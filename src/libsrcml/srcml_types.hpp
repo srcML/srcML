@@ -65,7 +65,7 @@ struct srcml_archive {
     /** an attribute for a version string */
     std::optional<std::string> version;
     /** an array of name-value attribute pairs */
-    std::vector<std::string> attributes;
+    Attributes attributes;
 
     /** srcml options */
     OPTION_TYPE options = SRCML_OPTION_DEFAULT_INTERNAL;
@@ -139,8 +139,9 @@ struct srcml_unit {
     std::optional<std::string> timestamp;
     /** an attribute for a hash string */
     std::optional<std::string> hash;
-    /** an array of name-value attribute pairs */
-    std::vector<std::string> attributes;
+    /** a collection of attributes */
+    Attributes attributes;
+
     /** the type of eol to output with source code */
     size_t eol = SOURCE_OUTPUT_EOL_AUTO;
 

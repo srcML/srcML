@@ -58,7 +58,7 @@ public:
                 const char* language,
                 const char* encoding,
                 OPTION_TYPE& option,
-                const std::vector<std::string>& attributes,
+                const Attributes& attributes,
                 const std::optional<std::pair<std::string, std::string>>& processing_instruction,
                 size_t tabsize);
 
@@ -90,7 +90,7 @@ public:
                    const char* unit_version, const char* unit_timestamp,
                    const char* unit_hash,
                    const char* encoding,
-                   const std::vector<std::string> & attributes,
+                   const Attributes& attributes,
                    bool output_macrolist);
 
     // consume the entire tokenstream with output of srcml
@@ -155,8 +155,8 @@ public:
     /* namespaces declared and used */
     Namespaces namespaces;
 
-    /** an array of name-value attribute pairs */
-    const std::vector<std::string> unit_attributes;
+    /** attributes added */
+    Attributes attributes;
 
     /** pre-root processing instruction */
     std::optional<std::pair<std::string, std::string> > processing_instruction;
