@@ -361,12 +361,13 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "metric", "https://www.srcml.org/test/metric");
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, "metric", "complexity", "high"), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_attribute_size(archive), 1);
-        dassert(srcml_archive_get_attribute_prefix(archive, 0), std::string("metric"));
-        dassert(srcml_archive_get_attribute_name(archive, 0) , std::string("complexity"));
-        dassert(srcml_archive_get_attribute_value(archive, 0) , std::string("high"));
+        dassert(srcml_unit_add_attribute(unit, "metric", "complexity", "high"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_attribute_size(unit), 1);
+        dassert(srcml_unit_get_attribute_prefix(unit, 0), std::string("metric"));
+        dassert(srcml_unit_get_attribute_name(unit, 0) , std::string("complexity"));
+        dassert(srcml_unit_get_attribute_value(unit, 0) , std::string("high"));
 
         srcml_archive_close(archive);
         srcml_archive_free(archive);
@@ -375,9 +376,10 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "metric", "https://www.srcml.org/test/metric");
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, "metric", "complexity", "high"), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_attribute_size(archive), 1);
+        dassert(srcml_unit_add_attribute(unit, "metric", "complexity", "high"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_attribute_size(unit), 1);
 
         char* s = 0;
         size_t size = 0;
@@ -396,14 +398,15 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "metric", "https://www.srcml.org/test/metric");
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, "metric", "complexity", "high"), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_attribute_size(archive), 1);
+        dassert(srcml_unit_add_attribute(unit, "metric", "complexity", "high"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_attribute_size(unit), 1);
 
         char* s = 0;
         size_t size = 0;
         srcml_archive_write_open_memory(archive, &s, &size);
-        srcml_unit* unit = srcml_unit_create(archive);
+        // srcml_unit* unit = srcml_unit_create(archive);
         srcml_unit_set_language(unit, "C++");
         srcml_unit_parse_memory(unit, "", 0);
         srcml_archive_write_unit(archive, unit);
@@ -426,31 +429,34 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "metric", "https://www.srcml.org/test/metric");
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, "metric", "complexity", "high"), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_attribute_size(archive), 1);
-        dassert(srcml_unit_add_attribute(archive, "metric", "loc", "5"), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_attribute_size(archive), 2);
+        dassert(srcml_unit_add_attribute(unit, "metric", "complexity", "high"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_attribute_size(unit), 1);
+        dassert(srcml_unit_add_attribute(unit, "metric", "loc", "5"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_attribute_size(unit), 2);
 
-        dassert(srcml_archive_get_attribute_prefix(archive, 0), std::string("metric"));
-        dassert(srcml_archive_get_attribute_name(archive, 0) , std::string("complexity"));
-        dassert(srcml_archive_get_attribute_value(archive, 0) , std::string("high"));
+        dassert(srcml_unit_get_attribute_prefix(unit, 0), std::string("metric"));
+        dassert(srcml_unit_get_attribute_name(unit, 0) , std::string("complexity"));
+        dassert(srcml_unit_get_attribute_value(unit, 0) , std::string("high"));
 
-        dassert(srcml_archive_get_attribute_prefix(archive, 1), std::string("metric"));
-        dassert(srcml_archive_get_attribute_name(archive, 1) , std::string("loc"));
-        dassert(srcml_archive_get_attribute_value(archive, 1) , std::string("5"));
+        dassert(srcml_unit_get_attribute_prefix(unit, 1), std::string("metric"));
+        dassert(srcml_unit_get_attribute_name(unit, 1) , std::string("loc"));
+        dassert(srcml_unit_get_attribute_value(unit, 1) , std::string("5"));
 
+        srcml_unit_free(unit);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         srcml_archive_register_namespace(archive, "metric", "https://www.srcml.org/test/metric");
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, "metric", "complexity", "high"), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_attribute_size(archive), 1);
-        dassert(srcml_unit_add_attribute(archive, "metric", "loc", "5"), SRCML_STATUS_OK);
-        dassert(srcml_unit_get_attribute_size(archive), 2);
+        dassert(srcml_unit_add_attribute(unit, "metric", "complexity", "high"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_attribute_size(unit), 1);
+        dassert(srcml_unit_add_attribute(unit, "metric", "loc", "5"), SRCML_STATUS_OK);
+        dassert(srcml_unit_get_attribute_size(unit), 2);
 
         char* s = 0;
         size_t size = 0;
@@ -468,28 +474,34 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, 0, "complexity", "high"), SRCML_STATUS_INVALID_ARGUMENT);
-        dassert(srcml_unit_get_attribute_size(archive), 0);
+        dassert(srcml_unit_add_attribute(unit, 0, "complexity", "high"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_get_attribute_size(unit), 0);
 
+        srcml_unit_free(unit);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, "metric", 0, "high"), SRCML_STATUS_INVALID_ARGUMENT);
-        dassert(srcml_unit_get_attribute_size(archive), 0);
+        dassert(srcml_unit_add_attribute(unit, "metric", 0, "high"), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_get_attribute_size(unit), 0);
 
+        srcml_unit_free(unit);
         srcml_archive_free(archive);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, "metric", "complexity", 0), SRCML_STATUS_INVALID_ARGUMENT);
-        dassert(srcml_unit_get_attribute_size(archive), 0);
+        dassert(srcml_unit_add_attribute(unit, "metric", "complexity", 0), SRCML_STATUS_INVALID_ARGUMENT);
+        dassert(srcml_unit_get_attribute_size(unit), 0);
 
+        srcml_unit_free(unit);
         srcml_archive_free(archive);
     }
 
@@ -499,10 +511,12 @@ int main(int, char* argv[]) {
 
     {
         srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
 
-        dassert(srcml_unit_add_attribute(archive, "metric", "complexity", "high"), SRCML_STATUS_UNASSIGNED_PREFIX);
-        dassert(srcml_unit_get_attribute_size(archive), 0);
+        dassert(srcml_unit_add_attribute(unit, "metric", "complexity", "high"), SRCML_STATUS_UNASSIGNED_PREFIX);
+        dassert(srcml_unit_get_attribute_size(unit), 0);
 
+        srcml_unit_free(unit);
         srcml_archive_free(archive);
     }
 
