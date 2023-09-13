@@ -616,6 +616,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
         nunit->read_body = nunit->read_header = true;
         if (!lastresult.unitWrapped) {
 
+            // remove the hash since not valid for partial query results
+            nunit->hash = std::nullopt;
+
             // update or add item attribute
             if (currentItemPosition != unit->attributes.size()) {
                 if (fullresults->nodeNr > 1) {
