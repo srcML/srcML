@@ -507,7 +507,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // find the position of the item attribute, if it exists
-    std::size_t currentItemPosition = unit->attributes.size();
+    // the attribute array consists of { name1, value1, name2, value2, ... }
+    auto currentItemPosition = unit->attributes.size();
     for (std::size_t i = 0; i < unit->attributes.size(); i += 2) {
         if (unit->attributes[i] == "item"sv) {
             currentItemPosition = i;
