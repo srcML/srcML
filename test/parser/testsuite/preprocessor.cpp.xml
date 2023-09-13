@@ -120,7 +120,7 @@
 </unit>
 -->
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <label><name>error</name>:</label>
 </unit>
 

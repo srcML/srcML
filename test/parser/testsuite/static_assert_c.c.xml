@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C" url="static_assert" filename="static_assert_c">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <assert type="static">_Static_assert<argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="string">"Message"</literal></expr></argument>)</argument_list>;</assert>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <assert type="static">_Static_assert<argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><literal type="string">"Message"</literal></expr></argument>)</argument_list>;</assert>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <assert type="static">_Static_assert<argument_list>(<argument><expr><name>a</name> <operator>+</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><literal type="string">"Message"</literal></expr></argument>)</argument_list>;</assert>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <assert type="static">_Static_assert<argument_list>(<argument><expr><literal type="number">0</literal> <operator>+</operator> <name>a</name></expr></argument>, <argument><expr><literal type="string">"Message"</literal></expr></argument>)</argument_list>;</assert>
 </unit>
 

@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="lambda" filename="lambda_cs">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>w</name></decl></parameter></parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name><name>w</name><operator>.</operator><name>Length</name></name></expr></block_content></block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> <init>= <expr><call><name><name>words</name><operator>.</operator><name>Min</name></name><argument_list>(<argument><expr><lambda><parameter_list type="pseudo"><parameter><decl><name>w</name></decl></parameter></parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name><name>w</name><operator>.</operator><name>Length</name></name></expr></block_content></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><lambda><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name><name>w</name><operator>.</operator><name>Length</name></name></expr></block_content></block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><lambda><parameter_list>(<parameter><decl><type><name>string</name></type> <name>w</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name><name>w</name><operator>.</operator><name>Length</name></name></expr></block_content></block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>int</name></type> <name>shortestWordLength</name> <init>= <expr><call><name><name>words</name><operator>.</operator><name>Min</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><type><name>string</name></type> <name>w</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name><name>w</name><operator>.</operator><name>Length</name></name></expr></block_content></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> <init>= <expr><call><name><name>digits</name><operator>.</operator><name>Where</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>digit</name></decl></parameter>, <parameter><decl><name>index</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name><name>digit</name><operator>.</operator><name>Length</name></name> <operator>&lt;</operator> <name>index</name></expr></block_content></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>shortDigits</name> <init>= <expr><call><name><name>digits</name><operator>.</operator><name>Where</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><type><name>string</name></type> <name>digit</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>index</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><name><name>digit</name><operator>.</operator><name>Length</name></name> <operator>&lt;</operator> <name>index</name></expr></block_content></block></lambda></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><lambda><parameter_list>(<parameter><decl><type><name>input</name></type> <name>parameters</name></decl></parameter>)</parameter_list> =&gt; <block>{<block_content><expr_stmt><expr><name>statement</name></expr>;</expr_stmt></block_content>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>TestDelegate</name></type> <name>myDel</name> <init>= <expr><lambda><parameter_list type="pseudo"><parameter><decl><name>n</name></decl></parameter></parameter_list> =&gt; <block>{<block_content> <decl_stmt><decl><type><name>string</name></type> <name>s</name> <init>= <expr><name>n</name> <operator>+</operator> <literal type="string">" "</literal> <operator>+</operator> <literal type="string">"World"</literal></expr></init></decl>;</decl_stmt> <expr_stmt><expr><call><name><name>Console</name><operator>.</operator><name>WriteLine</name></name><argument_list>(<argument><expr><name>s</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> </block_content>}</block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><lambda><specifier>async</specifier> <parameter_list>(<parameter><decl><name>t1</name></decl></parameter>,<parameter><decl><name>t2</name></decl></parameter>)</parameter_list>=&gt;<block type="pseudo"><block_content> <expr><operator>await</operator> <name>t1</name> <operator>+</operator> <operator>await</operator> <name>t2</name></expr></block_content></block></lambda></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> =&gt;<block type="pseudo"><block_content> <expr><literal type="boolean">true</literal></expr></block_content></block></lambda></expr></argument>, <argument><expr><delegate><name>delegate</name> <block>{<block_content>
     <if_stmt><if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
 

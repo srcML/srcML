@@ -1,95 +1,95 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="puretypedecl" filename="puretypedecl">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>bool</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>char</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>float</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>double</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>void</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>wchar_t</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>unsigned</name> <name>char</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>signed</name> <name>char</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>unsigned</name> <name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>signed</name> <name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>short</name> <name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>unsigned</name> <name>short</name> <name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>signed</name> <name>short</name> <name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>long</name> <name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>signed</name> <name>long</name> <name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>unsigned</name> <name>long</name> <name>int</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>long</name> <name>double</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>__int64</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>unsigned</name> <name>__int64</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>long</name> <name>long</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>unsigned</name> <name>long</name> <name>long</name></type> <name>v</name></decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl><type><name>signed</name> <name>long</name> <name>long</name></type> <name>v</name></decl>
 </unit>
 

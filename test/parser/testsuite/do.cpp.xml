@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="do">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <do>do <block>{<block_content/>}</block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <do>do <block>{<block_content> <break>break;</break> </block_content>}</block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <do>do<block type="pseudo"><block_content> <break>break;</break></block_content></block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <do>do<block type="pseudo"><block_content> <while>while <condition>(<expr><name>b</name></expr>)</condition><block type="pseudo"><block_content><empty_stmt>;</empty_stmt></block_content></block></while></block_content></block> while <condition>(<expr><name>a</name></expr>)</condition>;</do>
 </unit>
 

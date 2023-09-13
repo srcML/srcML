@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="try">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <try>try <block>{<block_content/>}</block></try>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <try>try <block>{<block_content> <expr_stmt><expr><name>a</name></expr>;</expr_stmt> </block_content>}</block></try>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <try>try <block>{<block_content> 
     <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
     </block_content>}</block><catch>catch <block>{<block_content/>}</block></catch></try>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <try>try <block>{<block_content> 
   <try>try <block>{<block_content> 
       <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
@@ -23,7 +23,7 @@
     </block_content>}</block><catch>catch <block>{<block_content/>}</block></catch></try>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <try>try <block>{<block_content> 
     </block_content>}</block><catch>catch <block>{<block_content>
       <try>try <block>{<block_content> 
@@ -32,7 +32,7 @@
     </block_content>}</block></catch></try>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <try>try <block>{<block_content> 
   <try>try <block>{<block_content> 
       <expr_stmt><expr><name>a</name></expr>;</expr_stmt> 
@@ -44,12 +44,12 @@
     </block_content>}</block></catch></try>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo"><block_content>
   <try>try <block>{<block_content/>}</block> <catch>catch <block>{<block_content/>}</block></catch></try></block_content></block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><block type="pseudo"><block_content>
   <try>try <block>{<block_content>
       <expr_stmt><expr><name>a</name></expr>;</expr_stmt>

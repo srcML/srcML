@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="function_decl" filename="function_decl_cs">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>*</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>?</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>&amp;</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>a</name></name> <modifier>&amp;&amp;</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 

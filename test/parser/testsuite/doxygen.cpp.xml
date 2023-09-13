@@ -1,83 +1,83 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="doxygen">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block" format="doxygen">/** */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block" format="doxygen">/**
 */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block" format="doxygen">/**
 *
 */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block" format="doxygen">/**
 
 */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block" format="doxygen">/*! */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block" format="doxygen">/*!
 */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block" format="doxygen">/*!
 *
 */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block" format="doxygen">/*!
 
 */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="line" format="doxygen">/// </comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<comment type="line" format="doxygen">/// </comment>
-<comment type="line" format="doxygen">/// </comment>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
-<comment type="line" format="doxygen">/// </comment>
+<unit language="C++">
 <comment type="line" format="doxygen">/// </comment>
 <comment type="line" format="doxygen">/// </comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
+<comment type="line" format="doxygen">/// </comment>
+<comment type="line" format="doxygen">/// </comment>
+<comment type="line" format="doxygen">/// </comment>
+</unit>
+
+<unit language="C++">
 <comment type="line" format="doxygen">//! </comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="line" format="doxygen">//! </comment>
 <comment type="line" format="doxygen">//! </comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="line" format="doxygen">//! </comment>
 <comment type="line" format="doxygen">//! </comment>
 <comment type="line" format="doxygen">//! </comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="line" format="doxygen">///</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="line" format="doxygen">//!</comment>
 </unit>
 

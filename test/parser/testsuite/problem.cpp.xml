@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="problem">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block">/*
  * äöüÄÖÜ
  * A comment 
@@ -9,13 +9,13 @@
 </unit>
 
 <!-- Taken from linux kernel source sys.c -->
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block">/*
  * Samma på svenska..
 */</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <comment type="block">/*
  * Samma p&amp;#xE5; svenska..
 */</comment>

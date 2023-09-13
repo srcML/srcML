@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="explicit" filename="explicit_cs">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <function><type><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier> <name>void</name></type> <name>M</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier></type> <name>operator <name>M</name></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 

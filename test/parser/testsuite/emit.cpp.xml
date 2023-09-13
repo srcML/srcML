@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="emit" filename="emit">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <emit>emit <expr><call><name>valueChanged</name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr>;</emit>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <function_decl><type><name>void</name></type> <name>emit</name><parameter_list>()</parameter_list>;</function_decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <function><type><name>void</name></type> <name>emit</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl_stmt><decl><type><name>void</name></type> <name>emit</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <class_decl>class <name>emit</name>;</class_decl>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <class>class <name>emit</name> <block>{<private type="default"/>}</block>;</class>
 </unit>
 

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="extern">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <extern>extern <literal type="string">"C"</literal> <block>{<block_content/>}</block></extern>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <extern>extern <literal type="string">"C"</literal> <block>{<block_content><break>break;</break></block_content>}</block></extern>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl_stmt><decl><type><specifier>extern</specifier> <name>int</name></type> <name>foo</name></decl>;</decl_stmt>
 </unit>
 

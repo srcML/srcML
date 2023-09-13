@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="typedef_ns">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <typedef>typedef <function_decl><type><name>int</name></type> (<name><name>FRED</name><operator>::</operator><modifier>*</modifier><name>ENGINE_CTRL_FUNC_PTR</name></name>)<parameter_list>()</parameter_list>;</function_decl></typedef>
 </unit>
 

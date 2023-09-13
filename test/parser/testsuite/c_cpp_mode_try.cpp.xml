@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" url="c_cpp_mode">
+<unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="c_cpp_mode">
 
 <unit language="C++">
 <label><name>try</name>:</label>

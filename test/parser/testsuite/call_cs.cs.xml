@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="call" filename="call_cs">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><call><name>~f</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><call><name>Method</name><argument_list>(<argument><modifier>out</modifier> <expr><name>str1</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><call><name>Method</name><argument_list>(<argument><modifier>ref</modifier> <expr><name>str2</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><call><name>Method</name><argument_list>(<argument><modifier>out</modifier> <expr><name>str1</name></expr></argument>, <argument><modifier>ref</modifier> <expr><name>str2</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><call><name>Method</name><argument_list>(<argument><modifier>ref</modifier> <expr><name>str2</name></expr></argument>, <argument><modifier>out</modifier> <expr><name>str1</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><call><name>CalculateBMI</name><argument_list>(<argument><name>height</name>: <expr><literal type="number">64</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><call><name>CalculateBMI</name><argument_list>(<argument><name>height</name>: <expr><literal type="number">64</literal></expr></argument>, <argument><name>weight</name>: <expr><literal type="number">123</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 

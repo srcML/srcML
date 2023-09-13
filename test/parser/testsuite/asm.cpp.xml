@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="asm">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><name>asm</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl_stmt><decl><type><name>asm</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl_stmt><decl><type><name>asm</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><name>__asm__</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl_stmt><decl><type><name>__asm__</name> <specifier>volatile</specifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl_stmt><decl><type><name>__asm__</name> <specifier>__volatile__</specifier></type> <name>a</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm ();</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm ("abc");</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm ("  movl    %%esp,%%edi     \n"
 "  andl    %0,%%edi        \n"
 "  addl    %1,%%edi        \n"
@@ -48,15 +48,15 @@
 );</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ ();</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ ("abc");</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ ("  movl    %%esp,%%edi     \n"
 "  andl    %0,%%edi        \n"
 "  addl    %1,%%edi        \n"
@@ -71,15 +71,15 @@
 );</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm <specifier>volatile</specifier> ();</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm <specifier>volatile</specifier> ("abc");</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm <specifier>volatile</specifier> ("  movl    %%esp,%%edi     \n"
 "  andl    %0,%%edi        \n"
 "  addl    %1,%%edi        \n"
@@ -94,15 +94,15 @@
 );</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ <specifier>volatile</specifier> ();</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ <specifier>volatile</specifier> ("abc");</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ <specifier>volatile</specifier> ("  movl    %%esp,%%edi     \n"
 "  andl    %0,%%edi        \n"
 "  addl    %1,%%edi        \n"
@@ -117,15 +117,15 @@
 );</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm <specifier>__volatile__</specifier> ();</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm <specifier>__volatile__</specifier> ("abc");</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>asm <specifier>__volatile__</specifier> ("  movl    %%esp,%%edi     \n"
 "  andl    %0,%%edi        \n"
 "  addl    %1,%%edi        \n"
@@ -140,15 +140,15 @@
 );</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ <specifier>__volatile__</specifier> ();</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ <specifier>__volatile__</specifier> ("abc");</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ <specifier>__volatile__</specifier> ("  movl    %%esp,%%edi     \n"
 "  andl    %0,%%edi        \n"
 "  addl    %1,%%edi        \n"
@@ -163,7 +163,7 @@
 );</asm>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <asm>__asm__ <specifier>__volatile__</specifier> (
 ";; CHECK IPICRi == 0           \n\t"
 ".fillinsn                      \n"

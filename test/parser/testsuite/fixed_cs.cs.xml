@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="fixed" filename="fixed_cs">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <fixed>fixed <init>(<decl><type><name>int</name><modifier>*</modifier></type> <name>p</name> <init>= <expr><name>arr</name></expr></init></decl>)</init>
  <empty_stmt>;</empty_stmt></fixed>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <fixed>fixed <init>(<decl><type><name>int</name><modifier>*</modifier></type> <name>p</name> <init>= <expr><name>arr</name></expr></init></decl>)</init>
  <block>{<block_content/>}</block></fixed>
 </unit>

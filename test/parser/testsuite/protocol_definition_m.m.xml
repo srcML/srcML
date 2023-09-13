@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Objective-C" url="protocol" filename="protocol_definition_m">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol<required type="default"/>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name><required type="default"> </required>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name><required>@required </required>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name><optional>@optional</optional>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name><required>@required </required>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name><optional>@optional </optional>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name><required type="default"> </required><optional>@optional</optional>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name><required type="default"> </required><required>@required</required>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name><required type="default">
 </required><optional>@optional
 </optional><required>@required
 </required>@end</protocol>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <protocol>@protocol <name>protocolname</name> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list><required type="default"/>@end</protocol>
 </unit>
 

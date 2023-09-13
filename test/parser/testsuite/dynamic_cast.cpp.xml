@@ -1,92 +1,92 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="cast" filename="dynamic_cast">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>()</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>()</argument_list></cast> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></cast> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><call><name>g</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></cast> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></cast> <operator>+</operator> <call><name>g</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr><name>b</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name> <operator>+</operator> <name>b</name></expr></argument>, <argument><expr><name>c</name> <operator>+</operator> <name>d</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><operator>(</operator><literal type="string">"a"</literal><operator>,</operator> <operator>(</operator><name>mAccWrapCreated</name><operator>-</operator><name>mAccWrapDeleted</name><operator>)</operator><operator>)</operator></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>,<argument><expr><operator>(</operator><name>b</name><operator>,</operator><name>c</name><operator>)</operator></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><operator>&amp;</operator><name>a</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name><operator>&amp;</operator></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></cast></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></cast> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></cast></expr></argument>)</argument_list></cast> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></cast> <operator>+</operator> <name>b</name></expr></argument>)</argument_list></cast> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></cast> <operator>+</operator> <cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <expr_stmt><expr><cast type="dynamic">dynamic_cast<argument_list>(<argument><expr>struct <name>x</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="decl_struct">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl_stmt><decl><type><specifier>static</specifier> <name><name>struct</name> <name>resource</name></name></type> <name><name>reserve</name><index>[<expr><name>MAXRESERVE</name></expr>]</index></name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <decl_stmt><decl><type><name><name>struct</name> <name>a</name></name></type> <name>b</name></decl>;</decl_stmt>
 </unit>
 

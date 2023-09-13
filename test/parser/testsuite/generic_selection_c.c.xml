@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C" url="generic_selection" filename="generic_selection_c">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <expr_stmt><expr><generic_selection>_Generic(<selector><expr/></selector>,<association_list/>)</generic_selection></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <expr_stmt><expr><generic_selection>_Generic(<selector><expr><literal type="number">0</literal></expr></selector>, <association_list><association><type><specifier>default</specifier></type> : <expr><name>foo</name></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <expr_stmt><expr><call><generic_selection>_Generic(<selector><expr><operator>(</operator><name>X</name><operator>)</operator></expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>cbrtl</name></expr></association>, <association><type><specifier>default</specifier></type>: <expr><name>cbrt</name></expr></association>, <association><type><name>float</name></type>: <expr><name>cbrtf</name></expr></association></association_list>)</generic_selection><argument_list>(<argument><expr><name>X</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <expr_stmt><expr><generic_selection>_Generic(<selector><expr><operator>(</operator><name>X</name><operator>)</operator></expr></selector>, <association_list><association><type><name>long</name> <name>double</name></type>: <expr><name>s</name> <operator>=</operator> <literal type="string">"double"</literal></expr></association>, <association><type><specifier>default</specifier></type>: <expr><name>s</name> <operator>=</operator> <literal type="string">"int"</literal></expr></association>, <association><type><name>float</name></type>: <expr><name>s</name> <operator>=</operator> <literal type="string">"float"</literal></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <expr_stmt><expr><generic_selection>_Generic(<selector><expr><call><name>foo</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></selector>, <association_list><association><type>struct <name>class</name></type> :  <expr><call><name>foo</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></association>, <association><type><specifier>default</specifier></type> : <expr><call><name>foo</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <expr_stmt><expr><name><generic_selection>_Generic(<selector><expr><literal type="number">0</literal></expr></selector>, <association_list><association><type>struct <name>class</name></type> :  <expr><literal type="number">0</literal></expr></association>, <association><type><specifier>default</specifier></type> : <expr><literal type="number">1</literal></expr></association>, <association><type><name>int</name></type> : <expr><literal type="number">2</literal></expr></association></association_list>)</generic_selection><index>[<expr><name>index</name></expr>]</index></name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><generic_selection>_Generic(<selector><expr><literal type="number">0</literal></expr></selector>, <association_list><association><type>struct <name>class</name></type> :  <expr><literal type="number">0</literal></expr></association>, <association><type><specifier>default</specifier></type> : <expr><literal type="number">1</literal></expr></association>, <association><type><name>int</name></type> : <expr><literal type="number">2</literal></expr></association></association_list>)</generic_selection></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>    
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C">
+<unit language="C">
 <expr_stmt><expr><generic_selection>_Generic(<selector><expr><call><name>foo</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><call><name>bar</name><argument_list>(<argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></selector>, <association_list><association><type>struct <name>class</name></type> :  <expr><call><name>foo</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><call><name>bar</name><argument_list>(<argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></association>, <association><type><specifier>default</specifier></type> : <expr><call><name>foo</name><argument_list>(<argument><expr><call><name>bar</name><argument_list>(<argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></association>, <association><type><name>int</name></type> : <expr><call><name>foo</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><call><name>bar</name><argument_list>(<argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></association></association_list>)</generic_selection></expr>;</expr_stmt>
 </unit>
 

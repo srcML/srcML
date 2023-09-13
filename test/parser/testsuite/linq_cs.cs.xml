@@ -1,92 +1,92 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="linq" filename="linq_cs">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><from>from <expr><name>item</name></expr> <in>in <expr><name>list</name></expr></in></from></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><orderby>orderby <expr><name>item</name></expr> <name>ascending</name></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><orderby>orderby <expr><name>item</name></expr> <name>ascending</name></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><select>select <expr><name>item</name></expr></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><orderby>orderby <expr><name>item</name></expr> <name>descending</name></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><orderby>orderby <expr><name>item</name></expr></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><orderby>orderby <expr><name>item</name></expr> <name>ascending</name>, <expr><name>item</name></expr> <name>descending</name></orderby></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><group>group <expr><name>item</name></expr> <by>by <expr><name><name>item</name><operator>.</operator><name>value</name></name></expr></by></group></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
             <expr><linq><group>group <expr><name>item</name></expr> <by>by <expr><name><name>item</name><operator>.</operator><name>value</name></name></expr></by> <into>into <expr><name>values</name></expr></into></group></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
             <expr><linq><where>where <expr><name><name>item</name><operator>.</operator><name>value</name></name> <operator>==</operator> <literal type="number">0</literal></expr></where></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><join>join <expr><name>item</name></expr> <in>in <expr><name>list</name></expr></in> <on>on <expr><name><name>other_item</name><operator>.</operator><name>value</name></name></expr></on> <equals>equals <expr><name><name>item</name><operator>.</operator><name>value</name></name></expr></equals></join></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><join>join <expr><name>item</name></expr> <in>in <expr><name>list</name></expr></in> <on>on <expr><name><name>other_item</name><operator>.</operator><name>value</name></name></expr></on> <equals>equals <expr><name><name>item</name><operator>.</operator><name>value</name></name></expr></equals> <into>into <expr><name>values</name></expr></into></join></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
             <expr><linq><let>let <expr><name>items</name> <operator>=</operator> <name><name>list</name><operator>.</operator><name>items</name></name></expr></let></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><from>from <expr><name>vegetable</name></expr> <in>in <expr><name>vegetables</name></expr></in></from>
     <orderby>orderby <expr><name>vegetable</name></expr> <name>ascending</name></orderby>
     <select>select <expr><name>vegetable</name></expr></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><from>from <expr><name>vegetable</name></expr> <in>in <expr><name>vegetables</name></expr></in></from>
     <orderby>orderby <expr><name>vegetable</name></expr> <name>descending</name></orderby>
     <select>select <expr><name>vegetable</name></expr></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><from>from <expr><name>student</name></expr> <in>in <expr><name>students</name></expr></in></from>
     <group>group <expr><name>student</name></expr> <by>by <expr><name><name>student</name><operator>.</operator><name>Last</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></by></group></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
             <expr><linq><from>from <expr><name>w</name></expr> <in>in <expr><name>words</name></expr></in></from>
             <group>group <expr><name>w</name></expr> <by>by <expr><name><name>w</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></by> <into>into <expr><name>fruitGroup</name></expr></into></group>
@@ -94,14 +94,14 @@
             <select>select <expr><operator>new</operator> <block>{ <expr><name>FirstLetter</name> <operator>=</operator> <name><name>fruitGroup</name><operator>.</operator><name>Key</name></name></expr>, <expr><name>Words</name> <operator>=</operator> <call><name><name>fruitGroup</name><operator>.</operator><name>Count</name></name><argument_list>()</argument_list></call></expr> }</block></expr></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
     <expr><linq><from>from <expr><name>category</name></expr> <in>in <expr><name>categories</name></expr></in></from>
     <join>join <expr><name>prod</name></expr> <in>in <expr><name>products</name></expr></in> <on>on <expr><name><name>category</name><operator>.</operator><name>ID</name></name></expr></on> <equals>equals <expr><name><name>prod</name><operator>.</operator><name>CategoryID</name></name></expr></equals></join>
     <select>select <expr><operator>new</operator> <block>{ <expr><name>ProductName</name> <operator>=</operator> <name><name>prod</name><operator>.</operator><name>Name</name></name></expr>, <expr><name>Category</name> <operator>=</operator> <name><name>category</name><operator>.</operator><name>Name</name></name></expr> }</block></expr></select></linq></expr></init></decl>;</decl_stmt> <comment type="line">//produces flat sequence</comment>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>Query</name></type> <name>query</name> <init>=
             <expr><linq><from>from <expr><name>sentence</name></expr> <in>in <expr><name>strings</name></expr></in></from>
             <let>let <expr><name>words</name> <operator>=</operator> <call><name><name>sentence</name><operator>.</operator><name>Split</name></name><argument_list>(<argument><expr><literal type="char">''</literal></expr></argument>)</argument_list></call></expr></let>
@@ -113,317 +113,317 @@
             <select>select <expr><name>word</name></expr></select></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>from</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>orderby</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>group</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>by</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>into</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>where</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>join</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>on</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>equals</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>let</name></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <if_stmt><if>if<condition>(<expr><name>select</name></expr>)</condition><block>{<block_content>
         <expr_stmt><expr><name>PostConfig</name> <operator>=</operator> <name>PostConfig</name> <operator>|</operator> <name>ep</name></expr>;</expr_stmt>
 </block_content>}</block></if></if_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>var</name></type> <name>a</name> <init>= <expr><linq><where>where <expr><operator>(</operator><name>a</name> <operator>%</operator> <literal type="number">2</literal><operator>)</operator> <operator>==</operator> <literal type="number">2</literal></expr></where></linq></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>select</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>select</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>select</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>select</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>select</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>from</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>from</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>from</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>from</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>from</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>where</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>where</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>where</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>where</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>where</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>group</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>group</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>group</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>group</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>group</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>into</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>into</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>into</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>into</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>into</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>orderby</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>orderby</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>orderby</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>orderby</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>orderby</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>join</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>join</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>join</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>join</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>join</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>let</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>let</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>let</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>let</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>let</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>on</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>on</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>on</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>on</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>on</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>equals</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>equals</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>equals</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>equals</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>equals</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>by</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>by</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>by</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>by</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>by</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>ascending</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>ascending</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>ascending</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>ascending</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>ascending</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>descending</name> <operator>=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>descending</name> <operator>=</operator><operator>+</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <expr_stmt><expr><name>descending</name> <operator>+=</operator> <name>a</name> <operator>+</operator> <name>b</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>descending</name></type> <name>s</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <decl_stmt><decl><type><name>s</name></type> <name>descending</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <foreach>foreach <control>(<init><decl><type><name>var</name></type> <name>application</name> <range>in <expr><linq><from>from <expr><name>app</name></expr> <in>in <expr><name>apps</name></expr></in></from>
                             <where>where <expr><name><name>app</name><operator>.</operator><name>MonitoredId</name></name> <operator>&gt;</operator> <literal type="number">0</literal></expr></where>
                             <select>select <expr><name>app</name></expr></select></linq></expr></range></decl></init>)</control>

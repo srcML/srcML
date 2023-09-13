@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="indexers" filename="indexers_cs">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <property><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
     <function><name>get</name> <block>{<block_content/>}</block></function>
 }</block></property>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <property><type><specifier>public</specifier> <name>byte</name></type> <name>this</name><parameter_list type="indexer">[<parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>]</parameter_list> <block>{
     <function><name>set</name> <block>{<block_content/>}</block></function>
 }</block></property>

@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="Objective-C" url="class" filename="class_interface_m">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<private>@private</private>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<protected>@protected</protected>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<public>@public</public>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<protected type="default"> </protected><private>@private</private>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<protected type="default"> </protected><protected>@protected</protected>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<protected type="default"> </protected><public>@public</public>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<protected type="default"> </protected>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<protected type="default">
 </protected><private>@private
 </private><protected>@protected
@@ -49,59 +49,59 @@
 </public>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <category>()</category> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <category>( )</category> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <category>(<name>foo</name>)</category> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> <block>{<protected type="default"/>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <category>()</category> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <category>( )</category> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <category>(<name>foo</name>)</category> <protocol_list>&lt;<name>a</name>, <name>list</name>&gt;</protocol_list> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <block>{<protected type="default">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
 <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
@@ -109,15 +109,15 @@
 @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> <block>{<protected type="default"> <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt> <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt> </protected>}</block> @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>classname</name> <super_list>: <super><name>super</name></super></super_list> <block>{<protected type="default">
 <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
 <decl_stmt><decl><type><name>int</name></type> <name>b</name></decl>;</decl_stmt>
@@ -125,7 +125,7 @@
 @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <block>{<protected type="default">
 
     <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
@@ -151,7 +151,7 @@
 @end</class>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="Objective-C">
+<unit language="Objective-C">
 <class type="@interface">@interface <name>class</name> <block>{<protected type="default">
 
     <decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>

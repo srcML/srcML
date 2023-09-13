@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C++" url="for">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><block type="pseudo"><block_content>
 <empty_stmt>;</empty_stmt></block_content></block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control>
 <block>{<block_content/>}</block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for <control>(<init><expr><name>i</name> <operator>=</operator> <literal type="number">0</literal></expr>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><block type="pseudo"><block_content>
 <empty_stmt>;</empty_stmt></block_content></block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for <control>(<init><expr><name>i</name> <operator>=</operator> <literal type="number">0</literal></expr>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control>
 <block>{<block_content/>}</block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for <control>(<init>;</init><condition>;</condition><incr/>)</control><block type="pseudo"><block_content>
 <empty_stmt>;</empty_stmt></block_content></block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for <control>(<init>;</init><condition>;</condition><incr/>)</control>
 <block>{<block_content/>}</block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr><operator>,</operator> <expr><operator>++</operator><name>s</name></expr></incr>)</control><block type="pseudo"><block_content>
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for <control>(<init>;</init><condition><expr><literal type="number">1</literal></expr><operator>,</operator> <expr><literal type="number">2</literal></expr>;</condition><incr/>)</control><block type="pseudo"><block_content>
 <empty_stmt>;</empty_stmt></block_content></block></for>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++">
+<unit language="C++">
 <for>for<control>(<init>;</init> <condition><expr><operator>(</operator><operator>*</operator><name>i</name><operator>)</operator> <operator>!=</operator> <literal type="number">0</literal></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><block type="pseudo"><block_content>
 <empty_stmt>;</empty_stmt></block_content></block></for>
 </unit>

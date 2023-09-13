@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" language="C#" url="using" filename="using_statement_cs">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <using_stmt>using <init>(<expr><name>font2</name></expr>)</init>
 <block>{<block_content/>}</block></using_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <using_stmt>using <init>(<decl><type><name>Font</name></type> <name>font1</name> <init>= <expr><operator>new</operator> <call><name>Font</name><argument_list>(<argument><expr><name>Arial</name></expr></argument>, <argument><expr><literal type="number">10.0f</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init>
 <block>{<block_content/>}</block></using_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<unit language="C#">
 <using_stmt>using <init>(<decl><type><name>Font</name></type> <name>font1</name> <init>= <expr><operator>new</operator> <call><name>Font</name><argument_list>(<argument><expr><name>Arial</name></expr></argument>, <argument><expr><literal type="number">10.0f</literal></expr></argument>)</argument_list></call></expr></init></decl>)</init>
 <block>{<block_content>
 
