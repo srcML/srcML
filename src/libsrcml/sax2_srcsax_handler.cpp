@@ -434,7 +434,7 @@ void start_unit(void* ctx, const xmlChar* localname, const xmlChar* prefix, cons
     for (int i = 0; i < nb_namespaces; ++i) {
 
         if ((const char*) namespaces[i * 2 + 1] == SRCML_CPP_NS_URI) {
-            state->cpp_prefix = namespaces[i * 2] ? "" : (const char*) namespaces[i * 2];
+            state->cpp_prefix = namespaces[i * 2] ? (const char*) namespaces[i * 2] : "";
         }
     }
 

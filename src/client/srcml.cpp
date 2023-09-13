@@ -22,6 +22,8 @@
 #include <csignal>
 #include <cmath>
 #include <TraceLog.hpp>
+#include <stdin_libarchive.hpp>
+#include <input_archive.hpp>
 
 #ifndef _MSC_VER
 #include <sys/uio.h>
@@ -67,12 +69,10 @@ int main(int argc, char* argv[]) {
     if (srcml_request.input_sources.size() == 1 && srcml_request.unit != 0)
         srcml_request.input_sources[0].unit = srcml_request.unit;
 
-    // determine if stdin is srcML or src
-    if (srcml_request.stdindex) {
+    // stdin from a terminal is not allowed
+    if (srcml_request.stdindex && isatty(0)) {
 
-        // stdin from a terminal is not allowed
-        if (isatty(0)) {
-            fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
+        fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
 Typical usage includes:
 
     # convert from a source file to srcML
@@ -91,11 +91,23 @@ Consider using the --text option for direct entry of text.
 
 See `srcml --help` for more information.
 )");
-            exit(1);
-        }
+        exit(1);
+    }
 
-        // determine source or srcML input based on --language
-        srcml_request.input_sources[*srcml_request.stdindex].state = srcml_request.att_language ? SRC : SRCML;
+    // determine if stdin is srcML or src
+    if (srcml_request.stdindex) {
+
+        // pre-read stdin to determine if source code or srcML
+        auto& stdInput = srcml_request.input_sources[*srcml_request.stdindex];
+        open_stdin_libarchive(stdInput);
+
+        // determine source or srcML input based on content
+        stdInput.state = stdInput.issrcML ? SRCML : SRC;
+
+        // for srcML stdin, convert from libarchive input (should just be compression)
+        if (stdInput.issrcML) {
+            stdInput.fd = input_archive(stdInput);
+        }
     }
 
     /*
@@ -120,6 +132,7 @@ See `srcml --help` for more information.
         pipeline.push_back(srcml_display_metadata);
     }
 
+
     // step srcml->src
     if (request_create_src(srcml_request)) {
 
@@ -128,6 +141,7 @@ See `srcml --help` for more information.
 
     // step (srcml|src)->compressed
     if (request_output_compression(srcml_request)) {
+
 #if ARCHIVE_VERSION_NUMBER >= 3002000
         pipeline.push_back(compress_srcml);
 #else

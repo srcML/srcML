@@ -18,6 +18,9 @@
 #include <utility>
 #include <map>
 #include <srcml_input_src.hpp>
+#include <string_view>
+#include <memory>
+#include <libarchive_utilities.hpp>
 
 // Internal srcml command options
 const int SRCML_COMMAND_LONGINFO                  = 1<<0;

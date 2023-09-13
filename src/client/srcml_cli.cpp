@@ -103,20 +103,22 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         }
 
         // empty string after equals is not shown, i.e., --xmlns="", so replace with two arguments
-        if (arg.back() == '=') {
+        if (arg == "--xmlns="sv || arg == "--text="sv) {
             commandline.emplace_back(arg.substr(0, arg.size() - 1));
             commandline.emplace_back("");
         } else {
             commandline.emplace_back(arg);
         }
     }
+
+    // CLI11 requires the vector to be in reverse
     std::reverse(commandline.begin(), commandline.end());
 
     int textCounter = 0;
     for (auto& p : commandline) {
         if (p == "--text"sv || p.rfind("--text=", 0) == 0) {
 
-            p.insert(6, std::to_string(textCounter));
+            p.insert("--text"sv.size(), std::to_string(textCounter));
             ++textCounter;
 
         } else if (p == "-t"sv) {
@@ -128,6 +130,26 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
             p = "--text" + std::to_string(textCounter) + p.substr(2);
             ++textCounter;
+        }
+    }
+
+    int xpathCounter = 0;
+    for (auto& p : commandline) {
+
+        if (p == "--xpath"sv || p.rfind("--xpath=", 0) == 0) {
+
+            p.insert("--xpath"sv.size(), std::to_string(xpathCounter));
+            ++xpathCounter;
+
+        } else if (p == "-t"sv) {
+
+            p = "--xpath" + std::to_string(xpathCounter);
+            ++xpathCounter;
+
+        } else if (p.rfind("-t=", 0) == 0) {
+
+            p = "--xpath" + std::to_string(xpathCounter) + p.substr(2);
+            ++xpathCounter;
         }
     }
 
@@ -155,17 +177,17 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
             // xslt transformation file
             if (input.extension == ".xsl"sv) {
-                srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt", input.filename));
+                srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("xslt", input.filename));
                 return;
             }
 
             // relaxng transformation file
             if (input.extension == ".rng"sv) {
-                srcml_request.transformations.emplace_back(src_prefix_add_uri("relaxng", input.filename));
+                srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("relaxng", input.filename));
                 return;
             }
 
-            srcml_request.input_sources.emplace_back(input);
+            srcml_request.input_sources.push_back(std::move(input));
         });
 
     // general
@@ -229,6 +251,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             ->group("")
             ->expected(1)
             ->check([&](std::string value) {
+
                 if (!value.empty() && value[0] == '-') {
                     SRCMLstatus(ERROR_MSG, "srcml: --text: 1 required STRING missing");
                     exit(CLI_STATUS_ERROR);
@@ -237,7 +260,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             })
             ->each([&](std::string text) {
                 isText = true;
-                srcml_request.input_sources.emplace_back(src_prefix_add_uri("text", text));
+                srcml_request.input_sources.insert(srcml_request.input_sources.begin(), { src_prefix_add_uri("text", text) });
             });
     }
 
@@ -487,21 +510,27 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("EXTRACTING SOURCE CODE");
 
     // query/transform
-    auto xpath =
     app.add_option("--xpath",
         "Apply XPATH expression to each individual srcML unit")
         ->type_name("XPATH")
-        ->group("QUERY & TRANSFORMATION")
-        ->each([&](std::string value) {
-            srcml_request.transformations.emplace_back(src_prefix_add_uri("xpath", value));
-            srcml_request.xpath_query_support.emplace_back(std::make_pair(std::nullopt,std::nullopt));
-        });
+        ->group("QUERY & TRANSFORMATION");
+
+    // Enforce single argument, but allow multiple --xpath options
+    // --xpath0 .. --xpath${xpathCounter}
+    for (int i = 0; i < xpathCounter; ++i) {
+        app.add_option("--xpath" + std::to_string(i), "")
+            ->group("")
+            ->expected(1)
+            ->each([&](std::string value) {
+                srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("xpath", value));
+                srcml_request.xpath_query_support.insert(srcml_request.xpath_query_support.begin(), std::make_pair(std::nullopt,std::nullopt));
+            });
+    }
 
     app.add_option("--attribute",
         "Insert attribute PRE:NAME=\"VALUE\" into element results of XPath query in original unit")
         ->type_name("PRE:NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION")
-        ->needs(xpath)
         ->check([&](std::string value) {
             if (srcml_request.xpath_query_support.empty()) {
 
@@ -560,7 +589,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Insert element PRE:NAME around each element result of XPath query in original unit")
         ->type_name("PRE:NAME")
         ->group("QUERY & TRANSFORMATION")
-        ->needs(xpath)
+        // ->needs(xpath)
         ->check([&](std::string value) {
             if (srcml_request.xpath_query_support.empty()) {
                 SRCMLstatus(ERROR_MSG, "srcml: element option must follow an --xpath option");
@@ -578,13 +607,14 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.xpath_query_support.back().first = element{ value.substr(0, elemn_index), value.substr(elemn_index + 1) };
         });
 
+    auto xsltEntry = srcml_request.transformations.begin();
     auto xslt =
     app.add_option("--xslt",
         "Apply the XSLT program FILE to each unit, where FILE can be a url")
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
-            srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt", value));
+            xsltEntry = srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("xslt", value));
         });
 
     app.add_option("--xslt-param",
@@ -593,7 +623,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("QUERY & TRANSFORMATION")
         ->needs(xslt)
         ->each([&](std::string value) {
-            srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt-param", value));
+            // insert after the xslt entry
+            srcml_request.transformations.insert(std::next(xsltEntry), src_prefix_add_uri("xslt-param", value));
         });
 
     app.add_option("--relaxng",
@@ -601,7 +632,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
         ->each([&](std::string value) {
-            srcml_request.transformations.emplace_back(src_prefix_add_uri("relaxng", value));
+            srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("relaxng", value));
         });
 
     // separate output with nulls

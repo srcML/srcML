@@ -23,6 +23,8 @@
 #include <archive.h>
 #include <sys/stat.h>
 #include <numeric>
+#include <libarchive_utilities.hpp>
+#include <memory>
 
 #ifdef WIN32
 #include <io.h>
@@ -79,6 +81,13 @@ public:
     bool isdirectoryform = false;
     bool skip = false;
     int unit = 0;
+
+    // pre-read of stdin
+    bool preReadLibarchive = false;
+    archive* parchive = nullptr;
+    archive_entry* pentry = nullptr;
+    std::string_view buffer;
+    bool issrcML = false;
 };
 
 struct srcMLReadArchiveError {

@@ -21,9 +21,18 @@ endif()
 find_package(LibArchive 3 REQUIRED)
 find_package(CURL REQUIRED)
 
+# rpath needs help on macos
+if(APPLE)
+    # Use rpath for the install directory
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+    # Specify the rpath directory (in this case, /usr/local/lib)
+    list(APPEND CMAKE_INSTALL_RPATH "/usr/local/lib")
+endif()
+
 include(FetchContent)
 FetchContent_Declare(cli11
-  URL https://github.com/CLIUtils/CLI11/releases/download/v2.2.0/CLI11.hpp
+  URL https://github.com/CLIUtils/CLI11/releases/download/v2.3.2/CLI11.hpp
   DOWNLOAD_NO_EXTRACT TRUE
 )
 FetchContent_MakeAvailable(cli11)
