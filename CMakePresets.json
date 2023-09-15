@@ -241,7 +241,7 @@
     {
       "name": "msvc",
       "configurePreset": "msvc",
-      "generators": [ "WIX", "Inno Setup", "NuGet", "ZIP" ],
+      "generators": [ "WIX", "INNOSETUP", "NuGet", "ZIP" ],
       "configurations": [ "Release" ]
     },
     {
@@ -253,7 +253,7 @@
     {
       "name": "msvc-inno",
       "configurePreset": "msvc",
-      "generators": [ "Inno Setup", "ZIP" ],
+      "generators": [ "INNOSETUP", "ZIP" ],
       "configurations": [ "Release" ]
     },
     {
