@@ -241,7 +241,19 @@
     {
       "name": "msvc",
       "configurePreset": "msvc",
+      "generators": [ "WIX", "Inno Setup", "ZIP" ],
+      "configurations": [ "Release" ]
+    },
+    {
+      "name": "msvc-wix",
+      "configurePreset": "msvc",
       "generators": [ "WIX", "ZIP" ],
+      "configurations": [ "Release" ]
+    },
+    {
+      "name": "msvc-inno",
+      "configurePreset": "msvc",
+      "generators": [ "Inno Setup", "ZIP" ],
       "configurations": [ "Release" ]
     }
   ]
