@@ -29,7 +29,7 @@ jobs:
         run: |
           cmake --version
           mkdir build
-          $VCPKG_ROOT/vcpkg list
+          echo $VCPKG_ROOT/vcpkg list
 
       - name: CMake Setup on Windows
         shell: bash
