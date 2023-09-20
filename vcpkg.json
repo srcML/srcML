@@ -9,5 +9,6 @@
     "lz4",
     "libxml2",
     "libxslt"
-  ]
+  ],
+  "builtin-baseline": "4cfabe769eaceb209ea37267e8c50c43b86a4a7b"
 }
