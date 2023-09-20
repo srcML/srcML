@@ -24,7 +24,7 @@ jobs:
       - name: Fix vcpkg
         shell: bash
         run: |
-          curl -L -O https://raw.githubusercontent.com/microsoft/vcpkg/4a600e9fea71bd7872080cbb716797e04d30e6d3/scripts/cmake/compile_wrapper_consider_clang-cl.patch "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys/compile_wrapper_consider_clang-cl.patch"
+          curl -L https://raw.githubusercontent.com/microsoft/vcpkg/4a600e9fea71bd7872080cbb716797e04d30e6d3/scripts/cmake/compile_wrapper_consider_clang-cl.patch -o "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys/compile_wrapper_consider_clang-cl.patch"
 
       - name: Setup devcmd to use cl.exe
         uses: ilammy/msvc-dev-cmd@v1
