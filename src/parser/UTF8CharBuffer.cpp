@@ -29,6 +29,7 @@
 #include <map>
 #include <string>
 #include <cstring>
+#include <algorithm>
 
 #ifndef _MSC_BUILD
 #include <unistd.h>
