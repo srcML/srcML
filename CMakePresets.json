@@ -215,7 +215,7 @@
       "name": "macos-vcpkg",
       "inherits": ["clang-release", "vcpkg"],
       "cacheVariables": {
-        "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
+        // "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
       }
     }
   ],
