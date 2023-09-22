@@ -27,12 +27,8 @@ jobs:
       - name: Fix vcpkg
         shell: bash
         run: |
-          curl -L -O https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/cmake/compile_wrapper_consider_clang-cl.patch #-o "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys/compile_wrapper_consider_clang-cl.patch"
-          ls -lh *.patch
           mkdir "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys"
-          ls -lh "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys"
-          cp compile_wrapper_consider_clang-cl.patch "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys/."
-          ls -lh "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys"
+          curl -L -O https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/cmake/compile_wrapper_consider_clang-cl.patch -o "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys/compile_wrapper_consider_clang-cl.patch"
 
       - name: Setup devcmd to use cl.exe
         uses: ilammy/msvc-dev-cmd@v1.12.1
@@ -64,19 +60,19 @@ jobs:
         continue-on-error: true
         run: |
           cpack -V --preset msvc
-      - uses: actions/upload-artifact@v3
-        with:
-          name: wix.log
-          if: failure()
-          path: build/dist/_CPack_Packages/win64/WIX/wix.log
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: wix.log
+      #     # if: failure()
+      #     path: build/dist/_CPack_Packages/win64/WIX/wix.log
       - uses: actions/upload-artifact@v3
         with:
           name: Installers
-          path: build/dist/*.msi
-      - uses: actions/upload-artifact@v3
-        with:
-          name: CPack
-          path: build/dist/_CPack_Packages/
+          path: build/dist/
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: CPack
+      #     path: build/dist/_CPack_Packages/
 
       # - name: Install from build
       #   working-directory: build
