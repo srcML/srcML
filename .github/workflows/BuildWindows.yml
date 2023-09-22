@@ -68,7 +68,11 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: Installers
-          path: build/dist/*.{msi,zip,exe,nupkg}
+          path: |
+            build/dist/*.msi
+            build/dist/*.zip
+            build/dist/*.exe
+            build/dist/*.nupkg
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: CPack
