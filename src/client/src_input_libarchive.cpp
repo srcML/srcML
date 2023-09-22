@@ -291,7 +291,7 @@ int src_input_libarchive(ParseQueue& queue,
                         srcml_archive_enable_hash(srcml_arch);
 
                         // Null found, so remove this part and issue as a request
-                        svBuffer->remove_prefix(nullPositionIterator - svBuffer->begin() + 1);
+                        svBuffer->remove_prefix(static_cast<std::string_view::size_type>(nullPositionIterator - svBuffer->begin() + 1));
 
                         goto schedule;
                     }
