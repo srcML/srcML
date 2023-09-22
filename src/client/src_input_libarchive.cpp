@@ -323,7 +323,7 @@ int src_input_libarchive(ParseQueue& queue,
                         prequest->buffer.insert(prequest->buffer.end(), buffer, nullPosition);
 
                         // save the remaining buffer
-                        svBuffer = std::string_view(nullPosition + 1, (buffer + size) - (nullPosition + 1));
+                        svBuffer = std::string_view(nullPosition + 1, static_cast<std::basic_string_view<char>::size_type>((buffer + size) - (nullPosition + 1)));
 
                         break;
                     }
