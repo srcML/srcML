@@ -145,7 +145,7 @@ int src_input_libarchive(ParseQueue& queue,
     /* In general, go through this once for each time the header can be read
        Exception: if empty, go through the loop exactly once */
     int count = 0;
-    archive_entry *entry;
+    archive_entry* entry = nullptr;
 
     if (input_file.pentry)
         entry = input_file.pentry;
