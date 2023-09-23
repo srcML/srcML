@@ -131,7 +131,7 @@ OPERATORS options { testLiterals = true; } {
     '>' (('>' '=') => '>' '=')? ('=')? |
 
     // <, << (C/C++), <=, <<< (CUDA)
-    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
+    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
 
     // match these as individual operators only
     ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
