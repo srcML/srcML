@@ -6,7 +6,7 @@ on: workflow_dispatch
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     steps:
 
       - name: Checkout Repository
@@ -14,9 +14,6 @@ jobs:
 
       - name: Setup Windows
         uses: microsoft/setup-msbuild@v1.3.1
-        with:
-          vs-prerelease: true
-
 
       - name: Restore artifacts, or run vcpkg, build (and cache artifacts as post step)
         uses: lukka/run-vcpkg@v11
@@ -67,16 +64,12 @@ jobs:
       #     path: build/dist/_CPack_Packages/win64/WIX/wix.log
       - uses: actions/upload-artifact@v3
         with:
-          name: Installers
+          name: WindowsInstallers
           path: |
             build/dist/*.msi
             build/dist/*.zip
             build/dist/*.exe
             build/dist/*.nupkg
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: CPack
-      #     path: build/dist/_CPack_Packages/
 
       # - name: Install from build
       #   working-directory: build
