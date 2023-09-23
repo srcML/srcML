@@ -61,6 +61,9 @@ srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlPar
         return 0;
     }
 
+    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
+    xmlSetGenericErrorFunc(libxml2_context, error_handler);
+
     context->libxml2_context = libxml2_context;
 
     return context;
