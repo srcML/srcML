@@ -46,8 +46,6 @@ srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlPar
 
     const char* encoding = nullptr;
 
-    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
-
     srcsax_context* context = nullptr;
     try {
         context = new srcsax_context();
