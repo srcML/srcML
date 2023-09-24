@@ -184,7 +184,8 @@ jobs:
         shell: bash
         continue-on-error: true
         run: |
-          srcml.exe --help
+          export SRCML_HOME="/c/Program Files/srcML/bin/"
+          srcml --help
           srcml --text="a;" -l C++
 
       # - name: Create build examples directory
