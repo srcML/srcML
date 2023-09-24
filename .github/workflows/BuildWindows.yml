@@ -252,13 +252,27 @@ jobs:
             cmake
             libxml2
 
+      - name: Create build directory
+        shell: bash
+        run: |
+          mkdir build
+
+      - name: Build
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          export UseMultiToolTask=true
+          cmake .. --preset msvc
+
       - name: Windows Client Tests on Installed srcml
         shell: msys2 {0}
+        working-directory: build
         timeout-minutes: 10
         continue-on-error: true
         run: |
-          export SRCML_HOME="/c/Program Files/srcML/bin/"
-          ctest -C Release -j 8
+          # export SRCML_HOME="/c/Program Files/srcML/bin/"
+          ctest -C Release
 
       - uses: actions/upload-artifact@v3
         with:
