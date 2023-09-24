@@ -182,7 +182,6 @@ jobs:
 
       - name: Run Installed srcml
         shell: bash
-        working-directory: build
         continue-on-error: true
         run: |
           srcml.exe --help
