@@ -168,19 +168,18 @@ jobs:
         with:
           name: installers
 
-      - shell: bash
-        continue-on-error: true
-        run: |
-          ls -lh
-
-      # - name: Install package
-      #   working-directory: build/dist
+      # - shell: bash
       #   continue-on-error: true
-      #   run: msiexec /i D:\a\srcML\srcML\build\dist\srcml-1.0.0-windows-x86_64.msi /quiet /norestart /L*vx .\msi.log
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: msi.log
-      #     path: build/dist/msi.log
+      #   run: |
+      #     ls -lh
+
+      - name: Install package
+        continue-on-error: true
+        run: msiexec /i srcml-1.0.0-windows-x86_64.msi /quiet /norestart /L*vx .\msi.log
+      - uses: actions/upload-artifact@v3
+        with:
+          name: msi.log
+          path: build/dist/msi.log
 
       # - name: Create build examples directory
       #   shell: bash
@@ -224,31 +223,31 @@ jobs:
       #     ./srcml_xpath.exe || echo $?
       #     ./srcml_xslt.exe || echo $?
 
-      # - name: Setup msys2 with additional client-test packages for Windows
-      #   uses: msys2/setup-msys2@v2
-      #   continue-on-error: true
-      #   with:
-      #     install: >-
-      #       zip
-      #       cpio
-      #       diffutils
-      #       util-linux
-      #       cmake
-      #       libxml2
+      - name: Setup msys2 with additional client-test packages for Windows
+        uses: msys2/setup-msys2@v2
+        continue-on-error: true
+        with:
+          install: >-
+            zip
+            cpio
+            diffutils
+            util-linux
+            cmake
+            libxml2
 
-      # - name: Windows Client Tests on Installed srcml
-      #   shell: msys2 {0}
-      #   working-directory: build
-      #   timeout-minutes: 10
-      #   continue-on-error: true
-      #   run: |
-      #     export SRCML_HOME="/c/Program Files/srcML/bin/"
-      #     ctest -C Release -j 8
+      - name: Windows Client Tests on Installed srcml
+        shell: msys2 {0}
+        working-directory: build
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          export SRCML_HOME="/c/Program Files/srcML/bin/"
+          ctest -C Release -j 8
 
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ClientTest.windows-latest.log
-      #     path: build/Testing/Temporary/LastTest.log
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ClientTest.windows-latest.log
+          path: build/Testing/Temporary/LastTest.log
 
       # - name: Build libsrcml Tests
       #   shell: bash
