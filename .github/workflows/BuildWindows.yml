@@ -185,11 +185,16 @@ jobs:
           name: msi.log
           path: ./msi.log
 
+      - name: Set PATH for Windows
+        shell: bash
+        continue-on-error: true
+        run: |
+          echo "/c/Program Files/srcML/bin" >> $GITHUB_PATH
+
       - name: Run Installed srcml
         shell: bash
         continue-on-error: true
         run: |
-          export SRCML_HOME="/c/Program Files/srcML/bin/"
           srcml --help
           srcml --text="a;" -l C++
 
