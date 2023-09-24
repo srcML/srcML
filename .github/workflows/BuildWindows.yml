@@ -160,7 +160,6 @@ jobs:
   test:
     needs: build
     runs-on: windows-latest
-
     steps:
       # Download the installer artifact
       - name: Download installer
@@ -179,7 +178,15 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: msi.log
-          path: build/dist/msi.log
+          path: ./msi.log
+
+      - name: Run Installed srcml
+        shell: bash
+        working-directory: build
+        continue-on-error: true
+        run: |
+          srcml.exe --help
+          srcml --text="a;" -l C++
 
       # - name: Create build examples directory
       #   shell: bash
@@ -237,7 +244,6 @@ jobs:
 
       - name: Windows Client Tests on Installed srcml
         shell: msys2 {0}
-        working-directory: build
         timeout-minutes: 10
         continue-on-error: true
         run: |
