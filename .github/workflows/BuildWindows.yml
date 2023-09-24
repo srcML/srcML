@@ -168,7 +168,7 @@ jobs:
         with:
           name: installers
 
-        shell: bash
+      - shell: bash
         continue-on-error: true
         run: |
           ls -lh
