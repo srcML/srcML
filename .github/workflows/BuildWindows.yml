@@ -163,7 +163,7 @@ jobs:
     steps:
       # Download the installer artifact
       - name: Download installer
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: installers
 
