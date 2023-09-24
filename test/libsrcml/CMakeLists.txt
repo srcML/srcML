@@ -12,7 +12,7 @@ project(srcML-Test-libsrcml)
 enable_testing()
 
 if(SRCML_TEST_INSTALLED OR NOT TARGET srcML::LibsrcML)
-    find_package(libsrcml REQUIRED ${SRCML_TEST_INSTALLED})
+    find_package(srcML REQUIRED)
 endif()
 
 include_directories(.)
