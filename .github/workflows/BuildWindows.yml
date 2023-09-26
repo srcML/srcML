@@ -53,7 +53,7 @@ jobs:
       #     cmake .. --preset msvc -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
 
       - name: CMake Setup on Windows
-        uses: lukka/run-cmake
+        uses: lukka/run-cmake@v10
         with:
           configurePreset: 'msvc-sccache'
           buildDirectory: '${{ github.workspace }}/build'
