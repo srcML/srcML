@@ -23,6 +23,9 @@ jobs:
         with:
           vcpkgGitCommitId: 'acc3bcf76b84ae5041c86ab55fe138ae7b8255c7'
 
+      # There is a missing directory/file in Visual Studio 2022 vcpkg support
+      # A later update should fix this
+      # In the meantime, create the missing directory and download the missing file
       - name: Fix vcpkg
         shell: bash
         run: |
@@ -42,12 +45,18 @@ jobs:
           mkdir build
           echo $VCPKG_ROOT/vcpkg list
 
+      # - name: CMake Setup on Windows
+      #   shell: bash
+      #   working-directory: build
+      #   run: |
+      #     export UseMultiToolTask=true
+      #     cmake .. --preset msvc -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+
       - name: CMake Setup on Windows
-        shell: bash
-        working-directory: build
-        run: |
-          export UseMultiToolTask=true
-          cmake .. --preset msvc -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+        uses: lukka/run-cmake
+        with:
+          configurePreset: 'msvc-sccache'
+          buildDirectory: '${{ github.workspace }}/build'
 
       - name: Build
         shell: bash
