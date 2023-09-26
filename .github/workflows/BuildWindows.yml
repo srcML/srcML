@@ -45,18 +45,18 @@ jobs:
           mkdir build
           echo $VCPKG_ROOT/vcpkg list
 
-      # - name: CMake Setup on Windows
-      #   shell: bash
-      #   working-directory: build
-      #   run: |
-      #     export UseMultiToolTask=true
-      #     cmake .. --preset msvc -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
-
       - name: CMake Setup on Windows
-        uses: lukka/run-cmake@v10
-        with:
-          configurePreset: 'msvc-sccache'
-          # buildDirectory: '${{ github.workspace }}/build'
+        shell: bash
+        working-directory: build
+        run: |
+          export UseMultiToolTask=true
+          cmake .. --preset msvc-sccache
+
+      # - name: CMake Setup on Windows
+      #   uses: lukka/run-cmake@v10
+      #   with:
+      #     configurePreset: 'msvc-sccache'
+      #     # buildDirectory: '${{ github.workspace }}/build'
 
       - name: Build
         shell: bash
