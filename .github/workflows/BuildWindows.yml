@@ -56,7 +56,7 @@ jobs:
         uses: lukka/run-cmake@v10
         with:
           configurePreset: 'msvc-sccache'
-          buildDirectory: '${{ github.workspace }}/build'
+          # buildDirectory: '${{ github.workspace }}/build'
 
       - name: Build
         shell: bash
