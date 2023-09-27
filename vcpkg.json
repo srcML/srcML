@@ -3,11 +3,12 @@
   "name": "srcml",
   "version": "1.0.1",
   "dependencies": [
-    "libarchive",
-    "curl",
-    "libiconv",
-    "lz4",
-    "libxml2",
-    "libxslt"
-  ]
+    { "name": "libarchive", "version>=": "3.6.2" },
+    { "name": "curl", "version>=": "8.2.0" },
+    { "name": "libiconv", "version>=": "1.17" },
+    { "name": "lz4", "version>=": "1.9.4" },
+    { "name": "libxml2", "version>=": "2.10.3" },
+    { "name": "libxslt", "version>=": "1.1.37" }
+  ],
+  "builtin-baseline": "7476f0d4e77d3333fbb249657df8251c28c4faae"
 }

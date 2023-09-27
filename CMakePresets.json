@@ -42,6 +42,7 @@
       "description": "Default build options for MSVC",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
       "toolchainFile": "toolchain-msvc.cmake",
+      "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "cl",
         "CMAKE_C_COMPILER": "cl",
@@ -96,6 +97,7 @@
         // /wd5262 # implicit fall-through occurs here; are you missing a break statement? Use [[fallthrough]] when a break statement is intentionally omitted between cases
         // /wd5264 # 'int const `char const * __cdecl `anonymous namespace'::positoa(int)'::`2'::SIZE': 'const' variable is not used
         "SRCML_PARSER_DISABLED_WARNINGS": "/wd4267;/wd4365;/wd4459;/wd4530;/wd4577;/wd4701;/wd5262;/wd5264",
+        "SRCML_LIBSRCML_COMPILE_FLAGS": "/Zi",
         "SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF",
         "SRCML_LIBSRCML_STATIC_LINK_FLAGS_RELEASE": "/LTCG:OFF",
         // wd4355 # this': used in base member initializer list
@@ -214,7 +216,7 @@
       "name": "macos-vcpkg",
       "inherits": ["clang-release", "vcpkg"],
       "cacheVariables": {
-        "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
+        // "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
       }
     }
   ],
@@ -240,7 +242,25 @@
     {
       "name": "msvc",
       "configurePreset": "msvc",
+      "generators": [ "WIX", "INNOSETUP", "NuGet", "ZIP" ],
+      "configurations": [ "Release" ]
+    },
+    {
+      "name": "msvc-wix",
+      "configurePreset": "msvc",
       "generators": [ "WIX", "ZIP" ],
+      "configurations": [ "Release" ]
+    },
+    {
+      "name": "msvc-inno",
+      "configurePreset": "msvc",
+      "generators": [ "INNOSETUP", "ZIP" ],
+      "configurations": [ "Release" ]
+    },
+    {
+      "name": "msvc-nuget",
+      "configurePreset": "msvc",
+      "generators": [ "NuGet", "ZIP" ],
       "configurations": [ "Release" ]
     }
   ]
