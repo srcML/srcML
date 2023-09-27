@@ -220,6 +220,20 @@ int srcml_unit_add_attribute(struct srcml_unit* unit, const char* prefix, const 
     if (unit == nullptr || prefix == nullptr || name == nullptr || value == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    // URI for this prefix must be declared
+
+    // check the unit namespaces
+    bool found = false;
+    if (unit->namespaces) {
+        const auto& uriNS = findNSPrefix(*unit->namespaces, prefix);
+        found = uriNS != unit->namespaces->end();
+    }
+    if (!found) {
+        const auto& uriNS = findNSPrefix(unit->archive->namespaces, prefix);
+        if (uriNS == unit->archive->namespaces.end())
+            return SRCML_STATUS_UNASSIGNED_PREFIX;
+    }
+
     // add/update custom attribute
     addAttribute(unit->attributes, "", prefix, name, value);
 
