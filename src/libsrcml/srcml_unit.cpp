@@ -600,6 +600,9 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
  */
 size_t srcml_unit_get_namespace_size(const struct srcml_unit* unit) {
 
+    if (unit == nullptr)
+        return 0;
+
     if (!unit->namespaces)
         return 0;
 
