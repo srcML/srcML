@@ -510,7 +510,7 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     // the attribute array consists of { name1, value1, name2, value2, ... }
     auto currentItemPosition = unit->attributes.size();
     for (std::size_t i = 0; i < unit->attributes.size(); i += 2) {
-        if (unit->attributes[i] == "item"sv) {
+        if (unit->attributes[i].name == "item"sv) {
             currentItemPosition = i;
             break;
         }
@@ -621,14 +621,13 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             nunit->hash = std::nullopt;
 
             // update or add item attribute
-            if (currentItemPosition != unit->attributes.size()) {
+            if (currentItemPosition < unit->attributes.size()) {
                 if (fullresults->nodeNr > 1) {
-                    nunit->attributes[currentItemPosition + 1] += '-';
-                    nunit->attributes[currentItemPosition + 1] += std::to_string(i + 1);
+                    nunit->attributes[currentItemPosition].value += '-';
+                    nunit->attributes[currentItemPosition].value += std::to_string(i + 1);
                 }
             } else {
-                nunit->attributes.push_back("item");
-                nunit->attributes.push_back(std::to_string(i + 1));
+                nunit->attributes.push_back({"", "", "item", std::to_string(i + 1)});
             }
         }
 

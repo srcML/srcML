@@ -1,0 +1,216 @@
+srcml_archive.cpp:    Language language(archive->registered_languages.get_language_from_filename(filename));
+srcml_archive.cpp:    archive->registered_languages.register_standard_file_extensions();
+srcml_archive.cpp:    return archive->error_number;
+srcml_archive.cpp:    return archive->error_string.data();
+srcml_archive.cpp:    if (archive->translator) {
+srcml_archive.cpp:        delete archive->translator;
+srcml_archive.cpp:        archive->translator = nullptr;
+srcml_archive.cpp:        archive->output_buffer = nullptr;
+srcml_archive.cpp:    if (archive->output_buffer) {
+srcml_archive.cpp:        xmlOutputBufferClose(archive->output_buffer);
+srcml_archive.cpp:        archive->output_buffer = nullptr;
+srcml_archive.cpp:    if (archive->xbuffer)
+srcml_archive.cpp:        xmlBufferFree(archive->xbuffer);
+srcml_archive.cpp:    if (archive->reader) {
+srcml_archive.cpp:        delete archive->reader;
+srcml_archive.cpp:        archive->reader = nullptr;
+srcml_archive.cpp:    new_archive->type = SRCML_ARCHIVE_INVALID;
+srcml_archive.cpp:    new_archive->translator = nullptr;
+srcml_archive.cpp:    new_archive->reader = nullptr;
+srcml_archive.cpp:    new_archive->output_buffer = nullptr;
+srcml_archive.cpp:    new_archive->xbuffer = nullptr;
+srcml_archive.cpp:    new_archive->buffer = nullptr;
+srcml_archive.cpp:    new_archive->size = nullptr;
+srcml_archive.cpp:    new_archive->rawwrites = false;
+srcml_archive.cpp:    new_archive->error_string.clear();
+srcml_archive.cpp:    new_archive->error_number = 0;
+srcml_archive.cpp:        archive->src_encoding = src_encoding;
+srcml_archive.cpp:        archive->src_encoding = decltype(archive->src_encoding)();
+srcml_archive.cpp:        archive->encoding = encoding;
+srcml_archive.cpp:        archive->encoding = decltype(archive->encoding)();
+srcml_archive.cpp:        archive->language = language;
+srcml_archive.cpp:        archive->language = decltype(archive->language)();
+srcml_archive.cpp:        archive->url = url;
+srcml_archive.cpp:        archive->url = decltype(archive->url)();
+srcml_archive.cpp:        archive->version = version;
+srcml_archive.cpp:        archive->version = std::nullopt;
+srcml_archive.cpp:        archive->options |= SRCML_OPTION_CPP_DECLARED;
+srcml_archive.cpp:    archive->options = modoption;
+srcml_archive.cpp:    return (archive->options & SRCML_OPTION_ARCHIVE) == 0;
+srcml_archive.cpp:    return (archive->options & SRCML_OPTION_HASH) != 0;
+srcml_archive.cpp:    archive->options |= (unsigned long long)(SRCML_OPTION_ARCHIVE);
+srcml_archive.cpp:    archive->options &= ~(unsigned long long)(SRCML_OPTION_ARCHIVE);
+srcml_archive.cpp:    archive->options |= (unsigned long long)(SRCML_OPTION_HASH);
+srcml_archive.cpp:    archive->options &= ~(unsigned long long)(SRCML_OPTION_HASH);
+srcml_archive.cpp:        archive->options |= SRCML_OPTION_CPP_DECLARED;
+srcml_archive.cpp:    archive->options |= modoption;
+srcml_archive.cpp:    archive->options &= ~modoption;
+srcml_archive.cpp:    archive->tabstop = tabstop;
+srcml_archive.cpp:    if (archive->registered_languages.register_user_ext(extension, language))
+srcml_archive.cpp:    auto ituri = findNSURI(archive->namespaces, uri);
+srcml_archive.cpp:    auto itprefix = findNSPrefix(archive->namespaces, prefix);
+srcml_archive.cpp:    if (ituri != archive->namespaces.end() && itprefix != archive->namespaces.end()) {
+srcml_archive.cpp:    } else if (ituri != archive->namespaces.end()) {
+srcml_archive.cpp:        archive->namespaces.emplace_back(prefix, uri, NS_REGISTERED);
+srcml_archive.cpp:        archive->options |= SRCML_OPTION_CPP;
+srcml_archive.cpp:        archive->options |= SRCML_OPTION_CPP_DECLARED;
+srcml_archive.cpp:        archive->options |= SRCML_OPTION_DEBUG;
+srcml_archive.cpp:        archive->options |= SRCML_OPTION_POSITION;
+srcml_archive.cpp:    archive->processing_instruction = std::pair<std::string,std::string>(target, data);
+srcml_archive.cpp:        std::vector<std::string>::size_type user_macro_list_size = archive->user_macro_list.size() / 2;
+srcml_archive.cpp:            if (archive->user_macro_list.at(i * 2) == token) {
+srcml_archive.cpp:                archive->user_macro_list.at(i * 2 + 1) = type;
+srcml_archive.cpp:    archive->user_macro_list.push_back(token);
+srcml_archive.cpp:    archive->user_macro_list.push_back(type);
+srcml_archive.cpp:    archive->revision_number = revision_number;
+srcml_archive.cpp:    return archive && archive->src_encoding ? archive->src_encoding->data() : 0;
+srcml_archive.cpp:    return archive && archive->encoding ? archive->encoding->data() : 0;
+srcml_archive.cpp:    return archive && archive->revision ? archive->revision->data() : 0;
+srcml_archive.cpp:    return archive && archive->language ? archive->language->data() : 0;
+srcml_archive.cpp:    return archive && archive->url ? archive->url->data() : 0;
+srcml_archive.cpp:    return archive && archive->version ? archive->version->data() : 0;
+srcml_archive.cpp:    return archive ? static_cast<int>(archive->options % (1<<7)) : 0;
+srcml_archive.cpp:    return archive ? archive->tabstop : 0;
+srcml_archive.cpp:    return archive ? archive->namespaces.size() : 0;
+srcml_archive.cpp:    if (pos > archive->namespaces.size())
+srcml_archive.cpp:    return archive->namespaces[pos].prefix.data();
+srcml_archive.cpp:    auto it = findNSURI(archive->namespaces, uri);
+srcml_archive.cpp:    return it != archive->namespaces.end() ? it->prefix.data() : 0;
+srcml_archive.cpp:    if (pos >= archive->namespaces.size())
+srcml_archive.cpp:    return archive->namespaces[pos].uri.data();
+srcml_archive.cpp:    auto it = findNSPrefix(archive->namespaces, prefix);
+srcml_archive.cpp:    return it != archive->namespaces.end() ? it->uri.data() : 0;
+srcml_archive.cpp:    return archive->processing_instruction ? archive->processing_instruction->first.data() : 0;
+srcml_archive.cpp:    return archive->processing_instruction ?  archive->processing_instruction->second.data() : 0;
+srcml_archive.cpp:    return archive ? (archive->user_macro_list.size() / 2) : 0;
+srcml_archive.cpp:    if (pos * 2 >= archive->user_macro_list.size())
+srcml_archive.cpp:    return archive->user_macro_list[pos * 2].data();
+srcml_archive.cpp:        std::vector<std::string>::size_type user_macro_list_size = archive->user_macro_list.size() / 2;
+srcml_archive.cpp:            if (archive->user_macro_list.at(i * 2) == token)
+srcml_archive.cpp:                return archive->user_macro_list.at(i * 2 + 1).data();
+srcml_archive.cpp:    if (pos * 2 + 1 >= archive->user_macro_list.size())
+srcml_archive.cpp:    return archive->user_macro_list[pos * 2 + 1].data();
+srcml_archive.cpp:    return archive->revision_number ? *archive->revision_number : SRCDIFF_REVISION_INVALID;
+srcml_archive.cpp:        archive->translator = new srcml_translator(
+srcml_archive.cpp:                                                archive->output_buffer,
+srcml_archive.cpp:                                                optional_to_c_str(archive->encoding, "UTF-8"),
+srcml_archive.cpp:                                                archive->options,
+srcml_archive.cpp:                                                archive->namespaces,
+srcml_archive.cpp:                                                archive->processing_instruction,
+srcml_archive.cpp:                                                archive->tabstop,
+srcml_archive.cpp:                                                srcml_check_language(optional_to_c_str(archive->language)),
+srcml_archive.cpp:                                                optional_to_c_str(archive->revision),
+srcml_archive.cpp:                                                optional_to_c_str(archive->url),
+srcml_archive.cpp:                                                optional_to_c_str(archive->version),
+srcml_archive.cpp:                                                archive->attributes, 0, 0, 0);
+srcml_archive.cpp:        archive->translator->set_macro_list(archive->user_macro_list);
+srcml_archive.cpp:        xmlOutputBufferClose(archive->output_buffer);
+srcml_archive.cpp:        archive->output_buffer = nullptr;
+srcml_archive.cpp:    archive->type = SRCML_ARCHIVE_WRITE;
+srcml_archive.cpp:    archive->output_buffer = xmlOutputBufferCreateFilename(srcml_filename, 0, 0);
+srcml_archive.cpp:    archive->type = SRCML_ARCHIVE_WRITE;
+srcml_archive.cpp:    archive->buffer = buffer;
+srcml_archive.cpp:    archive->size = size;
+srcml_archive.cpp:    archive->xbuffer = xmlBufferCreate();
+srcml_archive.cpp:    archive->output_buffer = xmlOutputBufferCreateBuffer(archive->xbuffer, 0);
+srcml_archive.cpp:    archive->type = SRCML_ARCHIVE_WRITE;
+srcml_archive.cpp:    archive->output_buffer = xmlOutputBufferCreateFile(srcml_file, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->data() : 0));
+srcml_archive.cpp:    archive->type = SRCML_ARCHIVE_WRITE;
+srcml_archive.cpp:    archive->output_buffer = xmlOutputBufferCreateFd(srcml_fd, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->data() : 0));
+srcml_archive.cpp:    archive->type = SRCML_ARCHIVE_WRITE;
+srcml_archive.cpp:    archive->output_buffer = xmlOutputBufferCreateIO(write_callback, close_callback, context, xmlFindCharEncodingHandler(archive->encoding ? archive->encoding->data() : 0));
+srcml_archive.cpp:        archive->reader = new srcml_sax2_reader(archive, std::move(input));
+srcml_archive.cpp:    archive->type = SRCML_ARCHIVE_READ;
+srcml_archive.cpp:    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateFilename(srcml_filename, archive->encoding ? xmlParseCharEncoding(archive->encoding->data()) : XML_CHAR_ENCODING_NONE));
+srcml_archive.cpp:    xmlCharEncoding encoding = archive->encoding ? xmlParseCharEncoding(archive->encoding->data()) : XML_CHAR_ENCODING_NONE;
+srcml_archive.cpp:    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateFile(srcml_file, archive->encoding ? xmlParseCharEncoding(archive->encoding->data()) : XML_CHAR_ENCODING_NONE));
+srcml_archive.cpp:    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateFd(srcml_fd, archive->encoding ? xmlParseCharEncoding(archive->encoding->data()) : XML_CHAR_ENCODING_NONE));
+srcml_archive.cpp:    std::unique_ptr<xmlParserInputBuffer> input(xmlParserInputBufferCreateIO(read_callback, close_callback, context, archive->encoding ? xmlParseCharEncoding(archive->encoding->data()) : XML_CHAR_ENCODING_NONE));
+srcml_archive.cpp:    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+srcml_archive.cpp:        unit->archive->reader->read_body(unit);
+srcml_archive.cpp:    if (archive->type != SRCML_ARCHIVE_WRITE && archive->type != SRCML_ARCHIVE_RW)
+srcml_archive.cpp:    if (archive->translator == nullptr) {
+srcml_archive.cpp:    archive->translator->add_unit(unit);
+srcml_archive.cpp:    if (archive->output_buffer)
+srcml_archive.cpp:        xmlOutputBufferWrite(archive->output_buffer, len, s);
+srcml_archive.cpp:    archive->rawwrites = true;
+srcml_archive.cpp:    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+srcml_archive.cpp:        not_done = archive->reader->read_header(unit.get());
+srcml_archive.cpp:    archive->reader->read_body(unit.get());
+srcml_archive.cpp:    if (archive->type != SRCML_ARCHIVE_READ && archive->type != SRCML_ARCHIVE_RW)
+srcml_archive.cpp:    int not_done = archive->reader->read_header(unit.get());
+srcml_archive.cpp:    if (archive->type == SRCML_ARCHIVE_WRITE && !archive->rawwrites && archive->translator == nullptr) {
+srcml_archive.cpp:    if (archive->translator) {
+srcml_archive.cpp:        archive->translator->close();
+srcml_archive.cpp:    if (archive->rawwrites && archive->output_buffer) {
+srcml_archive.cpp:        xmlOutputBufferClose(archive->output_buffer);
+srcml_archive.cpp:        archive->output_buffer = nullptr;
+srcml_archive.cpp:    if (archive->buffer && archive->size) {
+srcml_archive.cpp:        *archive->size = (size_t) archive->xbuffer->use;
+srcml_archive.cpp:        (*archive->buffer) = (char *) xmlBufferDetach(archive->xbuffer);
+srcml_archive.cpp:    archive->type = SRCML_ARCHIVE_INVALID;
+srcml_reader_handler.hpp:            archive->options &= ~SRCML_OPTION_ARCHIVE;
+srcml_reader_handler.hpp:                archive->revision = value;
+srcml_reader_handler.hpp:                archive->tabstop = static_cast<std::size_t>(atoi(value.data()));
+srcml_reader_handler.hpp:                        archive->options |= SRCML_OPTION_NO_XML_DECL;
+srcml_reader_handler.hpp:                        archive->options |= SRCML_OPTION_NAMESPACE_DECL;
+srcml_reader_handler.hpp:                        archive->options |= SRCML_OPTION_CPP_TEXT_ELSE;
+srcml_reader_handler.hpp:                        archive->options |= SRCML_OPTION_CPP_MARKUP_IF0;
+srcml_reader_handler.hpp:                        archive->options |= SRCML_OPTION_LINE;
+srcml_reader_handler.hpp:                archive->attributes.emplace_back(attribute);
+srcml_reader_handler.hpp:                archive->attributes.emplace_back(value);
+srcml_reader_handler.hpp:                archive->user_macro_list.push_back(std::move(token));
+srcml_reader_handler.hpp:                archive->user_macro_list.push_back(std::move(type));
+srcml_transform.cpp:    archive->transformations.push_back(std::unique_ptr<Transformation>(new xpathTransformation(archive, xpath_string, prefix, namespace_uri, element,
+srcml_transform.cpp:    if (!archive->transformations.empty()) {
+srcml_transform.cpp:        auto p = dynamic_cast<xpathTransformation*>(archive->transformations.back().get());
+srcml_transform.cpp:    archive->transformations.push_back(std::unique_ptr<Transformation>(new xsltTransformation(doc.release(), std::vector<std::string>())));
+srcml_transform.cpp:    archive->transformations.push_back(std::unique_ptr<Transformation>(new relaxngTransformation(doc.get())));
+srcml_transform.cpp:    if (archive->transformations.size() == 0)
+srcml_transform.cpp:    archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
+srcml_transform.cpp:    archive->transformations.back()->xsl_parameters.push_back(xpath_param_value);
+srcml_transform.cpp:    if (archive->transformations.size() == 0)
+srcml_transform.cpp:    archive->transformations.back()->xsl_parameters.push_back(xpath_param_name);
+srcml_transform.cpp:    archive->transformations.back()->xsl_parameters.push_back(parenvalue);
+srcml_transform.cpp:    archive->transformations.clear();
+srcml_transform.cpp:    if (archive->transformations.empty())
+srcml_transform.cpp:    for (const auto& trans : archive->transformations) {
+srcml_translator.cpp:    Namespaces mergedns = unit->archive->namespaces;
+srcml_translator.cpp:    if (unit->archive->revision_number) {
+srcml_translator.cpp:    auto nrevision = unit->archive->revision_number;
+srcml_translator.cpp:    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+srcml_translator.cpp:        std::string s = extract_revision(unit->srcml.data() + unit->content_begin, size, (int) *unit->archive->revision_number);
+srcml_translator.cpp:    out.startUnit(optional_to_c_str(unit->language, optional_to_c_str(unit->archive->language)),
+srcml_unit.cpp:    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+srcml_unit.cpp:        unit->archive->reader->read_body(unit);
+srcml_unit.cpp:    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+srcml_unit.cpp:        if (!unit->srcml_revision || unit->currevision != (int) *unit->archive->revision_number)
+srcml_unit.cpp:            unit->srcml_revision = extract_revision(unit->srcml.data(), (int) unit->srcml.size(), (int) *unit->archive->revision_number);
+srcml_unit.cpp:    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+srcml_unit.cpp:        unit->archive->reader->read_body(unit);
+srcml_unit.cpp:    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+srcml_unit.cpp:        if (!unit->srcml_fragment_revision || unit->currevision != (int) *unit->archive->revision_number)
+srcml_unit.cpp:            unit->srcml_fragment_revision = extract_revision(unit->srcml_fragment->data(), (int) unit->srcml_fragment->size(), (int) *unit->archive->revision_number);
+srcml_unit.cpp:    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+srcml_unit.cpp:        unit->archive->reader->read_body(unit);
+srcml_unit.cpp:    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
+srcml_unit.cpp:        if (!unit->srcml_raw_revision || unit->currevision != (int) *unit->archive->revision_number)
+srcml_unit.cpp:            unit->srcml_raw_revision = extract_revision(unit->srcml.data() + start, rawsize, (int) *unit->archive->revision_number);
+srcml_unit.cpp:        : (unit->archive->language ? srcml_check_language(unit->archive->language->data()) : SRCML_LANGUAGE_NONE);
+srcml_unit.cpp:        lang = unit->archive->registered_languages.get_language_from_filename(filename);
+srcml_unit.cpp:    const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
+srcml_unit.cpp:    bool output_hash = !unit->hash && unit->archive->options & SRCML_OPTION_HASH;
+srcml_unit.cpp:    unit->url = unit->archive->url;
+srcml_unit.cpp:    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+srcml_unit.cpp:        unit->archive->reader->read_body(unit);
+srcml_unit.cpp:    if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
+srcml_unit.cpp:        unit->archive->reader->read_body(unit);
+srcml_unit.cpp:    if (unit->archive->type != SRCML_ARCHIVE_READ && unit->archive->type != SRCML_ARCHIVE_RW)
+srcml_unit.cpp:    const char* encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding, "ISO-8859-1"));
+srcml_unit.cpp:            unit->archive->reader->read_body(unit);
+srcml_unit.cpp:        auto options = unit->archive->options;
+srcml_unit.cpp:            unit->namespaces = unit->archive->namespaces;
+srcml_unit.cpp:            optional_to_c_str(unit->archive->encoding, "UTF-8"),
+srcml_unit.cpp:            unit->archive->tabstop,
+srcml_unit.cpp:            optional_to_c_str(unit->hash, (unit->archive->options & SRCML_OPTION_HASH ? "" : 0)),
+srcml_unit.cpp:        unit->unit_translator->set_macro_list(unit->archive->user_macro_list);

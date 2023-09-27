@@ -64,7 +64,7 @@ srcml_translator::srcml_translator(xmlOutputBuffer * output_buffer,
                                  const char* url,
                                  const char* filename,
                                  const char* version,
-                                 const std::vector<std::string>& attributes,
+                                 const Attributes& attributes,
                                  const char* timestamp,
                                  const char* hash,
                                  const char* encoding)
