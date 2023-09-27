@@ -266,6 +266,7 @@ void create_srcml(const srcml_request_t& srcml_request,
         }
 
         if (protocol == "xslt"sv) {
+
             if (apply_xslt(srcml_arch.get(), resource) != SRCML_STATUS_OK) {
                 exit(1);
             }
