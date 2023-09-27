@@ -30,10 +30,17 @@ jobs:
         shell: bash
         run: |
           mkdir "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys"
-          curl -L -O https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/cmake/compile_wrapper_consider_clang-cl.patch -o "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys/compile_wrapper_consider_clang-cl.patch"
+          curl -L https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/cmake/compile_wrapper_consider_clang-cl.patch -o "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/msys/compile_wrapper_consider_clang-cl.patch"
 
       - name: Setup devcmd to use cl.exe
         uses: ilammy/msvc-dev-cmd@v1.12.1
+
+      - name: Configure sccache
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       - name: Run sccache-cache
         uses: mozilla-actions/sccache-action@v0.0.3
@@ -44,6 +51,12 @@ jobs:
           cmake --version
           mkdir build
           echo $VCPKG_ROOT/vcpkg list
+
+      # - name: Run CMake with vcpkg.json manifest
+      #   uses: lukka/run-cmake@v10
+      #   with:
+      #     configurePreset: msvc-sccache
+      #     vcpkgJsonGlob: '${{ github.workspace }}/vcpkg.json'
 
       - name: CMake Setup on Windows
         shell: bash
@@ -71,6 +84,7 @@ jobs:
         continue-on-error: true
         run: |
           cpack -V --preset msvc
+          dir dist/*
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: wix.log
@@ -171,9 +185,13 @@ jobs:
       #     ./srcml_xslt.exe || echo $?
 
 
-  test:
+  test-installer:
     needs: build
     runs-on: windows-latest
+    strategy:
+      matrix:
+        installer: [msi, inno, nuget]
+
     steps:
       # Download the installer artifact
       - name: Download installer
@@ -186,19 +204,50 @@ jobs:
       #   run: |
       #     ls -lh
 
-      - name: Install package
-        continue-on-error: true
+      - name: Install package Wix msi
+        # continue-on-error: true
+        if: ${{ matrix.installer == 'msi' }}
         run: msiexec /i srcml-1.0.0-windows-x86_64.msi /quiet /norestart /L*vx .\msi.log
       - uses: actions/upload-artifact@v3
+        if: ${{ matrix.installer == 'msi' }}
         with:
           name: msi.log
           path: ./msi.log
+
+      - name: Install package Inno Setup
+        # continue-on-error: true
+        if: ${{ matrix.installer == 'inno' }}
+        run: |
+          dir
+          D:\a\srcML-1942\srcML-1942\srcml-1.0.0-windows-x86_64.exe /VERYSILENT
+      # - uses: actions/upload-artifact@v3
+      #   if: ${{ matrix.installer == 'msi' }}
+      #   with:
+      #     name: msi.log
+      #     path: ./msi.log
+
+      - name: Install package Nuget
+        # continue-on-error: true
+        if: ${{ matrix.installer == 'nuget' }}
+        run: |
+          mkdir LocalNuGetFeed
+          nuget add srcml.1.0.0.nupkg -Source LocalNuGetFeed
+          nuget install srcml -Source D:\a\srcML-1942\srcML-1942\LocalNuGetFeed -OutputDirectory "C:\Program Files"
+          mv "C:\Program Files\srcml.1.0.0" "C:\Program Files\srcML"
+      # - uses: actions/upload-artifact@v3
+      #   if: ${{ matrix.installer == 'msi' }}
+      #   with:
+      #     name: msi.log
+      #     path: ./msi.log
+
 
       - name: Set PATH for Windows
         shell: bash
         continue-on-error: true
         run: |
           echo "/c/Program Files/srcML/bin" >> $GITHUB_PATH
+          echo "/c/Program Files/srcml.1.0.0/bin" >> $GITHUB_PATH
+          echo "/c/Program Files (x86)/srcML/bin" >> $GITHUB_PATH
 
       - name: Run Installed srcml
         shell: bash
@@ -249,6 +298,9 @@ jobs:
       #     ./srcml_xpath.exe || echo $?
       #     ./srcml_xslt.exe || echo $?
 
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
       - name: Setup msys2 with additional client-test packages for Windows
         uses: msys2/setup-msys2@v2
         continue-on-error: true
@@ -272,7 +324,7 @@ jobs:
         continue-on-error: true
         run: |
           export UseMultiToolTask=true
-          cmake .. --preset msvc
+          cmake ../test/client
 
       - name: Windows Client Tests on Installed srcml
         shell: msys2 {0}
@@ -280,8 +332,8 @@ jobs:
         timeout-minutes: 10
         continue-on-error: true
         run: |
-          # export SRCML_HOME="/c/Program Files/srcML/bin/"
-          ctest -C Release
+          export SRCML_HOME="/c/Program Files/srcML/bin"
+          ctest -C Release -VV
 
       - uses: actions/upload-artifact@v3
         with:
