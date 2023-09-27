@@ -63,5 +63,5 @@ if(LibsrcML_COMPONENT_static)
     find_package(LibXslt REQUIRED)
 endif()
 
-set_target_properties(srcML::libsrcml_${COMPONENT} PROPERTIES IMPORTED_GLOBAL TRUE)
+# set_target_properties(srcML::libsrcml_${COMPONENT} PROPERTIES IMPORTED_GLOBAL TRUE)
 add_library(srcML::LibsrcML ALIAS srcML::libsrcml_${COMPONENT})

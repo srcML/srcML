@@ -260,7 +260,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             })
             ->each([&](std::string text) {
                 isText = true;
-                srcml_request.input_sources.insert(srcml_request.input_sources.begin(), { src_prefix_add_uri("text", text) });
+                srcml_request.input_sources.insert(srcml_request.input_sources.begin(), srcml_input_src(src_prefix_add_uri("text", text)));
             });
     }
 

@@ -914,7 +914,7 @@ ssize_t srcml_unit_get_src_size(struct srcml_unit* unit) {
         unit->src = extract_src(unit->srcml);
     }
 
-    return unit->src->size();
+    return (ssize_t) unit->src->size();
 }
 
 /******************************************************************************

@@ -18,7 +18,7 @@ endif()
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
 
 # Package name
-set(CPACK_PACKAGE_NAME "srcml") 
+set(CPACK_PACKAGE_NAME "srcml")
 
 # Package release number (NOT srcml or libsrcml release)
 # Note: Update when package is updated, but not contents
@@ -35,7 +35,7 @@ set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
 set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcML.org>")
- 
+
 # package version
 # set as part of project()
 
@@ -50,7 +50,7 @@ set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
 
 # strip executables
 set(CPACK_STRIP_FILES ON)
- 
+
 # output directory
 set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
 
@@ -61,32 +61,19 @@ set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 # for installers that let you pick what to install
 # Development group, SRCMLDEV, is composed of multiple components
 include(CPackComponent)
+cpack_add_install_type(CLIENT DISPLAY_NAME "srcml cli")
+cpack_add_install_type(DEVELOPER DISPLAY_NAME "development")
+
 cpack_add_component(SRCML
-                    DISPLAY_NAME "srcml"
-                    DESCRIPTION "srcml cli program with required library"
-                    REQUIRED)
-
-cpack_add_component_group(SRCMLDEV
-                    DISPLAY_NAME "Development"
-                    DESCRIPTION "Include file, static library, and examples for developing C++ programs with libsrcml")
-
-cpack_add_component(INCLUDE
-                    DISPLAY_NAME "srcml.h"
-                    DESCRIPTION "Include file, srcml.h"
-                    DISABLED
-                    GROUP SRCMLDEV)
+                    DISPLAY_NAME "srcml client"
+                    DESCRIPTION "srcml cli program with required libraries"
+                    REQUIRED
+                    INSTALL_TYPES CLIENT DEVELOPER)
 
 cpack_add_component(DEVLIBS
-                    DISPLAY_NAME "libsrcml.a"
-                    DESCRIPTION "Development libraries, i.e.., static library"
-                    DISABLED
-                    GROUP SRCMLDEV)
-
-cpack_add_component(EXAMPLES
-                    DISPLAY_NAME "libsrcml examples"
-                    DESCRIPTION "Include file, srcml.h"
-                    DISABLED
-                    GROUP SRCMLDEV)
+                    DISPLAY_NAME "libsrcml development"
+                    DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
+                    INSTALL_TYPES DEVELOPER)
 
 # Copy and rename the README file for the proper extension
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)

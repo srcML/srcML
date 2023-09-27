@@ -14,7 +14,7 @@
 #include <SRCMLStatus.hpp>
 #include <libarchive_utilities.hpp>
 
-void unarchive_srcml(const srcml_request_t& srcml_request,
+void unarchive_srcml(const srcml_request_t& /* srcml_request */,
     const srcml_input_t& input_sources,
     const srcml_output_dest& destination) {
 
@@ -70,7 +70,10 @@ void unarchive_srcml(const srcml_request_t& srcml_request,
         libarchive_srcml.reset(input_sources[0].parchive);
 
         // write the first block read in previous to this
-        auto status = write(*destination.fd, input_sources[0].buffer.data(), input_sources[0].buffer.size());
+        if (write(*destination.fd, input_sources[0].buffer.data(), (unsigned int) input_sources[0].buffer.size()) == -1) {
+            SRCMLstatus(ERROR_MSG, "Unable to write to internal pipeline");
+            exit(1);
+        }
     }
 
     // copy from the libarchive unarchiveed data into the destination file descriptor
@@ -80,7 +83,10 @@ void unarchive_srcml(const srcml_request_t& srcml_request,
     int64_t offset;
     while (archive_read_data_block(libarchive_srcml.get(), (const void**) &buffer, &size, &offset) == ARCHIVE_OK) {
 
-        auto status = write(*destination.fd, buffer, size);
+        if (write(*destination.fd, buffer, (unsigned int) size) == -1) {
+            SRCMLstatus(ERROR_MSG, "Unable to write to internal pipeline");
+            exit(1);
+        }
    }
 
     // important to close, since this is how the file descriptor reader get an EOF

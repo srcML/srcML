@@ -1,0 +1,10 @@
+For details on the srcml command-line program, please refer to the man page (man srcml). Here's some examples of how to use it:
+# Convert from a source file to srcML srcml main.cpp -o main.cpp.xml
+# Convert from srcML back to source code srcml main.cpp.xml -o main.cpp
+# Convert a code fragment to srcML srcml --text="int a = b;" -l C++ -o fragment.cpp.xml
+# Convert entire project to srcML srcml --verbose project -o project.xml
+If you installed the libsrcml development package, you have the ability to write applications that directly use libsrcml. This contains the following:
+	The include file 	srcml.h
+	The static library 	libsrcml.a
+CMake configuration files
+In addition, the libsrcml examples are installed in /usr/local/share/srcml
