@@ -245,6 +245,7 @@ public :
 
         // collect attributes
         for (int pos = 0; pos < num_attributes; ++pos) {
+            std::string_view prefix = attributes[pos * 5 + 1] ? ((const char*) attributes[pos * 5 + 1]) : "";
             std::string_view attribute = (const char*) attributes[pos * 5];
             std::string value((const char *)attributes[pos * 5 + 3], static_cast<std::size_t>(attributes[pos * 5 + 4] - attributes[pos * 5 + 3]));
 
@@ -292,8 +293,7 @@ public :
                 ;
             else {
 
-                archive->attributes.emplace_back(attribute);
-                archive->attributes.emplace_back(value);
+                archive->attributes.emplace_back("", prefix, attribute, value);
             }
         }
 
@@ -452,7 +452,7 @@ public :
 
                 // namespaces probably aren't create yet
                 if (!unit->namespaces) {
-                    unit->namespaces = default_namespaces;
+                    unit->namespaces = starting_namespaces;
                 }
 
                 // set the found prefix, plus mark it as used

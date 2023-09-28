@@ -145,7 +145,7 @@ int src_input_libarchive(ParseQueue& queue,
     /* In general, go through this once for each time the header can be read
        Exception: if empty, go through the loop exactly once */
     int count = 0;
-    archive_entry *entry;
+    archive_entry* entry = nullptr;
 
     if (input_file.pentry)
         entry = input_file.pentry;
@@ -291,7 +291,7 @@ int src_input_libarchive(ParseQueue& queue,
                         srcml_archive_enable_hash(srcml_arch);
 
                         // Null found, so remove this part and issue as a request
-                        svBuffer->remove_prefix(nullPositionIterator - svBuffer->begin() + 1);
+                        svBuffer->remove_prefix(static_cast<std::string_view::size_type>(nullPositionIterator - svBuffer->begin() + 1));
 
                         goto schedule;
                     }
@@ -323,7 +323,7 @@ int src_input_libarchive(ParseQueue& queue,
                         prequest->buffer.insert(prequest->buffer.end(), buffer, nullPosition);
 
                         // save the remaining buffer
-                        svBuffer = std::string_view(nullPosition + 1, (buffer + size) - (nullPosition + 1));
+                        svBuffer = std::string_view(nullPosition + 1, static_cast<std::basic_string_view<char>::size_type>((buffer + size) - (nullPosition + 1)));
 
                         break;
                     }

@@ -194,6 +194,143 @@ int main(int, char* argv[]) {
     }
 
     /*
+      srcml_get_namespace_size
+    */
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_namespace_size(unit), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_register_namespace(unit, "foo1", "bar1");
+        srcml_unit_register_namespace(unit, "foo2", "bar2");
+        dassert(srcml_unit_get_namespace_size(unit), 2);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        dassert(srcml_unit_get_namespace_size(0), 0);
+    }
+
+    /*
+      srcml_unit_get_namespace_prefix
+    */
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_namespace_prefix(unit, 0), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_namespace_prefix(unit, 2), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        dassert(srcml_unit_get_namespace_prefix(0, 0), 0);
+    }
+
+    /*
+      srcml_unit_get_prefix_from_uri
+    */
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_prefix_from_uri(unit, "http://www.srcML.org/srcML/src"), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_prefix_from_uri(unit, "bar3"), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_prefix_from_uri(unit, 0), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        dassert(srcml_unit_get_prefix_from_uri(0, "http://www.srcML.org/srcML/cpp"), 0);
+    }
+
+    /*
+      srcml_unit_get_namespace_uri
+    */
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_namespace_uri(unit, 0), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_namespace_uri(unit, 2), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        dassert(srcml_unit_get_namespace_uri(0, 0), 0);
+    }
+
+    /*
+      srcml_unit_get_uri_from_prefix
+    */
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_uri_from_prefix(unit, ""), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_uri_from_prefix(unit, "foo3"), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+        srcml_unit* unit = srcml_unit_create(archive);
+        dassert(srcml_unit_get_uri_from_prefix(unit, 0), 0);
+        srcml_unit_free(unit);
+        srcml_archive_free(archive);
+    }
+
+    {
+        dassert(srcml_unit_get_uri_from_prefix(0, ""), 0);
+    }
+
+    /*
       srcml_unit_get_srcml_outer
     */
 

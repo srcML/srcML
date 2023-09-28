@@ -62,7 +62,7 @@ foreach(EXAMPLE IN ITEMS ${EXAMPLES})
     endif()
 
     # Install this example subdirectory
-    install(DIRECTORY "${EXAMPLE_DIR}" DESTINATION "${LIBSRCML_EXAMPLES_DIRECTORY}")
+    install(DIRECTORY "${EXAMPLE_DIR}" DESTINATION "${LIBSRCML_EXAMPLES_DIRECTORY}" COMPONENT DEVLIBS)
 
 endforeach()
 
@@ -71,7 +71,7 @@ file(COPY_FILE "CMakeLists.root.txt.in" "${EXAMPLE_ROOT}/CMakeLists.txt")
 
 # Copy/install the example files
 file(COPY ${TEST_FILES} DESTINATION "${EXAMPLE_ROOT}")
-install(FILES ${TEST_FILES} DESTINATION "${LIBSRCML_EXAMPLES_DIRECTORY}")
+install(FILES ${TEST_FILES} DESTINATION "${LIBSRCML_EXAMPLES_DIRECTORY}" COMPONENT DEVLIBS)
 
 # Append to the build file for each example
 foreach(EXAMPLE IN ITEMS ${EXAMPLES})
@@ -83,9 +83,11 @@ foreach(EXAMPLE IN ITEMS ${EXAMPLES})
     file(APPEND "${EXAMPLE_ROOT}/CMakeLists.txt"
         "# Example ${EXAMPLE_NAME}\n"
         "add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}/${EXAMPLE_NAME}.cpp)\n"
-        "target_link_libraries(${EXAMPLE_NAME} PRIVATE srcML::LibsrcML)\n\n")
+        "target_link_libraries(${EXAMPLE_NAME} PRIVATE srcML::LibsrcML)\n"
+        "add_custom_target(run_${EXAMPLE_NAME} COMMAND $<TARGET_FILE:${EXAMPLE_NAME}> DEPENDS ${EXAMPLE_NAME} USES_TERMINAL)\n"
+        "add_dependencies(run run_${EXAMPLE_NAME})\n\n")
 
 endforeach()
 
 # Install the CMake build file for all of the examples
-install(FILES "${EXAMPLE_ROOT}/CMakeLists.txt" DESTINATION "${LIBSRCML_EXAMPLES_DIRECTORY}")
+install(FILES "${EXAMPLE_ROOT}/CMakeLists.txt" DESTINATION "${LIBSRCML_EXAMPLES_DIRECTORY}" COMPONENT DEVLIBS)
