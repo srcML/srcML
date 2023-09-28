@@ -88,6 +88,21 @@ const Namespaces starting_namespaces = {
     Namespace(SRCML_SRC_NS_DEFAULT_PREFIX,     SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED),
 };
 
+void addNamespace(Namespaces& namespaces, std::string_view uri, std::string_view prefix);
+
+struct Attribute {
+    Attribute(std::string_view uri, std::string_view prefix, std::string_view name, std::string_view value)
+        : uri(uri), prefix(prefix), name(name), value(value) {}
+    std::string uri;
+    std::string prefix;
+    std::string name;
+    std::string value;
+};
+
+typedef std::vector<Attribute> Attributes;
+
+void addAttribute(Attributes& attributes, std::string_view uri, std::string_view prefix, std::string_view name, std::string_view value);
+
 // srcML standard attributes
 /** revision attribute */
 constexpr inline auto UNIT_ATTRIBUTE_REVISION = "revision"sv;

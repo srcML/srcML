@@ -59,7 +59,6 @@ file(GLOB ANTLR_SOURCE ${antlrsrc_SOURCE_DIR}/lib/cpp/src/*.cpp)
 list(REMOVE_ITEM ANTLR_SOURCE "${antlrsrc_SOURCE_DIR}/lib/cpp/src/dll.cpp")
 target_sources(antlr PRIVATE "${ANTLR_SOURCE}")
 target_include_directories(antlr SYSTEM PUBLIC "${antlrsrc_SOURCE_DIR}/lib/cpp/" SYSTEM PRIVATE "${antlrsrc_SOURCE_DIR}/lib/cpp/")
-# set_target_properties(antlr PROPERTIES POSITION_INDEPENDENT_CODE ON OPTIMIZE_DEPENDENCIES YES)
 
 # Generated source from antlr and the parser
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
@@ -80,7 +79,6 @@ target_include_directories(parser SYSTEM PUBLIC ${antlrsrc_SOURCE_DIR}/lib/cpp)
 target_include_directories(parser PRIVATE . ${CMAKE_GENERATED_SOURCE_DIR} PUBLIC . SYSTEM PUBLIC ${CMAKE_GENERATED_SOURCE_DIR})
 target_link_libraries(parser PRIVATE LibXml2::LibXml2 antlr)
 target_include_directories(parser PRIVATE $<TARGET_PROPERTY:TinySHA1,INTERFACE_INCLUDE_DIRECTORIES>)
-# set_target_properties(parser PROPERTIES POSITION_INDEPENDENT_CODE ON OPTIMIZE_DEPENDENCIES YES)
 
 # PreCompiled Headers configuration of the parser
 if (SRCML_PARSER_PCH)

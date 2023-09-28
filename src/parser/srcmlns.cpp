@@ -10,6 +10,24 @@
 #include <srcmlns.hpp>
 #include <algorithm>
 
+void addNamespace(Namespaces& namespaces, std::string_view uri, std::string_view prefix) {
+
+    // lookup by uri, if it already exists, update the prefix. If it doesn't exist, add it
+    // prefix must be unique
+    auto ituri = findNSURI(namespaces, uri);
+    auto itprefix = findNSPrefix(namespaces, prefix);
+    if (ituri != namespaces.end() && itprefix != namespaces.end()) {
+        // existing prefix/uri, change prefix of existing namespace
+        ituri->prefix = prefix;
+    } else if (ituri != namespaces.end()) {
+        // change prefix for existing uri
+        ituri->prefix = prefix;
+    } else {
+        // add new namespace
+        namespaces.emplace_back(prefix, uri, NS_REGISTERED);
+    }
+}
+
 // namespace form of immediate add
 // * Update prefixes
 // * Add an new uri's
@@ -96,4 +114,20 @@ Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, std::strin
 bool issrcdiff(const Namespaces& namespaces) {
 
     return findNSURI(namespaces, SRCML_DIFF_NS_URI) != namespaces.end();
+}
+
+void addAttribute(Attributes& attributes, std::string_view uri, std::string_view prefix, std::string_view name, std::string_view value) {
+
+    // if we already have the attribute, then just update the value
+    // otherwise create a new one
+    auto itprefix = std::find_if(attributes.begin(), attributes.end(), [uri, prefix, name](const Attribute& nsarg)->bool {
+        return nsarg.uri == uri && nsarg.prefix == prefix && nsarg.name == name; });
+
+    if (itprefix != attributes.end()) {
+        // update value of existing attribute
+        itprefix->value = value;
+    } else {
+        // add new attribute
+        attributes.emplace_back(uri, prefix, name, value);
+    }
 }

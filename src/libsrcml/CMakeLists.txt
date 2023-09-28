@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: GPL-3.0-only
 ##
 # @file CMakeLists.txt
-# 
+#
 # @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
-# 
+#
 # CMake files for the library libsrcml
 
 find_package(LibXml2 REQUIRED)
@@ -27,8 +27,10 @@ target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURR
 # libsrcml dependencies
 target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt parser)
 
-# Building static library for srcML
-message("CMAKE_OSX_ARCHITECTURES: ${CMAKE_OSX_ARCHITECTURES}")
+# On macOS, what architecturesBuilding static library for srcML
+if(APPLE)
+    message(STATUS "CMAKE_OSX_ARCHITECTURES: ${CMAKE_OSX_ARCHITECTURES}")
+endif()
 
 # Merge all object code into one object file to build static library from
 # Use this to build static library as it 1) hides filenames 2) hides symbols that are internal only
@@ -98,6 +100,10 @@ else()
 endif()
 set_target_properties(libsrcml_shared PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_SHARED_OUTPUT_NAME}")
 set_target_properties(libsrcml_static PROPERTIES OUTPUT_NAME "${SRCML_LIBSRCML_STATIC_OUTPUT_NAME}")
+
+if(DEFINED SRCML_LIBSRCML_COMPILE_FLAGS)
+    target_compile_options(libsrcml PRIVATE ${SRCML_LIBSRCML_COMPILE_FLAGS})
+endif()
 
 if(DEFINED SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE)
     set_target_properties(libsrcml_shared PROPERTIES LINK_FLAGS_RELEASE "${SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE}")
