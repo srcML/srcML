@@ -21,6 +21,7 @@
 #include <memory>
 
 #include <qli_extensions.hpp>
+#include <srcql.hpp>
 
 const char* const xpathTransformation::simple_xpath_attribute_name = "location";
 
@@ -48,7 +49,9 @@ xpathTransformation::xpathTransformation(srcml_archive* /* oarchive */, const ch
 
     // compile the xpath expression
     // errors will show up when it is first used
-    compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
+    if (std::string_view(xpath).compare(0, "srcql:"sv.size(), "srcql:") != 0) {
+        compiled_xpath = xmlXPathCompile(BAD_CAST xpath);
+    }
 
     // create a namespace for the new attribute (if needed)
     if (attr_uri) {
@@ -64,7 +67,8 @@ xpathTransformation::xpathTransformation(srcml_archive* /* oarchive */, const ch
 xpathTransformation::~xpathTransformation() {
 
     // free the compiled xpath
-    xmlXPathFreeCompExpr(compiled_xpath);
+    if (!compiled_xpath)
+        xmlXPathFreeCompExpr(compiled_xpath);
 
     // free the namespace for any added attributes
     if (attr_ns)
@@ -203,8 +207,17 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"clear",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&clear_elements);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"is-valid-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&is_valid_element);
 
+    auto localCompiledXPath = compiled_xpath;
+    // process srcQL query
+    if (!localCompiledXPath) {
+        std::string_view srcql_string(xpath);
+        srcql_string.remove_prefix("srcql:"sv.size());
+        const auto srcqlXPath = srcql_convert_query_to_xpath(srcql_string.data(), "C++");
+        localCompiledXPath = xmlXPathCompile(BAD_CAST srcqlXPath);
+    }
+
     // evaluate the xpath
-    std::unique_ptr<xmlXPathObject> result_nodes(xmlXPathCompiledEval(compiled_xpath, context.get()));
+    std::unique_ptr<xmlXPathObject> result_nodes(xmlXPathCompiledEval(localCompiledXPath, context.get()));
     if (!result_nodes) {
         fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
         return TransformationResult();
