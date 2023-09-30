@@ -46,7 +46,7 @@ srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml
 check "$output1"
 
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml --output-src
-check "a"
+check "a\n"
 
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" < sub/a.cpp.xml
 check "$output1"
@@ -64,7 +64,7 @@ srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:nam
 check "$output1"
 
 srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml --output-src
-check "a"
+check "a\n"
 
 srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:name" < sub/a.cpp.xml
 check "$output1"
