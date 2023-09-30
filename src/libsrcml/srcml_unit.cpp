@@ -180,6 +180,128 @@ int srcml_unit_set_eol(struct srcml_unit* unit, size_t eol) {
     return SRCML_STATUS_OK;
 }
 
+/**
+ * srcml_unit_register_namespace
+ * @param unit a srcml_unit
+ * @param prefix a XML namespace prefix
+ * @param uri a XML namespace uri
+ *
+ * Create a new namespace or change the prefix of an existing namespace.
+ *
+ * @returns SRCML_STATUS_OK on success and a status error code on failure.
+ */
+int srcml_unit_register_namespace(struct srcml_unit* unit, const char* prefix, const char* uri) {
+
+    if (unit == nullptr || prefix == nullptr || uri == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    if (!unit->namespaces) {
+        unit->namespaces = Namespaces();
+    }
+
+    // lookup by uri, if it already exists, update the prefix. If it doesn't exist, add it
+    // prefix must be unique
+    addNamespace(*unit->namespaces, uri, prefix);
+
+    return SRCML_STATUS_OK;
+}
+
+/**
+ * Add the attribute to the unit
+ * @param unit A srcml_unit
+ * @param uri An XML namespace uri of the attribute
+ * @param name The attribute name
+ * @param value The attribute value
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure.
+ */
+int srcml_unit_add_attribute(struct srcml_unit* unit, const char* prefix, const char* name, const char* value) {
+
+    if (unit == nullptr || prefix == nullptr || name == nullptr || value == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    // URI for this prefix must be declared
+
+    // check the unit namespaces
+    bool found = false;
+    if (unit->namespaces) {
+        const auto& uriNS = findNSPrefix(*unit->namespaces, prefix);
+        found = uriNS != unit->namespaces->end();
+    }
+    if (!found) {
+        const auto& uriNS = findNSPrefix(unit->archive->namespaces, prefix);
+        if (uriNS == unit->archive->namespaces.end())
+            return SRCML_STATUS_UNASSIGNED_PREFIX;
+    }
+
+    // add/update custom attribute
+    addAttribute(unit->attributes, "", prefix, name, value);
+
+    return SRCML_STATUS_OK;
+}
+
+/**
+ * Number of custom attributes
+ * @param unit A srcml_unit
+ * @return The number of attributes or 0 if unit is NULL
+ */
+LIBSRCML_DECL size_t srcml_unit_get_attribute_size(const struct srcml_unit* unit) {
+
+    return unit->attributes.size();
+}
+
+/**
+ * Prefix of the custom attribute at position pos
+ * @param unit A srcml_unit
+ * @param pos The attribute position
+ * @return The prefix for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_attribute_prefix(const struct srcml_unit* unit, size_t pos) {
+
+    if (unit == nullptr)
+        return nullptr;
+
+    if (pos > unit->attributes.size())
+        return nullptr;
+
+    return unit->attributes[pos].prefix.c_str();
+}
+
+/**
+ * Name of the custom attribute at position pos
+ * @param unit A srcml_unit
+ * @param pos The attribute position
+ * @return The name for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_attribute_name(const struct srcml_unit* unit, size_t pos) {
+
+    if (unit == nullptr)
+        return nullptr;
+
+    if (pos > unit->attributes.size())
+        return nullptr;
+
+    return unit->attributes[pos].name.c_str();
+}
+
+/**
+ * Value of the custom attribute at position pos
+ * @param unit A srcml_unit
+ * @param pos The attribute position
+ * @return The value for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_attribute_value(const struct srcml_unit* unit, size_t pos) {
+
+    if (unit == nullptr)
+        return nullptr;
+
+    if (pos > unit->attributes.size())
+        return nullptr;
+
+    return unit->attributes[pos].value.c_str();
+}
+
+
 /******************************************************************************
  *                                                                            *
  *                           Accessor functions                               *
@@ -470,6 +592,111 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
     return unit->srcml_raw->data();
 }
 
+/**
+ * srcml_unit_get_namespace_size
+ * @param unit a srcml_unit
+ *
+ * @returns Get the number of currently defined namespaces or 0 if unit is NULL
+ */
+size_t srcml_unit_get_namespace_size(const struct srcml_unit* unit) {
+
+    if (unit == nullptr)
+        return 0;
+
+    if (!unit->namespaces)
+        return 0;
+
+    return unit ? unit->namespaces->size() : 0;
+}
+
+/**
+ * srcml_unit_get_namespace_prefix
+ * @param unit a srcml_unit
+ * @param pos namespace position
+ *
+ * @returns Get prefix for the given position on success
+ * and NULL on failure.
+ */
+const char* srcml_unit_get_namespace_prefix(const struct srcml_unit* unit, size_t pos) {
+
+    if (unit == nullptr)
+        return nullptr;
+
+    if (!unit->namespaces) {
+        return nullptr;
+    }
+
+    if (pos > unit->namespaces->size())
+        return nullptr;
+
+    return (*unit->namespaces)[pos].prefix.data();
+}
+
+/**
+ * srcml_unit_get_prefix_from_uri
+ * @param unit a srcml_unit
+ * @param namespace_uri an XML namespace
+ *
+ * @returns Get the registered prefix for the given namespace
+ * on success and NULL on failure.
+ */
+const char* srcml_unit_get_prefix_from_uri(const struct srcml_unit* unit, const char* uri) {
+
+    if (unit == nullptr || uri == nullptr)
+        return 0;
+
+    if (!unit->namespaces) {
+        return nullptr;
+    }
+
+    auto it = findNSURI(*unit->namespaces, uri);
+    return it != unit->namespaces->end() ? it->prefix.data() : 0;
+}
+
+/**
+ * srcml_unit_get_namespace_uri
+ * @param unit a srcml_unit
+ * @param pos position in namespaces
+ *
+ * @returns Get the namespace at the given pos on succcess
+ * and NULL on failure.
+ */
+const char* srcml_unit_get_namespace_uri(const struct srcml_unit* unit, size_t pos) {
+
+    if (unit == nullptr)
+        return nullptr;
+
+    if (!unit->namespaces) {
+        return nullptr;
+    }
+
+    if (pos >= unit->namespaces->size())
+        return nullptr;
+
+    return (*unit->namespaces)[pos].uri.data();
+}
+
+/**
+ * srcml_unit_get_uri_from_prefix
+ * @param unit a srcml_unit
+ * @param prefix an XML prefix
+ *
+ * @returns Get the first namespace for the given prefix on success
+ * and NULL on failure.
+ */
+const char* srcml_unit_get_uri_from_prefix(const struct srcml_unit* unit, const char* prefix) {
+
+    if (unit == nullptr || prefix == nullptr)
+        return 0;
+
+    if (!unit->namespaces) {
+        return nullptr;
+    }
+
+    auto it = findNSPrefix(*unit->namespaces, prefix);
+    return it != unit->namespaces->end() ? it->uri.data() : 0;
+}
+
 /******************************************************************************
  *                                                                            *
  *                           Unit parsing functions                           *
@@ -704,7 +931,7 @@ ssize_t srcml_unit_get_src_size(struct srcml_unit* unit) {
         unit->src = extract_src(unit->srcml);
     }
 
-    return unit->src->size();
+    return (ssize_t) unit->src->size();
 }
 
 /******************************************************************************
@@ -1248,7 +1475,7 @@ struct srcml_unit* srcml_unit_clone(const struct srcml_unit* unit) {
     new_unit->eol = unit->eol;
     new_unit->derived_language = unit->derived_language;
     new_unit->namespaces = unit->namespaces;
-
+    new_unit->attributes = unit->attributes;
     return new_unit.release();
 }
 

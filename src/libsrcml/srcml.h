@@ -1,7 +1,7 @@
 /**
  * @file srcml.h
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,6 +85,8 @@ typedef SSIZE_T ssize_t;
 #define SRCML_STATUS_UNSET_LANGUAGE       7
 /** Return status indicating their are no transformations */
 #define SRCML_STATUS_NO_TRANSFORMATION    8
+/** Return status indicating a prefix is missing a declared namespace */
+#define SRCML_STATUS_UNASSIGNED_PREFIX    9
 /**@}*/
 
 /**@{ @anchor Language @name Core Language Set */
@@ -551,6 +553,43 @@ LIBSRCML_DECL const char* srcml_get_namespace_uri(size_t pos);
 LIBSRCML_DECL const char* srcml_get_uri_from_prefix(const char* prefix);
 
 /**
+ * Add the attribute to the archive
+ * @param uri An XML namespace uri of the attribute
+ * @param name The attribute name
+ * @param value The attribute value
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure.
+ */
+LIBSRCML_DECL int srcml_add_attribute(const char* uri, const char* name, const char* value);
+
+/**
+ * Number of custom attributes
+ * @return The number of attributes or 0 if archive is NULL
+ */
+LIBSRCML_DECL size_t srcml_get_attribute_size();
+
+/**
+ * Prefix of the custom attribute at position pos
+ * @param pos The attribute position
+ * @return The prefix for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_get_attribute_prefix(size_t pos);
+
+/**
+ * Name of the custom attribute at position pos
+ * @param pos The attribute position
+ * @return The name for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_get_attribute_name(size_t pos);
+
+/**
+ * Value of the custom attribute at position pos
+ * @param pos The attribute position
+ * @return The value for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_get_attribute_value(size_t pos);
+
+/**
  * Cleanup and free globally allocated items (usually by libxml2)
  */
 LIBSRCML_DECL void srcml_cleanup_globals();
@@ -862,6 +901,48 @@ LIBSRCML_DECL int srcml_archive_register_file_extension(struct srcml_archive* ar
  * @return Status error code on failure.
  */
 LIBSRCML_DECL int srcml_archive_register_namespace(struct srcml_archive* archive, const char* prefix, const char* uri);
+
+/**
+ * Add the attribute to the archive
+ * @param archive A srcml_archive
+ * @param uri An XML namespace uri of the attribute
+ * @param name The attribute name
+ * @param value The attribute value
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure.
+ */
+LIBSRCML_DECL int srcml_archive_add_attribute(struct srcml_archive* archive, const char* uri, const char* name, const char* value);
+
+/**
+ * Number of custom attributes
+ * @param archive A srcml_archive
+ * @return The number of attributes or 0 if archive is NULL
+ */
+LIBSRCML_DECL size_t srcml_archive_get_attribute_size(const struct srcml_archive* archive);
+
+/**
+ * Prefix of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The prefix for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_archive_get_attribute_prefix(const struct srcml_archive* archive, size_t pos);
+
+/**
+ * Name of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The name for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_archive_get_attribute_name(const struct srcml_archive* archive, size_t pos);
+
+/**
+ * Value of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The value for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_archive_get_attribute_value(const struct srcml_archive* archive, size_t pos);
 
 /**
  * Set a processing instruction that will be output before the root element of the archive
@@ -1352,6 +1433,58 @@ LIBSRCML_DECL int srcml_unit_set_timestamp(struct srcml_unit* unit, const char* 
 LIBSRCML_DECL int srcml_unit_set_eol(struct srcml_unit* unit, size_t eol);
 
 /**
+ * Create a new namespace or change the prefix of an existing namespace
+ * @param unit A srcml_unit
+ * @param prefix An XML namespace prefix
+ * @param uri An XML namespace uri
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure.
+ */
+LIBSRCML_DECL int srcml_unit_register_namespace(struct srcml_unit* unit, const char* prefix, const char* uri);
+
+/**
+ * Add the attribute to the unit
+ * @param unit A srcml_unit
+ * @param uri An XML namespace uri of the attribute
+ * @param name The attribute name
+ * @param value The attribute value
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure.
+ */
+LIBSRCML_DECL int srcml_unit_add_attribute(struct srcml_unit* unit, const char* uri, const char* name, const char* value);
+
+/**
+ * Number of custom attributes
+ * @param unit A srcml_unit
+ * @return The number of attributes or 0 if unit is NULL
+ */
+LIBSRCML_DECL size_t srcml_unit_get_attribute_size(const struct srcml_unit* unit);
+
+/**
+ * Prefix of the custom attribute at position pos
+ * @param unit A srcml_unit
+ * @param pos The attribute position
+ * @return The prefix for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_attribute_prefix(const struct srcml_unit* unit, size_t pos);
+
+/**
+ * Name of the custom attribute at position pos
+ * @param unit A srcml_unit
+ * @param pos The attribute position
+ * @return The name for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_attribute_name(const struct srcml_unit* unit, size_t pos);
+
+/**
+ * Value of the custom attribute at position pos
+ * @param unit A srcml_unit
+ * @param pos The attribute position
+ * @return The value for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_attribute_value(const struct srcml_unit* unit, size_t pos);
+
+/**
  * @param unit A srcml_unit
  * @return The source-code encoding for the unit on success, or NULL
  */
@@ -1436,6 +1569,40 @@ LIBSRCML_DECL const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit);
  * @return The fragment unit srcML on success and NULL on failure.
  */
 LIBSRCML_DECL const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit);
+
+/**
+ * @param unit A srcml_unit
+ * @return The number of currently defined namespaces or 0 if unit is NULL
+ */
+LIBSRCML_DECL size_t srcml_unit_get_namespace_size(const struct srcml_unit* unit);
+
+/**
+ * @param unit A srcml_unit
+ * @param pos The namespace position
+ * @return The prefix for the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_namespace_prefix(const struct srcml_unit* unit, size_t pos);
+
+/**
+ * @param unit A srcml_unit
+ * @param namespace_uri An XML namespace URI
+ * @return The registered prefix for the given namespace, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_prefix_from_uri(const struct srcml_unit* unit, const char* namespace_uri);
+
+/**
+ * @param unit A srcml_unit
+ * @param pos The namespace position
+ * @return The namespace at the given position, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_namespace_uri(const struct srcml_unit* unit, size_t pos);
+
+/**
+ * @param unit A srcml_unit
+ * @param prefix An XML prefix
+ * @return The first namespace for the given prefix on success, or NULL
+ */
+LIBSRCML_DECL const char* srcml_unit_get_uri_from_prefix(const struct srcml_unit* unit, const char* prefix);
 
 /**@}*/
 

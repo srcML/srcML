@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: GPL-3.0-only
 ##
 # @file CMakeLists.txt
-# 
+#
 # @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
-# 
+#
 # CMake files for the srcML client
 
 # if(NOT srcML::LibsrcML)
