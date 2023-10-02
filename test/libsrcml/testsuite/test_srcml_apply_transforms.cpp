@@ -53,11 +53,25 @@ int main(int, char* argv[]) {
 
 </unit>
 )";
+    const std::string srcml_a_after_item = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">
+
+<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+</unit>
+)";
     const std::string srcml_b_after = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <s:unit xmlns:s="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" version="1">
 
 <s:unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
+
+</s:unit>
+)";
+    const std::string srcml_b_after_item = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" version="1">
+
+<s:unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1" item="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt></s:unit>
 
 </s:unit>
 )";
@@ -430,7 +444,7 @@ int main(int, char* argv[]) {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(std::string(s, size), srcml_a_after);
+        dassert(std::string(s, size), srcml_a_after_item);
         free(s);
     }
 
@@ -459,14 +473,14 @@ int main(int, char* argv[]) {
         srcml_archive_free(oarchive);
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
-        dassert(std::string(s, size), srcml_b_after);
+        dassert(std::string(s, size), srcml_b_after_item);
         free(s);
     }
 
     std::string srcml_srcql = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
 
-<unit revision="1.0.0" language="C++" filename="a.cpp" item="1"><name>a</name></unit>
+<unit revision="1.0.0" language="C++" filename="a.cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 </unit>
 )";
