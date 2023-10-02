@@ -49,7 +49,8 @@ struct srcml_transform_result {
 };
 
 /**
- * srcml_append_transform_xpath_internal( * @param archive a srcml archive
+ * srcml_append_transform_xpath_internal
+ * @param archive a srcml archive
  * @param xpath_string an XPath expression
  * @param prefix the element prefix
  * @param namespace_uri the element namespace
@@ -57,7 +58,7 @@ struct srcml_transform_result {
  *
  * Append the XPath expression to the list
  * of transformation/queries.  As of yet no way to specify context.
- * Instead of outputting the results each in a separte unit tag.  Output the complete
+ * Instead of outputting the results each in a separate unit tag.  Output the complete
  * archive marking the xpath results with a user provided element.
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
@@ -146,7 +147,7 @@ int srcml_append_transform_xpath_attribute(struct srcml_archive* archive, const 
  *
  * Append the XPath expression to the list
  * of transformation/queries.  As of yet no way to specify context.
- * Instead of outputting the results each in a separte unit tag.  Output the complete
+ * Instead of outputting the results each in a separate unit tag.  Output the complete
  * archive marking the xpath results with a user provided element.
  *
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
@@ -160,6 +161,123 @@ int srcml_append_transform_xpath_element(struct srcml_archive* archive, const ch
         return SRCML_STATUS_INVALID_ARGUMENT;
 
     return srcml_append_transform_xpath_internal(archive, xpath_string, prefix, namespace_uri, element, 0, 0, 0, 0);
+}
+
+/**
+ * srcml_append_transform_srcql_internal
+ * @param archive a srcml archive
+ * @param srcql_string an XPath expression
+ * @param prefix the element prefix
+ * @param namespace_uri the element namespace
+ * @param element the element name
+ *
+ * Append the srcQL query to the list
+ * of transformation/queries.
+ * Instead of outputting the results each in a separate unit tag.  Output the complete
+ * archive marking the xpath results with a user provided element.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+static int srcml_append_transform_srcql_internal (struct srcml_archive* archive, const char* srcql_string,
+                                                    const char* prefix, const char* namespace_uri,
+                                                    const char* element,
+                                                    const char* attr_prefix, const char* attr_namespace_uri,
+                                                    const char* attr_name, const char* attr_value) {
+    if (archive == NULL || srcql_string == 0)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    std::string srcqlXPath("srcql:");
+    srcqlXPath += srcql_string;
+    archive->transformations.push_back(std::unique_ptr<Transformation>(new xpathTransformation(archive, srcqlXPath.data(), prefix, namespace_uri, element,
+            attr_prefix, attr_namespace_uri, attr_name, attr_value)));
+
+    return SRCML_STATUS_OK;
+}
+
+/**
+ * srcml_append_transform_srcql
+ * @param archive a srcml archive
+ * @param srcql_string an srcQL query
+ *
+ *
+ * of transformation/queries.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+int srcml_append_transform_srcql(srcml_archive* archive, const char* srcql_string) {
+
+    if (archive == nullptr || srcql_string == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    return srcml_append_transform_srcql_internal(archive, srcql_string, 0, 0, 0, 0, 0, 0, 0);
+}
+
+/**
+ * srcml_append_transform_srcql_attribute
+ * @param archive a srcml archive
+ * @param srcql_string an srcQL query
+ * @param prefix the attribute prefix
+ *
+ * @param attr_name the attribute name
+ * @param attr_value the attribute value
+ *
+ * Append the srcQL query to the list
+ * of transformation/queries.
+ * Instead of outputting the results each in a separate unit tag.  Output the complete
+ * archive marking the xpath results with a user provided attribute.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+int srcml_append_transform_srcql_attribute(struct srcml_archive* archive, const char* srcql_string,
+                                            const char* prefix, const char* namespace_uri,
+                                            const char* attr_name, const char* attr_value) {
+
+    if (archive == nullptr || srcql_string == nullptr ||
+        prefix == nullptr || namespace_uri == nullptr ||
+        attr_name == nullptr || attr_value == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    // attribute for a previous Xpath where the attribute is blank is appended on
+    if (!archive->transformations.empty()) {
+        auto p = dynamic_cast<xpathTransformation*>(archive->transformations.back().get());
+        if (p && p->xpath == srcql_string && p->attr_prefix.empty() && p->attr_uri.empty() && p->attr_name.empty() && p->attr_value.empty()) {
+
+            p->attr_prefix = prefix;
+            p->attr_uri = namespace_uri;
+            p->attr_name = attr_name;
+            p->attr_value = attr_value;
+
+            return SRCML_STATUS_OK;
+        }
+    }
+
+    return srcml_append_transform_srcql_internal(archive, srcql_string, 0, 0, 0, prefix, namespace_uri, attr_name, attr_value);
+}
+
+/**
+ * srcml_append_transform_srcql_element
+ * @param archive a srcml archive
+ * @param srcql_string an srcQL query
+ * @param prefix the element prefix
+ *
+ * @param element the element name
+ *
+ * Append the srcQL query to the list
+ * of transformation/queries.
+ * Instead of outputting the results each in a separate unit tag.  Output the complete
+ * archive marking the xpath results with a user provided element.
+ *
+ * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
+ */
+int srcml_append_transform_srcql_element(struct srcml_archive* archive, const char* srcql_string,
+                                                            const char* prefix, const char* namespace_uri,
+                                                            const char* element) {
+    if (archive == nullptr || srcql_string == nullptr ||
+        prefix == nullptr || namespace_uri == nullptr ||
+        element == nullptr)
+        return SRCML_STATUS_INVALID_ARGUMENT;
+
+    return srcml_append_transform_srcql_internal(archive, srcql_string, prefix, namespace_uri, element, 0, 0, 0, 0);
 }
 
 /**

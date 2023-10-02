@@ -38,11 +38,25 @@ int main(int, char* argv[]) {
 
 </unit>
 )";
+    const std::string srcml_item = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">
+
+<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+</unit>
+)";
     const std::string srcml_a_after = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">
 
 <unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
+
+</unit>
+)";
+    const std::string srcml_a_after_item = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">
+
+<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 </unit>
 )";
@@ -54,11 +68,25 @@ int main(int, char* argv[]) {
 
 </s:unit>
 )";
+    const std::string srcml_b_after_item = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" version="1">
+
+<s:unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1" item="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt></s:unit>
+
+</s:unit>
+)";
     const std::string srcml_full = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <s:unit xmlns:s="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">
 
 <s:unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
+
+</s:unit>
+)";
+    const std::string srcml_full_item = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<s:unit xmlns:s="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">
+
+<s:unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1" item="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt></s:unit>
 
 </s:unit>
 )";
@@ -329,6 +357,165 @@ int main(int, char* argv[]) {
 
         srcml_archive_close(iarchive);
         srcml_archive_free(iarchive);
+    }
+
+    //  srcql
+    {
+        char* s;
+        size_t size;
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml.c_str(), srcml.size());
+        srcml_append_transform_srcql(iarchive, "$T;");
+        srcml_archive* oarchive = srcml_archive_clone(iarchive);
+        srcml_archive_write_open_memory(oarchive, &s, &size);
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
+        srcml_transform_free(result);
+        srcml_unit_free(unit);
+        srcml_clear_transforms(iarchive);
+
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+        dassert(std::string(s, size), srcml_item);
+        free(s);
+    }
+
+    {
+        char* s;
+        size_t size;
+        srcml_archive* iarchive = srcml_archive_create();
+
+        srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
+        srcml_append_transform_srcql(iarchive, "$V;");
+        srcml_archive* oarchive = srcml_archive_clone(iarchive);
+        srcml_archive_write_open_memory(oarchive, &s, &size);
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
+        srcml_transform_free(result);
+        srcml_unit_free(unit);
+        srcml_clear_transforms(iarchive);
+
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+
+        dassert(std::string(s, size), srcml_full_item);
+        free(s);
+    }
+
+    {
+        char* s;
+        size_t size;
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+        srcml_append_transform_srcql(iarchive, "$V;");
+        srcml_archive* oarchive = srcml_archive_clone(iarchive);
+        srcml_archive_disable_solitary_unit(oarchive);
+        srcml_archive_write_open_memory(oarchive, &s, &size);
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
+        srcml_transform_free(result);
+        srcml_unit_free(unit);
+        srcml_clear_transforms(iarchive);
+
+        srcml_clear_transforms(iarchive);
+
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+        dassert(std::string(s, size), srcml_a_after_item);
+        free(s);
+    }
+
+    {
+        char* s;
+        size_t size;
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml_b.c_str(), srcml_b.size());
+        srcml_append_transform_srcql(iarchive, "$V;");
+        srcml_archive* oarchive = srcml_archive_clone(iarchive);
+        srcml_archive_disable_solitary_unit(oarchive);
+        srcml_archive_write_open_memory(oarchive, &s, &size);
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
+        srcml_transform_free(result);
+        srcml_unit_free(unit);
+        srcml_clear_transforms(iarchive);
+
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+        dassert(std::string(s, size), srcml_b_after_item);
+        free(s);
+    }
+
+    std::string srcml_srcql = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+<unit revision="1.0.0" language="C++" filename="a.cpp" item="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+</unit>
+)";
+
+    // srcql with multiple items
+    {
+        char* s;
+        size_t size;
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive, srcml_a.c_str(), srcml_a.size());
+        srcml_append_transform_srcql(iarchive, "$V;");
+        srcml_append_transform_srcql(iarchive, "$V;");
+        srcml_archive* oarchive = srcml_archive_clone(iarchive);
+        srcml_archive_disable_solitary_unit(oarchive);
+        srcml_archive_write_open_memory(oarchive, &s, &size);
+
+        srcml_unit* unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        srcml_archive_write_unit(oarchive, srcml_transform_get_unit(result, 0));
+        srcml_transform_free(result);
+        srcml_unit_free(unit);
+        srcml_clear_transforms(iarchive);
+
+        srcml_clear_transforms(iarchive);
+
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+        dassert(std::string(s, size), srcml_srcql);
+        free(s);
     }
 
     //  xslt_filename

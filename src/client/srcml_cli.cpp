@@ -153,6 +153,26 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         }
     }
 
+    int srcqlCounter = 0;
+    for (auto& p : commandline) {
+
+        if (p == "--srcql"sv || p.rfind("--srcql=", 0) == 0) {
+
+            p.insert("--srcql"sv.size(), std::to_string(srcqlCounter));
+            ++srcqlCounter;
+
+        } else if (p == "-t"sv) {
+
+            p = "--srcql" + std::to_string(srcqlCounter);
+            ++srcqlCounter;
+
+        } else if (p.rfind("-t=", 0) == 0) {
+
+            p = "--srcql" + std::to_string(xpathCounter) + p.substr(2);
+            ++xpathCounter;
+        }
+    }
+
     srcMLClI app{SRCML_HEADER, "srcml"};
     app.formatter(std::make_shared<srcMLFormatter>());
     app.get_formatter()->column_width(32);
@@ -523,6 +543,23 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             ->expected(1)
             ->each([&](std::string value) {
                 srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("xpath", value));
+                srcml_request.xpath_query_support.insert(srcml_request.xpath_query_support.begin(), std::make_pair(std::nullopt,std::nullopt));
+            });
+    }
+
+    app.add_option("--srcql",
+        "Apply SRCQL query to each individual srcML unit")
+        ->type_name("SRCQL")
+        ->group("QUERY & TRANSFORMATION");
+
+    // Enforce single argument, but allow multiple --srcql options
+    // --srcql0 .. --srcql${srcqlCounter}
+    for (int i = 0; i < srcqlCounter; ++i) {
+        app.add_option("--srcql" + std::to_string(i), "")
+            ->group("")
+            ->expected(1)
+            ->each([&](std::string value) {
+                srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("srcql", value));
                 srcml_request.xpath_query_support.insert(srcml_request.xpath_query_support.begin(), std::make_pair(std::nullopt,std::nullopt));
             });
     }
