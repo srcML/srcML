@@ -262,7 +262,12 @@ void create_srcml(const srcml_request_t& srcml_request,
             if (apply_xpath(srcml_arch.get(), srcml_arch.get(), resource, srcml_request.xpath_query_support[xpath_index++], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
                 exit(1);
             }
+        }
 
+        if (protocol == "srcql"sv) {
+            if (apply_srcql(srcml_arch.get(), srcml_arch.get(), resource, srcml_request.xpath_query_support[xpath_index++], srcml_request.xmlns_namespaces) != SRCML_STATUS_OK) {
+                exit(1);
+            }
         }
 
         if (protocol == "xslt"sv) {

@@ -17,6 +17,8 @@ int apply_xslt(srcml_archive* in_arch, std::string_view transform_input);
 
 int apply_xpath(srcml_archive* in_arch, srcml_archive* out_arch, std::string_view transform_input, const std::pair< std::optional<element>, std::optional<attribute> >& xpath_support, const std::map<std::string,std::string>& xmlns_namespaces);
 
+int apply_srcql(srcml_archive* in_arch, srcml_archive* out_arch, std::string_view transform_input, const std::pair< std::optional<element>, std::optional<attribute> >& srcql_support, const std::map<std::string,std::string>& xmlns_namespaces);
+
 int apply_relaxng(srcml_archive* in_arch, std::string_view transform_input);
 
 #endif
