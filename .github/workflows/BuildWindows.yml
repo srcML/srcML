@@ -63,7 +63,7 @@ jobs:
         working-directory: build
         run: |
           export UseMultiToolTask=true
-          cmake .. --preset msvc-sccache
+          cmake .. --preset msvc
 
       # - name: CMake Setup on Windows
       #   uses: lukka/run-cmake@v10
