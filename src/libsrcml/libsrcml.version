@@ -200,5 +200,8 @@ LIBSRCML_1.1 {
         srcml_append_transform_xpath;
         srcml_append_transform_xpath_element;
         srcml_append_transform_xpath_attribute;
-
+        srcml_append_transform_srcql_attribute;
+        srcml_append_transform_srcql;
+        srcml_append_transform_srcql_element;
+        srcml_append_transform_srcql_attribute;
 } LIBSRCML_1.0;
