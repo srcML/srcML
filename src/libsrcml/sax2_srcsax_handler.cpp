@@ -15,6 +15,8 @@
 #include <libxml/parserInternals.h>
 #include <libxml/tree.h>
 
+#define SRCSAX_DEBUG
+
 #ifdef SRCSAX_DEBUG
     #define BASE_DEBUG fprintf(stderr, "BASE:  %s %s %d |%.*s| at pos %ld\n", __FILE__,  __FUNCTION__, __LINE__, 3, state->base, state->base - state->prevbase);
     #define SRCML_DEBUG(title, ch, len) fprintf(stderr, "%s:  %s %s %d |%.*s|\n", title, __FILE__,  __FUNCTION__, __LINE__, (int)len, ch);
