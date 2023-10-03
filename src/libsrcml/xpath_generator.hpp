@@ -1,3 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file xpath_generator.hpp
+ *
+ * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+ */
+
 #include <string>
 #include <string_view>
 

@@ -1,3 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file libsrcql.cpp
+ *
+ * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+ */
+
 #include "srcql.hpp"
 
 #include "xpath_generator.hpp"

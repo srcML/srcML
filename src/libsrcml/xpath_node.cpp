@@ -1,3 +1,10 @@
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file xpath_node.cpp
+ *
+ * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+ */
+
 #include "xpath_node.hpp"
 
 XPathNode::XPathNode(const XPathNode& orig) {
