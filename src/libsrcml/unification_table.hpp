@@ -5,6 +5,9 @@
  * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
  */
 
+#ifndef SRCQL_UNIFICATION_TABLE_HPP
+#define SRCQL_UNIFICATION_TABLE_HPP
+
 #include <string>
 #include <string_view>
 #include <map>
@@ -13,9 +16,7 @@
 #include <set>
 #include <unordered_map>
 #include <functional>
-
-#ifndef SRCQL_UNIFICATION_TABLE_HPP
-#define SRCQL_UNIFICATION_TABLE_HPP
+#include <cstdint>
 
 struct unique_element {
     std::string_view token;

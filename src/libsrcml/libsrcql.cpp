@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <string>
 #include <cstring>
+#include <memory>
 
 const char* srcql_convert_query_to_xpath(const char* src_query, const char* language) {
     //////////////////////////////////////////////
