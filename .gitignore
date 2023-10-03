@@ -4,39 +4,3 @@
 .\#*
 *.pyc
 .DS_Store
-
-bin
-dist
-dep
-deps
-src/parser/PhaseOne.txt
-
-# cmake/ctest/cpack
-CMakeCache.txt
-CMakeFiles
-CPackConfig.cmake
-CPackSourceConfig.cmake
-cmake_install.cmake
-CTestTestfile.cmake
-DartConfiguration.tcl
-install_manifest.txt
-Testing
-Makefile
-!dist/Makefile
-!doc/Makefile
-!src/ElementInfo/Makefile
-!suite/Makefile
-!test/cli/Makefile
-!test/Makefile
-!timing/Makefile
-srcML.sublime-project
-srcML.sublime-workspace
-
-# testing log files
-*.log
-
-# Windows Extra files/folders
-src/parser/PhaseOne.txt
-
-# Dependency Version File
-deps_version.txt
