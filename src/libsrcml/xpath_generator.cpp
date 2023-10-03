@@ -258,10 +258,9 @@ bool XPathGenerator::is_primitive_element(xmlNode* node) {
 
 std::string XPathGenerator::add_quotes(std::string_view text_view) {
     std::string text(text_view);
-    for(int i = 0; i < text.length(); ++i) {
-        if(text[i] == '"') {
+    for (const auto c : text) {
+        if (c == '"')
             return '\'' + text + '\'';
-        }
     }
     return '"' + text + '"';
 }
@@ -269,7 +268,7 @@ std::string XPathGenerator::add_quotes(std::string_view text_view) {
 std::string XPathGenerator::extract_variable(std::string_view text_view) {
     std::string rtn = "";
     std::string text(text_view);
-    for(size_t i = text.find("$")+1; i < text.length() && (isalnum(text[i]) || text[i] == '_'); ++i) { 
+    for (size_t i = text.find("$")+1; i < text.length() && (isalnum(text[i]) || text[i] == '_'); ++i) {
         rtn += text[i]; 
     }
     return rtn;
