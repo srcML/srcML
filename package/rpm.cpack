@@ -34,7 +34,7 @@ set(CPACK_RPM_DEVLIBS_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
 
 # Extract processor type
 execute_process(COMMAND /usr/bin/uname --machine OUTPUT_VARIABLE PROCESSOR OUTPUT_STRIP_TRAILING_WHITESPACE)
-message("PROCESSOR ${PROCESSOR}")
+message(STATUS "Processor: ${PROCESSOR}")
 
 # Per-distribution package name
 if(DISTRO MATCHES "Fedora|CentOS")
