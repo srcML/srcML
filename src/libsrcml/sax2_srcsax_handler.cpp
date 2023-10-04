@@ -789,7 +789,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
 
     // libxml2 handles things in the background differently for whitespace and escaped characters
     // using a different buffer. For POS (Plain Old Strings), it uses the original buffer
-    if (state->base == ctxt->input->cur) {
+    if (ch == ctxt->input->cur) {
 
         // plain old strings
         state->unitsrcml.append((const char*) ch, static_cast<std::size_t>(len));
@@ -800,18 +800,20 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     } else {
 
         // whitespace and escaped characters
-        if (*ch == '<')
+        if (*ch == '<') {
             for (auto c : "&lt;"sv)
                 state->unitsrcml += c;
-        else if (*ch == '>')
+        } else if (*ch == '>') {
             for (auto c : "&gt;"sv)
                 state->unitsrcml += c;
-        else if (*ch == '&')
+        } else if (*ch == '&') {
             for (auto c : "&amp;"sv)
                 state->unitsrcml += c;
-        else
+        } else {
             state->unitsrcml.append((const char*) ch, static_cast<std::size_t>(len));
+        }
 
+        // ctxt->input->cur is incremented before the call
         state->base = ctxt->input->cur;
     }
 
