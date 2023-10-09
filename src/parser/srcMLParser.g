@@ -2111,14 +2111,13 @@ do_statement[] { ENTRY_DEBUG } :
 
             // mode to nest while part of do while statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
-        }
-        DO
-        {
+
             if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
                 startNoSkipElement(SCONTENT);
             }
         }
+        DO
 ;
 
 // while part of do statement
