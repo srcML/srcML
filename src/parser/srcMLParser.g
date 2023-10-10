@@ -2825,18 +2825,16 @@ using_aliasing[] { int type_count = 0; int secondtoken = 0; int after_token = 0;
         )*
 ;
 
-//  Objectice-C compatibility alias
+//  Objective-C compatibility alias
 compatibility_alias[] { ENTRY_DEBUG } :
-    {
+        {
+            // statement
+            startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME);
 
-        // statement
-        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME);
-
-        // start the namespace definition
-        startElement(SCOMPATIBILITY_ALIAS);
-
-    }
-    COMPATIBILITY_ALIAS
+            // start the namespace definition
+            startElement(SCOMPATIBILITY_ALIAS);
+        }
+        COMPATIBILITY_ALIAS
 ;
 
 //  Objectice-C @class directive
