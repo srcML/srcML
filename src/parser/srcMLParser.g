@@ -3017,7 +3017,6 @@ objective_c_class_header[] { ENTRY_DEBUG } :
 
 // class header base
 objective_c_class_header_base[] { ENTRY_DEBUG } :
-
         // suppress ()* warning
         identifier
 
