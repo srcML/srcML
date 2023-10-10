@@ -2916,7 +2916,6 @@ class_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
-
         class_preamble (CLASS | CXX_CLASS) class_post class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
