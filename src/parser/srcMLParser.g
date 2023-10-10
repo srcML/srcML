@@ -3031,31 +3031,23 @@ objective_c_class_header_base[] { ENTRY_DEBUG } :
 ;
 
 objective_c_class_end[] { ENTRY_DEBUG } :
+        {
+            if (inTransparentMode(MODE_ACCESS_REGION)) {
 
-    {
+                endDownToMode(MODE_TOP);
 
-        if (inTransparentMode(MODE_ACCESS_REGION)) {
+                // flush any whitespace tokens since sections should
+                // end at the last possible place
+                flushSkip();
 
-            endDownToMode(MODE_TOP);
+                endWhileMode(MODE_TOP_SECTION);
+            }
 
-            // flush any whitespace tokens since sections should
-            // end at the last possible place
-            flushSkip();
+            endDownOverMode(MODE_TOP | MODE_CLASS);
 
-            endWhileMode(MODE_TOP_SECTION);
-
+            endDownOverMode(MODE_CLASS);
         }
-
-
-        endDownOverMode(MODE_TOP | MODE_CLASS);
-
-    }
-
-    ATEND
-
-    {
-        endDownOverMode(MODE_CLASS);
-    }
+        ATEND
 ;
 
 // Handle an enum class
