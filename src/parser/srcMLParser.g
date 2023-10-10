@@ -2561,15 +2561,12 @@ assert_statement[] { ENTRY_DEBUG } :
         ASSERT
 ;
 
-static_block  { ENTRY_DEBUG } :
-
-    {
-        startNewMode(MODE_STATEMENT | MODE_NEST);
-        startElement(SSTATIC_BLOCK);
-
-    }
-
-    STATIC lcurly
+static_block { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+            startElement(SSTATIC_BLOCK);
+        }
+        STATIC lcurly
 ;
 
 // C _Static_assert statement
