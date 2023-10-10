@@ -3010,12 +3010,9 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 
 // handle class header
 objective_c_class_header[] { ENTRY_DEBUG } :
-
         { isoption(parser_options, SRCML_PARSER_OPTION_CPP) }?
         (macro_call_check class_header_base LCURLY)=>
-           macro_call objective_c_class_header_base |
-
-        objective_c_class_header_base
+           macro_call objective_c_class_header_base | objective_c_class_header_base
 ;
 
 // class header base
