@@ -3111,10 +3111,8 @@ interface_definition[] { ENTRY_DEBUG } :
             // java interfaces end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-
         class_preamble INTERFACE class_post class_header lcurly[false]
 ;
-
 
 // do an interface declaration
 interface_declaration[] { ENTRY_DEBUG } :
