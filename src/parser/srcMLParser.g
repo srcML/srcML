@@ -2297,11 +2297,12 @@ control_condition_action[] { ENTRY_DEBUG } :
                             MODE_LIST | MODE_EXPRESSION);
             } else {
                 replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+
                 // setup a mode for initialization that will end with a ";"
                 startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_STATEMENT);
+                
                 startElement(SCONTROL_CONDITION);
             }
-
         }
 ;
 
