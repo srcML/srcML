@@ -2936,6 +2936,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 
             // start the class definition
             startElement(token);
+            
             // classes end at the end of the block
             if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
