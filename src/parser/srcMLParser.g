@@ -3136,7 +3136,6 @@ struct_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SSTRUCT_DECLARATION);
         }
-
         class_preamble STRUCT class_post class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
