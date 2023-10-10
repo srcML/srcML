@@ -3123,7 +3123,6 @@ interface_declaration[] { ENTRY_DEBUG } :
             // start the interface definition
             startElement(SINTERFACE_DECLARATION);
         }
-
         class_preamble INTERFACE class_post class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
