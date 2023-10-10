@@ -2970,25 +2970,24 @@ class_post[] { ENTRY_DEBUG } :
 ;
 
 objective_c_class[] { bool first = true; ENTRY_DEBUG } :
-
-    {
-        startNewMode(MODE_STATEMENT | MODE_CLASS);
-
-        if (LA(1) == ATINTERFACE)
-            startElement(SCLASS_INTERFACE);
-        else
-            startElement(SCLASS_IMPLEMENTATION);
-
-        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
-    }
-
-    (ATINTERFACE | ATIMPLEMENTATION) ({ first }? objective_c_class_header set_bool[first, false])*
-
-    (lcurly[false]
         {
-            class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
+            startNewMode(MODE_STATEMENT | MODE_CLASS);
+
+            if (LA(1) == ATINTERFACE)
+                startElement(SCLASS_INTERFACE);
+            else
+                startElement(SCLASS_IMPLEMENTATION);
+
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
         }
-    )*
+
+        (ATINTERFACE | ATIMPLEMENTATION) ({ first }? objective_c_class_header set_bool[first, false])*
+
+        (lcurly[false]
+            {
+                class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
+            }
+        )*
 ;
 
 protocol[] { ENTRY_DEBUG } :
