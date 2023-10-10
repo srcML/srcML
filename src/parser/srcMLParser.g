@@ -2991,12 +2991,8 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 ;
 
 protocol[] { ENTRY_DEBUG } :
-
-    { look_past_rule(&srcMLParser::protocol_declaration) == TERMINATE }? protocol_declaration |
-    protocol_definition
+        { look_past_rule(&srcMLParser::protocol_declaration) == TERMINATE }? protocol_declaration | protocol_definition
 ;
-
-
 
 protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 
