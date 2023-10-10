@@ -2936,7 +2936,7 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
 
             // start the class definition
             startElement(token);
-            
+
             // classes end at the end of the block
             if (intypedef || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) {
                 setMode(MODE_END_AT_BLOCK);
@@ -2958,7 +2958,6 @@ class_definition[] { ENTRY_DEBUG } :
 
         class_preamble (CLASS | CXX_CLASS) class_post (class_header lcurly[false] | lcurly[false])
         {
-
             if (inLanguage(LANGUAGE_CXX))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
