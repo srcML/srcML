@@ -2531,7 +2531,7 @@ import_statement[] { ENTRY_DEBUG } :
 // * as name
 multop_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-                startElement(SNAME);
+            startElement(SNAME);
         }
         MULTOPS
 ;
