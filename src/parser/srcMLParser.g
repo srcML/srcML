@@ -3064,7 +3064,7 @@ enum_class_declaration[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM_DECLARATION]
         
         class_preamble ENUM class_post class_header
-        
+
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
@@ -3076,14 +3076,11 @@ anonymous_class_definition[] { ENTRY_DEBUG } :
 
             // start the class definition
             startElement(SCLASS);
-        }
 
-        // first name in an anonymous class definition is the class it extends
-        // or the interface that it implements
-        anonymous_class_super
+            // first name in an anonymous class definition is the class it extends
+            // or the interface that it implements
+            anonymous_class_super
 
-        // argument list
-        {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_NO_BLOCK_CONTENT);
         }
