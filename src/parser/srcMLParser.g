@@ -2300,7 +2300,7 @@ control_condition_action[] { ENTRY_DEBUG } :
 
                 // setup a mode for initialization that will end with a ";"
                 startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_STATEMENT);
-                
+
                 startElement(SCONTROL_CONDITION);
             }
         }
@@ -2361,13 +2361,12 @@ if_statement[] { ENTRY_DEBUG } :
             // expect a condition
             // start THEN after condition
             startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_CONDITION);
-        }
-        IF
-        {
+
             if (LA(1) == CONSTEXPR) {
                 constexpr_specifier();
             }
         }
+        IF
 ;
 
 /*
