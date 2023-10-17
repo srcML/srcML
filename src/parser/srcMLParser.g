@@ -3264,18 +3264,15 @@ class_header[] { ENTRY_DEBUG } :
 
 // class header base
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
+        {
+            setMode(MODE_CLASS_NAME);
 
-    {
-        setMode(MODE_CLASS_NAME);
+            class_namestack.push(LT(1)->getText());
 
-        class_namestack.push(LT(1)->getText());
-    }
+            clearMode(MODE_CLASS_NAME);
+        }
         // suppress ()* warning
         ({ LA(1) != FINAL }? compound_name | keyword_name)
-
-    {
-        clearMode(MODE_CLASS_NAME);
-    }
 
         (options { greedy = true; } : { LA(1) == FINAL }? specifier)*
 
@@ -3286,6 +3283,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } 
             (extends_list | implements_list) (options { greedy = true; } : extends_list | implements_list)*))*
+
         {
             if (insuper)
                 endMode();
