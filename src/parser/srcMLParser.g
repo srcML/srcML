@@ -3546,7 +3546,6 @@ terminate_pre[] { ENTRY_DEBUG } :
 // do the post terminate processing
 terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         {
-
             // end all statements this statement is nested in
             // special case when ending then of if statement
             if ((!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT)) &&
@@ -3556,14 +3555,7 @@ terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_
 
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
-
             }
-
-        }
-
-        else_handling
-
-        {
 
             if (inMode(MODE_SWITCH))
                 endMode();
@@ -3575,8 +3567,8 @@ terminate_post[] {  bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_
                 endMode();
 
             wait_terminate_post = false;
-
         }
+        else_handling
 ;
 
 /*
