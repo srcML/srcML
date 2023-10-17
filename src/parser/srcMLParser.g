@@ -2157,15 +2157,14 @@ foreach_statement[] { ENTRY_DEBUG } :
 
             // start the for statement
             startElement(SFOREACH_STATEMENT);
-        }
-        FOREACH
-        {
+
             // statement with nested statement after the control group
             if (inLanguage(LANGUAGE_CSHARP))
                 startNewMode(MODE_EXPECT | MODE_CONTROL);
             else
                 startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
         }
+        FOREACH
 ;
 
 // start of control group, i.e., initialization, test, increment
