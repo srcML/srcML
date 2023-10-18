@@ -7658,17 +7658,12 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
 // } matching and processing
 rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         {
-
             if (isempty) {
 
                 // additional right parentheses indicates end of non-list modes
                 if (inTransparentMode(MODE_LIST))
                     endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
             }
-
-        }
-        RCURLY
-        {
 
             // end the single mode that started the list
             // don't end more than one since they may be nested
@@ -7685,6 +7680,7 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
             if (!isempty)
                 decCurly();
         }
+        RCURLY
 ;
 
 rbracket[] { ENTRY_DEBUG } :
