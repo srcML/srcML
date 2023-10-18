@@ -5813,6 +5813,9 @@ constructor_definition[] { ENTRY_DEBUG } :
 
 // header portion of constructor
 constructor_header[] { ENTRY_DEBUG } :
+        {
+            setMode(MODE_FUNCTION_TAIL);
+        }
 
         (options { greedy = true; } :
 
@@ -5828,9 +5831,6 @@ constructor_header[] { ENTRY_DEBUG } :
         )*
         compound_name_inner[false]
         parameter_list
-        {
-            setMode(MODE_FUNCTION_TAIL);
-        }
 ;
 
 // member initialization list markup
