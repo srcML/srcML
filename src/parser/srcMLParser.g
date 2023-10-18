@@ -5462,8 +5462,7 @@ compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_
 ;
 
 // name markup internals
-compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG 
-} :
+compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
             // There is a problem detecting complex names from
             // complex names of operator methods in namespaces or
@@ -5483,9 +5482,14 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
-        }
-        (
 
+            // if it isn't a compound name, nop the element
+            if (!iscompound)
+                // set the token to NOP
+                tp.setType(SNOP);
+        }
+
+        (
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         compound_name_java[iscompound] |
 
@@ -5509,13 +5513,6 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         (options { greedy = true; } : { index && /*!inTransparentMode(MODE_EAT_TYPE) &&*/ (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
             variable_identifier_array_grammar_sub[iscompound]
         )*
-
-        {
-            // if it isn't a compound name, nop the element
-            if (!iscompound)
-                // set the token to NOP
-                tp.setType(SNOP);
-        }
 ;
 
 multops_star[] { ENTRY_DEBUG } :
