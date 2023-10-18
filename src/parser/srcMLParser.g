@@ -8110,19 +8110,13 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
 
             // start the parameter list element
             startElement(SINDEXER_PARAMETER_LIST);
-        }
-        // parameter list must include all possible parts since it is part of
-        // function detection
-        LBRACKET
-        { startNewMode(MODE_LIST); }
-        ({ if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
-        {
-            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
-//            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-//                endMode();
-        } comma |
 
-        complete_parameter { lastwasparam = true; })*
+            startNewMode(MODE_LIST);
+        }
+        // parameter list must include all possible parts since it is part of function detection
+        LBRACKET
+        ({ if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+        comma | complete_parameter { lastwasparam = true; })*
 ;
 
 // an empty element
