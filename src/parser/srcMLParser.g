@@ -5616,6 +5616,11 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
 
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
+
+            // if it isn't a compound name, nop the element
+            if (!iscompound)
+                // set the token to NOP
+                tp.setType(SNOP);
         }
 
         keyword_name_inner[iscompound]
@@ -5625,13 +5630,6 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
         (options { greedy = true; } : { /*!inTransparentMode(MODE_EAT_TYPE) &&*/ (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
             variable_identifier_array_grammar_sub[iscompound]
         )*
-
-        {
-            // if it isn't a compound name, nop the element
-            if (!iscompound)
-                // set the token to NOP
-                tp.setType(SNOP);
-        }
 ;
 
 // C++ compound name handling
