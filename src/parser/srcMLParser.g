@@ -6569,7 +6569,7 @@ macro_label_call[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // do a macro call.
-macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+macro_specifier_call[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -6579,12 +6579,13 @@ macro_specifier_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
             startElement(SMACRO_CALL);
 
             startNewMode(MODE_LOCAL);
+            
             startElement(SNAME);
 
+            endMode();
         }
 
         MACRO_SPECIFIER
-        { endMode(); }
         macro_call_argument_list
 ;
 
