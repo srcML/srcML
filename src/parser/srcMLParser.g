@@ -6498,7 +6498,7 @@ macro_pattern_call[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SMACRO_CALL);
 
             startNewMode(MODE_LOCAL);
-            
+
             startElement(SNAME);
 
             endMode();
@@ -6509,7 +6509,7 @@ macro_pattern_call[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // do a macro call.
-macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
+macro_type_name_call[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_STATEMENT | MODE_TOP);
@@ -6518,15 +6518,15 @@ macro_type_name_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
             startElement(SMACRO_CALL);
 
             startNewMode(MODE_LOCAL);
+
             startElement(SNAME);
 
+            endMode();
         }
 
         MACRO_TYPE_NAME
-        { endMode(); }
         macro_call_argument_list
 ;
-
 
 // do a macro call.
 macro_case_call[] { CompleteElement element(this) ;ENTRY_DEBUG } :
