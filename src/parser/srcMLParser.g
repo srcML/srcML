@@ -5895,6 +5895,9 @@ destructor_declaration[] { ENTRY_DEBUG } :
 
 // a destructor header
 destructor_header[] { ENTRY_DEBUG } :
+        {
+            setMode(MODE_FUNCTION_TAIL);
+        }
 
         (options { greedy = true; } :
 
@@ -5910,9 +5913,6 @@ destructor_header[] { ENTRY_DEBUG } :
         )*
         compound_name_inner[false]
         parameter_list
-        {
-            setMode(MODE_FUNCTION_TAIL);
-        }
 ;
 
 // Java annotation
