@@ -7684,24 +7684,15 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
 ;
 
 rbracket[] { ENTRY_DEBUG } :
-    {
+        {
+            endDownOverMode(MODE_LIST);
 
-        endDownOverMode(MODE_LIST);
-
-    }
-
-    RBRACKET
-
-    {
-
-        if (inMode(MODE_OBJECTIVE_C_CALL)) {
-
-            endDownOverMode(MODE_OBJECTIVE_C_CALL);
-
+            if (inMode(MODE_OBJECTIVE_C_CALL)) {
+                endDownOverMode(MODE_OBJECTIVE_C_CALL);
+            }
         }
-
-    }
-; 
+        RBRACKET
+;
 
 // Dot (period) operator
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
