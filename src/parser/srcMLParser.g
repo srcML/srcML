@@ -1347,15 +1347,17 @@ annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG
         complete_expression
 ;
 
-// Ref qualifiers in function tail
-ref_qualifier[]  { LightweightElement element(this); ENTRY_DEBUG } :
+/*
+  ref_qualifier
+
+  Reference qualifiers in the function tail.
+*/
+ref_qualifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // markup type modifiers if option is on
             startElement(SREF_QUALIFIER);
         }
-        (
-        REFOPS | RVALUEREF
-        )
+        (REFOPS | RVALUEREF)
 ;
 
 // trailing return in function tail
