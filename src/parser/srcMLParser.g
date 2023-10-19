@@ -1318,16 +1318,19 @@ function_tail[] { ENTRY_DEBUG } :
         )*
 ;
 
-// Java annotation default values
+/*
+  annotation_default
+
+  Java annotation default values.
+*/
 annotation_default[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-
             startNewMode(MODE_LOCAL);
 
             startElement(SDEFAULT);
-
         }
-        DEFAULT annotation_default_initialization
+        DEFAULT
+        annotation_default_initialization
 ;
 
 // Java annotation default value initialization
