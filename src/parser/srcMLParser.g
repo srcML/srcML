@@ -1191,7 +1191,11 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
 /* functions */
 
-// beginning function declaration/header
+/*
+  function_declaration
+  
+  The beginning function declaration/header.
+*/
 function_declaration[int type_count, int token = SFUNCTION_DECLARATION] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_STATEMENT);
