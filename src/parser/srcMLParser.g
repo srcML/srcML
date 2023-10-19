@@ -1076,15 +1076,15 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
         expression_statement[type, call_count]
 ;
 
-// efficient way to view the token after the current LA(1)
+/*
+  next_token
+
+  An efficient way to view the token after the current LA(1).
+*/
 next_token[] returns [unsigned int token] {
-
         if (LT(1)->getColumn() == current_column && LT(1)->getLine() == current_line) {
-
             token = nxt_token;
-
         } else {
-
             current_column = LT(1)->getColumn();
             current_line = LT(1)->getLine();
 
