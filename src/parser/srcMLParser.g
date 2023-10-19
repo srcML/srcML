@@ -1254,17 +1254,23 @@ decl_pre_type_annotation[int& type_count] { ENTRY_DEBUG } :
         set_int[type_count, type_count - 1]
 ;
 
-// header of a function
-function_header[int type_count] { ENTRY_DEBUG } :
+/*
+  function_header
 
-        // no return value functions:  casting operator method and main
+  The header of a function.
+*/
+function_header[int type_count] { ENTRY_DEBUG } :
+        // no return value functions: casting operator method and main
         { type_count == 0 }? function_identifier
+
         { replaceMode(MODE_FUNCTION_NAME, MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL); } |
         (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
 
-        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN /* || LA(1) == FINAL*/))
-            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                decl_pre_type_annotation[type_count])*
+        (options { greedy = true; } : { type_count > 0
+        && (LA(1) != OVERRIDE
+        || !inLanguage(LANGUAGE_CXX))
+        && ((inLanguage(LANGUAGE_JAVA) && (LA(1) == ATSIGN /* || LA(1) == FINAL */)) || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
+        decl_pre_type_annotation[type_count])*
 
         function_type[type_count]
 ;
