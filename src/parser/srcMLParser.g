@@ -1169,19 +1169,19 @@ look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
         rewind(place);
 } :;
 
-// give the next token as if rule was applied.  If rule can not be applied return -1
-look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
+/*
+  look_past_rule
 
+  Gives the next token as if the rule was applied.  If the rule can not be applied, return -1.
+*/
+look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
         int place = mark();
         inputState->guessing++;
 
         try {
-
             (this->*rule)();
             token = LA(1);
-
         } catch(...) {
-
             token = -1;
         }
 
