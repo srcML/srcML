@@ -1333,14 +1333,16 @@ annotation_default[] { CompleteElement element(this); ENTRY_DEBUG } :
         annotation_default_initialization
 ;
 
-// Java annotation default value initialization
+/*
+  annotation_default_initialization
+
+  Java annotation default value initialization.
+*/
 annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-
             startNewMode(MODE_LOCAL);
 
             startElement(SDECLARATION_INITIALIZATION);
-
         }
         complete_expression
 ;
