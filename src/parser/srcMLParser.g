@@ -1377,12 +1377,17 @@ trailing_return[] { int type_count = 0; int secondtoken = 0; int after_token = 0
         )
 ;
 
-// Do the rest of the function and get the end
-function_rest[int& fla] { ENTRY_DEBUG } :
+/*
+  function_rest
 
+  Process the rest of the function and get to the end.
+*/
+function_rest[int& fla] { ENTRY_DEBUG } :
         eat_optional_macro_call
 
-        parameter_list function_tail check_end[fla]
+        parameter_list
+        function_tail
+        check_end[fla]
 ;
 
 // function type, including specifiers
