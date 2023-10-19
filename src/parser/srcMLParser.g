@@ -1151,9 +1151,12 @@ look_past[int skiptoken] returns [int token] {
         rewind(place);
 } :;
 
-// skip past all of the skiptoken1 and skiptoken2 and return the one after
-look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
+/*
+  look_past_two
 
+  Skips past all of the skiptoken1 and skiptoken2 and returns the one after.
+*/
+look_past_two[int skiptoken1, int skiptoken2] returns [int token] {
         int place = mark();
         inputState->guessing++;
 
