@@ -793,7 +793,6 @@ public:
   Order of evaluation is important.
 */
 start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
-
         // end of file
         eof |
 
@@ -815,8 +814,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_NAMESPACE) }? lcurly[false] |
 
         // don't confuse with expression block
-        { ((inTransparentMode(MODE_CONDITION) ||
-            (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
+        { ((inTransparentMode(MODE_CONDITION) || (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)))
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
         && (!inLanguage(LANGUAGE_CXX) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
 
@@ -829,23 +827,26 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope |
 
+        // Commented-out code
         // // special default() call for C#
         // { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
         { ((LA(1) != TEMPLATE || next_token() != TEMPOPS))
-         && inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
-         && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
-         && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
-         && (LA(1) != DEFAULT || next_token() == COLON)
-         && (LA(1) != CHECKED || next_token() == LCURLY)
-         && (LA(1) != UNCHECKED || next_token() == LCURLY)
-         && (LA(1) != CXX_TRY || next_token() == LCURLY)
-         && (LA(1) != INLINE || next_token() == NAMESPACE)
-         && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
-         && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
-         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN)
-         && (LA(1) != EMIT || emit_statement_check()) }? keyword_statements |
+        && inMode(MODE_NEST | MODE_STATEMENT)
+        && !inMode(MODE_FUNCTION_TAIL)
+        && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
+        && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
+        && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
+        && (LA(1) != DEFAULT || next_token() == COLON)
+        && (LA(1) != CHECKED || next_token() == LCURLY)
+        && (LA(1) != UNCHECKED || next_token() == LCURLY)
+        && (LA(1) != CXX_TRY || next_token() == LCURLY)
+        && (LA(1) != INLINE || next_token() == NAMESPACE)
+        && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
+        && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
+        && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN)
+        && (LA(1) != EMIT || emit_statement_check()) }? keyword_statements |
 
         { next_token() == LPAREN }? synchronized_statement |
 
@@ -859,7 +860,6 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
 ;
 exception
 catch[...] {
-
         CATCH_DEBUG
 
         // need to consume the token. If we got here because
