@@ -871,10 +871,11 @@ catch[...] {
 }
 
 /*
-  statements that begin with a unique keyword
+  keyword_statements
+
+  Statements that begin with a unique keyword.
 */
 keyword_statements[] { ENTRY_DEBUG } :
-
         // conditional statements
         if_statement | { next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
 
@@ -894,7 +895,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         namespace_definition |
 
         // C/C++
-        typedef_statement | friend_statement | 
+        typedef_statement | friend_statement |
 
         // C
         static_assert_statement |
