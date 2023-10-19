@@ -1236,21 +1236,21 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         (variable_identifier_array_grammar_sub[flag])*
 ;
 
+/*
+  decl_pre_type_annotation
+*/
 decl_pre_type_annotation[int& type_count] { ENTRY_DEBUG } :
-
         (
-
+        // Commented-out code
         // special case only for functions.  Should only reach here for funciton in Java
-    //    { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
+        // { inLanguage(LANGUAGE_JAVA) && LA(1) == FINAL }? single_keyword_specifier |
 
         { inLanguage(LANGUAGE_JAVA) }? annotation |
 
         { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
 
-        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
-
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp
         )
-
         set_int[type_count, type_count - 1]
 ;
 
