@@ -1216,9 +1216,12 @@ function_pointer_name_grammar[] { ENTRY_DEBUG } :
         RPAREN
 ;
 
-// inner portion of functon pointer name
-function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
+/*
+  function_pointer_name_base
 
+  The inner portion of the functon pointer name.
+*/
+function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         // special case for function pointer names that don't have '*'
         { !inMode(MODE_EXPRESSION) && macro_call_token_set.member(LA(1)) }?
         (compound_name_inner[false])* |
