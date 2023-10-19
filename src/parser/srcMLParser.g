@@ -1122,13 +1122,16 @@ next_token_two[] returns [int token] {
         rewind(place);
 } :;
 
-// is the next token one of the parameters
-next_token_check[int token1, int token2] returns [bool result] {
+/*
+  next_token_check
 
+  Checks if the next token is one of the parameters.
+*/
+next_token_check[int token1, int token2] returns [bool result] {
         int token = next_token();
 
         result = token == token1 || token == token2;
-}:;
+} :;
 
 // skips past any skiptokens to get the one after
 look_past[int skiptoken] returns [int token] {
