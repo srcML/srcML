@@ -1193,7 +1193,7 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
 
 /*
   function_declaration
-  
+
   The beginning function declaration/header.
 */
 function_declaration[int type_count, int token = SFUNCTION_DECLARATION] { ENTRY_DEBUG } :
@@ -1205,9 +1205,15 @@ function_declaration[int type_count, int token = SFUNCTION_DECLARATION] { ENTRY_
         function_header[type_count]
 ;
 
-// A function pointer name handle
+/*
+  function_pointer_name_grammar
+
+  A function pointer name handle.
+*/
 function_pointer_name_grammar[] { ENTRY_DEBUG } :
-        LPAREN function_pointer_name_base RPAREN
+        LPAREN
+        function_pointer_name_base
+        RPAREN
 ;
 
 // inner portion of functon pointer name
