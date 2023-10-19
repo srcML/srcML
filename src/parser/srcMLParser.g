@@ -1103,9 +1103,12 @@ next_token[] returns [unsigned int token] {
         }
 } :;
 
-// efficient way to view the token after the current next_token
-next_token_two[] returns [int token] {
+/*
+  next_token_two
 
+  An efficient way to view the token after the current next_token.
+*/
+next_token_two[] returns [int token] {
         int place = mark();
         inputState->guessing++;
 
