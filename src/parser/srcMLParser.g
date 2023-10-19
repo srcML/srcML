@@ -1133,9 +1133,12 @@ next_token_check[int token1, int token2] returns [bool result] {
         result = token == token1 || token == token2;
 } :;
 
-// skips past any skiptokens to get the one after
-look_past[int skiptoken] returns [int token] {
+/*
+  look_past
 
+  Skips past any skiptokens to get the one after.
+*/
+look_past[int skiptoken] returns [int token] {
         unsigned int place = mark();
         inputState->guessing++;
 
