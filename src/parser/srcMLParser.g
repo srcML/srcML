@@ -1275,14 +1275,15 @@ function_header[int type_count] { ENTRY_DEBUG } :
         function_type[type_count]
 ;
 
-// portion of function after paramter list and before block
+/*
+  function_tail
+
+  The portion of the function after the parameter list and before the block.
+*/
 function_tail[] { ENTRY_DEBUG } :
-
         (options { greedy = true; } :
-
-            /* order is important */
-            { inLanguage(LANGUAGE_CXX_FAMILY)
-                && (LA(1) != EQUAL || (inLanguage(LANGUAGE_CXX) && (next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE))) }?
+            // order is important
+            { inLanguage(LANGUAGE_CXX_FAMILY) && (LA(1) != EQUAL || (inLanguage(LANGUAGE_CXX) && (next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE))) }?
             function_specifier |
 
             { inLanguage(LANGUAGE_CXX) }?
@@ -1297,7 +1298,7 @@ function_tail[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CXX) }?
             complete_noexcept_list |
 
-            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
             attribute_cpp |
 
             { inLanguage(LANGUAGE_CXX) }?
@@ -1307,12 +1308,12 @@ function_tail[] { ENTRY_DEBUG } :
             annotation_default |
 
             // K&R
-            { inLanguage(LANGUAGE_C) }? (
+            { inLanguage(LANGUAGE_C) }?
 
             // macros
-            (simple_identifier paren_pair)=> macro_call |
-            { look_past_two(NAME, VOID) == LCURLY }? simple_identifier |
-              parameter (MULTOPS | simple_identifier | COMMA)* TERMINATE
+            (
+            (simple_identifier paren_pair) => macro_call | { look_past_two(NAME, VOID) == LCURLY }? simple_identifier | parameter (MULTOPS | simple_identifier | COMMA)*
+            TERMINATE
             )
         )*
 ;
