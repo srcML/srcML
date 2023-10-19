@@ -919,9 +919,11 @@ keyword_statements[] { ENTRY_DEBUG } :
 ;
 
 /*
+  pattern_statements
+
   Statements, declarations, and definitions that must be matched by pattern.
 
-  Basically we have an identifier and we don't know yet whether it starts an expression
+  Basically we have an identifier and we don't know yet whether it starts an expression,
   function definition, function declaration, or even a label.
 */
 pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token = 0; bool isempty = false; int call_count = 1;
@@ -943,7 +945,7 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
         { stmt_type == FUNCTION }?
         objective_c_method[SFUNCTION_DEFINITION] |
 
-        // check for declaration of some kind (variable, function, constructor, destructor
+        // check for declaration of some kind (variable, function, constructor, destructor)
         { stmt_type == FUNCTION_DECL }?
         function_declaration[type_count] |
 
