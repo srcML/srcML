@@ -2022,15 +2022,17 @@ synthesize_statement[] { ENTRY_DEBUG } :
     property_implementation_inner
 ;
 
+/*
+  dynamic_statement
+*/
 dynamic_statement[] { ENTRY_DEBUG } :
     {
-
         startNewMode(MODE_STATEMENT);
 
         startElement(SDYNAMIC);
-        
     }
-    DYNAMIC property_implementation_inner
+    DYNAMIC
+    property_implementation_inner
 ;
 
 property_implementation_inner[] { ENTRY_DEBUG } :
