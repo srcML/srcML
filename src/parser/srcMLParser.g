@@ -1741,7 +1741,11 @@ lambda_java[] { ENTRY_DEBUG } :
         }
 ;
 
-// handle the beginning of a function definition
+/*
+  function_definition
+
+  Handles the beginning of a function definition.
+*/
 function_definition[int type_count, int token = SFUNCTION_DEFINITION] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_STATEMENT);
