@@ -2056,15 +2056,17 @@ property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
     (property_implementation_initialization)*
 ;
 
+/*
+  property_implementation_initialization
+*/
 property_implementation_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
-
         startNewMode(MODE_LOCAL);
 
         //startElement(SDECLARATION_INITIALIZATION);
-
     }
-    EQUAL identifier
+    EQUAL
+    identifier
 ;
 
 // Check and see if this is a call and what type
