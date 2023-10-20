@@ -2144,14 +2144,18 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         ENTRY_DEBUG
 } :;
 
-// check if call is call
-call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& isempty, int& call_count] { ENTRY_DEBUG } :
+/*
+  call_check
 
-        // detect name, which may be name of macro or even an expression
+  Used to check if a call is a call.
+*/
+call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& isempty, int& call_count] { ENTRY_DEBUG } :
+        // detect name, which may be the name of a macro or even an expression
         (function_identifier | keyword_call_tokens (DOTDOTDOT | generic_argument_list | cuda_argument_list)* | { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair)
 
         // record token after the function identifier for future use if this fails
         markend[postnametoken]
+
         set_bool[isempty, (LA(1) == LPAREN && next_token() == RPAREN) || (inLanguage(LANGUAGE_CXX) && LA(1) == LCURLY && next_token() == RCURLY)]
         (
             { isoption(parser_options, SRCML_PARSER_OPTION_CPP) }?
@@ -2159,9 +2163,7 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
             (call_check_paren_pair[argumenttoken] set_int[call_count, call_count + 1])*
 
             // record token after argument list to differentiate between call and macro
-            markend[postcalltoken] |
-
-            LPAREN set_int[call_count, 1]
+            markend[postcalltoken] | LPAREN set_int[call_count, 1]
         )
 ;
 
