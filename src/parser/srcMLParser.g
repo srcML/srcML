@@ -2212,19 +2212,19 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
         ({ call_token == LPAREN }? RPAREN | { call_token == LCURLY && inLanguage(LANGUAGE_CXX) }? RCURLY)
 ;
 
+/*
+  perform_ternary_check
+*/
 perform_ternary_check[] returns [bool is_ternary] {
-
     is_ternary = false;
 
     int start = mark();
     inputState->guessing++;
 
     try {
-
         ternary_check();
         if (LA(1) == QMARK)
             is_ternary = true;
-
     } catch(...) {}
 
     if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
@@ -2234,8 +2234,7 @@ perform_ternary_check[] returns [bool is_ternary] {
     rewind(start);
 
     ENTRY_DEBUG
-
-}:;
+} :;
 
 ternary_check[] { ENTRY_DEBUG } :
 
