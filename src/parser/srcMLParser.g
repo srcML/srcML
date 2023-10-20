@@ -1528,18 +1528,21 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-// handle a C# lambda expression
+/*
+  lambda_expression_csharp
+
+  Handles a C# lambda expression.
+*/
 lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
         {
-
-            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS | MODE_END_AT_COMMA);      
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS | MODE_END_AT_COMMA);
 
             startElement(SFUNCTION_LAMBDA);
-
         }
-
         (options { greedy = true; } : specifier)*
-        (parameter_list | lambda_single_parameter) lambda_csharp (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+        (parameter_list | lambda_single_parameter)
+        lambda_csharp
+        (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 ;
 
 // handle a C++11 lambda expression
