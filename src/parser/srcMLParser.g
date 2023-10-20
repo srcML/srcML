@@ -1456,11 +1456,14 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         }
 ;
 
-// check the functon type
-function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
+/*
+  function_type_check
 
+  Checks the functon type.
+*/
+function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
         lead_type_identifier
-        ( { inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
 ;
 
 // match a function identifier
