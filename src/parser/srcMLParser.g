@@ -1960,7 +1960,7 @@ property_declaration[] { int type_count = 0; int secondtoken = 0; int after_toke
 
         startElement(SPROPERTY);
     }
-    
+
     PROPERTY
 
     (property_attribute_list)*
@@ -1968,13 +1968,14 @@ property_declaration[] { int type_count = 0; int secondtoken = 0; int after_toke
     variable_declaration[type_count]
 ;
 
+/*
+  property_attribute_list
+*/
 property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
-
         startNewMode(MODE_LOCAL);
 
         startElement(SATTRIBUTE_LIST);
-
     }
     LPAREN
     (property_attribute | COMMA)*
