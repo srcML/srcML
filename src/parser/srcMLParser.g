@@ -1824,7 +1824,11 @@ complete_noexcept_list[] { ENTRY_DEBUG } :
 
 /* property methods */
 
-// C# property method GET/SET/ADD/REMOVE
+/*
+  property_method
+
+  Handles a C# property method (GET/SET/ADD/REMOVE).
+*/
 property_method[int element] { ENTRY_DEBUG } :
         {
             // function definitions have a "nested" block statement
