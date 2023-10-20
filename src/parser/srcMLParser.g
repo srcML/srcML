@@ -1644,7 +1644,11 @@ lambda_expression_full_cpp[] { ENTRY_DEBUG } :
         function_tail curly_pair
 ;
 
-// modifiers that can occur within a lambda capture.
+/*
+  lambda_capture_modifiers
+
+  Handles modifiers that can occur within a lambda capture.
+*/
 lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SMODIFIER);
