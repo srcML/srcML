@@ -2043,15 +2043,17 @@ property_implementation_inner[] { ENTRY_DEBUG } :
     (COMMA property_implementation_name)*
 ;
 
+/*
+  property_implementation_name
+*/
 property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
-
         startNewMode(MODE_LOCAL);
 
         startElement(SDECLARATION);
-
     }
-    identifier (property_implementation_initialization)*
+    identifier
+    (property_implementation_initialization)*
 ;
 
 property_implementation_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
