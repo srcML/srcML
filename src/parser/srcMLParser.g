@@ -1502,7 +1502,11 @@ function_identifier_main[] { SingleElement element(this); ENTRY_DEBUG } :
         MAIN
 ;
 
-// overloaded operator name
+/*
+  overloaded_operator
+
+  Handles an overloaded operator name.
+*/
 overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
@@ -1511,13 +1515,13 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         set_bool[operatorname, true]
 
-        OPERATOR 
+        OPERATOR
         (
             // special case for 'operator()'
             { LA(1) == LPAREN }? { startElement(SNAME); } LPAREN RPAREN |
 
             // for form operator type
-            { LA(1) != DESTOP }? (compound_name)=> compound_name |
+            { LA(1) != DESTOP }? (compound_name) => compound_name |
 
             // general operator name case is anything else
             { startElement(SNAME); } (options { greedy = true; } : ~(LPAREN))*
