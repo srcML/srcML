@@ -1924,28 +1924,28 @@ objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
     (objective_c_parameter)*
 ;
 
-// method parameter name:value pair for Objective_C
+/*
+  objective_c_parameter
+
+  Handles a method parameter "name:value" pair for Objective-C.
+*/
 objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
-
         if (inTransparentMode(MODE_LIST))
             endDownToMode(MODE_LIST);
 
         startNewMode(MODE_PARAMETER);
 
         startElement(SPARAMETER);
-
     }
 
     objective_c_selector
 
-    (options { greedy = true; } : 
-
+    (options { greedy = true; } :
         objective_c_method_type
-
-        // Mark as name before mark without name
+        
+        // Mark as name before mark but without name
         (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
-
     )*
 ;
 
