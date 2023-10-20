@@ -1995,15 +1995,18 @@ property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
     (property_attribute_initialization)*
 ;
 
+/*
+  property_attribute_initialization
+*/
 property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
-
         startNewMode(MODE_LOCAL);
 
-        //startElement(SDECLARATION_INITIALIZATION);
-
+        // Commented-out code
+        // startElement(SDECLARATION_INITIALIZATION);
     }
-    EQUAL identifier
+    EQUAL
+    identifier
 ;
 
 synthesize_statement[] { ENTRY_DEBUG } :
