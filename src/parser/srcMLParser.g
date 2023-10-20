@@ -1841,7 +1841,11 @@ property_method[int element] { ENTRY_DEBUG } :
         property_method_name
 ;
 
-// handle the name portion of a property method
+/*
+  property_method_name
+
+  Handles the name portion of a property method.
+*/
 property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
