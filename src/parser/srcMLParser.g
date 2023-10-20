@@ -1783,7 +1783,11 @@ throw_list[] { ENTRY_DEBUG } :
 
 // The next two rules may be equivalent.
 
-// noexcept list in a function
+/*
+  noexcept_list
+
+  Handles a noexcept list in a function.
+*/
 noexcept_list[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -1791,16 +1795,12 @@ noexcept_list[] { ENTRY_DEBUG } :
 
             startElement(SNOEXCEPT);
         }
-        NOEXCEPT 
-
-        { 
-
-            if (LA(1) != LPAREN) endMode(); 
-            else startElement(SARGUMENT_LIST); 
-
-        } 
-
-        (options { greedy = true;} : LPAREN)*
+        NOEXCEPT
+        {
+            if (LA(1) != LPAREN) endMode();
+            else startElement(SARGUMENT_LIST);
+        }
+        (options { greedy = true; } : LPAREN)*
 ;
 
 // match a thow list completely
