@@ -1621,10 +1621,15 @@ lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
         complete_expression
 ;
 
-// completely match a C# lambda expression
-lambda_expression_full_csharp[] { ENTRY_DEBUG } :
+/*
+  lambda_expression_full_csharp
 
-        (options { greedy = true; } : ASYNC)* (variable_identifier | paren_pair) LAMBDA
+  Used to match a C# lambda expression completely.
+*/
+lambda_expression_full_csharp[] { ENTRY_DEBUG } :
+        (options { greedy = true; } : ASYNC)*
+        (variable_identifier | paren_pair)
+        LAMBDA
 ;
 
 // completely match a C++ lambda expression
