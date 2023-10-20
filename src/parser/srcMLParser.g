@@ -1913,15 +1913,15 @@ objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
   objective_c_parameter_list
 */
 objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_FUNCTION_PARAMETER);
+        {
+            startNewMode(MODE_FUNCTION_PARAMETER);
 
-        // start the function call element
-        startElement(SPARAMETER_LIST);
-    }
+            // start the function call element
+            startElement(SPARAMETER_LIST);
+        }
 
-    objective_c_parameter
-    (objective_c_parameter)*
+        objective_c_parameter
+        (objective_c_parameter)*
 ;
 
 /*
@@ -1930,23 +1930,23 @@ objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
   Handles a method parameter "name:value" pair for Objective-C.
 */
 objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        if (inTransparentMode(MODE_LIST))
-            endDownToMode(MODE_LIST);
+        {
+            if (inTransparentMode(MODE_LIST))
+                endDownToMode(MODE_LIST);
 
-        startNewMode(MODE_PARAMETER);
+            startNewMode(MODE_PARAMETER);
 
-        startElement(SPARAMETER);
-    }
+            startElement(SPARAMETER);
+        }
 
-    objective_c_selector
+        objective_c_selector
 
-    (options { greedy = true; } :
-        objective_c_method_type
+        (options { greedy = true; } :
+            objective_c_method_type
 
-        // Mark as name before mark but without name
-        (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
-    )*
+            // Mark as name before mark but without name
+            (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
+        )*
 ;
 
 /*
@@ -1955,118 +1955,118 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
   Handles an Objective-C property declaration.
 */
 property_declaration[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_STATEMENT);
+        {
+            startNewMode(MODE_STATEMENT);
 
-        startElement(SPROPERTY);
-    }
+            startElement(SPROPERTY);
+        }
 
-    PROPERTY
+        PROPERTY
 
-    (property_attribute_list)*
-    { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
-    variable_declaration[type_count]
+        (property_attribute_list)*
+        { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
+        variable_declaration[type_count]
 ;
 
 /*
   property_attribute_list
 */
 property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SATTRIBUTE_LIST);
-    }
-    LPAREN
-    (property_attribute | COMMA)*
-    RPAREN
+            startElement(SATTRIBUTE_LIST);
+        }
+        LPAREN
+        (property_attribute | COMMA)*
+        RPAREN
 ;
 
 /*
   property_attribute
 */
 property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SATTRIBUTE);
-    }
-    identifier
-    (property_attribute_initialization)*
+            startElement(SATTRIBUTE);
+        }
+        identifier
+        (property_attribute_initialization)*
 ;
 
 /*
   property_attribute_initialization
 */
 property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
+        {
+            startNewMode(MODE_LOCAL);
 
-        // Commented-out code
-        // startElement(SDECLARATION_INITIALIZATION);
-    }
-    EQUAL
-    identifier
+            // Commented-out code
+            // startElement(SDECLARATION_INITIALIZATION);
+        }
+        EQUAL
+        identifier
 ;
 
 /*
   synthesize_statement
 */
 synthesize_statement[] { ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_STATEMENT);
+        {
+            startNewMode(MODE_STATEMENT);
 
-        startElement(SSYNTHESIZE);
-    }
-    SYNTHESIZE
-    property_implementation_inner
+            startElement(SSYNTHESIZE);
+        }
+        SYNTHESIZE
+        property_implementation_inner
 ;
 
 /*
   dynamic_statement
 */
 dynamic_statement[] { ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_STATEMENT);
+        {
+            startNewMode(MODE_STATEMENT);
 
-        startElement(SDYNAMIC);
-    }
-    DYNAMIC
-    property_implementation_inner
+            startElement(SDYNAMIC);
+        }
+        DYNAMIC
+        property_implementation_inner
 ;
 
 /*
   property_implementation_inner
 */
 property_implementation_inner[] { ENTRY_DEBUG } :
-    property_implementation_name
-    (COMMA property_implementation_name)*
+        property_implementation_name
+        (COMMA property_implementation_name)*
 ;
 
 /*
   property_implementation_name
 */
 property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SDECLARATION);
-    }
-    identifier
-    (property_implementation_initialization)*
+            startElement(SDECLARATION);
+        }
+        identifier
+        (property_implementation_initialization)*
 ;
 
 /*
   property_implementation_initialization
 */
 property_implementation_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
+        {
+            startNewMode(MODE_LOCAL);
 
-        //startElement(SDECLARATION_INITIALIZATION);
-    }
-    EQUAL
-    identifier
+            //startElement(SDECLARATION_INITIALIZATION);
+        }
+        EQUAL
+        identifier
 ;
 
 // Check and see if this is a call and what type
