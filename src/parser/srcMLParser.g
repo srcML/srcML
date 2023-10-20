@@ -1755,7 +1755,11 @@ function_definition[int type_count, int token = SFUNCTION_DEFINITION] { ENTRY_DE
         function_header[type_count]
 ;
 
-// throw list for a function
+/*
+  throw_list
+
+  Handles a throw list for a function.
+*/
 throw_list[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -1763,12 +1767,9 @@ throw_list[] { ENTRY_DEBUG } :
 
             startElement(STHROW_SPECIFIER);
         }
-        THROW 
-
+        THROW
         {
-
             startElement(SARGUMENT_LIST);
-
         }
         LPAREN |
         {
