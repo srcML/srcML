@@ -1726,9 +1726,12 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
         variable_identifier
 ;
 
-// lambda character
+/*
+  lambda_java
+
+  Handles a lambda character in Java.
+*/
 lambda_java[] { ENTRY_DEBUG } :
-            
         TRETURN
         {
             if (LA(1) != LCURLY) {
