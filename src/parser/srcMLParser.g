@@ -1656,27 +1656,30 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
         (EQUAL | REFOPS)
 ;
 
-// handle a block expression lambda
+/*
+  block_lambda_expression
+
+  Handles a block expression lambda.
+*/
 block_lambda_expression[] { ENTRY_DEBUG } :
         {
             bool iscall = look_past_rule(&srcMLParser::block_lambda_expression_full) == LPAREN;
-            if (iscall) {
 
+            if (iscall) {
                 // start a new mode that will end after the argument list
                 startNewMode(MODE_ARGUMENT | MODE_LIST);
 
                 // start the function call element
                 startElement(SFUNCTION_CALL);
-
             }
 
-            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
             startElement(SFUNCTION_LAMBDA);
-
         }
-
-        BLOCKOP (options { greedy = true; } : type_identifier)* (options { greedy = true; } : parameter_list)*
+        BLOCKOP
+        (options { greedy = true; } : type_identifier)*
+        (options { greedy = true; } : parameter_list)*
 ;
 
 // completely match block expression lambda
