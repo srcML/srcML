@@ -2035,9 +2035,12 @@ dynamic_statement[] { ENTRY_DEBUG } :
     property_implementation_inner
 ;
 
+/*
+  property_implementation_inner
+*/
 property_implementation_inner[] { ENTRY_DEBUG } :
-
-    property_implementation_name (COMMA property_implementation_name)*
+    property_implementation_name
+    (COMMA property_implementation_name)*
 ;
 
 property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
