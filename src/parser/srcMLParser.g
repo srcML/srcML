@@ -2009,15 +2009,17 @@ property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG
     identifier
 ;
 
+/*
+  synthesize_statement
+*/
 synthesize_statement[] { ENTRY_DEBUG } :
     {
-
         startNewMode(MODE_STATEMENT);
 
         startElement(SSYNTHESIZE);
-
     }
-    SYNTHESIZE property_implementation_inner
+    SYNTHESIZE
+    property_implementation_inner
 ;
 
 dynamic_statement[] { ENTRY_DEBUG } :
