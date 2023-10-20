@@ -1569,23 +1569,22 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
         lambda_capture
 ;
 
-// [capture] portion of a C++11 lambda function.
+/*
+  lambda_capture
+
+  Handles the "[capture]" portion of a C++11 lambda function.
+*/
 lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LIST | MODE_LOCAL | MODE_ARGUMENT);
 
             startElement(SLAMBDA_CAPTURE);
-
         }
         (
-
-            LBRACKET 
-            // suppress warning most likely compound_name's can match RBRACKET and it also is matched by RBRACKET
-            // after wards.  
-            (options { warnWhenFollowAmbig = false; } :
-            { /* warning suppression */ LA(1) == COMMA }? COMMA | { LA(1) != RBRACKET }? lambda_capture_argument)* 
+            LBRACKET
+            // suppress warning where compound_name's can match RBRACKET and is also matched by RBRACKET afterwards.
+            (options { warnWhenFollowAmbig = false; } : { /* warning suppression */ LA(1) == COMMA }? COMMA | { LA(1) != RBRACKET }? lambda_capture_argument)*
             RBRACKET
-    
         )
 ;
 
