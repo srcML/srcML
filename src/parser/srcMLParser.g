@@ -1466,23 +1466,27 @@ function_type_check[int& type_count] { type_count = 1; ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_JAVA_FAMILY) || LA(1) != LBRACKET }? type_identifier_count[type_count])*
 ;
 
-// match a function identifier
-function_identifier[] { ENTRY_DEBUG } :
+/*
+  function_identifier
 
+  Matches a function identifier.
+*/
+function_identifier[] { ENTRY_DEBUG } :
         // Mark as name before mark without name
-        (options { generateAmbigWarnings = false; } :  
-            // typical name  
+        (options { generateAmbigWarnings = false; } :
+            // typical name
             compound_name_inner[false] |
 
-            keyword_name | 
+            keyword_name |
 
-            { function_pointer_name_check() }? 
+            { function_pointer_name_check() }?
             function_pointer_name |
 
             function_identifier_main |
 
             // function pointer identifier with name marked separately
-            function_pointer_name_grammar eat_optional_macro_call
+            function_pointer_name_grammar
+            eat_optional_macro_call
         )
 ;
 
