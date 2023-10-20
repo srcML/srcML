@@ -1909,17 +1909,19 @@ objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
         RPAREN
 ;
 
+/*
+  objective_c_parameter_list
+*/
 objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
-
         startNewMode(MODE_FUNCTION_PARAMETER);
 
         // start the function call element
         startElement(SPARAMETER_LIST);
-
     }
 
-    objective_c_parameter (objective_c_parameter)*
+    objective_c_parameter
+    (objective_c_parameter)*
 ;
 
 // method parameter name:value pair for Objective_C
