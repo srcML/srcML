@@ -2069,69 +2069,80 @@ property_implementation_initialization[] { CompleteElement element(this); ENTRY_
         identifier
 ;
 
-// Check and see if this is a call and what type
+/*
+  perform_call_check
+
+  Checks to see if this is a call and what type it is.
+*/
 perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondtoken] returns [bool iscall] {
+        iscall = true;
+        isempty = false;
+        type = NOCALL;
 
-    iscall = true;
-    isempty = false;
+        int start = mark();
+        inputState->guessing++;
+        int save_first = LA(1);
 
-    type = NOCALL;
+        int postnametoken = 0;
+        int argumenttoken = 0;
+        int postcalltoken = 0;
+        call_count = 0;
 
-    int start = mark();
-    inputState->guessing++;
+        try {
+            call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
 
-    int save_first = LA(1);
+            // call syntax succeeded
+            type = CALL;
 
-    int postnametoken = 0;
-    int argumenttoken = 0;
-    int postcalltoken = 0;
-    call_count = 0;
-    try {
-        call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
+            // call syntax succeeded, however post-call token is not legitimate
+            if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) &&
+                (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
+                || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
+                || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
+                || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
+                || (postnametoken != 1 && postcalltoken == 1 /* Commented-out code: EOF ? */)
+                || postcalltoken == TEMPLATE
+                || postcalltoken == INLINE
+                || postcalltoken == PUBLIC
+                || postcalltoken == PRIVATE
+                || postcalltoken == PROTECTED
+                || postcalltoken == SIGNAL
+                || postcalltoken == ATREQUIRED
+                || postcalltoken == ATOPTIONAL
+                || postcalltoken == STATIC
+                || postcalltoken == CONST)
+                && (save_first != DECLTYPE))
+                type = MACRO;
 
-        // call syntax succeeded
-        type = CALL;
+            if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
+                type = NOCALL;
 
-        // call syntax succeeded, however post call token is not legitimate
-        if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) &&
-            (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
-            || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
-            || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
-            || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
-            || (postnametoken != 1 && postcalltoken == 1 /* EOF ? */)
-            || postcalltoken == TEMPLATE || postcalltoken == INLINE
-            || postcalltoken == PUBLIC || postcalltoken == PRIVATE || postcalltoken == PROTECTED || postcalltoken == SIGNAL
-            || postcalltoken == ATREQUIRED || postcalltoken == ATOPTIONAL
-            || postcalltoken == STATIC || postcalltoken == CONST)
-            && (save_first != DECLTYPE))
-
-            type = MACRO;
-        if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
+        } catch (...) {
             type = NOCALL;
 
-    } catch (...) {
+            if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
+                type = MACRO;
 
+            // single macro call followed by statement_cfg
+            else if (isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+                    && secondtoken != -1
+                    && (keyword_token_set.member(secondtoken)
+                        || secondtoken == LCURLY
+                        || secondtoken == 1 /* Commented-out code: EOF */
+                        || secondtoken == PUBLIC
+                        || secondtoken == PRIVATE
+                        || secondtoken == PROTECTED))
+                type = MACRO;
+        }
 
-        type = NOCALL;
+        if (type == CALL && postnametoken == 1)
+            type = NOCALL;
 
-        if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) && argumenttoken != 0 && postcalltoken == 0)
-            type = MACRO;
+        inputState->guessing--;
+        rewind(start);
 
-        // single macro call followed by statement_cfg
-        else if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) && secondtoken != -1
-                 && (keyword_token_set.member(secondtoken) || secondtoken == LCURLY || secondtoken == 1 /* EOF */
-                     || secondtoken == PUBLIC || secondtoken == PRIVATE || secondtoken == PROTECTED))
-
-            type = MACRO;
-    }
-
-    if (type == CALL && postnametoken == 1)
-        type = NOCALL;
-
-    inputState->guessing--;
-    rewind(start);
-
-    ENTRY_DEBUG } :;
+        ENTRY_DEBUG
+} :;
 
 // check if call is call
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& isempty, int& call_count] { ENTRY_DEBUG } :
