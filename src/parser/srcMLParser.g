@@ -1606,6 +1606,9 @@ lambda_capture_argument[] { bool first = true; CompleteElement element(this); EN
         )
 ;
 
+/*
+  lambda_capture_initialization
+*/
 lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL | MODE_END_AT_COMMA);
@@ -1614,7 +1617,8 @@ lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         // suppress warning of another case where REFOPS or something is in both alts.
-        EQUAL complete_expression
+        EQUAL
+        complete_expression
 ;
 
 // completely match a C# lambda expression
