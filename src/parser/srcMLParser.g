@@ -1870,11 +1870,12 @@ objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
         objective_c_parameter_list
 ;
 
+/*
+  objective_c_method_specifier
+*/
 objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
     {
-
         startElement(SFUNCTION_SPECIFIER);
-
     }
     (CSPEC | MSPEC)
 ;
