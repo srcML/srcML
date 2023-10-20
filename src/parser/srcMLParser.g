@@ -1694,17 +1694,20 @@ block_lambda_expression_full[] { ENTRY_DEBUG } :
         curly_pair
 ;
 
-// handle a Java lambda expression
+/*
+  lambda_expression_java
+
+  Handles a Java lambda expression.
+*/
 lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
         {
-
-            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
             startElement(SFUNCTION_LAMBDA);
-
         }
-
-        (parameter_list | lambda_single_parameter) lambda_java (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+        (parameter_list | lambda_single_parameter)
+        lambda_java
+        (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 ;
 
 lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
