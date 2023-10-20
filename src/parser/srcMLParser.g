@@ -1632,11 +1632,16 @@ lambda_expression_full_csharp[] { ENTRY_DEBUG } :
         LAMBDA
 ;
 
-// completely match a C++ lambda expression
-lambda_expression_full_cpp[] { ENTRY_DEBUG } :
+/*
+  lambda_expression_full_cpp
 
+  Used to match a C++ lambda expression completely.
+*/
+lambda_expression_full_cpp[] { ENTRY_DEBUG } :
         // paren_pair and curly_pair seem to have nondeterminism because both can match LPAREN
-        LBRACKET (~RBRACKET)* RBRACKET (options { warnWhenFollowAmbig = false; } : paren_pair)* function_tail curly_pair
+        LBRACKET (~RBRACKET)* RBRACKET
+        (options { warnWhenFollowAmbig = false; } : paren_pair)*
+        function_tail curly_pair
 ;
 
 // modifiers that can occur within a lambda capture.
