@@ -1812,9 +1812,14 @@ complete_throw_list[] { bool is_compound = false; ENTRY_DEBUG } :
         THROW paren_pair | THROWS (options { greedy = true; } : compound_name_java[is_compound] | COMMA)*
 ;
 
-// match noexcept list completely
+/*
+  complete_noexcept_list
+
+  Used to match a noexcept list completely.
+*/
 complete_noexcept_list[] { ENTRY_DEBUG } :
-        NOEXCEPT (options { greedy = true;} : paren_pair)*
+        NOEXCEPT
+        (options { greedy = true; } : paren_pair)*
 ;
 
 /* property methods */
