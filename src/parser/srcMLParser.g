@@ -1803,9 +1803,13 @@ noexcept_list[] { ENTRY_DEBUG } :
         (options { greedy = true; } : LPAREN)*
 ;
 
-// match a thow list completely
+/*
+  complete_throw_list
+
+  Used to match a throw list completely.
+*/
 complete_throw_list[] { bool is_compound = false; ENTRY_DEBUG } :
-        THROW paren_pair | THROWS ( options { greedy = true; } : compound_name_java[is_compound] | COMMA)*
+        THROW paren_pair | THROWS (options { greedy = true; } : compound_name_java[is_compound] | COMMA)*
 ;
 
 // match noexcept list completely
