@@ -1390,14 +1390,16 @@ function_rest[int& fla] { ENTRY_DEBUG } :
         check_end[fla]
 ;
 
-// function type, including specifiers
+/*
+  function_type
+
+  The function type, including specifiers.
+*/
 function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
         {
             if (type_count == 0) {
-
                 setMode(MODE_FUNCTION_NAME);
                 return;
-
             }
 
             // start a mode for the type that will end in this grammar rule
@@ -1406,13 +1408,12 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
             // type element begins
             startElement(STYPE);
         }
-        (options { greedy = true; } :
 
-                { decl_specifier_tokens_set.member(LA(1)) }?
-                (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1] | 
-
-                { inLanguage(LANGUAGE_JAVA) }? generic_parameter_list set_int[type_count, type_count - 1]
+        (options { greedy = true; } : { decl_specifier_tokens_set.member(LA(1)) }?
+            (specifier | default_specifier | template_specifier)
+            set_int[type_count, type_count - 1] | { inLanguage(LANGUAGE_JAVA) }? generic_parameter_list set_int[type_count, type_count - 1]
         )*
+
         {
             if (type_count == 0) {
                 endMode(MODE_EAT_TYPE);
@@ -1422,26 +1423,32 @@ function_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
 
             setTypeCount(type_count);
         }
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))* 
+
+        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }?
+            (lead_type_identifier))*
 
         // match auto keyword first as special case do no warn about ambiguity
-        (options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
-            { is_class_type_identifier() }? (options { greedy = true; } :
-                { !class_tokens_set.member(LA(1)) }? 
-                    (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) { decTypeCount(); })*
-                    class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* |
-        (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier { decTypeCount(); })* (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier))
+        (
+        options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] | { is_class_type_identifier() }?
+            (options { greedy = true; } : { !class_tokens_set.member(LA(1)) }?
+                (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call)
+                { decTypeCount(); })*
+            class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }? multops)* | (options { greedy = true; } : { getTypeCount() > 2 }? pure_lead_type_identifier
+                { decTypeCount(); })*
+            (lead_type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
+        )
 
-        { 
-
+        {
             decTypeCount();
+
             if (inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
         }
 
-        (options { greedy = true; } : {getTypeCount() > 0}? 
+        (options { greedy = true; } : { getTypeCount() > 0 }?
             // Mark as name before mark without name
-            (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier) { decTypeCount(); })*
+            (options { generateAmbigWarnings = false; } : keyword_name | type_identifier | { inLanguage(LANGUAGE_JAVA) }? default_specifier)
+            { decTypeCount(); })*
 
         {
             endMode(MODE_EAT_TYPE);
