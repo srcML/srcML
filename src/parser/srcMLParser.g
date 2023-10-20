@@ -1943,22 +1943,27 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     (options { greedy = true; } :
         objective_c_method_type
-        
+
         // Mark as name before mark but without name
         (options { generateAmbigWarnings = false; } : compound_name | keyword_name)
     )*
 ;
 
-// Objective-C property declaration
-property_declaration[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
-    {
+/*
+  property_declaration
 
+  Handles an Objective-C property declaration.
+*/
+property_declaration[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+    {
         startNewMode(MODE_STATEMENT);
 
         startElement(SPROPERTY);
-
     }
-    PROPERTY (property_attribute_list)*
+    
+    PROPERTY
+
+    (property_attribute_list)*
     { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
     variable_declaration[type_count]
 ;
