@@ -1545,27 +1545,27 @@ lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 ;
 
-// handle a C++11 lambda expression
+/*
+  lambda_expression_cpp
+
+  Handles a C++11 lambda expression.
+*/
 lambda_expression_cpp[] { ENTRY_DEBUG } :
         {
-
             bool iscall = look_past_rule(&srcMLParser::lambda_expression_full_cpp) == LPAREN;
-            if (iscall) {
 
+            if (iscall) {
                 // start a new mode that will end after the argument list
                 startNewMode(MODE_ARGUMENT | MODE_LIST);
 
                 // start the function call element
                 startElement(SFUNCTION_CALL);
-
             }
 
-            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);      
+            startNewMode(MODE_FUNCTION_PARAMETER | MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
 
             startElement(SFUNCTION_LAMBDA);
-
         }
-
         lambda_capture
 ;
 
