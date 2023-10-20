@@ -1682,10 +1682,16 @@ block_lambda_expression[] { ENTRY_DEBUG } :
         (options { greedy = true; } : parameter_list)*
 ;
 
-// completely match block expression lambda
-block_lambda_expression_full[] { ENTRY_DEBUG } :
+/*
+  block_lambda_expression_full
 
-        BLOCKOP (options { greedy = true; } : type_identifier)* (options { greedy = true; } : paren_pair)* curly_pair
+  Used to match a block expression lambda completely.
+*/
+block_lambda_expression_full[] { ENTRY_DEBUG } :
+        BLOCKOP
+        (options { greedy = true; } : type_identifier)*
+        (options { greedy = true; } : paren_pair)*
+        curly_pair
 ;
 
 // handle a Java lambda expression
