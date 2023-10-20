@@ -1490,7 +1490,11 @@ function_identifier[] { ENTRY_DEBUG } :
         )
 ;
 
-// special cases for main
+/*
+  function_identifier_main
+
+  Handles special cases for main.
+*/
 function_identifier_main[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
