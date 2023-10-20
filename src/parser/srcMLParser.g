@@ -1982,15 +1982,17 @@ property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
     RPAREN
 ;
 
+/*
+  property_attribute
+*/
 property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
     {
-
         startNewMode(MODE_LOCAL);
 
         startElement(SATTRIBUTE);
-
     }
-    identifier (property_attribute_initialization)* 
+    identifier
+    (property_attribute_initialization)*
 ;
 
 property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
