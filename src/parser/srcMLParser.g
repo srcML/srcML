@@ -2236,18 +2236,30 @@ perform_ternary_check[] returns [bool is_ternary] {
     ENTRY_DEBUG
 } :;
 
+/*
+  ternary_check
+*/
 ternary_check[] { ENTRY_DEBUG } :
+    // ends are catch alls; it's ok if they overlap
+    (
+        { LA(1) != 1 }? (options { generateAmbigWarnings = false; } :
+            { identifier_list_tokens_set.member(LA(1)) }?
+            compound_name_inner[false] | paren_pair | bracket_pair
+            (options { greedy = true; } : paren_pair | curly_pair)*
+                | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
+        )
+    )
 
-
-    // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : {identifier_list_tokens_set.member(LA(1)) }? compound_name_inner[false] | paren_pair | bracket_pair (options { greedy = true; } : paren_pair | curly_pair)*
-         | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))
-
-    // ends are catch alls ok if overlap
-    ({ LA(1) != 1 }? (options { generateAmbigWarnings = false; } : {identifier_list_tokens_set.member(LA(1)) }? compound_name_inner[false] | paren_pair | bracket_pair (options { greedy = true; } : paren_pair | curly_pair)*
-         | ~(QMARK | TERMINATE | LCURLY  | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)))* 
+    // ends are catch alls; it's ok if they overlap
+    (
+        { LA(1) != 1 }? (options { generateAmbigWarnings = false; } :
+            { identifier_list_tokens_set.member(LA(1)) }?
+            compound_name_inner[false] | paren_pair | bracket_pair
+            (options { greedy = true; } : paren_pair | curly_pair)*
+                | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
+        )
+    )* 
 ;
-
 
 // records the current token, even in guessing mode
 markend[int& token] { token = LA(1); } :;
