@@ -1853,16 +1853,21 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
         (GET | SET | ADD | REMOVE)
 ;
 
-// Objective-C method declaration
+/*
+  objective_c_method
+
+  Handles Objective-C method declaration.
+*/
 objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
         {
-
             startNewMode(MODE_STATEMENT);
 
             startElement(token);
-
         }
-        objective_c_method_specifier (options { greedy = true; } : objective_c_method_type)* /*objective_c_selector*/ objective_c_parameter_list
+        objective_c_method_specifier
+        (options { greedy = true; } : objective_c_method_type)*
+        /* Commented-out code: objective_c_selector */
+        objective_c_parameter_list
 ;
 
 objective_c_method_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
