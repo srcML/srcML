@@ -1588,17 +1588,22 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-// argument within the capture portion of a C++11 lambda
-lambda_capture_argument[] { bool first = true; CompleteElement element(this); ENTRY_DEBUG } :
+/*
+  lambda_capture_argument
 
+  Handles the argument within the capture portion of a C++11 lambda.
+*/
+lambda_capture_argument[] { bool first = true; CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SARGUMENT);
         }
-
         // suppress greedy warnings
-        ((options { greedy = true; } : lambda_capture_modifiers)* (options { greedy = true; } : { first }? variable_identifier (options { greedy = true; } : lambda_capture_initialization)* set_bool[first, false])*)
+        (
+            (options { greedy = true; } : lambda_capture_modifiers)*
+            (options { greedy = true; } : { first }? variable_identifier (options { greedy = true; } : lambda_capture_initialization)* set_bool[first, false])*
+        )
 ;
 
 lambda_capture_initialization[] { CompleteElement element(this); ENTRY_DEBUG } :
