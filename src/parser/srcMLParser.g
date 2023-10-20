@@ -1710,13 +1710,17 @@ lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
 ;
 
+/*
+  lambda_single_parameter
+*/
 lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
         {
-
             startNewMode(MODE_LOCAL);
 
             startElement(SPSEUDO_PARAMETER_LIST);
+
             startElement(SPARAMETER);
+
             startElement(SDECLARATION);
         }
         variable_identifier
