@@ -2167,15 +2167,18 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
         )
 ;
 
-// check the contents of a call
-call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1); bool name = false; ENTRY_DEBUG } :
+/*
+  call_check_paren_pair
 
+  Used to check the contents of a call.
+*/
+call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1); bool name = false; ENTRY_DEBUG } :
         (LPAREN | { inLanguage(LANGUAGE_CXX) }? LCURLY)
 
         // record token after the start of the argument list
         markend[argumenttoken]
-        ( options { greedy = true; generateAmbigWarnings = false;} :
 
+        ( options { greedy = true; generateAmbigWarnings = false; } :
             // recursive nested parentheses
             call_check_paren_pair[argumenttoken, depth + 1] set_bool[name, false] |
 
@@ -2197,15 +2200,13 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
 
             { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair |
 
-            // found two names in a row, so this is not an expression
-            // cause this to fail by explicitly throwing exception
+            // found two names in a row, so this is not an expression; cause this to fail by explicitly throwing an exception
             { depth == 0 }?
             (identifier | generic_selection) throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
             { call_token == LPAREN && !keyword_token_set.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false] |
             { call_token == LCURLY && inLanguage(LANGUAGE_CXX) && !keyword_token_set.member(LA(1)) }? ~(LCURLY | RCURLY | TERMINATE) set_bool[name, false]
-
         )*
 
         ({ call_token == LPAREN }? RPAREN | { call_token == LCURLY && inLanguage(LANGUAGE_CXX) }? RCURLY)
