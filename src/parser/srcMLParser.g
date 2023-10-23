@@ -2272,7 +2272,11 @@ markend[int& token] {
 
 /* Keyword Statements */
 
-// while statement
+/*
+  while_statement
+
+  Handles a while statement.
+*/
 while_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement (after condition)
