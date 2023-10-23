@@ -2452,24 +2452,23 @@ is_control_terminate[] returns [bool is_terminate = false] {
         rewind(state);
 } :;
 
+/*
+  control_initialization_pre
+*/
 control_initialization_pre[] { ENTRY_DEBUG } :
-
         {
-            // check for ; in if control
-            if(inMode(MODE_CONTROL_INITIALIZATION) && inPrevMode(MODE_IF) && !is_control_terminate()) {
+            // check for ";" in if control
+            if (inMode(MODE_CONTROL_INITIALIZATION) && inPrevMode(MODE_IF) && !is_control_terminate()) {
                 replaceMode(MODE_CONTROL_INITIALIZATION, MODE_CONTROL_CONDITION);
             }
-
         }
 
         (
         // inside of control group expecting initialization
-        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }?
-        control_initialization |
+        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }? control_initialization |
 
-        // inside of control group expecting initialization
-        { inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
-        control_condition
+        // inside of control group expecting condition
+        { inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }? control_condition
         )
 ;
 
