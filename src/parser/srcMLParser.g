@@ -2291,17 +2291,22 @@ while_statement[] { ENTRY_DEBUG } :
         WHILE
 ;
 
-// Qt forever statement
+/*
+  forever_statement
+
+  Handles a Qt forever statement.
+*/
 forever_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement (after condition)
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
-            // start the while element
+            // start the forever element
             startElement(SFOREVER_STATEMENT);
 
+            // Commented-out code
             // expect a condition to follow the keyword
-            //startNewMode(MODE_CONDITION | MODE_EXPECT);
+            // startNewMode(MODE_CONDITION | MODE_EXPECT);
         }
         FOREVER
 ;
