@@ -2566,7 +2566,11 @@ control_condition[] { bool in_if_condition = inPrevMode(MODE_IF); ENTRY_DEBUG } 
         )
 ;
 
-// increment in for parameter list
+/*
+  control_increment
+
+  Handles an increment in a "for" parameter list.
+*/
 control_increment[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_EXPECT | MODE_CONTROL_INCREMENT);
