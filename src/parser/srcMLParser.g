@@ -2415,41 +2415,42 @@ control_group[] { ENTRY_DEBUG } :
         LPAREN
 ;
 
+/*
+  is_control_terminate
+*/
 is_control_terminate[] returns [bool is_terminate = false] {
+        int state = mark();
+        ++inputState->guessing;
 
-    int state = mark();
-    ++inputState->guessing;
+        int parencount = 0;
+        int bracecount = 0;
 
-    int parencount = 0;
-    int bracecount = 0;
-    while (LA(1) != antlr::Token::EOF_TYPE) {
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == RPAREN)
+                --parencount;
+            else if (LA(1) == LPAREN)
+                ++parencount;
 
-        if (LA(1) == RPAREN)
-            --parencount;
-        else if (LA(1) == LPAREN)
-            ++parencount;
+            if (LA(1) == RCURLY)
+                --bracecount;
+            else if (LA(1) == LCURLY)
+                ++bracecount;
 
-        if (LA(1) == RCURLY)
-            --bracecount;
-        else if (LA(1) == LCURLY)
-            ++bracecount;
+            if (parencount < 0 || bracecount < 0) {
+                break;
+            }
 
-        if (parencount < 0 || bracecount < 0) {
-            break;
+            if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0) {
+                is_terminate = true;
+                break;
+            }
+
+            consume();
         }
 
-        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0) {
-            is_terminate = true;
-            break;
-        }
-
-        consume();
-    }
-    --inputState->guessing;
-    rewind(state);
-
-} :
-;
+        --inputState->guessing;
+        rewind(state);
+} :;
 
 control_initialization_pre[] { ENTRY_DEBUG } :
 
