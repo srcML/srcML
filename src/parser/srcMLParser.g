@@ -2718,7 +2718,11 @@ switch_statement[] { ENTRY_DEBUG } :
         SWITCH
 ;
 
-// actions to perform before first starting a section.  Uses in multiple places.
+/*
+  section_entry_action
+
+  Handles the actions to perform before first starting a section.  Used in multiple places.
+*/
 section_entry_action_first[] :
         {
             // start a new section inside the block with nested statements
