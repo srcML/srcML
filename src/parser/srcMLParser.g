@@ -2311,12 +2311,15 @@ forever_statement[] { ENTRY_DEBUG } :
         FOREVER
 ;
 
-// do while statement
+/*
+  do_statement
+
+  Handles a do-while statement.
+*/
 do_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement (after condition)
-            // set to top mode so that end of block will
-            // not end statement itself
+            // set to top mode so that end of block will not end the statement itself
             startNewMode(MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT);
 
             // start of do statement
@@ -2329,6 +2332,7 @@ do_statement[] { ENTRY_DEBUG } :
         {
             if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
+
                 startNoSkipElement(SCONTENT);
             }
         }
