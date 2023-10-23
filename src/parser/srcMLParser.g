@@ -2395,16 +2395,18 @@ foreach_statement[] { ENTRY_DEBUG } :
         FOREACH
 ;
 
-// start of control group, i.e., initialization, test, increment
+/*
+  control_group
+
+  Handles the start of a control group. (i.e., initialization, test, increment)
+*/
 control_group[] { ENTRY_DEBUG } :
         {
-            // start the control group mode that will end at the next matching
-            // parentheses
-            replaceMode(MODE_CONTROL, MODE_TOP | MODE_CONTROL_INITIALIZATION | MODE_IGNORE_TERMINATE |
-                        MODE_INTERNAL_END_PAREN | MODE_LIST);
+            // start the control group mode that will end at the next matching parentheses
+            replaceMode(MODE_CONTROL, MODE_TOP | MODE_CONTROL_INITIALIZATION | MODE_IGNORE_TERMINATE | MODE_INTERNAL_END_PAREN | MODE_LIST);
 
             // start the for heading group element
-            if(inPrevMode(MODE_IF)) {
+            if (inPrevMode(MODE_IF)) {
                 startElement(SCONDITION);
             } else {
                 startElement(SCONTROL);
