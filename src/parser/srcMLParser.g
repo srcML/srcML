@@ -2261,8 +2261,14 @@ ternary_check[] { ENTRY_DEBUG } :
     )* 
 ;
 
-// records the current token, even in guessing mode
-markend[int& token] { token = LA(1); } :;
+/*
+  markend
+
+  Records the current token, even in guessing mode.
+*/
+markend[int& token] {
+        token = LA(1);
+} :;
 
 /* Keyword Statements */
 
