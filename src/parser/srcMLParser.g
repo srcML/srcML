@@ -2551,7 +2551,11 @@ control_condition_action[] { ENTRY_DEBUG } :
         }
 ;
 
-// for condition
+/*
+  control_condition
+
+  Handles a "for" condition.
+*/
 control_condition[] { bool in_if_condition = inPrevMode(MODE_IF); ENTRY_DEBUG } :
         control_condition_action
         (
