@@ -2216,49 +2216,49 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
   perform_ternary_check
 */
 perform_ternary_check[] returns [bool is_ternary] {
-    is_ternary = false;
+        is_ternary = false;
 
-    int start = mark();
-    inputState->guessing++;
+        int start = mark();
+        inputState->guessing++;
 
-    try {
-        ternary_check();
-        if (LA(1) == QMARK)
-            is_ternary = true;
-    } catch(...) {}
+        try {
+            ternary_check();
+            if (LA(1) == QMARK)
+                is_ternary = true;
+        } catch(...) {}
 
-    if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
-        skip_ternary = true;
+        if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
+            skip_ternary = true;
 
-    inputState->guessing--;
-    rewind(start);
+        inputState->guessing--;
+        rewind(start);
 
-    ENTRY_DEBUG
+        ENTRY_DEBUG
 } :;
 
 /*
   ternary_check
 */
 ternary_check[] { ENTRY_DEBUG } :
-    // ends are catch alls; it's ok if they overlap
-    (
-        { LA(1) != 1 }? (options { generateAmbigWarnings = false; } :
-            { identifier_list_tokens_set.member(LA(1)) }?
-            compound_name_inner[false] | paren_pair | bracket_pair
-            (options { greedy = true; } : paren_pair | curly_pair)*
-                | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
+        // ends are catch alls; it's ok if they overlap
+        (
+            { LA(1) != 1 }? (options { generateAmbigWarnings = false; } :
+                { identifier_list_tokens_set.member(LA(1)) }?
+                compound_name_inner[false] | paren_pair | bracket_pair
+                (options { greedy = true; } : paren_pair | curly_pair)*
+                    | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
+            )
         )
-    )
 
-    // ends are catch alls; it's ok if they overlap
-    (
-        { LA(1) != 1 }? (options { generateAmbigWarnings = false; } :
-            { identifier_list_tokens_set.member(LA(1)) }?
-            compound_name_inner[false] | paren_pair | bracket_pair
-            (options { greedy = true; } : paren_pair | curly_pair)*
-                | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
-        )
-    )* 
+        // ends are catch alls; it's ok if they overlap
+        (
+            { LA(1) != 1 }? (options { generateAmbigWarnings = false; } :
+                { identifier_list_tokens_set.member(LA(1)) }?
+                compound_name_inner[false] | paren_pair | bracket_pair
+                (options { greedy = true; } : paren_pair | curly_pair)*
+                    | ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
+            )
+        )*
 ;
 
 /*
