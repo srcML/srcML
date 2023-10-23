@@ -2590,15 +2590,15 @@ control_increment[] { ENTRY_DEBUG } :
 ;
 
 /*
- start of if statement
+  if_statement
 
- if statement is first processed here.  Then prepare for a condition.  The end of the
- condition will setup for the then part of the statement.  The end of the then looks
- ahead for an else.  If so, it ends the then part.  If not, it ends the entire statement.*/
+  An "if" statement is first processed here.  Then prepare for a condition.  The end of the
+  condition will set up for the "then" part of the statement.  The end of the "then" looks
+  ahead for an "else".  If so, it ends the "then" part.  If not, it ends the entire statement.
+*/
 if_statement[] { ENTRY_DEBUG } :
-        {           
-            // statement with nested statement
-            // detection of else
+        {
+            // statement with nested statement; detection of else
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
 
             // start if sequence container
@@ -2611,8 +2611,7 @@ if_statement[] { ENTRY_DEBUG } :
             // start the if statement
             startElement(SIF);
 
-            // expect a condition
-            // start THEN after condition
+            // expect a condition; start THEN after condition
             startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_CONDITION);
         }
         IF
