@@ -2623,18 +2623,16 @@ if_statement[] { ENTRY_DEBUG } :
 ;
 
 /*
- else part of if statement
+  else_statement
 
- else is detected on its own, and as part of termination (semicolon or
- end of a block
+  Handles the "else" part of an "if" statement. The "else" part is detected on its own, and as
+  part of termination. (semicolon or end of a block)
 */
 else_statement[] { ENTRY_DEBUG } :
         {
             // catchup for isolated else
             if (!inMode(MODE_IF_STATEMENT)) {
-
-                // statement with nested statement
-                // detection of else
+                // statement with nested statement; detection of else
                 startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
 
                 // start if sequence container
@@ -2650,7 +2648,6 @@ else_statement[] { ENTRY_DEBUG } :
             startElement(SELSE);
         }
         ELSE
-
         {
             if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
