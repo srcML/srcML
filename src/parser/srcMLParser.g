@@ -2354,7 +2354,11 @@ do_while[] { ENTRY_DEBUG } :
         WHILE
 ;
 
-// start of for statement
+/*
+  for_statement
+
+  Handles the start of a for statement.
+*/
 for_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the control group
