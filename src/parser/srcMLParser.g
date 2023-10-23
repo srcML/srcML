@@ -2730,14 +2730,17 @@ section_entry_action_first[] :
         }
 ;
 
-// actions to perform before starting a section
+/*
+  section_entry_action
+
+  Handles the actions to perform before starting a section.
+*/
 section_entry_action[] :
         {
             // end any statements inside the section
             endDownToModeSet(MODE_TOP);
 
-            // flush any whitespace tokens since sections should
-            // end at the last possible place
+            // flush any whitespace tokens since sections should end at the last possible place
             flushSkip();
 
             // end the section inside the block
