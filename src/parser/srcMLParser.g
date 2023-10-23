@@ -2657,18 +2657,17 @@ else_statement[] { ENTRY_DEBUG } :
 ;
 
 /*
- else if construct
+  elseif_statement
 
- else and if are detected on their own, and as part of termination (semicolon or
- end of a block
+  Handles the "else if" construct. The "else" and "if" parts are detected on their own, and as
+  part of termination. (semicolon or end of a block)
 */
 elseif_statement[] { ENTRY_DEBUG } :
         {
             // catchup for isolated else
             if (!inMode(MODE_IF_STATEMENT)) {
 
-                // statement with nested statement
-                // detection of else
+                // statement with nested statement; detection of else
                 startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
 
                 // start if sequence container
@@ -2683,15 +2682,13 @@ elseif_statement[] { ENTRY_DEBUG } :
             // start the else part of the if statement
             startElement(SELSEIF);
         }
-        ELSE 
-
+        ELSE
         {
-
+            // Commented-out code
             // start the if statement
             // startElement(SIF_STATEMENT);
 
-            // expect a condition
-            // start THEN after condition
+            // expect a condition; start THEN after condition
             startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_CONDITION);
         }
         IF
