@@ -2338,11 +2338,14 @@ do_statement[] { ENTRY_DEBUG } :
         }
 ;
 
-// while part of do statement
+/*
+  do_while
+
+  Handles the 'while' part of a do-while statement.
+*/
 do_while[] { ENTRY_DEBUG } :
         {
-            // mode for do statement is in top mode so that
-            // end of the block will not end the statement
+            // mode for do statement is in top mode so that end of the block will not end the statement
             clearMode(MODE_TOP);
 
             // expect a condition to follow
