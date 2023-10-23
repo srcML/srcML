@@ -2525,7 +2525,11 @@ control_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
         variable_declaration[type_count]
 ;
 
-// for parameter list condition setup.  Used in multiple places.
+/*
+  control_condition_action
+
+  Handles "for" parameter list condition setup.  Used in multiple places.
+*/
 control_condition_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_CONTROL_CONDITION | MODE_EXPECT);
@@ -2533,17 +2537,17 @@ control_condition_action[] { ENTRY_DEBUG } :
             bool in_if_mode = inPrevMode(MODE_IF);
 
             // setup next stage control condition
-            if(in_if_mode) {
+            if (in_if_mode) {
                 // switch back to if-processing
-                replaceMode(MODE_TOP | MODE_CONTROL_CONDITION  | MODE_IGNORE_TERMINATE | MODE_INTERNAL_END_PAREN, 
-                            MODE_LIST | MODE_EXPRESSION);
+                replaceMode(MODE_TOP | MODE_CONTROL_CONDITION | MODE_IGNORE_TERMINATE | MODE_INTERNAL_END_PAREN, MODE_LIST | MODE_EXPRESSION);
             } else {
                 replaceMode(MODE_CONTROL_CONDITION, MODE_CONTROL_INCREMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+
                 // setup a mode for initialization that will end with a ";"
                 startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_STATEMENT);
+
                 startElement(SCONTROL_CONDITION);
             }
-
         }
 ;
 
