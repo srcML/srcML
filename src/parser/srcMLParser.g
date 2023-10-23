@@ -2749,7 +2749,11 @@ section_entry_action[] :
         section_entry_action_first
 ;
 
-// case treated as a statement
+/*
+  switch_case
+
+  Note that "case" is treated as a statement.
+*/
 switch_case[] { ENTRY_DEBUG } :
         {
             // start a new mode
