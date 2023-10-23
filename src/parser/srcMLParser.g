@@ -2699,7 +2699,11 @@ elseif_statement[] { ENTRY_DEBUG } :
         }
 ;
 
-//  start of switch statement
+/*
+  switch_statement
+
+  Handles the start of a "switch" statement.
+*/
 switch_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested block
