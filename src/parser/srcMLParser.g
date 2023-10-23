@@ -2472,7 +2472,11 @@ control_initialization_pre[] { ENTRY_DEBUG } :
         )
 ;
 
-// for parameter list initialization.  used in multiple places
+/*
+  control_initialization_action
+
+  Handles parameter list initialization.  Used in multiple places.
+*/
 control_initialization_action[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT);
@@ -2485,7 +2489,7 @@ control_initialization_action[] { ENTRY_DEBUG } :
             // setup a mode for initialization that will end with a ";"
             startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
 
-            if(!in_if_mode) {
+            if (!in_if_mode) {
                 startElement(SCONTROL_INITIALIZATION);
             } else {
                 startElement(SDECLARATION_STATEMENT);
