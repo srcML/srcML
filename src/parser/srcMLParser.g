@@ -2373,13 +2373,17 @@ for_statement[] { ENTRY_DEBUG } :
         FOR
 ;
 
-// start of foreach statement (C#/Qt)
+/*
+  foreach_statement
+
+  Handles the start of a foreach statement. (C#/Qt)
+*/
 foreach_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement after the control group
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
-            // start the for statement
+            // start the foreach statement
             startElement(SFOREACH_STATEMENT);
 
             // statement with nested statement after the control group
