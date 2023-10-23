@@ -2512,17 +2512,18 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
         )
 ;
 
-// Statement for the declaration of a variable or group of variables
-// in a for initialization
+/*
+  control_initialization_variable_declaration
+
+  Handles a statement for the declaration of a variable (or a group of variables) in a "for" initialization.
+*/
 control_initialization_variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
-            // start a new mode for the expression which will end
-            // inside of the terminate
+            // start a new mode for the expression which will end inside of the terminate
             startNewMode(MODE_LIST);
         }
         variable_declaration[type_count]
 ;
-
 
 // for parameter list condition setup.  Used in multiple places.
 control_condition_action[] { ENTRY_DEBUG } :
