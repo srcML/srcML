@@ -3105,7 +3105,11 @@ extern_definition[] { ENTRY_DEBUG } :
         (extern_alias (options { greedy = true; } : variable_identifier)*)*
 ;
 
-// name of extern section
+/*
+  extern_name
+
+  Handles the name of an "extern" section.
+*/
 extern_name[] { ENTRY_DEBUG } :
         string_literal
         {
