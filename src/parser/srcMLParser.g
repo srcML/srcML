@@ -3029,7 +3029,11 @@ asm_declaration[] { ENTRY_DEBUG } :
         ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
-// complete assembly declaration statement
+/*
+  visual_cxx_asm_declaration
+
+  Used to complete an assembly declaration statement.
+*/
 visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement
@@ -3038,7 +3042,9 @@ visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        VISUAL_CXX_ASM ({ LA(1) == LCURLY}? visual_cxx_asm_declaration_curly_pair | (options { greedy = true; } : visual_cxx_asm_inner)*) (options { greedy = true; } : TERMINATE)*
+        VISUAL_CXX_ASM
+        ({ LA(1) == LCURLY }? visual_cxx_asm_declaration_curly_pair | (options { greedy = true; } : visual_cxx_asm_inner)*)
+        (options { greedy = true; } : TERMINATE)*
 ;
 
 visual_cxx_asm_declaration_curly_pair[] { ENTRY_DEBUG } :
