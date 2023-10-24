@@ -3118,6 +3118,9 @@ extern_name[] { ENTRY_DEBUG } :
         }
 ;
 
+/*
+  namespace_inline_specifier
+*/
 namespace_inline_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
