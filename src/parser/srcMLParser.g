@@ -2787,13 +2787,17 @@ switch_default[] { ENTRY_DEBUG } :
         DEFAULT
 ;
 
-// import statement
+/*
+  import_statement
+
+  Handles an "import" statement.
+*/
 import_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
 
-            // start the return statement
+            // start the import statement
             startElement(SIMPORT);
         }
         IMPORT
