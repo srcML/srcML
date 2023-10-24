@@ -3000,14 +3000,15 @@ goto_statement[] { ENTRY_DEBUG } :
         GOTO
 ;
 
+/*
+  goto_case
+*/
 goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
-    {
-
-        startElement(SNAME);
-
-
-    }
-    CASE (literals | ~TERMINATE)*
+        {
+            startElement(SNAME);
+        }
+        CASE
+        (literals | ~TERMINATE)*
 ;
 
 // complete assembly declaration statement
