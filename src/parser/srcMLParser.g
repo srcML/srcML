@@ -2768,7 +2768,11 @@ switch_case[] { ENTRY_DEBUG } :
         (CASE | macro_case_call)
 ;
 
-// default treated as a statement
+/*
+  switch_default
+
+  Note that "default" is treated as a statement.
+*/
 switch_default[] { ENTRY_DEBUG } :
         {
             // start a new mode
