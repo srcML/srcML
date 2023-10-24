@@ -3128,7 +3128,11 @@ namespace_inline_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         INLINE
 ;
 
-// namespaces
+/*
+  namespace_definition
+
+  Handles namespaces.
+*/
 namespace_definition[] { ENTRY_DEBUG } :
         {
             // statement
@@ -3137,7 +3141,8 @@ namespace_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SNAMESPACE);
         }
-        (namespace_inline_specifier)* NAMESPACE
+        (namespace_inline_specifier)*
+        NAMESPACE
 ;
 
 // a namespace alias
