@@ -3071,9 +3071,11 @@ visual_cxx_block_inner[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : TERMINATE)*
 ;
 
+/*
+  visual_cxx_asm_inner
+*/
 visual_cxx_asm_inner[] { ENTRY_DEBUG } :
-
-     (~(EOL | TERMINATE | RCURLY | VISUAL_CXX_ASM))
+        (~(EOL | TERMINATE | RCURLY | VISUAL_CXX_ASM))
 ;
 
 extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
