@@ -2803,14 +2803,17 @@ import_statement[] { ENTRY_DEBUG } :
         IMPORT
 ;
 
-// * as name
+/*
+  multop_name
+
+  Handles the cases where "*" is used as a name.
+*/
 multop_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-                startElement(SNAME);
+            startElement(SNAME);
         }
         MULTOPS
 ;
-
 
 // package statement
 package_statement[] { ENTRY_DEBUG } :
