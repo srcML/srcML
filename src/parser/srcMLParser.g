@@ -2879,7 +2879,11 @@ static_assert_statement[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// return statement
+/*
+  return_statement
+
+  Handles a "return" statement.
+*/
 return_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
