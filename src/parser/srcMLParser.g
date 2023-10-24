@@ -3088,16 +3088,21 @@ extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
         ALIAS
 ;
 
-// extern definition
+/*
+  extern_definition
+
+  Handles an "extern" definition.
+*/
 extern_definition[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXTERN);
 
-            // start the namespace definition
+            // start the extern definition
             startElement(SEXTERN);
         }
-        EXTERN (extern_alias (options { greedy = true; } : variable_identifier)*)*
+        EXTERN
+        (extern_alias (options { greedy = true; } : variable_identifier)*)*
 ;
 
 // name of extern section
