@@ -3011,7 +3011,11 @@ goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
         (literals | ~TERMINATE)*
 ;
 
-// complete assembly declaration statement
+/*
+  asm_declaration
+
+  Used to complete an assembly declaration statement.
+*/
 asm_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -3020,7 +3024,8 @@ asm_declaration[] { ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        ASM (options { greedy = true; } : { LA(1) == VOLATILE }? specifier)*
+        ASM
+        (options { greedy = true; } : { LA(1) == VOLATILE }? specifier)*
         ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
