@@ -2906,7 +2906,11 @@ yield_statements[] { int t = next_token(); ENTRY_DEBUG } :
         { t == BREAK }? yield_break_statement
 ;
 
-// match a special yield specifier
+/*
+  yield_specifier
+
+  Used to match a special "yield" specifier.
+*/
 yield_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
