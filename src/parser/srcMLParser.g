@@ -3056,7 +3056,10 @@ visual_cxx_asm_declaration_curly_pair[] { ENTRY_DEBUG } :
         RCURLY
 ;
 
-visual_cxx_block_inner[] { CompleteElement element(this);  ENTRY_DEBUG } :
+/*
+  visual_cxx_block_inner
+*/
+visual_cxx_block_inner[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_LOCAL);
@@ -3064,7 +3067,8 @@ visual_cxx_block_inner[] { CompleteElement element(this);  ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        ({ LA(1) == LCURLY}? visual_cxx_asm_declaration_curly_pair | (visual_cxx_asm_inner (options { greedy = true; } : visual_cxx_asm_inner)*)) (options { greedy = true; } : TERMINATE)*
+        ({ LA(1) == LCURLY }? visual_cxx_asm_declaration_curly_pair | (visual_cxx_asm_inner (options { greedy = true; } : visual_cxx_asm_inner)*))
+        (options { greedy = true; } : TERMINATE)*
 ;
 
 visual_cxx_asm_inner[] { ENTRY_DEBUG } :
