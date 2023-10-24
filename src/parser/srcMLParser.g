@@ -2918,7 +2918,11 @@ yield_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         YIELD
 ;
 
-// match a special yield specifier followed by return
+/*
+  yield_return_statement
+
+  Used to match a special "yield" specifier followed by a "return" keyword.
+*/
 yield_return_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
@@ -2927,7 +2931,8 @@ yield_return_statement[] { ENTRY_DEBUG } :
             // start the return statement
             startElement(SRETURN_STATEMENT);
         }
-        yield_specifier RETURN
+        yield_specifier
+        RETURN
 ;
 
 // match a special yield specifier followed by break;
