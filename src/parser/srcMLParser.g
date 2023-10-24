@@ -2935,7 +2935,11 @@ yield_return_statement[] { ENTRY_DEBUG } :
         RETURN
 ;
 
-// match a special yield specifier followed by break;
+/*
+  yield_break_statement
+
+  Used to match a special "yield" specifier followed by a "break" keyword.
+*/
 yield_break_statement[] { ENTRY_DEBUG } :
         {
             // statement
@@ -2944,7 +2948,8 @@ yield_break_statement[] { ENTRY_DEBUG } :
             // start the break statement
             startElement(SBREAK_STATEMENT);
         }
-        yield_specifier BREAK
+        yield_specifier
+        BREAK
 ;
 
 // break statement
