@@ -2968,7 +2968,11 @@ break_statement[] { ENTRY_DEBUG } :
         BREAK
 ;
 
-// start of continue statement
+/*
+  continue_statement
+
+  Handles the start of a "continue" statement.
+*/
 continue_statement[] { ENTRY_DEBUG } :
         {
             // statement
