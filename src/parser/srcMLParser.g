@@ -3078,6 +3078,9 @@ visual_cxx_asm_inner[] { ENTRY_DEBUG } :
         (~(EOL | TERMINATE | RCURLY | VISUAL_CXX_ASM))
 ;
 
+/*
+  extern_alias
+*/
 extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
