@@ -2831,13 +2831,17 @@ package_statement[] { ENTRY_DEBUG } :
         PACKAGE
 ;
 
-// package statement
+/*
+  assert_statement
+
+  Handles an "assert" statement.
+*/
 assert_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
-            // start the return statement
+            // start the assert statement
             startElement(SASSERT_STATEMENT);
         }
         ASSERT
