@@ -2984,11 +2984,14 @@ continue_statement[] { ENTRY_DEBUG } :
         CONTINUE
 ;
 
-// start of goto statement
+/*
+  goto_statement
+
+  Handles the start of a "goto" statement.
+*/
 goto_statement[] { ENTRY_DEBUG } :
         {
-            // statement with an expected label name
-            // label name is a subset of variable names
+            // statement with an expected label name; the label name is a subset of variable names
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
 
             // start the goto statement
