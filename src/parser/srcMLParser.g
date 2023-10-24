@@ -2860,19 +2860,23 @@ static_block { ENTRY_DEBUG } :
     lcurly
 ;
 
-// C _Static_assert statement
+/*
+  static_assert_statement
+
+  Handles a "_Static_assert" statement. (C)
+*/
 static_assert_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
-            // start the return statement
+            // start the static assert statement
             startElement(SSTATIC_ASSERT_STATEMENT);
 
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
         }
-
-        STATIC_ASSERT call_argument_list
+        STATIC_ASSERT
+        call_argument_list
 ;
 
 // return statement
