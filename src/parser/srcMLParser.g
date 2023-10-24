@@ -3145,12 +3145,15 @@ namespace_definition[] { ENTRY_DEBUG } :
         NAMESPACE
 ;
 
-// a namespace alias
+/*
+  namespace_alias
+
+  Handles a namespace alias.
+*/
 namespace_alias[] { ENTRY_DEBUG } :
         EQUAL
         {
-            // expect a label name
-            // label name is a subset of variable names
+            // expect a label name; a label name is a subset of variable names
             setMode(MODE_VARIABLE_NAME);
         }
 ;
