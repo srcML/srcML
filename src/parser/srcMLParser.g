@@ -2815,13 +2815,17 @@ multop_name[] { SingleElement element(this); ENTRY_DEBUG } :
         MULTOPS
 ;
 
-// package statement
+/*
+  package_statement
+
+  Handles a "package" statement.
+*/
 package_statement[] { ENTRY_DEBUG } :
         {
             // statement with a possible expression
             startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT);
 
-            // start the return statement
+            // start the package statement
             startElement(SPACKAGE);
         }
         PACKAGE
