@@ -2952,7 +2952,11 @@ yield_break_statement[] { ENTRY_DEBUG } :
         BREAK
 ;
 
-// break statement
+/*
+  break_statement
+
+  Used to handle a "break" statement.
+*/
 break_statement[] { ENTRY_DEBUG } :
         {
             // statement
