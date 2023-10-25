@@ -3282,13 +3282,17 @@ emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG
         rewind(state);
 } :;
 
-// Qt emit statement
+/*
+  emit_statement
+
+  Handles a Qt "emit" statement.
+*/
 emit_statement[] { ENTRY_DEBUG } :
         {
             // statement with nested statement (after condition)
             startNewMode(MODE_STATEMENT);
 
-            // start the while element
+            // start the emit statement
             startElement(SEMIT_STATEMENT);
 
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
