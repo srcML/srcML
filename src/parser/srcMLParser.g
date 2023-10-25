@@ -3217,15 +3217,15 @@ using_aliasing[] { int type_count = 0; int secondtoken = 0; int after_token = 0;
   Handles an Objective-C compatibility alias.
 */
 compatibility_alias[] { ENTRY_DEBUG } :
-    {
-        // statement
-        startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME);
+        {
+            // statement
+            startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME);
 
-        // start the compatibility alias definition
-        startElement(SCOMPATIBILITY_ALIAS);
+            // start the compatibility alias definition
+            startElement(SCOMPATIBILITY_ALIAS);
 
-    }
-    COMPATIBILITY_ALIAS
+        }
+        COMPATIBILITY_ALIAS
 ;
 
 /*
@@ -3234,15 +3234,15 @@ compatibility_alias[] { ENTRY_DEBUG } :
   Handles an Objective-C "@class" directive.
 */
 class_directive[] { ENTRY_DEBUG } :
-    {
-        // statement
-        startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_LIST);
+        {
+            // statement
+            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_LIST);
 
-        // start the class declaration definition
-        startElement(SCLASS_DECLARATION);
-    }
-    ATCLASS
-    (identifier | COMMA)*
+            // start the class declaration definition
+            startElement(SCLASS_DECLARATION);
+        }
+        ATCLASS
+        (identifier | COMMA)*
 ;
 
 protocol_declaration[] { ENTRY_DEBUG } :
