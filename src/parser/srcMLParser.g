@@ -3258,26 +3258,29 @@ protocol_declaration[] { ENTRY_DEBUG } :
         (variable_identifier | COMMA)*
 ;
 
-emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG 
+/*
+  emit_statement_check
+*/
+emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG
+        if (LA(1) != EMIT) return false;
 
-    if (LA(1) != EMIT) return false;
+        is_emit_stmt = false;
 
-    is_emit_stmt = false;
+        int state = mark();
+        ++inputState->guessing;
 
-    int state = mark();
-    ++inputState->guessing;
+        consume();
 
-    consume();
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 0;
 
-    CALL_TYPE type = NOCALL;  bool isempty = false; int call_count = 0;
-    if (perform_call_check(type, isempty, call_count, -1) && type == CALL)
-        is_emit_stmt = true;
+        if (perform_call_check(type, isempty, call_count, -1) && type == CALL)
+            is_emit_stmt = true;
 
-    --inputState->guessing;
-    rewind(state);
-
-} :
-;
+        --inputState->guessing;
+        rewind(state);
+} :;
 
 // Qt emit statement
 emit_statement[] { ENTRY_DEBUG } :
