@@ -3486,9 +3486,12 @@ objective_c_class_header[] { ENTRY_DEBUG } :
         (macro_call_check class_header_base LCURLY) => macro_call objective_c_class_header_base | objective_c_class_header_base
 ;
 
-// class header base
-objective_c_class_header_base[] { ENTRY_DEBUG } :
+/*
+  objective_c_class_header_base
 
+  Handles an Objective-C "class" header base.
+*/
+objective_c_class_header_base[] { ENTRY_DEBUG } :
         // suppress ()* warning
         identifier
 
