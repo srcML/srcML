@@ -3383,11 +3383,17 @@ class_preprocessing[int token] { ENTRY_DEBUG } :
         }
 ;
 
-// handle stuff before CLASS token
+/*
+  class_preamble
+
+  Handles anything that occurs before the "CLASS" token.
+*/
 class_preamble[] { ENTRY_DEBUG } :
-        // suppress warning probably do to only having ()*
-        (options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) && next_token() != INTERFACE }? annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
-        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+        // suppress warning likely due to only having ()*
+        (
+            options { greedy = true; } : { inLanguage(LANGUAGE_JAVA) && next_token() != INTERFACE }?
+                annotation | { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp | { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp
+        )*
         (specifier | { LA(1) != TEMPLATE || next_token() != TEMPOPS }? template_specifier | { true }? template_declaration_full)*
 ;
 
