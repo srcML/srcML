@@ -3322,7 +3322,11 @@ friend_statement[] { ENTRY_DEBUG } :
 
 /* Declarations Definitions CFG */
 
-// check the ending token
+/*
+  check_end
+
+  Used to check the ending token.
+*/
 check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
         LCURLY | TERMINATE | COLON | COMMA | RPAREN | EQUAL
 ;
