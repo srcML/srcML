@@ -3397,13 +3397,22 @@ class_preamble[] { ENTRY_DEBUG } :
         (specifier | { LA(1) != TEMPLATE || next_token() != TEMPOPS }? template_specifier | { true }? template_declaration_full)*
 ;
 
-// a class definition
+/*
+  class_definition
+
+  Handles a "class" definition.
+*/
 class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
 
-        class_preamble (CLASS | CXX_CLASS) class_post (class_header lcurly[false] | lcurly[false])
-        {
+        class_preamble
 
+        (CLASS | CXX_CLASS)
+
+        class_post
+
+        (class_header lcurly[false] | lcurly[false])
+        {
             if (inLanguage(LANGUAGE_CXX))
                 class_default_access_action(SPRIVATE_ACCESS_DEFAULT);
         }
