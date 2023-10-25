@@ -212,7 +212,8 @@ public:
     CompleteElement(srcMLParser* parent) : parent(parent) {
 
         // only run if not guessing
-        if (parent->inputState->guessing) return;
+        if (parent->inputState->guessing)
+            return;
 
         ++parent->number_finishing_elements;
 
@@ -222,7 +223,8 @@ public:
     ~CompleteElement() {
 
         // only run if not guessing
-        if (parent->inputState->guessing) return;
+        if (parent->inputState->guessing)
+            return;
 
         // Close all the modes opened in the current rule with their elements.
         int n = parent->size() - start_size;
@@ -256,7 +258,8 @@ public:
     LightweightElement(srcMLParser* parent) : parent(parent) {
 
         // only run if not guessing
-        if (parent->inputState->guessing) return;
+        if (parent->inputState->guessing)
+            return;
 
         start_size = parent->currentState().size();
 
@@ -266,7 +269,8 @@ public:
     ~LightweightElement() {
 
         // only run if not guessing
-        if (parent->inputState->guessing) return;
+        if (parent->inputState->guessing)
+            return;
 
         // Close all elements opened by the rule in this mode.
         while (start_size < parent->currentState().size())
@@ -300,7 +304,8 @@ public:
     ~SingleElement() {
 
         // only run if not guessing
-        if (parent->inputState->guessing) return;
+        if (parent->inputState->guessing)
+            return;
 
         // end last opened element
         if (!parent->currentState().openelements.empty())
@@ -2508,7 +2513,9 @@ control_initialization[] { int type_count = 0; int secondtoken = 0; int after_to
             // explicitly check for a variable declaration since it can easily be confused with an expression
             { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }? control_initialization_variable_declaration[type_count] |
 
-            { if (secondtoken == COLON) setMode(MODE_RANGED_FOR); } expression
+            { if (secondtoken == COLON)
+                setMode(MODE_RANGED_FOR); }
+            expression
         )
 ;
 
@@ -3262,7 +3269,8 @@ protocol_declaration[] { ENTRY_DEBUG } :
   emit_statement_check
 */
 emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG
-        if (LA(1) != EMIT) return false;
+        if (LA(1) != EMIT)
+            return false;
 
         is_emit_stmt = false;
 
