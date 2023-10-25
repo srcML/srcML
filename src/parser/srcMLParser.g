@@ -3188,7 +3188,10 @@ namespace_directive[] { ENTRY_DEBUG } :
         USING
 ;
 
-using_aliasing[]  { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+/*
+  using_aliasing
+*/
+using_aliasing[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
@@ -3196,18 +3199,16 @@ using_aliasing[]  { int type_count = 0;  int secondtoken = 0; int after_token = 
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
-        EQUAL 
-
+        EQUAL
         (
-            { pattern_check(stmt_type, secondtoken, type_count, after_token) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
-            || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
+            { pattern_check(stmt_type, secondtoken, type_count, after_token) &&
+                (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
             {
                 startElement(STYPE);
             }
-            function_declaration[type_count] |
 
-            set_int[type_count, type_count + 1] variable_declaration_type[type_count]
-            )*
+            function_declaration[type_count] | set_int[type_count, type_count + 1] variable_declaration_type[type_count]
+        )*
 ;
 
 //  Objectice-C compatibility alias
