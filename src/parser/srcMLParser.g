@@ -3228,18 +3228,21 @@ compatibility_alias[] { ENTRY_DEBUG } :
     COMPATIBILITY_ALIAS
 ;
 
-//  Objectice-C @class directive
+/*
+  class_directive
+
+  Handles an Objective-C "@class" directive.
+*/
 class_directive[] { ENTRY_DEBUG } :
     {
-
         // statement
         startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_LIST);
 
-        // start the namespace definition
+        // start the class declaration definition
         startElement(SCLASS_DECLARATION);
-
     }
-    ATCLASS (identifier | COMMA)*
+    ATCLASS
+    (identifier | COMMA)*
 ;
 
 protocol_declaration[] { ENTRY_DEBUG } :
