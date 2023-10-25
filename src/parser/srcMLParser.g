@@ -3459,17 +3459,21 @@ protocol[] { ENTRY_DEBUG } :
         { look_past_rule(&srcMLParser::protocol_declaration) == TERMINATE }? protocol_declaration | protocol_definition
 ;
 
+/*
+  protocol_definition
+*/
 protocol_definition[] { bool first = true; ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_STATEMENT | MODE_CLASS);
+        {
+            startNewMode(MODE_STATEMENT | MODE_CLASS);
 
-        startElement(SPROTOCOL);
+            startElement(SPROTOCOL);
 
-        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_TOP | MODE_CLASS);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_TOP | MODE_CLASS);
 
-        class_default_access_action(SREQUIRED_DEFAULT);
-    }
-    ATPROTOCOL ({ first }? objective_c_class_header set_bool[first, false])*
+            class_default_access_action(SREQUIRED_DEFAULT);
+        }
+        ATPROTOCOL
+        ({ first }? objective_c_class_header set_bool[first, false])*
 ;
 
 // handle class header
