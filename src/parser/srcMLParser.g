@@ -3211,14 +3211,17 @@ using_aliasing[] { int type_count = 0; int secondtoken = 0; int after_token = 0;
         )*
 ;
 
-//  Objectice-C compatibility alias
+/*
+  compatibility_alias
+
+  Handles an Objective-C compatibility alias.
+*/
 compatibility_alias[] { ENTRY_DEBUG } :
     {
-
         // statement
         startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME);
 
-        // start the namespace definition
+        // start the compatibility alias definition
         startElement(SCOMPATIBILITY_ALIAS);
 
     }
