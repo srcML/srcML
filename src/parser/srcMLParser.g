@@ -3171,7 +3171,11 @@ namespace_block[] { ENTRY_DEBUG } :
         lcurly[false]
 ;
 
-// using directive
+/*
+  namespace_directive
+
+  Handles a namespace "using" directive.
+*/
 namespace_directive[] { ENTRY_DEBUG } :
         {
             // statement with an expected namespace name after the keywords
