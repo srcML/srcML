@@ -3300,15 +3300,16 @@ emit_statement[] { ENTRY_DEBUG } :
         EMIT
 ;
 
+/*
+  friend_statement
+*/
 friend_statement[] { ENTRY_DEBUG } :
-    {
-    
-        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_FRIEND);
+        {
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_FRIEND);
 
-        startElement(SFRIEND);
-
-    }
-    FRIEND
+            startElement(SFRIEND);
+        }
+        FRIEND
 ;
 
 /* Declarations Definitions CFG */
