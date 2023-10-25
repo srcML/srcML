@@ -3245,16 +3245,17 @@ class_directive[] { ENTRY_DEBUG } :
         (identifier | COMMA)*
 ;
 
+/*
+  protocol_declaration
+*/
 protocol_declaration[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STATEMENT | MODE_LOCAL);
 
-    {
-
-        startNewMode(MODE_STATEMENT | MODE_LOCAL);
-
-        startElement(SPROTOCOL_DECLARATION);
-
-    }
-   ATPROTOCOL (variable_identifier | COMMA)*
+            startElement(SPROTOCOL_DECLARATION);
+        }
+        ATPROTOCOL
+        (variable_identifier | COMMA)*
 ;
 
 emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG 
