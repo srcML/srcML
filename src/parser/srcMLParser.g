@@ -3331,7 +3331,11 @@ check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
         LCURLY | TERMINATE | COLON | COMMA | RPAREN | EQUAL
 ;
 
-// handle a class declaration
+/*
+  class_declaration
+
+  Handles a "class" declaration.
+*/
 class_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -3340,8 +3344,14 @@ class_declaration[] { ENTRY_DEBUG } :
             // start the class definition
             startElement(SCLASS_DECLARATION);
         }
+        class_preamble
 
-        class_preamble (CLASS | CXX_CLASS) class_post class_header
+        (CLASS | CXX_CLASS)
+
+        class_post
+
+        class_header
+
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
