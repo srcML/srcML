@@ -3158,7 +3158,11 @@ namespace_alias[] { ENTRY_DEBUG } :
         }
 ;
 
-// namespace block
+/*
+  namespace_block
+
+  Handles a namespace block.
+*/
 namespace_block[] { ENTRY_DEBUG } :
         {
             // nest a block inside the namespace
