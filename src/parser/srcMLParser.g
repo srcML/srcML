@@ -3557,7 +3557,11 @@ enum_class_declaration[] { ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
-// anonymous class definition
+/*
+  anonymous_class_definition
+
+  Handles an anonymous class definition.
+*/
 anonymous_class_definition[] { ENTRY_DEBUG } :
         {
             // statement
@@ -3567,8 +3571,7 @@ anonymous_class_definition[] { ENTRY_DEBUG } :
             startElement(SCLASS);
         }
 
-        // first name in an anonymous class definition is the class it extends
-        // or the interface that it implements
+        // first name in an anonymous class definition is the class it extends or the interface that it implements
         anonymous_class_super
 
         // argument list
@@ -3576,6 +3579,7 @@ anonymous_class_definition[] { ENTRY_DEBUG } :
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_NO_BLOCK_CONTENT);
         }
+
         call_argument_list
 ;
 
