@@ -3505,14 +3505,15 @@ objective_c_class_header_base[] { ENTRY_DEBUG } :
         (protocol_list)*
 ;
 
+/*
+  objective_c_class_end
+*/
 objective_c_class_end[] { ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_ACCESS_REGION)) {
-
                 endDownToMode(MODE_TOP);
 
-                // flush any whitespace tokens since sections should
-                // end at the last possible place
+                // flush any whitespace tokens since sections should end at the last possible place
                 flushSkip();
 
                 endWhileMode(MODE_TOP_SECTION);
