@@ -3897,10 +3897,14 @@ lcurly[bool content = true] { ENTRY_DEBUG } :
         }
 ;
 
-// left curly brace.  Used in multiple places
+/*
+  lcurly_base
+
+  Handles the left curly brace base.  Used in multiple places.
+*/
 lcurly_base[bool content = true] { ENTRY_DEBUG } :
         {
-            // need to pass on class mode to detect constructors for Java
+            // need to pass on class mode to detect constructors for java
             bool inclassmode = (inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP)) && inMode(MODE_CLASS);
 
             bool in_function_body = inTransparentMode(MODE_FUNCTION_TAIL);
