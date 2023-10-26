@@ -4056,20 +4056,21 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
         set_bool[skip_ternary, false]
 ;
 
-// do the pre terminate processing
+/*
+  terminate_pre
+
+  Handles pre-terminate processing.
+*/
 terminate_pre[] { ENTRY_DEBUG } :
         {
-
             // end any elements inside of the statement
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
-                endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK |
-                                   MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+                endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
 
             if (inTransparentMode(MODE_TRAILING_RETURN)) {
                 endDownToMode(MODE_TRAILING_RETURN);
                 endMode(MODE_TRAILING_RETURN);
             }
-
         }
 ;
 
