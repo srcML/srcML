@@ -3662,14 +3662,21 @@ struct_declaration[] { ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
-// handle struct union definition
+/*
+  struct_union_definition
+
+  Handles a "struct" "union" definition.
+*/
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
+        class_preamble
+        (STRUCT | UNION)
+        class_post
+        (class_header lcurly[false] | lcurly[false])
 
-        class_preamble (STRUCT | UNION) class_post (class_header lcurly[false] | lcurly[false])
         {
-           if (inLanguage(LANGUAGE_CXX))
-               class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
+            if (inLanguage(LANGUAGE_CXX))
+                class_default_access_action(SPUBLIC_ACCESS_DEFAULT);
         }
 ;
 
