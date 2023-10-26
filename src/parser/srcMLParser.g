@@ -3929,12 +3929,15 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
         set_bool[skip_ternary, false]
 ;
 
-// end of a block.  Also indicates the end of some open elements.
-block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
-        // handling of if with then block followed by else
-        // handle the block, however scope of then completion stops at if
+/*
+  block_end
 
+  Handles the end of a block.  Also indicates the end of some open elements.
+  For "if" with "then" followed by "else," the block is handled, but the scope of completion stops at "if."
+*/
+block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         rcurly
+
         {
             if (inMode(MODE_ANONYMOUS)) {
                 endMode();
@@ -3942,9 +3945,8 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
                 return;
             }
 
-            // end all statements this statement is nested in
-            // special case when ending then of if statement
-            // end down to either a block or top section, or to an if, whichever is reached first
+            // end all the statements this statement is nested in
+            // special case when ending then of if statement: end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
@@ -3958,8 +3960,7 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
                     endMode();
             }
 
-            // looking for a terminate (';')
-            // some statements end with the block if there is no terminate
+            // looking for a terminate character (';'); some statements end with the block if there is no terminate
             if (inMode(MODE_END_AT_BLOCK_NO_TERMINATE) && LA(1) != TERMINATE) {
                 endstatement = true;
                 endMode();
@@ -3968,13 +3969,12 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
             if (!(anonymous_class) && (!(inMode(MODE_CLASS) || inMode(MODE_ENUM)) || endstatement))
                 else_handling();
 
-            // then we needed to markup the (abbreviated) variable declaration
+            // if true, we need to markup the (abbreviated) variable declaration
             if (inMode(MODE_DECL) && LA(1) != TERMINATE)
                 short_variable_declaration();
 
             if (!in_issue_empty && inMode(MODE_END_AT_ENDIF | MODE_TOP | MODE_STATEMENT))
                 endMode();
-
         }
 ;
 
