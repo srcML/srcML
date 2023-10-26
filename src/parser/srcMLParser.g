@@ -3849,9 +3849,9 @@ access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
 ;
 
 /*
-  left curly brace
+  lcurly
 
-  Marks the start of a block.  End of the block is handled in right curly brace
+  Marks the start of a block.  The end of the block is handled in rcurly.
 */
 lcurly[bool content = true] { ENTRY_DEBUG } :
         {
@@ -3870,32 +3870,30 @@ lcurly[bool content = true] { ENTRY_DEBUG } :
             }
 
             if (inMode(MODE_IF)) {
-
                 // then part of the if statement (after the condition)
                 startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
+                // Commented-out code
                 // start the then element
-                //startNoSkipElement(STHEN);
+                // startNoSkipElement(STHEN);
             }
 
             // special end for constructor member initialization list
             if (inMode(MODE_LIST | MODE_CALL)) {
-                // flush any whitespace tokens since sections should
-                // end at the last possible place
+                // flush any whitespace tokens since sections should end at the last possible place
                 flushSkip();
 
                 endMode();
             }
         }
+
         lcurly_base[content]
+
         {
-
-
             incCurly();
 
             // alter the modes set in lcurly_base
             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST);
-
         }
 ;
 
