@@ -3700,18 +3700,25 @@ union_declaration[] { ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
+/*
+  annotation_definition
+*/
 annotation_definition[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_CLASS);
 
-            // start the interface definition
+            // start the annotation definition
             startElement(SANNOTATION_DEFN);
 
-            // java interfaces end at the end of the block
+            // java annotations end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
-        class_preamble ATSIGN INTERFACE class_header lcurly[false]
+        class_preamble
+        ATSIGN
+        INTERFACE
+        class_header
+        lcurly[false]
 ;
 
 // default private/public section for C++
