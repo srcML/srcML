@@ -3978,11 +3978,14 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
         }
 ;
 
-// right curly brace. Not used directly, but called by block_end
+/*
+  rcurly
+
+  Handles a right curly brace.  Not used directly, but called by block_end.
+*/
 rcurly[] { ENTRY_DEBUG } :
         {
-            // end any elements inside of the block
-            // basically, endDownToMode(MODE_TOP), but checking for class ending
+            // end any elements inside of the block; this is basically endDownToMode(MODE_TOP) but checks for class ending
             if (inTransparentMode(MODE_TOP)) {
                 while (size() > 1 && !inMode(MODE_TOP)) {
                     if (inMode(MODE_CLASS))
@@ -3994,8 +3997,7 @@ rcurly[] { ENTRY_DEBUG } :
                 }
             }
 
-            // flush any whitespace tokens since sections should
-            // end at the last possible place
+            // flush any whitespace tokens since sections should end at the last possible place
             flushSkip();
 
             if (isPaused()) {
@@ -4011,8 +4013,7 @@ rcurly[] { ENTRY_DEBUG } :
             if (getCurly() != 0)
                 decCurly();
             
-            // end the current mode for the block
-            // don't end more than one since they may be nested
+            // end the current mode for the block; don't end more than one since they may be nested
             endMode(MODE_TOP);
         }
         RCURLY
