@@ -3804,13 +3804,19 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         }
 ;
 
-// Each instance of an access specifier defines a region in the class
+/*
+  access_specifier_region
+
+  Each instance of an access specifier defines a region in the class.
+*/
 access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
         section_entry_action
+
         {
             // mark access regions to detect statements that only occur in them
             setMode(MODE_ACCESS_REGION);
         }
+
         (
             // start access region
             {
@@ -3837,9 +3843,9 @@ access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
                 startElement(SOPTIONAL);
             }
             ATOPTIONAL
+        )
 
-        ) 
-    ({ !inLanguage(LANGUAGE_OBJECTIVE_C) && first }? (compound_name)* COLON set_bool[first, false])*
+        ({ !inLanguage(LANGUAGE_OBJECTIVE_C) && first }? (compound_name)* COLON set_bool[first, false])*
 ;
 
 /*
