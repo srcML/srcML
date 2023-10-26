@@ -3526,13 +3526,20 @@ objective_c_class_end[] { ENTRY_DEBUG } :
         ATEND
 ;
 
-// Handle an enum class
+/*
+  enum_class_definition
+
+  Handles an "enum" class definition.
+*/
 enum_class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM]
-        
-        { setMode(MODE_ENUM); }
 
-        class_preamble ENUM (class_header enum_block | enum_block)
+        {
+            setMode(MODE_ENUM);
+        }
+        class_preamble
+        ENUM
+        (class_header enum_block | enum_block)
 ;
 
 // Handle an enum class
