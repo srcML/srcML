@@ -3766,7 +3766,11 @@ class_header[] { ENTRY_DEBUG } :
         (macro_call_check class_header_base LCURLY) => macro_call class_header_base | class_header_base
 ;
 
-// class header base
+/*
+  class_header_base
+
+  Handles a "class" header base.
+*/
 class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         {
             setMode(MODE_CLASS_NAME);
@@ -3775,6 +3779,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 
             clearMode(MODE_CLASS_NAME);
         }
+
         // suppress ()* warning
         ({ LA(1) != FINAL }? compound_name | keyword_name)
 
@@ -3785,8 +3790,13 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         // move suppressed ()* warning to begin
         (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
 
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }? (options { greedy = true; } : super_list_java { insuper = true; } 
-            (extends_list | implements_list) (options { greedy = true; } : extends_list | implements_list)*))*
+        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            (options { greedy = true; } :
+                super_list_java
+                { insuper = true; } (extends_list | implements_list)
+                (options { greedy = true; } : extends_list | implements_list)*
+            )
+        )*
 
         {
             if (insuper)
