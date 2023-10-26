@@ -3542,12 +3542,18 @@ enum_class_definition[] { ENTRY_DEBUG } :
         (class_header enum_block | enum_block)
 ;
 
-// Handle an enum class
-enum_class_declaration[] { ENTRY_DEBUG } :
+/*
+  enum_class_declaration
 
+  Handles an "enum" class declaration.
+*/
+enum_class_declaration[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM_DECLARATION]
-        
-        class_preamble ENUM class_post class_header
+
+        class_preamble
+        ENUM
+        class_post
+        class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
