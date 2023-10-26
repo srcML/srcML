@@ -3642,17 +3642,23 @@ interface_declaration[] { ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
-// match struct declaration
+/*
+  struct_declaration
+
+  Handles a "struct" declaration.
+*/
 struct_declaration[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
 
-            // start the class definition
+            // start the struct definition
             startElement(SSTRUCT_DECLARATION);
         }
-
-        class_preamble STRUCT class_post class_header
+        class_preamble
+        STRUCT
+        class_post
+        class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
