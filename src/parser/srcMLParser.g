@@ -3680,16 +3680,23 @@ struct_union_definition[int element_token] { ENTRY_DEBUG } :
         }
 ;
 
-// process union declaration beginning
+/*
+  union_declaration
+
+  Handles the beginning of a "union" declaration.
+*/
 union_declaration[] { ENTRY_DEBUG } :
         {
             // statement
             startNewMode(MODE_STATEMENT);
 
-            // start the class definition
+            // start the union definition
             startElement(SUNION_DECLARATION);
         }
-        class_preamble UNION class_post class_header
+        class_preamble
+        UNION
+        class_post
+        class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
