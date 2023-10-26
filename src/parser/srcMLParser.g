@@ -4038,15 +4038,19 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
         terminate_post
 ;
 
-// match the actual terminate token
+/*
+  terminate_token
+
+  Matches the actual terminate token (';').
+*/
 terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (inMode(MODE_STATEMENT | MODE_NEST) && (!inMode(MODE_DECL) && !inTransparentMode(MODE_FRIEND)
-            && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
+            if (inMode(MODE_STATEMENT | MODE_NEST)
+                && (!inMode(MODE_DECL) && !inTransparentMode(MODE_FRIEND)
+                && (!inLanguage(LANGUAGE_JAVA) || !inMode(MODE_ENUM | MODE_LIST))))
                 startElement(SEMPTY);
 
             wait_terminate_post = true;
-
         }
         TERMINATE
         set_bool[skip_ternary, false]
