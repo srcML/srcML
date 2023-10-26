@@ -3583,7 +3583,11 @@ anonymous_class_definition[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// super within an anonymous class
+/*
+  anonymous_class_super
+
+  Handles cases where a "super" appears within an anonymous class.
+*/
 anonymous_class_super[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement
