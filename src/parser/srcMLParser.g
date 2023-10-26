@@ -4019,11 +4019,14 @@ rcurly[] { ENTRY_DEBUG } :
         RCURLY
 ;
 
-// terminate (';')
+/*
+  terminate
+
+  Begins the process of handling a terminate character (';').
+*/
 terminate[] { ENTRY_DEBUG resumeStream(); } :
         {
             if (inMode(MODE_IGNORE_TERMINATE)) {
-
                 if (inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT))
                     control_initialization_action();
                 else
