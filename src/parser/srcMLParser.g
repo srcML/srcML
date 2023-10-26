@@ -3622,7 +3622,11 @@ interface_definition[] { ENTRY_DEBUG } :
         lcurly[false]
 ;
 
-// do an interface declaration
+/*
+  interface_declaration
+
+  Handles an "interface" declaration.
+*/
 interface_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -3631,8 +3635,10 @@ interface_declaration[] { ENTRY_DEBUG } :
             // start the interface definition
             startElement(SINTERFACE_DECLARATION);
         }
-
-        class_preamble INTERFACE class_post class_header
+        class_preamble
+        INTERFACE
+        class_post
+        class_header
         (options { greedy = true; } : COMMA class_post class_header)*
 ;
 
