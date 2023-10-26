@@ -3756,14 +3756,14 @@ class_default_access_action[int access_token] { ENTRY_DEBUG } :
         }
 ;
 
-// handle class header
+/*
+  class_header
+
+  Handles a "class" header.
+*/
 class_header[] { ENTRY_DEBUG } :
-
         { isoption(parser_options, SRCML_PARSER_OPTION_CPP) && next_token() != DCOLON }?
-        (macro_call_check class_header_base LCURLY)=>
-           macro_call class_header_base |
-
-        class_header_base
+        (macro_call_check class_header_base LCURLY) => macro_call class_header_base | class_header_base
 ;
 
 // class header base
