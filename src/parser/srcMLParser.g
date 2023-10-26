@@ -3721,28 +3721,36 @@ annotation_definition[] { ENTRY_DEBUG } :
         lcurly[false]
 ;
 
-// default private/public section for C++
+/*
+  class_default_access_action
+
+  Handles default private/public section for C++
+*/
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
-            if ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_OBJECTIVE_C)) && (SkipBufferSize() > 0 ||
-                !(LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED || LA(1) == SIGNAL
-                    || LA(1) == ATREQUIRED || LA(1) == ATOPTIONAL))) {
-
-                // setup block section
+            if ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_OBJECTIVE_C))
+                && (SkipBufferSize() > 0
+                || !(LA(1) == PUBLIC
+                || LA(1) == PRIVATE
+                || LA(1) == PROTECTED
+                || LA(1) == SIGNAL
+                || LA(1) == ATREQUIRED
+                || LA(1) == ATOPTIONAL)))
+            {
+                // create block section
                 section_entry_action_first();
 
                 // start private element
                 if (LA(1) == RCURLY && SkipBufferSize() == 0)
-                    // empty element for empty (no ws even) block
+                    // empty element for empty (no whitespace even) block
                     emptyElement(access_token);
                 else {
                     // start private element before whitespace
                     startNoSkipElement(access_token);
                     setMode(MODE_ACCESS_REGION);
                 }
-
-            /* Have to setup an empty section for anonymouse structs, not sure why */
             } else if (inLanguage(LANGUAGE_C)) {
+                // have to create an empty section for anonymous structs, not sure why
                 section_entry_action_first();
             }
         }
