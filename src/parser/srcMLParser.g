@@ -4441,7 +4441,11 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         namespace_definition
 ;
 
-// mark ( operator
+/*
+  lparen_marked
+
+  Used to mark the "(" operator.
+*/
 lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             incParen();
