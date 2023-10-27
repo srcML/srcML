@@ -4468,7 +4468,11 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
         BAR
 ;
 
-// handle comma
+/*
+  comma
+
+  Used to handle commas.
+*/
 comma[] { bool markup_comma = true; ENTRY_DEBUG } :
         {
             // comma ends the current item in a list or ends the current expression
@@ -4476,7 +4480,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
                 endDownToModeSet(MODE_LIST | MODE_STATEMENT);
 
-            // comma in a variable initialization end init of current variable
+            // comma in a variable initialization ends init of current variable
             if (inMode(MODE_IN_INIT))
                 endMode(MODE_IN_INIT);
 
