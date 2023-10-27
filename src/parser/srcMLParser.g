@@ -4584,11 +4584,10 @@ colon[] { ENTRY_DEBUG } :
 ;
 
 /*
-  Condition contained in if/while/switch.
+  condition
 
-  Triggered by mode MODE_CONDITION | MODE_EXPECT and left parentheses.
-  Starts condition mode and prepares to handle embedded expression.
-  End of the element is handled in condition_rparen.
+  Condition contained in "if"/"while"/"switch."  Triggered by left parentheses in mode MODE_CONDITION or MODE_EXPECT.
+  Starts condition mode and prepares to handle an embedded expression.  The end of the element is handled in condition_rparen.
 */
 condition[] { ENTRY_DEBUG } :
         {
@@ -4597,12 +4596,10 @@ condition[] { ENTRY_DEBUG } :
             // start element condition outside of the left parentheses
             startElement(SCONDITION);
 
-            // mark the condition mode as the one to stop at a right parentheses
-            // non-empty conditions contain an expression
+            // mark the condition mode as the one to stop at a right parentheses; non-empty conditions contain an expression
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
         }
         LPAREN
-
         condition_inner
 ;
 
