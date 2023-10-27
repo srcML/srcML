@@ -5332,9 +5332,12 @@ type_identifier_count_check returns [int type_count] {
         --inputState->guessing;
 } :;
 
-// core functionality for type identifier count check
-type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
+/*
+  type_identifier_count_check_core
 
+  Handles the core functionality for type_identifier_count_check.
+*/
+type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
         (type_identifier_count[type_count])*
 ;
 
