@@ -4524,25 +4524,29 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
         COMMA
 ;
 
-// mark COLON
+/*
+  colon_marked
+
+  Used to mark a colon (":").
+*/
 colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); bool markup_colon = true; LightweightElement element(this); ENTRY_DEBUG } :
         {
-
             if (in_ternary) {
-
                 endDownToMode(MODE_THEN);
+
                 flushSkip();
+
                 endMode(MODE_THEN);
+
                 startNewMode(MODE_ELSE | MODE_EXPRESSION | MODE_EXPECT);
+
                 startElement(SELSE);
 
                 markup_colon = false;
-
             }
 
-            // only needed when ranged for and not a declaration
+            // only needed for a ranged for and not a declaration
             if (inTransparentMode(MODE_RANGED_FOR)) {
-
                 // start a new mode that will end after the argument list
                 startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
@@ -4550,21 +4554,15 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
                 startElement(SDECLARATION_RANGE);
 
                 markup_colon = false;
-
             }
 
             if (inLanguage(LANGUAGE_OBJECTIVE_C) && inTransparentMode(MODE_INTERNAL_END_CURLY)) {
-
                 endDownToMode(MODE_INTERNAL_END_CURLY);
-
             }
 
-            if (markup_colon && !(in_ternary && true)
-                && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
+            if (markup_colon && !(in_ternary && true) && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
                 startElement(SOPERATOR);
-
         }
-
         COLON
 ;
 
