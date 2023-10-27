@@ -5360,28 +5360,29 @@ eat_type[int& count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
         eat_type[count]
 ;
 
-// type identifier
+/*
+  pure_lead_type_identifier
+*/
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
+        // ambiguous on template keyword from template specifier and probably class_preamble template
+        (options { generateAmbigWarnings = false; } :
+            // specifiers that occur in a type
+            { argument_token_set.member(LA(1)) }?
+            specifier | template_specifier | auto_keyword[true] |
 
-        // ambigous on template keyword from template specifier and probably class_preamble template
-        (options { generateAmbigWarnings = false; } : 
-        // specifiers that occur in a type
+            { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
+            LBRACKET (COMMA)* RBRACKET |
 
-        { 
-            argument_token_set.member(LA(1))
-        }?
-        specifier | template_specifier | auto_keyword[true] |
+            { inLanguage(LANGUAGE_JAVA) }?
+            annotation |
 
-        { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
-        LBRACKET (COMMA)* RBRACKET |
+            { inLanguage(LANGUAGE_CSHARP) }?
+            attribute_csharp |
 
-        { inLanguage(LANGUAGE_JAVA) }? annotation |
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
+            attribute_cpp |
 
-        { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
-
-        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
-
-        pure_lead_type_identifier_no_specifiers
+            pure_lead_type_identifier_no_specifiers
         )
 ;
 
