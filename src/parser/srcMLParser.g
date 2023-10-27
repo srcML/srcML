@@ -5304,11 +5304,14 @@ update_typecount[srcMLState::MODE_TYPE mode] {} :
         }
 ;
 
-// count type identifiers
-type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
+/*
+  type_identifier_count
 
+  Used to count type identifiers.
+*/
+type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         // overloaded parentheses operator
-        { LA(1) == OPERATOR /* turns off ANTLR warning, and is nooped */ }?
+        { LA(1) == OPERATOR /* turns off ANTLR warning */ }?
         overloaded_operator |
         type_identifier |
         MAIN
