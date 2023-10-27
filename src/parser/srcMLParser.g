@@ -5238,8 +5238,14 @@ throw_exception[bool condition = true] {
         if (condition) throw antlr::RecognitionException();
 } :;
 
-/* sets the declaration type to a value if the condition is true */
-set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] { if (condition) name = value; } :;
+/*
+  set_type
+
+  Sets the declaration type to a value if the condition is true.
+*/
+set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] {
+        if (condition) name = value;
+} :;
 
 /* sets the int to a value if the condition is true */
 set_int[int& name, int value, bool condition = true] { if (condition) name = value; } :;
