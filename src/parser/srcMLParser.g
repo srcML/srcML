@@ -4566,7 +4566,11 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
         COLON
 ;
 
-// process colon not marked.
+/*
+  colon
+
+  Used to process a colon that was not marked.
+*/
 colon[] { ENTRY_DEBUG } :
         {
             // colon ends the current item in a list
