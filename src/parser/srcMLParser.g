@@ -5247,8 +5247,14 @@ set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] {
         if (condition) name = value;
 } :;
 
-/* sets the int to a value if the condition is true */
-set_int[int& name, int value, bool condition = true] { if (condition) name = value; } :;
+/*
+  set_int
+
+  Sets the int to a value if the condition is true.
+*/
+set_int[int& name, int value, bool condition = true] {
+        if (condition) name = value;
+} :;
 
 /* sets the bool to a value */
 set_bool[bool& variable, bool value = true] { variable = value; } :;
