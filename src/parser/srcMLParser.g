@@ -5341,16 +5341,20 @@ type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTR
         (type_identifier_count[type_count])*
 ;
 
+// Commented-out code
 /*
 // --a;
 deduct[int& type_count] { --type_count; } :;
 */
 
-// consume a type
-eat_type[int& count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
+/*
+  eat_type
 
+  Used to consume a type.
+*/
+eat_type[int& count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
         // Mark as name before mark without name
-        (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier)
+        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier)
 
         set_int[count, count - 1]
         eat_type[count]
