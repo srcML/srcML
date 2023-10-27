@@ -5317,17 +5317,19 @@ type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         MAIN
 ;
 
-// check the type identifier count
+/*
+  type_identifier_count_check
+
+  Checks the type identifier count.
+*/
 type_identifier_count_check returns [int type_count] {
+        int start = mark();
+        ++inputState->guessing;
 
+        type_count = type_identifier_count_check_core();
 
-    int start = mark();
-    ++inputState->guessing;
-
-    type_count = type_identifier_count_check_core();
-
-    rewind(start);
-    --inputState->guessing;
+        rewind(start);
+        --inputState->guessing;
 } :;
 
 // core functionality for type identifier count check
