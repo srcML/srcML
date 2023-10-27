@@ -4618,126 +4618,159 @@ condition_inner[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; int aft
         rparen[false]
 ;
 
-// perform an arbitrary look ahead looking for a pattern
+/*
+  pattern_check
+
+  Performs an arbitrary look ahead, looking for a pattern.
+*/
 pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bool inparam = false] returns [bool isdecl] {
+        isdecl = true;
 
-    isdecl = true;
-
-    int specifier_count;
-    int attribute_count;
-    int template_count;
-    type = NONE;
-
-    int start = mark();
-    inputState->guessing++;
-
-    bool sawtemplate;
-    bool sawcontextual;
-    int posin = 0;
-    int fla = 0;
-
-    try {
-
-        pattern_check_core(token, fla, type_count, specifier_count, attribute_count, template_count, type, inparam, sawtemplate, sawcontextual, posin);
-
-    } catch (...) {
-
-        if (type == VARIABLE && type_count == 0) {
-            type_count = 1;
-        }
-
-    }
-
-    if (type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
+        int specifier_count;
+        int attribute_count;
+        int template_count;
         type = NONE;
 
-    if (type == NONE && (sawtemplate || (sawcontextual && type_count > 0))
-     && (!keyword_name_token_set.member(LA(1)) || LA(1) == MULTOPS || LA(1) == REFOPS || LA(1) == RVALUEREF || LA(1) == TERMINATE))
-        type = VARIABLE;
-    
-    // may just have an expression
-    if (type == VARIABLE && posin)
-        type_count = posin - 1;
+        int start = mark();
+        inputState->guessing++;
 
-    // may just have a single macro (no parens possibly) before a statement
-    else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
-        type = SINGLE_MACRO;
+        bool sawtemplate;
+        bool sawcontextual;
+        int posin = 0;
+        int fla = 0;
 
-    else if (type == 0 && type_count == 1 && (LA(1) == CLASS || LA(1) == CXX_CLASS || LA(1) == STRUCT || LA(1) == UNION)) {
-
-        pattern_check(type, token, type_count, after_token, inparam);
-        type_count += 1;
-
-        if (type == CLASS_DECL || type == CLASS_DEFN || type == UNION_DECL || type == UNION_DEFN || type == STRUCT_DECL || type == STRUCT_DEFN || type == ENUM_DECL || type == ENUM_DEFN || type == 0) {
-
-            type = SINGLE_MACRO;
-            type_count = 1;
-
+        try {
+            pattern_check_core(token, fla, type_count, specifier_count, attribute_count, template_count, type, inparam, sawtemplate, sawcontextual, posin);
+        } catch (...) {
+            if (type == VARIABLE && type_count == 0) {
+                type_count = 1;
+            }
         }
 
-    }
+        if (type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
+            type = NONE;
 
-    // may just have an expression
-    else if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
-        type = NULLOPERATOR;
+        if (type == NONE
+            && (sawtemplate
+                || (sawcontextual
+                    && type_count > 0
+                    )
+                )
+            && (!keyword_name_token_set.member(LA(1))
+                || LA(1) == MULTOPS
+                || LA(1) == REFOPS
+                || LA(1) == RVALUEREF
+                || LA(1) == TERMINATE
+                )
+            )
+            type = VARIABLE;
 
-    // declaration form
-    else if (type == CONSTRUCTOR && fla == TERMINATE)
-        type = CONSTRUCTOR_DECL;
+        // may just have an expression
+        if (type == VARIABLE && posin)
+            type_count = posin - 1;
 
-    // declaration form
-    else if (type == DESTRUCTOR && fla == TERMINATE)
-        type = DESTRUCTOR_DECL;
+        // may just have a single macro (no parens possibly) before a statement
+        else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
+            type = SINGLE_MACRO;
 
-    // declaration form
-    else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
-        type = FUNCTION_DECL;
+        else if (type == 0
+            && type_count == 1
+            && (LA(1) == CLASS
+                || LA(1) == CXX_CLASS
+                || LA(1) == STRUCT
+                || LA(1) == UNION))
+        {
+            pattern_check(type, token, type_count, after_token, inparam);
 
-    // declaration form
-    else if (type == OPERATOR_FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
-        type = OPERATOR_FUNCTION_DECL;
+            type_count += 1;
 
-    // we actually have a macro and then a constructor
-    else if (type == FUNCTION && fla == COLON)
-        type = SINGLE_MACRO;
+            if (type == CLASS_DECL
+                || type == CLASS_DEFN
+                || type == UNION_DECL
+                || type == UNION_DEFN
+                || type == STRUCT_DECL
+                || type == STRUCT_DEFN
+                || type == ENUM_DECL
+                || type == ENUM_DEFN
+                || type == 0)
+            {
+                type = SINGLE_MACRO;
+                type_count = 1;
+            }
+        }
 
-    // not really a destructor
-    if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
-        type = EXPRESSION;
+        // may just have an expression
+        else if (type == DESTRUCTOR && !inLanguage(LANGUAGE_CXX_FAMILY))
+            type = NULLOPERATOR;
 
-    if ((type == FUNCTION || type == FUNCTION_DECL) && fla == COMMA && !inparam)
-        type = VARIABLE;
+        // declaration form
+        else if (type == CONSTRUCTOR && fla == TERMINATE)
+            type = CONSTRUCTOR_DECL;
 
-    after_token = LA(1);
+        // declaration form
+        else if (type == DESTRUCTOR && fla == TERMINATE)
+            type = DESTRUCTOR_DECL;
 
-    inputState->guessing--;
-    rewind(start);
+        // declaration form
+        else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+            type = FUNCTION_DECL;
 
-    if (type == VARIABLE && type_count == (specifier_count + attribute_count + template_count))
-        ++type_count;
+        // declaration form
+        else if (type == OPERATOR_FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+            type = OPERATOR_FUNCTION_DECL;
 
-    if (!inMode(MODE_FUNCTION_TAIL) && type == 0 && type_count == 0 
-       && (enum_preprocessing_token_set.member(LA(1)) || LA(1) == DECLTYPE) && (!inLanguage(LANGUAGE_CXX) || !(LA(1) == FINAL || LA(1) == OVERRIDE))
-       && after_token == TERMINATE) {
+        // we actually have a macro and then a constructor
+        else if (type == FUNCTION && fla == COLON)
+            type = SINGLE_MACRO;
 
-        type = VARIABLE;
-        type_count = 1;
+        // not really a destructor
+        if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
+            type = EXPRESSION;
 
-    }
+        if ((type == FUNCTION || type == FUNCTION_DECL) && fla == COMMA && !inparam)
+            type = VARIABLE;
 
-    if (type == NONE && LA(1) == TEMPLATE)
-        type = GLOBAL_TEMPLATE;
+        after_token = LA(1);
 
-    if (inLanguage(LANGUAGE_CSHARP) && type == FUNCTION_DECL && fla == TERMINATE && LA(1) == DELEGATE) {
-        type_count -= 1;
-        type = DELEGATE_TYPE;
-    }
+        inputState->guessing--;
+        rewind(start);
 
-    if (inLanguage(LANGUAGE_CSHARP) && type == FUNCTION_DECL && fla == TERMINATE && 
-        (token == DELEGATE && (LA(1) == PUBLIC || LA(1) == PRIVATE || LA(1) == PROTECTED))) {
-        type_count -= 2;
-        type = DELEGATE_TYPE;
-    }
+        if (type == VARIABLE && type_count == (specifier_count + attribute_count + template_count))
+            ++type_count;
+
+        if (!inMode(MODE_FUNCTION_TAIL)
+            && type == 0
+            && type_count == 0
+            && (enum_preprocessing_token_set.member(LA(1))
+                || LA(1) == DECLTYPE)
+            && (!inLanguage(LANGUAGE_CXX)
+                || !(LA(1) == FINAL
+                || LA(1) == OVERRIDE))
+            && after_token == TERMINATE)
+        {
+            type = VARIABLE;
+            type_count = 1;
+        }
+
+        if (type == NONE && LA(1) == TEMPLATE)
+            type = GLOBAL_TEMPLATE;
+
+        if (inLanguage(LANGUAGE_CSHARP) && type == FUNCTION_DECL && fla == TERMINATE && LA(1) == DELEGATE) {
+            type_count -= 1;
+            type = DELEGATE_TYPE;
+        }
+
+        if (inLanguage(LANGUAGE_CSHARP)
+            && type == FUNCTION_DECL
+            && fla == TERMINATE
+            && (token == DELEGATE
+                && (LA(1) == PUBLIC
+                    || LA(1) == PRIVATE
+                    || LA(1) == PROTECTED)))
+        {
+            type_count -= 2;
+            type = DELEGATE_TYPE;
+        }
 } :;
 
 /*
