@@ -4455,7 +4455,11 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         LPAREN
 ;
 
-// marking | operator
+/*
+  bar
+
+  Used to mark the "|" operator.
+*/
 bar[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (!inMode(MODE_PARAMETER))
