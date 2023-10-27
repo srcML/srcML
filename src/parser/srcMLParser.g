@@ -4107,29 +4107,28 @@ terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_P
 ;
 
 /*
-  Handle possible endings of else statements.
+  else_handling
 
-  Called from all places that end a statement, and could possibly end the else that the target statement was in.
-  I.e., terminate ';', end of a statement block, etc.
+  Handles the possible endings of "else" statements.
+
+  Called from all places that end a statement, and could possibly end the "else" that the target statement was in.
+  I.e., terminate (";"), end of a statement block, etc.
 
   If in an if-statement, relatively straightforward.  Note that we could be ending with multiple else's.
 
-  Special case:  else with no matching if.  This occurs with a) a single else, or more likely with b) an
-  else in a preprocessor #if .. #else ... #endif construct (actually, very common).
+  Special case: "else" with no matching "if."  This occurs with a) a single "else", or with b) an "else" in a
+  preprocessor "#if ... #else ... #endif" construct (this is very common).
 */
 else_handling[] { ENTRY_DEBUG } :
         {
-
-            // record the current size of the top of the cppmode stack to detect
-            // any #else or #endif in consumeSkippedTokens
-            // see below
+            // record the current size of the top of the cppmode stack to detect any #else or #endif in consumeSkippedTokens (see below)
             auto cppmode_size = !cppmode.empty() ? cppmode.top().statesize.size() : 0;
 
-            // catch and finally statements are nested inside of a try, if at that level
-            // so if no CATCH or FINALLY, then end now
+            // catch and finally statements are nested inside of a try, if at that level; if no CATCH or FINALLY, then end now
             bool intry = inMode(MODE_TRY);
             bool in_for_like_list = inMode(MODE_FOR_LIKE_LIST);
             bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == FINALLY;
+
             if (intry && !restoftry) {
                 endMode(MODE_TRY);
                 endDownToMode(MODE_TOP);
@@ -4137,35 +4136,26 @@ else_handling[] { ENTRY_DEBUG } :
 
             // handle parts of if
             if (inTransparentMode(MODE_IF) && !(intry && restoftry) && !in_for_like_list) {
-
                 if (LA(1) != ELSE) {
-
                     endDownToMode(MODE_TOP);
-
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (inMode(MODE_ELSE)) {
-
                     // when an else but not elseif
                     while (inMode(MODE_ELSE) && !inMode(MODE_IF)) {
-
                         // end the else
                         endMode();
 
-                        // we have an extra else that is rogue
-                        // it either is a single else statement, or part of an #ifdef ... #else ... #endif
+                        // we have an extra else that is rogue; it either is a single else statement, or part of an #ifdef ... #else ... #endif
                         if (LA(1) == ELSE && ifcount == 1)
                             break;
 
                         // ending an else means ending an if
                         if (inMode(MODE_IF)) {
-
                             if (inMode(MODE_IF_STATEMENT))
                                 --ifcount;
 
                             endMode();
-
                         }
-
                     }
 
                     // following ELSE indicates end of outer then
@@ -4176,26 +4166,23 @@ else_handling[] { ENTRY_DEBUG } :
                     if (inMode(MODE_IF | MODE_ELSE)) {
                         if (inMode(MODE_IF_STATEMENT))
                             --ifcount;
+
                         endMode();
                     }
-
                 }
             } else if (inTransparentMode(MODE_ELSE)) {
-
-                // have an else, but are not in an if.  Could be a fragment,
-                // or could be due to an #ifdef ... #else ... #endif
+                // have an else not in an if; could be a fragment, or could be due to an #ifdef ... #else ... #endif
                 if (inMode(MODE_ELSE))
                     endMode(MODE_ELSE);
             }
 
             // update the state size in cppmode if changed from using consumeSkippedTokens
             if (!cppmode.empty() && cppmode_size != cppmode.top().statesize.size()) {
-
                 cppmode.top().statesize.back() = size();
 
                 // remove any finished ones
                 if (cppmode.top().isclosed)
-                        cppmode_cleanup();
+                    cppmode_cleanup();
             }
         }
 ;
