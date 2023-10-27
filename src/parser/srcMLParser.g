@@ -4187,7 +4187,11 @@ else_handling[] { ENTRY_DEBUG } :
         }
 ;
 
-// mid-statement
+/*
+  statement_part
+
+  Handles being in the middle of a statement.
+*/
 statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE;
                    CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
 
@@ -4200,7 +4204,6 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         { endDownToMode(MODE_LIST); endMode(MODE_LIST); }
         lcurly |
 
-
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
         enum_short_variable_declaration |
 
@@ -4211,8 +4214,7 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
           MODE_EXPRESSION
         */
 
-        // expression block or expressions
-        // must check before expression
+        // expression block or expressions; must check before expression
         { inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT) }?
         pure_expression_block |
 
@@ -4226,23 +4228,30 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
 
         // throw list at end of function header
         { (inLanguage(LANGUAGE_OO)) }?
-        throw_list complete_arguments (comma complete_arguments)* { endDownToMode(MODE_LIST); endMode(MODE_LIST); } |
+        throw_list
+        complete_arguments
+        (comma complete_arguments)*
+        { endDownToMode(MODE_LIST); endMode(MODE_LIST); } |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX))&& inMode(MODE_FUNCTION_TAIL) }?
+        { (inLanguage(LANGUAGE_CXX)) && inMode(MODE_FUNCTION_TAIL) }?
         ref_qualifier |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) }?
+        { (inLanguage(LANGUAGE_CXX)) && inTransparentMode(MODE_FUNCTION_TAIL) }?
         noexcept_list |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX))&& inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
+        { (inLanguage(LANGUAGE_CXX)) && inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
         attribute_cpp |
 
         // K&R function parameters
-        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && inMode(MODE_FUNCTION_TAIL) &&
-          pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE && after_token != LCURLY }?
+        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && inMode(MODE_FUNCTION_TAIL)
+            && pattern_check(stmt_type, secondtoken, type_count, after_token)
+            && stmt_type == VARIABLE
+            && after_token != LCURLY
+        }?
         kr_parameter[type_count] |
 
         // function try block, must be before function_specifier
@@ -4250,8 +4259,16 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         try_statement |
 
         // function specifier at end of function header
-        { inLanguage(LANGUAGE_CXX_FAMILY) && inMode(MODE_FUNCTION_TAIL)
-            && (LA(1) != EQUAL || (inLanguage(LANGUAGE_CXX) && (next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE))) }?
+        { inLanguage(LANGUAGE_CXX_FAMILY)
+            && inMode(MODE_FUNCTION_TAIL)
+            && (LA(1) != EQUAL
+                || (inLanguage(LANGUAGE_CXX)
+                    && (next_token() == CONSTANTS
+                    || next_token() == DEFAULT
+                    || next_token() == DELETE)
+                )
+            )
+        }?
         function_specifier |
 
         { inMode(MODE_FUNCTION_TAIL) }?
@@ -4271,30 +4288,34 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
 
         // start of argument for return or throw statement
-        { inMode(MODE_EXPRESSION | MODE_EXPECT) &&
-            isoption(parser_options, SRCML_PARSER_OPTION_CPP) && perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO }?
+        { inMode(MODE_EXPRESSION | MODE_EXPECT)
+            && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && perform_call_check(type, isempty, call_count, secondtoken)
+            && type == MACRO
+        }?
         macro_call |
 
         { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
         expression[type, call_count] |
 
-        // already in an expression, and run into a keyword
-        // so stop the expression, and markup the keyword statement
+        // already in an expression and ran into a keyword; stop the expression and markup the keyword statement
         { inMode(MODE_EXPRESSION)
-         && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
-         && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
-         && (LA(1) != DEFAULT || next_token() == COLON)
-         && (LA(1) != CHECKED || next_token() == LCURLY)
-         && (LA(1) != UNCHECKED || next_token() == LCURLY)
-         && (LA(1) != CXX_TRY || next_token() == LCURLY)
-         && (LA(1) != INLINE || next_token() == NAMESPACE)
-         && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
-         && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
-         && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN) 
-         && (LA(1) != EMIT || emit_statement_check()) }?
+            && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
+            && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
+            && (LA(1) != DEFAULT || next_token() == COLON)
+            && (LA(1) != CHECKED || next_token() == LCURLY)
+            && (LA(1) != UNCHECKED || next_token() == LCURLY)
+            && (LA(1) != CXX_TRY || next_token() == LCURLY)
+            && (LA(1) != INLINE || next_token() == NAMESPACE)
+            && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
+            && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
+            && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN)
+            && (LA(1) != EMIT || emit_statement_check())
+        }?
         terminate_pre
         terminate_post
         keyword_statements |
+
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
         expression_part_plus_linq |
@@ -4310,6 +4331,7 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         /*
           MODE_VARIABLE_NAME
         */
+
         { inMode(MODE_VARIABLE_NAME | MODE_INIT) }?
         tripledotop |
 
@@ -4341,8 +4363,18 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         variable_declaration_initialization |
 
         // start of argument for return or throw statement
-        { inMode(MODE_INIT | MODE_EXPECT) && ((LA(1) == COLON && ((inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP)) || inLanguage(LANGUAGE_JAVA)))
-                || LA(1) == IN) }?
+        { inMode(MODE_INIT | MODE_EXPECT)
+            && (
+                (LA(1) == COLON
+                    && (
+                        (inLanguage(LANGUAGE_C_FAMILY)
+                            && !inLanguage(LANGUAGE_CSHARP)
+                        )
+                        || inLanguage(LANGUAGE_JAVA)
+                    )
+                )
+            || LA(1) == IN)
+        }?
         variable_declaration_range |
 
         // in an argument list expecting an argument
@@ -4354,7 +4386,7 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         parameter |
 
         { inMode(MODE_VARIABLE_NAME) }?
-        goto_case | 
+        goto_case |
 
         /*
           Check for MODE_CONTROL_CONDITION before template stuff, since it can conflict
@@ -4399,13 +4431,13 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         { inMode(MODE_EXTERN) }?
         extern_name |
 
-        // sometimes end up here, as when control group ends early, or with for-each
+        // sometimes end up here if a control group ends early or with a for-each
         rparen |
 
         // seem to end up here for colon in ternary operator
         colon_marked |
 
-        // markup namespace tag in using namespace
+        // markup namespace tag using namespace
         namespace_definition
 ;
 
