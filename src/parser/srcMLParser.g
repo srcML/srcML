@@ -5407,15 +5407,15 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
         )
 ;
 
-// more lead type identifier
-class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
+/*
+  class_lead_type_identifier
+*/
+class_lead_type_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-
             if (inTransparentMode(MODE_TEMPLATE))
                 startElement(SNAME);
             else
                 startElement(SNOP);
-
         }
         (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
