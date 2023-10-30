@@ -5403,7 +5403,10 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
             enum_definition_complete |
 
-            { LA(1) == DECLTYPE }? type_specifier_call | atomic
+            { LA(1) == DECLTYPE }?
+            type_specifier_call |
+
+            atomic
         )
 ;
 
