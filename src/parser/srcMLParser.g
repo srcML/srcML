@@ -5087,11 +5087,11 @@ pattern_check_core[ int& token,           /* second token, after name (always re
             throw_exception[type == PROPERTY_STMT]
 
             /*
-            We have a declaration (at this point a variable) if we have:
-                - At least one non-specifier in the type
-                - There is nothing in the type (what was the name is the type) and it is part of a parameter list
+              We have a declaration (at this point a variable) if we have:
+              - At least one non-specifier in the type
+              - There is nothing in the type (what was the name is the type) and it is part of a parameter list
 
-                For now, attribute and template counts are left out on purpose.
+              For now, attribute and template counts are left out on purpose.
             */
             set_type[type, VARIABLE,
                     ((((type_count - specifier_count - template_count) > 0
