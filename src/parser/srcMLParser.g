@@ -5628,14 +5628,20 @@ linq_expression_pure[] { ENTRY_DEBUG } :
         | linq_orderby
 ;
 
-// a linq from
+/*
+  linq_from
+
+  Handles a linq "from" keyword.
+*/
 linq_from[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SFROM);
         }
-        FROM linq_expression_complete (options { greedy = true; } : linq_in)*
+        FROM
+        linq_expression_complete
+        (options { greedy = true; } : linq_in)*
 ;
 
 // a linq in
