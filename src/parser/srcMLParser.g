@@ -5755,12 +5755,17 @@ linq_join[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)*
 ;
 
-// linq on
+/*
+  linq_on
+
+  Handles a linq "on" keyword.
+*/
 linq_on[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SON);
         }
-        ON linq_expression_complete
+        ON
+        linq_expression_complete
 ;
 
 // linq equals
