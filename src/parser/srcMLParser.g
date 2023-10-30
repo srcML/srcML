@@ -5475,7 +5475,7 @@ type_specifier_call[] { ENTRY_DEBUG } :
 /*
   decltype_call
 
-  Used to mark a "decltype" (C++11).
+  Used to mark a "decltype" specifier (C++11).
 */
 decltype_call[] { CompleteElement element(this); int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
