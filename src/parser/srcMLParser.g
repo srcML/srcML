@@ -5435,12 +5435,12 @@ lead_type_identifier[] { ENTRY_DEBUG } :
         pure_lead_type_identifier
 ;
 
-// type identifier
+/*
+  type_identifier
+*/
 type_identifier[] { ENTRY_DEBUG } :
-
-        // any identifier that can appear first can appear later
-        // true suppresses warning.  antlr forms rules as LA(1) && (true )
-        // so this does nothing.
+        // any identifier that can appear first and can appear later as true suppresses the warning
+        // antlr forms rules as LA(1) && (true), so this does nothing
         { true }? lead_type_identifier |
 
         non_lead_type_identifier
