@@ -5544,9 +5544,14 @@ atomic_call[] { CompleteElement element(this); int save_type_count = getTypeCoun
         (options { greedy = true; } : complete_argument_list)?
 ;
 
-// C++ completely match without markup _Atomic
+/*
+  atomic_call_full
+
+  Used to completely match an "_Atomic" without marking it up (C++).
+*/
 atomic_call_full[] { ENTRY_DEBUG } :
-        ATOMIC (options { greedy = true; } : paren_pair)?
+        ATOMIC
+        (options { greedy = true; } : paren_pair)?
 ;
 
 // qmark
