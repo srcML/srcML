@@ -5596,7 +5596,13 @@ qmark[] { is_qmark = true; ENTRY_DEBUG } :
         }
 ;
 
-/* linq expressions */
+/*
+  linq expressions
+*/
+
+/*
+  linq_expression
+*/
 linq_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
