@@ -5513,7 +5513,11 @@ atomic[] { ENTRY_DEBUG } :
         atomic_specifier
 ;
 
-// C11 markup _Atomic as specifier
+/*
+  atomic_specifier
+
+  Used to mark "_Atomic" as a specifier (C++11).
+*/
 atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
