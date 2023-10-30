@@ -5768,12 +5768,17 @@ linq_on[] { SingleElement element(this); ENTRY_DEBUG } :
         linq_expression_complete
 ;
 
-// linq equals
+/*
+  linq_equals
+
+  Handles a linq "equals" keyword.
+*/
 linq_equals[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SEQUALS);
         }
-        EQUALS linq_expression_complete
+        EQUALS
+        linq_expression_complete
 ;
 
 // linq orderby
