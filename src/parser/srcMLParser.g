@@ -5726,12 +5726,17 @@ linq_by[] { SingleElement element(this); ENTRY_DEBUG } :
         linq_expression_complete
 ;
 
-// linq into
+/*
+  linq_into
+
+  Handles a linq "into" keyword.
+*/
 linq_into[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SINTO);
         }
-        INTO linq_expression_complete
+        INTO
+        linq_expression_complete
 ;
 
 // linq join
