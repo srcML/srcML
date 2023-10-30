@@ -5657,12 +5657,17 @@ linq_in[] { SingleElement element(this); ENTRY_DEBUG } :
         linq_expression_complete
 ;
 
-// a linq where
+/*
+  linq_where
+
+  Hanles a linq "where" keyword.
+*/
 linq_where[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SWHERE);
         }
-        WHERE linq_expression_complete
+        WHERE
+        linq_expression_complete
 ;
 
 // a linq select
