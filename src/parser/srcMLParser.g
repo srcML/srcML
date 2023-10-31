@@ -6195,30 +6195,56 @@ try_linq_expression_complete_inner[int& count_paren] returns [bool success = fal
         --inputState->guessing;
 } :;
 
+/*
+  linq_expression_complete_inner
+*/
 linq_expression_complete_inner[int& count_paren, bool update = false] { CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
+        // commas as in a list
+        comma |
 
-    // commas as in a list
-    comma |
+        // right parentheses, unless we are in a pair of parentheses in an expression
+        { LA(1) == LPAREN }?
+        expression_setup_linq
+        ({ update }? set_int[count_paren, count_paren + 1])? |
 
-    // right parentheses, unless we are in a pair of parentheses in an expression
-    { LA(1) == LPAREN }? expression_setup_linq ({ update }? set_int[count_paren, count_paren + 1])? |
+        { LA(1) == RPAREN && inputState->guessing }?
+        rparen
+        ({ update }? set_int[count_paren, count_paren - 1])? |
 
-    { LA(1) == RPAREN && inputState->guessing }? rparen ({ update }? set_int[count_paren, count_paren - 1])? |
+        { LA(1) == RPAREN && !inputState->guessing}?
+        expression_setup_linq
+        ({ update }? set_int[count_paren, count_paren - 1])? |
 
-    { LA(1) == RPAREN && !inputState->guessing}? expression_setup_linq ({ update }? set_int[count_paren, count_paren - 1])? |
+        { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
+        ({ update }? set_int[count_paren, isempty ? count_paren : count_paren + 1])?
+        expression_setup_linq |
 
-    { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
-    ({ update }? set_int[count_paren, isempty ? count_paren : count_paren + 1])? expression_setup_linq |
+        // argument mode (as part of call)
+        { inMode(MODE_ARGUMENT) }?
+        argument |
 
-    // argument mode (as part of call)
-    { inMode(MODE_ARGUMENT) }? argument |
+        // expression with right parentheses if a previous match is in one
+        {
+            LA(1) != ASCENDING
+            && LA(1) != DESCENDING
+            && LA(1) != ON
+            && LA(1) != BY
+            && LA(1) != FROM
+            && LA(1) != SELECT
+            && LA(1) != LET
+            && LA(1) != WHERE
+            && LA(1) != ORDERBY
+            && LA(1) != GROUP
+            && LA(1) != JOIN
+            && LA(1) != IN 
+            && LA(1) != EQUALS
+            && LA(1) != INTO
+            && (LA(1) != RPAREN
+                || inTransparentMode(MODE_INTERNAL_END_PAREN))
+        }?
+        expression_setup_linq |
 
-    // expression with right parentheses if a previous match is in one
-    { LA(1) != ASCENDING && LA(1) != DESCENDING && LA(1) != ON && LA(1) != BY && LA(1) != FROM && LA(1) != SELECT 
-        && LA(1) != LET && LA(1) != WHERE && LA(1) != ORDERBY && LA(1) != GROUP && LA(1) != JOIN && LA(1) != IN 
-        && LA(1) != EQUALS && LA(1) != INTO && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression_setup_linq |
-
-    COLON
+        COLON
 ;
 
 // variable name in an expression.  Includes array names, but not function calls
