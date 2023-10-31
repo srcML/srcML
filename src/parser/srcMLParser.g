@@ -5815,7 +5815,11 @@ linq_ascending[] { SingleElement element(this); ENTRY_DEBUG } :
         ASCENDING
 ;
 
-// linq descending
+/*
+  linq_descending
+
+  Handles a linq "descending" keyword.
+*/
 linq_descending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
