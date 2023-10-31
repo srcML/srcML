@@ -5880,7 +5880,11 @@ variable_identifier_array_grammar_sub_contents { bool found_expr = false; bool i
         }
 ;
 
-// handle C# attribute
+/*
+  attribute_csharp
+
+  Handles a C# attribute.
+*/
 attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -5890,8 +5894,12 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET
 
-        // do not warn as identifier list and colon are in complete expression as well, but need special processing here.
-        (options { warnWhenFollowAmbig = false; } : { next_token() == COLON }? attribute_csharp_target COLON)*
+        // do not warn; identifier list and colon are in complete expression as well, but need special processing here
+        (options { warnWhenFollowAmbig = false; } :
+            { next_token() == COLON }?
+                attribute_csharp_target
+                COLON
+        )*
 
         attribute_inner_list
 
