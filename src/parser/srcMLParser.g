@@ -6369,12 +6369,18 @@ simple_name_optional_template_optional_specifier_destop[bool push = true] { Comp
         )
 ;
 
-// a destructor identifier
+/*
+  identifier_destop
+
+  Handles a destructor identifier.
+*/
 identifier_destop[bool push = true] { SingleElement element(this); ENTRY_DEBUG } :
         {
-                startElement(SNAME);
+            startElement(SNAME);
         }
-        DESTOP push_namestack[push] identifier_list
+        DESTOP
+        push_namestack[push]
+        identifier_list
 ;
 
 // a destructor identifier
