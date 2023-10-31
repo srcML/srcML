@@ -6321,15 +6321,21 @@ simple_name_optional_template_destop[bool push = true] { CompleteElement element
         )
 ;
 
-// name including template argument list
-simple_name_optional_template_optional_specifier[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
-        push_namestack[push] (template_specifier /* { is_nop = false; } */)* identifier
-    (
-        { generic_argument_list_check() }? (generic_argument_list)=>
-            generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
+/*
+  simple_name_optional_template_optional_specifier
 
-        (cuda_argument_list) => cuda_argument_list |
-    )
+  Handles a name (including template argument list).  Used for optional specifiers.
+*/
+simple_name_optional_template_optional_specifier[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+        push_namestack[push]
+        (template_specifier /* Commented-out code: { is_nop = false; } */ )*
+        identifier
+        (
+            { generic_argument_list_check() }?
+            (generic_argument_list) => generic_argument_list (options { greedy = true; } : generic_type_constraint)* |
+
+            (cuda_argument_list) => cuda_argument_list
+        )
 ;
 
 // name including template argument list
