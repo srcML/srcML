@@ -5960,11 +5960,23 @@ complete_argument_list[] { ENTRY_DEBUG } :
         rparen[false]
 ;
 
-// Full, complete expression matched all at once (no stream).
-complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_TYPE type = NOCALL; 
-    bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
+/*
+  complete_arguments
+
+  Matches a full, complete expression all at once (no stream).
+*/
+complete_arguments[] {
+        CompleteElement element(this);
+        int count_paren = 1;
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 0;
+        ENTRY_DEBUG
+} :
         { getParen() == 0 }? rparen[false] |
+
         { getCurly() == 0 }? rcurly_argument |
+
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -5972,27 +5984,38 @@ complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_
             // start the argument
             startElement(SARGUMENT);
         }
-        (options { warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
 
-            (options { generateAmbigWarnings = false; } :
-                { LA(1) == LPAREN }? expression { ++count_paren; } |
+        (options { warnWhenFollowAmbig = false; } :
+            { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
+                (options { generateAmbigWarnings = false; } :
+                    { LA(1) == LPAREN }?
+                    expression { ++count_paren; } |
 
-                { LA(1) == RPAREN }? expression { --count_paren; } |
+                    { LA(1) == RPAREN }?
+                    expression { --count_paren; } |
 
-                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if (!isempty) ++count_paren; }
-                    expression_process (call[call_count] | keyword_calls) complete_arguments |
+                    { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
+                    { if (!isempty)
+                        ++count_paren;
+                    }
 
-                expression | (type_identifier) => expression_process type_identifier |
+                    expression_process (call[call_count] | keyword_calls)
+                    complete_arguments |
 
-                comma
-                {
-                    // argument with nested expression
-                    startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+                    expression |
 
-                    // start the argument
-                    startElement(SARGUMENT);
-                }
-            )
+                    (type_identifier) => expression_process type_identifier |
+
+                    comma
+
+                    {
+                        // argument with nested expression
+                        startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+                        // start the argument
+                        startElement(SARGUMENT);
+                    }
+                )
         )*
 ;
 
