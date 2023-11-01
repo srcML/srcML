@@ -6537,11 +6537,20 @@ pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
         rparen[true]
 ;
 
-// Markup names
+/*
+  compound_name
+
+  Used to mark names.
+*/
 compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_DEBUG } :
         compound_name_inner[true]
-        (options { greedy = true; } : {(!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}? variable_identifier_array_grammar_sub[iscompound] |
-        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } :
+            { (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET) }?
+            variable_identifier_array_grammar_sub[iscompound] |
+
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
+            attribute_cpp
+        )*
 ;
 
 // name markup internals
