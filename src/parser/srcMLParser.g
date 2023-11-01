@@ -6508,28 +6508,33 @@ function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
         compound_name_inner[false]
 ;
 
+/*
+  pointer_dereference
+*/
 pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
+        lparen_marked
 
-    lparen_marked
+        // special case for function pointer names that don't have a '*'
+        (
+            { macro_call_token_set.member(LA(1)) }?
+            (compound_name_inner[false])* |
 
-    // special case for function pointer names that don't have '*'
-    (
-        { macro_call_token_set.member(LA(1)) }?
-        (compound_name_inner[false])* |
+            // special name prefix of namespace or class
+            identifier
+            (generic_argument_list (generic_type_constraint)*)*
+            DCOLON
+            pointer_dereference |
 
-        // special name prefix of namespace or class
-        identifier (generic_argument_list (generic_type_constraint)*)* DCOLON pointer_dereference |
+            // typical function pointer name; need greedy for general operators and possibly end
+            general_operators
+            (options { greedy = true; } : general_operators)*
+            (options { greedy = true; } : compound_name_inner[false])*
 
-        // typical function pointer name
-        // need greedy for general operators and possibly end
-        general_operators (options { greedy = true; } : general_operators)* (options { greedy = true; } : compound_name_inner[false])*
+            // optional array declaration
+            (variable_identifier_array_grammar_sub[flag])*
+        )
 
-        // optional array declaration
-        (variable_identifier_array_grammar_sub[flag])*
-
-    )
-
-    rparen[true]
+        rparen[true]
 ;
 
 // Markup names
