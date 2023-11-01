@@ -6410,31 +6410,35 @@ identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         identifier_list
 ;
 
-// the list of identifiers that are also marked up as tokens for other things.
+/*
+  identifier_list
+
+  Handles the list of identifiers that are also marked up as tokens for other things.
+*/
 identifier_list[] { ENTRY_DEBUG } :
-            NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-            WARNING | SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
-            FINAL | OVERRIDE | VOID | ASM |
+        NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
+        WARNING | SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD | FINAL |
+        OVERRIDE | VOID | ASM |
 
-            // C# linq
-            FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
-            INTO | THIS | ALIAS |
+        // C# linq
+        FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING |
+        GROUP | BY | JOIN | ON | EQUALS | INTO | THIS | ALIAS |
 
-            // Objective-C
-            IMPORT | ATPROTOCOL |
+        // Objective-C
+        IMPORT | ATPROTOCOL |
 
-            // C
-            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |
+        // C
+        CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |
 
-            // Not sure why these are commented out
-            /* CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
-            VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
-            DELETE | LITERAL_FALSE | LITERAL_TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
-            DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF
-            */
+        // Commented-out code; Not sure why these are commented out
+        /* 
+        CXX_CLASS | THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW | VIRTUAL | FRIEND | OPERATOR |
+        EXPLICIT | NAMESPACE | USING | DELETE | LITERAL_FALSE | LITERAL_TRUE | FINAL | OVERRIDE |
+        CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR | DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF
+        */
 
-            //Qt
-            EMIT | FOREACH | SIGNAL | FOREVER
+        // Qt
+        EMIT | FOREACH | SIGNAL | FOREVER
 ;
 
 // most basic name
