@@ -6553,16 +6553,17 @@ compound_name[] { CompleteElement element(this); bool iscompound = false; ENTRY_
         )*
 ;
 
-// name markup internals
+/*
+  compound_name_inner
+
+  Used to mark the inner portion of a name.
+
+  There is a problem detecting complex names from complex names of operator methods in namespaces or classes for implicit casting
+  (e.g., A::operator String // () {}).  Detecting before here means lookahead on all A::B::... names, causing a slowdown of
+  almost 20%.  The solution ("hack") is to start all complex names as operator methods, then replace by NOP if not.
+*/
 compound_name_inner[bool index] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
-            // There is a problem detecting complex names from
-            // complex names of operator methods in namespaces or
-            // classes for implicit casting, e.g., A::operator String // () {}.
-            // Detecting before here means lookahead on all A::B::... names
-            // causing a slowdown of almost 20%.  Solution (hack) is to start all complex
-            // names as operator methods, then replace by NOP if not.
-
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
 
@@ -6597,12 +6598,16 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         { inLanguage(LANGUAGE_CXX) }?
         compound_name_cpp[iscompound] |
 
-        macro_type_name_call 
+        macro_type_name_call
         )
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
+            attribute_cpp
+        )*
 
-        (options { greedy = true; } : { index && /*!inTransparentMode(MODE_EAT_TYPE) &&*/ (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
+        (options { greedy = true; } :
+            { index && /* Commented-out code: !inTransparentMode(MODE_EAT_TYPE) && */ (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET) }?
             variable_identifier_array_grammar_sub[iscompound]
         )*
 ;
