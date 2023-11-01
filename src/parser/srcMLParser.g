@@ -6466,28 +6466,27 @@ typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         TYPENAME
 ;
 
-function_pointer_name_check[] returns[bool is_fp_name = false] {
+/*
+  function_pointer_name_check
+*/
+function_pointer_name_check[] returns [bool is_fp_name = false] {
+        if (LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
+            ++inputState->guessing;
+            int start = mark();
 
-    if (LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
+            try {
+                function_pointer_name_grammar();
+                is_fp_name = LA(1) == PERIOD
+                    || LA(1) == TRETURN
+                    || (inLanguage(LANGUAGE_CXX) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
+            } catch(...) {}
 
-        ++inputState->guessing;
-        int start = mark();
+            rewind(start);
+            --inputState->guessing;
+        }
 
-        try {
-
-            function_pointer_name_grammar();
-            is_fp_name = LA(1) == PERIOD || LA(1) == TRETURN
-                || (inLanguage(LANGUAGE_CXX) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
-
-        } catch(...) {}
-       
-
-        rewind(start);
-        --inputState->guessing;
-
-    }
-
-ENTRY_DEBUG } :;
+        ENTRY_DEBUG
+} :;
 
 function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
 
