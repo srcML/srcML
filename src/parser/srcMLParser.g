@@ -6453,6 +6453,9 @@ simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         (NAME | VOID)
 ;
 
+/*
+  typename_keyword
+*/
 typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             if (!inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
