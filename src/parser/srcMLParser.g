@@ -6441,14 +6441,16 @@ identifier_list[] { ENTRY_DEBUG } :
         EMIT | FOREACH | SIGNAL | FOREVER
 ;
 
-// most basic name
+/*
+  simple_identifier
+
+  Handles the most basic form of a name.
+*/
 simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
-        (
-        NAME | VOID
-        )
+        (NAME | VOID)
 ;
 
 typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
