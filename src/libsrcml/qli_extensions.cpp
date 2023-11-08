@@ -232,3 +232,50 @@ void is_valid_element(xmlXPathParserContext* ctxt, int nargs) {
     // return whether element is valid
     xmlXPathReturnBoolean(ctxt, !invalidElement);
 }
+
+void intersect(xmlXPathParserContext* ctxt, int nargs){
+    if(nargs != 2) {
+        std::cout << "Arg arity error" << std::endl;
+        return;
+    }
+
+    xmlNodeSetPtr rhs = xmlXPathPopNodeSet(ctxt);
+    xmlNodeSetPtr lhs = xmlXPathPopNodeSet(ctxt);
+    xmlNodeSetPtr res = xmlXPathNodeSetCreate(NULL);
+
+    int i_lhs = 0;
+    int i_rhs = 0;
+    while(i_lhs < lhs->nodeNr && i_rhs < rhs->nodeNr) {
+        std::uintptr_t l = reinterpret_cast<std::uintptr_t>(lhs->nodeTab[i_lhs]);
+        std::uintptr_t r = reinterpret_cast<std::uintptr_t>(rhs->nodeTab[i_rhs]);
+        if(l == r) { xmlXPathNodeSetAdd(res,lhs->nodeTab[i_lhs]); ++i_lhs; ++i_rhs; }
+        else if(l < r) { ++i_lhs; }
+        else if(l > r) { ++i_rhs; }
+    }
+
+    xmlXPathReturnNodeSet(ctxt,res);
+}
+
+void difference(xmlXPathParserContext* ctxt, int nargs) {
+    if(nargs != 2) {
+        std::cout << "Arg arity error" << std::endl;
+        return;
+    }
+
+    xmlNodeSetPtr rhs = xmlXPathPopNodeSet(ctxt);
+    xmlNodeSetPtr lhs = xmlXPathPopNodeSet(ctxt);
+    xmlNodeSetPtr res = xmlXPathNodeSetCreate(NULL);
+
+
+    for(int i = 0; i < lhs->nodeNr; ++i) {
+        std::uintptr_t l = reinterpret_cast<std::uintptr_t>(lhs->nodeTab[i]);
+        bool add = true;
+        for(int j = 0; j < rhs->nodeNr; ++j) {
+            std::uintptr_t r = reinterpret_cast<std::uintptr_t>(rhs->nodeTab[j]);
+            if(l == r) { add = false; break; }
+        }
+        if(add) { xmlXPathNodeSetAdd(res,lhs->nodeTab[i]); }
+    }
+
+    xmlXPathReturnNodeSet(ctxt,res);
+}

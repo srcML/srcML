@@ -21,6 +21,8 @@
 #include <cstring>
 #include <memory>
 
+#include <iostream>
+
 const char* srcql_convert_query_to_xpath(const char* src_query, const char* language) {
     //////////////////////////////////////////////
     // ONLY SUPPORTS srcPat CURRENTLY
@@ -68,6 +70,7 @@ const char* srcql_convert_query_to_xpath(const char* src_query, const char* lang
     char* returned_xpath = new char[xpath.length()+1];
     strcpy(returned_xpath,xpath.c_str());
 
+    std::cout << "!!!" << returned_xpath << std::endl;
 
     return returned_xpath;
 }

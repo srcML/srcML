@@ -20,6 +20,8 @@
 #include <libxml2_utilities.hpp>
 #include <memory>
 
+#include <Language.hpp>
+
 #include <qli_extensions.hpp>
 #include <srcql.hpp>
 
@@ -174,7 +176,7 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
  *
  * @returns true on success false on failure.
  */
-TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position */) const {
+TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
 
     std::unique_ptr<xmlXPathContext> context(createContext(doc));
     if (!context) {
@@ -202,17 +204,23 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
     }
 
     // register srcQL extension functions
+    // qli Namespace
     xmlXPathRegisterNs(context.get(),(xmlChar*)"qli",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation");
+    // Unification Operations
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"add-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&add_element);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"clear",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&clear_elements);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"is-valid-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&is_valid_element);
+    // Set Operations
+    xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"intersect",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&intersect);
+    xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"difference",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&difference);
+
 
     auto localCompiledXPath = compiled_xpath;
     // process srcQL query
     if (!localCompiledXPath) {
         std::string_view srcql_string(xpath);
         srcql_string.remove_prefix("srcql:"sv.size());
-        const auto srcqlXPath = srcql_convert_query_to_xpath(srcql_string.data(), "C++");
+        const auto srcqlXPath = srcql_convert_query_to_xpath(srcql_string.data(), Language(position).getLanguageString());
         localCompiledXPath = xmlXPathCompile(BAD_CAST srcqlXPath);
     }
 
