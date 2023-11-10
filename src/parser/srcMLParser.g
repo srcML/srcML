@@ -5496,11 +5496,14 @@ decltype_call[] { CompleteElement element(this); int save_type_count = getTypeCo
 
             // start the macro call element
             startElement(SDECLTYPE);
-
-            setTypeCount(save_type_count);
         }
+
         DECLTYPE
         complete_argument_list
+
+        {
+            setTypeCount(save_type_count);
+        }
 ;
 
 /*
