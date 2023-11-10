@@ -7642,11 +7642,14 @@ macro_type_name_call[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             startElement(SNAME);
-
-            endMode();
         }
 
         MACRO_TYPE_NAME
+
+        {
+            endMode();
+        }
+
         macro_call_argument_list
 ;
 
