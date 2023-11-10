@@ -4100,7 +4100,9 @@ terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_P
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
             }
-
+        }
+        else_handling
+        {
             if (inMode(MODE_SWITCH))
                 endMode();
 
@@ -4112,7 +4114,6 @@ terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_P
 
             wait_terminate_post = false;
         }
-        else_handling
 ;
 
 /*
