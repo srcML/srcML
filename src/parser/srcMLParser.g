@@ -7688,11 +7688,14 @@ macro_label_call[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             startElement(SNAME);
-
-            endMode();
         }
 
         MACRO_LABEL
+
+        {
+            endMode();
+        }
+
         macro_call_argument_list
 ;
 
