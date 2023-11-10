@@ -4587,11 +4587,12 @@ colon[] { ENTRY_DEBUG } :
             // colon ends the current item in a list
             if (inTransparentMode(MODE_TOP_SECTION))
                 endDownToMode(MODE_TOP_SECTION);
-            
+        }
+        COLON
+        {
             if (inMode(MODE_DETECT_COLON))
                 endMode(MODE_DETECT_COLON);
         }
-        COLON
 ;
 
 /*
