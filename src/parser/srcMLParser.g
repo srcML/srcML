@@ -6932,12 +6932,7 @@ constructor_definition[] { ENTRY_DEBUG } :
 
 // header portion of constructor
 constructor_header[] { ENTRY_DEBUG } :
-        {
-            setMode(MODE_FUNCTION_TAIL);
-        }
-
         (options { greedy = true; } :
-
             { inLanguage(LANGUAGE_JAVA) }? annotation |
 
             { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
@@ -6948,8 +6943,13 @@ constructor_header[] { ENTRY_DEBUG } :
 
             { inLanguage(LANGUAGE_JAVA_FAMILY) }? generic_parameter_list
         )*
+
         compound_name_inner[false]
         parameter_list
+
+        {
+            setMode(MODE_FUNCTION_TAIL);
+        }
 ;
 
 // member initialization list markup
