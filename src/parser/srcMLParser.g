@@ -7665,11 +7665,14 @@ macro_case_call[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
 
             startElement(SNAME);
-
-            endMode();
         }
 
         MACRO_CASE
+
+        {
+            endMode();
+        }
+
         macro_call_argument_list
 ;
 
