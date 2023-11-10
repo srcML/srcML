@@ -5552,11 +5552,14 @@ atomic_call[] { CompleteElement element(this); int save_type_count = getTypeCoun
 
             // start the macro call element
             startElement(SATOMIC);
-
-            setTypeCount(save_type_count);
         }
+
         ATOMIC
         (options { greedy = true; } : complete_argument_list)?
+
+        {
+            setTypeCount(save_type_count);
+        }
 ;
 
 /*
