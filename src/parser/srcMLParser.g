@@ -7712,11 +7712,14 @@ macro_specifier_call[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_LOCAL);
             
             startElement(SNAME);
-
-            endMode();
         }
 
         MACRO_SPECIFIER
+
+        {
+            endMode();
+        }
+
         macro_call_argument_list
 ;
 
