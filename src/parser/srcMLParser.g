@@ -3525,10 +3525,11 @@ objective_c_class_end[] { ENTRY_DEBUG } :
             }
 
             endDownOverMode(MODE_TOP | MODE_CLASS);
-
-            endDownOverMode(MODE_CLASS);
         }
         ATEND
+        {
+            endDownOverMode(MODE_CLASS);
+        }
 ;
 
 /*
