@@ -4502,13 +4502,14 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 
             if (inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA))
                 markup_comma = false;
-
+        }
+        comma_marked[markup_comma]
+        {
             if (inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA)) {
                 startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
                 startNoSkipElement(SDECLARATION_RANGE);
             }
         }
-        comma_marked[markup_comma]
 ;
 
 /*
