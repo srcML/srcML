@@ -1,14 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-only
-/**
- * @file xpath_node.cpp
- *
- * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
- */
-
 #include "xpath_node.hpp"
 
 XPathNode::XPathNode(const XPathNode& orig) {
-    std::cout << "Copying!" << std::endl;
+    //std::cout << "Copying!" << std::endl;
     text = orig.text;
     type = orig.type;
     for(auto child : orig.children) {
@@ -30,23 +23,45 @@ std::ostream& operator<<(std::ostream& out, const XPathNode& node) {
     else if(node.type == ANY)  { out << "//"; }
 
     out << node.text;
-    for(auto child : node.children) { out << *child; }
-
+    if(node.type != CALL) {
+        for(auto child : node.children) { out << *child; }
+    }
+    else {
+        out << node.text << "(";
+        int i = 0;
+        for(auto child : node.children) { 
+            if(i++) { out << ","; }
+            out << *child;
+        }
+        out << ")";
+    }
     if(node.type == PREDICATE) { out << ']' ; }
 
     return out;
 }
 
 std::string XPathNode::to_string(std::string_view rtn_view) {
+    //std::cout << "IN" << text << "|" << this << std::endl;
     std::string rtn(rtn_view);
-    if(type == PREDICATE) { rtn += '[' ; }
-    else if(type == NEXT) { rtn += '/' ; }
-    else if(type == ANY)  { rtn += "//"; }
+    if(type == PREDICATE)     { rtn += '['  ; }
+    else if(type == NEXT)     { rtn += '/'  ; }
+    else if(type == ANY)      { rtn += "//" ; }
+    else if(type == UNION)    { rtn += "|"  ; }
 
-    rtn += text;
-    for(auto child : children) { rtn += child->to_string(); }
-
-    //if(text == "") { rtn += "*[false]"; } // Invalid expression, fail
+    if(type != UNION) { rtn += text; };
+    if(type != CALL) {
+        for(auto child : children) { rtn += child->to_string(); }
+    }
+    else {
+        rtn += "(";
+        int i = 0;
+        for(auto child : children) {
+            if(i != 0) { rtn += ","; }
+            rtn += child->to_string();
+            ++i;
+        }
+        rtn += ")";
+    }
 
     if(type == PREDICATE) { rtn += ']' ; }
 

@@ -1,10 +1,3 @@
-// SPDX-License-Identifier: GPL-3.0-only
-/**
- * @file xpath_generator.hpp
- *
- * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
- */
-
 #include <string>
 #include <string_view>
 
@@ -19,17 +12,16 @@
 
 class XPathGenerator {
 public:
-    XPathGenerator(xmlNode* _root);
-    ~XPathGenerator() { delete xpath_root; }
+    XPathGenerator(std::string_view query, std::string_view lang) : src_query(query), language(lang) { storage = UnificationTable(); };
     std::string convert();
 
 
 private:
-    void get_variables(xmlNode*);
+    XPathNode* get_xpath_from_argument(std::string query);
+    void get_variables(xmlNode* top_xml_node);
     void convert_traverse(xmlNode*, XPathNode*);
     void organize_add_calls(XPathNode*);
-    void add_bucket_clears(XPathNode*);
-    std::string number_add_calls(std::string_view);
+    void add_bucket_clears(XPathNode*,int);
 
     // XML Node Funcs
     std::string get_full_name(xmlNode*);
@@ -45,8 +37,10 @@ private:
     std::string extract_variable(std::string_view);
     void get_variable_info(std::string_view, std::string&, size_t&);
 
-    xmlNode* srcml_root;
-    XPathNode* xpath_root;
+    // xmlNode* srcml_root;
+    // XPathNode* xpath_root;
+    std::string src_query;
+    std::string language;
     UnificationTable storage;
 };
 

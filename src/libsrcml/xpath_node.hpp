@@ -1,10 +1,3 @@
-// SPDX-License-Identifier: GPL-3.0-only
-/**
- * @file xpath_node.hpp
- *
- * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
- */
-
 #include <deque>
 #include <string>
 #include <string_view>
@@ -14,14 +7,18 @@
 #define SRCQL_XPATH_NODE_HPP
 
 enum NodeConnectionType {
-    PREDICATE = 1, // []
-    NEXT,          // /
-    ANY           // //
+    NO_CONN = 0,   // TEXT
+    PREDICATE,     // [TEXT]
+    NEXT,          // /TEXT
+    ANY,           // //TEXT
+    CALL,          // TEXT()
+    UNION,         // |
 };
 
 class XPathNode {
 public:
-    XPathNode() {};
+    XPathNode() : text(""), type(NO_CONN) {};
+    XPathNode(std::string_view _text) : text(_text), type(NO_CONN) {}
     XPathNode(std::string_view _text, NodeConnectionType _type) : text(_text), type(_type) {}
     XPathNode(const XPathNode&);
    ~XPathNode();
