@@ -6593,11 +6593,6 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
 
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
-
-            // if it isn't a compound name, nop the element
-            if (!iscompound)
-                // set the token to NOP
-                tp.setType(SNOP);
         }
 
         (
@@ -6628,6 +6623,13 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
             { index && /* Commented-out code: !inTransparentMode(MODE_EAT_TYPE) && */ (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET) }?
             variable_identifier_array_grammar_sub[iscompound]
         )*
+
+        {
+            // if it isn't a compound name, nop the element
+            if (!iscompound)
+                // set the token to NOP
+                tp.setType(SNOP);
+        }
 ;
 
 multops_star[] { ENTRY_DEBUG } :
