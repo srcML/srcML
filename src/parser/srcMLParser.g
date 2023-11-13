@@ -5226,86 +5226,42 @@ pattern_check_core[ int& token,           /* second token, after name (always re
         )
 ;
 
-/*
-  check_global_attribute
-
-  Used to check for a C# global attribute target.
-*/
+// C# global attribute target
 check_global_attribute[] returns [bool flag] {
-        flag = LT(1)->getText() == "module"sv || LT(1)->getText() == "assembly"sv;
+
+        flag =  LT(1)->getText() == "module"sv || LT(1)->getText() == "assembly"sv;
 } :;
 
 /*
   Utility rules
 
-  Work even in guessing mode, where explicit code segments do not.
+  Work even in guessing mode, which explicit code segments cannot
 */
 
-/*
-  throw_exception
+/* Throws an exception if the condition is true */
+throw_exception[bool condition = true] { if (condition) throw antlr::RecognitionException(); } :;
 
-  Throws an exception if the condition is true.
-*/
-throw_exception[bool condition = true] {
-        if (condition) throw antlr::RecognitionException();
-} :;
+/* sets the declaration type to a value if the condition is true */
+set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] { if (condition) name = value; } :;
 
-/*
-  set_type
+/* sets the int to a value if the condition is true */
+set_int[int& name, int value, bool condition = true] { if (condition) name = value; } :;
 
-  Sets the declaration type to a value if the condition is true.
-*/
-set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] {
-        if (condition) name = value;
-} :;
+/* sets the bool to a value */
+set_bool[bool& variable, bool value = true] { variable = value; } :;
 
-/*
-  set_int
+trace[const char*s ] { std::cerr << s << std::endl; } :;
 
-  Sets the int to a value if the condition is true.
-*/
-set_int[int& name, int value, bool condition = true] {
-        if (condition) name = value;
-} :;
 
-/*
-  set_bool
-
-  Sets the bool to a value.
-*/
-set_bool[bool& variable, bool value = true] {
-        variable = value;
-} :;
-
-/*
-  trace
-*/
-trace[const char*s] {
-        std::cerr << s << std::endl;
-} :;
-
-/*
-  trace_int
-*/
-trace_int[int s] {
-        std::cerr << "HERE " << s << std::endl;
-} :;
-
-// Commented-out code
-/*
-traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
+/*traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 */
 
-/*
-  update_typecount
-
-  Used to update the type count.
-*/
+// update type count
 update_typecount[srcMLState::MODE_TYPE mode] {} :
         {
             decTypeCount();
-
             if (inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
 
@@ -5316,223 +5272,178 @@ update_typecount[srcMLState::MODE_TYPE mode] {} :
         }
 ;
 
-/*
-  type_identifier_count
-
-  Used to count type identifiers.
-*/
+// count type identifiers
 type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
+
         // overloaded parentheses operator
-        { LA(1) == OPERATOR /* turns off ANTLR warning */ }?
+        { LA(1) == OPERATOR /* turns off ANTLR warning, and is nooped */ }?
         overloaded_operator |
         type_identifier |
         MAIN
 ;
 
-/*
-  type_identifier_count_check
-
-  Checks the type identifier count.
-*/
+// check the type identifier count
 type_identifier_count_check returns [int type_count] {
-        int start = mark();
-        ++inputState->guessing;
 
-        type_count = type_identifier_count_check_core();
 
-        rewind(start);
-        --inputState->guessing;
+    int start = mark();
+    ++inputState->guessing;
+
+    type_count = type_identifier_count_check_core();
+
+    rewind(start);
+    --inputState->guessing;
 } :;
 
-/*
-  type_identifier_count_check_core
-
-  Handles the core functionality for type_identifier_count_check.
-*/
+// core functionality for type identifier count check
 type_identifier_count_check_core returns [int type_count] { type_count = 0; ENTRY_DEBUG } :
+
         (type_identifier_count[type_count])*
 ;
 
-// Commented-out code
 /*
 // --a;
 deduct[int& type_count] { --type_count; } :;
 */
 
-/*
-  eat_type
-
-  Used to consume a type.
-*/
+// consume a type
 eat_type[int& count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
+
         // Mark as name before mark without name
-        (options { generateAmbigWarnings = false; } : keyword_name | type_identifier)
+        (options { generateAmbigWarnings = false;} :  keyword_name | type_identifier)
 
         set_int[count, count - 1]
         eat_type[count]
 ;
 
-/*
-  pure_lead_type_identifier
-*/
+// type identifier
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
-        // ambiguous on template keyword from template specifier and probably class_preamble template
-        (options { generateAmbigWarnings = false; } :
-            // specifiers that occur in a type
-            { argument_token_set.member(LA(1)) }?
-            specifier | template_specifier | auto_keyword[true] |
 
-            { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
-            LBRACKET (COMMA)* RBRACKET |
+        // ambigous on template keyword from template specifier and probably class_preamble template
+        (options { generateAmbigWarnings = false; } : 
+        // specifiers that occur in a type
 
-            { inLanguage(LANGUAGE_JAVA) }?
-            annotation |
+        { 
+            argument_token_set.member(LA(1))
+        }?
+        specifier | template_specifier | auto_keyword[true] |
 
-            { inLanguage(LANGUAGE_CSHARP) }?
-            attribute_csharp |
+        { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
+        LBRACKET (COMMA)* RBRACKET |
 
-            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
-            attribute_cpp |
+        { inLanguage(LANGUAGE_JAVA) }? annotation |
 
-            pure_lead_type_identifier_no_specifiers
+        { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+
+        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
+
+        pure_lead_type_identifier_no_specifiers
         )
 ;
 
-/*
-  pure_lead_type_identifier_no_specifiers
-*/
+// type identifier
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
+
         // class/struct/union before a name in a type, e.g., class A f();
         (options { generateAmbigWarnings = false; } :
-            class_lead_type_identifier |
-            typename_keyword |
 
-            // enum use in a type
-            { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
-            (ENUM variable_identifier (variable_identifier | multops | tripledotop | INLINE)) => ENUM |
+        class_lead_type_identifier | typename_keyword |
 
-            // entire enum definition
-            { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
-            enum_definition_complete |
+        // enum use in a type
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        (ENUM variable_identifier (variable_identifier | multops | tripledotop | INLINE))=> ENUM |
 
-            { LA(1) == DECLTYPE }?
-            type_specifier_call |
+        // entire enum definition
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+        enum_definition_complete |
 
-            atomic
+        { LA(1) == DECLTYPE }? type_specifier_call | atomic
+
         )
 ;
 
-/*
-  class_lead_type_identifier
-*/
-class_lead_type_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
+// more lead type identifier
+class_lead_type_identifier[]  { SingleElement element(this); ENTRY_DEBUG } :
         {
+
             if (inTransparentMode(MODE_TEMPLATE))
                 startElement(SNAME);
             else
                 startElement(SNOP);
+
         }
         (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
-/*
-  lead_type_identifier
-*/
+// type identifier
 lead_type_identifier[] { ENTRY_DEBUG } :
-        // Commented-out code
-        // specifier |
-        // (macro_call_paren identifier)=> macro_call |
+
+//        specifier |
+
+//        (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) && LA(1) != CRESTRICT && LA(1) != MUTABLE }?
+        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) && 
+            LA(1) != CRESTRICT && LA(1) != MUTABLE }?
         compound_name |
 
         pure_lead_type_identifier
 ;
 
-/*
-  type_identifier
-*/
+// type identifier
 type_identifier[] { ENTRY_DEBUG } :
-        // any identifier that can appear first and can appear later as true suppresses the warning
-        // antlr forms rules as LA(1) && (true), so this does nothing
+
+        // any identifier that can appear first can appear later
+        // true suppresses warning.  antlr forms rules as LA(1) && (true )
+        // so this does nothing.
         { true }? lead_type_identifier |
 
         non_lead_type_identifier
 ;
 
-/*
-  non_lead_type_identifier
-*/
+// type identifier
 non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
+
         tripledotop |
 
-        { inLanguage(LANGUAGE_C_FAMILY) }?
-        multops |
+        { inLanguage(LANGUAGE_C_FAMILY) }? multops |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && look_past(LBRACKET) == RBRACKET }?
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
-/*
-  type_specifier_call
-*/
 type_specifier_call[] { ENTRY_DEBUG } :
-        { inputState->guessing }?
-        (decltype_call_full) |
 
-        decltype_call
+    { inputState->guessing }? (decltype_call_full) | decltype_call
 ;
 
-/*
-  decltype_call
-
-  Used to mark a "decltype" specifier (C++11).
-*/
+// C++11 markup decltype 
 decltype_call[] { CompleteElement element(this); int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
+
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the macro call element
             startElement(SDECLTYPE);
+         
         }
-
-        DECLTYPE
-        complete_argument_list
-
-        {
-            setTypeCount(save_type_count);
-        }
+        DECLTYPE complete_argument_list
+        { setTypeCount(save_type_count); }
 ;
 
-/*
-  decltype_call_full
-
-  Used to completely match a "decltype" without marking it up (C++).
-*/
+// C++ completely match without markup decltype
 decltype_call_full[] { ENTRY_DEBUG } :
-        DECLTYPE
-        paren_pair
+        DECLTYPE paren_pair
 ;
 
-/*
-  atomic
-
-  Used to mark an "_Atomic" keyword (C++11).
-*/
+// C11 markup _Atomic 
 atomic[] { ENTRY_DEBUG } :
-        { next_token() == LPAREN }?
-        ({ inputState->guessing }? atomic_call_full | atomic_call) |
 
-        atomic_specifier
+    { next_token() == LPAREN }? ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
 ;
 
-/*
-  atomic_specifier
-
-  Used to mark "_Atomic" as a specifier (C++11).
-*/
+// C11 markup _Atomic as specifier
 atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
@@ -5540,41 +5451,27 @@ atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         ATOMIC
 ;
 
-/*
-  atomic_call
-
-  Used to mark "_Atomic" as a call (C++11).
-*/
-atomic_call[] { CompleteElement element(this); int save_type_count = getTypeCount(); ENTRY_DEBUG } :
+// C11 markup _Atomic as call
+atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
+
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the macro call element
             startElement(SATOMIC);
+         
         }
-
-        ATOMIC
-        (options { greedy = true; } : complete_argument_list)?
-
-        {
-            setTypeCount(save_type_count);
-        }
+        ATOMIC (options { greedy = true; } : complete_argument_list)?
+        { setTypeCount(save_type_count); }
 ;
 
-/*
-  atomic_call_full
-
-  Used to completely match an "_Atomic" without marking it up (C++).
-*/
+// C++ completely match without markup _Atomic
 atomic_call_full[] { ENTRY_DEBUG } :
-        ATOMIC
-        (options { greedy = true; } : paren_pair)?
+        ATOMIC (options { greedy = true; } : paren_pair)?
 ;
 
-/*
-  qmark_name
-*/
+// qmark
 qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
@@ -5582,21 +5479,14 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         QMARK
 ;
 
-/*
-  qmark_marked
-*/
 qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (!(in_ternary && true))
                 startElement(SOPERATOR);
         }
-        QMARK
-        ({ SkipBufferSize() == 0 }? QMARK)?
+        QMARK ({ SkipBufferSize() == 0 }? QMARK)?
 ;
 
-/*
-  qmark
-*/
 qmark[] { is_qmark = true; ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_TERNARY | MODE_CONDITION))
@@ -5605,22 +5495,16 @@ qmark[] { is_qmark = true; ENTRY_DEBUG } :
         qmark_marked
         {
             if (inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
+
                 endMode(MODE_CONDITION);
-
                 startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
-
                 startNoSkipElement(STHEN);
+
             }
         }
 ;
 
-/*
-  linq expressions
-*/
-
-/*
-  linq_expression
-*/
+/* linq expressions */
 linq_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
@@ -5631,201 +5515,124 @@ linq_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : linq_expression_pure)*
 ;
 
-/*
-  linq_expression_pure
-
-  Used to match linq expressions.
-*/
+// match linq expressions
 linq_expression_pure[] { ENTRY_DEBUG } :
-        linq_from
-        | linq_where
-        | linq_select
-        | linq_let
-        | linq_group
-        | linq_join
-        | linq_orderby
+        linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby
 ;
 
-/*
-  linq_from
-
-  Handles a linq "from" keyword.
-*/
+// a linq from
 linq_from[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SFROM);
         }
-        FROM
-        linq_expression_complete
-        (options { greedy = true; } : linq_in)*
+        FROM linq_expression_complete (options { greedy = true; } : linq_in)*
 ;
 
-/*
-  linq_in
-
-  Handles a linq "in" keyword.
-*/
+// a linq in
 linq_in[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SIN);
         }
-        IN
-        linq_expression_complete
+        IN linq_expression_complete
 ;
 
-/*
-  linq_where
-
-  Hanles a linq "where" keyword.
-*/
+// a linq where
 linq_where[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SWHERE);
         }
-        WHERE
-        linq_expression_complete
+        WHERE linq_expression_complete
 ;
 
-/*
-  linq_select
-
-  Handles a linq "select" keyword.
-*/
+// a linq select
 linq_select[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SSELECT);
         }
-        SELECT
-        linq_expression_complete
+        SELECT linq_expression_complete
 ;
 
-/*
-  linq_let
-
-  Handles a linq "let" keyword.
-*/
+// a linq let
 linq_let[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SLET);
         }
-        LET
-        linq_expression_complete
+        LET linq_expression_complete
 ;
 
-/*
-  linq_group
-
-  Handles a linq "group" keyword.
-*/
+// a linq group
 linq_group[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SGROUP);
         }
-        GROUP
-        linq_expression_complete
+        GROUP linq_expression_complete
         (options { greedy = true; } : linq_by)*
         (options { greedy = true; } : linq_into)*
 ;
 
-/*
-  linq_by
-
-  Handles a linq "by" keyword.
-*/
+// linq by
 linq_by[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SBY);
         }
-        BY
-        linq_expression_complete
+        BY linq_expression_complete
 ;
 
-/*
-  linq_into
-
-  Handles a linq "into" keyword.
-*/
+// linq into
 linq_into[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SINTO);
         }
-        INTO
-        linq_expression_complete
+        INTO linq_expression_complete
 ;
 
-/*
-  linq_join
-
-  Handles a linq "join" keyword.
-*/
+// linq join
 linq_join[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SJOIN);
         }
-        JOIN
-        linq_expression_complete
+        JOIN linq_expression_complete
+
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)*
 ;
 
-/*
-  linq_on
-
-  Handles a linq "on" keyword.
-*/
+// linq on
 linq_on[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SON);
         }
-        ON
-        linq_expression_complete
+        ON linq_expression_complete
 ;
 
-/*
-  linq_equals
-
-  Handles a linq "equals" keyword.
-*/
+// linq equals
 linq_equals[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SEQUALS);
         }
-        EQUALS
-        linq_expression_complete
+        EQUALS linq_expression_complete
 ;
 
-/*
-  linq_orderby
-
-  Handles a linq "orderby" keyword.
-*/
+// linq orderby
 linq_orderby[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SORDERBY);
         }
-        ORDERBY
-        linq_expression_complete
+        ORDERBY linq_expression_complete
+
         (options { greedy = true; } : linq_ascending | linq_descending)*
 
-        (options { greedy = true; } :
-            COMMA
-            linq_expression_complete
-            (options { greedy = true; } : linq_ascending | linq_descending)*
-        )*
+        (options { greedy = true; } : COMMA linq_expression_complete (options { greedy = true; } : linq_ascending | linq_descending)* )*
 ;
 
-/*
-  linq_ascending
-
-  Handles a linq "ascending" keyword.
-*/
+// linq ascending
 linq_ascending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
@@ -5833,11 +5640,7 @@ linq_ascending[] { SingleElement element(this); ENTRY_DEBUG } :
         ASCENDING
 ;
 
-/*
-  linq_descending
-
-  Handles a linq "descending" keyword.
-*/
+// linq descending
 linq_descending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
@@ -5845,11 +5648,7 @@ linq_descending[] { SingleElement element(this); ENTRY_DEBUG } :
         DESCENDING
 ;
 
-/*
-  variable_identifier_array_grammar_sub
-
-  Handles a variables array index.
-*/
+// variables array index
 variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             iscomplex = true;
@@ -5869,40 +5668,24 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
         RBRACKET
 ;
 
-/*
-  variable_identifier_array_grammar_sub_contents
-
-  Handles the contents of a variables array index.
-*/
-variable_identifier_array_grammar_sub_contents { bool found_expr = false; bool is_expr = false; ENTRY_DEBUG } :
-        { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
-        complete_expression |
+// contents of array index
+variable_identifier_array_grammar_sub_contents{ bool found_expr = false; bool is_expr = false; ENTRY_DEBUG } :
+        { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }? complete_expression |
 
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-        (options { greedy = true; } :
-            { LA(1) != RBRACKET }?
-                ({ /* stop warning */ LA(1) == COMMA }?
-                    { if (!found_expr)
-                        empty_element(SEXPRESSION, true);
-                    }
+            (options { greedy = true; } : { LA(1) != RBRACKET }?
+                ({ /* stop warning */ LA(1) == COMMA }? { if (!found_expr) { empty_element(SEXPRESSION, true); }
 
-                    COMMA
-                    { found_expr = false; } | complete_expression { found_expr = true; }
-                )
+
+                 } COMMA { found_expr = false; } | complete_expression { found_expr = true; })
 
                 set_bool[is_expr, true]
-        )*
 
-        { if (is_expr && !found_expr)
-            empty_element(SEXPRESSION, true);
-        }
+        )*
+        { if (is_expr && !found_expr) empty_element(SEXPRESSION, true); }
 ;
 
-/*
-  attribute_csharp
-
-  Handles a C# attribute.
-*/
+// handle C# attribute
 attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -5912,23 +5695,15 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
         LBRACKET
 
-        // do not warn; identifier list and colon are in complete expression as well, but need special processing here
-        (options { warnWhenFollowAmbig = false; } :
-            { next_token() == COLON }?
-                attribute_csharp_target
-                COLON
-        )*
+        // do not warn as identifier list and colon are in complete expression as well, but need special processing here.
+        (options { warnWhenFollowAmbig = false; } : { next_token() == COLON }? attribute_csharp_target COLON)*
 
         attribute_inner_list
 
         RBRACKET
 ;
 
-/*
-  attribute_csharp_target
-
-  Handles a target for a C# attribute.
-*/
+// handle target for C# target
 attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(STARGET);
@@ -5936,21 +5711,13 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         (RETURN | EVENT | identifier_list)
 ;
 
-/*
-  attribute_inner_list
-
-  Handles the inner portion of an attribute list.
-*/
+// inner attribute list handling
 attribute_inner_list[] { ENTRY_DEBUG } :
-        complete_expression
-        (COMMA complete_expression)*
+
+    complete_expression (COMMA complete_expression)*
 ;
 
-/*
-  attribute_cpp
-
-  Handles a C++11 attribute.
-*/
+// C++11 attributes
 attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -5958,43 +5725,23 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SATTRIBUTE);
         }
-        LBRACKET
-        LBRACKET
+        LBRACKET LBRACKET
 
         attribute_inner_list
 
-        RBRACKET
-        RBRACKET
+        RBRACKET RBRACKET
 ;
 
-/*
-  complete_argument_list
-
-  Used to match an argument list completely.
-*/
+// Do a complete argument list
 complete_argument_list[] { ENTRY_DEBUG } :
-        call_argument_list
-        (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments)*
-        rparen[false]
+        call_argument_list (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments)* rparen[false]
 ;
 
-/*
-  complete_arguments
-
-  Matches a full, complete expression all at once (no stream).
-*/
-complete_arguments[] {
-        CompleteElement element(this);
-        int count_paren = 1;
-        CALL_TYPE type = NOCALL;
-        bool isempty = false;
-        int call_count = 0;
-        ENTRY_DEBUG
-} :
+// Full, complete expression matched all at once (no stream).
+complete_arguments[] { CompleteElement element(this); int count_paren = 1; CALL_TYPE type = NOCALL; 
+    bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
         { getParen() == 0 }? rparen[false] |
-
         { getCurly() == 0 }? rcurly_argument |
-
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -6002,114 +5749,78 @@ complete_arguments[] {
             // start the argument
             startElement(SARGUMENT);
         }
+        (options { warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
 
-        (options { warnWhenFollowAmbig = false; } :
-            { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
-                (options { generateAmbigWarnings = false; } :
-                    { LA(1) == LPAREN }?
-                    expression { ++count_paren; } |
+            (options { generateAmbigWarnings = false; } :
+                { LA(1) == LPAREN }? expression { ++count_paren; } |
 
-                    { LA(1) == RPAREN }?
-                    expression { --count_paren; } |
+                { LA(1) == RPAREN }? expression { --count_paren; } |
 
-                    { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
-                    { if (!isempty)
-                        ++count_paren;
-                    }
+                { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if (!isempty) ++count_paren; }
+                    expression_process (call[call_count] | keyword_calls) complete_arguments |
 
-                    expression_process (call[call_count] | keyword_calls)
-                    complete_arguments |
+                expression | (type_identifier) => expression_process type_identifier |
 
-                    expression |
+                comma
+                {
+                    // argument with nested expression
+                    startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
 
-                    (type_identifier) => expression_process type_identifier |
-
-                    comma
-
-                    {
-                        // argument with nested expression
-                        startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
-
-                        // start the argument
-                        startElement(SARGUMENT);
-                    }
-                )
+                    // start the argument
+                    startElement(SARGUMENT);
+                }
+            )
         )*
 ;
 
-/*
-  complete_default_parameter
-
-  Matches a full, complete expression all at once (no stream).  Might be better version of complete_expression.
-*/
-complete_default_parameter[] {
-        CompleteElement element(this);
-        int count_paren = 0;
-        CALL_TYPE type = NOCALL;
-        bool isempty = false;
-        int call_count = 0;
-        ENTRY_DEBUG
-} : 
-        { getParen() == 0 }?
-        rparen[false] |
-
-        { getCurly() == 0 }?
-        rcurly_argument |
-
+// Full, complete expression matched all at once (no stream).
+// May be better version of complete_expression
+complete_default_parameter[] { CompleteElement element(this); int count_paren = 0; CALL_TYPE type = NOCALL; 
+    bool isempty = false; int call_count = 0; ENTRY_DEBUG } : 
+       { getParen() == 0 }? rparen[false] |
+        { getCurly() == 0 }? rcurly_argument |
         {
             // argument with nested expression
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
+        (options {warnWhenFollowAmbig = false; } : { (LA(1) != RPAREN && LA(1) != COMMA) || count_paren > 0 }?
 
-        (options { warnWhenFollowAmbig = false; } :
-            { (LA(1) != RPAREN && LA(1) != COMMA) || count_paren > 0 }?
-                (
-                    { LA(1) == LPAREN }?
-                    expression set_int[count_paren, count_paren + 1] |
+        ({ LA(1) == LPAREN }? expression set_int[count_paren, count_paren + 1] |
 
-                    { LA(1) == RPAREN && inputState->guessing }?
-                    rparen set_int[count_paren, count_paren - 1] |
+        { LA(1) == RPAREN && inputState->guessing }? rparen set_int[count_paren, count_paren - 1] |
 
-                    { LA(1) == RPAREN && !inputState->guessing}?
-                    expression set_int[count_paren, count_paren - 1] |
+        { LA(1) == RPAREN && !inputState->guessing}? expression set_int[count_paren, count_paren - 1] |
 
-                    { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
-                    set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
+        { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
+        set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
 
-                    expression |
+        expression | comma
 
-                    comma
-                )
-        )*
+        ))*
 ;
 
-/*
-  complete_objective_c_call
 
-  Matches a complete Objective-C call (no stream).
-*/
+// match a complete objective_c_call no stream
 complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; ENTRY_DEBUG} :
-        { inputState->guessing }?
-        bracket_pair |
 
-        {
-            // start a mode to end at right bracket with expressions inside
-            if (!inMode(MODE_EXPRESSION) || inMode(MODE_EXPRESSION | MODE_EXPECT))
-                startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
-            else 
-                startNewMode(MODE_TOP);
-        }
+    { inputState->guessing }? bracket_pair |
 
-        (options { greedy = true; } :
+    {
+        // start a mode to end at right bracket with expressions inside
+        if (!inMode(MODE_EXPRESSION) || inMode(MODE_EXPRESSION | MODE_EXPECT))
+            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+        else 
+            startNewMode(MODE_TOP);
+
+    }
+
+    (options { greedy = true; } :
+
             // end of objective c call
-            { inTransparentMode(MODE_OBJECTIVE_C_CALL) && bracket_count }?
-            rbracket
-            set_int[bracket_count, bracket_count - 1] |
+            { inTransparentMode(MODE_OBJECTIVE_C_CALL) && bracket_count }? rbracket set_int[bracket_count, bracket_count - 1] |
 
             // objective c argument list
-            { LA(1) == LBRACKET }?
-            expression
-            set_int[bracket_count, bracket_count + 1] |
+            { LA(1) == LBRACKET }? expression set_int[bracket_count, bracket_count + 1] |
 
             // objective c argument list
             { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
@@ -6120,165 +5831,121 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
             (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
 
             // commas as in a list
-            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA) }?
+            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
             comma |
 
             // right parentheses, unless we are in a pair of parentheses in an expression
-            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }?
-            rparen[false] |
+            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
             // argument mode (as part of call)
-            { inMode(MODE_ARGUMENT) }?
-            argument |
+            { inMode(MODE_ARGUMENT) }? argument |
 
             // expression with right parentheses if a previous match is in one
-            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }?
-            expression |
+            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
 
             colon_marked
-        )*
+
+    )*
 ;
 
-/*
-  complete_expression
-
-  Matches a complete expression (no stream).
-*/
+// match a complete expression no stream
 complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
-        }
 
+        }
         (options { greedy = true; } :
+
             // commas as in a list
-            { (inTransparentMode(MODE_END_ONLY_AT_RPAREN) && (getFirstMode(MODE_END_ONLY_AT_RPAREN | MODE_END_AT_COMMA)& MODE_END_AT_COMMA) == 0)
-                || !inTransparentMode(MODE_END_AT_COMMA)
-            }?
+            { (inTransparentMode(MODE_END_ONLY_AT_RPAREN) && (getFirstMode(MODE_END_ONLY_AT_RPAREN | MODE_END_AT_COMMA)& MODE_END_AT_COMMA) == 0) || !inTransparentMode(MODE_END_AT_COMMA) }?
             comma |
 
             // right parentheses, unless we are in a pair of parentheses in an expression
-            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }?
-            rparen[false] |
+            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
 
-            { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }?
-            complete_objective_c_call |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }? complete_objective_c_call |
 
             // argument mode (as part of call)
-            { inMode(MODE_ARGUMENT) }?
-            argument |
+            { inMode(MODE_ARGUMENT) }? argument |
 
             // expression with right parentheses if a previous match is in one
-            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }?
-            expression |
+            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
 
             colon_marked
+
         )*
 ;
 
-/*
-  linq_expression_complete
 
-  Matches a linq expression completely.
-*/
+// match a linq_expression completely
 linq_expression_complete[] { CompleteElement element(this); int count_paren = 0; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
+        (options {warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
 
-        (options { warnWhenFollowAmbig = false; } :
-            { LA(1) != RPAREN || count_paren > 0 }?
 
-            { (LA(1) != RPAREN || count_paren > 0) && try_linq_expression_complete_inner(count_paren) }?
-            linq_expression_complete_inner[count_paren, true]
+            { (LA(1) != RPAREN || count_paren > 0) && try_linq_expression_complete_inner(count_paren) }? linq_expression_complete_inner[count_paren, true]
+            
         )*
 ;
 
-/*
-  try_linq_expression_complete_inner
-*/
-try_linq_expression_complete_inner[int& count_paren] returns [bool success = false] {
-        int start = mark();
-        ++inputState->guessing;
+try_linq_expression_complete_inner[int& count_paren] returns[bool success = false] {
 
-        try {
-            linq_expression_complete_inner(count_paren);
-            success = true;
-        } catch (antlr::RecognitionException& e) {
-            success = false;
-        }
+    int start = mark();
+    ++inputState->guessing;
 
-        rewind(start);
-        --inputState->guessing;
+    try {
+
+        linq_expression_complete_inner(count_paren);
+        success = true;
+
+    } catch(antlr::RecognitionException& e) {
+
+        success = false;
+
+    }
+
+    rewind(start);
+    --inputState->guessing;
+
+
 } :;
 
-/*
-  linq_expression_complete_inner
-*/
 linq_expression_complete_inner[int& count_paren, bool update = false] { CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
-        // commas as in a list
-        comma |
 
-        // right parentheses, unless we are in a pair of parentheses in an expression
-        { LA(1) == LPAREN }?
-        expression_setup_linq
-        ({ update }? set_int[count_paren, count_paren + 1])? |
+    // commas as in a list
+    comma |
 
-        { LA(1) == RPAREN && inputState->guessing }?
-        rparen
-        ({ update }? set_int[count_paren, count_paren - 1])? |
+    // right parentheses, unless we are in a pair of parentheses in an expression
+    { LA(1) == LPAREN }? expression_setup_linq ({ update }? set_int[count_paren, count_paren + 1])? |
 
-        { LA(1) == RPAREN && !inputState->guessing}?
-        expression_setup_linq
-        ({ update }? set_int[count_paren, count_paren - 1])? |
+    { LA(1) == RPAREN && inputState->guessing }? rparen ({ update }? set_int[count_paren, count_paren - 1])? |
 
-        { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
-        ({ update }? set_int[count_paren, isempty ? count_paren : count_paren + 1])?
-        expression_setup_linq |
+    { LA(1) == RPAREN && !inputState->guessing}? expression_setup_linq ({ update }? set_int[count_paren, count_paren - 1])? |
 
-        // argument mode (as part of call)
-        { inMode(MODE_ARGUMENT) }?
-        argument |
+    { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
+    ({ update }? set_int[count_paren, isempty ? count_paren : count_paren + 1])? expression_setup_linq |
 
-        // expression with right parentheses if a previous match is in one
-        {
-            LA(1) != ASCENDING
-            && LA(1) != DESCENDING
-            && LA(1) != ON
-            && LA(1) != BY
-            && LA(1) != FROM
-            && LA(1) != SELECT
-            && LA(1) != LET
-            && LA(1) != WHERE
-            && LA(1) != ORDERBY
-            && LA(1) != GROUP
-            && LA(1) != JOIN
-            && LA(1) != IN 
-            && LA(1) != EQUALS
-            && LA(1) != INTO
-            && (LA(1) != RPAREN
-                || inTransparentMode(MODE_INTERNAL_END_PAREN))
-        }?
-        expression_setup_linq |
+    // argument mode (as part of call)
+    { inMode(MODE_ARGUMENT) }? argument |
 
-        COLON
+    // expression with right parentheses if a previous match is in one
+    { LA(1) != ASCENDING && LA(1) != DESCENDING && LA(1) != ON && LA(1) != BY && LA(1) != FROM && LA(1) != SELECT 
+        && LA(1) != LET && LA(1) != WHERE && LA(1) != ORDERBY && LA(1) != GROUP && LA(1) != JOIN && LA(1) != IN 
+        && LA(1) != EQUALS && LA(1) != INTO && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) }? expression_setup_linq |
+
+    COLON
 ;
 
-/*
-  variable_identifier
-
-  Handles a variable name in an expression.  Includes array names, but not function calls.
-*/
+// variable name in an expression.  Includes array names, but not function calls
 variable_identifier[] { ENTRY_DEBUG } :
         compound_name
 ;
 
-/*
-  simple_name_optional_template
-
-  Handles a name (including template argument list).
-*/
+// name including template argument list
 simple_name_optional_template[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
@@ -6290,28 +5957,21 @@ simple_name_optional_template[bool push = true] { CompleteElement element(this);
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
         }
-        push_namestack[push]
-        identifier
-        (
+        push_namestack[push] identifier (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-
-            { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list /* Commented-out code: (options { greedy = true; } : generic_type_constraint)* */ |
+            { generic_argument_list_check() }? (generic_argument_list)=>
+                generic_argument_list /* (options { greedy = true; } : generic_type_constraint)*  */ |
 
             (cuda_argument_list) => cuda_argument_list |
 
             {
-                // set the token to NOP since we did not find a template argument list
-                tp.setType(SNOP);
+               // set the token to NOP since we did not find a template argument list
+               tp.setType(SNOP);
             }
-        )
+       )
 ;
 
-/*
-  simple_name_optional_template_destop
-
-  Handles a name (including template argument list).  Used for destructor identifiers.
-*/
+// name including template argument list
 simple_name_optional_template_destop[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
@@ -6323,44 +5983,32 @@ simple_name_optional_template_destop[bool push = true] { CompleteElement element
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
         }
-        identifier_destop[push]
-        (
+        identifier_destop[push] (
             { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-
-            { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list /* Commented-out code: (options { greedy = true; } : generic_type_constraint)* */ |
+            { generic_argument_list_check() }? (generic_argument_list)=>
+                generic_argument_list /* (options { greedy = true; } : generic_type_constraint)*  */ |
 
             (cuda_argument_list) => cuda_argument_list |
 
             {
-                // set the token to NOP since we did not find a template argument list
-                tp.setType(SNOP);
+               // set the token to NOP since we did not find a template argument list
+               tp.setType(SNOP);
             }
-        )
+       )
 ;
 
-/*
-  simple_name_optional_template_optional_specifier
-
-  Handles a name (including template argument list).  Used for optional specifiers.
-*/
+// name including template argument list
 simple_name_optional_template_optional_specifier[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
-        push_namestack[push]
-        (template_specifier /* Commented-out code: { is_nop = false; } */ )*
-        identifier
-        (
-            { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list (options { greedy = true; } : generic_type_constraint)* |
+        push_namestack[push] (template_specifier /* { is_nop = false; } */)* identifier
+    (
+        { generic_argument_list_check() }? (generic_argument_list)=>
+            generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
 
-            (cuda_argument_list) => cuda_argument_list
-        )
+        (cuda_argument_list) => cuda_argument_list |
+    )
 ;
 
-/*
-  simple_name_optional_template_optional_specifier_destop
-
-  Handles a name (including template argument list).  Used for optional specifiers with destructor identifiers.
-*/
+// name including template argument list
 simple_name_optional_template_optional_specifier_destop[bool push = true] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
@@ -6373,107 +6021,81 @@ simple_name_optional_template_optional_specifier_destop[bool push = true] { Comp
             setTokenPosition(tp);
         }
         identifier_optional_specifier_destop[push, is_nop]
-        (
-            { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list (options { greedy = true; } : generic_type_constraint)* |
+    (
+        { generic_argument_list_check() }? (generic_argument_list)=>
+            generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
 
-            (cuda_argument_list) => cuda_argument_list |
+        (cuda_argument_list) => cuda_argument_list |
 
-            {
-                // set the token to NOP since we did not find a template argument list
-                if (is_nop)
-                    tp.setType(SNOP);
-            }
-        )
+        {
+            // set the token to NOP since we did not find a template argument list
+            if (is_nop)
+                tp.setType(SNOP);
+        }
+    )
 ;
 
-/*
-  identifier_destop
-
-  Handles a destructor identifier.
-*/
+// a destructor identifier
 identifier_destop[bool push = true] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SNAME);
+                startElement(SNAME);
         }
-        DESTOP
-        push_namestack[push]
-        identifier_list
+        DESTOP push_namestack[push] identifier_list
 ;
 
-/*
-  identifier_optional_specifier_destop
-
-  Handles an optional specifier with destructor identifiers.
-*/
+// a destructor identifier
 identifier_optional_specifier_destop[bool push, bool& is_nop] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SNAME);
+                startElement(SNAME);
         }
-        DESTOP
-        push_namestack[push]
-        (template_specifier { is_nop = false; })*
-        identifier_list
+        DESTOP push_namestack[push] (template_specifier { is_nop = false; })* identifier_list
 ;
 
-/*
-  identifier
-
-  Handles an identifier.
-*/
+// an identifier
 identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SNAME);
+                startElement(SNAME);
         }
         identifier_list
 ;
 
-/*
-  identifier_list
-
-  Handles the list of identifiers that are also marked up as tokens for other things.
-*/
+// the list of identifiers that are also marked up as tokens for other things.
 identifier_list[] { ENTRY_DEBUG } :
-        NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
-        WARNING | SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD | FINAL |
-        OVERRIDE | VOID | ASM |
+            NAME | INCLUDE | DEFINE | ELIF | ENDIF | ERRORPREC | IFDEF | IFNDEF | LINE | PRAGMA | UNDEF |
+            WARNING | SUPER | REGION | ENDREGION | GET | SET | ADD | REMOVE | ASYNC | YIELD |
+            FINAL | OVERRIDE | VOID | ASM |
 
-        // C# linq
-        FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING |
-        GROUP | BY | JOIN | ON | EQUALS | INTO | THIS | ALIAS |
+            // C# linq
+            FROM | WHERE | SELECT | LET | ORDERBY | ASCENDING | DESCENDING | GROUP | BY | JOIN | ON | EQUALS |
+            INTO | THIS | ALIAS |
 
-        // Objective-C
-        IMPORT | ATPROTOCOL |
+            // Objective-C
+            IMPORT | ATPROTOCOL |
 
-        // C
-        CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |
+            // C
+            CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |
 
-        // Commented-out code; Not sure why these are commented out
-        /* 
-        CXX_CLASS | THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW | VIRTUAL | FRIEND | OPERATOR |
-        EXPLICIT | NAMESPACE | USING | DELETE | LITERAL_FALSE | LITERAL_TRUE | FINAL | OVERRIDE |
-        CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR | DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF
-        */
+            // Not sure why these are commented out
+            /* CXX_CLASS| THROW | CLASS | PUBLIC | PRIVATE | PROTECTED | NEW |
+            VIRTUAL | FRIEND | OPERATOR | EXPLICIT | NAMESPACE | USING |
+            DELETE | LITERAL_FALSE | LITERAL_TRUE | FINAL | OVERRIDE | CONSTEXPR | NOEXCEPT | THREADLOCAL | NULLPTR |
+            DECLTYPE | ALIGNAS | TYPENAME | ALIGNOF
+            */
 
-        // Qt
-        EMIT | FOREACH | SIGNAL | FOREVER
+            //Qt
+            EMIT | FOREACH | SIGNAL | FOREVER
 ;
 
-/*
-  simple_identifier
-
-  Handles the most basic form of a name.
-*/
+// most basic name
 simple_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
-        (NAME | VOID)
+        (
+        NAME | VOID
+        )
 ;
 
-/*
-  typename_keyword
-*/
 typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             if (!inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
@@ -6484,75 +6106,69 @@ typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         TYPENAME
 ;
 
-/*
-  function_pointer_name_check
-*/
-function_pointer_name_check[] returns [bool is_fp_name = false] {
-        if (LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
-            ++inputState->guessing;
-            int start = mark();
+function_pointer_name_check[] returns[bool is_fp_name = false] {
 
-            try {
-                function_pointer_name_grammar();
-                is_fp_name = LA(1) == PERIOD
-                    || LA(1) == TRETURN
-                    || (inLanguage(LANGUAGE_CXX) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
-            } catch(...) {}
+    if (LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
 
-            rewind(start);
-            --inputState->guessing;
-        }
+        ++inputState->guessing;
+        int start = mark();
 
-        ENTRY_DEBUG
-} :;
+        try {
 
-/*
-  function_pointer_name
-*/
+            function_pointer_name_grammar();
+            is_fp_name = LA(1) == PERIOD || LA(1) == TRETURN
+                || (inLanguage(LANGUAGE_CXX) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
+
+        } catch(...) {}
+       
+
+        rewind(start);
+        --inputState->guessing;
+
+    }
+
+ENTRY_DEBUG } :;
+
 function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
+
         {
+
             startNewMode(MODE_LOCAL);
 
             startElement(SNAME);
-        }
-        pointer_dereference
-        (period | member_pointer | member_pointer_dereference | dot_dereference)
 
-        ({ function_pointer_name_check() }?
-            pointer_dereference
-            (period | member_pointer | member_pointer_dereference | dot_dereference)
-        )*
+        }
+
+        pointer_dereference (period | member_pointer | member_pointer_dereference | dot_dereference)
+
+        ({ function_pointer_name_check() }? pointer_dereference (period | member_pointer | member_pointer_dereference | dot_dereference))*
 
         compound_name_inner[false]
-;
+        
+    ;
 
-/*
-  pointer_dereference
-*/
 pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
-        lparen_marked
 
-        // special case for function pointer names that don't have a '*'
-        (
-            { macro_call_token_set.member(LA(1)) }?
-            (compound_name_inner[false])* |
+    lparen_marked
 
-            // special name prefix of namespace or class
-            identifier
-            (generic_argument_list (generic_type_constraint)*)*
-            DCOLON
-            pointer_dereference |
+    // special case for function pointer names that don't have '*'
+    (
+        { macro_call_token_set.member(LA(1)) }?
+        (compound_name_inner[false])* |
 
-            // typical function pointer name; need greedy for general operators and possibly end
-            general_operators
-            (options { greedy = true; } : general_operators)*
-            (options { greedy = true; } : compound_name_inner[false])*
+        // special name prefix of namespace or class
+        identifier (generic_argument_list (generic_type_constraint)*)* DCOLON pointer_dereference |
 
-            // optional array declaration
-            (variable_identifier_array_grammar_sub[flag])*
-        )
+        // typical function pointer name
+        // need greedy for general operators and possibly end
+        general_operators (options { greedy = true; } : general_operators)* (options { greedy = true; } : compound_name_inner[false])*
 
-        rparen[true]
+        // optional array declaration
+        (variable_identifier_array_grammar_sub[flag])*
+
+    )
+
+    rparen[true]
 ;
 
 /*
