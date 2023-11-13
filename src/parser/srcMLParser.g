@@ -5226,9 +5226,12 @@ pattern_check_core[ int& token,           /* second token, after name (always re
         )
 ;
 
-// C# global attribute target
-check_global_attribute[] returns [bool flag] {
+/*
+  check_global_attribute
 
+  C# global attribute target
+*/
+check_global_attribute[] returns [bool flag] {
         flag =  LT(1)->getText() == "module"sv || LT(1)->getText() == "assembly"sv;
 } :;
 
