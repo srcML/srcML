@@ -12,7 +12,7 @@
 #include <stack>
 #include <cstring>
 #include <string_view>
-
+#include <iostream>
 using namespace ::std::literals::string_view_literals;
 
 // Update unit attributes with xml parsed attributes
@@ -84,12 +84,14 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
                 mode.push(DELETE);
             } else if (strncmp(tstart, "insert", 6) == 0) {
                 mode.push(INSERT);
-            } else {
+            } else if (strncmp(tstart, "ws", 2) != 0) {
                 mode.push(COMMON);
             }
+
         }
         else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX.data(), DIFF_PREFIX.size()) == 0) {
-            mode.pop();
+            if(strncmp(sp + 2 + DIFF_PREFIX.size(), "ws", 2) != 0)
+                mode.pop();
         }
         else {
             if (inmode && !text_only)
