@@ -5589,19 +5589,24 @@ qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITI
         ({ SkipBufferSize() == 0 }? QMARK)?
 ;
 
+/*
+  qmark
+*/
 qmark[] { is_qmark = true; ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_TERNARY | MODE_CONDITION))
                 endDownToMode(MODE_CONDITION);
         }
+
         qmark_marked
+
         {
             if (inTransparentMode(MODE_TERNARY | MODE_CONDITION)) {
-
                 endMode(MODE_CONDITION);
-                startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
-                startNoSkipElement(STHEN);
 
+                startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
+
+                startNoSkipElement(STHEN);
             }
         }
 ;
