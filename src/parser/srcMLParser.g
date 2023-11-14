@@ -5268,8 +5268,14 @@ set_int[int& name, int value, bool condition = true] {
         if (condition) name = value;
 } :;
 
-/* sets the bool to a value */
-set_bool[bool& variable, bool value = true] { variable = value; } :;
+/*
+  set_bool
+
+  Sets the boolean to a value.
+*/
+set_bool[bool& variable, bool value = true] {
+        variable = value;
+} :;
 
 trace[const char*s ] { std::cerr << s << std::endl; } :;
 
