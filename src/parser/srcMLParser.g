@@ -5936,10 +5936,14 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         (RETURN | EVENT | identifier_list)
 ;
 
-// inner attribute list handling
-attribute_inner_list[] { ENTRY_DEBUG } :
+/*
+  attribute_inner_list
 
-    complete_expression (COMMA complete_expression)*
+  Handles the inner portion of an attribute list.
+*/
+attribute_inner_list[] { ENTRY_DEBUG } :
+        complete_expression
+        (COMMA complete_expression)*
 ;
 
 // C++11 attributes
