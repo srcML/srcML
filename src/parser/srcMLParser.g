@@ -5534,19 +5534,26 @@ atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         ATOMIC
 ;
 
-// C11 markup _Atomic as call
-atomic_call[] { CompleteElement element(this);  int save_type_count = getTypeCount(); ENTRY_DEBUG } :
-        {
+/*
+  atomic_call
 
+  Used to mark "_Atomic" as a call (C++11).
+*/
+atomic_call[] { CompleteElement element(this); int save_type_count = getTypeCount(); ENTRY_DEBUG } :
+        {
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
             // start the macro call element
             startElement(SATOMIC);
-         
         }
-        ATOMIC (options { greedy = true; } : complete_argument_list)?
-        { setTypeCount(save_type_count); }
+
+        ATOMIC
+        (options { greedy = true; } : complete_argument_list)?
+
+        {
+            setTypeCount(save_type_count);
+        }
 ;
 
 // C++ completely match without markup _Atomic
