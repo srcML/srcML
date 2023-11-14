@@ -5924,7 +5924,11 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         RBRACKET
 ;
 
-// handle target for C# target
+/*
+  attribute_csharp_target
+
+  Handles a target for a C# attribute.
+*/
 attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(STARGET);
