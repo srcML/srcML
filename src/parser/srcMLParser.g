@@ -5802,18 +5802,27 @@ linq_equals[] { SingleElement element(this); ENTRY_DEBUG } :
         linq_expression_complete
 ;
 
-// linq orderby
+/*
+  linq_orderby
+
+  Handles a linq "orderby" keyword.
+*/
 linq_orderby[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SORDERBY);
         }
-        ORDERBY linq_expression_complete
 
+        ORDERBY
+        linq_expression_complete
         (options { greedy = true; } : linq_ascending | linq_descending)*
 
-        (options { greedy = true; } : COMMA linq_expression_complete (options { greedy = true; } : linq_ascending | linq_descending)* )*
+        (options { greedy = true; } :
+            COMMA
+            linq_expression_complete
+            (options { greedy = true; } : linq_ascending | linq_descending)*
+        )*
 ;
 
 // linq ascending
