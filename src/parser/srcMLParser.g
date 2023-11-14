@@ -5430,16 +5430,20 @@ class_lead_type_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
-// type identifier
+/*
+  lead_type_identifier
+*/
 lead_type_identifier[] { ENTRY_DEBUG } :
-
-//        specifier |
-
-//        (macro_call_paren identifier)=> macro_call |
+        // Commented-out code
+        // specifier |
+        // (macro_call_paren identifier)=> macro_call |
 
         // typical type name
-        { LA(1) != ASYNC && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE)) && 
-            LA(1) != CRESTRICT && LA(1) != MUTABLE }?
+        {
+            LA(1) != ASYNC
+            && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
+            && LA(1) != CRESTRICT && LA(1) != MUTABLE
+        }?
         compound_name |
 
         pure_lead_type_identifier
