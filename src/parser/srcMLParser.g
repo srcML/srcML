@@ -6132,35 +6132,42 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
         )*
 ;
 
-// match a complete expression no stream
+/*
+  complete_expression
+
+  Matches a complete expression (no stream).
+*/
 complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
-
         }
-        (options { greedy = true; } :
 
+        (options { greedy = true; } :
             // commas as in a list
-            { (inTransparentMode(MODE_END_ONLY_AT_RPAREN) && (getFirstMode(MODE_END_ONLY_AT_RPAREN | MODE_END_AT_COMMA)& MODE_END_AT_COMMA) == 0) || !inTransparentMode(MODE_END_AT_COMMA) }?
+            { (inTransparentMode(MODE_END_ONLY_AT_RPAREN) && (getFirstMode(MODE_END_ONLY_AT_RPAREN | MODE_END_AT_COMMA) & MODE_END_AT_COMMA) == 0)
+                || !inTransparentMode(MODE_END_AT_COMMA)
+            }?
             comma |
 
             // right parentheses, unless we are in a pair of parentheses in an expression
-            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+            rparen[false] |
 
-            { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }? complete_objective_c_call |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == LBRACKET }?
+            complete_objective_c_call |
 
             // argument mode (as part of call)
-            { inMode(MODE_ARGUMENT) }? argument |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
             // expression with right parentheses if a previous match is in one
-            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+            expression |
 
             colon_marked
-
         )*
 ;
-
 
 // match a linq_expression completely
 linq_expression_complete[] { CompleteElement element(this); int count_paren = 0; ENTRY_DEBUG } :
