@@ -5729,12 +5729,18 @@ linq_group[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : linq_into)*
 ;
 
-// linq by
+/*
+  linq_by
+
+  Handles a linq "by" keyword.
+*/
 linq_by[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SBY);
         }
-        BY linq_expression_complete
+
+        BY
+        linq_expression_complete
 ;
 
 // linq into
