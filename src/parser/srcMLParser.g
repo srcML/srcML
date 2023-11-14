@@ -5522,7 +5522,11 @@ atomic[] { ENTRY_DEBUG } :
         ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
 ;
 
-// C11 markup _Atomic as specifier
+/*
+  atomic_specifier
+
+  Used to mark "_Atomic" as a specifier (C++11).
+*/
 atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
