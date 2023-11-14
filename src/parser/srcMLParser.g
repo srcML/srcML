@@ -5655,12 +5655,18 @@ linq_from[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : linq_in)*
 ;
 
-// a linq in
+/*
+  linq_in
+
+  Handles a linq "in" keyword.
+*/
 linq_in[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SIN);
         }
-        IN linq_expression_complete
+
+        IN
+        linq_expression_complete
 ;
 
 // a linq where
