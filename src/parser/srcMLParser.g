@@ -6078,27 +6078,31 @@ complete_default_parameter[] {
         )*
 ;
 
-// match a complete objective_c_call no stream
+/*
+  complete_objective_c_call
+
+  Matches a complete Objective-C call (no stream).
+*/
 complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; ENTRY_DEBUG} :
+        { inputState->guessing }?
+        bracket_pair |
 
-    { inputState->guessing }? bracket_pair |
+        {
+            // start a mode to end at right bracket with expressions inside
+            if (!inMode(MODE_EXPRESSION) || inMode(MODE_EXPRESSION | MODE_EXPECT))
+                startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
+            else 
+                startNewMode(MODE_TOP);
+        }
 
-    {
-        // start a mode to end at right bracket with expressions inside
-        if (!inMode(MODE_EXPRESSION) || inMode(MODE_EXPRESSION | MODE_EXPECT))
-            startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
-        else 
-            startNewMode(MODE_TOP);
-
-    }
-
-    (options { greedy = true; } :
-
+        (options { greedy = true; } :
             // end of objective c call
-            { inTransparentMode(MODE_OBJECTIVE_C_CALL) && bracket_count }? rbracket set_int[bracket_count, bracket_count - 1] |
+            { inTransparentMode(MODE_OBJECTIVE_C_CALL) && bracket_count }?
+            rbracket set_int[bracket_count, bracket_count - 1] |
 
             // objective c argument list
-            { LA(1) == LBRACKET }? expression set_int[bracket_count, bracket_count + 1] |
+            { LA(1) == LBRACKET }?
+            expression set_int[bracket_count, bracket_count + 1] |
 
             // objective c argument list
             { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
@@ -6109,21 +6113,23 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
             (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
 
             // commas as in a list
-            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
+            { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA) }?
             comma |
 
             // right parentheses, unless we are in a pair of parentheses in an expression
-            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+            { !inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+            rparen[false] |
 
             // argument mode (as part of call)
-            { inMode(MODE_ARGUMENT) }? argument |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
             // expression with right parentheses if a previous match is in one
-            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? expression |
+            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+            expression |
 
             colon_marked
-
-    )*
+        )*
 ;
 
 // match a complete expression no stream
