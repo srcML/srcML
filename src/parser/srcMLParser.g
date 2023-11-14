@@ -5757,15 +5757,20 @@ linq_into[] { SingleElement element(this); ENTRY_DEBUG } :
         linq_expression_complete
 ;
 
-// linq join
+/*
+  linq_join
+
+  Handles a linq "join" keyword.
+*/
 linq_join[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SJOIN);
         }
-        JOIN linq_expression_complete
 
+        JOIN
+        linq_expression_complete
         (options { greedy = true; } : linq_in | linq_on | linq_equals | linq_into)*
 ;
 
