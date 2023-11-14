@@ -5946,7 +5946,11 @@ attribute_inner_list[] { ENTRY_DEBUG } :
         (COMMA complete_expression)*
 ;
 
-// C++11 attributes
+/*
+  attribute_cpp
+
+  Handles a C++11 attribute.
+*/
 attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
@@ -5954,11 +5958,14 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SATTRIBUTE);
         }
-        LBRACKET LBRACKET
+
+        LBRACKET
+        LBRACKET
 
         attribute_inner_list
 
-        RBRACKET RBRACKET
+        RBRACKET
+        RBRACKET
 ;
 
 // Do a complete argument list
