@@ -6169,17 +6169,20 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 ;
 
-// match a linq_expression completely
+/*
+  linq_expression_complete
+
+  Matches a linq expression completely.
+*/
 linq_expression_complete[] { CompleteElement element(this); int count_paren = 0; ENTRY_DEBUG } :
         {
             // start a mode to end at right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
-        (options {warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
 
-
-            { (LA(1) != RPAREN || count_paren > 0) && try_linq_expression_complete_inner(count_paren) }? linq_expression_complete_inner[count_paren, true]
-            
+        (options { warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
+            { (LA(1) != RPAREN || count_paren > 0) && try_linq_expression_complete_inner(count_paren) }?
+            linq_expression_complete_inner[count_paren, true]
         )*
 ;
 
