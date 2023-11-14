@@ -5576,12 +5576,17 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         QMARK
 ;
 
+/*
+  qmark_marked
+*/
 qmark_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_CONDITION); LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (!(in_ternary && true))
                 startElement(SOPERATOR);
         }
-        QMARK ({ SkipBufferSize() == 0 }? QMARK)?
+
+        QMARK
+        ({ SkipBufferSize() == 0 }? QMARK)?
 ;
 
 qmark[] { is_qmark = true; ENTRY_DEBUG } :
