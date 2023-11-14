@@ -5566,7 +5566,9 @@ atomic_call_full[] { ENTRY_DEBUG } :
         (options { greedy = true; } : paren_pair)?
 ;
 
-// qmark
+/*
+  qmark_name
+*/
 qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
