@@ -5512,10 +5512,14 @@ decltype_call_full[] { ENTRY_DEBUG } :
         paren_pair
 ;
 
-// C11 markup _Atomic 
-atomic[] { ENTRY_DEBUG } :
+/*
+  atomic
 
-    { next_token() == LPAREN }? ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
+  Used to mark an "_Atomic" keyword (C++11).
+*/
+atomic[] { ENTRY_DEBUG } :
+        { next_token() == LPAREN }?
+        ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
 ;
 
 // C11 markup _Atomic as specifier
