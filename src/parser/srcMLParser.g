@@ -5284,8 +5284,16 @@ trace[const char*s] {
         std::cerr << s << std::endl;
 } :;
 
-trace_int[int s] { std::cerr << "HERE " << s << std::endl; } :;
-/*traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
+/*
+  trace_int
+*/
+trace_int[int s] {
+        std::cerr << "HERE " << s << std::endl;
+} :;
+
+// Commented-out code
+/*
+traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::endl; } :;
 marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 */
 
