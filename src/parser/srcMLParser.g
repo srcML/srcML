@@ -5711,14 +5711,20 @@ linq_let[] { SingleElement element(this); ENTRY_DEBUG } :
         linq_expression_complete
 ;
 
-// a linq group
+/*
+  linq_group
+
+  Handles a linq "group" keyword.
+*/
 linq_group[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SGROUP);
         }
-        GROUP linq_expression_complete
+
+        GROUP
+        linq_expression_complete
         (options { greedy = true; } : linq_by)*
         (options { greedy = true; } : linq_into)*
 ;
