@@ -5232,13 +5232,13 @@ pattern_check_core[ int& token,           /* second token, after name (always re
   C# global attribute target
 */
 check_global_attribute[] returns [bool flag] {
-        flag =  LT(1)->getText() == "module"sv || LT(1)->getText() == "assembly"sv;
+        flag = LT(1)->getText() == "module"sv || LT(1)->getText() == "assembly"sv;
 } :;
 
 /*
   Utility rules
 
-  Work even in guessing mode, which explicit code segments cannot
+  Work even in guessing mode, where explicit code segments do not.
 */
 
 /* Throws an exception if the condition is true */
