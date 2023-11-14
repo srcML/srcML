@@ -5683,12 +5683,18 @@ linq_where[] { SingleElement element(this); ENTRY_DEBUG } :
         linq_expression_complete
 ;
 
-// a linq select
+/*
+  linq_select
+
+  Handles a linq "select" keyword.
+*/
 linq_select[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SSELECT);
         }
-        SELECT linq_expression_complete
+
+        SELECT
+        linq_expression_complete
 ;
 
 // a linq let
