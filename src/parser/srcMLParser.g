@@ -5396,24 +5396,24 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
         )
 ;
 
-// type identifier
+/*
+  pure_lead_type_identifier_no_specifiers
+*/
 pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
-
         // class/struct/union before a name in a type, e.g., class A f();
         (options { generateAmbigWarnings = false; } :
+            class_lead_type_identifier | typename_keyword |
 
-        class_lead_type_identifier | typename_keyword |
+            // enum use in a type
+            { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+            (ENUM variable_identifier (variable_identifier | multops | tripledotop | INLINE)) => ENUM |
 
-        // enum use in a type
-        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
-        (ENUM variable_identifier (variable_identifier | multops | tripledotop | INLINE))=> ENUM |
+            // entire enum definition
+            { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
+            enum_definition_complete |
 
-        // entire enum definition
-        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
-        enum_definition_complete |
-
-        { LA(1) == DECLTYPE }? type_specifier_call | atomic
-
+            { LA(1) == DECLTYPE }?
+            type_specifier_call | atomic
         )
 ;
 
