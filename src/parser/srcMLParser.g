@@ -5502,9 +5502,14 @@ decltype_call[] { CompleteElement element(this); int save_type_count = getTypeCo
         { setTypeCount(save_type_count); }
 ;
 
-// C++ completely match without markup decltype
+/*
+  decltype_call_full
+
+  Used to completely match a "decltype" without marking it up (C++).
+*/
 decltype_call_full[] { ENTRY_DEBUG } :
-        DECLTYPE paren_pair
+        DECLTYPE
+        paren_pair
 ;
 
 // C11 markup _Atomic 
