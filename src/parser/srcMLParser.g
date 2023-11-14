@@ -5474,9 +5474,12 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
         variable_identifier_array_grammar_sub[iscomplex]
 ;
 
+/*
+  type_specifier_call
+*/
 type_specifier_call[] { ENTRY_DEBUG } :
-
-    { inputState->guessing }? (decltype_call_full) | decltype_call
+        { inputState->guessing }?
+        (decltype_call_full) | decltype_call
 ;
 
 // C++11 markup decltype 
