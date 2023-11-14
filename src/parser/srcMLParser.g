@@ -5297,10 +5297,15 @@ traceLA { std::cerr << "LA(1) is " << LA(1) << " " << LT(1)->getText() << std::e
 marker[] { CompleteElement element(this); startNewMode(MODE_LOCAL); startElement(SMARKER); } :;
 */
 
-// update type count
+/*
+  update_typecount
+
+  Used to update the type count.
+*/
 update_typecount[srcMLState::MODE_TYPE mode] {} :
         {
             decTypeCount();
+
             if (inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
                 return;
 
