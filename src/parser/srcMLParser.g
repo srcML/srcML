@@ -5482,18 +5482,23 @@ type_specifier_call[] { ENTRY_DEBUG } :
         (decltype_call_full) | decltype_call
 ;
 
-// C++11 markup decltype 
+/*
+  decltype_call
+
+  Used to mark a "decltype" (C++11).
+*/
 decltype_call[] { CompleteElement element(this); int save_type_count = getTypeCount(); ENTRY_DEBUG } :
         {
-
             // start a mode for the macro that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
-            // start the macro call element
+            // start the decltype element
             startElement(SDECLTYPE);
-         
         }
-        DECLTYPE complete_argument_list
+
+        DECLTYPE
+        complete_argument_list
+
         { setTypeCount(save_type_count); }
 ;
 
