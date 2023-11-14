@@ -5461,12 +5461,14 @@ type_identifier[] { ENTRY_DEBUG } :
         non_lead_type_identifier
 ;
 
-// type identifier
+/*
+  non_lead_type_identifier
+*/
 non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
-
         tripledotop |
 
-        { inLanguage(LANGUAGE_C_FAMILY) }? multops |
+        { inLanguage(LANGUAGE_C_FAMILY) }?
+        multops |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) && look_past(LBRACKET) == RBRACKET }?
         variable_identifier_array_grammar_sub[iscomplex]
