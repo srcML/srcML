@@ -5697,12 +5697,18 @@ linq_select[] { SingleElement element(this); ENTRY_DEBUG } :
         linq_expression_complete
 ;
 
-// a linq let
+/*
+  linq_let
+
+  Handles a linq "let" keyword.
+*/
 linq_let[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SLET);
         }
-        LET linq_expression_complete
+
+        LET
+        linq_expression_complete
 ;
 
 // a linq group
