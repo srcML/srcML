@@ -5968,9 +5968,19 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
         RBRACKET
 ;
 
-// Do a complete argument list
+/*
+  complete_argument_list
+
+  Used to match an argument list completely.
+*/
 complete_argument_list[] { ENTRY_DEBUG } :
-        call_argument_list (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != RCURLY }? complete_arguments)* rparen[false]
+        call_argument_list
+
+        (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != RCURLY }?
+            complete_arguments
+        )*
+
+        rparen[false]
 ;
 
 // Full, complete expression matched all at once (no stream).
