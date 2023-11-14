@@ -5241,8 +5241,14 @@ check_global_attribute[] returns [bool flag] {
   Work even in guessing mode, where explicit code segments do not.
 */
 
-/* Throws an exception if the condition is true */
-throw_exception[bool condition = true] { if (condition) throw antlr::RecognitionException(); } :;
+/*
+  throw_exception
+
+  Throws an exception if the condition is true.
+*/
+throw_exception[bool condition = true] {
+        if (condition) throw antlr::RecognitionException();
+} :;
 
 /* sets the declaration type to a value if the condition is true */
 set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] { if (condition) name = value; } :;
