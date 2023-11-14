@@ -5629,7 +5629,11 @@ linq_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : linq_expression_pure)*
 ;
 
-// match linq expressions
+/*
+  linq_expression_pure
+
+  Used to match linq expressions.
+*/
 linq_expression_pure[] { ENTRY_DEBUG } :
         linq_from | linq_where | linq_select | linq_let | linq_group | linq_join | linq_orderby
 ;
