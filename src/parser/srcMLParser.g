@@ -5825,7 +5825,11 @@ linq_orderby[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 ;
 
-// linq ascending
+/*
+  linq_ascending
+
+  Handles a linq "ascending" keyword.
+*/
 linq_ascending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
