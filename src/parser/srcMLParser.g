@@ -5849,7 +5849,11 @@ linq_descending[] { SingleElement element(this); ENTRY_DEBUG } :
         DESCENDING
 ;
 
-// variables array index
+/*
+  variable_identifier_array_grammar_sub
+
+  Handles a variables array index.
+*/
 variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             iscomplex = true;
@@ -5862,10 +5866,9 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 
             startElement(SINDEX);
         }
+
         (LBRACKET | ATLBRACKET)
-
         variable_identifier_array_grammar_sub_contents
-
         RBRACKET
 ;
 
