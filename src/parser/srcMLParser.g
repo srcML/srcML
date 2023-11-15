@@ -6631,9 +6631,11 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         }
 ;
 
+/*
+  multops_star
+*/
 multops_star[] { ENTRY_DEBUG } :
-
-    (options { greedy = true; } : multops)*
+        (options { greedy = true; } : multops)*
 ;
 
 // C++ compound name handling
