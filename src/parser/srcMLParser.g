@@ -6186,26 +6186,22 @@ linq_expression_complete[] { CompleteElement element(this); int count_paren = 0;
         )*
 ;
 
-try_linq_expression_complete_inner[int& count_paren] returns[bool success = false] {
+/*
+  try_linq_expression_complete_inner
+*/
+try_linq_expression_complete_inner[int& count_paren] returns [bool success = false] {
+        int start = mark();
+        ++inputState->guessing;
 
-    int start = mark();
-    ++inputState->guessing;
+        try {
+            linq_expression_complete_inner(count_paren);
+            success = true;
+        } catch (antlr::RecognitionException& e) {
+            success = false;
+        }
 
-    try {
-
-        linq_expression_complete_inner(count_paren);
-        success = true;
-
-    } catch(antlr::RecognitionException& e) {
-
-        success = false;
-
-    }
-
-    rewind(start);
-    --inputState->guessing;
-
-
+        rewind(start);
+        --inputState->guessing;
 } :;
 
 linq_expression_complete_inner[int& count_paren, bool update = false] { CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
