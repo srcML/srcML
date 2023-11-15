@@ -7033,7 +7033,11 @@ this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         THIS
 ;
 
-// A constructor declaration
+/*
+  constructor_declaration
+
+  Handles a constructor declaration.
+*/
 constructor_declaration[] { ENTRY_DEBUG } :
         {
             // statement
@@ -7042,6 +7046,7 @@ constructor_declaration[] { ENTRY_DEBUG } :
             // start the constructor declaration
             startElement(SCONSTRUCTOR_DECLARATION);
         }
+
         constructor_header
 ;
 
