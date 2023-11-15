@@ -6250,7 +6250,11 @@ linq_expression_complete_inner[int& count_paren, bool update = false] { CALL_TYP
         COLON
 ;
 
-// variable name in an expression.  Includes array names, but not function calls
+/*
+  variable_identifier
+
+  Handles a variable name in an expression.  Includes array names, but not function calls.
+*/
 variable_identifier[] { ENTRY_DEBUG } :
         compound_name
 ;
