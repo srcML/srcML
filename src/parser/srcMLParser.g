@@ -6781,6 +6781,9 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
         )*
 ;
 
+/*
+  keyword_name
+*/
 keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
@@ -6798,9 +6801,12 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
 
         keyword_name_inner[iscompound]
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
 
-        (options { greedy = true; } : { /*!inTransparentMode(MODE_EAT_TYPE) &&*/ (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)}?
+        (options { greedy = true; } :
+            { /* Commented-out code: !inTransparentMode(MODE_EAT_TYPE) && */
+                (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)
+            }?
             variable_identifier_array_grammar_sub[iscompound]
         )*
 
