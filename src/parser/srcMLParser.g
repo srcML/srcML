@@ -7152,7 +7152,9 @@ push_namestack[bool push = true] {
         namestack[0] = LT(1)->getText();
 } :;
 
-// identifier stack
+/*
+  identifier_stack
+*/
 identifier_stack[decltype(namestack)& s] { s[1] = std::move(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
         identifier
 ;
