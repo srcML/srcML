@@ -6853,13 +6853,17 @@ keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 exception
 catch[antlr::RecognitionException&] {}
 
-// an identifier
+/*
+  keyword_identifier
+
+  Handles a keyword identifier.
+*/
 keyword_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-                startElement(SNAME);
+            startElement(SNAME);
         }
+
         (CLASS | CXX_CLASS)
-        
 ;
 
 // Specifier for a function
