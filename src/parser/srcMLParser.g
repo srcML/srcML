@@ -7139,8 +7139,18 @@ member_init[] { ENTRY_DEBUG } :
         call_argument_list 
 ;
 
-// push name onto namestack
-push_namestack[bool push = true] { if (!push) return; namestack[1] = std::move(namestack[0]); namestack[0] = LT(1)->getText(); } :;
+/*
+  push_namestack
+
+  Used to push a name onto the namestack.
+*/
+push_namestack[bool push = true] {
+        if (!push)
+            return;
+
+        namestack[1] = std::move(namestack[0]);
+        namestack[0] = LT(1)->getText();
+} :;
 
 // identifier stack
 identifier_stack[decltype(namestack)& s] { s[1] = std::move(s[0]); s[0] = LT(1)->getText(); ENTRY_DEBUG } :
