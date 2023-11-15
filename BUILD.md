@@ -29,7 +29,7 @@ To generate a makefile in your build directory:
 
 The main packages required may be installed via brew:
 
-    brew install antlr2 boost cmake
+    brew install antlr2 boost libxslt cmake
 
 Libarchive greater than 3.0.0 is required. For macOS previous to Catalina (19.*.*), libarchive.a 3.3.* must be 
 statically included. Use brew to install a more recent version:
