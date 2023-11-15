@@ -6866,16 +6866,24 @@ keyword_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         (CLASS | CXX_CLASS)
 ;
 
-// Specifier for a function
+/*
+  function_specifier
+
+  Handles a specifier for a function.
+*/
 function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
-        { LA(1) == WHERE }? generic_type_constraint |
+        { LA(1) == WHERE }?
+        generic_type_constraint |
 
-        ({ LA(1) != ASYNC }? specifier |
+        (
+            { LA(1) != ASYNC }?
+            specifier |
 
-        // pure virtual specifier, = default, and = delete
-        EQUAL (literal | function_equal_specifier) |
+            // pure virtual specifier, = default, and = delete
+            EQUAL (literal | function_equal_specifier) |
 
-        simple_name_optional_template)
+            simple_name_optional_template
+        )
 ;
 
 // function declaration can be set to delete or default.
