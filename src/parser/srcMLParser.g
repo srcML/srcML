@@ -7159,7 +7159,9 @@ identifier_stack[decltype(namestack)& s] { s[1] = std::move(s[0]); s[0] = LT(1)-
         identifier
 ;
 
-// destructor definition
+/*
+  destructor_definition
+*/
 destructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
@@ -7168,6 +7170,7 @@ destructor_definition[] { ENTRY_DEBUG } :
             // start the destructor definition
             startElement(SDESTRUCTOR_DEFINITION);
         }
+
         destructor_header
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
