@@ -7176,7 +7176,9 @@ destructor_definition[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
 ;
 
-// destructor declaration
+/*
+  destructor_declaration
+*/
 destructor_declaration[] { ENTRY_DEBUG } :
         {
             // just a statement
@@ -7185,6 +7187,7 @@ destructor_declaration[] { ENTRY_DEBUG } :
             // start the destructor declaration
             startElement(SDESTRUCTOR_DECLARATION);
         }
+
         destructor_header
 ;
 
