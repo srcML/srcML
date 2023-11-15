@@ -6346,7 +6346,11 @@ simple_name_optional_template_optional_specifier[bool push = true] { CompleteEle
         )
 ;
 
-// name including template argument list
+/*
+  simple_name_optional_template_optional_specifier_destop
+
+  Handles a name (including a template argument list).  Used for optional specifiers with destructor identifiers.
+*/
 simple_name_optional_template_optional_specifier_destop[bool push = true] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
@@ -6358,19 +6362,21 @@ simple_name_optional_template_optional_specifier_destop[bool push = true] { Comp
             // record the name token so we can replace it if necessary
             setTokenPosition(tp);
         }
+
         identifier_optional_specifier_destop[push, is_nop]
-    (
-        { generic_argument_list_check() }? (generic_argument_list)=>
-            generic_argument_list (options { greedy = true; } : generic_type_constraint)*  |
 
-        (cuda_argument_list) => cuda_argument_list |
+        (
+            { generic_argument_list_check() }?
+            (generic_argument_list) => generic_argument_list (options { greedy = true; } : generic_type_constraint)* |
 
-        {
-            // set the token to NOP since we did not find a template argument list
-            if (is_nop)
-                tp.setType(SNOP);
-        }
-    )
+            (cuda_argument_list) => cuda_argument_list |
+
+            {
+                // set the token to NOP since we did not find a template argument list
+                if (is_nop)
+                    tp.setType(SNOP);
+            }
+        )
 ;
 
 // a destructor identifier
