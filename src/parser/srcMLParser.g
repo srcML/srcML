@@ -6909,18 +6909,23 @@ specifier[] { ENTRY_DEBUG } :
         single_keyword_specifier | alignas_specifier | macro_specifier_call | atomic
 ;
 
-// match a single word specifier
+/*
+  single_keyword_specifier
+
+  Used to match a single word specifier.
+*/
 single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+
         (
             // access
             PUBLIC | PRIVATE | PROTECTED |
 
             // C++
-            FINAL | STATIC | ABSTRACT | { inLanguage(LANGUAGE_CSHARP) }? NEW | MUTABLE |
-            CONSTEXPR | THREAD_LOCAL |
+            FINAL | STATIC | ABSTRACT | { inLanguage(LANGUAGE_CSHARP) }? NEW |
+            MUTABLE | CONSTEXPR | THREAD_LOCAL |
 
             // C
             REGISTER | RESTRICT | NORETURN | COMPLEX | IMAGINARY |
@@ -6928,7 +6933,7 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             // C/C++ mode
             CRESTRICT | 
 
-            // C#& Java
+            // C# and Java
             INTERNAL | SEALED | OVERRIDE | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
             DELEGATE | PARTIAL | ASYNC | VIRTUAL | EXTERN | INLINE | IN | PARAMS |
             { inLanguage(LANGUAGE_JAVA) }? (SYNCHRONIZED | NATIVE | STRICTFP | TRANSIENT) |
@@ -6937,7 +6942,6 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // Apple
             BLOCK | WEAK | STRONG
-
         )
 ;
 
