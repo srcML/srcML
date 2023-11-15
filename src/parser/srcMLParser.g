@@ -7191,18 +7191,28 @@ destructor_declaration[] { ENTRY_DEBUG } :
         destructor_header
 ;
 
-// a destructor header
+/*
+  destructor_header
+*/
 destructor_header[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
-            { inLanguage(LANGUAGE_JAVA) }? annotation |
+            { inLanguage(LANGUAGE_JAVA) }?
+            annotation |
 
-            { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+            { inLanguage(LANGUAGE_CSHARP) }?
+            attribute_csharp |
 
-            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
+            attribute_cpp |
 
-            specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full |
+            specifier |
 
-            { LA(1) == VOID }? simple_identifier
+            { next_token() != TEMPOPS }? template_specifier |
+
+            template_declaration_full |
+
+            { LA(1) == VOID }?
+            simple_identifier
         )*
 
         compound_name_inner[false]
