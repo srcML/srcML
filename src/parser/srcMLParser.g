@@ -6961,11 +6961,16 @@ auto_keyword[bool is_specifier] { SingleElement element(this); ENTRY_DEBUG } :
         AUTO
 ;
 
-// match a single word specifier
+/*
+  template_specifier
+
+  Used to match a "template" specifier.
+*/
 template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+
         TEMPLATE
 ;
 
