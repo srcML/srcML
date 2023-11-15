@@ -7084,7 +7084,7 @@ constructor_header[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CSHARP) }?
             attribute_csharp |
 
-            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
             attribute_cpp |
 
             specifier |
