@@ -6945,7 +6945,11 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-// C/C++ auto specifier (as either type name or specifier)
+/*
+  auto_keyword
+
+  Handles an "auto" specifier as either a type name or specifier (C/C++).
+*/
 auto_keyword[bool is_specifier] { SingleElement element(this); ENTRY_DEBUG } :
         {
             if (is_specifier)
@@ -6953,6 +6957,7 @@ auto_keyword[bool is_specifier] { SingleElement element(this); ENTRY_DEBUG } :
             else
                 startElement(SNAME);
         }
+
         AUTO
 ;
 
