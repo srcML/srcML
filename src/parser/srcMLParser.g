@@ -7105,7 +7105,11 @@ constructor_header[] { ENTRY_DEBUG } :
         }
 ;
 
-// member initialization list markup
+/*
+  member_initialization_list
+
+  Marks up a member initialization list.
+*/
 member_initialization_list[] { ENTRY_DEBUG } :
         {
             // handle member initialization list as a list of calls
@@ -7113,6 +7117,7 @@ member_initialization_list[] { ENTRY_DEBUG } :
 
             startElement(SMEMBER_INITIALIZATION_LIST);
         }
+
         COLON
 ;
 
