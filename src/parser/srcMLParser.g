@@ -6394,12 +6394,19 @@ identifier_destop[bool push = true] { SingleElement element(this); ENTRY_DEBUG }
         identifier_list
 ;
 
-// a destructor identifier
+/*
+  identifier_optional_specifier_destop
+
+  Handles an optional specifier with destructor identifiers.
+*/
 identifier_optional_specifier_destop[bool push, bool& is_nop] { SingleElement element(this); ENTRY_DEBUG } :
         {
-                startElement(SNAME);
+            startElement(SNAME);
         }
-        DESTOP push_namestack[push] (template_specifier { is_nop = false; })* identifier_list
+
+        DESTOP push_namestack[push]
+        (template_specifier { is_nop = false; })*
+        identifier_list
 ;
 
 // an identifier
