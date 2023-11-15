@@ -6886,17 +6886,18 @@ function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-// function declaration can be set to delete or default.
+/*
+  function_equal_specifier
+
+  Handles "=delete" and "=default" in a function declaration.
+*/
 function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             // only markup strings in literal option
             startElement(SFUNCTION_SPECIFIER);
         }
-        (
 
-            DEFAULT | DELETE
-
-        )
+        (DEFAULT | DELETE)
 ;
 
 // mark specifiers
