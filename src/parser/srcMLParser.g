@@ -6688,28 +6688,48 @@ compound_name_cpp[bool& iscompound] { namestack.fill(""); bool iscolon = false; 
 exception
 catch[antlr::RecognitionException&] {}
 
-// compound name for C#
-compound_name_csharp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
+/*
+  compound_name_csharp
 
+  Handles a compound name (C#).
+*/
+compound_name_csharp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
         (modifiers_csharp)*
+
         (dcolon { iscompound = true; })*
-        (set_bool[isdestructor] { /* iscompound = true; */} simple_name_optional_template_destop |
-        simple_name_optional_template | push_namestack overloaded_operator)
+
+        (set_bool[isdestructor] { /* Commented-out code: iscompound = true; */}
+            simple_name_optional_template_destop
+            | simple_name_optional_template
+            | push_namestack overloaded_operator
+        )
+
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
         ( options { greedy = true; } :
-            ({ !modifier_tokens_set.member(last_consumed) }? dcolon { iscompound = true; } | (period | member_pointer) { iscompound = true; })
+            ({ !modifier_tokens_set.member(last_consumed) }?
+                dcolon
+                { iscompound = true; }
+                    | (period | member_pointer) { iscompound = true; }
+            )
+
             (options { greedy = true; } : dcolon)*
-            (set_bool[isdestructor] simple_name_optional_template_destop | 
-            (multops)*
-            (simple_name_optional_template | push_namestack overloaded_operator | function_identifier_main))
-            //(options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
+
+            (
+                set_bool[isdestructor]
+                simple_name_optional_template_destop | (multops)*
+
+                (simple_name_optional_template
+                    | push_namestack overloaded_operator
+                    | function_identifier_main)
+            )
+
+            // Commented-out code: (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 ;
 exception
-catch[antlr::RecognitionException&] {
-}
+catch[antlr::RecognitionException&] {}
 
 // compound name for C
 compound_name_c[bool& iscompound] { ENTRY_DEBUG } :
