@@ -7050,7 +7050,11 @@ constructor_declaration[] { ENTRY_DEBUG } :
         constructor_header
 ;
 
-// A constructor definition
+/*
+  constructor_definition
+
+  Handles a constructor definition.
+*/
 constructor_definition[] { ENTRY_DEBUG } :
         {
             // statement with nested block
@@ -7059,6 +7063,7 @@ constructor_definition[] { ENTRY_DEBUG } :
             // start the construction definition
             startElement(SCONSTRUCTOR_DEFINITION);
         }
+
         constructor_header
 
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
