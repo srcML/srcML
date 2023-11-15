@@ -7121,19 +7121,22 @@ member_initialization_list[] { ENTRY_DEBUG } :
         COLON
 ;
 
-// call  function call, macro, etc.
+/*
+  member_init
+
+  Handles a call, function call, macro, etc.
+*/
 member_init[] { ENTRY_DEBUG } :
         {
-
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
 
             // start the function call element
             startElement(SMEMBER_INITIALIZATION);
-
         }
-        function_identifier call_argument_list
-        
+
+        function_identifier
+        call_argument_list 
 ;
 
 // push name onto namestack
