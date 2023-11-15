@@ -6409,11 +6409,16 @@ identifier_optional_specifier_destop[bool push, bool& is_nop] { SingleElement el
         identifier_list
 ;
 
-// an identifier
+/*
+  identifier
+
+  Handles an identifier.
+*/
 identifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-                startElement(SNAME);
+            startElement(SNAME);
         }
+
         identifier_list
 ;
 
