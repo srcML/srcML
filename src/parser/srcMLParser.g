@@ -6818,29 +6818,40 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
         }
 ;
 
-// C++ compound name handling
-keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
+/*
+  keyword_name_inner
 
-        //( options { greedy = true; } : dcolon)*
-        //(DESTOP set_bool[isdestructor] { iscompound = true; })*
+  Handles a compound name (C++).
+*/
+keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
+        // Commented-out code: (options { greedy = true; } : dcolon)*
+        // Commented-out code: (DESTOP set_bool[isdestructor] { iscompound = true; })*
+
         keyword_identifier
+
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
-        ( options { greedy = true; } :
+        (options { greedy = true; } :
             (dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
-            ( options { greedy = true; } : dcolon)*
+
+            (options { greedy = true; } : dcolon)*
+
             (DESTOP set_bool[isdestructor])*
+
             (multops)*
+
             (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
+
             (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
         )*
 
-        { notdestructor = LA(1) == DESTOP; }
+        {
+            notdestructor = LA(1) == DESTOP;
+        }
 ;
 exception
-catch[antlr::RecognitionException&] {
-}
+catch[antlr::RecognitionException&] {}
 
 // an identifier
 keyword_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
