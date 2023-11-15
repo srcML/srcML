@@ -7223,7 +7223,11 @@ destructor_header[] { ENTRY_DEBUG } :
         }
 ;
 
-// Java annotation
+/*
+  annotation
+
+  Handles a Java annotation.
+*/
 annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7232,17 +7236,29 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the function call element
             startElement(SANNOTATION);
         }
-        ATSIGN
 
+        ATSIGN
         function_identifier
 
-        // warnings seem to be caused by antlr ()* ending the rules.
-        // first greedy eliminates LPAREN LCURLY
-        (options { greedy = true; } : call_argument_list 
-        // second greedy get rid of rparen
-        (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != COMMA }? annotation_argument 
-        // third greedy gets rid of comma
-        (options { greedy = true; } : comma)*)* rparen)*
+        // warnings seem to be caused by antlr ()* ending the rules
+
+        (
+            // first greedy eliminates LPAREN LCURLY
+            options { greedy = true; } :
+                call_argument_list
+
+            (
+                // second greedy get rid of rparen
+                options { greedy = true; } :
+                    { LA(1) != RPAREN && LA(1) != COMMA }?
+                    annotation_argument
+
+                // third greedy gets rid of comma
+                (options { greedy = true; } : comma)*
+            )*
+
+            rparen
+        )*
 ;
 
 // call  function call, macro, etc.
