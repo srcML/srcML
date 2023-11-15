@@ -6987,18 +6987,26 @@ constexpr_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         CONSTEXPR
 ;
 
-// C++11 specifier
+/*
+  alignas_specifier
+
+  Handles an "alignas" specifier (C++11).
+*/
 alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL | MODE_ARGUMENT);
 
             startElement(SALIGNAS);
         }
+
         ALIGNAS
 
-        ({ inputState->guessing }? paren_pair | 
+        (
+            { inputState->guessing }?
+            paren_pair |
 
-        complete_argument_list)
+            complete_argument_list
+        )
 ;
 
 // default specifier (Java Methods)
