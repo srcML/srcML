@@ -7071,18 +7071,30 @@ constructor_definition[] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
 ;
 
-// header portion of constructor
+/*
+  constructor_header
+
+  Handles the header portion of a constructor.
+*/
 constructor_header[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
-            { inLanguage(LANGUAGE_JAVA) }? annotation |
+            { inLanguage(LANGUAGE_JAVA) }?
+            annotation |
 
-            { inLanguage(LANGUAGE_CSHARP) }? attribute_csharp |
+            { inLanguage(LANGUAGE_CSHARP) }?
+            attribute_csharp |
 
-            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp |
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
+            attribute_cpp |
 
-            specifier | { next_token() != TEMPOPS }? template_specifier | template_declaration_full |
+            specifier |
 
-            { inLanguage(LANGUAGE_JAVA_FAMILY) }? generic_parameter_list
+            { next_token() != TEMPOPS }? template_specifier |
+
+            template_declaration_full |
+
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            generic_parameter_list
         )*
 
         compound_name_inner[false]
