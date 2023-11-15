@@ -6900,7 +6900,11 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         (DEFAULT | DELETE)
 ;
 
-// mark specifiers
+/*
+  specifier
+
+  Used to mark specifiers.
+*/
 specifier[] { ENTRY_DEBUG } :
         single_keyword_specifier | alignas_specifier | macro_specifier_call | atomic
 ;
