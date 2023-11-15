@@ -7009,11 +7009,16 @@ alignas_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-// default specifier (Java Methods)
+/*
+  default_specifier
+
+  Handles a "default" specifier (Java methods).
+*/
 default_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+
         DEFAULT
 ;
 
