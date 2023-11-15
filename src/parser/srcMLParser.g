@@ -6765,14 +6765,21 @@ compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
         )*
 ;
 
-// compound name for Java
+/*
+  compound_name_java
+
+  Handles a compound name (Java).
+*/
 compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
+        generic_argument_list | simple_name_optional_template
 
-        generic_argument_list |
-        simple_name_optional_template
-        (options { greedy = true; } : (period { iscompound = true; } (keyword_name | simple_name_optional_template | { next_token() == TERMINATE }? multop_name)))*
+        (options { greedy = true; } :
+            (
+                period { iscompound = true; }
+                (keyword_name | simple_name_optional_template | { next_token() == TERMINATE }? multop_name)
+            )
+        )*
 ;
-
 
 keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompound = false; ENTRY_DEBUG } :
         {
