@@ -7022,10 +7022,14 @@ default_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         DEFAULT
 ;
 
+/*
+  this_specifier
+*/
 this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+
         THIS
 ;
 
