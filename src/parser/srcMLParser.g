@@ -6974,11 +6974,16 @@ template_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         TEMPLATE
 ;
 
-// match a single word specifier
+/*
+  constexpr_specifier
+
+  Used to match a "constexpr" specifier.
+*/
 constexpr_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+
         CONSTEXPR
 ;
 
