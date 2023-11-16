@@ -8331,15 +8331,16 @@ using_statement[] { ENTRY_DEBUG } :
         for_like_statement_post
 ;
 
+/*
+  for_like_statement_pre
+*/
 for_like_statement_pre[int tag] { ENTRY_DEBUG } :
         {
-            
-            // treat try block as nested block statement
+            // treat try block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start of the try statement
             startElement(tag);
-
         }
 ;
 
