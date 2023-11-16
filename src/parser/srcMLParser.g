@@ -8135,13 +8135,16 @@ catch[antlr::RecognitionException&] {
             emptyElement(SERROR_PARSE);
 }
 
-// handle macro list/pattern name by itself
-macro_type_name[]  { SingleElement element(this); ENTRY_DEBUG } :
+/*
+  macro_type_name
+
+  Handles a macro list/pattern name by itself.
+*/
+macro_type_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-
             startElement(SNAME);
-
         }
+
         MACRO_TYPE_NAME
 ;
 
