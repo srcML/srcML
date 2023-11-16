@@ -7417,9 +7417,12 @@ ternary_expression[] { ENTRY_DEBUG } :
         )
 ;
 
-// an expression
-expression_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+/*
+  expression_no_ternary
 
+  Handles an expression (that is known to not be a ternary).  Used in ternary_expression.
+*/
+expression_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
         expression_process
 
         expression_part_plus_linq_no_ternary[type, call_count]
