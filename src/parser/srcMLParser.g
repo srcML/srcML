@@ -7731,7 +7731,11 @@ reinterpret_cast_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// static_cast
+/*
+  static_cast_call
+
+  Handles a "static_cast<>()" call.
+*/
 static_cast_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7740,7 +7744,9 @@ static_cast_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SSTATIC_CAST);
         }
-        STATIC_CAST (generic_argument_list)*
+
+        STATIC_CAST
+        (generic_argument_list)*
         call_argument_list
 ;
 
