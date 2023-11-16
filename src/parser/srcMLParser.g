@@ -8239,15 +8239,20 @@ macro_call_contents[] {
         }
 } :;
 
-// try statement
+/*
+  try_statement
+
+  Handles a try statement.
+*/
 try_statement[] { ENTRY_DEBUG } :
         {
-            // treat try block as nested block statement
+            // treat try block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
 
             // start of the try statement
             startElement(STRY_BLOCK);
         }
+
         (TRY | CXX_TRY)
 ;
 
