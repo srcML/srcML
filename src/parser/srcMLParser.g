@@ -8274,15 +8274,20 @@ try_statement_with_resource[] { ENTRY_DEBUG } :
         for_like_statement_post 
 ;
 
-// a checked statement
+/*
+  checked_statement
+
+  Handles a checked statement.  Sometimes appears inside of a try statement in C#.
+*/
 checked_statement[] { ENTRY_DEBUG } :
         {
-            // treat try block as nested block statement
+            // treat try block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
-            // start of the try statement
+            // start of the checked statement
             startElement(SCHECKED_STATEMENT);
         }
+
         CHECKED
 ;
 
