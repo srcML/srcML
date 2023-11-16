@@ -8197,45 +8197,46 @@ catch[antlr::RecognitionException&] {
             emptyElement(SERROR_PARSE);
 }
 
-// contents of macro call
+/*
+  macro_call_contents
+
+  Handles the contents of a macro call.
+*/
 macro_call_contents[] {
+        ENTRY_DEBUG
 
-    ENTRY_DEBUG
+        CompleteElement element(this);
 
-    CompleteElement element(this);
+        int parencount = 0;
+        bool start = true;
 
-    int parencount = 0;
-    bool start = true;
-    while (LA(1) != 1 /* EOF? */ && !(parencount == 0 && LA(1) == RPAREN)) {
+        while (LA(1) != 1 /* Commented-out code: EOF? */ && !(parencount == 0 && LA(1) == RPAREN)) {
+            if (LA(1) == LPAREN)
+                ++parencount;
 
-        if (LA(1) == LPAREN)
-            ++parencount;
+            if (LA(1) == RPAREN)
+                --parencount;
 
-        if (LA(1) == RPAREN)
-            --parencount;
+            if (inputState->guessing == 0 && start) {
+                // argument with nested expression
+                startNewMode(MODE_ARGUMENT);
 
-        if (inputState->guessing == 0 && start) {
-            // argument with nested expression
-            startNewMode(MODE_ARGUMENT);
+                // start of the try statement
+                startElement(SARGUMENT);
 
-            // start of the try statement
-            startElement(SARGUMENT);
+                start = false;
+            }
 
-            start = false;
+            if (inputState->guessing == 0 && LA(1) == COMMA && parencount == 0) {
+                endMode();
+                start = true;
+            }
+
+            if (literal_tokens_set.member(LA(1)))
+                literals();
+            else
+                consume();
         }
-
-        if (inputState->guessing == 0 && LA(1) == COMMA && parencount == 0) {
-            endMode();
-            start = true;
-        }
-
-        if (literal_tokens_set.member(LA(1)))
-            literals();
-        else
-            consume();
-
-    }
-
 } :;
 
 // try statement
