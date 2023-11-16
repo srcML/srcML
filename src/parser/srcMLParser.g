@@ -7317,17 +7317,20 @@ objective_c_call[] { ENTRY_DEBUG } :
         objective_c_call_receiver
 ;
 
-// function call object for Objective_C
+/*
+  objective_c_call_receiver
+
+  Handles an Objective-C function call object.
+*/
 objective_c_call_receiver[] { ENTRY_DEBUG } :
-    {
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
-        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            // start the receiver element
+            startElement(SRECEIVER);
+        }
 
-        // start the function call element
-        startElement(SRECEIVER);
-    
-    }
-    expression
+        expression
 ;
 
 // function call message for Objective_C
