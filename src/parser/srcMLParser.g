@@ -7768,7 +7768,11 @@ encode_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// @selector(...)
+/*
+  selector_call
+
+  Handles a "@selector(...)" call.
+*/
 selector_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7777,6 +7781,7 @@ selector_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SSELECTOR);
         }
+
         SELECTOR
         call_argument_list
 ;
