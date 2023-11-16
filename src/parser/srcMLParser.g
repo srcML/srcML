@@ -8291,7 +8291,9 @@ checked_statement[] { ENTRY_DEBUG } :
         CHECKED
 ;
 
-// unsafe statement
+/*
+  unsafe_statement
+*/
 unsafe_statement[] { ENTRY_DEBUG } :
         {
             // treat try block as nested block statement
@@ -8300,6 +8302,7 @@ unsafe_statement[] { ENTRY_DEBUG } :
             // start of the try statement
             startElement(SUNSAFE_STATEMENT);
         }
+
         UNSAFE
 ;
 
