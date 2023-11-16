@@ -7674,7 +7674,11 @@ typeid_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// const_cast
+/*
+  const_cast_call
+
+  Handles a "const_cast<>()" call.
+*/
 const_cast_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7683,7 +7687,9 @@ const_cast_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SCONST_CAST);
         }
-        CONST_CAST (generic_argument_list)*
+
+        CONST_CAST
+        (generic_argument_list)*
         call_argument_list
 ;
 
