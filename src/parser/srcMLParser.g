@@ -7602,16 +7602,18 @@ keyword_call_tokens[] { ENTRY_DEBUG } :
         TYPEOF | DEFAULT | CHECKED | UNCHECKED
 ;
 
-// sizeof unary_expression
+/*
+  sizeof_unary_expression
+*/
 sizeof_unary_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SSIZEOF_CALL);
+            startElement(SSIZEOF_CALL);
+        }
 
-    }
-    SIZEOF
-    variable_identifier
+        SIZEOF
+        variable_identifier
 ;
 
 // sizeof(...)
