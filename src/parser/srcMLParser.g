@@ -7373,14 +7373,23 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
         )*
 ;
 
-// function call message for Objective_C
-objective_c_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
+/*
+  objective_c_selector
 
-        startElement(SSELECTOR);
-    }
-    (function_identifier (options { greedy = true; } : COLON)* | COLON)
+  Handles an Objective-C selector.
+*/
+objective_c_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SSELECTOR);
+        }
+
+        (
+            function_identifier
+
+            (options { greedy = true; } : COLON)* | COLON
+        )
 ;
 
 ternary_expression[] { ENTRY_DEBUG } :
