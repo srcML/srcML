@@ -8344,25 +8344,27 @@ for_like_statement_pre[int tag] { ENTRY_DEBUG } :
         }
 ;
 
+/*
+  for_like_statement_post
+*/
 for_like_statement_post[] { ENTRY_DEBUG } :
+        {
+            // expect a condition to follow the keyword
+            startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
 
-    {
+            startElement(SFOR_LIKE_CONTROL);
+        }
 
-        // expect a condition to follow the keyword
-        startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
+        LPAREN
 
-        startElement(SFOR_LIKE_CONTROL);
+        {
+            startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+            
+            // Commented-out code
+            // startElement(SCONTROL_INITIALIZATION);
+        }
 
-    }
-    LPAREN
-
-    {
-
-        startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
-
-        //startElement(SCONTROL_INITIALIZATION);
-    }
-    for_like_list_item
+        for_like_list_item
 ;
 
 for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
