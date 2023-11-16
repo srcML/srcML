@@ -7712,7 +7712,11 @@ dynamic_cast_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// reinterpret_cast
+/*
+  reinterpret_cast_call
+
+  Handles a "reinterpret_cast<>()" call.
+*/
 reinterpret_cast_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7721,7 +7725,9 @@ reinterpret_cast_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SREINTERPRET_CAST);
         }
-        REINTERPRET_CAST (generic_argument_list)*
+
+        REINTERPRET_CAST
+        (generic_argument_list)*
         call_argument_list
 ;
 
