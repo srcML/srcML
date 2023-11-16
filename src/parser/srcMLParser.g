@@ -7656,7 +7656,11 @@ alignof_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// typeid
+/*
+  typeid_call
+
+  Handles a "typeid()" call.
+*/
 typeid_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7665,6 +7669,7 @@ typeid_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(STYPEID);
         }
+
         TYPEID
         call_argument_list
 ;
