@@ -7280,7 +7280,11 @@ call[int call_count = 1] { ENTRY_DEBUG } :
         ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
 ;
 
-// argument list to a call
+/*
+  call_argument_list
+
+  Handles an argument list used for a call.
+*/
 call_argument_list[] { ENTRY_DEBUG } :
         {
             // list of parameters
@@ -7289,6 +7293,7 @@ call_argument_list[] { ENTRY_DEBUG } :
             // start the argument list
             startElement(SARGUMENT_LIST);
         }
+
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
