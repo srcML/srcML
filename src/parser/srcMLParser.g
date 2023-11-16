@@ -7445,8 +7445,10 @@ expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1
         expression_part_no_ternary[type, call_count]
 ;
 
+/*
+  expression_part_no_ternary
+*/
 expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_control_incr = false; ENTRY_DEBUG } :
-
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         UNION |
@@ -7474,90 +7476,95 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW generic_argument_list)=> sole_new generic_argument_list |
+        (NEW generic_argument_list) => sole_new generic_argument_list |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW function_identifier paren_pair LCURLY)=> sole_new anonymous_class_definition |
+        (NEW function_identifier paren_pair LCURLY) => sole_new anonymous_class_definition |
 
-        { notdestructor }? sole_destop { notdestructor = false; } |
+        { notdestructor }?
+        sole_destop { notdestructor = false; } |
 
-        { next_token() != LPAREN && next_token() != DOTDOTDOT }? sizeof_unary_expression |
+        { next_token() != LPAREN && next_token() != DOTDOTDOT }?
+        sizeof_unary_expression |
 
         // call
-        // distinguish between a call and a macro
+        // need to distinguish between a call and a macro
         { type == CALL || (perform_call_check(type, isempty, call_count, -1) && type == CALL) }?
-
-            // Added argument to correct markup of default parameters using a call.
-            // normally call claims left paren and start calls argument.
-            // however I believe parameter_list matches a right paren of the call.
-           (call[call_count] | keyword_calls) argument |
+        // added argument to correct markup of default parameters using a call
+        // normally call claims left paren and starts call argument; however, I believe parameter_list matches a right paren of the call
+        (call[call_count] | keyword_calls) argument |
 
         // macro call
-        { type == MACRO }? macro_call |
+        { type == MACRO }?
+        macro_call |
 
         // general math operators
-        // looks like general operators and variable identifier can match same thing
-        (options { generateAmbigWarnings = false; } : general_operators
-        {
-            if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
-                general_operators();
-        }
-        | qmark | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
+        // looks like general operators and variable identifiers can match same thing
+        (
+            options { generateAmbigWarnings = false; } :
+                general_operators
 
-        // left parentheses
-        { function_pointer_name_check() }?
-        function_pointer_name |
-        lparen_marked
-        {
-            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
-        } |
+                {
+                    if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
+                        general_operators();
+                }
 
-        // right parentheses that only matches a left parentheses of an expression
-        { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
-        {
+                | qmark | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
 
-            end_control_incr = inTransparentMode(MODE_CONTROL_INCREMENT);
+                // left parentheses
+                { function_pointer_name_check() }?
+                function_pointer_name |
 
-            // stop at this matching paren, or a preprocessor statement
-            endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
-            
-            if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
-                endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+                lparen_marked
 
-            end_control_incr = end_control_incr && !inTransparentMode(MODE_CONTROL_INCREMENT);
+                {
+                    startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
+                } |
 
-        }
+                // right parentheses that only matches the left parentheses of an expression
+                { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+                {
+                    end_control_incr = inTransparentMode(MODE_CONTROL_INCREMENT);
 
-        // treat as operator for operator markup
-        rparen[!end_control_incr, end_control_incr] |
+                    // stop at this matching paren, or a preprocessor statement
+                    endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
+                    
+                    if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
+                        endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
 
-        // left curly brace
-        {
-            startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
+                    end_control_incr = end_control_incr && !inTransparentMode(MODE_CONTROL_INCREMENT);
+                }
+                // treat as operator for operator markup
+                rparen[!end_control_incr, end_control_incr] |
 
-            startElement(SBLOCK);
-        }
-        LCURLY
-        {
-            incCurly();
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_CURLY);
-        } |
-        { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
-        {
+                // left curly brace
+                {
+                    startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
-            if (!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
+                    startElement(SBLOCK);
+                }
 
-                endDownToMode(MODE_INTERNAL_END_CURLY);
+                LCURLY
 
-                endMode(MODE_INTERNAL_END_CURLY);
+                {
+                    incCurly();
 
-            }
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_CURLY);
+                } |
 
-        }
-        rcurly_argument |
+                { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
+                {
+                    if (!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
+                        endDownToMode(MODE_INTERNAL_END_CURLY);
 
-        // variable or literal
-        variable_identifier | keyword_name | auto_keyword[false] | single_keyword_specifier) | literals | noexcept_list | 
+                        endMode(MODE_INTERNAL_END_CURLY);
+                    }
+                }
+                rcurly_argument |
+
+                // variable or literal
+                variable_identifier | keyword_name | auto_keyword[false] | single_keyword_specifier
+        ) | literals | noexcept_list |
 
         variable_identifier_array_grammar_sub[flag]
 ;
