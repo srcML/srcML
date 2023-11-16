@@ -7297,22 +7297,24 @@ call_argument_list[] { ENTRY_DEBUG } :
         (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
-// function call for Objective_C
+/*
+  objective_c_call
+
+  Handles an Objective-C function call.
+*/
 objective_c_call[] { ENTRY_DEBUG } :
-    {
+        {
+            // start a new mode that will end after the argument list
+            startNewMode(MODE_OBJECTIVE_C_CALL);
 
-        // start a new mode that will end after the argument list
-        startNewMode(MODE_OBJECTIVE_C_CALL);
+            // start the function call element
+            startElement(SFUNCTION_CALL);
 
-        // start the function call element
-        startElement(SFUNCTION_CALL);
+            startNewMode(MODE_ARGUMENT_LIST | MODE_LIST);
+        }
 
-        startNewMode(MODE_ARGUMENT_LIST | MODE_LIST);
-
-    }
-
-    LBRACKET
-    objective_c_call_receiver
+        LBRACKET
+        objective_c_call_receiver
 ;
 
 // function call object for Objective_C
