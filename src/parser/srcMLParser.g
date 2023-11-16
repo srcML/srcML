@@ -7693,7 +7693,11 @@ const_cast_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// dynamic_cast
+/*
+  dynamic_cast_call
+
+  Handles a "dynamic_cast<>()" call.
+*/
 dynamic_cast_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7702,7 +7706,9 @@ dynamic_cast_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SDYNAMIC_CAST);
         }
-        DYNAMIC_CAST (generic_argument_list)*
+
+        DYNAMIC_CAST
+        (generic_argument_list)*
         call_argument_list
 ;
 
