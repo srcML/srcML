@@ -8367,23 +8367,24 @@ for_like_statement_post[] { ENTRY_DEBUG } :
         for_like_list_item
 ;
 
-for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+/*
+  for_like_list_item
+*/
+for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+        // explicitly check for a variable declaration since it can easily be confused with an expression
+        { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
+        control_initialization_variable_declaration[type_count] |
 
-    // explicitly check for a variable declaration since it can easily
-    // be confused with an expression
-    { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
-    control_initialization_variable_declaration[type_count] |
+        {
+            // use a new mode without the expect so we don't nest expression parts
+            startNewMode(MODE_EXPRESSION);
 
-    {
-        // use a new mode without the expect so we don't nest expression parts
-        startNewMode(MODE_EXPRESSION);
+            // start the expression element
+            startElement(SEXPRESSION);
+        }
 
-        // start the expression element
-        startElement(SEXPRESSION);
-    }
-    // explicitly check for non-terminate so that a large switch statement
-    // isn't needed
-    expression
+        // explicitly check for non-terminate to avoid using a large switch statement
+        expression
 ;
 
 // lock statement
