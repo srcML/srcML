@@ -7804,7 +7804,11 @@ typeof_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// default
+/*
+  default_call
+
+  Handles a "default" call.
+*/
 default_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7813,6 +7817,7 @@ default_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SDEFAULT);
         }
+
         DEFAULT
         call_argument_list
 ;
