@@ -8306,9 +8306,10 @@ unsafe_statement[] { ENTRY_DEBUG } :
         UNSAFE
 ;
 
-// using namespace 
+/*
+  using_namespace_statement
+*/
 using_namespace_statement[] { ENTRY_DEBUG } :
-
         { inLanguage(LANGUAGE_CSHARP) && next_token() == LPAREN }?
         using_statement |
 
