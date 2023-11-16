@@ -7786,7 +7786,11 @@ selector_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// typeof
+/*
+  typeof_call
+
+  Handles a "typeof" call.
+*/
 typeof_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7795,6 +7799,7 @@ typeof_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(STYPEOF);
         }
+
         TYPEOF
         call_argument_list
 ;
