@@ -7840,7 +7840,11 @@ checked_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// unchecked
+/*
+  unchecked_call
+
+  Handles an "unchecked" call.
+*/
 unchecked_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7849,9 +7853,11 @@ unchecked_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SUNCHECKED_STATEMENT);
         }
+
         UNCHECKED
         call_argument_list
 ;
+
 // check if macro call
 macro_call_check[] { ENTRY_DEBUG } :
         simple_identifier (options { greedy = true; } : paren_pair)*
