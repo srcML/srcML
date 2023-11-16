@@ -7587,16 +7587,19 @@ keyword_calls[] { ENTRY_DEBUG } :
         checked_call | unchecked_call
 ;
 
+/*
+  keyword_call_tokens
+*/
 keyword_call_tokens[] { ENTRY_DEBUG } :
+        // C++
+        SIZEOF | ALIGNOF | TYPEID | CONST_CAST | DYNAMIC_CAST |
+        REINTERPRET_CAST | STATIC_CAST | DECLTYPE |
 
-    // C++
-    SIZEOF | ALIGNOF | TYPEID | CONST_CAST | DYNAMIC_CAST | REINTERPRET_CAST | STATIC_CAST | DECLTYPE |
+        // Objective-C
+        ENCODE | SELECTOR |
 
-    // Objective-C
-    ENCODE | SELECTOR |
-
-    // C#
-    TYPEOF | DEFAULT | CHECKED | UNCHECKED
+        // C#
+        TYPEOF | DEFAULT | CHECKED | UNCHECKED
 ;
 
 // sizeof unary_expression
