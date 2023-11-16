@@ -8148,7 +8148,9 @@ macro_type_name[] { SingleElement element(this); ENTRY_DEBUG } :
         MACRO_TYPE_NAME
 ;
 
-// inner part of call
+/*
+  macro_type_name_call_inner
+*/
 macro_type_name_call_inner[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
@@ -8157,31 +8159,39 @@ macro_type_name_call_inner[] { CompleteElement element(this); bool first = true;
             // start the macro call element
             startElement(SMACRO_CALL);
         }
-        macro_type_name
-        (options { greedy = true; } : { first }?
-        {
-            // start a mode for the macro argument list
-            startNewMode(MODE_LIST | MODE_TOP);
 
-            // start the argument list
-            startElement(SARGUMENT_LIST);
-        }
-        LPAREN
-        macro_call_contents
-        {
-            // end anything started inside of the macro argument list
-            endDownToMode(MODE_LIST | MODE_TOP);
-        }
-        RPAREN
-        {
-            // end the macro argument list
-            endMode(MODE_LIST | MODE_TOP);
-        } 
-        set_bool[first, false] )*
+        macro_type_name
+
+        (options { greedy = true; } :
+            { first }?
+            {
+                // start a mode for the macro argument list
+                startNewMode(MODE_LIST | MODE_TOP);
+
+                // start the argument list
+                startElement(SARGUMENT_LIST);
+            }
+
+            LPAREN
+            macro_call_contents
+
+            {
+                // end anything started inside of the macro argument list
+                endDownToMode(MODE_LIST | MODE_TOP);
+            }
+
+            RPAREN
+
+            {
+                // end the macro argument list
+                endMode(MODE_LIST | MODE_TOP);
+            }
+
+            set_bool[first, false]
+        )*
 ;
 exception
 catch[antlr::RecognitionException&] {
-
         // no end found to macro
         if (isoption(parser_options, SRCML_OPTION_DEBUG))
             emptyElement(SERROR_PARSE);
