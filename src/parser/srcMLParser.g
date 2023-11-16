@@ -7868,38 +7868,39 @@ macro_call_check[] { ENTRY_DEBUG } :
         (options { greedy = true; } : paren_pair)*
 ;
 
-// eat an optional macro call
+/*
+  eat_optional_macro_call
+
+  Eats an optional macro call.
+*/
 eat_optional_macro_call[] {
+        bool success = false;
 
-    bool success = false;
+        // find out if we have a macro call
+        int start = mark();
+        inputState->guessing++;
 
-    // find out if we have a macro call
-    int start = mark();
-    inputState->guessing++;
+        try {
+            // check for the name
+            if (LA(1) == NAME)
+                match(NAME);
+            else 
+                match(VOID);
 
-    try {
-        // check for the name
-        if (LA(1) == NAME)
-            match(NAME);
-        else 
-            match(VOID);
+            // handle the parentheses
+            paren_pair();
 
-        // handle the parentheses
-        paren_pair();
+            success = true;
+        } catch (...) {}
 
-        success = true;
+        inputState->guessing--;
+        rewind(start);
 
-    } catch (...) {
-    }
+        // when successfull, eat the macro
+        if (success)
+            macro_call();
 
-    inputState->guessing--;
-    rewind(start);
-
-    // when successfull, eat the macro
-    if (success)
-        macro_call();
-
-    ENTRY_DEBUG
+        ENTRY_DEBUG
 } :;
 
 // markup macro call
