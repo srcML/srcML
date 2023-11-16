@@ -7428,14 +7428,23 @@ expression_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG
         expression_part_plus_linq_no_ternary[type, call_count]
 ;
 
-// expression with linq
-expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+/*
+  expression_part_plus_linq_no_ternary
 
-        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token() != ASSIGNMENT && next_token() != EQUAL }?
-        (linq_expression_pure)=> linq_expression |
+  Handles an expression with linq (that is known to not be a ternary).  Used in expression_no_ternary.
+*/
+expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_CSHARP)
+            && next_token() != RPAREN
+            && next_token() != ASSIGNMENT
+            && next_token() != EQUAL
+        }?
+        (linq_expression_pure) => linq_expression |
 
         expression_part_no_ternary[type, call_count]
 ;
+
 expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_control_incr = false; ENTRY_DEBUG } :
 
         // cast
