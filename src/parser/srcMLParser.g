@@ -7903,9 +7903,14 @@ eat_optional_macro_call[] {
         ENTRY_DEBUG
 } :;
 
-// markup macro call
+/*
+  macro_call
+
+  Used to start marking a macro call.
+*/
 macro_call[] { ENTRY_DEBUG } :
         macro_call_inner
+
         {
             if (inMode(MODE_THEN) && LA(1) == ELSE)
                 endMode(MODE_THEN);
