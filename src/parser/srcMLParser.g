@@ -8094,31 +8094,42 @@ macro_specifier_call[] { CompleteElement element(this); ENTRY_DEBUG } :
         macro_call_argument_list
 ;
 
-// handle the actual macro call
-macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
-        (options { greedy = true; } : { first }?
-        {
-            // start a mode for the macro argument list
-            startNewMode(MODE_LIST | MODE_TOP);
+/*
+  macro_call_argument_list
 
-            // start the argument list
-            startElement(SARGUMENT_LIST);
-        }
-        LPAREN
-        macro_call_contents
-        {
-            // end anything started inside of the macro argument list
-            endDownToMode(MODE_LIST | MODE_TOP);
-        }
-        RPAREN
-        {
-            // end the macro argument list
-            endMode(MODE_LIST | MODE_TOP);
-        } set_bool[first, false] )*
+  Also used to handle the actual macro call.  Used in multiple places.
+*/
+macro_call_argument_list[] { bool first = true; ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            { first }?
+            {
+                // start a mode for the macro argument list
+                startNewMode(MODE_LIST | MODE_TOP);
+
+                // start the argument list
+                startElement(SARGUMENT_LIST);
+            }
+
+            LPAREN
+            macro_call_contents
+
+            {
+                // end anything started inside of the macro argument list
+                endDownToMode(MODE_LIST | MODE_TOP);
+            }
+
+            RPAREN
+
+            {
+                // end the macro argument list
+                endMode(MODE_LIST | MODE_TOP);
+            }
+
+            set_bool[first, false]
+        )*
 ;
 exception
 catch[antlr::RecognitionException&] {
-
         // no end found to macro
         if (isoption(parser_options, SRCML_OPTION_DEBUG))
             emptyElement(SERROR_PARSE);
