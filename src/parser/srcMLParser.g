@@ -7261,23 +7261,23 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 ;
 
-// call  function call, macro, etc.
+/*
+  call
+
+  Handles a function call, macro, etc.
+*/
 call[int call_count = 1] { ENTRY_DEBUG } :
         {
-
             do {
-
                 // start a new mode that will end after the argument list
                 startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
 
                 // start the function call element
                 startElement(SFUNCTION_CALL);
-
-            } while(--call_count > 0);
-
+            } while (--call_count > 0);
         }
-        ({inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
-        
+
+        ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
 ;
 
 // argument list to a call
