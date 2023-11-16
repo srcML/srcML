@@ -8018,7 +8018,9 @@ macro_type_name_call[] { CompleteElement element(this); ENTRY_DEBUG } :
         macro_call_argument_list
 ;
 
-// do a macro call.
+/*
+  macro_case_call
+*/
 macro_case_call[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
