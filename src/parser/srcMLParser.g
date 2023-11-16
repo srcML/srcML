@@ -7333,18 +7333,22 @@ objective_c_call_receiver[] { ENTRY_DEBUG } :
         expression
 ;
 
-// function call message for Objective_C
+/*
+  objective_c_call_message
+
+  Handles an Objective-C function call message.
+*/
 objective_c_call_message[] { ENTRY_DEBUG } :
-    {
+        {
+            endDownToMode(MODE_ARGUMENT_LIST);
 
-        endDownToMode(MODE_ARGUMENT_LIST);
-        clearMode(MODE_ARGUMENT_LIST);
+            clearMode(MODE_ARGUMENT_LIST);
 
-        // start the function call element
-        startElement(SMESSAGE);
+            // start the message element
+            startElement(SMESSAGE);
+        }
 
-    }
-    objective_c_call_argument
+        objective_c_call_argument
 ;
 
 // function call argument name:value pair for Objective_C
