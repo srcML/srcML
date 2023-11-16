@@ -7750,7 +7750,11 @@ static_cast_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// @encode(...)
+/*
+  encode_call
+
+  Handles an "@encode(...)" call.
+*/
 encode_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7759,6 +7763,7 @@ encode_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SENCODE);
         }
+
         ENCODE
         call_argument_list
 ;
