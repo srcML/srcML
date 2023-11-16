@@ -8256,10 +8256,14 @@ try_statement[] { ENTRY_DEBUG } :
         (TRY | CXX_TRY)
 ;
 
-// try statement with resources
+/*
+  try_statement_with_resource
+
+  Used to handle a try statement with resources.
+*/
 try_statement_with_resource[] { ENTRY_DEBUG } :
         {
-            // treat try block as nested block statement
+            // treat try block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TRY);
 
             // start of the try statement
@@ -8267,7 +8271,6 @@ try_statement_with_resource[] { ENTRY_DEBUG } :
         }
 
         TRY
-
         for_like_statement_post 
 ;
 
