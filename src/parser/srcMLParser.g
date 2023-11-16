@@ -7968,7 +7968,9 @@ catch[antlr::RecognitionException&] {
             emptyElement(SERROR_PARSE);
 }
 
-// do a macro call.
+/*
+  macro_pattern_call
+*/
 macro_pattern_call[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // start a mode for the macro that will end after the argument list
