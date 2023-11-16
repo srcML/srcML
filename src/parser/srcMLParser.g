@@ -7569,20 +7569,23 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         variable_identifier_array_grammar_sub[flag]
 ;
 
-// Keyword based calls with special markup
+/*
+  keyword_calls
+
+  Handles keyword-based calls with special markup.
+*/
 keyword_calls[] { ENTRY_DEBUG } :
+        // C++
+        sizeof_call | alignof_call | typeid_call | const_cast_call | dynamic_cast_call |
+        reinterpret_cast_call | static_cast_call | decltype_call |
 
-    // C++
-    sizeof_call | alignof_call | typeid_call | const_cast_call | dynamic_cast_call | reinterpret_cast_call | static_cast_call | decltype_call |
+        // Objective-C
+        encode_call | selector_call |
 
-
-    // Objective-C
-    encode_call | selector_call |
-
-    // C#
-    typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call | checked_call | unchecked_call
+        // C#
+        typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call |
+        checked_call | unchecked_call
 ;
-
 
 keyword_call_tokens[] { ENTRY_DEBUG } :
 
