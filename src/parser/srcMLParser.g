@@ -7351,17 +7351,26 @@ objective_c_call_message[] { ENTRY_DEBUG } :
         objective_c_call_argument
 ;
 
-// function call argument name:value pair for Objective_C
+/*
+  objective_c_call_argument
+
+  Handles an Objective-C function call argument "name:value" pair.
+*/
 objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
-    {
+        {
+            if (inTransparentMode(MODE_LIST))
+                endDownToMode(MODE_LIST);
 
-        if (inTransparentMode(MODE_LIST))
-            endDownToMode(MODE_LIST);
+            startNewMode(MODE_ARGUMENT);
+        }
 
-        startNewMode(MODE_ARGUMENT);
+        objective_c_selector
 
-    }
-    objective_c_selector (options { greedy = true; } : { first && LA(1) != RBRACKET }? argument set_bool[first, false])*
+        (
+            options { greedy = true; } :
+                { first && LA(1) != RBRACKET }?
+                argument set_bool[first, false]
+        )*
 ;
 
 // function call message for Objective_C
