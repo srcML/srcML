@@ -7822,7 +7822,11 @@ default_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// checked
+/*
+  checked_call
+
+  Handles a "checked" call.
+*/
 checked_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7831,10 +7835,10 @@ checked_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SCHECKED_STATEMENT);
         }
+
         CHECKED
         call_argument_list
 ;
-
 
 // unchecked
 unchecked_call[] { ENTRY_DEBUG } :
