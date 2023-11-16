@@ -7858,9 +7858,14 @@ unchecked_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// check if macro call
+/*
+  macro_call_check
+
+  Checks for a macro call.
+*/
 macro_call_check[] { ENTRY_DEBUG } :
-        simple_identifier (options { greedy = true; } : paren_pair)*
+        simple_identifier
+        (options { greedy = true; } : paren_pair)*
 ;
 
 // eat an optional macro call
