@@ -7638,7 +7638,11 @@ sizeof_call[] { ENTRY_DEBUG } :
         call_argument_list
 ;
 
-// alignof
+/*
+  alignof_call
+
+  Handles an "alignof()" call.
+*/
 alignof_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7647,6 +7651,7 @@ alignof_call[] { ENTRY_DEBUG } :
             // start the function call element
             startElement(SALIGNOF);
         }
+
         ALIGNOF
         call_argument_list
 ;
