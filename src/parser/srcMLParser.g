@@ -7616,7 +7616,11 @@ sizeof_unary_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         variable_identifier
 ;
 
-// sizeof(...)
+/*
+  sizeof_call
+
+  Handles a "sizeof(...)" call.
+*/
 sizeof_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -7627,8 +7631,8 @@ sizeof_call[] { ENTRY_DEBUG } :
                 startElement(SSIZEOF_CALL);
             else
                 startElement(SSIZEOF_PACK);
-
         }
+
         SIZEOF
         (DOTDOTDOT)*
         call_argument_list
