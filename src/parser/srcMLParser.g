@@ -9575,9 +9575,12 @@ expression_process[] { ENTRY_DEBUG } :
         }
 ;
 
-// an expression
-expression[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+/*
+  expression
 
+  Used to handle an expression.
+*/
+expression[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
         expression_process
 
         expression_part_plus_linq[type, call_count]
