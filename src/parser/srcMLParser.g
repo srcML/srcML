@@ -9280,11 +9280,16 @@ sole_new[] { LightweightElement element(this); ENTRY_DEBUG } :
         NEW
 ;
 
-// only ~
+/*
+  sole_destop
+
+  Handles the "~" operator only.
+*/
 sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
+
         DESTOP
 ;
 
