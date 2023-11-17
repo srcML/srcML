@@ -8710,15 +8710,18 @@ generic_selection_association_type[] { int type_count = 0; int secondtoken = 0; 
         }
 ;
 
-generic_selection_association_default[] { SingleElement element(this); ENTRY_DEBUG} :
-    {
+/*
+  generic_selection_association_default
+*/
+generic_selection_association_default[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
             startNewMode(MODE_LOCAL);
 
             startElement(STYPE);
-    }
-    DEFAULT
-;
+        }
 
+        DEFAULT
+;
 
 // an expression statement pre processing
 expression_statement_process[] { ENTRY_DEBUG } :
