@@ -8756,10 +8756,11 @@ expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG 
         expression[type, call_count]
 ;
 
-// declartion statement
+/*
+  variable_declaration_statement
+*/
 variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         {
-            // statement
             startNewMode(MODE_STATEMENT);
 
             if (!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL)) {
