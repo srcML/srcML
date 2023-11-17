@@ -8420,13 +8420,15 @@ synchronized_statement[] { ENTRY_DEBUG } :
         for_like_statement_post
 ;
 
-// unchecked statement
+/*
+  unchecked_statement
+*/
 unchecked_statement[] { ENTRY_DEBUG } :
         {
-            // treat try block as nested block statement
+            // treat try block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
-            // start of the try statement
+            // start of the unchecked statement
             startElement(SUNCHECKED_STATEMENT);
         }
 
