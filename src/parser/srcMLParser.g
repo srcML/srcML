@@ -8950,35 +8950,38 @@ class_type_identifier[bool& is_compound] { CompleteElement element(this); ENTRY_
         class_type_compound_name[is_compound]
 ;
 
-class_type_compound_name[bool& is_compound] { ; ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_EXPRESSION);
-    }
+/*
+  class_type_compound_name
+*/
+class_type_compound_name[bool& is_compound] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXPRESSION);
+        }
 
-    (
-    { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-    compound_name_java[is_compound] |
+        (
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            compound_name_java[is_compound] |
 
-    { inLanguage(LANGUAGE_CSHARP) }?
-    compound_name_csharp[is_compound] |
+            { inLanguage(LANGUAGE_CSHARP) }?
+            compound_name_csharp[is_compound] |
 
-    { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-    compound_name_objective_c[is_compound] |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            compound_name_objective_c[is_compound] |
 
-    { inLanguage(LANGUAGE_C) }?
-    compound_name_c[is_compound] |
+            { inLanguage(LANGUAGE_C) }?
+            compound_name_c[is_compound] |
 
-    { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
-    compound_name_cpp[is_compound] | keyword_name_inner[is_compound] |
+            { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            compound_name_cpp[is_compound] | keyword_name_inner[is_compound] |
 
-    macro_type_name_call 
-    )
+            macro_type_name_call
+        )
 
-    (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
 
-    {
-        endMode();
-    }
+        {
+            endMode();
+        }
 ;
 
 // more lead type identifier
