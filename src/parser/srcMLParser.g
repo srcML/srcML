@@ -9835,20 +9835,33 @@ complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         )?
 ;
 
-// literal numbers
+/*
+  literal
+
+  Handles literal numbers.
+*/
 literal[bool markup = true] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             if (markup) {
-
                 startElement(SLITERAL);
 
                 setTokenPosition(tp);
             }
-
         }
-        CONSTANTS ({ (LT(1)->getText() == "+"sv || LT(1)->getText() == "-"sv) && next_token() == COMPLEX_NUMBER }? OPERATORS COMPLEX_NUMBER {  if (markup) tp.setType(SCOMPLEX); })?
-;
 
+        CONSTANTS
+
+        (
+            { (LT(1)->getText() == "+"sv || LT(1)->getText() == "-"sv) && next_token() == COMPLEX_NUMBER }?
+            OPERATORS
+            COMPLEX_NUMBER
+
+            {
+                if (markup)
+                    tp.setType(SCOMPLEX);
+            }
+        )?
+;
 
 // booleans
 boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
