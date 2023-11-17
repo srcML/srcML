@@ -8577,21 +8577,27 @@ throw_statement[] { ENTRY_DEBUG } :
         THROW
 ;
 
-// C _Generic (generic selection)
+/*
+  generic_selection
+
+  Handles a "_Generic" selection (C).
+*/
 generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        // statement 
-        startNewMode(MODE_LOCAL);
+        {
+            startNewMode(MODE_LOCAL);
 
-        // start the generic
-        startElement(SGENERIC_SELECTION);
+            // start the generic
+            startElement(SGENERIC_SELECTION);
 
-        startNewMode(MODE_LIST);
-    }
-    (
-        { inputState->guessing }? GENERIC_SELECTION paren_pair | 
-        GENERIC_SELECTION LPAREN generic_selection_selector COMMA generic_selection_association_list rparen[false]
-    )
+            startNewMode(MODE_LIST);
+        }
+
+        (
+            { inputState->guessing }?
+            GENERIC_SELECTION paren_pair |
+
+            GENERIC_SELECTION LPAREN generic_selection_selector COMMA generic_selection_association_list rparen[false]
+        )
 ;
 
 generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
