@@ -8936,14 +8936,18 @@ is_class_type_identifier[] returns [bool is_class_type = false] {
             is_class_type = true;
 } :;
 
+/*
+  class_type_identifier
+*/
 class_type_identifier[bool& is_compound] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
-     
-        startElement(SNAME);
-    }
+        {
+            startNewMode(MODE_LOCAL);
+        
+            startElement(SNAME);
+        }
 
-    class_type_identifier_keyword class_type_compound_name[is_compound]
+        class_type_identifier_keyword
+        class_type_compound_name[is_compound]
 ;
 
 class_type_compound_name[bool& is_compound] { ; ENTRY_DEBUG } :
