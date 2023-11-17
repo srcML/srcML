@@ -8482,16 +8482,19 @@ finally_statement[] { ENTRY_DEBUG } :
         FINALLY
 ;
 
-// lambda function
+/*
+  lambda_anonymous
+*/
 lambda_anonymous[] { ENTRY_DEBUG } :
-    {
-        // treat catch block as nested block statement
-        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
-    }
-    lambda_csharp
+        {
+            // treat catch block as a nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
+        }
 
-    /* completely parse a function until it is done */
-    (options { greedy = true; } : { inputState->guessing }? curly_pair)*
+        lambda_csharp
+
+        // completely parse a function until it is done
+        (options { greedy = true; } : { inputState->guessing }? curly_pair)*
 ;
 
 // anonymous delegate
