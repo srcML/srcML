@@ -8673,17 +8673,21 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
         )*
 ;
 
-// a generic selection association
+/*
+  generic_selection_association
+*/
 generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        // argument with nested expression
-        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        {
+            // argument with a nested expression
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
-        // start the argument
-        startElement(SGENERIC_ASSOCIATION);
-    }
+            // start the generic
+            startElement(SGENERIC_ASSOCIATION);
+        }
 
-    generic_selection_association_type COLON generic_selection_complete_expression
+        generic_selection_association_type
+        COLON
+        generic_selection_complete_expression
 ;
 
 generic_selection_association_type[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
