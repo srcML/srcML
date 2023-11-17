@@ -9934,15 +9934,18 @@ super_list_java[] { ENTRY_DEBUG } :
         }
 ;
 
-// extends list
+/*
+  extends_list
+*/
 extends_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            // end all elements at end of rule automatically
+            // end all elements at the end of the rule automatically
             startNewMode(MODE_LOCAL);
 
-            // start the derivation list
+            // start the extends statement
             startElement(SEXTENDS);
         }
+
         EXTENDS
         super_list
 ;
