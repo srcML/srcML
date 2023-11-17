@@ -9768,13 +9768,17 @@ literals[] { ENTRY_DEBUG } :
         string_literal | char_literal | literal | boolean | null_literal | complex_literal | nil_literal
 ;
 
-// Only start and end of strings are put directly through the parser.
-// The contents of the string are handled as whitespace.
+/*
+  string_literal
+
+  Only the start and the end of strings are put directly through the parser.  The contents of the string are handled as whitespace.
+*/
 string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (markup)
                 startElement(SSTRING);
         }
+
         (STRING_START (STRING_END | RAW_STRING_END))
 ;
 
