@@ -9966,13 +9966,11 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         super_list
 ;
 
-// super list
+/*
+  super_list
+*/
 super_list[] { ENTRY_DEBUG } :
-        (options { greedy = true; } :
-            derived
-        |
-            COMMA
-        )*
+        (options { greedy = true; } : derived | COMMA)*
 ;
 
 // a derive access
