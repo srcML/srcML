@@ -8921,15 +8921,19 @@ specifiers_or_macro[] { bool first = true; ENTRY_DEBUG } :
         (options { greedy = true; } : specifier)*
 ;
 
-is_class_type_identifier[] returns[bool is_class_type = false] { ENTRY_DEBUG 
+/*
+  is_class_type_identifier
+*/
+is_class_type_identifier[] returns [bool is_class_type = false] {
+        ENTRY_DEBUG
 
-    if (inputState->guessing || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) || inTransparentMode(MODE_ASSOCIATION_TYPE))
-        return is_class_type;
+        if (inputState->guessing || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) || inTransparentMode(MODE_ASSOCIATION_TYPE))
+            return is_class_type;
 
-    int token = look_past_rule(&srcMLParser::specifiers_or_macro);
+        int token = look_past_rule(&srcMLParser::specifiers_or_macro);
 
-    if (class_tokens_set.member(token))
-        is_class_type = true;
+        if (class_tokens_set.member(token))
+            is_class_type = true;
 } :;
 
 class_type_identifier[bool& is_compound] { CompleteElement element(this); ENTRY_DEBUG } :
