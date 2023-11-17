@@ -9921,10 +9921,12 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? generic_argument_list)*
 ;
 
-// super list
+/*
+  super_list_java
+*/
 super_list_java[] { ENTRY_DEBUG } :
         {
-            // end all elements at end of rule automatically
+            // end all elements at the end of the rule automatically
             startNewMode(MODE_LOCAL);
 
             // start the derivation list
