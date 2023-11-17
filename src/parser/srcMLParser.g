@@ -8984,11 +8984,14 @@ class_type_compound_name[bool& is_compound] { ENTRY_DEBUG } :
         }
 ;
 
-// more lead type identifier
-class_type_identifier_keyword[]  { SingleElement element(this); ENTRY_DEBUG } :
+/*
+  class_type_identifier
+*/
+class_type_identifier_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
+
         (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
