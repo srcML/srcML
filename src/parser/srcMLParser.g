@@ -8435,17 +8435,20 @@ unchecked_statement[] { ENTRY_DEBUG } :
         UNCHECKED
 ;
 
-// a synchonized statement
+/*
+  autoreleasepool_block
+*/
 autoreleasepool_block[] { ENTRY_DEBUG } :
         {
-            // treat try block as nested block statement
+            // treat try block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start of the try statement
             startElement(SAUTORELEASEPOOL);
-
         }
-        AUTORELEASEPOOL lcurly
+
+        AUTORELEASEPOOL
+        lcurly
 ;
 
 // the catch statement
