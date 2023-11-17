@@ -9794,11 +9794,14 @@ char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG
         (CHAR_START CHAR_END)
 ;
 
-// literals
+/*
+  null_literal
+*/
 null_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNULL);
         }
+
         (NULLPTR | NULLLITERAL)
 ;
 
