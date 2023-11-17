@@ -9876,24 +9876,25 @@ boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
         (LITERAL_TRUE | LITERAL_FALSE)
 ;
 
-// a derived_list class
+/*
+  derived_list
+
+  Handles a "derived_list" class.
+*/
 derived_list[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG } :
         {
-            // end all elements at end of rule automatically
+            // end all elements at the end of the rule automatically
             startNewMode(MODE_LOCAL);
 
             // start the derivation list
             startElement(SDERIVATION_LIST);
         }
-        COLON
-        (options { greedy = true; } :
-            { LA(1) != WHERE && (!inLanguage(LANGUAGE_OBJECTIVE_C) || first) }? (
-            derived
 
-            set_bool[first, false]
-            )
-        |
-            COMMA
+        COLON
+
+        (options { greedy = true; } :
+            { LA(1) != WHERE && (!inLanguage(LANGUAGE_OBJECTIVE_C) || first) }?
+            (derived set_bool[first, false]) | COMMA
         )*
 ;
 
