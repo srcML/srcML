@@ -9267,11 +9267,16 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-// only new operator
+/*
+  sole_new
+
+  Handles the "new" operator only.
+*/
 sole_new[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
+
         NEW
 ;
 
