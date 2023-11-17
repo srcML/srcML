@@ -8723,18 +8723,22 @@ generic_selection_association_default[] { SingleElement element(this); ENTRY_DEB
         DEFAULT
 ;
 
-// an expression statement pre processing
+/*
+  expression_statement_process
+
+  Handles expression statement preprocessing.
+*/
 expression_statement_process[] { ENTRY_DEBUG } :
-    {
-        bool inenumclass = (inLanguage(LANGUAGE_JAVA_FAMILY) && inTransparentMode(MODE_ENUM) && inMode(MODE_CLASS));
+        {
+            bool inenumclass = (inLanguage(LANGUAGE_JAVA_FAMILY) && inTransparentMode(MODE_ENUM) && inMode(MODE_CLASS));
 
-        // statement with an embedded expression
-        startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+            // statement with an embedded expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
-        // start the element which will end after the terminate
-        if (!inenumclass)
-            startElement(SEXPRESSION_STATEMENT);
-    }
+            // start the element that will end after the terminate
+            if (!inenumclass)
+                startElement(SEXPRESSION_STATEMENT);
+        }
 ;
 
 // an expression statement
