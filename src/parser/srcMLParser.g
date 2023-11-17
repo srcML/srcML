@@ -9194,7 +9194,11 @@ variable_declaration_range[] { ENTRY_DEBUG } :
         (COLON | IN)
 ;
 
-// parameter variable initialization
+/*
+  parameter_declaration_initialization
+
+  Handles the initialization of a parameter variable.
+*/
 parameter_declaration_initialization[] { ENTRY_DEBUG } :
         {
             // end the init correctly
@@ -9203,6 +9207,7 @@ parameter_declaration_initialization[] { ENTRY_DEBUG } :
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
+
         EQUAL
 ;
 
