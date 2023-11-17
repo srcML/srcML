@@ -8600,13 +8600,17 @@ generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+/*
+  generic_selection_selector
+*/
 generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_LOCAL);
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SGENERIC_SELECTOR);
-    }
-    generic_selection_complete_expression
+            startElement(SGENERIC_SELECTOR);
+        }
+
+        generic_selection_complete_expression
 ;
 
 // generic selection association list
