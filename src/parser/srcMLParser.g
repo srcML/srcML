@@ -9597,11 +9597,19 @@ expression_setup_linq[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
         expression_part[type]
 ;
 
-// expression with linq
-expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+/*
+  expression_part_plus_linq
 
-        { inLanguage(LANGUAGE_CSHARP) && next_token() != RPAREN && next_token() != ASSIGNMENT && next_token() != EQUAL }?
-        (linq_expression_pure)=> linq_expression |
+  Handles a linq expression.
+*/
+expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+        {
+            inLanguage(LANGUAGE_CSHARP)
+            && next_token() != RPAREN
+            && next_token() != ASSIGNMENT
+            && next_token() != EQUAL
+        }?
+        (linq_expression_pure) => linq_expression |
 
         expression_part[type, call_count]
 ;
