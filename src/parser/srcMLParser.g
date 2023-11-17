@@ -9228,17 +9228,33 @@ pure_expression_block[] { ENTRY_DEBUG } :
         }
 ;
 
-// All possible operators
+/*
+  general_operators
+
+  Handles all possible operators.
+*/
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if ((LA(1) != IN || !inTransparentMode(MODE_CONTROL_CONDITION)))
                 startElement(SOPERATOR);
         }
+
         (
             OPERATORS | ASSIGNMENT | TEMPOPS |
-            TEMPOPE (options { greedy = true;  } : ({ SkipBufferSize() == 0 }? TEMPOPE) ({ SkipBufferSize() == 0 }? TEMPOPE)?
-             | ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == ">>="sv }? ASSIGNMENT))? |
-            EQUAL | /*MULTIMM |*/ DESTOP | /* MEMBERPOINTER |*/ MULTOPS | REFOPS | DOTDOT | RVALUEREF | { inLanguage(LANGUAGE_JAVA) }? BAR |
+
+            TEMPOPE
+            (options { greedy = true; } :
+                ({ SkipBufferSize() == 0 }? TEMPOPE)
+                ({ SkipBufferSize() == 0 }? TEMPOPE)? |
+
+                ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == ">>="sv }? ASSIGNMENT)
+            )? |
+
+            /* Commented-out code: MULTIMM | */
+            /* Commented-out code: MEMBERPOINTER | */
+
+            EQUAL | DESTOP | MULTOPS | REFOPS | DOTDOT | RVALUEREF |
+            { inLanguage(LANGUAGE_JAVA) }? BAR |
 
             // others are not combined
             NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA | DOTDOTDOT |
@@ -9248,7 +9264,6 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             // Apple
             BLOCKOP
-
         )
 ;
 
