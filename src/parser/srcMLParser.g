@@ -8409,9 +8409,10 @@ fixed_statement[] { ENTRY_DEBUG } :
         for_like_statement_post
 ;
 
-// a synchonized statement
+/*
+  synchronized_statement
+*/
 synchronized_statement[] { ENTRY_DEBUG } :
-
         for_like_statement_pre[SSYNCHRONIZED_STATEMENT]
 
         SYNCHRONIZED
