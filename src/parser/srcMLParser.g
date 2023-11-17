@@ -9135,7 +9135,11 @@ event_statement[int type_count] { ENTRY_DEBUG } :
         variable_declaration_type[type_count]
 ;
 
-// initializtion of a function pointer.
+/*
+  function_pointer_initialization
+
+  Handles the initializtion of a function pointer.
+*/
 function_pointer_initialization[] { ENTRY_DEBUG } :
         {
             // end the init correctly
@@ -9144,6 +9148,7 @@ function_pointer_initialization[] { ENTRY_DEBUG } :
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
+
         EQUAL
         complete_default_parameter
 ;
