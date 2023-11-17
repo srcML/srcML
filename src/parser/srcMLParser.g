@@ -8451,16 +8451,20 @@ autoreleasepool_block[] { ENTRY_DEBUG } :
         lcurly
 ;
 
-// the catch statement
+/*
+  catch_statement
+*/
 catch_statement[] { ENTRY_DEBUG } :
         {
-            // treat catch block as nested block statement
+            // treat catch block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start of the catch statement
             startElement(SCATCH_BLOCK);
         }
-        (CATCH | CXX_CATCH) (parameter_list)*
+
+        (CATCH | CXX_CATCH)
+        (parameter_list)*
 ;
 
 // finally statement
