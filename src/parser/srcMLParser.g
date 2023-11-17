@@ -9049,7 +9049,9 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev 
         }
 ;
 
-// declartion statement
+/*
+  property_statement
+*/
 property_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
@@ -9061,15 +9063,29 @@ property_statement[int type_count] { ENTRY_DEBUG } :
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_NO_BLOCK_CONTENT);
 
             // declaration
-            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_NO_BLOCK_CONTENT);
-
+            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT | MODE_NO_BLOCK_CONTENT);
         }
 
-        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } :
+            { next_token() == TEMPOPS }?
+            template_declaration_full
+            set_int[type_count, type_count - 1]
+        )*
 
-        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
-            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                decl_pre_type_annotation[type_count])*
+        (options { greedy = true; } :
+            {
+                type_count > 0
+                && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX))
+                && ((inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN)
+                    || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET)
+                    || (inLanguage(LANGUAGE_CXX)
+                        && LA(1) == LBRACKET
+                        && next_token() == LBRACKET
+                    )
+                )
+            }?
+            decl_pre_type_annotation[type_count]
+        )*
 
         variable_declaration_type[type_count]
 ;
