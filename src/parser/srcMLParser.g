@@ -9090,7 +9090,9 @@ property_statement[int type_count] { ENTRY_DEBUG } :
         variable_declaration_type[type_count]
 ;
 
-// declartion statement
+/*
+  event_statement
+*/
 event_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
@@ -9102,17 +9104,33 @@ event_statement[int type_count] { ENTRY_DEBUG } :
             startNewMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
             // declaration
-            startNewMode(MODE_LOCAL| MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
-
+            startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
         }
 
-        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } :
+            { next_token() == TEMPOPS }?
+            template_declaration_full
+            set_int[type_count, type_count - 1]
+        )*
 
-        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && (decl_specifier_tokens_set.member(LA(1)) || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
-            || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-                decl_pre_type_annotation[type_count])*
+        (options { greedy = true; } :
+            {
+                type_count > 0
+                && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX))
+                && (decl_specifier_tokens_set.member(LA(1))
+                    || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN)
+                    || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET)
+                    || (inLanguage(LANGUAGE_CXX)
+                        && LA(1) == LBRACKET
+                        && next_token() == LBRACKET
+                    )
+                )
+            }?
+            decl_pre_type_annotation[type_count]
+        )*
 
-        EVENT set_int[type_count, type_count - 1]
+        EVENT
+        set_int[type_count, type_count - 1]
 
         variable_declaration_type[type_count]
 ;
