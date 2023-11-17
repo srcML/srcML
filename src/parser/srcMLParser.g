@@ -8398,9 +8398,10 @@ lock_statement[] { ENTRY_DEBUG } :
         for_like_statement_post
 ;
 
-// fix the statement
+/*
+  fixed_statement
+*/
 fixed_statement[] { ENTRY_DEBUG } :
-
         for_like_statement_pre[SFIXED_STATEMENT]
 
         FIXED
