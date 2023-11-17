@@ -9950,15 +9950,18 @@ extends_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         super_list
 ;
 
-// implements list
+/*
+  implements_list
+*/
 implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            // end all elements at end of rule automatically
+            // end all elements at the end of the rule automatically
             startNewMode(MODE_LOCAL);
 
-            // start the derivation list
+            // start the implements statement
             startElement(SIMPLEMENTS);
         }
+
         IMPLEMENTS
         super_list
 ;
