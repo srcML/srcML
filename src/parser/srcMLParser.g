@@ -9498,12 +9498,17 @@ period[] { LightweightElement element(this); ENTRY_DEBUG } :
         PERIOD
 ;
 
-// -> operator
+/*
+  member_pointer
+
+  Handles the "->" operator.
+*/
 member_pointer[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
-      TRETURN  
+
+        TRETURN
 ;
 
 // ->* operator
