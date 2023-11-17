@@ -9973,11 +9973,14 @@ super_list[] { ENTRY_DEBUG } :
         (options { greedy = true; } : derived | COMMA)*
 ;
 
-// a derive access
+/*
+  derive_access
+*/
 derive_access[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCLASS_SPECIFIER);
         }
+
         (PUBLIC | PRIVATE | PROTECTED)
 ;
 
