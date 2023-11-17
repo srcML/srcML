@@ -9537,11 +9537,16 @@ dot_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
         DOTDEREF
 ;
 
-// Namespace operator '::'
+/*
+  dcolon
+
+  Handles a namespace operator ("::").
+*/
 dcolon[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
+
         DCOLON
 ;
 
