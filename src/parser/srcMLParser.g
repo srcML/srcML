@@ -8774,7 +8774,11 @@ variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         variable_declaration[type_count]
 ;
 
-// processing for short variable declaration
+/*
+  short_variable_declaration
+
+  Handles processing for short variable declaration.
+*/
 short_variable_declaration[] { ENTRY_DEBUG } :
         {
             // variable declarations may be in a list
