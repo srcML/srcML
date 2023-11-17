@@ -9511,12 +9511,17 @@ member_pointer[] { LightweightElement element(this); ENTRY_DEBUG } :
         TRETURN
 ;
 
-// ->* operator
+/*
+  member_pointer_dereference
+
+  Handles the "->*" operator.
+*/
 member_pointer_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
-      MPDEREF  
+
+        MPDEREF
 ;
 
 // .* operator
