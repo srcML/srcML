@@ -9485,11 +9485,16 @@ rbracket[] { ENTRY_DEBUG } :
         }
 ;
 
-// Dot (period) operator
+/*
+  period
+
+  Handles the "dot" (period) operator.
+*/
 period[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
+
         PERIOD
 ;
 
