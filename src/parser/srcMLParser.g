@@ -9307,49 +9307,49 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
         RPAREN
 ;
 
-//processing on )
+/*
+  rparen
+
+  Handles right parenthesis processing.
+*/
 rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
         {
-
             if (isempty) {
-
                 // additional right parentheses indicates end of non-list modes
                 endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE);
 
-                // special case:  Get to here, in for-initalization.  Need an extra end mode
+                // special case: need an extra end mode for for-initalization
                 if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_CONTROL_CONDITION))
                     endDownToModeSet(MODE_CONTROL_CONDITION);
 
-                // don't markup since not a normal operator
+                // don't markup since it is not a normal operator
                 markup = false;
-
-            } else
-
+            } else {
                 decParen();
+            }
 
             if (inMode(MODE_ASSOCIATION_LIST))
                 endMode(MODE_ASSOCIATION_LIST);
 
             if (end_control_incr || inMode(MODE_LIST | MODE_CONTROL_CONDITION))
                 setMode(MODE_END_CONTROL);
-
         }
+
         rparen_operator[markup]
+
         {
             if (isempty) {
-
-                // special handling for then part of an if statement
-                // only when in a condition of an if statement
+                // special handling for the then part of an if statement; only accessed when in the condition of an if statement
                 if (inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
-
                     // end the condition
                     endMode(MODE_CONDITION);
 
                     // then part of the if statement (after the condition)
                     startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
+                    // Commented-out code
                     // start the then element
-                    //startNoSkipElement(STHEN);
+                    // startNoSkipElement(STHEN);
 
                     if (LA(1) != LCURLY) {
                         startNoSkipElement(SPSEUDO_BLOCK);
@@ -9357,45 +9357,41 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                     }
 
                     if (cppif_duplicate) {
-
                         std::stack<int> open_elements;
-                        //open_elements.push(STHEN);
+
+                        // Commented-out code
+                        // open_elements.push(STHEN);
+
                         if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
-
                     }
 
                     cppif_duplicate = false;
-
                 }
 
                 // end while condition, etc. and output pseudo block
                 if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
-
                     endMode(MODE_LIST);
+
                     if (LA(1) != LCURLY) {
                         startNoSkipElement(SPSEUDO_BLOCK);
                         startNoSkipElement(SCONTENT);
                     }
 
                     if (cppif_duplicate) {
-
                         std::stack<int> open_elements;
+
                         if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
-
                     }
 
                     cppif_duplicate = false;
-
-
                 // end control group and output pseudo block
                 } else if (end_control_incr) {
-
                     if (inMode(MODE_LIST))
                         endMode(MODE_LIST);
     
@@ -9405,46 +9401,39 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                     }
 
                     if (cppif_duplicate) {
-
                         std::stack<int> open_elements;
+
                         if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
-
                     }
 
                     cppif_duplicate = false;
-
                 } else if (inMode(MODE_LIST | MODE_CONTROL_CONDITION)) {
-
                     endMode(MODE_CONTROL_CONDITION);
+
                     if (LA(1) != LCURLY) {
                         startNoSkipElement(SPSEUDO_BLOCK);
                         startNoSkipElement(SCONTENT);
                     }
 
                     if (cppif_duplicate) {
-
                         std::stack<int> open_elements;
-                        if (LA(1) != LCURLY)                        
+
+                        if (LA(1) != LCURLY)
                             open_elements.push(SPSEUDO_BLOCK);
 
                         dupMode(open_elements);
-
                     }
 
                     cppif_duplicate = false;
-
-                } else
-
-                // end the single mode that started the list
-                // don't end more than one since they may be nested
+                } else {
+                // end the single mode that started the list; don't end more than one since they may be nested
                 if (inMode(MODE_LIST))
                     endMode(MODE_LIST);
-
+                }
             }
-
         }
 ;
 
