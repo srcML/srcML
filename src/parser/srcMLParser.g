@@ -9524,11 +9524,16 @@ member_pointer_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
         MPDEREF
 ;
 
-// .* operator
+/*
+  dot_dereference
+
+  Handles the ".*" operator.
+*/
 dot_dereference[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
+
         DOTDEREF
 ;
 
