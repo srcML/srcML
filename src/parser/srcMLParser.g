@@ -8792,10 +8792,13 @@ short_variable_declaration[] { ENTRY_DEBUG } :
         }
 ;
 
-// more of the inner part of a declaration
+/*
+  variable_declaration
+
+  Handles more of the inner part of a declaration.
+*/
 variable_declaration[int type_count] { ENTRY_DEBUG } :
         {
-
             bool output_decl = !inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL);
 
             // variable declarations may be in a list
@@ -8808,17 +8811,28 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
                 setMode(MODE_LIST);
 
             if (output_decl)
-
                 // start the declaration
                 startElement(SDECLARATION);
-
         }
 
-        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full set_int[type_count, type_count - 1])*
+        (options { greedy = true; } :
+            { next_token() == TEMPOPS }?
+            template_declaration_full
+            set_int[type_count, type_count - 1]
+        )*
 
-        (options { greedy = true; } : { type_count > 0 && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX)) && ((inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN) 
-           || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET) || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET))}?
-            decl_pre_type_annotation[type_count])*
+        (options { greedy = true; } :
+            {
+                type_count > 0
+                && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX))
+                && (
+                    (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN)
+                    || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET)
+                    || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET)
+                )
+            }?
+            decl_pre_type_annotation[type_count]
+        )*
 
         variable_declaration_type[type_count]
 ;
