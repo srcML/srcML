@@ -8497,18 +8497,21 @@ lambda_anonymous[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing }? curly_pair)*
 ;
 
-// anonymous delegate
+/*
+  delegate_type
+*/
 delegate_type[int type_count] { ENTRY_DEBUG } :
-    {
-        // treat catch block as nested block statement
-        startNewMode(MODE_STATEMENT);
+        {
+            // treat catch block as a nested block statement
+            startNewMode(MODE_STATEMENT);
 
-        // start of the catch statement
-        startElement(SFUNCTION_DELEGATE);
-    }
-    (derive_access)*
-    DELEGATE
-    function_header[type_count]
+            // start of the delegate statement
+            startElement(SFUNCTION_DELEGATE);
+        }
+
+        (derive_access)*
+        DELEGATE
+        function_header[type_count]
 ;
 
 // anonymous delegate
