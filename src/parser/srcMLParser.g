@@ -9816,15 +9816,24 @@ nil_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         NIL
 ;
 
-// complex numbers
+/*
+  complex_literal
+
+  Handles complex numbers.
+*/
 complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCOMPLEX);
         }
-        COMPLEX_NUMBER ({ (LT(1)->getText() == "+"sv || LT(1)->getText() == "-"sv) && next_token() == CONSTANTS }? OPERATORS CONSTANTS)?
-  
-;
 
+        COMPLEX_NUMBER
+
+        (
+            { (LT(1)->getText() == "+"sv || LT(1)->getText() == "-"sv) && next_token() == CONSTANTS }?
+            OPERATORS
+            CONSTANTS
+        )?
+;
 
 // literal numbers
 literal[bool markup = true] { LightweightElement element(this); TokenPosition tp; ENTRY_DEBUG } :
