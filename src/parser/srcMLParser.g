@@ -9586,9 +9586,12 @@ expression[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
         expression_part_plus_linq[type, call_count]
 ;
 
-// setup for expression linq
-expression_setup_linq[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
+/*
+  expression_setup_linq
 
+  Handles setup for a linq expression.
+*/
+expression_setup_linq[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
         expression_process
 
         expression_part[type]
