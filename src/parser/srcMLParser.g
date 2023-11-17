@@ -8995,15 +8995,17 @@ class_type_identifier_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
-// Variable declaration name and optional initialization
-variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev = false;
-        ENTRY_DEBUG } :
+/*
+  variable_declaration_nameinit
+
+  Handles a variable declaration name and optional initialization.
+*/
+variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev = false; ENTRY_DEBUG } :
         {
             if (!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
-              && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
-              && !inTransparentMode(MODE_TYPEDEF)
-              && !inTransparentMode(MODE_USING)) {
-
+                && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
+                && !inTransparentMode(MODE_TYPEDEF) && !inTransparentMode(MODE_USING))
+            {
                 startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
                 // start the declaration
@@ -9016,19 +9018,25 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev 
                 instypeprev = true;
             }
         }
+
         (multops)*
+
         {
             if (instypeprev)
                 endMode();
         }
+
         // Mark as name before mark without name
-        (options { generateAmbigWarnings = false;} :  { inLanguage(LANGUAGE_CSHARP) }? compound_name_inner[!isthis] | compound_name | keyword_name)
+        (options { generateAmbigWarnings = false; } :
+            { inLanguage(LANGUAGE_CSHARP) }?
+            compound_name_inner[!isthis] | compound_name | keyword_name
+        )
+
         {
             // expect a possible initialization
             setMode(MODE_INIT | MODE_EXPECT);
 
             if (isthis && LA(1) == LBRACKET) {
-
                 indexer_parameter_list();
 
                 endDownToMode(MODE_LIST);
