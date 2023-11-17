@@ -9984,10 +9984,14 @@ derive_access[] { SingleElement element(this); ENTRY_DEBUG } :
         (PUBLIC | PRIVATE | PROTECTED)
 ;
 
+/*
+  derive_virtual
+*/
 derive_virtual[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCLASS_SPECIFIER);
         }
+
         VIRTUAL
 ;
 
