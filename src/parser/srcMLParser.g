@@ -9805,11 +9805,14 @@ null_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         (NULLPTR | NULLLITERAL)
 ;
 
-// literals
+/*
+  nil_literal
+*/
 nil_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNIL);
         }
+
         NIL
 ;
 
