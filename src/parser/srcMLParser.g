@@ -8741,12 +8741,15 @@ expression_statement_process[] { ENTRY_DEBUG } :
         }
 ;
 
-// an expression statement
-expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
+/*
+  expression_statement
 
+  Handles an expression statement.
+*/
+expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG } :
         expression_statement_process
 
-        { 
+        {
             pauseStream();
         }
 
