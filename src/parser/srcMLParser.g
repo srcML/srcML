@@ -8533,12 +8533,17 @@ delegate_anonymous[] { ENTRY_DEBUG } :
         (options { greedy = true; } : { inputState->guessing }? curly_pair)*
 ;
 
-// mark the delegate function
+/*
+  delegate_marked
+
+  Used to mark the delegate function.
+*/
 delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
-    {
-        startElement(SNAME);
-    }
-    DELEGATE
+        {
+            startElement(SNAME);
+        }
+
+        DELEGATE
 ;
 
 lambda_csharp[] { ENTRY_DEBUG } :
