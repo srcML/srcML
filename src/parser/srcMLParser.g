@@ -9468,11 +9468,16 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         }
 ;
 
+/*
+  rbracket
+*/
 rbracket[] { ENTRY_DEBUG } :
         {
             endDownOverMode(MODE_LIST);
         }
+
         RBRACKET
+
         {
             if (inMode(MODE_OBJECTIVE_C_CALL)) {
                 endDownOverMode(MODE_OBJECTIVE_C_CALL);
