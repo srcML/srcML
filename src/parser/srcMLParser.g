@@ -8387,9 +8387,10 @@ for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token 
         expression
 ;
 
-// lock statement
+/*
+  lock_statement
+*/
 lock_statement[] { ENTRY_DEBUG } :
-
         for_like_statement_pre[SLOCK_STATEMENT]
 
         LOCK
