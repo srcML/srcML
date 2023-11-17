@@ -9898,19 +9898,24 @@ derived_list[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG }
         )*
 ;
 
+/*
+  derived
+*/
 derived[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            // end all elements at end of rule automatically
+            // end all elements at the end of the rule automatically
             startNewMode(MODE_LOCAL);
 
-            // start the derivation list
+            // start the derivation
             startElement(SDERIVATION);
         }
 
         ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+
         (derive_virtual | derive_access)*
 
         ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
+
         ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
 
         (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? generic_argument_list)*
