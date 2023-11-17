@@ -9211,9 +9211,14 @@ parameter_declaration_initialization[] { ENTRY_DEBUG } :
         EQUAL
 ;
 
-// expression block beginning and setup
+/*
+  pure_expression_block
+
+  Handles the beginning and setup of an expression block.
+*/
 pure_expression_block[] { ENTRY_DEBUG } :
         lcurly_base
+
         {
             // nesting blocks, not statement
             replaceMode(MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_NEST | MODE_END_AT_BLOCK_NO_TERMINATE);
