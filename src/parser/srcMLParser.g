@@ -9782,13 +9782,15 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
         (STRING_START (STRING_END | RAW_STRING_END))
 ;
 
-// Only start and end of character are put directly through the parser.
-// The contents of the character are handled as whitespace.
+/*
+  char_literal
+*/
 char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (markup)
                 startElement(SCHAR);
         }
+
         (CHAR_START CHAR_END)
 ;
 
