@@ -8613,17 +8613,22 @@ generic_selection_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
         generic_selection_complete_expression
 ;
 
-// generic selection association list
+/*
+  generic_selection_association_list
+*/
 generic_selection_association_list[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
-        // list of parameters
-        setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN |  MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
+        {
+            // list of parameters
+            setMode(MODE_EXPECT | MODE_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN | MODE_ASSOCIATION_LIST);
 
-        // start the argument list
-        startElement(SGENERIC_ASSOCIATION_LIST);
-    }
-    (COMMA | { LA(1) != RPAREN }? generic_selection_association)*
-    //(LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+            // start the association list
+            startElement(SGENERIC_ASSOCIATION_LIST);
+        }
+
+        (COMMA | { LA(1) != RPAREN }? generic_selection_association)*
+
+        // Commented-out code
+        // (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
 ;
 
 generic_selection_complete_expression[] { CompleteElement element(this); int count_paren = 1; CALL_TYPE type = NOCALL; 
