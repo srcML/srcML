@@ -9550,18 +9550,24 @@ dcolon[] { LightweightElement element(this); ENTRY_DEBUG } :
         DCOLON
 ;
 
-// process portion of expression
+/*
+  expression_process
+
+  Used to process a portion of an expression.
+*/
 expression_process[] { ENTRY_DEBUG } :
         {
-            // if expecting an expression start one. except if you are at a right curly brace
-            if (inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != RCURLY &&
-                !(inMode(MODE_CONTROL_INCREMENT) && LA(1) == RPAREN)) {
-
+            // if expecting an expression, then start one except if you are at a right curly brace
+            if (inMode(MODE_EXPRESSION | MODE_EXPECT)
+                && LA(1) != RCURLY
+                && !(inMode(MODE_CONTROL_INCREMENT)
+                && LA(1) == RPAREN))
+            {
                 // use a new mode without the expect so we don't nest expression parts
                 startNewMode(MODE_EXPRESSION);
 
                 if (inPrevMode(MODE_TERNARY_CONDITION))
-                   setMode(MODE_TERNARY_CONDITION);
+                    setMode(MODE_TERNARY_CONDITION);
 
                 // start the expression element
                 startElement(SEXPRESSION);
