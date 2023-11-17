@@ -9863,11 +9863,16 @@ literal[bool markup = true] { LightweightElement element(this); TokenPosition tp
         )?
 ;
 
-// booleans
+/*
+  boolean
+
+  Handles booleans.
+*/
 boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-                startElement(SBOOLEAN);
+            startElement(SBOOLEAN);
         }
+
         (LITERAL_TRUE | LITERAL_FALSE)
 ;
 
