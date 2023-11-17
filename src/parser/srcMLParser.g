@@ -8514,20 +8514,23 @@ delegate_type[int type_count] { ENTRY_DEBUG } :
         function_header[type_count]
 ;
 
-// anonymous delegate
+/*
+  delegate_anonymous
+*/
 delegate_anonymous[] { ENTRY_DEBUG } :
-    {
-        // treat catch block as nested block statement
-        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
+        {
+            // treat catch block as a nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ANONYMOUS);
 
-        // start of the catch statement
-        startElement(SFUNCTION_DELEGATE);
-    }
-    delegate_marked
-    (options { greedy = true; } : parameter_list)*
+            // start of the delegate statement
+            startElement(SFUNCTION_DELEGATE);
+        }
 
-    /* completely parse a function until it is done */
-    (options { greedy = true; } : { inputState->guessing }? curly_pair)*
+        delegate_marked
+        (options { greedy = true; } : parameter_list)*
+
+        // completely parse a function until it is done
+        (options { greedy = true; } : { inputState->guessing }? curly_pair)*
 ;
 
 // mark the delegate function
