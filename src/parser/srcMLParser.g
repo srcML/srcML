@@ -8562,16 +8562,19 @@ lambda_csharp[] { ENTRY_DEBUG } :
         }
 ;
 
-// throw statement
+/*
+  throw_statement
+*/
 throw_statement[] { ENTRY_DEBUG } :
-    {
-        // statement with expected expression
-        startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+        {
+            // statement with an expected expression
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
-        // start of throw statement
-        startElement(STHROW_STATEMENT);
-    }
-    THROW
+            // start of a throw statement
+            startElement(STHROW_STATEMENT);
+        }
+
+        THROW
 ;
 
 // C _Generic (generic selection)
