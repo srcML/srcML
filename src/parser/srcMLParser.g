@@ -9437,7 +9437,11 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
         }
 ;
 
-// } matching and processing
+/*
+  rcurly_argument
+
+  Handles right curly brace matching and processing.
+*/
 rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         {
             if (isempty) {
@@ -9446,15 +9450,15 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
                     endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE | MODE_INTERNAL_END_CURLY);
             }
         }
+
         RCURLY
+
         {
-            // end the single mode that started the list
-            // don't end more than one since they may be nested
+            // end the single mode that started the list; don't end more than one since they may be nested
             if (isempty && inMode(MODE_LIST)) {
-                while(inMode(MODE_LIST) && (!inMode(MODE_INTERNAL_END_PAREN) || inMode(MODE_END_ONLY_AT_RPAREN)) && !inMode(MODE_INITIALIZATION_LIST)) {
+                while (inMode(MODE_LIST) && (!inMode(MODE_INTERNAL_END_PAREN) || inMode(MODE_END_ONLY_AT_RPAREN)) && !inMode(MODE_INITIALIZATION_LIST)) {
                     endMode(MODE_LIST);
                 }
-            
             } else if (inTransparentMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP)) {
                 endWhileMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
             }
