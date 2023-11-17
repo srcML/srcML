@@ -8906,13 +8906,19 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
+/*
+  specifiers_or_macro
+*/
 specifiers_or_macro[] { bool first = true; ENTRY_DEBUG } :
+        (options { greedy = true; } : specifier)*
 
-    (options { greedy = true; } : specifier)*
+        (options { greedy = true; } :
+            { first && !class_tokens_set.member(LA(1)) }?
+            macro_call
+            set_bool[first, false]
+        )*
 
-    (options { greedy = true; } : { first && !class_tokens_set.member(LA(1)) }? macro_call set_bool[first, false])*
-
-    (options { greedy = true; } : specifier)*
+        (options { greedy = true; } : specifier)*
 ;
 
 is_class_type_identifier[] returns[bool is_class_type = false] { ENTRY_DEBUG 
