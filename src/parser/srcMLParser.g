@@ -8467,15 +8467,18 @@ catch_statement[] { ENTRY_DEBUG } :
         (parameter_list)*
 ;
 
-// finally statement
+/*
+  finally_statement
+*/
 finally_statement[] { ENTRY_DEBUG } :
         {
-            // treat catch block as nested block statement
+            // treat catch block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
             // start of the catch statement
             startElement(SFINALLY_BLOCK);
         }
+
         FINALLY
 ;
 
