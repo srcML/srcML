@@ -8546,20 +8546,20 @@ delegate_marked[] { SingleElement element(this); ENTRY_DEBUG } :
         DELEGATE
 ;
 
+/*
+  lambda_csharp
+*/
 lambda_csharp[] { ENTRY_DEBUG } :
+        LAMBDA
 
-    LAMBDA
-    {
-        if (LA(1) != LCURLY) {
-
-            startNoSkipElement(SPSEUDO_BLOCK);
-            startNoSkipElement(SCONTENT);
-
-        } else if (LA(1) == LCURLY) {
-
-            startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
+        {
+            if (LA(1) != LCURLY) {
+                startNoSkipElement(SPSEUDO_BLOCK);
+                startNoSkipElement(SCONTENT);
+            } else if (LA(1) == LCURLY) {
+                startNewMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS);
+            }
         }
-    }
 ;
 
 // throw statement
