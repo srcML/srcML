@@ -9153,7 +9153,11 @@ function_pointer_initialization[] { ENTRY_DEBUG } :
         complete_default_parameter
 ;
 
-// initialization of a declared variable
+/*
+  variable_declaration_initialization
+
+  Handles the initialization of a declared variable.
+*/
 variable_declaration_initialization[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
@@ -9162,11 +9166,14 @@ variable_declaration_initialization[] { ENTRY_DEBUG } :
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
+
         EQUAL |
+
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
         }
+
         call_argument_list
 ;
 
