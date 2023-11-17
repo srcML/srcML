@@ -9293,14 +9293,19 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
         DESTOP
 ;
 
-// mark up )
+/*
+  rparen_operator
+
+  Used to mark up a right parenthesis.
+*/
 rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (markup && !inMode(MODE_END_ONLY_AT_RPAREN))
                 startElement(SOPERATOR);
         }
+
         RPAREN
-    ;
+;
 
 //processing on )
 rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getParen() == 0; ENTRY_DEBUG } :
