@@ -8837,49 +8837,73 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
         variable_declaration_type[type_count]
 ;
 
-// declaration type
-variable_declaration_type[int type_count] {  bool is_compound = false; ENTRY_DEBUG } :
-    {
-        if (type_count == 0) {
+/*
+  variable_declaration_type
+*/
+variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBUG } :
+        {
+            if (type_count == 0) {
+                if (inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
+                    return;
 
-            if (inTransparentMode(MODE_ARGUMENT) && inLanguage(LANGUAGE_CXX))
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
                 return;
+            }
 
-            setMode(MODE_VARIABLE_NAME | MODE_INIT);
-            return;
+            // start a mode for the type that will end in this grammar rule
+            startNewMode(MODE_EAT_TYPE);
 
+            // type element begins
+            startElement(STYPE);
         }
 
-        // start a mode for the type that will end in this grammar rule
-        startNewMode(MODE_EAT_TYPE);
+        (options { greedy = true; } :
+            { decl_specifier_tokens_set.member(LA(1)) }?
+            (specifier | default_specifier | template_specifier)
+            set_int[type_count, type_count - 1]
+        )*
 
-        // type element begins
-        startElement(STYPE);
-    }
+        {
+            if (type_count == 0) {
+                endMode(MODE_EAT_TYPE);
+                return;
+            }
 
-    (options { greedy = true; } : { decl_specifier_tokens_set.member(LA(1)) }? (specifier | default_specifier | template_specifier) set_int[type_count, type_count - 1])*
-    {
-        if (type_count == 0) {
-            endMode(MODE_EAT_TYPE);
-            return;
+            setTypeCount(type_count);
         }
 
-        setTypeCount(type_count);
-    }
+        // match auto keyword first as a special case; do not warn about ambiguity
+        (options { generateAmbigWarnings = false; } :
+            { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }?
+            keyword_name | auto_keyword[type_count > 1] |
 
-    // match auto keyword first as special case do no warn about ambiguity
-    (options { generateAmbigWarnings = false; } : 
-        { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }? keyword_name | auto_keyword[type_count > 1] |
-        { is_class_type_identifier() }? (options { greedy = true; } : 
-            { !class_tokens_set.member(LA(1)) }? 
-                (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) { decTypeCount(); })*
-                class_type_identifier[is_compound] { decTypeCount(); } (options { greedy = true; } : { !is_compound }?  multops)* |
-        lead_type_identifier | EVENT)
-    { if (!inTransparentMode(MODE_TYPEDEF)) decTypeCount(); } 
+            { is_class_type_identifier() }?
+            (options { greedy = true; } :
+                { !class_tokens_set.member(LA(1)) }?
+                (options { generateAmbigWarnings = false; } :
+                    specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call
+                )
+                { decTypeCount(); }
+            )*
+            class_type_identifier[is_compound]
+            { decTypeCount(); }
+            (options { greedy = true; } : { !is_compound }?  multops)* |
 
-    (options { greedy = true; } : { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
-    (options { generateAmbigWarnings = false; } : keyword_name | type_identifier) { decTypeCount(); })* 
-    update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
+            lead_type_identifier | EVENT
+        )
+
+        {
+            if (!inTransparentMode(MODE_TYPEDEF))
+                decTypeCount();
+        } 
+
+        (options { greedy = true; } :
+            { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
+            (options { generateAmbigWarnings = false; } : keyword_name | type_identifier)
+            { decTypeCount(); }
+        )*
+
+        update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
 ;
 
 specifiers_or_macro[] { bool first = true; ENTRY_DEBUG } :
