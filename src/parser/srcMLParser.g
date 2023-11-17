@@ -9759,7 +9759,11 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         variable_identifier_array_grammar_sub[flag]
 ;
 
-// rule for literals
+/*
+  literals
+
+  Handles various rules for literals.
+*/
 literals[] { ENTRY_DEBUG } :
         string_literal | char_literal | literal | boolean | null_literal | complex_literal | nil_literal
 ;
