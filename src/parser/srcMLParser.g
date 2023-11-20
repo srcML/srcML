@@ -10406,11 +10406,16 @@ modifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
         (REF | OUT)
 ;
 
-// ...
+/*
+  tripledotop
+
+  Handles a triple dot ("...") operator.
+*/
 tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SMODIFIER);
         }
+
         DOTDOTDOT
 ;
 
