@@ -10506,36 +10506,41 @@ template_param_list[] { ENTRY_DEBUG } :
         tempops
 ;
 
-// parameter in template
+/*
+  template_param
+
+  Handles a parameter in a template.
+*/
 template_param[] { in_template_param = true; ENTRY_DEBUG } :
         {
-            // end parameter correctly
+            // end the parameter correctly
             startNewMode(MODE_LOCAL);
 
             // start the parameter element
             startElement(STEMPLATE_PARAMETER);
         }
 
-        // Both can contain extern however an extern template should not be a template param so should not be a problem
+        // Both can contain extern; however, an extern template should not be a template param (so it should not be a problem)
         (options { generateAmbigWarnings = false; } :
-        { LA(1) != TEMPLATE }? parameter_type
-        {
-            // expect a name initialization
+            { LA(1) != TEMPLATE }?
+            parameter_type
 
-            setMode(MODE_VARIABLE_NAME | MODE_INIT);
-        }  
-        (options { greedy = true; } : { true }? variable_declaration_nameinit)* |
+            {
+                // expect a name initialization
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+            }
 
-        template_inner_full
-    )
-    set_bool[in_template_param, false]
+            (options { greedy = true; } : { true }? variable_declaration_nameinit)* |
+
+            template_inner_full
+        )
+
+        set_bool[in_template_param, false]
 ;
 exception
 catch[antlr::RecognitionException&] {
-
-    in_template_param = false;
-    throw antlr::RecognitionException();
-
+        in_template_param = false;
+        throw antlr::RecognitionException();
 }
 
 // complete inner full for template
