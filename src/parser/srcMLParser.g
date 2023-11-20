@@ -10255,34 +10255,50 @@ parameter[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT
         )
 ;
 
-// handle parameter type if not function_decl
+/*
+  parameter_type_variable
+
+  Handles a parameter type if it is not a FUNCTION_DECL.
+*/
 parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type = true; ENTRY_DEBUG } :
         {
+            // start the declaration element
+            startElement(SDECLARATION);
 
-                // start the declaration element
-                startElement(SDECLARATION);
+            if (stmt_type != VARIABLE)
+                type_count = 1;
 
-                if (stmt_type != VARIABLE)
-                    type_count = 1;
+            int look_past_token = 0;
 
-                int look_past_token = 0;
-                output_type = !((inLanguage(LANGUAGE_JAVA) || inLanguage(LANGUAGE_CSHARP)) && type_count == 1 && LA(1) != DOTDOTDOT && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
-                    && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA ||
-                        look_past_token == RPAREN || look_past_token == TRETURN || look_past_token == LAMBDA));
-
-
+            output_type = !(
+                (inLanguage(LANGUAGE_JAVA) || inLanguage(LANGUAGE_CSHARP))
+                && type_count == 1
+                && LA(1) != DOTDOTDOT
+                && inTransparentMode(MODE_FUNCTION_TAIL | MODE_ANONYMOUS)
+                && ((look_past_token = look_past_rule(&srcMLParser::type_identifier)) == COMMA
+                    || look_past_token == RPAREN
+                    || look_past_token == TRETURN
+                    || look_past_token == LAMBDA)
+            );
         }
 
         (
-        { stmt_type == VARIABLE || stmt_type == CLASS_DECL || stmt_type == STRUCT_DECL || stmt_type == UNION_DECL || stmt_type == ENUM_DECL|| LA(1) == DOTDOTDOT }?
-        (parameter_type_count[type_count, output_type])
-        // suppress warning caused by ()*
-        (options { greedy = true; } : bar set_int[type_count, type_count > 1 ? type_count - 1 : 1] parameter_type_count[type_count])*
-        {
-            // expect a name initialization
-            setMode(MODE_VARIABLE_NAME | MODE_INIT);
-        }
-        ( options { greedy = true; } : variable_declaration_nameinit)*
+            { stmt_type == VARIABLE || stmt_type == CLASS_DECL || stmt_type == STRUCT_DECL || stmt_type == UNION_DECL || stmt_type == ENUM_DECL || LA(1) == DOTDOTDOT }?
+            (parameter_type_count[type_count, output_type])
+
+            // suppress warning caused by ()*
+            (options { greedy = true; } :
+                bar
+                set_int[type_count, type_count > 1 ? type_count - 1 : 1]
+                parameter_type_count[type_count]
+            )*
+
+            {
+                // expect a name initialization
+                setMode(MODE_VARIABLE_NAME | MODE_INIT);
+            }
+
+            (options { greedy = true; } : variable_declaration_nameinit)*
         )
 ;
 
