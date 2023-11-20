@@ -10618,57 +10618,60 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
         expression
 ;
 
-// generic argument list
-generic_argument_list_check[] returns [bool is_generic_argument_list] {
-
-    is_generic_argument_list = false;
-
-    int start = mark();
-    inputState->guessing++;
-
-    int parencount = 0;
-    int bracecount = 0;
-    while (LA(1) != antlr::Token::EOF_TYPE) {
-
-        if (LA(1) == RPAREN)
-            --parencount;
-        else if (LA(1) == LPAREN)
-            ++parencount;
-
-        if (parencount < 0) {
-            break;
-        }
-
-        if (LA(1) == TEMPOPE) {
-            is_generic_argument_list = true;
-            break;
-        }
-
-        if (LA(1) == RCURLY)
-            --bracecount;
-        else if (LA(1) == LCURLY)
-            ++bracecount;
-
-        if (bracecount < 0)
-            break;
-
-        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0)
-            break;
-
-        consume();
-    }
-
-    inputState->guessing--;
-    rewind(start);
-
-    ENTRY_DEBUG
-
-}:;
 /*
+  generic_argument_list_check
+*/
+generic_argument_list_check[] returns [bool is_generic_argument_list] {
+        is_generic_argument_list = false;
+
+        int start = mark();
+        inputState->guessing++;
+
+        int parencount = 0;
+        int bracecount = 0;
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == RPAREN)
+                --parencount;
+            else if (LA(1) == LPAREN)
+                ++parencount;
+
+            if (parencount < 0) {
+                break;
+            }
+
+            if (LA(1) == TEMPOPE) {
+                is_generic_argument_list = true;
+                break;
+            }
+
+            if (LA(1) == RCURLY)
+                --bracecount;
+            else if (LA(1) == LCURLY)
+                ++bracecount;
+
+            if (bracecount < 0)
+                break;
+
+            if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0)
+                break;
+
+            consume();
+        }
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+        Commented-out code:
+
         savenamestack[namestack_save]
-
-        tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])* tempope
-
+        tempops
+        (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])*
+        tempope
         restorenamestack[namestack_save]
 */
 
