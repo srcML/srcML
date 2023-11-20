@@ -10035,7 +10035,9 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
         rparen[false]
 ;
 
-// indexer parameter list
+/*
+  indexer_parameter_list
+*/
 indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
@@ -10045,7 +10047,7 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
             startElement(SINDEXER_PARAMETER_LIST);
         }
 
-        // parameter list must include all possible parts since it is part of function detection
+        // parameter list must include all possible parts since it is a part of function detection
         LBRACKET
 
         {
@@ -10053,14 +10055,17 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
         }
 
         (
-            { if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
+            { if (!lastwasparam)
+                empty_element(SPARAMETER, !lastwasparam);
+                lastwasparam = false;
+            }
 
-            // Commented-out code
+            /* Commented-out code:
             // We are in a parameter list; Need to make sure we end it down to the start of the parameter list
-            // { if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-            //     endMode(); }
-            comma |
-            complete_parameter { lastwasparam = true; }
+            { if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                endMode();
+            } */
+            comma | complete_parameter { lastwasparam = true; }
         )*
 ;
 
