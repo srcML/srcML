@@ -10468,17 +10468,20 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
         )
 ;
 
-// Template
+/*
+  template_declaration
+*/
 template_declaration[] { ENTRY_DEBUG } :
         {
-            // template with nested statement (function or class)
-            // expect a template parameter list
+            // template with a nested statement (function or class); expect a template parameter list
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TEMPLATE);
 
             // start the template
             startElement(STEMPLATE);
         }
+
         TEMPLATE
+
         {
             if (LA(1) == CLASS || LA(1) == CXX_CLASS)
                 startNewMode(MODE_TEMPLATE | MODE_LIST | MODE_EXPECT);
