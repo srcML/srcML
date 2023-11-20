@@ -10395,12 +10395,16 @@ multopblockop[] { LightweightElement element(this); ENTRY_DEBUG } :
         (MULTOPS | BLOCKOP)
 ;
 
+/*
+  modifiers_csharp
+*/
 modifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SMODIFIER);
         }
+
         (REF | OUT)
- ;
+;
 
 // ...
 tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
