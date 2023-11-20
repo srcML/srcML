@@ -10317,7 +10317,7 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
                 startElement(STYPE);
         }
 
-        // match auto keyword first as special case; do not warn about ambiguity
+        // match auto keyword first as a special case; do not warn about ambiguity
         (
             (options { generateAmbigWarnings = false; } :
                 this_specifier | auto_keyword[type_count > 1] |
