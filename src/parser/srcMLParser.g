@@ -10302,7 +10302,11 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
         )
 ;
 
-// count types in parameter
+/*
+  parameter_type_count
+
+  Used to count types in a parameter.
+*/
 parameter_type_count[int& type_count, bool output_type = true] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
@@ -10313,18 +10317,49 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
                 startElement(STYPE);
         }
 
+        // match auto keyword first as special case; do not warn about ambiguity
+        (
+            (options { generateAmbigWarnings = false; } :
+                this_specifier | auto_keyword[type_count > 1] |
 
-        // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] |
-         { is_class_type_identifier() }? (options { greedy = true; } :
-            { !class_tokens_set.member(LA(1)) }?
-                (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) set_int[type_count, type_count - 1])*
-                class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
-         type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+                { is_class_type_identifier() }?
+                (options { greedy = true; } :
+                    { !class_tokens_set.member(LA(1)) }?
+                    (options { generateAmbigWarnings = false; } :
+                        specifier |
 
-        // sometimes there is no parameter name.  if so, we need to eat it
-        ( options { greedy = true; generateAmbigWarnings = false; } : multops | tripledotop | LBRACKET RBRACKET |
-         { next_token() == MULTOPS || next_token() == REFOPS || next_token() == RVALUEREF || (inLanguage(LANGUAGE_CSHARP) &&  next_token() == QMARK) || next_token() == BLOCKOP }? type_identifier)*
+                        { look_past_rule(&srcMLParser::identifier) != LPAREN }?
+                        identifier |
+
+                        macro_call
+                    )
+
+                    set_int[type_count, type_count - 1]
+                )*
+                class_type_identifier[is_compound]
+                set_int[type_count, type_count - 1]
+                (options { greedy = true; } : { !is_compound }? multops)* |
+
+                type_identifier
+            )
+
+            set_int[type_count, type_count - 1]
+            (options { greedy = true; } : eat_type[type_count])?
+        )
+
+        // sometimes there is no parameter name; if so, we need to eat it
+        ( options { greedy = true; generateAmbigWarnings = false; } :
+            multops | tripledotop | LBRACKET RBRACKET |
+
+            {
+                next_token() == MULTOPS
+                || next_token() == REFOPS
+                || next_token() == RVALUEREF
+                || (inLanguage(LANGUAGE_CSHARP) &&  next_token() == QMARK)
+                || next_token() == BLOCKOP
+            }?
+            type_identifier
+        )*
 ;
 
 // Modifier ops
