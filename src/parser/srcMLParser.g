@@ -10675,8 +10675,10 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
         restorenamestack[namestack_save]
 */
 
-// generic argument list
-generic_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save;  bool in_function_type = false; ENTRY_DEBUG } :
+/*
+  generic_argument_list
+*/
+generic_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save; bool in_function_type = false; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
@@ -10687,11 +10689,13 @@ generic_argument_list[] { CompleteElement element(this); decltype(namestack) nam
                 startElement(SGENERIC_ARGUMENT_LIST);
             else
                 startElement(STEMPLATE_PARAMETER_LIST);
-   
         }
+
         savenamestack[namestack_save]
 
-        tempops (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])* tempope
+        tempops
+        (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])*
+        tempope
 
         restorenamestack[namestack_save]
 ;
