@@ -10081,10 +10081,17 @@ empty_element[int ele, bool cond] { LightweightElement element(this); ENTRY_DEBU
         }
 ;
 
-// k& r C parameter
+/*
+  kr_parameter
+
+  Handles a parameter in K&R syntax (C).
+*/
 kr_parameter[int type_count] { ENTRY_DEBUG } :
-        kr_parameter_type[type_count] kr_parameter_name kr_parameter_terminate
-        //complete_parameter terminate_pre terminate_token
+        kr_parameter_type[type_count]
+        kr_parameter_name
+        kr_parameter_terminate
+
+        /* Commented-out code: complete_parameter terminate_pre terminate_token */
 ;
 
 // k& r C parameter type
