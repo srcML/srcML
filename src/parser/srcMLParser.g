@@ -10419,7 +10419,11 @@ tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
         DOTDOTDOT
 ;
 
-// do a parameter type
+/*
+  parameter_type
+
+  Handles a parameter type.
+*/
 parameter_type[] { CompleteElement element(this); int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; bool is_compound = false; ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
@@ -10428,15 +10432,40 @@ parameter_type[] { CompleteElement element(this); int type_count = 0; int second
             // start of type
             startElement(STYPE);
         }
-        { pattern_check(stmt_type, secondtoken, type_count, after_token) && (type_count ? type_count : (type_count = 1))}?
 
-        // match auto keyword first as special case do no warn about ambiguity
-        ((options { generateAmbigWarnings = false; } : auto_keyword[type_count > 1] |
-         { is_class_type_identifier() }? (options { greedy = true; } :
-            { !class_tokens_set.member(LA(1)) }?
-                (options { generateAmbigWarnings = false; } : specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call) set_int[type_count, type_count - 1])*
-                class_type_identifier[is_compound] set_int[type_count, type_count - 1] (options { greedy = true; } : { !is_compound }? multops)* |
-         type_identifier) set_int[type_count, type_count - 1] (options { greedy = true;} : eat_type[type_count])?)
+        {
+            pattern_check(stmt_type, secondtoken, type_count, after_token)
+            && (type_count ? type_count : (type_count = 1))
+        }?
+        // match auto keyword first as a special case; do not warn about ambiguity
+        (
+            (options { generateAmbigWarnings = false; } :
+                auto_keyword[type_count > 1] |
+
+                { is_class_type_identifier() }?
+                (options { greedy = true; } :
+                    { !class_tokens_set.member(LA(1)) }?
+                    (options { generateAmbigWarnings = false; } :
+                        specifier |
+
+                        { look_past_rule(&srcMLParser::identifier) != LPAREN }?
+                        identifier |
+
+                        macro_call
+                    )
+
+                    set_int[type_count, type_count - 1]
+                )*
+                class_type_identifier[is_compound]
+                set_int[type_count, type_count - 1]
+                (options { greedy = true; } : { !is_compound }? multops)* |
+
+                type_identifier
+            )
+
+            set_int[type_count, type_count - 1]
+            (options { greedy = true; } : eat_type[type_count])?
+        )
 ;
 
 // Template
