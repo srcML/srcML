@@ -10143,10 +10143,16 @@ complete_parameter[] { ENTRY_DEBUG } :
         (options { greedy = true; } : parameter_declaration_initialization complete_default_parameter)*
 ;
 
-// an argument
+/*
+  argument
+*/
 argument[] { ENTRY_DEBUG } :
-        { getParen() == 0 }? rparen[false] |
-        { getCurly() == 0 }? rcurly_argument |
+        { getParen() == 0 }?
+        rparen[false] |
+
+        { getCurly() == 0 }?
+        rcurly_argument |
+
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -10155,13 +10161,21 @@ argument[] { ENTRY_DEBUG } :
             startElement(SARGUMENT);
         }
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP)  && look_past_rule(&srcMLParser::identifier) == COLON }? argument_named_csharp)*
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CSHARP) }? argument_modifier_csharp)*
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_CSHARP) && look_past_rule(&srcMLParser::identifier) == COLON }?
+            argument_named_csharp
+        )*
+
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_CSHARP) }?
+            argument_modifier_csharp
+        )*
 
         (
-        { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }? expression |
+            { !((LA(1) == RPAREN && inTransparentMode(MODE_INTERNAL_END_PAREN)) || (LA(1) == RCURLY && inTransparentMode(MODE_INTERNAL_END_CURLY))) }?
+            expression |
 
-        (type_identifier) => expression_process type_identifier
+            (type_identifier) => expression_process type_identifier
         )
 ;
 
