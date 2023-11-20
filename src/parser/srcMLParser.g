@@ -10225,7 +10225,9 @@ annotation_argument[] { ENTRY_DEBUG } :
         )*
 ;
 
-// a parameter
+/*
+  parameter
+*/
 parameter[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         {
             // end parameter correctly
@@ -10234,20 +10236,22 @@ parameter[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT
             // start the parameter element
             startElement(SPARAMETER);
         }
+
         (
-
-            { pattern_check(stmt_type, secondtoken, type_count, after_token, true) && (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION
-                || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
+            {
+                pattern_check(stmt_type, secondtoken, type_count, after_token, true)
+                && (stmt_type == FUNCTION_DECL
+                    || stmt_type == FUNCTION
+                    || stmt_type == OPERATOR_FUNCTION_DECL
+                    || stmt_type == OPERATOR_FUNCTION)
+            }?
             function_declaration[type_count]
-
-            function_identifier // pointer_name_grammar
-
+            function_identifier
+            // Commented-out code: pointer_name_grammar
             (macro_call_check)*
-
             parameter_list |
-   
-            parameter_type_variable[type_count, stmt_type]
 
+            parameter_type_variable[type_count, stmt_type]
         )
 ;
 
