@@ -10382,11 +10382,16 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-// Modifier ops
+/*
+  multopblockop
+
+  A modifier operation.
+*/
 multopblockop[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SMODIFIER);
         }
+
         (MULTOPS | BLOCKOP)
 ;
 
