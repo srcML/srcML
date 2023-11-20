@@ -10179,10 +10179,14 @@ argument[] { ENTRY_DEBUG } :
         )
 ;
 
+/*
+  argument_modifier_csharp
+*/
 argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SMODIFIER);
         }
+
         (OUT | REF)
 ;
 
