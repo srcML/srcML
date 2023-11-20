@@ -10602,7 +10602,9 @@ template_declaration_full[] { ENTRY_DEBUG } :
         }
 ;
 
-// template initialization
+/*
+  template_declaration_initialization
+*/
 template_declaration_initialization[] { ENTRY_DEBUG } :
         {
             // end the init correctly
@@ -10611,7 +10613,9 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
-        EQUAL expression
+
+        EQUAL
+        expression
 ;
 
 // generic argument list
