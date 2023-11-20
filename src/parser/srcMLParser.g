@@ -10543,18 +10543,25 @@ catch[antlr::RecognitionException&] {
         throw antlr::RecognitionException();
 }
 
-// complete inner full for template
+/*
+  template_inner_full
+*/
 template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; } :
-
         template_in_parameter_list_full
-        { pattern_check(stmt_type, secondtoken, type_count, after_token) && (type_count ? type_count : (type_count = 1))}?
+
+        {
+            pattern_check(stmt_type, secondtoken, type_count, after_token)
+            && (type_count ? type_count : (type_count = 1))
+        }?
         eat_type[type_count]
+
         {
             endMode();
 
             // expect a name initialization
             setMode(MODE_VARIABLE_NAME | MODE_INIT);
         }
+
         (options { greedy = true; } : { true }? variable_declaration_nameinit)*
 ;
 
