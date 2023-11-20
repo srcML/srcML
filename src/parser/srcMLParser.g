@@ -10362,12 +10362,24 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
         )*
 ;
 
-// Modifier ops
+/*
+  multops
+
+  A modifier operation.
+*/
 multops[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SMODIFIER);
         }
-        (MULTOPS | REFOPS | RVALUEREF | { inLanguage(LANGUAGE_CSHARP) }? QMARK set_bool[is_qmark, true] | BLOCKOP)
+
+        (
+            MULTOPS | REFOPS | RVALUEREF |
+
+            { inLanguage(LANGUAGE_CSHARP) }?
+            QMARK set_bool[is_qmark, true] |
+
+            BLOCKOP
+        )
 ;
 
 // Modifier ops
