@@ -9995,7 +9995,9 @@ derive_virtual[] { SingleElement element(this); ENTRY_DEBUG } :
         VIRTUAL
 ;
 
-// do a parameter list
+/*
+  parameter_list
+*/
 parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
@@ -10004,15 +10006,33 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
             // start the parameter list element
             startElement(SPARAMETER_LIST);
         }
-        // parameter list must include all possible parts since it is part of
-        // function detection
-        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
-        {
-            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
-            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-                endMode();
-        } comma | { inLanguage(LANGUAGE_JAVA) }? bar |
-        complete_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
+
+        // parameter list must include all possible parts since it is part of a function detection
+        LPAREN
+
+        (
+            {
+                foundparam = true;
+
+                if (!lastwasparam)
+                    empty_element(SPARAMETER, !lastwasparam);
+
+                lastwasparam = false;
+            }
+
+            {
+                // We are in a parameter list; need to make sure we end it down to the start of the parameter list
+                if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                    endMode();
+            }
+
+            comma |
+            { inLanguage(LANGUAGE_JAVA) }? bar |
+            complete_parameter { foundparam = lastwasparam = true; }
+        )*
+
+        empty_element[SPARAMETER, !lastwasparam && foundparam]
+        rparen[false]
 ;
 
 // indexer parameter list
