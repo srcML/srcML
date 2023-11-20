@@ -10700,18 +10700,22 @@ generic_argument_list[] { CompleteElement element(this); decltype(namestack) nam
         restorenamestack[namestack_save]
 ;
 
-// generic parameter list
-generic_parameter_list[] { CompleteElement element(this); decltype(namestack) namestack_save;  ENTRY_DEBUG } :
+/*
+  generic_parameter_list
+*/
+generic_parameter_list[] { CompleteElement element(this); decltype(namestack) namestack_save; ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
 
             startElement(SGENERIC_PARAMETER_LIST);
-   
         }
+
         savenamestack[namestack_save]
 
-        tempops (options { generateAmbigWarnings = false; } : COMMA | generic_parameter)* tempope
+        tempops
+        (options { generateAmbigWarnings = false; } : COMMA | generic_parameter)*
+        tempope
 
         restorenamestack[namestack_save]
 ;
