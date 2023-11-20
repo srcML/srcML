@@ -10190,9 +10190,12 @@ argument_modifier_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
         (OUT | REF)
 ;
 
+/*
+  argument_named_csharp
+*/
 argument_named_csharp[] { ENTRY_DEBUG } :
-
-        identifier COLON
+        identifier
+        COLON
 ;
 
 // annotation argument
