@@ -10110,7 +10110,11 @@ kr_parameter_type[int type_count] { ENTRY_DEBUG } :
         )*
 ;
 
-// k& r C parameter name
+/*
+  kr_parameter_name
+
+  Handles a parameter name in K&R syntax (C).
+*/
 kr_parameter_name[] { ENTRY_DEBUG } :
         ((comma)* variable_declaration_nameinit)*
 ;
