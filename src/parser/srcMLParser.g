@@ -10133,9 +10133,12 @@ kr_parameter_terminate[] { ENTRY_DEBUG } :
         }
 ;
 
-// complete parameter
+/*
+  complete_parameter
+*/
 complete_parameter[] { ENTRY_DEBUG } :
         parameter
+
         // suppress ()* warning
         (options { greedy = true; } : parameter_declaration_initialization complete_default_parameter)*
 ;
