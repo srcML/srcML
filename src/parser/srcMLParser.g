@@ -10069,7 +10069,11 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
         )*
 ;
 
-// an empty element
+/*
+  empty_element
+
+  Handles an empty element.
+*/
 empty_element[int ele, bool cond] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (cond)
