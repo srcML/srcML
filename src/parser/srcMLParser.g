@@ -10198,9 +10198,13 @@ argument_named_csharp[] { ENTRY_DEBUG } :
         COLON
 ;
 
-// annotation argument
+/*
+  annotation_argument
+*/
 annotation_argument[] { ENTRY_DEBUG } :
-        { getParen() == 0 }? rparen[false] |
+        { getParen() == 0 }?
+        rparen[false] |
+
         {
             // argument with nested expression
             startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
@@ -10211,8 +10215,14 @@ annotation_argument[] { ENTRY_DEBUG } :
 
         // suppress warning of ()*
         (options { greedy = true; } :
-        { inputState->guessing }? RCURLY | 
-        { !(LA(1) == RPAREN) }? expression | type_identifier)*
+            { inputState->guessing }?
+            RCURLY |
+
+            { !(LA(1) == RPAREN) }?
+            expression |
+
+            type_identifier
+        )*
 ;
 
 // a parameter
