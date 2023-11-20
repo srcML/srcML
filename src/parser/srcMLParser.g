@@ -10565,14 +10565,17 @@ template_inner_full[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; int
         (options { greedy = true; } : { true }? variable_declaration_nameinit)*
 ;
 
-// entire template parameter list
-template_in_parameter_list_full[] { ENTRY_DEBUG } :
+/*
+  template_in_parameter_list_full
 
+  Handles an entire template parameter list.
+*/
+template_in_parameter_list_full[] { ENTRY_DEBUG } :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
-            
-            // start of type
+
+            // start of a type
             startElement(STYPE);
         }
 
