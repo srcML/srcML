@@ -10119,9 +10119,18 @@ kr_parameter_name[] { ENTRY_DEBUG } :
         ((comma)* variable_declaration_nameinit)*
 ;
 
-// k& r C terminate
+/*
+  kr_parameter_terminate
+
+  Handles a parameter terminate in K&R syntax (C).
+*/
 kr_parameter_terminate[] { ENTRY_DEBUG } :
-    terminate_pre terminate_token { endDownToModeSet(MODE_FUNCTION_TAIL); }
+        terminate_pre
+        terminate_token
+
+        {
+            endDownToModeSet(MODE_FUNCTION_TAIL);
+        }
 ;
 
 // complete parameter
