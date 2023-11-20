@@ -10582,9 +10582,24 @@ template_in_parameter_list_full[] { ENTRY_DEBUG } :
         template_declaration_full
 ;
 
+/*
+  template_declaration_full
+*/
 template_declaration_full[] { ENTRY_DEBUG } :
+        template_declaration
+        template_param_list
 
-    template_declaration template_param_list (template_param (template_declaration_initialization)* (comma)*)* tempope { if (inMode(MODE_TEMPLATE)) endMode();}
+        (
+            template_param
+            (template_declaration_initialization)*
+            (comma)*
+        )*
+
+        tempope
+
+        { if (inMode(MODE_TEMPLATE))
+            endMode();
+        }
 ;
 
 // template initialization
