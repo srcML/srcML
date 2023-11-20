@@ -10094,10 +10094,20 @@ kr_parameter[int type_count] { ENTRY_DEBUG } :
         /* Commented-out code: complete_parameter terminate_pre terminate_token */
 ;
 
-// k& r C parameter type
-kr_parameter_type[int type_count] { ENTRY_DEBUG} :
+/*
+  kr_parameter_type
+
+  Handles a parameter type in K&R syntax (C).
+*/
+kr_parameter_type[int type_count] { ENTRY_DEBUG } :
         // suppress ()* warning
-        variable_declaration_statement[type_count] (options { greedy = true; } : { inMode(MODE_EAT_TYPE) }? type_identifier update_typecount[MODE_FUNCTION_NAME])* 
+        variable_declaration_statement[type_count]
+
+        (options { greedy = true; } :
+            { inMode(MODE_EAT_TYPE) }?
+            type_identifier
+            update_typecount[MODE_FUNCTION_NAME]
+        )*
 ;
 
 // k& r C parameter name
