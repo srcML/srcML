@@ -10490,7 +10490,11 @@ template_declaration[] { ENTRY_DEBUG } :
         }
 ;
 
-// start parameter list for templates
+/*
+  template_param_list
+
+  Starts a parameter list for templates.
+*/
 template_param_list[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_PARAMETER | MODE_LIST);
@@ -10498,6 +10502,7 @@ template_param_list[] { ENTRY_DEBUG } :
             // start the template parameter list
             startElement(STEMPLATE_PARAMETER_LIST);
         }
+
         tempops
 ;
 
