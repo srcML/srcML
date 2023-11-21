@@ -10978,14 +10978,19 @@ template_argument_expression[] { ENTRY_DEBUG } :
         rparen_operator[true]
 ;
 
-// All possible operators
+/*
+  template_operators
+
+  Handles all possible template operators.
+*/
 template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
+
         (
-        OPERATORS | TRETURN | TEMPOPS | EQUAL | MULTOPS | REFOPS | DOTDOT | RVALUEREF |
-        QMARK | NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
+            OPERATORS | TRETURN | TEMPOPS | EQUAL | MULTOPS | REFOPS | DOTDOT | RVALUEREF |
+            QMARK | NEW | DELETE | IN | IS | STACKALLOC | AS | AWAIT | LAMBDA
         )
 ;
 
