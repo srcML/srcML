@@ -11117,9 +11117,15 @@ typedef_statement[] { ENTRY_DEBUG } :
         TYPEDEF
 ;
 
-// matching set of parenthesis
+/*
+  paren_pair
+
+  Used to match a set of parentheses.
+*/
 paren_pair[] { ENTRY_DEBUG } :
-        LPAREN (paren_pair | qmark | ~(QMARK | LPAREN | RPAREN))* RPAREN
+        LPAREN
+        (paren_pair | qmark | ~(QMARK | LPAREN | RPAREN))*
+        RPAREN
 ;
 
 // matching set of curly braces
