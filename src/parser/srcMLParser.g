@@ -11019,13 +11019,16 @@ template_extends_java[] { CompleteElement element(this); bool is_compound = fals
         compound_name_java[is_compound]
 ;
 
-// template super 
+/*
+  template_super_java
+*/
 template_super_java[] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SDERIVATION);
         }
+
         SUPER
         compound_name_java[is_compound]
 ;
