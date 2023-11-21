@@ -11374,7 +11374,11 @@ enum_block[] { ENTRY_DEBUG } :
         }
 ;
 
-// processing for short variable declaration
+/*
+  enum_short_variable_declaration
+
+  Handles processing for a short enum variable declaration.
+*/
 enum_short_variable_declaration[] { ENTRY_DEBUG } :
         {
             // variable declarations may be in a list
@@ -11386,6 +11390,7 @@ enum_short_variable_declaration[] { ENTRY_DEBUG } :
             // start the declaration
             startElement(SDECLARATION);
         }
+
         variable_declaration_nameinit
 ;
 
