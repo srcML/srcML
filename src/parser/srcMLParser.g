@@ -11610,11 +11610,22 @@ cpp_garbage[] :
         ~(EOL | LINE_COMMENT_START | BLOCK_COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START)
 ;
 
-cpp_check_end[] returns[bool is_end = false] {
-
- if (LA(1) == EOL || LA(1) == LINE_COMMENT_START || LA(1) == BLOCK_COMMENT_START || LA(1) == JAVADOC_COMMENT_START || LA(1) == DOXYGEN_COMMENT_START || LA(1) == LINE_DOXYGEN_COMMENT_START || LA(1) == EOF || LA(1) == 1)  /* EOF */
-     return true;
-}:;
+/*
+  cpp_check_end
+*/
+cpp_check_end[] returns [bool is_end = false] {
+        if (LA(1) == EOL
+            || LA(1) == LINE_COMMENT_START
+            || LA(1) == BLOCK_COMMENT_START
+            || LA(1) == JAVADOC_COMMENT_START
+            || LA(1) == DOXYGEN_COMMENT_START
+            || LA(1) == LINE_DOXYGEN_COMMENT_START
+            || LA(1) == EOF
+            || LA(1) == 1) /* EOF */
+        {
+            return true;
+        }
+} :;
 
 // skip to eol
 eol_skip[int directive_token, bool markblockzero] {
