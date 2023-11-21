@@ -11150,31 +11150,34 @@ bracket_pair[] { ENTRY_DEBUG } :
         RBRACKET
 ;
 
-// See if there is a semicolon terminating a statement inside a block at the top level
+/*
+  nested_terminate
+
+  Used to see if there is a semicolon terminating a statement inside of a block at the top level.
+*/
 nested_terminate[] {
+        int parencount = 0;
+        int bracecount = 0;
 
-    int parencount = 0;
-    int bracecount = 0;
-    while (LA(1) != antlr::Token::EOF_TYPE) {
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == RPAREN)
+                --parencount;
+            else if (LA(1) == LPAREN)
+                ++parencount;
 
-        if (LA(1) == RPAREN)
-            --parencount;
-        else if (LA(1) == LPAREN)
-            ++parencount;
+            if (LA(1) == RCURLY)
+                --bracecount;
+            else if (LA(1) == LCURLY)
+                ++bracecount;
 
-        if (LA(1) == RCURLY)
-            --bracecount;
-        else if (LA(1) == LCURLY)
-            ++bracecount;
+            if (bracecount < 0)
+                break;
 
-        if (bracecount < 0)
-            break;
+            if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0)
+                break;
 
-        if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0)
-            break;
-
-        consume();
-    }
+            consume();
+        }
 } :
         TERMINATE
 ;
