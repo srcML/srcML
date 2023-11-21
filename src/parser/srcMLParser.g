@@ -10854,16 +10854,23 @@ new_name[] { LightweightElement element(this); ENTRY_DEBUG } :
         NEW
 ;
 
+/*
+  protocol_list
+*/
 protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
+        {
+            // local mode
+            startNewMode(MODE_LOCAL | MODE_LIST);
 
-        // local mode
-        startNewMode(MODE_LOCAL | MODE_LIST);
+            startElement(SPROTOCOL_LIST);
+        }
 
-        startElement(SPROTOCOL_LIST);
+        TEMPOPS
 
-    }
-    TEMPOPS identifier (COMMA identifier)* TEMPOPE
+        identifier
+        (COMMA identifier)*
+
+        TEMPOPE
 ;
 
 category[] { CompleteElement element(this); ENTRY_DEBUG } :
