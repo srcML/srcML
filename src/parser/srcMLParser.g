@@ -12244,19 +12244,26 @@ omp_clause[] { CompleteElement element(this); ENTRY_DEBUG } :
         omp_argument_list
 ;
 
-omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
-    {
-        startNewMode(MODE_LOCAL);
+/*
+  omp_argument_list
+*/
+omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SOMP_ARGUMENT_LIST);
-    }
+            startElement(SOMP_ARGUMENT_LIST);
+        }
 
-    (
+        (
+            { next_token() != RPAREN }?
+            LPAREN
+            omp_argument
+            (COMMA omp_argument)*
+            RPAREN |
 
-    { next_token() != RPAREN }? LPAREN omp_argument (COMMA omp_argument)* RPAREN |
-    LPAREN RPAREN
-
-    )
+            LPAREN
+            RPAREN
+        )
 ;
 
 omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
