@@ -10954,14 +10954,28 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
         )+
 ;
 
-// template argument expression
+/*
+  template_argument_expression
+*/
 template_argument_expression[] { ENTRY_DEBUG } :
-
         lparen_marked
-        
-        // qmark matches before template argument expression is fine
-        ({ LA(1) != RPAREN }? (options { generateAmbigWarnings = false; } : general_operators | qmark | (variable_identifier)=>variable_identifier | literals | type_identifier | template_argument_expression | COMMA))*
-       rparen_operator[true]
+
+        // qmark matches before template argument expression, which is fine
+        (
+            { LA(1) != RPAREN }?
+            (
+                options { generateAmbigWarnings = false; } :
+                    general_operators
+                    | qmark
+                    | (variable_identifier) => variable_identifier
+                    | literals
+                    | type_identifier
+                    | template_argument_expression
+                    | COMMA
+            )
+        )*
+
+        rparen_operator[true]
 ;
 
 // All possible operators
