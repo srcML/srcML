@@ -11048,13 +11048,19 @@ tempops[] { ENTRY_DEBUG } :
         TEMPOPS
 ;
 
-// end of template parameter list
+/*
+  tempope
+
+  Handles the end of a template parameter list.
+*/
 tempope[] { ENTRY_DEBUG } :
         {
             // end down to the mode created by the start template operator
             endDownToMode(MODE_LIST);
         }
+
         TEMPOPE
+
         {
             // end the mode created by the start template operator
             while (inMode(MODE_LIST))
