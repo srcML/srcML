@@ -11326,28 +11326,37 @@ enum_csharp_declaration[] { ENTRY_DEBUG } :
         )*
 ;
 
-// Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
-// enum must be parsed since it is part of the type.
+/*
+  enum_definition_complete
+
+  Used for enum's embedded in typedef's where the entire enum must be parsed since it is part of the type.
+*/
 enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
         enum_definition
 
         (variable_identifier)*
 
-        // start of enum definition block
+        // start of the enum definition block
         {
             startNewMode(MODE_TOP | MODE_LIST | MODE_DECL | MODE_EXPECT | MODE_BLOCK | MODE_NEST);
 
             startElement(SBLOCK);
         }
+
         LCURLY
 
-        (options { greedy = true; } : { LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
-        expression | comma)*
+        (options { greedy = true; } :
+            { LA(1) != RCURLY || inTransparentMode(MODE_INTERNAL_END_CURLY) }?
+            expression |
 
-        // end of enum definition block
+            comma
+        )*
+
+        // end of the enum definition block
         {
             endDownToMode(MODE_TOP);
         }
+
         RCURLY
 ;
 
