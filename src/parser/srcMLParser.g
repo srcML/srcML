@@ -10720,31 +10720,30 @@ generic_parameter_list[] { CompleteElement element(this); decltype(namestack) na
         restorenamestack[namestack_save]
 ;
 
-// generic parameter
+/*
+  generic_parameter
+*/
 generic_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-
             // local mode
             startNewMode(MODE_LOCAL);
 
             startElement(STEMPLATE_PARAMETER);
-
         }
+
         (options { greedy = true; } :
-        { LA(1) != SUPER && LA(1) != QMARK }?
-
-        (options { generateAmbigWarnings = false; } : generic_specifiers_csharp)*
-        ((options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
-
-        (type_identifier | literals)
-            (options { generateAmbigWarnings = false; } : template_operators)*
+            { LA(1) != SUPER && LA(1) != QMARK }?
+            (options { generateAmbigWarnings = false; } : generic_specifiers_csharp)*
+            (
+                (options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
+                (type_identifier | literals)
+                (options { generateAmbigWarnings = false; } : template_operators)*
             ) |
 
             template_extends_java |
 
-            template_super_java | qmark_name |
-            template_argument_expression
-        )+ 
+            template_super_java | qmark_name | template_argument_expression
+        )+
 ;
 
 // CUDA argument list
