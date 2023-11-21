@@ -11650,38 +11650,33 @@ eol_skip[int directive_token, bool markblockzero] {
 ;
 
 /*
-  end of line
+  eol
 
-  Only used for ending preprocessor, and only those directives who end on the current
-  line.
+  Only used for ending a preprocessor, and only those directives that end on the current line.
 */
 eol[int directive_token, bool markblockzero] {
+        // end all preprocessor modes
+        endWhileMode(MODE_PREPROC);
 
-            // end all preprocessor modes
-            endWhileMode(MODE_PREPROC);
+        endMode(MODE_PARSE_EOL);
 
-            endMode(MODE_PARSE_EOL);
-ENTRY_DEBUG } :
-
+        ENTRY_DEBUG
+} :
         {
             if (directive_token == ENDIF) {
-
                 bool end_statement = inMode(MODE_END_AT_ENDIF);
-                while(inMode(MODE_END_AT_ENDIF))
+
+                while (inMode(MODE_END_AT_ENDIF))
                     endMode();
 
                 if (end_statement)
                     else_handling();
-
-
             }
 
             if (LA(1) == 1) {
-
                 eol_post(directive_token, markblockzero);
                 return;
             }
-
         }
 
         (EOL | LINE_COMMENT_START | BLOCK_COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START | eof)
