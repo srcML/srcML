@@ -133,7 +133,8 @@ header "post_include_hpp" {
 
 using namespace ::std::literals::string_view_literals;
 
-//#define DEBUG_PARSER
+// Commented-out code
+// #define DEBUG_PARSER
 
 // Macros to introduce trace statements
 #ifdef DEBUG_PARSER
@@ -832,8 +833,8 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         // process template operator correctly @test template
         { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope |
 
+        // special default() call for C#
         // Commented-out code
-        // // special default() call for C#
         // { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
 
         // statements that clearly start with a keyword
@@ -2068,7 +2069,8 @@ property_implementation_initialization[] { CompleteElement element(this); ENTRY_
         {
             startNewMode(MODE_LOCAL);
 
-            //startElement(SDECLARATION_INITIALIZATION);
+            // Commented-out code
+            // startElement(SDECLARATION_INITIALIZATION);
         }
         EQUAL
         identifier
@@ -4928,7 +4930,9 @@ pattern_check_core[ int& token,           /* second token, after name (always re
                     LBRACKET
                     LBRACKET
 
-                    //complete_expression
+                    // Commented-out code
+                    // complete_expression
+
                     (~(RBRACKET))*
 
                     RBRACKET
@@ -7507,9 +7511,15 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
                 {
                     if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                         general_operators();
-                }
+                } |
+                
+                qmark |
+                period |
+                member_pointer |
+                member_pointer_dereference |
+                dot_dereference |
 
-                | qmark | /* newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
+                /* Commented-out code: newop | */
 
                 // left parentheses
                 { function_pointer_name_check() }?
