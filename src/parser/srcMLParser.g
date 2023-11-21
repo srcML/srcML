@@ -11395,17 +11395,18 @@ enum_short_variable_declaration[] { ENTRY_DEBUG } :
 ;
 
 /*
-  end of file
+  eof
 
-  Reached the end of the input.  Must now make sure to end any open elements.  Open elements indicate
-  either syntax error in the code, or a translation error.
+  Reached the end of the input.  Need to make sure to end any open elements.
+  Open elements indicate either a syntax error in the code, or a translation error.
 
-  EOF marks the end of all processing, so it must occur after any ending modes
+  EOF marks the end of all processing, so it must occur after any ending modes.
 */
 eof[] { ENTRY_DEBUG } :
         {
             endAllModes();
         }
+
         EOF
 ;
 
