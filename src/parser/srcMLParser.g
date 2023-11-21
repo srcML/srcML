@@ -10781,15 +10781,21 @@ cuda_start[] { ENTRY_DEBUG } :
         CUDA
 ;
 
-// end of cuda argument list
+/*
+  cuda_end
+
+  Handles the end of a CUDA argument list.
+*/
 cuda_end[] { ENTRY_DEBUG } :
         {
-            // end down to the mode created by the start cuda argument list operator
+            // end down to the mode created by the cuda_start argument list operator
             endDownToMode(MODE_LIST);
         }
+
         TEMPOPE TEMPOPE TEMPOPE
+
         {
-            // end the mode created by the start cuda argument list operator
+            // end the mode created by the cuda_start argument list operator
             while (inMode(MODE_LIST))
                 endMode(MODE_LIST);
         }
