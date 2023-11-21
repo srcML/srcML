@@ -12144,7 +12144,11 @@ cpp_define_value[] { ENTRY_DEBUG } :
         (options { greedy = true; } : cpp_garbage)*
 ;
 
-// optional symbol cpp 
+/*
+  cpp_symbol_optional
+
+  Handles an optional symbol in C++.
+*/
 cpp_symbol_optional[] { ENTRY_DEBUG } :
         (options { greedy = true; } : cpp_symbol)*
 ;
