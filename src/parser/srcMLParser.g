@@ -10994,11 +10994,15 @@ template_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         )
 ;
 
+/*
+  generic_specifiers_csharp
+*/
 generic_specifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
-    {
-        startElement(SFUNCTION_SPECIFIER);
-    }
-    (IN | OUT)
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        (IN | OUT)
 ;
 
 // template extends
