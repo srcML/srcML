@@ -11979,22 +11979,23 @@ cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG 
         cpp_complete_expression
 ;
 
-// an expression
-cpp_expression[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
+/*
+  cpp_expression
 
+  Handles an expression in C++.
+*/
+cpp_expression[CALL_TYPE type = NOCALL] { ENTRY_DEBUG } :
         { !inputState->guessing }?
-        (expression_process
-            expression_part_plus_linq[type]
-        ) | cpp_garbage
+        (expression_process expression_part_plus_linq[type]) |
+
+        cpp_garbage
 ;
 exception
 catch[...] {
-
         startNewMode(MODE_LOCAL);
         startElement(SNAME);
         consume();
         endMode();
-
 }
 
 // match a complete expression no stream
