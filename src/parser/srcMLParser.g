@@ -11033,14 +11033,18 @@ template_super_java[] { CompleteElement element(this); bool is_compound = false;
         compound_name_java[is_compound]
 ;
 
-// beginning of template parameter list
+/*
+  tempops
+
+  Handles the beginning of a template parameter list.
+*/
 tempops[] { ENTRY_DEBUG } :
         {
-            // make sure we are in a list mode so that we can end correctly
-            // some uses of tempope will have their own mode
+            // ensure we are in a list mode so that we can end correctly; some uses of tempope will have their own mode
             if (!inMode(MODE_LIST))
                 startNewMode(MODE_LIST);
         }
+
         TEMPOPS
 ;
 
