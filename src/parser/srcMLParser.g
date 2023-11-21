@@ -11005,13 +11005,16 @@ generic_specifiers_csharp[] { LightweightElement element(this); ENTRY_DEBUG } :
         (IN | OUT)
 ;
 
-// template extends
+/*
+  template_extends_java
+*/
 template_extends_java[] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SEXTENDS);
         }
+
         EXTENDS
         compound_name_java[is_compound]
 ;
