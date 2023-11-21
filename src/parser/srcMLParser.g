@@ -12266,13 +12266,17 @@ omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-omp_argument[] { CompleteElement element(this); ENTRY_DEBUG} :
-    {
-        startNewMode(MODE_LOCAL);
+/*
+  omp_argument
+*/
+omp_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SOMP_ARGUMENT);
-        startElement(SOMP_EXPRESSION);
-    }
+            startElement(SOMP_ARGUMENT);
 
-    (~(RPAREN | COMMA))*
+            startElement(SOMP_EXPRESSION);
+        }
+
+        (~(RPAREN | COMMA))*
 ;
