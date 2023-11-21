@@ -11084,7 +11084,9 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
         COLON
 ;
 
-// a label
+/*
+  macro_label_statement
+*/
 macro_label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement
@@ -11093,7 +11095,9 @@ macro_label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        macro_label_call COLON
+
+        macro_label_call
+        COLON
 ;
 
 // typedef
