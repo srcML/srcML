@@ -12184,11 +12184,16 @@ cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG }
         )*
 ;
 
-// literal in cpp
+/*
+  cpp_literal
+
+  Handles a literal in C++.
+*/
 cpp_literal[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCPP_LITERAL);
         }
+
         (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
