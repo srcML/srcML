@@ -11933,10 +11933,14 @@ eol_post[int directive_token, bool markblockzero] {
         ENTRY_DEBUG
 } :;
 
-// remove any finished or unneeded cppmodes
-cppmode_cleanup[] {
+/*
+  cppmode_cleanup
 
+  Used to remove any finished or unneeded cppmodes.
+*/
+cppmode_cleanup[] {
         bool equal = true;
+
         for (auto& state : cppmode.top().statesize) {
             if (state != cppmode.top().statesize[0]) {
                 equal = false;
@@ -11947,7 +11951,7 @@ cppmode_cleanup[] {
         if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2))
             cppmode.pop();
 
-        ENTRY_DEBUG 
+        ENTRY_DEBUG
 } :;
 
 // line continuation character
