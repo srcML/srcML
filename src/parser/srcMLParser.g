@@ -11182,8 +11182,10 @@ nested_terminate[] {
         TERMINATE
 ;
 
-enum_preprocessing[bool decl] { ENTRY_DEBUG} :
-
+/*
+  enum_preprocessing
+*/
+enum_preprocessing[bool decl] { ENTRY_DEBUG } :
         {
             bool intypedef = inMode(MODE_TYPEDEF);
 
@@ -11192,27 +11194,23 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
 
             // statement
             auto mode = MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_ENUM | MODE_DECL;
+
             if (inLanguage(LANGUAGE_CSHARP))
                 mode |= MODE_END_AT_BLOCK_NO_TERMINATE;
+
             startNewMode(mode);
 
             // start the enum definition
             if (inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
-
                 if (decl)
                     startElement(SENUM_CLASS_DECLARATION);
                 else
                     startElement(SENUM_CLASS);
-
             } else if (decl) {
-
                 startElement(SENUM_DECLARATION);
-
             } else {
-
-                 startElement(SENUM);
-
-             }
+                startElement(SENUM);
+            }
 
             // classes end at the end of the block
             if (intypedef) {
@@ -11220,7 +11218,6 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG} :
             }
         }
 ;
-
 
 // definition of an enum
 enum_definition[] { ENTRY_DEBUG } :
