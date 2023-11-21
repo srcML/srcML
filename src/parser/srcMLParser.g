@@ -10746,7 +10746,9 @@ generic_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         )+
 ;
 
-// CUDA argument list
+/*
+  cuda_argument_list
+*/
 cuda_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save; ENTRY_DEBUG } :
         {
             // local mode
@@ -10754,9 +10756,12 @@ cuda_argument_list[] { CompleteElement element(this); decltype(namestack) namest
 
             startElement(SCUDA_ARGUMENT_LIST);
         }
+
         savenamestack[namestack_save]
 
-        cuda_start (options { generateAmbigWarnings = false; } : COMMA | template_argument)* cuda_end
+        cuda_start
+        (options { generateAmbigWarnings = false; } : COMMA | template_argument)*
+        cuda_end
 
         restorenamestack[namestack_save]
 ;
