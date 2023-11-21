@@ -12153,11 +12153,16 @@ cpp_symbol_optional[] { ENTRY_DEBUG } :
         (options { greedy = true; } : cpp_symbol)*
 ;
 
-// filename cpp
+/*
+  cpp_filename
+
+  Handles a filename in C++.
+*/
 cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SCPP_FILENAME);
         }
+
         (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
