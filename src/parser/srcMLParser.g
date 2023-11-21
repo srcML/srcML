@@ -10801,7 +10801,9 @@ cuda_end[] { ENTRY_DEBUG } :
         }
 ;
 
-// generic type constraint
+/*
+  generic_type_constraint
+*/
 generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode
@@ -10809,7 +10811,13 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SWHERE);
         }
-        WHERE compound_name_inner[false] COLON type_constraint (options { greedy = true; } : COMMA type_constraint)*
+
+        WHERE
+        compound_name_inner[false]
+        COLON
+
+        type_constraint
+        (options { greedy = true; } : COMMA type_constraint)*
 ;
 
 type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
