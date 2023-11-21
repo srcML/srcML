@@ -11128,9 +11128,15 @@ paren_pair[] { ENTRY_DEBUG } :
         RPAREN
 ;
 
-// matching set of curly braces
+/*
+  curly_pair
+
+  Used to match a set of curly braces.
+*/
 curly_pair[] { ENTRY_DEBUG } :
-        LCURLY (curly_pair | qmark | ~(QMARK | LCURLY | RCURLY))* RCURLY
+        LCURLY
+        (curly_pair | qmark | ~(QMARK | LCURLY | RCURLY))*
+        RCURLY
 ;
 
 // matching set of brackets
