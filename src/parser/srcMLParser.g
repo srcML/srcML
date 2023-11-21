@@ -11627,21 +11627,26 @@ cpp_check_end[] returns [bool is_end = false] {
         }
 } :;
 
-// skip to eol
+/*
+  eol_skip
+
+  Used to skip to the EOL.
+*/
 eol_skip[int directive_token, bool markblockzero] {
+        while (LA(1) != EOL
+            && LA(1) != LINE_COMMENT_START
+            && LA(1) != BLOCK_COMMENT_START
+            && LA(1) != JAVADOC_COMMENT_START
+            && LA(1) != DOXYGEN_COMMENT_START
+            && LA(1) != LINE_DOXYGEN_COMMENT_START
+            && LA(1) != 1 /* EOF? */)
+        {
+            consume();
+        }
 
-    while (LA(1) != EOL &&
-           LA(1) != LINE_COMMENT_START &&
-           LA(1) != BLOCK_COMMENT_START &&
-           LA(1) != JAVADOC_COMMENT_START &&
-           LA(1) != DOXYGEN_COMMENT_START &&
-           LA(1) != LINE_DOXYGEN_COMMENT_START &&
-           LA(1) != 1 /* EOF? */
-        )
-         consume();
-
-    ENTRY_DEBUG } :
-    eol[directive_token, markblockzero]
+        ENTRY_DEBUG
+} :
+        eol[directive_token, markblockzero]
 ;
 
 /*
