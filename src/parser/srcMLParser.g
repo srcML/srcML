@@ -12132,11 +12132,16 @@ cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
         parameter_type_count[type_count]
 ;
 
+/*
+  cpp_define_value
+*/
 cpp_define_value[] { ENTRY_DEBUG } :
         {
             startElement(SCPP_MACRO_VALUE);
         }
-        cpp_garbage (options { greedy = true; } : cpp_garbage)*
+
+        cpp_garbage
+        (options { greedy = true; } : cpp_garbage)*
 ;
 
 // optional symbol cpp 
