@@ -12219,13 +12219,16 @@ omp_directive[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 ;
 
+/*
+  omp_name
+*/
 omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOMP_NAME);
         }
+
         cpp_garbage
 ;
-
 
 omp_clause[] { CompleteElement element(this); ENTRY_DEBUG} :
     {
