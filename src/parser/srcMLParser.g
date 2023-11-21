@@ -11280,10 +11280,22 @@ enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         (options { generateAmbigWarnings = false; } : specifier | compound_name)*
 ;
 
-enum_csharp_definition[] { ENTRY_DEBUG } :
+/*
+  enum_csharp_definition
 
-    // may need to modifiy to work with enum_decl
-    enum_preprocessing[false] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
+  May need to be modified to work with ENUM_DECL.
+*/
+enum_csharp_definition[] { ENTRY_DEBUG } :
+        enum_preprocessing[false]
+        class_preamble
+        ENUM
+
+        (options { greedy = true; } : variable_identifier)*
+
+        (
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            (options { greedy = true; } : derived_list)
+        )*
 ;
 
 enum_csharp_declaration[] { ENTRY_DEBUG } :
