@@ -11219,14 +11219,20 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG } :
         }
 ;
 
-// definition of an enum
+/*
+  enum_definition
+*/
 enum_definition[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         enum_class_definition |
 
         { inLanguage(LANGUAGE_CSHARP) }?
         enum_csharp_definition |
-        enum_preprocessing[false] (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
+
+        enum_preprocessing[false]
+        (options { greedy = true; } : specifier)*
+        ENUM
+        (options { greedy = true; } : enum_class_header)*
 ;
 
 // declaration of an enum
