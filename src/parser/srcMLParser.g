@@ -12197,14 +12197,26 @@ cpp_literal[] { SingleElement element(this); ENTRY_DEBUG } :
         (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
-omp_directive[] { CompleteElement element(this); ENTRY_DEBUG} :
-    {
-        startNewMode(MODE_LOCAL);
+/*
+  omp_directive
+*/
+omp_directive[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SOMP_DIRECTIVE);
-    }
+            startElement(SOMP_DIRECTIVE);
+        }
 
-    OMP_OMP (options { generateAmbigWarnings = false; } : COMMA | { next_token() == LPAREN }? omp_clause | omp_name)*
+        OMP_OMP
+
+        (options { generateAmbigWarnings = false; } :
+            COMMA |
+
+            { next_token() == LPAREN }?
+            omp_clause |
+
+            omp_name
+        )*
 ;
 
 omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
