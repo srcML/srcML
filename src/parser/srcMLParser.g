@@ -11702,66 +11702,80 @@ cppendif_skip[] {
         }
 } :;
 
+/*
+  cppif_end_count_check
+*/
 cppif_end_count_check[] returns [std::list<int> end_order] {
+        int start = mark();
+        std::list<int> op_stack;
+        ++inputState->guessing;
 
-    int start = mark();
-    std::list<int> op_stack;
-    ++inputState->guessing;
+        std::list<int>::size_type save_size = 0;
 
-    std::list<int>::size_type save_size = 0;
+        int prev = -1;
 
-    int prev = -1;
-    while(LA(1) != ENDIF && !(prev == PREPROC && LA(1) == ELSE) && LA(1) != 1 /* EOF */) {
+        while (LA(1) != ENDIF
+            && !(prev == PREPROC && LA(1) == ELSE)
+            && LA(1) != 1 /* EOF */)
+        {
+            if ((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
+                cppendif_skip();
+                continue;
+            }
 
-        if ((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
-            cppendif_skip();
-            continue;
+            if (LA(1) == ELIF)
+                save_size = end_order.size();
+
+            if (LA(1) == LPAREN)
+                op_stack.push_back(LPAREN);
+
+            if (LA(1) == RPAREN) {
+                if (!op_stack.empty() && op_stack.back() == LPAREN)
+                    op_stack.pop_back();
+                else
+                    end_order.push_back(RPAREN);
+            }
+
+            if (LA(1) == LCURLY)
+                op_stack.push_back(LCURLY);
+
+            if (LA(1) == RCURLY) {
+                if (!op_stack.empty() && op_stack.back() == LCURLY)
+                    op_stack.pop_back();
+                else
+                    end_order.push_back(RCURLY);
+            }
+
+            if (LA(1) == TERMINATE
+                && !wait_terminate_post
+                && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)
+                    || inMode(MODE_END_CONTROL)))
+            {
+                end_order.push_back(TERMINATE);
+            }
+
+            prev = LA(1);
+            consume();
         }
 
-        if (LA(1) == ELIF) save_size = end_order.size();
-
-        if (LA(1) == LPAREN) op_stack.push_back(LPAREN);
-        if (LA(1) == RPAREN) {
-            if (!op_stack.empty() && op_stack.back() == LPAREN) op_stack.pop_back();
-            else end_order.push_back(RPAREN);
+        if (LA(1) == 1 /* EOF */) {
+            end_order.clear();
         }
 
-        if (LA(1) == LCURLY) op_stack.push_back(LCURLY);
-        if (LA(1) == RCURLY) {
-            if (!op_stack.empty() && op_stack.back() == LCURLY) op_stack.pop_back();
-            else end_order.push_back(RCURLY);
+        if (LA(1) == ENDIF)
+            end_order.resize(save_size);
+
+        while (!op_stack.empty() && !end_order.empty()) {
+            op_stack.pop_front();
+            end_order.pop_front();
         }
 
-        if (LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_CONTROL))) {
-            end_order.push_back(TERMINATE);
+        --inputState->guessing;
 
-        }
+        rewind(start);
 
-        prev = LA(1);
-        consume();
-
-    }
-
-    if (LA(1) == 1 /* EOF */) {
-
-        end_order.clear();
-
-    }
-
-    if (LA(1) == ENDIF) end_order.resize(save_size);
-
-    while(!op_stack.empty() && !end_order.empty()) {
-
-        op_stack.pop_front();
-        end_order.pop_front();
-
-    }
-
-    --inputState->guessing;
-
-    rewind(start);
-
-ENTRY_DEBUG } :;
+        ENTRY_DEBUG
+} :;
 
 // post processing for eol
 eol_post[int directive_token, bool markblockzero] {
