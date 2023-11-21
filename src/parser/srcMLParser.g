@@ -11683,24 +11683,24 @@ eol[int directive_token, bool markblockzero] {
         eol_post[directive_token, markblockzero]
 ;
 
+/*
+  cppendif_skip
+*/
 cppendif_skip[] {
+        int prev = -1;
+        int endif_count = 1;
 
-    int prev = -1;
-    int endif_count = 1;
+        while (endif_count && LA(1) != 1 /* EOF */) {
+            if ((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF)
+                ++endif_count;
 
-    while(endif_count && LA(1) != 1 /* EOF */) {
+            if (LA(1) == ENDIF)
+                --endif_count;
 
-        if ((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF)
-            ++endif_count;
-
-        if (LA(1) == ENDIF)
-            --endif_count;
-
-        prev = LA(1);
-        consume();
-    }
-
-}:;
+            prev = LA(1);
+            consume();
+        }
+} :;
 
 cppif_end_count_check[] returns [std::list<int> end_order] {
 
