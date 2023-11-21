@@ -11251,13 +11251,22 @@ enum_declaration[] { ENTRY_DEBUG } :
         (options { greedy = true; } : enum_class_header)*
 ;
 
-// header for enum class
+/*
+  enum_class_header
+*/
 enum_class_header[] {} :
-        (CLASS | CXX_CLASS | STRUCT | UNION)* 
-        ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-        variable_identifier (COLON enum_type)* (options { greedy = true; } : COMMA variable_identifier (COLON enum_type)*)*
+        (CLASS | CXX_CLASS | STRUCT | UNION)*
+        ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
 
-    ;
+        variable_identifier
+        (COLON enum_type)*
+
+        (options { greedy = true; } :
+            COMMA
+            variable_identifier
+            (COLON enum_type)*
+        )*
+;
 
 // type portion of enum
 enum_type { LightweightElement element(this); ENTRY_DEBUG } :
