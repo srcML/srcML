@@ -11268,14 +11268,17 @@ enum_class_header[] {} :
         )*
 ;
 
-// type portion of enum
+/*
+  enum_type
+*/
 enum_type { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(STYPE);
         }
-        // suppress warning compound_name seems to have some tokens in common with specifier.
+
+        // suppress warning that compound_name seems to have some tokens in common with specifier
         (options { generateAmbigWarnings = false; } : specifier | compound_name)*
-    ;
+;
 
 enum_csharp_definition[] { ENTRY_DEBUG } :
 
