@@ -11068,7 +11068,9 @@ tempope[] { ENTRY_DEBUG } :
         }
 ;
 
-// a label
+/*
+  label_statement
+*/
 label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // statement
@@ -11077,7 +11079,9 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the label element
             startElement(SLABEL_STATEMENT);
         }
-        (identifier | keyword_identifier) COLON
+
+        (identifier | keyword_identifier)
+        COLON
 ;
 
 // a label
