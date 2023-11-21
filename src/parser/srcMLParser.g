@@ -10873,16 +10873,20 @@ protocol_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         TEMPOPE
 ;
 
+/*
+  category
+*/
 category[] { CompleteElement element(this); ENTRY_DEBUG } :
-    {
+        {
+            // local mode
+            startNewMode(MODE_LOCAL);
 
-        // local mode
-        startNewMode(MODE_LOCAL);
+            startElement(SCATEGORY);
+        }
 
-        startElement(SCATEGORY);
-
-    }
-    LPAREN (identifier)* RPAREN
+        LPAREN
+        (identifier)*
+        RPAREN
 ;
 
 // save the namestack
