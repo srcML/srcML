@@ -11954,12 +11954,17 @@ cppmode_cleanup[] {
         ENTRY_DEBUG
 } :;
 
-// line continuation character
+/*
+  line_continuation
+
+  Handles a line continuation character.
+*/
 line_continuation[] { ENTRY_DEBUG } :
         {
             // end all preprocessor modes
             endWhileMode(MODE_PARSE_EOL);
         }
+
         EOL_BACKSLASH
 ;
 
