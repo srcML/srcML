@@ -11968,9 +11968,12 @@ line_continuation[] { ENTRY_DEBUG } :
         EOL_BACKSLASH
 ;
 
-// condition in cpp
-cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG } :
+/*
+  cpp_condition
 
+  Handles a condition in C++.
+*/
+cpp_condition[bool& markblockzero] { CompleteElement element(this); ENTRY_DEBUG } :
         set_bool[markblockzero, LA(1) == CONSTANTS && LT(1)->getText() == "0"sv]
 
         cpp_complete_expression
