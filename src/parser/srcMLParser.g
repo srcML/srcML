@@ -12117,6 +12117,9 @@ cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam =
         rparen[false]
 ;
 
+/*
+  cpp_define_parameter
+*/
 cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
         {
             // end parameter correctly
@@ -12125,9 +12128,9 @@ cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
             // start the parameter element
             startElement(SPARAMETER);
         }
+
         parameter_type_count[type_count]
 ;
-
 
 cpp_define_value[] { ENTRY_DEBUG } :
         {
