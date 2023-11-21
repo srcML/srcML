@@ -10820,6 +10820,9 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } : COMMA type_constraint)*
 ;
 
+/*
+  type_constraint
+*/
 type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode
