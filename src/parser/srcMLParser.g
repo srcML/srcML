@@ -12056,17 +12056,26 @@ cpp_symbol[] { ENTRY_DEBUG } :
         )
 ;
 
-cpp_define_name[] { CompleteElement element(this);
-    int line_pos = LT(1)->getLine();
-    auto pos = LT(1)->getColumn() + LT(1)->getText().size();
+/*
+  cpp_define_name
+*/
+cpp_define_name[] {
+        CompleteElement element(this);
+        int line_pos = LT(1)->getLine();
+        auto pos = LT(1)->getColumn() + LT(1)->getText().size();
 } :
-
         {
             startNewMode(MODE_LOCAL);
 
             startElement(SCPP_MACRO_DEFN);
         }
-        cpp_symbol (options { greedy = true; } : { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }? cpp_define_parameter_list)*
+
+        cpp_symbol
+
+        (options { greedy = true; } :
+            { line_pos == LT(1)->getLine() && pos == (unsigned)LT(1)->getColumn() }?
+            cpp_define_parameter_list
+        )*
 ;
 
 cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
