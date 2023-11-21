@@ -10909,8 +10909,15 @@ restorenamestack[decltype(namestack)& namestack_save] {
         ENTRY_DEBUG
 } :;
 
-// clear the namestack
-clearnamestack[] { namestack.fill(""); ENTRY_DEBUG } :;
+/*
+  clearnamestack
+
+  Used to clear the namestack.
+*/
+clearnamestack[] {
+        namestack.fill("");
+        ENTRY_DEBUG
+} :;
 
 // template argument
 template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :
