@@ -11998,30 +11998,38 @@ catch[...] {
         endMode();
 }
 
-// match a complete expression no stream
+/*
+  cpp_complete_expression
+
+  Used to match a complete expression (no stream) in C++.
+*/
 cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            // start a mode to end at right bracket with expressions inside
+            // start a mode to end at the right bracket with expressions inside
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
-        (options { greedy = true; } : { !cpp_check_end() }? 
 
-        (   
-        // commas as in a list
-        { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA)}?
-        comma |
+        (options { greedy = true; } :
+            { !cpp_check_end() }?
+            (
+                // commas in a list
+                { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA )}?
+                comma |
 
-        // right parentheses, unless we are in a pair of parentheses in an expression
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) }? rparen[false] |
+                // right parentheses, unless we are in a pair of parentheses in an expression
+                { !inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+                rparen[false] |
 
-        // argument mode (as part of call)
-        { inMode(MODE_ARGUMENT) }? argument |
+                // argument mode (as part of call)
+                { inMode(MODE_ARGUMENT) }?
+                argument |
 
-        // expression with right parentheses if a previous match is in one
-        { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }? cpp_expression |
+                // expression with right parentheses if a previous match is in one
+                { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+                cpp_expression |
 
-        COLON
-        )
+                COLON
+            )
         )*
 ;
 
