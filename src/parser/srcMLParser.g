@@ -12166,9 +12166,22 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
         (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
 ;
 
-// linenumber in cpp
+/*
+  cpp_linenumber
+
+  Handles a linenumber in C++.
+*/
 cpp_linenumber[] { SingleElement element(this); bool first = true; ENTRY_DEBUG } :
-        (options { greedy = true; } : { if (first) { startElement(SCPP_NUMBER); first = false; } } literal[false])*
+        (options { greedy = true; } :
+            {
+                if (first) {
+                    startElement(SCPP_NUMBER);
+                    first = false;
+                }
+            }
+
+            literal[false]
+        )*
 ;
 
 // literal in cpp
