@@ -12230,14 +12230,18 @@ omp_name[] { SingleElement element(this); ENTRY_DEBUG } :
         cpp_garbage
 ;
 
-omp_clause[] { CompleteElement element(this); ENTRY_DEBUG} :
-    {
-        startNewMode(MODE_LOCAL);
+/*
+  omp_clause
+*/
+omp_clause[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
 
-        startElement(SOMP_CLAUSE);
-    }
+            startElement(SOMP_CLAUSE);
+        }
 
-    omp_name omp_argument_list
+        omp_name
+        omp_argument_list
 ;
 
 omp_argument_list[] { CompleteElement element(this); ENTRY_DEBUG} :
