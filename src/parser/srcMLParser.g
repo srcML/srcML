@@ -10889,8 +10889,15 @@ category[] { CompleteElement element(this); ENTRY_DEBUG } :
         RPAREN
 ;
 
-// save the namestack
-savenamestack[decltype(namestack)& namestack_save] { namestack_save.swap(namestack); ENTRY_DEBUG } :;
+/*
+  savenamestack
+
+  Used to save the namestack.
+*/
+savenamestack[decltype(namestack)& namestack_save] {
+        namestack_save.swap(namestack);
+        ENTRY_DEBUG
+} :;
 
 // restore the namestack
 restorenamestack[decltype(namestack)& namestack_save] { namestack.swap(namestack_save); ENTRY_DEBUG } :;
