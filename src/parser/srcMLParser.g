@@ -11100,7 +11100,9 @@ macro_label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
         COLON
 ;
 
-// typedef
+/*
+  typedef_statement
+*/
 typedef_statement[] { ENTRY_DEBUG } :
         {
             // statement
@@ -11111,6 +11113,7 @@ typedef_statement[] { ENTRY_DEBUG } :
 
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
         }
+
         TYPEDEF
 ;
 
