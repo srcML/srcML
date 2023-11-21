@@ -10843,6 +10843,9 @@ new_constraint[] { ENTRY_DEBUG } :
         RPAREN
 ;
 
+/*
+  new_name
+*/
 new_name[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
