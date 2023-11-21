@@ -11298,11 +11298,32 @@ enum_csharp_definition[] { ENTRY_DEBUG } :
         )*
 ;
 
-enum_csharp_declaration[] { ENTRY_DEBUG } :
+/*
+  enum_csharp_declaration
 
-    // may need to modifiy to work with enum_decl
-    enum_preprocessing[true] class_preamble ENUM (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
-    (COMMA (options { greedy = true; } : variable_identifier)* ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*)*
+  May need to be modified to work with ENUM_DECL.
+*/
+enum_csharp_declaration[] { ENTRY_DEBUG } :
+        enum_preprocessing[true]
+        class_preamble
+        ENUM
+
+        (options { greedy = true; } : variable_identifier)*
+
+        (
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            (options { greedy = true; } : derived_list)
+        )*
+
+        (
+            COMMA
+            (options { greedy = true; } : variable_identifier)*
+
+            (
+                { inLanguage(LANGUAGE_CXX_FAMILY) }?
+                (options { greedy = true; } : derived_list)
+            )*
+        )*
 ;
 
 // Complete definition of an enum.  Used for enum's embedded in typedef's where the entire
