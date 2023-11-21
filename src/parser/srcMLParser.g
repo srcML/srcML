@@ -11139,9 +11139,15 @@ curly_pair[] { ENTRY_DEBUG } :
         RCURLY
 ;
 
-// matching set of brackets
+/*
+  bracket_pair
+
+  Used to match a set of brackets.
+*/
 bracket_pair[] { ENTRY_DEBUG } :
-        LBRACKET (bracket_pair | qmark | ~(QMARK | LBRACKET | RBRACKET))* RBRACKET
+        LBRACKET
+        (bracket_pair | qmark | ~(QMARK | LBRACKET | RBRACKET))*
+        RBRACKET
 ;
 
 // See if there is a semicolon terminating a statement inside a block at the top level
