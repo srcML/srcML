@@ -11360,9 +11360,14 @@ enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
         RCURLY
 ;
 
-// enum block beginning and setup
+/*
+  enum_block
+
+  Handles the beginning and setup of an enum block.
+*/
 enum_block[] { ENTRY_DEBUG } :
         lcurly_base[false]
+
         {
             // nesting blocks, not statement
             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
