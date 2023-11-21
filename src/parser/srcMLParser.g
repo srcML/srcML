@@ -11601,10 +11601,13 @@ catch[...] {
         eol_skip(directive_token, markblockzero);
 }
 
-// do all the cpp garbage
-cpp_garbage[] :
+/*
+  cpp_garbage
 
- ~(EOL | LINE_COMMENT_START | BLOCK_COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START) 
+  Handles all of the C++ garbage.
+*/
+cpp_garbage[] :
+        ~(EOL | LINE_COMMENT_START | BLOCK_COMMENT_START | JAVADOC_COMMENT_START | DOXYGEN_COMMENT_START | LINE_DOXYGEN_COMMENT_START)
 ;
 
 cpp_check_end[] returns[bool is_end = false] {
