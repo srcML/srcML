@@ -12033,27 +12033,27 @@ cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 ;
 
-// symbol in cpp
+/*
+  cpp_symbol
+
+  Handles a symbol in C++.
+*/
 cpp_symbol[] { ENTRY_DEBUG } :
         (options { generateAmbigWarnings = false; } :
-            
-            simple_identifier | 
+            simple_identifier |
 
-        {
+            {
+                startNewMode(MODE_LOCAL);
 
-            startNewMode(MODE_LOCAL);
-            startElement(SNAME);
+                startElement(SNAME);
+            }
 
-        }
+            cpp_garbage
 
-        cpp_garbage
-
-        {
-
-        endMode();
-
-        }
-    )
+            {
+                endMode();
+            }
+        )
 ;
 
 cpp_define_name[] { CompleteElement element(this);
