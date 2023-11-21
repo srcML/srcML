@@ -11235,14 +11235,20 @@ enum_definition[] { ENTRY_DEBUG } :
         (options { greedy = true; } : enum_class_header)*
 ;
 
-// declaration of an enum
+/*
+  enum_declaration
+*/
 enum_declaration[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
         enum_class_declaration |
 
         { inLanguage(LANGUAGE_CSHARP) }?
         enum_csharp_declaration |
-        enum_preprocessing[true] (options { greedy = true; } : specifier)* ENUM (options { greedy = true; } : enum_class_header)*
+
+        enum_preprocessing[true]
+        (options { greedy = true; } : specifier)*
+        ENUM
+        (options { greedy = true; } : enum_class_header)*
 ;
 
 // header for enum class
