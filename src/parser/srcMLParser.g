@@ -10834,11 +10834,14 @@ type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         (compound_name_inner[false] | CLASS | CXX_CLASS | STRUCT | new_constraint)
 ;
 
+/*
+  new_constraint
+*/
 new_constraint[] { ENTRY_DEBUG } :
-
-    new_name LPAREN RPAREN
+        new_name
+        LPAREN
+        RPAREN
 ;
-
 
 new_name[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
