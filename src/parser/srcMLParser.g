@@ -11411,11 +11411,12 @@ eof[] { ENTRY_DEBUG } :
 ;
 
 /*
-    Preprocessor
+  preprocessor
 
-    Match on the directive itself not the entire directive
+  Used to match on the directive itself (not the entire directive).
 */
-preprocessor[] { ENTRY_DEBUG
+preprocessor[] {
+        ENTRY_DEBUG
 
         int directive_token = 0;
         bool markblockzero = false;
@@ -11423,160 +11424,176 @@ preprocessor[] { ENTRY_DEBUG
         TokenPosition tp;
         TokenPosition tp_directive;
 
-        // parse end of line
+        // parse the end of line
         startNewMode(MODE_PARSE_EOL);
 
         // mode for any preprocessor elements
         startNewMode(MODE_PREPROC);
-        } :
-
+} :
         {
-            // assume error.  will set to proper one later
+            // assume there is an error; will properly set one later
             startElement(SCPP_EMPTY);
 
             setTokenPosition(tp);
         }
 
-        PREPROC markend[directive_token]
-        {
+        PREPROC
+        markend[directive_token]
 
+        {
             startNewMode(MODE_LOCAL);
 
             startElement(SCPP_DIRECTIVE);
+
             setTokenPosition(tp_directive);
         }
 
-        // Suppress warnings that should be caused by empty rule.
-        (options { generateAmbigWarnings = false; } : 
-        INCLUDE
-        {
-            endMode();
+        // suppress warnings that should be caused by the empty rule
+        (options { generateAmbigWarnings = false; } :
+            INCLUDE
+            {
+                endMode();
 
-            tp.setType(SCPP_INCLUDE);
-        }
-        (cpp_filename)* |
+                tp.setType(SCPP_INCLUDE);
+            }
+            (cpp_filename)* |
 
-        DEFINE
-        {
-            endMode();
+            DEFINE
+            {
+                endMode();
 
-            tp.setType(SCPP_DEFINE);
-        }
-        (options { greedy = true; } : cpp_define_name (options { greedy = true; } : cpp_define_value)*)* |
+                tp.setType(SCPP_DEFINE);
+            }
+            (options { greedy = true; } :
+                cpp_define_name
+                (options { greedy = true; } : cpp_define_value)*
+            )* |
 
-        IFNDEF
-        {
-            endMode();
+            IFNDEF
+            {
+                endMode();
 
-            tp.setType(SCPP_IFNDEF);
-        }
-        cpp_symbol_optional |
-
-        UNDEF
-        {
-            endMode();
-
-            tp.setType(SCPP_UNDEF);
-        }
-        cpp_symbol_optional |
-
-        IF
-        { markblockzero = false; }
-        {
-            endMode();
-
-            tp.setType(SCPP_IF);
-        }
-        cpp_condition[markblockzero] |
-
-        ELIF
-        {
-            endMode();
-
-            tp.setType(SCPP_ELIF);
-        }
-        cpp_condition[markblockzero] |
-
-        ELSE
-        {
-            endMode();
-
-            tp.setType(SCPP_ELSE);
-        } |
-
-        ENDIF
-        {
-            endMode();
-
-            tp.setType(SCPP_ENDIF);
-        } |
-
-        IFDEF
-        {
-            endMode();
-
-            tp.setType(SCPP_IFDEF);
-        }
+                tp.setType(SCPP_IFNDEF);
+            }
             cpp_symbol_optional |
 
-        LINE
-        {
-            endMode();
+            UNDEF
+            {
+                endMode();
 
-            tp.setType(SCPP_LINE);
-        }
-            (options { generateAmbigWarnings = false; } : cpp_linenumber
+                tp.setType(SCPP_UNDEF);
+            }
+            cpp_symbol_optional |
 
-            (cpp_filename)* | { inLanguage(LANGUAGE_CSHARP) }? cpp_symbol_optional) |
+            IF
+            {
+                markblockzero = false;
 
-        PRAGMA
-        {
-            endMode();
+                endMode();
 
-            tp.setType(SCPP_PRAGMA);
-        } ((OMP_OMP)=> omp_directive | (CHAR_START | STRING_START | TEMPOPS)=> cpp_literal | cpp_symbol)* |
+                tp.setType(SCPP_IF);
+            }
+            cpp_condition[markblockzero] |
 
-        ERRORPREC
-        {
-            endMode();
+            ELIF
+            {
+                endMode();
 
-            tp.setType(SCPP_ERROR);
-        } (cpp_literal)* |
+                tp.setType(SCPP_ELIF);
+            }
+            cpp_condition[markblockzero] |
 
-        WARNING
-        {
-            endMode();
+            ELSE
+            {
+                endMode();
 
-            tp.setType(SCPP_WARNING);
-        } (cpp_literal)* |
+                tp.setType(SCPP_ELSE);
+            } |
 
-        REGION
-        {
-            endMode();
+            ENDIF
+            {
+                endMode();
 
-            tp.setType(SCPP_REGION);
-        } (cpp_symbol)* |
+                tp.setType(SCPP_ENDIF);
+            } |
 
-        ENDREGION
-        {
-            endMode();
+            IFDEF
+            {
+                endMode();
 
-            tp.setType(SCPP_ENDREGION);
-        } |
+                tp.setType(SCPP_IFDEF);
+            }
+            cpp_symbol_optional |
 
-        IMPORT
-        {
-            endMode();
+            LINE
+            {
+                endMode();
 
-            tp.setType(SCPP_IMPORT);
-        }
-        (cpp_filename)* |
+                tp.setType(SCPP_LINE);
+            }
+            (options { generateAmbigWarnings = false; } :
+                cpp_linenumber (cpp_filename)* |
 
-        /* blank preproc */
-        // suppress ()* warning
-        { tp_directive.setType(SNOP); endMode(); } (options { greedy = true; } : cpp_garbage)*
+                { inLanguage(LANGUAGE_CSHARP) }?
+                cpp_symbol_optional
+            ) |
 
+            PRAGMA
+            {
+                endMode();
+
+                tp.setType(SCPP_PRAGMA);
+            }
+            (
+                (OMP_OMP) => omp_directive |
+                (CHAR_START | STRING_START | TEMPOPS) => cpp_literal |
+                cpp_symbol
+            )* |
+
+            ERRORPREC
+            {
+                endMode();
+
+                tp.setType(SCPP_ERROR);
+            }
+            (cpp_literal)* |
+
+            WARNING
+            {
+                endMode();
+
+                tp.setType(SCPP_WARNING);
+            }
+            (cpp_literal)* |
+
+            REGION
+            {
+                endMode();
+
+                tp.setType(SCPP_REGION);
+            }
+            (cpp_symbol)* |
+
+            ENDREGION
+            {
+                endMode();
+
+                tp.setType(SCPP_ENDREGION);
+            } |
+
+            IMPORT
+            {
+                endMode();
+
+                tp.setType(SCPP_IMPORT);
+            }
+            (cpp_filename)* |
+
+            // blank preproc; suppress ()* warning
+            { tp_directive.setType(SNOP); endMode(); }
+            (options { greedy = true; } : cpp_garbage)*
         )
+
         eol_skip[directive_token, markblockzero]
 ;
 exception
