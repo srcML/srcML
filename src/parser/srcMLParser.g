@@ -12078,6 +12078,9 @@ cpp_define_name[] {
         )*
 ;
 
+/*
+  cpp_define_parameter_list
+*/
 cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
         {
             // list of parameters
@@ -12087,17 +12090,32 @@ cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam =
             startElement(SPARAMETER_LIST);
         }
 
-        // parameter list must include all possible parts since it is part of
-        // function detection
-        LPAREN ({ foundparam = true; if (!lastwasparam) empty_element(SPARAMETER, !lastwasparam); lastwasparam = false; }
-        {
-            // We are in a parameter list.  Need to make sure we end it down to the start of the parameter list
-            if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-                endMode();
-        } comma |
-        cpp_define_parameter { foundparam = lastwasparam = true; })* empty_element[SPARAMETER, !lastwasparam && foundparam] rparen[false]
-;
+        // parameter list must include all possible parts since it is part of function detection
+        LPAREN
 
+        (
+            {
+                foundparam = true;
+
+                if (!lastwasparam)
+                    empty_element(SPARAMETER, !lastwasparam);
+                    lastwasparam = false;
+            }
+
+            {
+                // we are in a parameter list; need to make sure we end it down to the start of the parameter list
+                if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                    endMode();
+            }
+
+            comma |
+
+            cpp_define_parameter { foundparam = lastwasparam = true; }
+        )*
+
+        empty_element[SPARAMETER, !lastwasparam && foundparam]
+        rparen[false]
+;
 
 cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
         {
