@@ -2322,6 +2322,7 @@ synthesize_statement[] { ENTRY_DEBUG } :
 
             startElement(SSYNTHESIZE);
         }
+
         SYNTHESIZE
         property_implementation_inner
 ;
