@@ -141,14 +141,15 @@ using namespace ::std::literals::string_view_literals;
 class RuleTrace {
 public:
     RuleTrace(int guessing, int token, int rd, std::string text, const char* fun, int line) :
-        guessing(guessing), token(token), rd(rd), text(text), fun(fun), line(line) {
-
+        guessing(guessing), token(token), rd(rd), text(text), fun(fun), line(line)
+    {
         fprintf(stderr, "TRACE: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.data(), rd, "", fun, line);
     }
 
     ~RuleTrace() {
         fprintf(stderr, "  END: %d %d %d %5s%*s %s (%d)\n", guessing, token, rd, text.data(), rd, "", fun, line);
     }
+
 private:
     int guessing;
     int token;
