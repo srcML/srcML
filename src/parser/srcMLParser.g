@@ -389,7 +389,7 @@ tokens {
     // entire source file
     SUNIT;
 
-    // No output at all.  Only a placeholder
+    // no output at all, only a placeholder
     SNOP;
 
     // literal types
@@ -632,7 +632,7 @@ tokens {
     SINTO;
 
     // misc
-    SEMPTY;  // empty statement
+    SEMPTY;     // empty statement
 
     // Objective-C
     SRECEIVER;
@@ -666,7 +666,7 @@ tokens {
     // srcMLOutput used only
     SPOSITION;
 
-    // Other
+    // other
     SCUDA_ARGUMENT_LIST;
 
     // OpenMP
