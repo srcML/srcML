@@ -1821,10 +1821,19 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SLAMBDA_CAPTURE);
         }
+
         (
             LBRACKET
-            // suppress warning where compound_name's can match RBRACKET and is also matched by RBRACKET afterwards.
-            (options { warnWhenFollowAmbig = false; } : { /* warning suppression */ LA(1) == COMMA }? COMMA | { LA(1) != RBRACKET }? lambda_capture_argument)*
+
+            // suppress warning where compound_name's can match RBRACKET and is also matched by RBRACKET afterwards
+            (options { warnWhenFollowAmbig = false; } :
+                { /* warning suppression */ LA(1) == COMMA }?
+                COMMA |
+
+                { LA(1) != RBRACKET }?
+                lambda_capture_argument
+            )*
+
             RBRACKET
         )
 ;
