@@ -2404,23 +2404,50 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
             type = CALL;
 
             // call syntax succeeded, however post-call token is not legitimate
-            if (isoption(parser_options, SRCML_PARSER_OPTION_CPP) &&
-                (((!inLanguage(LANGUAGE_OBJECTIVE_C) || !inTransparentMode(MODE_OBJECTIVE_C_CALL)) && (keyword_token_set.member(postcalltoken) || postcalltoken == NAME || postcalltoken == VOID))
-                || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == LCURLY)
-                || postcalltoken == EXTERN || postcalltoken == STRUCT || postcalltoken == UNION || postcalltoken == CLASS || postcalltoken == CXX_CLASS
-                || (!inLanguage(LANGUAGE_CSHARP) && postcalltoken == RCURLY)
-                || (postnametoken != 1 && postcalltoken == 1 /* Commented-out code: EOF ? */)
-                || postcalltoken == TEMPLATE
-                || postcalltoken == INLINE
-                || postcalltoken == PUBLIC
-                || postcalltoken == PRIVATE
-                || postcalltoken == PROTECTED
-                || postcalltoken == SIGNAL
-                || postcalltoken == ATREQUIRED
-                || postcalltoken == ATOPTIONAL
-                || postcalltoken == STATIC
-                || postcalltoken == CONST)
-                && (save_first != DECLTYPE))
+            if (
+                isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+                && (
+                    (
+                        (
+                            !inLanguage(LANGUAGE_OBJECTIVE_C)
+                            || !inTransparentMode(MODE_OBJECTIVE_C_CALL)
+                        )
+                        && (
+                            keyword_token_set.member(postcalltoken)
+                            || postcalltoken == NAME
+                            || postcalltoken == VOID
+                        )
+                    )
+                    || (
+                        !inLanguage(LANGUAGE_CSHARP)
+                        && postcalltoken == LCURLY
+                    )
+                    || postcalltoken == EXTERN
+                    || postcalltoken == STRUCT
+                    || postcalltoken == UNION
+                    || postcalltoken == CLASS
+                    || postcalltoken == CXX_CLASS
+                    || (
+                        !inLanguage(LANGUAGE_CSHARP)
+                        && postcalltoken == RCURLY
+                    )
+                    || (
+                        postnametoken != 1
+                        && postcalltoken == 1 /* EOF ? */
+                    )
+                    || postcalltoken == TEMPLATE
+                    || postcalltoken == INLINE
+                    || postcalltoken == PUBLIC
+                    || postcalltoken == PRIVATE
+                    || postcalltoken == PROTECTED
+                    || postcalltoken == SIGNAL
+                    || postcalltoken == ATREQUIRED
+                    || postcalltoken == ATOPTIONAL
+                    || postcalltoken == STATIC
+                    || postcalltoken == CONST
+                )
+                && (save_first != DECLTYPE)
+            )
                 type = MACRO;
 
             if (inLanguage(LANGUAGE_CSHARP) && (postcalltoken == LAMBDA || postcalltoken == EQUAL))
@@ -2433,14 +2460,18 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
                 type = MACRO;
 
             // single macro call followed by statement_cfg
-            else if (isoption(parser_options, SRCML_PARSER_OPTION_CPP)
-                    && secondtoken != -1
-                    && (keyword_token_set.member(secondtoken)
-                        || secondtoken == LCURLY
-                        || secondtoken == 1 /* Commented-out code: EOF */
-                        || secondtoken == PUBLIC
-                        || secondtoken == PRIVATE
-                        || secondtoken == PROTECTED))
+            else if (
+                isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+                && secondtoken != -1
+                && (
+                    keyword_token_set.member(secondtoken)
+                    || secondtoken == LCURLY
+                    || secondtoken == 1 /* EOF */
+                    || secondtoken == PUBLIC
+                    || secondtoken == PRIVATE
+                    || secondtoken == PROTECTED
+                )
+            )
                 type = MACRO;
         }
 
