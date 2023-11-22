@@ -2540,18 +2540,26 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
         // record token after the start of the argument list
         markend[argumenttoken]
 
-        ( options { greedy = true; generateAmbigWarnings = false; } :
+        (options { greedy = true; generateAmbigWarnings = false; } :
             // recursive nested parentheses
-            call_check_paren_pair[argumenttoken, depth + 1] set_bool[name, false] |
+            call_check_paren_pair[argumenttoken, depth + 1]
+            set_bool[name, false] |
 
             // special case for something that looks like a declaration
             { !name || (depth > 0) }?
-            (identifier | generic_selection) set_bool[name, true] |
+            (identifier | generic_selection)
+            set_bool[name, true] |
 
-            keyword_call_tokens (options { greedy = true; } : DOTDOTDOT | generic_argument_list | cuda_argument_list)* |
+            keyword_call_tokens
+            (options { greedy = true; } :
+                DOTDOTDOT |
+                generic_argument_list |
+                cuda_argument_list
+            )* |
 
             // special case for something that looks like a declaration
-            { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }? delegate_anonymous |
+            { LA(1) == DELEGATE /* eliminates ANTRL warning, will be nop */ }?
+            delegate_anonymous |
 
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous |
@@ -2560,18 +2568,31 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
 
             (block_lambda_expression_full) => block_lambda_expression_full |
 
-            { inLanguage(LANGUAGE_OBJECTIVE_C) }? bracket_pair |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            bracket_pair |
 
             // found two names in a row, so this is not an expression; cause this to fail by explicitly throwing an exception
             { depth == 0 }?
-            (identifier | generic_selection) throw_exception[true] |
+            (identifier | generic_selection)
+            throw_exception[true] |
 
             // forbid parentheses (handled recursively) and cfg tokens
-            { call_token == LPAREN && !keyword_token_set.member(LA(1)) }? ~(LPAREN | RPAREN | TERMINATE) set_bool[name, false] |
-            { call_token == LCURLY && inLanguage(LANGUAGE_CXX) && !keyword_token_set.member(LA(1)) }? ~(LCURLY | RCURLY | TERMINATE) set_bool[name, false]
+            { call_token == LPAREN && !keyword_token_set.member(LA(1)) }?
+            ~(LPAREN | RPAREN | TERMINATE)
+            set_bool[name, false] |
+
+            { call_token == LCURLY && inLanguage(LANGUAGE_CXX) && !keyword_token_set.member(LA(1)) }?
+            ~(LCURLY | RCURLY | TERMINATE)
+            set_bool[name, false]
         )*
 
-        ({ call_token == LPAREN }? RPAREN | { call_token == LCURLY && inLanguage(LANGUAGE_CXX) }? RCURLY)
+        (
+            { call_token == LPAREN }?
+            RPAREN |
+
+            { call_token == LCURLY && inLanguage(LANGUAGE_CXX) }?
+            RCURLY
+        )
 ;
 
 /*
