@@ -333,24 +333,24 @@ srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE&
 
 // ends all currently open modes
 void srcMLParser::endAllModes() {
-
     // should only be one mode
     if (size() > 1 && isoption(parser_options, SRCML_OPTION_DEBUG))
-         emptyElement(SERROR_MODE);
+        emptyElement(SERROR_MODE);
 
     if (isPaused()) {
         while (size() > 1)
-           endMode();
+            endMode();
+
         nopStreamStart();
     }
+
     resumeStream();
 
     // end all modes except the last
     while (size() > 1)
-       endMode();
+        endMode();
 
-    // process any skip tokens that are not ended properly
-    // e.g., "//" with EOF
+    // process any skip tokens that are not ended properly (e.g., "//" with EOF)
     completeSkip();
 
     // flush any skipped characters
@@ -358,7 +358,7 @@ void srcMLParser::endAllModes() {
 
     // end the very last mode which forms the entire unit
     if (size() == 1)
-       endLastMode();
+        endLastMode();
 }
 
 #include <srcml_bitset_token_sets.hpp>
