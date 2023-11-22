@@ -2293,6 +2293,7 @@ property_attribute[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SATTRIBUTE);
         }
+
         identifier
         (property_attribute_initialization)*
 ;
