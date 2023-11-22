@@ -3264,6 +3264,7 @@ package_statement[] { ENTRY_DEBUG } :
             // start the package statement
             startElement(SPACKAGE);
         }
+
         PACKAGE
 ;
 
