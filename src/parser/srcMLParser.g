@@ -2123,6 +2123,7 @@ property_method[int element] { ENTRY_DEBUG } :
             // start the function definition element
             startElement(element);
         }
+
         (attribute_csharp | specifier)*
         property_method_name
 ;
