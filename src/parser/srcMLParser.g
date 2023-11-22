@@ -171,7 +171,7 @@ private:
 
 #define assertMode(m)
 
-enum STMT_TYPE { 
+enum STMT_TYPE {
     NONE, VARIABLE, FUNCTION, FUNCTION_DECL, CONSTRUCTOR, CONSTRUCTOR_DECL, DESTRUCTOR, DESTRUCTOR_DECL,
     SINGLE_MACRO, NULLOPERATOR, ENUM_DEFN, ENUM_DECL, GLOBAL_ATTRIBUTE, PROPERTY_ACCESSOR, PROPERTY_ACCESSOR_DECL,
     EXPRESSION, CLASS_DEFN, CLASS_DECL, UNION_DEFN, UNION_DECL, STRUCT_DEFN, STRUCT_DECL, INTERFACE_DEFN, INTERFACE_DECL, ACCESS_REGION,
@@ -184,7 +184,7 @@ enum CALL_TYPE {
 
 // position in output stream
 struct TokenPosition {
-    TokenPosition() 
+    TokenPosition()
         : token(0), sp(0) {}
 
     // sets a particular token in the output token stream
