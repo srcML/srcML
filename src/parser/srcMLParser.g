@@ -1939,6 +1939,7 @@ block_lambda_expression[] { ENTRY_DEBUG } :
 
             startElement(SFUNCTION_LAMBDA);
         }
+
         BLOCKOP
         (options { greedy = true; } : type_identifier)*
         (options { greedy = true; } : parameter_list)*
