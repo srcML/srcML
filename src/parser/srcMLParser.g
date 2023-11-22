@@ -309,11 +309,14 @@ private:
 
 #ifdef ENTRY_DEBUG
 class RuleDepth {
-
 public:
-    RuleDepth(srcMLParser* t) : pparser(t) { ++pparser->ruledepth; }
+    RuleDepth(srcMLParser* t) : pparser(t) {
+        ++pparser->ruledepth;
+    }
 
-    ~RuleDepth() { --pparser->ruledepth; }
+    ~RuleDepth() {
+        --pparser->ruledepth;
+    }
 
 private:
     srcMLParser* pparser;
