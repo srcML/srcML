@@ -167,7 +167,7 @@ private:
 #define ENTRY_DEBUG_START
 #endif
 
-#define CATCH_DEBUG //marker();
+#define CATCH_DEBUG // Commented-out code: marker();
 
 #define assertMode(m)
 
