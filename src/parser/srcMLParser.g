@@ -325,8 +325,7 @@ private:
 
 // constructor
 srcMLParser::srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& parser_options)
-   : antlr::LLkParser(lexer,1), Language(lang), ModeStack(),
-    parser_options(parser_options)
+    : antlr::LLkParser(lexer,1), Language(lang), ModeStack(), parser_options(parser_options)
 {
     // root, single mode that allows statements to be nested
     startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
