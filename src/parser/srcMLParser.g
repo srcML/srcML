@@ -2152,6 +2152,7 @@ objective_c_method[int token = SNOP] { ENTRY_DEBUG } :
 
             startElement(token);
         }
+
         objective_c_method_specifier
         (options { greedy = true; } : objective_c_method_type)*
         /* Commented-out code: objective_c_selector */
