@@ -3289,13 +3289,14 @@ assert_statement[] { ENTRY_DEBUG } :
   static_block
 */
 static_block { ENTRY_DEBUG } :
-    {
-        startNewMode(MODE_STATEMENT | MODE_NEST);
+        {
+            startNewMode(MODE_STATEMENT | MODE_NEST);
 
-        startElement(SSTATIC_BLOCK);
-    }
-    STATIC
-    lcurly
+            startElement(SSTATIC_BLOCK);
+        }
+
+        STATIC
+        lcurly
 ;
 
 /*
