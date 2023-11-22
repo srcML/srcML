@@ -2308,6 +2308,7 @@ property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG
             // Commented-out code
             // startElement(SDECLARATION_INITIALIZATION);
         }
+
         EQUAL
         identifier
 ;
