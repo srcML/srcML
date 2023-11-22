@@ -3217,6 +3217,7 @@ switch_default[] { ENTRY_DEBUG } :
             // filler mode ended by the colon
             startNewMode(MODE_STATEMENT);
         }
+
         DEFAULT
 ;
 
