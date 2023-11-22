@@ -2373,6 +2373,7 @@ property_implementation_initialization[] { CompleteElement element(this); ENTRY_
             // Commented-out code
             // startElement(SDECLARATION_INITIALIZATION);
         }
+
         EQUAL
         identifier
 ;
