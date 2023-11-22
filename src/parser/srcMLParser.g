@@ -182,13 +182,11 @@ enum CALL_TYPE { NOCALL, CALL, MACRO };
 
 // position in output stream
 struct TokenPosition {
-
     TokenPosition() 
         : token(0), sp(0) {}
 
     // sets a particular token in the output token stream
     void setType(int type) {
-
         // set the inner name token to type
         (*token)->setType(type);
 
