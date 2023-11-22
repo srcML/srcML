@@ -1428,14 +1428,27 @@ function_header[int type_count] { ENTRY_DEBUG } :
 function_tail[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // order is important
-            { inLanguage(LANGUAGE_CXX_FAMILY) && (LA(1) != EQUAL || (inLanguage(LANGUAGE_CXX) && (next_token() == CONSTANTS || next_token() == DEFAULT || next_token() == DELETE))) }?
+            {
+                inLanguage(LANGUAGE_CXX_FAMILY)
+                && (
+                    LA(1) != EQUAL
+                    || (
+                        inLanguage(LANGUAGE_CXX)
+                        && (
+                            next_token() == CONSTANTS
+                            || next_token() == DEFAULT
+                            || next_token() == DELETE
+                        )
+                    )
+                )
+            }?
             function_specifier |
 
             { inLanguage(LANGUAGE_CXX) }?
             ref_qualifier |
 
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
-            (TRY | CXX_TRY) | 
+            (TRY | CXX_TRY) |
 
             { inLanguage(LANGUAGE_OO) }?
             complete_throw_list |
@@ -1454,11 +1467,16 @@ function_tail[] { ENTRY_DEBUG } :
 
             // K&R
             { inLanguage(LANGUAGE_C) }?
-
             // macros
             (
-            (simple_identifier paren_pair) => macro_call | { look_past_two(NAME, VOID) == LCURLY }? simple_identifier | parameter (MULTOPS | simple_identifier | COMMA)*
-            TERMINATE
+                (simple_identifier paren_pair) => macro_call |
+
+                { look_past_two(NAME, VOID) == LCURLY }?
+                simple_identifier |
+
+                parameter
+                (MULTOPS | simple_identifier | COMMA)*
+                TERMINATE
             )
         )*
 ;
