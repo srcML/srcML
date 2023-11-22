@@ -3281,6 +3281,7 @@ assert_statement[] { ENTRY_DEBUG } :
             // start the assert statement
             startElement(SASSERT_STATEMENT);
         }
+
         ASSERT
 ;
 
