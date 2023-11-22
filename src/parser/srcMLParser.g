@@ -2974,11 +2974,16 @@ control_condition_action[] { ENTRY_DEBUG } :
 */
 control_condition[] { bool in_if_condition = inPrevMode(MODE_IF); ENTRY_DEBUG } :
         control_condition_action
+
         (
-        // non-empty condition
-        { in_if_condition }? condition_inner |
-        { LA(1) != RPAREN }? expression |
-        rparen[false]
+            // non-empty condition
+            { in_if_condition }?
+            condition_inner |
+
+            { LA(1) != RPAREN }?
+            expression |
+
+            rparen[false]
         )
 ;
 
