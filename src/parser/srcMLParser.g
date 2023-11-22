@@ -3342,9 +3342,11 @@ return_statement[] { ENTRY_DEBUG } :
   Handles "yield" statements.
 */
 yield_statements[] { int t = next_token(); ENTRY_DEBUG } :
-        { t == RETURN }? yield_return_statement |
+        { t == RETURN }?
+        yield_return_statement |
 
-        { t == BREAK }? yield_break_statement
+        { t == BREAK }?
+        yield_break_statement
 ;
 
 /*
