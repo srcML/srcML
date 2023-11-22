@@ -3332,6 +3332,7 @@ return_statement[] { ENTRY_DEBUG } :
             // start the return statement
             startElement(SRETURN_STATEMENT);
         }
+
         RETURN
 ;
 
