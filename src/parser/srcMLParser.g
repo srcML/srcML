@@ -1522,6 +1522,7 @@ ref_qualifier[] { LightweightElement element(this); ENTRY_DEBUG } :
             // markup type modifiers if option is on
             startElement(SREF_QUALIFIER);
         }
+
         (REFOPS | RVALUEREF)
 ;
 
