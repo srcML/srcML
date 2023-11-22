@@ -2186,14 +2186,24 @@ objective_c_method_type[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         LPAREN
 
-        (options { greedy = true; } : { inputState->guessing && (LA(1) == TYPENAME || LA(1) == CONST) }? (lead_type_identifier))*
+        (options { greedy = true; } :
+            {
+                inputState->guessing
+                && (
+                    LA(1) == TYPENAME
+                    || LA(1) == CONST
+                )
+            }?
+            (lead_type_identifier)
+        )*
 
         // match auto keyword first as a special case; do not warn about ambiguity
         (options { generateAmbigWarnings = false; } : auto_keyword[true] | lead_type_identifier)
 
-        (options { greedy = true; } : { LA(1) != RPAREN }?
+        (options { greedy = true; } :
+            { LA(1) != RPAREN }?
             // Mark as name before mark but without name
-            (options { generateAmbigWarnings = false; } :  keyword_name | type_identifier)
+            (options { generateAmbigWarnings = false; } : keyword_name | type_identifier)
         )*
 
         RPAREN
