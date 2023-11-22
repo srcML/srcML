@@ -2767,7 +2767,9 @@ for_statement[] { ENTRY_DEBUG } :
             // start the for statement
             startElement(SFOR_STATEMENT);
         }
+
         FOR
+
         {
             // statement with nested statement after the control group
             startNewMode(MODE_EXPECT | MODE_CONTROL);
