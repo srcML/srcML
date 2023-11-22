@@ -205,12 +205,11 @@ struct TokenPosition {
 // Included in the generated srcMLParser.cpp file after antlr includes
 header "post_include_cpp" {
 
-// Makes sure that a grammar rule forms a complete element
+// Ensures that a grammar rule forms a complete element.
 // Ends all modes started in the rule and closes any elements started in the rule.
 class CompleteElement {
 public:
     CompleteElement(srcMLParser* parent) : parent(parent) {
-
         // only run if not guessing
         if (parent->inputState->guessing)
             return;
@@ -221,12 +220,11 @@ public:
     }
 
     ~CompleteElement() {
-
         // only run if not guessing
         if (parent->inputState->guessing)
             return;
 
-        // Close all the modes opened in the current rule with their elements.
+        // close all the modes opened in the current rule with their elements
         int n = parent->size() - start_size;
         for (int i = 0; i < n; ++i) {
             parent->endMode();
@@ -235,9 +233,7 @@ public:
         --parent->number_finishing_elements;
 
         if (parent->number_finishing_elements == 0) {
-
             for (auto& citr : parent->finish_elements_add) {
-
                 parent->startNewMode(citr.first);
                 parent->currentState().openelements = citr.second;
             }
