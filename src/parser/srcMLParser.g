@@ -2704,6 +2704,7 @@ forever_statement[] { ENTRY_DEBUG } :
             // expect a condition to follow the keyword
             // startNewMode(MODE_CONDITION | MODE_EXPECT);
         }
+
         FOREVER
 ;
 
