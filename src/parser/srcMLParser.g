@@ -3145,6 +3145,7 @@ switch_statement[] { ENTRY_DEBUG } :
             // expect a condition to follow
             startNewMode(MODE_CONDITION | MODE_EXPECT);
         }
+
         SWITCH
 ;
 
