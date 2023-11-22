@@ -3071,7 +3071,9 @@ else_statement[] { ENTRY_DEBUG } :
             // start the else part of the if statement
             startElement(SELSE);
         }
+
         ELSE
+
         {
             if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
