@@ -3314,6 +3314,7 @@ static_assert_statement[] { ENTRY_DEBUG } :
 
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
         }
+
         STATIC_ASSERT
         call_argument_list
 ;
