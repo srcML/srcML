@@ -2871,11 +2871,13 @@ control_initialization_pre[] { ENTRY_DEBUG } :
         }
 
         (
-        // inside of control group expecting initialization
-        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }? control_initialization |
+            // inside of control group expecting initialization
+            { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) }?
+            control_initialization |
 
-        // inside of control group expecting condition
-        { inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }? control_condition
+            // inside of control group expecting condition
+            { inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
+            control_condition
         )
 ;
 
