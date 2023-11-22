@@ -2818,6 +2818,7 @@ control_group[] { ENTRY_DEBUG } :
                 startElement(SCONTROL);
             }
         }
+
         LPAREN
 ;
 
