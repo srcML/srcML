@@ -1013,14 +1013,20 @@ keyword_statements[] { ENTRY_DEBUG } :
   Basically we have an identifier and we don't know yet whether it starts an expression,
   function definition, function declaration, or even a label.
 */
-pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token = 0; bool isempty = false; int call_count = 1;
-        STMT_TYPE stmt_type = NONE; CALL_TYPE type = NOCALL;
+pattern_statements[] {
+        int secondtoken = 0;
+        int type_count = 0;
+        int after_token = 0;
+        bool isempty = false;
+        int call_count = 1;
+        STMT_TYPE stmt_type = NONE;
+        CALL_TYPE type = NOCALL;
 
         // detect the declaration/definition type
         pattern_check(stmt_type, secondtoken, type_count, after_token);
 
-        ENTRY_DEBUG } :
-
+        ENTRY_DEBUG
+} :
         // variable declaration
         { stmt_type == VARIABLE }?
         variable_declaration_statement[type_count] |
@@ -1153,12 +1159,23 @@ pattern_statements[] { int secondtoken = 0; int type_count = 0; int after_token 
         delegate_type[type_count] |
 
         // call
-        { isoption(parser_options, SRCML_PARSER_OPTION_CPP) && (inMode(MODE_ACCESS_REGION) || (perform_call_check(type, isempty, call_count, secondtoken) && type == MACRO)) }?
+        {
+            isoption(parser_options, SRCML_PARSER_OPTION_CPP)
+            && (
+                inMode(MODE_ACCESS_REGION)
+                || (
+                    perform_call_check(type, isempty, call_count, secondtoken)
+                    && type == MACRO
+                )
+            )
+        }?
         macro_call |
 
-        { inMode(MODE_ENUM) && inMode(MODE_LIST) }? enum_short_variable_declaration |
+        { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
+        enum_short_variable_declaration |
 
-        { inLanguage(LANGUAGE_JAVA) }? annotation |
+        { inLanguage(LANGUAGE_JAVA) }?
+        annotation |
 
         expression_statement[type, call_count]
 ;
