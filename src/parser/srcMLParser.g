@@ -795,61 +795,144 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START |
 
-        comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
+        comma |
 
-        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }? rparen[false] |
+        { inLanguage(LANGUAGE_JAVA) }?
+        bar |
+
+        { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
+        rbracket |
+
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }?
+        rparen[false] |
 
         // characters with special actions that usually end currently open elements
-        { !inTransparentMode(MODE_INTERNAL_END_CURLY) }? block_end |
+        { !inTransparentMode(MODE_INTERNAL_END_CURLY) }?
+        block_end |
 
         terminate |
 
-        { inMode(MODE_ENUM) }? enum_block |
+        { inMode(MODE_ENUM) }?
+        enum_block |
 
         // namespace block does not have block content element
-        { inMode(MODE_NAMESPACE) }? lcurly[false] |
+        { inMode(MODE_NAMESPACE) }?
+        lcurly[false] |
 
         // don't confuse with expression block
-        { ((inTransparentMode(MODE_CONDITION) || (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)))
-        && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-        && (!inLanguage(LANGUAGE_CXX) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
+        {
+            (
+                (
+                    inTransparentMode(MODE_CONDITION)
+                    || (
+                        !inMode(MODE_EXPRESSION)
+                        && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)
+                    )
+                )
+                && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
+                && (
+                    !inLanguage(LANGUAGE_CXX)
+                    || !inTransparentMode(MODE_INIT | MODE_EXPECT)
+                )
+            )
+            || inTransparentMode(MODE_ANONYMOUS)
+        }?
+        lcurly |
 
-        { inMode(MODE_ARGUMENT_LIST) }? call_argument_list |
+        { inMode(MODE_ARGUMENT_LIST) }?
+        call_argument_list |
 
         // switch cases @test switch
-        { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
+        {
+            !inMode(MODE_INIT)
+            && (
+                !inMode(MODE_EXPRESSION)
+                || inTransparentMode(MODE_DETECT_COLON)
+            )
+        }?
         colon |
 
         // process template operator correctly @test template
-        { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }? tempope |
+        { inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) }?
+        tempope |
 
-        // special default() call for C#
         // Commented-out code
-        // { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN}? expression_part_default |
+        // special default() call for C#
+        // { LA(1) == DEFAULT && inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_EXPRESSION) && next_token() == LPAREN }?
+        // expression_part_default |
 
         // statements that clearly start with a keyword
-        { ((LA(1) != TEMPLATE || next_token() != TEMPOPS))
-        && inMode(MODE_NEST | MODE_STATEMENT)
-        && !inMode(MODE_FUNCTION_TAIL)
-        && (LA(1) != TEMPLATE || next_token() == TEMPOPS)
-        && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
-        && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
-        && (LA(1) != DEFAULT || next_token() == COLON)
-        && (LA(1) != CHECKED || next_token() == LCURLY)
-        && (LA(1) != UNCHECKED || next_token() == LCURLY)
-        && (LA(1) != CXX_TRY || next_token() == LCURLY)
-        && (LA(1) != INLINE || next_token() == NAMESPACE)
-        && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
-        && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
-        && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN)
-        && (LA(1) != EMIT || emit_statement_check()) }? keyword_statements |
+        {
+            (
+                LA(1) != TEMPLATE
+                || next_token() != TEMPOPS
+            )
+            && inMode(MODE_NEST | MODE_STATEMENT)
+            && !inMode(MODE_FUNCTION_TAIL)
+            && (
+                LA(1) != TEMPLATE
+                || next_token() == TEMPOPS
+            )
+            && !(
+                inLanguage(LANGUAGE_OBJECTIVE_C)
+                && LA(1) == IMPORT
+            )
+            && !(
+                LA(1) == ATPROTOCOL
+                && next_token() == LPAREN
+            )
+            && (
+                LA(1) != DEFAULT
+                || next_token() == COLON
+            )
+            && (
+                LA(1) != CHECKED
+                || next_token() == LCURLY
+            )
+            && (
+                LA(1) != UNCHECKED
+                || next_token() == LCURLY
+            )
+            && (
+                LA(1) != CXX_TRY
+                || next_token() == LCURLY
+            )
+            && (
+                LA(1) != INLINE
+                || next_token() == NAMESPACE
+            )
+            && (
+                LA(1) != STATIC
+                || (
+                    inLanguage(LANGUAGE_JAVA)
+                    && next_token() == LCURLY
+                )
+            )
+            && (
+                LA(1) != CXX_CATCH
+                || next_token() == LPAREN
+                || next_token() == LCURLY
+            )
+            && (
+                LA(1) != ASM
+                || look_past_two(ASM, VOLATILE) == LPAREN
+            )
+            && (
+                LA(1) != EMIT
+                || emit_statement_check()
+            )
+        }?
+        keyword_statements |
 
-        { next_token() == LPAREN }? synchronized_statement |
+        { next_token() == LPAREN }?
+        synchronized_statement |
 
-        { inLanguage(LANGUAGE_CXX) && inMode(MODE_USING) }? using_aliasing |
+        { inLanguage(LANGUAGE_CXX) && inMode(MODE_USING) }?
+        using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL)}? pattern_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }?
+        pattern_statements |
 
         // in the middle of a statement
         statement_part
