@@ -2278,6 +2278,7 @@ property_attribute_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SATTRIBUTE_LIST);
         }
+
         LPAREN
         (property_attribute | COMMA)*
         RPAREN
