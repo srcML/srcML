@@ -1896,9 +1896,13 @@ lambda_expression_full_csharp[] { ENTRY_DEBUG } :
 */
 lambda_expression_full_cpp[] { ENTRY_DEBUG } :
         // paren_pair and curly_pair seem to have nondeterminism because both can match LPAREN
-        LBRACKET (~RBRACKET)* RBRACKET
+        LBRACKET
+        (~RBRACKET)*
+        RBRACKET
+
         (options { warnWhenFollowAmbig = false; } : paren_pair)*
-        function_tail curly_pair
+        function_tail
+        curly_pair
 ;
 
 /*
