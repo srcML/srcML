@@ -1508,6 +1508,7 @@ annotation_default_initialization[] { CompleteElement element(this); ENTRY_DEBUG
 
             startElement(SDECLARATION_INITIALIZATION);
         }
+
         complete_expression
 ;
 
