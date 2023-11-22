@@ -1774,10 +1774,15 @@ lambda_expression_csharp[] { bool first = true; ENTRY_DEBUG } :
 
             startElement(SFUNCTION_LAMBDA);
         }
+
         (options { greedy = true; } : specifier)*
         (parameter_list | lambda_single_parameter)
         lambda_csharp
-        (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+
+        (options { greedy = true; } :
+            { LA(1) != LCURLY && first }?
+            complete_expression set_bool[first, false]
+        )*
 ;
 
 /*
