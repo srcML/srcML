@@ -2072,11 +2072,16 @@ noexcept_list[] { ENTRY_DEBUG } :
 
             startElement(SNOEXCEPT);
         }
+
         NOEXCEPT
+
         {
-            if (LA(1) != LPAREN) endMode();
-            else startElement(SARGUMENT_LIST);
+            if (LA(1) != LPAREN)
+                endMode();
+            else
+                startElement(SARGUMENT_LIST);
         }
+
         (options { greedy = true; } : LPAREN)*
 ;
 
