@@ -1332,10 +1332,15 @@ function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
         (compound_name_inner[false])* |
 
         // special name prefix of namespace or class
-        identifier (generic_argument_list)* DCOLON function_pointer_name_base |
+        identifier
+        (generic_argument_list)*
+        DCOLON
+        function_pointer_name_base |
 
         // typical function pointer name
-        multops (multops)* (compound_name_inner[false])*
+        multops
+        (multops)*
+        (compound_name_inner[false])*
 
         // optional array declaration
         (variable_identifier_array_grammar_sub[flag])*
