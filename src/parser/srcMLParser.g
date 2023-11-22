@@ -3177,6 +3177,7 @@ section_entry_action[] :
             // end the section inside the block
             endWhileMode(MODE_TOP_SECTION);
         }
+
         section_entry_action_first
 ;
 
