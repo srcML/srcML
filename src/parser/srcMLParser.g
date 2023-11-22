@@ -956,7 +956,12 @@ catch[...] {
 */
 keyword_statements[] { ENTRY_DEBUG } :
         // conditional statements
-        if_statement | { next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement |
+
+        { next_token() == IF }?
+        elseif_statement |
+
+        else_statement | switch_statement | switch_case | switch_default |
 
         // iterative statements
         while_statement | for_statement | do_statement | foreach_statement |
@@ -968,7 +973,10 @@ keyword_statements[] { ENTRY_DEBUG } :
         template_declaration |
 
         // exception statements
-        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }? try_statement_with_resource | try_statement | catch_statement | finally_statement | throw_statement |
+        { inLanguage(LANGUAGE_JAVA) && next_token() == LPAREN }?
+        try_statement_with_resource |
+
+        try_statement | catch_statement | finally_statement | throw_statement |
 
         // namespace statements
         namespace_definition |
