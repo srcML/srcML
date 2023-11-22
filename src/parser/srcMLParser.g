@@ -2264,6 +2264,7 @@ property_declaration[] { int type_count = 0; int secondtoken = 0; int after_toke
         PROPERTY
 
         (property_attribute_list)*
+
         { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
         variable_declaration[type_count]
 ;
