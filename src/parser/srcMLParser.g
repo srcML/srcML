@@ -2913,12 +2913,16 @@ control_initialization_action[] { ENTRY_DEBUG } :
 */
 control_initialization[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         control_initialization_action
+
         (
             // explicitly check for a variable declaration since it can easily be confused with an expression
-            { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }? control_initialization_variable_declaration[type_count] |
+            { pattern_check(stmt_type, secondtoken, type_count, after_token) && stmt_type == VARIABLE }?
+            control_initialization_variable_declaration[type_count] |
 
             { if (secondtoken == COLON)
-                setMode(MODE_RANGED_FOR); }
+                setMode(MODE_RANGED_FOR);
+            }
+
             expression
         )
 ;
