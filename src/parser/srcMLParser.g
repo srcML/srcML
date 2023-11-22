@@ -717,7 +717,7 @@ public:
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
     size_t number_finishing_elements = 0;
-    std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int> > > finish_elements_add;
+    std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int>>> finish_elements_add;
     bool in_template_param = false;
     int start_count = 0;
 
@@ -738,9 +738,7 @@ public:
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
 
     // destructor
-    ~srcMLParser() {
-
-    }
+    ~srcMLParser() {}
 
     struct cppmodeitem {
         cppmodeitem(int current_size)
@@ -751,7 +749,6 @@ public:
         std::deque<int> statesize;
         bool isclosed;
         bool skipelse;
-
     };
 
     std::stack<cppmodeitem> cppmode;
@@ -769,11 +766,10 @@ public:
 
     void endAllModes();
 
-
     virtual void consume() {
-
         if (!skip_tokens_set.member((unsigned int) LA(1)))
             last_consumed = LA(1);
+
         LLkParser::consume();
     }
 }
