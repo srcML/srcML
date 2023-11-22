@@ -287,14 +287,13 @@ private:
     int start_size;
 };
 
-// Makes sure that a grammar rule forms a complete element
+// Ensures that a grammar rule forms a complete element.
 // Ends the last opened tag.
 class SingleElement {
 public:
     SingleElement(srcMLParser* parent) : parent(parent) {}
 
     ~SingleElement() {
-
         // only run if not guessing
         if (parent->inputState->guessing)
             return;
