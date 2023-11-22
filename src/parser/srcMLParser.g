@@ -1992,6 +1992,7 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SDECLARATION);
         }
+
         variable_identifier
 ;
 
