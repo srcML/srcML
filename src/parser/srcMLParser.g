@@ -1849,10 +1849,17 @@ lambda_capture_argument[] { bool first = true; CompleteElement element(this); EN
 
             startElement(SARGUMENT);
         }
+
         // suppress greedy warnings
         (
             (options { greedy = true; } : lambda_capture_modifiers)*
-            (options { greedy = true; } : { first }? variable_identifier (options { greedy = true; } : lambda_capture_initialization)* set_bool[first, false])*
+
+            (options { greedy = true; } :
+                { first }?
+                variable_identifier
+                (options { greedy = true; } : lambda_capture_initialization)*
+                set_bool[first, false]
+            )*
         )
 ;
 
