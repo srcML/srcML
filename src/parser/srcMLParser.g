@@ -1722,6 +1722,7 @@ function_identifier_main[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
+
         MAIN
 ;
 
