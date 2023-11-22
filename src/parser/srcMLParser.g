@@ -1968,9 +1968,15 @@ lambda_expression_java[] { bool first = true; ENTRY_DEBUG } :
 
             startElement(SFUNCTION_LAMBDA);
         }
+
         (parameter_list | lambda_single_parameter)
         lambda_java
-        (options { greedy = true; } : { LA(1) != LCURLY && first }? complete_expression set_bool[first, false])*
+
+        (options { greedy = true; } :
+            { LA(1) != LCURLY && first }?
+            complete_expression
+            set_bool[first, false]
+        )*
 ;
 
 /*
