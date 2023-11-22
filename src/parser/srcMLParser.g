@@ -2003,6 +2003,7 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 */
 lambda_java[] { ENTRY_DEBUG } :
         TRETURN
+
         {
             if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
