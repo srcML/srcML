@@ -3234,6 +3234,7 @@ import_statement[] { ENTRY_DEBUG } :
             // start the import statement
             startElement(SIMPORT);
         }
+
         IMPORT
 ;
 
