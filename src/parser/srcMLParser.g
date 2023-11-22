@@ -1306,6 +1306,7 @@ function_declaration[int type_count, int token = SFUNCTION_DECLARATION] { ENTRY_
 
             startElement(token);
         }
+
         function_header[type_count]
 ;
 
