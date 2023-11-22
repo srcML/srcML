@@ -1533,13 +1533,24 @@ ref_qualifier[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 trailing_return[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         TRETURN
+
         (
-        { pattern_check(stmt_type, secondtoken, type_count, after_token, true) && (stmt_type == FUNCTION || stmt_type == FUNCTION_DECL) }?
-        { startNewMode(MODE_TRAILING_RETURN); }
-        function_declaration[type_count]
-        function_identifier
-        parameter_list | set_int[type_count, type_count + 1]
-        parameter_type_count[type_count]
+            {
+                pattern_check(stmt_type, secondtoken, type_count, after_token, true)
+                && (
+                    stmt_type == FUNCTION
+                    || stmt_type == FUNCTION_DECL
+                )
+            }?
+            {
+                startNewMode(MODE_TRAILING_RETURN);
+            }
+            function_declaration[type_count]
+            function_identifier
+            parameter_list |
+
+            set_int[type_count, type_count + 1]
+            parameter_type_count[type_count]
         )
 ;
 
