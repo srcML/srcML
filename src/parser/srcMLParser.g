@@ -2336,6 +2336,7 @@ dynamic_statement[] { ENTRY_DEBUG } :
 
             startElement(SDYNAMIC);
         }
+
         DYNAMIC
         property_implementation_inner
 ;
