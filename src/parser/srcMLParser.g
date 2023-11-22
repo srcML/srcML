@@ -2358,6 +2358,7 @@ property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SDECLARATION);
         }
+
         identifier
         (property_implementation_initialization)*
 ;
