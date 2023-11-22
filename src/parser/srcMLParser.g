@@ -3007,6 +3007,7 @@ control_increment[] { ENTRY_DEBUG } :
             else
                 startElement(SCONTROL_INCREMENT);
         }
+
         expression
 ;
 
