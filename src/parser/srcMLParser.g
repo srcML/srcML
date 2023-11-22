@@ -1914,6 +1914,7 @@ lambda_capture_modifiers[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SMODIFIER);
         }
+
         (EQUAL | REFOPS)
 ;
 
