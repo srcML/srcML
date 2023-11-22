@@ -1492,6 +1492,7 @@ annotation_default[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SDEFAULT);
         }
+
         DEFAULT
         annotation_default_initialization
 ;
