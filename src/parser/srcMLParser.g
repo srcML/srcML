@@ -2039,17 +2039,22 @@ throw_list[] { ENTRY_DEBUG } :
 
             startElement(STHROW_SPECIFIER);
         }
+
         THROW
+
         {
             startElement(SARGUMENT_LIST);
         }
+
         LPAREN |
+
         {
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_EXPECT | MODE_END_LIST_AT_BLOCK);
 
             startElement(STHROW_SPECIFIER_JAVA);
         }
+
         THROWS
 ;
 
