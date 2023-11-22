@@ -1806,6 +1806,7 @@ lambda_expression_cpp[] { ENTRY_DEBUG } :
 
             startElement(SFUNCTION_LAMBDA);
         }
+
         lambda_capture
 ;
 
