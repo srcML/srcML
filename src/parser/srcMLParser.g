@@ -2750,6 +2750,7 @@ do_while[] { ENTRY_DEBUG } :
             // expect a condition to follow
             startNewMode(MODE_CONDITION | MODE_EXPECT);
         }
+
         WHILE
 ;
 
