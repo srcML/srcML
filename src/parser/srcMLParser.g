@@ -2023,6 +2023,7 @@ function_definition[int type_count, int token = SFUNCTION_DEFINITION] { ENTRY_DE
 
             startElement(token);
         }
+
         function_header[type_count]
 ;
 
