@@ -247,12 +247,11 @@ private:
     int start_size;
 };
 
-// Makes sure that a grammar rule forms a complete element
+// Ensures that a grammar rule forms a complete element.
 // Closes all elements opened in the rule for this current mode.
 class LightweightElement {
 public:
     LightweightElement(srcMLParser* parent) : parent(parent) {
-
         // only run if not guessing
         if (parent->inputState->guessing)
             return;
@@ -263,21 +262,18 @@ public:
     }
 
     ~LightweightElement() {
-
         // only run if not guessing
         if (parent->inputState->guessing)
             return;
 
-        // Close all elements opened by the rule in this mode.
+        // close all elements opened by the rule in this mode
         while (start_size < parent->currentState().size())
             parent->endElement(parent->currentState().openelements.top());
 
         --parent->number_finishing_elements;
 
         if (parent->number_finishing_elements == 0) {
-
             for (auto& citr : parent->finish_elements_add) {
-
                 parent->startNewMode(citr.first);
                 parent->currentState().openelements = citr.second;
             }
