@@ -2137,6 +2137,7 @@ property_method_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
+
         (GET | SET | ADD | REMOVE)
 ;
 
