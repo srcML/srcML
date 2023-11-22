@@ -3197,6 +3197,7 @@ switch_case[] { ENTRY_DEBUG } :
             // expect an expression ended by a colon
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
+
         (CASE | macro_case_call)
 ;
 
