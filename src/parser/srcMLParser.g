@@ -4783,7 +4783,7 @@ terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_P
 
   If in an if-statement, relatively straightforward.  Note that we could be ending with multiple else's.
 
-  Special case: "else" with no matching "if."  This occurs with a) a single "else", or with b) an "else" in a
+  Special case: "else" with no matching "if."  This occurs with either a single "else" or with an "else" in a
   preprocessor "#if ... #else ... #endif" construct (this is very common).
 */
 else_handling[] { ENTRY_DEBUG } :
