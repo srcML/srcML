@@ -4094,6 +4094,7 @@ enum_class_definition[] { ENTRY_DEBUG } :
         {
             setMode(MODE_ENUM);
         }
+
         class_preamble
         ENUM
         (class_header enum_block | enum_block)
