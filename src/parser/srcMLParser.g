@@ -3567,6 +3567,7 @@ extern_alias[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+
         ALIAS
 ;
 
