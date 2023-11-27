@@ -3850,18 +3850,20 @@ class_declaration[] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            // start the class definition
+            // start the class declaration
             startElement(SCLASS_DECLARATION);
         }
+
         class_preamble
-
         (CLASS | CXX_CLASS)
-
         class_post
-
         class_header
 
-        (options { greedy = true; } : COMMA class_post class_header)*
+        (options { greedy = true; } :
+            COMMA
+            class_post
+            class_header
+        )*
 ;
 
 /*
