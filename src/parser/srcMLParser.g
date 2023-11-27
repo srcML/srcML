@@ -3773,7 +3773,9 @@ protocol_declaration[] { ENTRY_DEBUG } :
 /*
   emit_statement_check
 */
-emit_statement_check[] returns [bool is_emit_stmt] { ENTRY_DEBUG
+emit_statement_check[] returns [bool is_emit_stmt] {
+        ENTRY_DEBUG
+
         if (LA(1) != EMIT)
             return false;
 
