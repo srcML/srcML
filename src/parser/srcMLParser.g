@@ -3428,6 +3428,7 @@ continue_statement[] { ENTRY_DEBUG } :
             // start the continue statement
             startElement(SCONTINUE_STATEMENT);
         }
+
         CONTINUE
 ;
 
