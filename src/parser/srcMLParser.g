@@ -3677,7 +3677,12 @@ namespace_directive[] { ENTRY_DEBUG } :
             // start the using directive
             startElement(SUSING_DIRECTIVE);
         }
-        (options { greedy = true; } : { next_token() == TEMPOPS }? template_declaration_full)*
+
+        (options { greedy = true; } :
+            { next_token() == TEMPOPS }?
+            template_declaration_full
+        )*
+
         USING
 ;
 
