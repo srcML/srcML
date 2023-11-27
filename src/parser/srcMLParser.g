@@ -4859,9 +4859,16 @@ else_handling[] { ENTRY_DEBUG } :
 
   Handles being in the middle of a statement.
 */
-statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE;
-                   CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
-
+statement_part[] {
+        int type_count;
+        int secondtoken = 0;
+        int after_token = 0;
+        STMT_TYPE stmt_type = NONE;
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 0;
+        ENTRY_DEBUG
+} :
         { inMode(MODE_EAT_TYPE) }?
         type_identifier
         update_typecount[MODE_FUNCTION_NAME] |
@@ -4898,7 +4905,10 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         throw_list
         complete_arguments
         (comma complete_arguments)*
-        { endDownToMode(MODE_LIST); endMode(MODE_LIST); } |
+        {
+            endDownToMode(MODE_LIST);
+            endMode(MODE_LIST);
+        } |
 
         // throw list at end of function header
         { (inLanguage(LANGUAGE_CXX)) && inMode(MODE_FUNCTION_TAIL) }?
@@ -4909,11 +4919,16 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         noexcept_list |
 
         // throw list at end of function header
-        { (inLanguage(LANGUAGE_CXX)) && inTransparentMode(MODE_FUNCTION_TAIL) && next_token() == LBRACKET }?
+        {
+            (inLanguage(LANGUAGE_CXX))
+            && inTransparentMode(MODE_FUNCTION_TAIL)
+            && next_token() == LBRACKET
+        }?
         attribute_cpp |
 
         // K&R function parameters
-        { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+        {
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
             && inMode(MODE_FUNCTION_TAIL)
             && pattern_check(stmt_type, secondtoken, type_count, after_token)
             && stmt_type == VARIABLE
@@ -4926,13 +4941,18 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         try_statement |
 
         // function specifier at end of function header
-        { inLanguage(LANGUAGE_CXX_FAMILY)
+        {
+            inLanguage(LANGUAGE_CXX_FAMILY)
             && inMode(MODE_FUNCTION_TAIL)
-            && (LA(1) != EQUAL
-                || (inLanguage(LANGUAGE_CXX)
-                    && (next_token() == CONSTANTS
-                    || next_token() == DEFAULT
-                    || next_token() == DELETE)
+            && (
+                LA(1) != EQUAL
+                || (
+                    inLanguage(LANGUAGE_CXX)
+                    && (
+                        next_token() == CONSTANTS
+                        || next_token() == DEFAULT
+                        || next_token() == DELETE
+                    )
                 )
             )
         }?
@@ -4955,7 +4975,8 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
 
         // start of argument for return or throw statement
-        { inMode(MODE_EXPRESSION | MODE_EXPECT)
+        {
+            inMode(MODE_EXPRESSION | MODE_EXPECT)
             && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
             && perform_call_check(type, isempty, call_count, secondtoken)
             && type == MACRO
@@ -4966,18 +4987,56 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         expression[type, call_count] |
 
         // already in an expression and ran into a keyword; stop the expression and markup the keyword statement
-        { inMode(MODE_EXPRESSION)
-            && !(inLanguage(LANGUAGE_OBJECTIVE_C) && LA(1) == IMPORT)
-            && !(LA(1) == ATPROTOCOL && next_token() == LPAREN)
-            && (LA(1) != DEFAULT || next_token() == COLON)
-            && (LA(1) != CHECKED || next_token() == LCURLY)
-            && (LA(1) != UNCHECKED || next_token() == LCURLY)
-            && (LA(1) != CXX_TRY || next_token() == LCURLY)
-            && (LA(1) != INLINE || next_token() == NAMESPACE)
-            && (LA(1) != STATIC || (inLanguage(LANGUAGE_JAVA) && next_token() == LCURLY))
-            && (LA(1) != CXX_CATCH || next_token() == LPAREN || next_token() == LCURLY)
-            && (LA(1) != ASM || look_past_two(ASM, VOLATILE) == LPAREN)
-            && (LA(1) != EMIT || emit_statement_check())
+        {
+            inMode(MODE_EXPRESSION)
+            && !(
+                inLanguage(LANGUAGE_OBJECTIVE_C)
+                && LA(1) == IMPORT
+            )
+            && !(
+                LA(1) == ATPROTOCOL
+                && next_token() == LPAREN
+            )
+            && (
+                LA(1) != DEFAULT
+                || next_token() == COLON
+            )
+            && (
+                LA(1) != CHECKED
+                || next_token() == LCURLY
+            )
+            && (
+                LA(1) != UNCHECKED
+                || next_token() == LCURLY
+            )
+            && (
+                LA(1) != CXX_TRY
+                || next_token() == LCURLY
+            )
+            && (
+                LA(1) != INLINE
+                || next_token() == NAMESPACE
+            )
+            && (
+                LA(1) != STATIC
+                || (
+                    inLanguage(LANGUAGE_JAVA)
+                    && next_token() == LCURLY
+                )
+            )
+            && (
+                LA(1) != CXX_CATCH
+                || next_token() == LPAREN
+                || next_token() == LCURLY
+            )
+            && (
+                LA(1) != ASM
+                || look_past_two(ASM, VOLATILE) == LPAREN
+            )
+            && (
+                LA(1) != EMIT
+                || emit_statement_check()
+            )
         }?
         terminate_pre
         terminate_post
@@ -4988,11 +5047,23 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         expression_part_plus_linq |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
+        {
+            inMode(MODE_CALL | MODE_LIST)
+            && (
+                LA(1) != LCURLY
+                || inLanguage(LANGUAGE_CXX)
+            )
+        }?
         member_init |
 
         // call list in member initialization list
-        { inMode(MODE_CALL | MODE_LIST) && (LA(1) != LCURLY || inLanguage(LANGUAGE_CXX)) }?
+        {
+            inMode(MODE_CALL | MODE_LIST)
+            && (
+                LA(1) != LCURLY
+                || inLanguage(LANGUAGE_CXX)
+            )
+        }?
         keyword_calls |
 
         /*
@@ -5030,17 +5101,21 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         variable_declaration_initialization |
 
         // start of argument for return or throw statement
-        { inMode(MODE_INIT | MODE_EXPECT)
+        {
+            inMode(MODE_INIT | MODE_EXPECT)
             && (
-                (LA(1) == COLON
+                (
+                    LA(1) == COLON
                     && (
-                        (inLanguage(LANGUAGE_C_FAMILY)
+                        (
+                            inLanguage(LANGUAGE_C_FAMILY)
                             && !inLanguage(LANGUAGE_CSHARP)
                         )
                         || inLanguage(LANGUAGE_JAVA)
                     )
                 )
-            || LA(1) == IN)
+                || LA(1) == IN
+            )
         }?
         variable_declaration_range |
 
@@ -5063,14 +5138,21 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         { inMode(MODE_CONTROL | MODE_EXPECT) }?
         control_group |
 
-        { inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT) || inMode(MODE_CONTROL_CONDITION | MODE_EXPECT) }?
+        {
+            inMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT)
+            || inMode(MODE_CONTROL_CONDITION | MODE_EXPECT)
+        }?
         control_initialization_pre |
 
         // inside of control group expecting initialization
         { inMode(MODE_CONTROL_INCREMENT | MODE_EXPECT) }?
         control_increment |
 
-        { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) && !inMode(MODE_TEMPLATE_PARAMETER_LIST)}?
+        {
+            inTransparentMode(MODE_TEMPLATE)
+            && inMode(MODE_LIST | MODE_EXPECT)
+            && !inMode(MODE_TEMPLATE_PARAMETER_LIST)
+        }?
         class_declaration |
 
         { inTransparentMode(MODE_TEMPLATE) && inMode(MODE_LIST | MODE_EXPECT) }?
