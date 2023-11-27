@@ -5435,29 +5435,49 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         int fla = 0;
 
         try {
-            pattern_check_core(token, fla, type_count, specifier_count, attribute_count, template_count, type, inparam, sawtemplate, sawcontextual, posin);
+            pattern_check_core(
+                token,
+                fla,
+                type_count,
+                specifier_count,
+                attribute_count,
+                template_count,
+                type,
+                inparam,
+                sawtemplate,
+                sawcontextual,
+                posin
+            );
         } catch (...) {
             if (type == VARIABLE && type_count == 0) {
                 type_count = 1;
             }
         }
 
-        if (type == VARIABLE && inTransparentMode(MODE_CONDITION) && LA(1) != EQUAL)
+        if (
+            type == VARIABLE
+            && inTransparentMode(MODE_CONDITION)
+            && LA(1) != EQUAL
+        )
             type = NONE;
 
-        if (type == NONE
-            && (sawtemplate
-                || (sawcontextual
+        if (
+            type == NONE
+            && (
+                sawtemplate
+                || (
+                    sawcontextual
                     && type_count > 0
-                    )
                 )
-            && (!keyword_name_token_set.member(LA(1))
+            )
+            && (
+                !keyword_name_token_set.member(LA(1))
                 || LA(1) == MULTOPS
                 || LA(1) == REFOPS
                 || LA(1) == RVALUEREF
                 || LA(1) == TERMINATE
-                )
             )
+        )
             type = VARIABLE;
 
         // may just have an expression
@@ -5465,21 +5485,29 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
             type_count = posin - 1;
 
         // may just have a single macro (no parens possibly) before a statement
-        else if (type == 0 && type_count == 0 && keyword_token_set.member(LA(1)))
+        else if (
+            type == 0
+            && type_count == 0
+            && keyword_token_set.member(LA(1))
+        )
             type = SINGLE_MACRO;
 
-        else if (type == 0
+        else if (
+            type == 0
             && type_count == 1
-            && (LA(1) == CLASS
+            && (
+                LA(1) == CLASS
                 || LA(1) == CXX_CLASS
                 || LA(1) == STRUCT
-                || LA(1) == UNION))
-        {
+                || LA(1) == UNION
+            )
+        ) {
             pattern_check(type, token, type_count, after_token, inparam);
 
             type_count += 1;
 
-            if (type == CLASS_DECL
+            if (
+                type == CLASS_DECL
                 || type == CLASS_DEFN
                 || type == UNION_DECL
                 || type == UNION_DEFN
@@ -5487,8 +5515,8 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
                 || type == STRUCT_DEFN
                 || type == ENUM_DECL
                 || type == ENUM_DEFN
-                || type == 0)
-            {
+                || type == 0
+            ) {
                 type = SINGLE_MACRO;
                 type_count = 1;
             }
@@ -5507,11 +5535,25 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
             type = DESTRUCTOR_DECL;
 
         // declaration form
-        else if (type == FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+        else if (
+            type == FUNCTION
+            && (
+                fla == TERMINATE
+                || fla == COMMA
+                || fla == EQUAL
+            )
+        )
             type = FUNCTION_DECL;
 
         // declaration form
-        else if (type == OPERATOR_FUNCTION && (fla == TERMINATE || fla == COMMA || fla == EQUAL))
+        else if (
+            type == OPERATOR_FUNCTION
+            && (
+                fla == TERMINATE
+                || fla == COMMA
+                || fla == EQUAL
+            )
+        )
             type = OPERATOR_FUNCTION_DECL;
 
         // we actually have a macro and then a constructor
@@ -5519,10 +5561,23 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
             type = SINGLE_MACRO;
 
         // not really a destructor
-        if (type == DESTRUCTOR_DECL && (!inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_FUNCTION_TAIL)))
+        if (
+            type == DESTRUCTOR_DECL
+            && (
+                !inTransparentMode(MODE_CLASS)
+                || inTransparentMode(MODE_FUNCTION_TAIL)
+            )
+        )
             type = EXPRESSION;
 
-        if ((type == FUNCTION || type == FUNCTION_DECL) && fla == COMMA && !inparam)
+        if (
+            (
+                type == FUNCTION
+                || type == FUNCTION_DECL
+            )
+            && fla == COMMA
+            && !inparam
+        )
             type = VARIABLE;
 
         after_token = LA(1);
@@ -5530,19 +5585,27 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         inputState->guessing--;
         rewind(start);
 
-        if (type == VARIABLE && type_count == (specifier_count + attribute_count + template_count))
+        if (
+            type == VARIABLE
+            && type_count == (specifier_count + attribute_count + template_count)
+        )
             ++type_count;
 
-        if (!inMode(MODE_FUNCTION_TAIL)
+        if (
+            !inMode(MODE_FUNCTION_TAIL)
             && type == 0
             && type_count == 0
-            && (enum_preprocessing_token_set.member(LA(1))
-                || LA(1) == DECLTYPE)
-            && (!inLanguage(LANGUAGE_CXX)
+            && (
+                enum_preprocessing_token_set.member(LA(1))
+                || LA(1) == DECLTYPE
+            )
+            && (
+                !inLanguage(LANGUAGE_CXX)
                 || !(LA(1) == FINAL
-                || LA(1) == OVERRIDE))
-            && after_token == TERMINATE)
-        {
+                || LA(1) == OVERRIDE)
+            )
+            && after_token == TERMINATE
+        ) {
             type = VARIABLE;
             type_count = 1;
         }
@@ -5550,19 +5613,29 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         if (type == NONE && LA(1) == TEMPLATE)
             type = GLOBAL_TEMPLATE;
 
-        if (inLanguage(LANGUAGE_CSHARP) && type == FUNCTION_DECL && fla == TERMINATE && LA(1) == DELEGATE) {
+        if (
+            inLanguage(LANGUAGE_CSHARP)
+            && type == FUNCTION_DECL
+            && fla == TERMINATE
+            && LA(1) == DELEGATE
+        ) {
             type_count -= 1;
             type = DELEGATE_TYPE;
         }
 
-        if (inLanguage(LANGUAGE_CSHARP)
+        if (
+            inLanguage(LANGUAGE_CSHARP)
             && type == FUNCTION_DECL
             && fla == TERMINATE
-            && (token == DELEGATE
-                && (LA(1) == PUBLIC
+            && (
+                token == DELEGATE
+                && (
+                    LA(1) == PUBLIC
                     || LA(1) == PRIVATE
-                    || LA(1) == PROTECTED)))
-        {
+                    || LA(1) == PROTECTED
+                )
+            )
+        ) {
             type_count -= 2;
             type = DELEGATE_TYPE;
         }
