@@ -5382,6 +5382,7 @@ condition[] { ENTRY_DEBUG } :
             // mark the condition mode as the one to stop at a right parentheses; non-empty conditions contain an expression
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
         }
+
         LPAREN
         condition_inner
 ;
