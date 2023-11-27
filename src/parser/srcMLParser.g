@@ -4276,14 +4276,22 @@ union_declaration[] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            // start the union definition
+            // start the union declaration
             startElement(SUNION_DECLARATION);
         }
+
         class_preamble
+
         UNION
+
         class_post
         class_header
-        (options { greedy = true; } : COMMA class_post class_header)*
+
+        (options { greedy = true; } :
+            COMMA
+            class_post
+            class_header
+        )*
 ;
 
 /*
