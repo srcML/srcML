@@ -3631,6 +3631,7 @@ namespace_definition[] { ENTRY_DEBUG } :
             // start the namespace definition
             startElement(SNAMESPACE);
         }
+
         (namespace_inline_specifier)*
         NAMESPACE
 ;
