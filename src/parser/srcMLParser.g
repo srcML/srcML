@@ -4308,9 +4308,12 @@ annotation_definition[] { ENTRY_DEBUG } :
             // java annotations end at the end of the block
             setMode(MODE_END_AT_BLOCK);
         }
+
         class_preamble
+
         ATSIGN
         INTERFACE
+
         class_header
         lcurly[false]
 ;
