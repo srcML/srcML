@@ -3825,6 +3825,7 @@ friend_statement[] { ENTRY_DEBUG } :
 
             startElement(SFRIEND);
         }
+
         FRIEND
 ;
 
