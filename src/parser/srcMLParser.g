@@ -3734,6 +3734,7 @@ compatibility_alias[] { ENTRY_DEBUG } :
             startElement(SCOMPATIBILITY_ALIAS);
 
         }
+
         COMPATIBILITY_ALIAS
 ;
 
