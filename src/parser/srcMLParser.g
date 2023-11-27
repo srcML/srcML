@@ -3411,6 +3411,7 @@ break_statement[] { ENTRY_DEBUG } :
             // start the break statement
             startElement(SBREAK_STATEMENT);
         }
+
         BREAK
 ;
 
