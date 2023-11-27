@@ -4013,7 +4013,12 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
         }
 
         ATPROTOCOL
-        ({ first }? objective_c_class_header set_bool[first, false])*
+
+        (
+            { first }?
+            objective_c_class_header
+            set_bool[first, false]
+        )*
 
         {
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK | MODE_TOP | MODE_CLASS);
