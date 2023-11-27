@@ -5193,7 +5193,7 @@ statement_part[] {
 /*
   lparen_marked
 
-  Used to mark the "(" operator.
+  Used to mark the left parenthesis operator.
 */
 lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
@@ -5201,6 +5201,7 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             startElement(SOPERATOR);
         }
+
         LPAREN
 ;
 
