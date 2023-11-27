@@ -4660,7 +4660,9 @@ rcurly[] { ENTRY_DEBUG } :
             if (getCurly() != 0)
                 decCurly();
         }
+
         RCURLY
+
         {
             // end the current mode for the block; don't end more than one since they may be nested
             endMode(MODE_TOP);
@@ -4681,6 +4683,7 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
                     control_condition_action();
             }
         }
+
         terminate_pre
         terminate_token
         terminate_post
