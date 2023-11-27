@@ -4160,6 +4160,7 @@ anonymous_class_super[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the super name of an anonymous class
             startElement(SDERIVATION);
         }
+
         compound_name_inner[false]
 ;
 
