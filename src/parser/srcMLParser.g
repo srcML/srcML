@@ -4437,7 +4437,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
 /*
   access_specifier_region
 
-  Each instance of an access specifier defines a region in the class.
+  Each instance of an access specifier defines a region in a class.
 */
 access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
         section_entry_action
@@ -4453,29 +4453,39 @@ access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
                 startElement(SPUBLIC_ACCESS);
             }
             PUBLIC |
+
             {
                 startElement(SPRIVATE_ACCESS);
             }
             PRIVATE |
+
             {
                 startElement(SPROTECTED_ACCESS);
             }
             PROTECTED |
+
             {
                 startElement(SSIGNAL_ACCESS);
             }
             SIGNAL |
+
             {
                 startElement(SREQUIRED);
             }
             ATREQUIRED |
+
             {
                 startElement(SOPTIONAL);
             }
             ATOPTIONAL
         )
 
-        ({ !inLanguage(LANGUAGE_OBJECTIVE_C) && first }? (compound_name)* COLON set_bool[first, false])*
+        (
+            { !inLanguage(LANGUAGE_OBJECTIVE_C) && first }?
+            (compound_name)*
+            COLON
+            set_bool[first, false]
+        )*
 ;
 
 /*
