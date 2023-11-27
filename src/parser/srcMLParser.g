@@ -4742,17 +4742,23 @@ terminate_pre[] { ENTRY_DEBUG } :
 terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         {
             // end all the statements this statement is nested in; special case when ending then of if statement
-            if ((!inMode(MODE_EXPRESSION_BLOCK) || inMode(MODE_EXPECT))
+            if (
+                (
+                    !inMode(MODE_EXPRESSION_BLOCK)
+                    || inMode(MODE_EXPECT)
+                )
                 && !inMode(MODE_INTERNAL_END_CURLY)
                 && !inMode(MODE_INTERNAL_END_PAREN)
                 && !inMode(MODE_STATEMENT | MODE_ISSUE_EMPTY_AT_POP)
-                && !inMode(MODE_END_AT_ENDIF))
-            {
+                && !inMode(MODE_END_AT_ENDIF)
+            ) {
                 // end down to either a block or top section, or to an if or else
                 endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
             }
         }
+
         else_handling
+
         {
             if (inMode(MODE_SWITCH))
                 endMode();
