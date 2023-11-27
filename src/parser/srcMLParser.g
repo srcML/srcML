@@ -3539,7 +3539,17 @@ visual_cxx_block_inner[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
-        ({ LA(1) == LCURLY }? visual_cxx_asm_declaration_curly_pair | (visual_cxx_asm_inner (options { greedy = true; } : visual_cxx_asm_inner)*))
+
+        (
+            { LA(1) == LCURLY }?
+            visual_cxx_asm_declaration_curly_pair |
+            
+            (
+                visual_cxx_asm_inner
+                (options { greedy = true; } : visual_cxx_asm_inner)*
+            )
+        )
+
         (options { greedy = true; } : TERMINATE)*
 ;
 
