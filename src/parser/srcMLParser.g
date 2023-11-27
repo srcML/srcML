@@ -3445,6 +3445,7 @@ goto_statement[] { ENTRY_DEBUG } :
             // start the goto statement
             startElement(SGOTO_STATEMENT);
         }
+
         GOTO
 ;
 
