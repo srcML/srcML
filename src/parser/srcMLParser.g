@@ -4107,12 +4107,18 @@ enum_class_definition[] { ENTRY_DEBUG } :
 */
 enum_class_declaration[] { ENTRY_DEBUG } :
         class_preprocessing[SENUM_DECLARATION]
-
         class_preamble
+
         ENUM
+
         class_post
         class_header
-        (options { greedy = true; } : COMMA class_post class_header)*
+
+        (options { greedy = true; } :
+            COMMA
+            class_post
+            class_header
+        )*
 ;
 
 /*
