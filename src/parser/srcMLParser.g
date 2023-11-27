@@ -4228,14 +4228,22 @@ struct_declaration[] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            // start the struct definition
+            // start the struct declaration
             startElement(SSTRUCT_DECLARATION);
         }
+
         class_preamble
+
         STRUCT
+
         class_post
         class_header
-        (options { greedy = true; } : COMMA class_post class_header)*
+
+        (options { greedy = true; } :
+            COMMA
+            class_post
+            class_header
+        )*
 ;
 
 /*
