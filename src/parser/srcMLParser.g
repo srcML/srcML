@@ -5215,6 +5215,7 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
             if (!inMode(MODE_PARAMETER))
                 startElement(SOPERATOR);
         }
+
         BAR
 ;
 
