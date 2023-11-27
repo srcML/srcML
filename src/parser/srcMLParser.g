@@ -5293,7 +5293,12 @@ comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY
 
   Used to mark a colon (":").
 */
-colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); bool markup_colon = true; LightweightElement element(this); ENTRY_DEBUG } :
+colon_marked[] {
+        bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN);
+        bool markup_colon = true;
+        LightweightElement element(this);
+        ENTRY_DEBUG
+} :
         {
             if (in_ternary) {
                 endDownToMode(MODE_THEN);
@@ -5324,9 +5329,20 @@ colon_marked[] { bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN); 
                 endDownToMode(MODE_INTERNAL_END_CURLY);
             }
 
-            if (markup_colon && !(in_ternary && true) && (!inLanguage(LANGUAGE_OBJECTIVE_C) || !inMode(MODE_INTERNAL_END_CURLY)))
+            if (
+                markup_colon
+                && !(
+                    in_ternary
+                    && true
+                )
+                && (
+                    !inLanguage(LANGUAGE_OBJECTIVE_C)
+                    || !inMode(MODE_INTERNAL_END_CURLY)
+                )
+            )
                 startElement(SOPERATOR);
         }
+
         COLON
 ;
 
