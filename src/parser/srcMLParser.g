@@ -3643,6 +3643,7 @@ namespace_definition[] { ENTRY_DEBUG } :
 */
 namespace_alias[] { ENTRY_DEBUG } :
         EQUAL
+
         {
             // expect a label name; a label name is a subset of variable names
             setMode(MODE_VARIABLE_NAME);
