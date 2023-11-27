@@ -3498,8 +3498,16 @@ visual_cxx_asm_declaration[] { CompleteElement element(this); ENTRY_DEBUG } :
             // start the asm statement
             startElement(SASM);
         }
+
         VISUAL_CXX_ASM
-        ({ LA(1) == LCURLY }? visual_cxx_asm_declaration_curly_pair | (options { greedy = true; } : visual_cxx_asm_inner)*)
+
+        (
+            { LA(1) == LCURLY }?
+            visual_cxx_asm_declaration_curly_pair |
+            
+            (options { greedy = true; } : visual_cxx_asm_inner)*
+        )
+
         (options { greedy = true; } : TERMINATE)*
 ;
 
