@@ -4559,13 +4559,16 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
 
             startElement(SBLOCK);
         }
+
         LCURLY
+
         {
             if (content) {
                 startNewMode(MODE_BLOCK_CONTENT);
                 startNoSkipElement(SCONTENT);
             }
         }
+
         set_bool[skip_ternary, false]
 ;
 
