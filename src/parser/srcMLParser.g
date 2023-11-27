@@ -4387,23 +4387,43 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         }
 
         // suppress ()* warning
-        ({ LA(1) != FINAL }? compound_name | keyword_name)
+        (
+            { LA(1) != FINAL }?
+            compound_name |
+
+            keyword_name
+        )
 
         {
             clearMode(MODE_CLASS_NAME);
         }
 
-        (options { greedy = true; } : { LA(1) == FINAL }? specifier)*
+        (options { greedy = true; } :
+            { LA(1) == FINAL }?
+            specifier
+        )*
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? (options { greedy = true; } : derived_list))*
+        (
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            (options { greedy = true; } : derived_list)
+        )*
 
         // move suppressed ()* warning to begin
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? generic_type_constraint)*
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_CXX_FAMILY) }?
+            generic_type_constraint
+        )*
 
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
+        (
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (options { greedy = true; } :
                 super_list_java
-                { insuper = true; } (extends_list | implements_list)
+
+                {
+                    insuper = true;
+                }
+
+                (extends_list | implements_list)
                 (options { greedy = true; } : extends_list | implements_list)*
             )
         )*
