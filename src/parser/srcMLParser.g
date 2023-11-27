@@ -4254,7 +4254,9 @@ struct_declaration[] { ENTRY_DEBUG } :
 struct_union_definition[int element_token] { ENTRY_DEBUG } :
         class_preprocessing[element_token]
         class_preamble
+
         (STRUCT | UNION)
+
         class_post
         (class_header lcurly[false] | lcurly[false])
 
