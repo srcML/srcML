@@ -4584,7 +4584,11 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
         {
             if (inMode(MODE_ANONYMOUS)) {
                 endMode();
-                if (LA(1) == LPAREN) { call_argument_list(); }
+
+                if (LA(1) == LPAREN) {
+                    call_argument_list();
+                }
+
                 return;
             }
 
