@@ -3697,15 +3697,26 @@ using_aliasing[] { int type_count = 0; int secondtoken = 0; int after_token = 0;
             // start the initialization element
             startElement(SDECLARATION_INITIALIZATION);
         }
+
         EQUAL
+
         (
-            { pattern_check(stmt_type, secondtoken, type_count, after_token) &&
-                (stmt_type == FUNCTION_DECL || stmt_type == FUNCTION || stmt_type == OPERATOR_FUNCTION_DECL || stmt_type == OPERATOR_FUNCTION) }?
+            {
+                pattern_check(stmt_type, secondtoken, type_count, after_token)
+                && (
+                    stmt_type == FUNCTION_DECL
+                    || stmt_type == FUNCTION
+                    || stmt_type == OPERATOR_FUNCTION_DECL
+                    || stmt_type == OPERATOR_FUNCTION
+                )
+            }?
             {
                 startElement(STYPE);
             }
+            function_declaration[type_count] |
 
-            function_declaration[type_count] | set_int[type_count, type_count + 1] variable_declaration_type[type_count]
+            set_int[type_count, type_count + 1]
+            variable_declaration_type[type_count]
         )*
 ;
 
