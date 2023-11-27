@@ -3976,8 +3976,16 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
         }
 
         (ATINTERFACE | ATIMPLEMENTATION)
-        ({ first }? objective_c_class_header set_bool[first, false])*
-        (lcurly[false]
+
+        (
+            { first }?
+            objective_c_class_header
+            set_bool[first, false]
+        )*
+
+        (
+            lcurly[false]
+
             {
                 class_default_access_action(SPROTECTED_ACCESS_DEFAULT);
             }
