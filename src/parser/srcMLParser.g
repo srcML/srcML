@@ -3358,6 +3358,7 @@ yield_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+
         YIELD
 ;
 
