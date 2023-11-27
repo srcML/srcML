@@ -5227,7 +5227,13 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
 comma[] { bool markup_comma = true; ENTRY_DEBUG } :
         {
             // comma ends the current item in a list or ends the current expression
-            if (!inTransparentMode(MODE_PARSE_EOL) && (inTransparentMode(MODE_LIST) || inTransparentMode(MODE_STATEMENT)))
+            if (
+                !inTransparentMode(MODE_PARSE_EOL)
+                && (
+                    inTransparentMode(MODE_LIST)
+                    || inTransparentMode(MODE_STATEMENT)
+                )
+            )
                 // might want to check for !inMode(MODE_INTERNAL_END_CURLY)
                 endDownToModeSet(MODE_LIST | MODE_STATEMENT);
 
@@ -5244,7 +5250,9 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
             if (inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA))
                 markup_comma = false;
         }
+
         comma_marked[markup_comma]
+
         {
             if (inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA)) {
                 startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
