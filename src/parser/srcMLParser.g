@@ -4325,15 +4325,23 @@ annotation_definition[] { ENTRY_DEBUG } :
 */
 class_default_access_action[int access_token] { ENTRY_DEBUG } :
         {
-            if ((inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_OBJECTIVE_C))
-                && (SkipBufferSize() > 0
-                || !(LA(1) == PUBLIC
-                || LA(1) == PRIVATE
-                || LA(1) == PROTECTED
-                || LA(1) == SIGNAL
-                || LA(1) == ATREQUIRED
-                || LA(1) == ATOPTIONAL)))
-            {
+            if (
+                (
+                    inLanguage(LANGUAGE_CXX)
+                    || inLanguage(LANGUAGE_OBJECTIVE_C)
+                )
+                && (
+                    SkipBufferSize() > 0
+                    || !(
+                        LA(1) == PUBLIC
+                        || LA(1) == PRIVATE
+                        || LA(1) == PROTECTED
+                        || LA(1) == SIGNAL
+                        || LA(1) == ATREQUIRED
+                        || LA(1) == ATOPTIONAL
+                    )
+                )
+            ) {
                 // create block section
                 section_entry_action_first();
 
