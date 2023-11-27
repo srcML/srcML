@@ -3660,6 +3660,7 @@ namespace_block[] { ENTRY_DEBUG } :
             // nest a block inside the namespace
             setMode(MODE_STATEMENT | MODE_NEST);
         }
+
         lcurly[false]
 ;
 
