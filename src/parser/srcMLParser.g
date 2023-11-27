@@ -3600,6 +3600,7 @@ extern_definition[] { ENTRY_DEBUG } :
 */
 extern_name[] { ENTRY_DEBUG } :
         string_literal
+
         {
             // nest a block inside the namespace
             setMode(MODE_STATEMENT | MODE_NEST);
