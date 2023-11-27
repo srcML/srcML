@@ -3751,6 +3751,7 @@ class_directive[] { ENTRY_DEBUG } :
             // start the class declaration definition
             startElement(SCLASS_DECLARATION);
         }
+
         ATCLASS
         (identifier | COMMA)*
 ;
