@@ -5390,15 +5390,26 @@ condition[] { ENTRY_DEBUG } :
 /*
   condition_inner
 */
-condition_inner[] { ENTRY_DEBUG int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE;
-                    pattern_check(stmt_type, secondtoken, type_count, after_token);
+condition_inner[] {
+        ENTRY_DEBUG
 
-                    if (stmt_type == VARIABLE) {
-                        startNewMode(MODE_INTERNAL_END_PAREN);
-                    }
+        int type_count = 0;
+        int secondtoken = 0;
+        int after_token = 0;
+        STMT_TYPE stmt_type = NONE;
+
+        pattern_check(stmt_type, secondtoken, type_count, after_token);
+
+        if (stmt_type == VARIABLE) {
+            startNewMode(MODE_INTERNAL_END_PAREN);
+        }
 } :
-        { stmt_type == VARIABLE }? control_initialization_variable_declaration[type_count] |
-        { LA(1) != RPAREN }? expression |
+        { stmt_type == VARIABLE }?
+        control_initialization_variable_declaration[type_count] |
+
+        { LA(1) != RPAREN }?
+        expression |
+
         rparen[false]
 ;
 
