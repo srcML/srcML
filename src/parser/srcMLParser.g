@@ -3765,6 +3765,7 @@ protocol_declaration[] { ENTRY_DEBUG } :
 
             startElement(SPROTOCOL_DECLARATION);
         }
+
         ATPROTOCOL
         (variable_identifier | COMMA)*
 ;
