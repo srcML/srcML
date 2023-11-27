@@ -3812,6 +3812,7 @@ emit_statement[] { ENTRY_DEBUG } :
 
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
+
         EMIT
 ;
 
