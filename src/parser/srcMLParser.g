@@ -4200,14 +4200,22 @@ interface_declaration[] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            // start the interface definition
+            // start the interface declaration
             startElement(SINTERFACE_DECLARATION);
         }
+
         class_preamble
+
         INTERFACE
+
         class_post
         class_header
-        (options { greedy = true; } : COMMA class_post class_header)*
+
+        (options { greedy = true; } :
+            COMMA
+            class_post
+            class_header
+        )*
 ;
 
 /*
