@@ -3584,8 +3584,13 @@ extern_definition[] { ENTRY_DEBUG } :
             // start the extern definition
             startElement(SEXTERN);
         }
+
         EXTERN
-        (extern_alias (options { greedy = true; } : variable_identifier)*)*
+
+        (
+            extern_alias
+            (options { greedy = true; } : variable_identifier)*
+        )*
 ;
 
 /*
