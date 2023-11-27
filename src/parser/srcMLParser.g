@@ -5268,19 +5268,23 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 */
 comma_marked[bool markup_comma = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup_comma
-                && (!inMode(MODE_PARAMETER)
+            if (
+                markup_comma
+                && (
+                    !inMode(MODE_PARAMETER)
                     && !inMode(MODE_ARGUMENT)
-                    && !(inTransparentMode(MODE_IN_INIT)
+                    && !(
+                        inTransparentMode(MODE_IN_INIT)
                         && inMode(MODE_EXPRESSION | MODE_LIST)
-                        )
                     )
+                )
                 && !inMode(MODE_ENUM)
                 && !inMode(MODE_INTERNAL_END_CURLY)
                 && !inMode(MODE_INITIALIZATION_LIST)
-                )
+            )
                 startElement(SOPERATOR);
         }
+
         COMMA
 ;
 
