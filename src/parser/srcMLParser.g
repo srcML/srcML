@@ -6582,14 +6582,20 @@ pure_lead_type_identifier_no_specifiers[] { ENTRY_DEBUG } :
 
             // enum use in a type
             { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
-            (ENUM variable_identifier (variable_identifier | multops | tripledotop | INLINE)) => ENUM |
+            (
+                ENUM
+                variable_identifier
+                (variable_identifier | multops | tripledotop | INLINE)
+            ) => ENUM |
 
             // entire enum definition
             { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
             enum_definition_complete |
 
             { LA(1) == DECLTYPE }?
-            type_specifier_call | atomic
+            type_specifier_call |
+
+            atomic
         )
 ;
 
