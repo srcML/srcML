@@ -6775,6 +6775,7 @@ qmark_name[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
+
         QMARK
 ;
 
