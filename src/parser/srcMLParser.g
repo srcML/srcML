@@ -7615,17 +7615,21 @@ simple_name_optional_template_destop[bool push = true] { CompleteElement element
         identifier_destop[push]
 
         (
-            { inLanguage(LANGUAGE_CXX_FAMILY) || inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-                { generic_argument_list_check() }?
-                    (generic_argument_list) => generic_argument_list
-                    /* Commented-out code: (options { greedy = true; } : generic_type_constraint)* */ |
+            {
+                inLanguage(LANGUAGE_CXX_FAMILY)
+                || inLanguage(LANGUAGE_JAVA_FAMILY)
+                || inLanguage(LANGUAGE_OBJECTIVE_C)
+            }?
+            { generic_argument_list_check() }?
+            (generic_argument_list) => generic_argument_list
+            /* Commented-out code: (options { greedy = true; } : generic_type_constraint)* */ |
 
-                    (cuda_argument_list) => cuda_argument_list |
+            (cuda_argument_list) => cuda_argument_list |
 
-                    {
-                        // set the token to NOP since we did not find a template argument list
-                        tp.setType(SNOP);
-                    }
+            {
+                // set the token to NOP since we did not find a template argument list
+                tp.setType(SNOP);
+            }
         )
 ;
 
