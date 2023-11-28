@@ -7139,7 +7139,8 @@ attribute_csharp[] { CompleteElement element(this); ENTRY_DEBUG } :
         LBRACKET
 
         // do not warn; identifier list and colon are in complete expression as well, but need special processing here
-        (options { warnWhenFollowAmbig = false; } : { next_token() == COLON }?
+        (options { warnWhenFollowAmbig = false; } :
+            { next_token() == COLON }?
             attribute_csharp_target
             COLON
         )*
