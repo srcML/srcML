@@ -8214,11 +8214,18 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
 
         keyword_name_inner[iscompound]
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
+            attribute_cpp
+        )*
 
         (options { greedy = true; } :
-            { /* Commented-out code: !inTransparentMode(MODE_EAT_TYPE) && */
-                (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)
+            {
+                /* Commented-out code: !inTransparentMode(MODE_EAT_TYPE) && */
+                (
+                    !inLanguage(LANGUAGE_CXX)
+                    || next_token() != LBRACKET
+                )
             }?
             variable_identifier_array_grammar_sub[iscompound]
         )*
