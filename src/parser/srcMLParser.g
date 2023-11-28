@@ -7645,7 +7645,8 @@ simple_name_optional_template_optional_specifier[bool push = true] { CompleteEle
 
         (
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list (options { greedy = true; } : generic_type_constraint)* |
+            (generic_argument_list) => generic_argument_list
+            (options { greedy = true; } : generic_type_constraint)* |
 
             (cuda_argument_list) => cuda_argument_list |
         )
