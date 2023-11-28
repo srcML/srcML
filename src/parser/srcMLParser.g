@@ -8822,10 +8822,10 @@ objective_c_call_argument[] { bool first = true; ENTRY_DEBUG } :
 
         objective_c_selector
 
-        (
-            options { greedy = true; } :
-                { first && LA(1) != RBRACKET }?
-                argument set_bool[first, false]
+        (options { greedy = true; } :
+            { first && LA(1) != RBRACKET }?
+            argument
+            set_bool[first, false]
         )*
 ;
 
