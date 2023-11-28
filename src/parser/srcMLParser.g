@@ -8684,19 +8684,19 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         // warnings seem to be caused by antlr ()* ending the rules
 
-        (
-            // first greedy eliminates LPAREN LCURLY
-            options { greedy = true; } :
-                call_argument_list
+        // first greedy eliminates LPAREN LCURLY
+        (options { greedy = true; } :
+            call_argument_list
 
-            (
-                // second greedy get rid of rparen
-                options { greedy = true; } :
-                    { LA(1) != RPAREN && LA(1) != COMMA }?
-                    annotation_argument
+            // second greedy get rid of rparen
+            (options { greedy = true; } :
+                { LA(1) != RPAREN && LA(1) != COMMA }?
+                annotation_argument
 
                 // third greedy gets rid of comma
-                (options { greedy = true; } : comma)*
+                (options { greedy = true; } :
+                    comma
+                )*
             )*
 
             rparen
