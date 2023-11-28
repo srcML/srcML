@@ -8155,7 +8155,12 @@ compound_name_objective_c[bool& iscompound] { ENTRY_DEBUG } :
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multopblockop)*
 
         (options { greedy = true; } :
-            (period | member_pointer) { iscompound = true; }
+            (period | member_pointer)
+
+            {
+                iscompound = true;
+            }
+
             (multopblockop)*
             simple_name_optional_template
         )*
