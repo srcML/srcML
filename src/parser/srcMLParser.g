@@ -7093,21 +7093,34 @@ variable_identifier_array_grammar_sub_contents { bool found_expr = false; bool i
         complete_expression |
 
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-        (options { greedy = true; } : { LA(1) != RBRACKET }?
-            ({ /* stop warning */ LA(1) == COMMA }?
-            { if (!found_expr) {
-                empty_element(SEXPRESSION, true);
-            }}
-
-            COMMA
-            { found_expr = false; } | complete_expression { found_expr = true; })
+        (options { greedy = true; } :
+            { LA(1) != RBRACKET }?
+            (
+                { LA(1) == COMMA /* stop warning */ }?
+                {
+                    if (!found_expr) {
+                        empty_element(SEXPRESSION, true);
+                    }
+                }
+                COMMA
+                {
+                    found_expr = false;
+                } |
+                
+                complete_expression
+                {
+                    found_expr = true;
+                }
+            )
 
             set_bool[is_expr, true]
         )*
 
-        { if (is_expr && !found_expr) {
-            empty_element(SEXPRESSION, true);
-        }}
+        {
+            if (is_expr && !found_expr) {
+                empty_element(SEXPRESSION, true);
+            }
+        }
 ;
 
 /*
