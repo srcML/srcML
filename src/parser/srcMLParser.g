@@ -8648,7 +8648,8 @@ destructor_header[] { ENTRY_DEBUG } :
 
             specifier |
 
-            { next_token() != TEMPOPS }? template_specifier |
+            { next_token() != TEMPOPS }?
+            template_specifier |
 
             template_declaration_full |
 
