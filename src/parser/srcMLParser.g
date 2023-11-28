@@ -5647,30 +5647,34 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
   Figures out if we have a declaration, either variable or function. This is pretty complicated as it has to
   decide whether it is a declaration or not, and whether it is a function or a variable declaration.
 */
-pattern_check_core[ int& token,           /* second token, after name (always returned) */
-                    int& fla,             /* for a function, TERMINATE or LCURLY, 0 for a variable */
-                    int& type_count,      /* number of tokens in type (not including name) */
-                    int& specifier_count, /* number of tokens that are specifiers */
-                    int& attribute_count, /* number of tokens that are attributes */
-                    int& template_count,  /* number of tokens that are templates */
-                    STMT_TYPE& type,      /* type discovered */
-                    bool inparam,         /* are we in a parameter */
-                    bool& sawtemplate,    /* have we seen a template */
-                    bool& sawcontextual,  /* have we seen a contextual keyword */
-                    int& posin
+pattern_check_core[
+        int& token,           /* second token, after name (always returned) */
+        int& fla,             /* for a function, TERMINATE or LCURLY, 0 for a variable */
+        int& type_count,      /* number of tokens in type (not including name) */
+        int& specifier_count, /* number of tokens that are specifiers */
+        int& attribute_count, /* number of tokens that are attributes */
+        int& template_count,  /* number of tokens that are templates */
+        STMT_TYPE& type,      /* type discovered */
+        bool inparam,         /* are we in a parameter */
+        bool& sawtemplate,    /* have we seen a template */
+        bool& sawcontextual,  /* have we seen a contextual keyword */
+        int& posin
 ] {
         token = 0;
         int parameter_pack_pos = -1;
         fla = 0;
+
         type_count = 0;
         specifier_count = 0;
         attribute_count = 0;
         template_count = 0;
+
         type = NONE;
         sawtemplate = false;
         sawcontextual= false;
         posin = 0;
         isdestructor = false; /* global flag detected during name matching */
+
         bool foundpure = false;
         bool isoperator = false;
         bool ismain = false;
@@ -5679,10 +5683,12 @@ pattern_check_core[ int& token,           /* second token, after name (always re
         bool endbracket = false;
         bool modifieroperator = false;
         bool is_c_class_identifier = false;
+
         is_qmark = false;
         int real_type_count = 0;
         bool lcurly = false;
         bool is_event = false;
+
         ENTRY_DEBUG
 } :
         // main pattern for variable declarations, and most function declaration/definitions
@@ -5701,11 +5707,22 @@ pattern_check_core[ int& token,           /* second token, after name (always re
         (
             (
                 {
-                    ((inLanguage(LANGUAGE_JAVA_FAMILY) || inLanguage(LANGUAGE_CSHARP) || (type_count == 0))
-                        || (LA(1) != LBRACKET || next_token() == LBRACKET))
-                    && (LA(1) != IN || !inTransparentMode(MODE_CONTROL_CONDITION))
+                    (
+                        (
+                            inLanguage(LANGUAGE_JAVA_FAMILY)
+                            || inLanguage(LANGUAGE_CSHARP)
+                            || (type_count == 0)
+                        )
+                        || (
+                            LA(1) != LBRACKET
+                            || next_token() == LBRACKET
+                        )
+                    )
+                    && (
+                        LA(1) != IN
+                        || !inTransparentMode(MODE_CONTROL_CONDITION)
+                    )
                 }?
-
                 set_bool[is_qmark, (is_qmark || (LA(1) == QMARK)) && inLanguage(LANGUAGE_CSHARP)]
 
                 set_int[posin, LA(1) == IN ? posin = type_count : posin]
@@ -5725,40 +5742,94 @@ pattern_check_core[ int& token,           /* second token, after name (always re
                 (
                     {
                         argument_token_set.member(LA(1))
-                        && (LA(1) != SIGNAL || (LA(1) == SIGNAL && look_past(SIGNAL) == COLON))
-                        && (!inLanguage(LANGUAGE_CXX) || (/* Commented-out code: LA(1) != FINAL && */ LA(1) != OVERRIDE))
-                        && (LA(1) != TEMPLATE || next_token() != TEMPOPS)
-                        && (LA(1) != ATOMIC || next_token() != LPAREN)
+                        && (
+                            LA(1) != SIGNAL
+                            || (
+                                LA(1) == SIGNAL
+                                && look_past(SIGNAL) == COLON
+                            )
+                        )
+                        && (
+                            !inLanguage(LANGUAGE_CXX)
+                            || (
+                                /* Commented-out code: LA(1) != FINAL && */
+                                LA(1) != OVERRIDE
+                            )
+                        )
+                        && (
+                            LA(1) != TEMPLATE
+                            || next_token() != TEMPOPS
+                        )
+                        && (
+                            LA(1) != ATOMIC
+                            || next_token() != LPAREN
+                        )
                     }?
 
                     set_int[token, LA(1)]
                     set_bool[foundpure, foundpure || (LA(1) == CONST || LA(1) == TYPENAME)]
 
                     (options { generateAmbigWarnings = false; } :
-                        EXTERN (options { greedy = true; } : ALIAS set_int[specifier_count, specifier_count + 1])*
-                        | { LA(1) != NEW || (inLanguage(LANGUAGE_CSHARP) && (inPrevMode(MODE_CLASS) || specifier_count > 0)) }? specifier
-                        | template_specifier set_bool[sawtemplate, true]
-                        | { next_token() == COLON }? SIGNAL | ATREQUIRED | ATOPTIONAL
-                        | { inLanguage(LANGUAGE_JAVA) }? default_specifier
+                        EXTERN
+
+                        (options { greedy = true; } :
+                            ALIAS
+                            set_int[specifier_count, specifier_count + 1]
+                        )* |
+
+                        {
+                            LA(1) != NEW
+                            || (
+                                inLanguage(LANGUAGE_CSHARP)
+                                && (
+                                    inPrevMode(MODE_CLASS)
+                                    || specifier_count > 0
+                                )
+                            )
+                        }?
+                        specifier |
+
+                        template_specifier
+                        set_bool[sawtemplate, true] |
+
+                        { next_token() == COLON }?
+                        SIGNAL |
+
+                        ATREQUIRED | ATOPTIONAL |
+
+                        { inLanguage(LANGUAGE_JAVA) }?
+                        default_specifier
                     )
 
                     set_int[specifier_count, specifier_count + 1]
-                    set_type[type, ACCESS_REGION,
-                            ((inLanguage(LANGUAGE_CXX) && look_past_two(NAME, VOID) == COLON)
-                                || inLanguage(LANGUAGE_OBJECTIVE_C))
-                            && (token == PUBLIC
-                                || token == PRIVATE
-                                || token == PROTECTED
-                                || token == SIGNAL
-                                || token == ATREQUIRED
-                                || token == ATOPTIONAL)
+
+                    set_type[
+                        type,
+                        ACCESS_REGION,
+                        (
+                            (
+                                inLanguage(LANGUAGE_CXX)
+                                && look_past_two(NAME, VOID) == COLON
+                            )
+                            || inLanguage(LANGUAGE_OBJECTIVE_C)
+                        )
+                        && (
+                            token == PUBLIC
+                            || token == PRIVATE
+                            || token == PROTECTED
+                            || token == SIGNAL
+                            || token == ATREQUIRED
+                            || token == ATOPTIONAL
+                        )
                     ]
 
                     throw_exception[type == ACCESS_REGION] |
-                    { true }? template_declaration_full set_int[template_count, template_count + 1] |
+
+                    { true }?
+                    template_declaration_full
+                    set_int[template_count, template_count + 1] |
 
                     { inLanguage(LANGUAGE_CSHARP) }?
-
                     LBRACKET
 
                     // suppress warning
@@ -5767,9 +5838,13 @@ pattern_check_core[ int& token,           /* second token, after name (always re
                     // ~RBRACKET matches these as well
                     // suppress warning
                     (options { warnWhenFollowAmbig = false; } :
-                        (RETURN | EVENT | set_type[type, GLOBAL_ATTRIBUTE, check_global_attribute()]
-                        throw_exception[type == GLOBAL_ATTRIBUTE]
-                        identifier)
+                        (
+                            RETURN | EVENT |
+                            set_type[type, GLOBAL_ATTRIBUTE, check_global_attribute()]
+
+                            throw_exception[type == GLOBAL_ATTRIBUTE]
+                            identifier
+                        )
                     )?
 
                     // complete_expression
@@ -5779,8 +5854,7 @@ pattern_check_core[ int& token,           /* second token, after name (always re
 
                     set_int[attribute_count, attribute_count + 1] |
 
-                    { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
-
+                    { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
                     LBRACKET
                     LBRACKET
 
@@ -5801,37 +5875,117 @@ pattern_check_core[ int& token,           /* second token, after name (always re
 
                     {
                         type_count == attribute_count + specifier_count + template_count
-                        && (!inLanguage(LANGUAGE_JAVA)
-                            || (inLanguage(LANGUAGE_JAVA)
-                                && (LA(1) != ATSIGN
-                                    || (LA(1) == ATSIGN
-                                    && next_token() == INTERFACE))))
-                        && (!inLanguage(LANGUAGE_CXX)
-                            || (!keyword_name_token_set.member(next_token())
-                            || (next_token() == LBRACKET
-                                && next_token_two() == LBRACKET)))
+                        && (
+                            !inLanguage(LANGUAGE_JAVA)
+                            || (
+                                inLanguage(LANGUAGE_JAVA)
+                                && (
+                                    LA(1) != ATSIGN
+                                    || (
+                                        LA(1) == ATSIGN
+                                        && next_token() == INTERFACE
+                                    )
+                                )
+                            )
+                        )
+                        && (
+                            !inLanguage(LANGUAGE_CXX)
+                            || (
+                                !keyword_name_token_set.member(next_token())
+                                || (
+                                    next_token() == LBRACKET
+                                    && next_token_two() == LBRACKET
+                                )
+                            )
+                        )
                     }?
+                    (
+                        CLASS
+                        set_type[type, CLASS_DECL] |
 
-                    (CLASS           set_type[type, CLASS_DECL]     |
-                    CXX_CLASS        set_type[type, CLASS_DECL]     |
-                    STRUCT           set_type[type, STRUCT_DECL]    |
-                    UNION            set_type[type, UNION_DECL]     |
-                    INTERFACE        set_type[type, INTERFACE_DECL] |
-                    ATSIGN INTERFACE set_type[type, ANNOTATION_DEFN])
+                        CXX_CLASS
+                        set_type[type, CLASS_DECL] |
+
+                        STRUCT
+                        set_type[type, STRUCT_DECL] |
+
+                        UNION
+                        set_type[type, UNION_DECL] |
+
+                        INTERFACE
+                        set_type[type, INTERFACE_DECL] |
+
+                        ATSIGN
+                        INTERFACE
+                        set_type[type, ANNOTATION_DEFN]
+                    )
 
                     set_bool[lcurly, LA(1) == LCURLY]
 
-                    (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
-                    ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
+                    (options { greedy = true; } :
+                        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
+                        attribute_cpp
+                    )*
+
+                    (
+                        { LA(1) == DOTDOTDOT }?
+                        DOTDOTDOT
+                        set_int[type_count, type_count + 1]
+                    )*
 
                     class_post
                     (class_header | LCURLY)
 
-                    set_type[type, CLASS_DEFN,     type == CLASS_DECL     && (LA(1) == LCURLY || lcurly)]
-                    set_type[type, STRUCT_DEFN,    type == STRUCT_DECL    && (LA(1) == LCURLY || lcurly)]
-                    set_type[type, UNION_DEFN,     type == UNION_DECL     && (LA(1) == LCURLY || lcurly)]
-                    set_type[type, INTERFACE_DEFN, type == INTERFACE_DECL && (LA(1) == LCURLY || lcurly)]
-                    set_type[type, NONE,           !(LA(1) == TERMINATE || LA(1)    == COMMA  || LA(1) == LCURLY || lcurly)]
+                    set_type[
+                        type,
+                        CLASS_DEFN,
+                        type == CLASS_DECL
+                        && (
+                            LA(1) == LCURLY
+                            || lcurly
+                        )
+                    ]
+
+                    set_type[
+                        type,
+                        STRUCT_DEFN,
+                        type == STRUCT_DECL
+                        && (
+                            LA(1) == LCURLY
+                            || lcurly
+                        )
+                    ]
+
+                    set_type[
+                        type,
+                        UNION_DEFN,
+                        type == UNION_DECL
+                        && (
+                            LA(1) == LCURLY
+                            || lcurly
+                        )
+                    ]
+
+                    set_type[
+                        type,
+                        INTERFACE_DEFN,
+                        type == INTERFACE_DECL
+                        && (
+                            LA(1) == LCURLY
+                            || lcurly
+                        )
+                    ]
+
+                    set_type[
+                        type,
+                        NONE,
+                        !(
+                            LA(1) == TERMINATE
+                            || LA(1) == COMMA 
+                            || LA(1) == LCURLY
+                            || lcurly
+                        )
+                    ]
 
                     throw_exception[type != NONE]
 
@@ -5843,26 +5997,65 @@ pattern_check_core[ int& token,           /* second token, after name (always re
 
                     set_bool[lcurly, LA(1) == LCURLY]
 
-                    (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
-                    ({ LA(1) == DOTDOTDOT }? DOTDOTDOT set_int[type_count, type_count + 1])*
-                    ({ inLanguage(LANGUAGE_JAVA) }? class_header
-                        | { inLanguage(LANGUAGE_CSHARP)}? variable_identifier (derived_list)*
-                        | enum_class_header
-                        | LCURLY
+                    (options { greedy = true; } :
+                        { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
+                        attribute_cpp
+                    )*
+
+                    (
+                        { LA(1) == DOTDOTDOT }?
+                        DOTDOTDOT
+                        set_int[type_count, type_count + 1]
+                    )*
+
+                    (
+                        { inLanguage(LANGUAGE_JAVA) }?
+                        class_header |
+
+                        { inLanguage(LANGUAGE_CSHARP) }?
+                        variable_identifier
+                        (derived_list)* |
+
+                        enum_class_header |
+
+                        LCURLY
                     )
 
-                    set_type[type, ENUM_DEFN, type == ENUM_DECL && (LA(1) == LCURLY || lcurly)]
-                    set_type[type, NONE, !(LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == LCURLY || lcurly)]
+                    set_type[
+                        type,
+                        ENUM_DEFN,
+                        type == ENUM_DECL
+                        && (
+                            LA(1) == LCURLY
+                            || lcurly
+                        )
+                    ]
+
+                    set_type[
+                        type,
+                        NONE,
+                        !(
+                            LA(1) == TERMINATE
+                            || LA(1) == COMMA
+                            || LA(1) == LCURLY
+                            || lcurly
+                        )
+                    ]
 
                     throw_exception[type != NONE]
 
                     set_bool[foundpure]
                     set_int[type_count, type_count + 1] |
 
-                    (USING set_type[type, USING_STMT] throw_exception[true]) |
+                    (
+                        USING
+                        set_type[type, USING_STMT]
+                        throw_exception[true]
+                    ) |
 
                     { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-                    generic_argument_list set_int[specifier_count, specifier_count + 1] |
+                    generic_argument_list
+                    set_int[specifier_count, specifier_count + 1] |
 
                     { inLanguage(LANGUAGE_JAVA_FAMILY) }?
                     annotation
@@ -5878,10 +6071,12 @@ pattern_check_core[ int& token,           /* second token, after name (always re
                     // always count as a name for now since is always used as a type or type modifier
                     auto_keyword[false] |
 
-                    EVENT set_bool[is_event] |
+                    EVENT
+                    set_bool[is_event] |
 
                     // special function name
-                    MAIN set_bool[ismain, type_count == 0] |
+                    MAIN
+                    set_bool[ismain, type_count == 0] |
 
                     { is_c_class_identifier || keyword_name_token_set.member(next_token()) }?
                     keyword_name |
@@ -5890,12 +6085,25 @@ pattern_check_core[ int& token,           /* second token, after name (always re
                     bar |
 
                     // type parts that can occur before other type parts (excluding specifiers)
-                    // do not match a struct, class, or union.  If was class/struct/union, decl will not reach here.
-                    // if elaborated type specifier should also be handled above. If reached here because non-specifier, then class/struct/union.
-                    { LA(1) != LBRACKET && (LA(1) != CLASS && LA(1) != CXX_CLASS && LA(1) != STRUCT && LA(1) != UNION) }?
-                    ({ LA(1) == DECLTYPE }? type_specifier_call
-                        | { next_token() == LPAREN }? atomic
-                        | pure_lead_type_identifier_no_specifiers
+                    // do not match a struct, class, or union; if was class/struct/union, decl will not reach here
+                    // if elaborated type specifier should also be handled above; if reached here because non-specifier, then class/struct/union
+                    {
+                        LA(1) != LBRACKET
+                        && (
+                            LA(1) != CLASS
+                            && LA(1) != CXX_CLASS
+                            && LA(1) != STRUCT
+                            && LA(1) != UNION
+                        )
+                    }?
+                    (
+                        { LA(1) == DECLTYPE }?
+                        type_specifier_call |
+
+                        { next_token() == LPAREN }?
+                        atomic |
+
+                        pure_lead_type_identifier_no_specifiers
                     )
                     set_bool[foundpure] |
 
@@ -5912,9 +6120,18 @@ pattern_check_core[ int& token,           /* second token, after name (always re
             )*
 
             // special case for property attributes as names, e.g., get, set, etc.
-            throw_exception[type == PROPERTY_ACCESSOR && (type_count == attribute_count + specifier_count + 1) && LA(1) == LCURLY]
+            throw_exception[
+                type == PROPERTY_ACCESSOR
+                && (type_count == attribute_count + specifier_count + 1)
+                && LA(1) == LCURLY
+            ]
             set_type[type, PROPERTY_ACCESSOR_DECL, type == PROPERTY_ACCESSOR]
-            throw_exception[type == PROPERTY_ACCESSOR_DECL && (type_count == attribute_count + specifier_count + 1) && LA(1) == TERMINATE]
+
+            throw_exception[
+                type == PROPERTY_ACCESSOR_DECL
+                && (type_count == attribute_count + specifier_count + 1)
+                && LA(1) == TERMINATE
+            ]
             set_type[type, NONE, type == PROPERTY_ACCESSOR_DECL]
 
             set_int[real_type_count, type_count]
@@ -5932,20 +6149,25 @@ pattern_check_core[ int& token,           /* second token, after name (always re
             // using also has no name so counter operation
             set_int[type_count, inMode(MODE_USING) ? type_count + 1 : type_count]
 
-            set_int[type_count, type_count > 1
-                    && inLanguage(LANGUAGE_CXX)
-                    && parameter_pack_pos >= 0
-                    && parameter_pack_pos == (type_count - 1)
-                    ? type_count + 1 : type_count
+            set_int[
+                type_count,
+                type_count > 1
+                && inLanguage(LANGUAGE_CXX)
+                && parameter_pack_pos >= 0
+                && parameter_pack_pos == (type_count - 1)
+                ? type_count + 1 : type_count
             ]
 
             set_int[type_count, type_count > 1 ? type_count - 1 : 0]
 
             // special case for what looks like a destructor declaration
-            throw_exception[isdestructor
-                            && (modifieroperator
-                                || (type_count - specifier_count - attribute_count - template_count) > 1
-                                || ((type_count - specifier_count - attribute_count - template_count) == 1))
+            throw_exception[
+                isdestructor
+                && (
+                    modifieroperator
+                    || (type_count - specifier_count - attribute_count - template_count) > 1
+                    || ((type_count - specifier_count - attribute_count - template_count) == 1)
+                )
             ]
 
             // check if an event
@@ -5953,7 +6175,13 @@ pattern_check_core[ int& token,           /* second token, after name (always re
             throw_exception[is_event]
 
             // check if a property
-            set_type[type, PROPERTY_STMT, inLanguage(LANGUAGE_CSHARP) && (type_count - specifier_count) > 0 && LA(1) == LCURLY]
+            set_type[
+                type,
+                PROPERTY_STMT,
+                inLanguage(LANGUAGE_CSHARP)
+                && (type_count - specifier_count) > 0
+                && LA(1) == LCURLY
+            ]
             throw_exception[type == PROPERTY_STMT]
 
             /*
@@ -5963,71 +6191,114 @@ pattern_check_core[ int& token,           /* second token, after name (always re
 
               For now, attribute and template counts are left out on purpose.
             */
-            set_type[type, VARIABLE,
-                    ((((type_count - specifier_count - template_count) > 0
-                    && LA(1) != OPERATORS
-                    && LA(1) != CSPEC
-                    && LA(1) != MSPEC
-                    && ((inLanguage(LANGUAGE_CXX)
-                            && !inMode(MODE_ACCESS_REGION))
-                        || LA(1) == 1
-                        || LA(1) == TERMINATE
-                        || LA(1) == COMMA
-                        || LA(1) == BAR
-                        || LA(1) == LBRACKET
-                        || (LA(1) == LPAREN
-                            && next_token() != RPAREN)
-                        || LA(1) == LCURLY
-                        || LA(1) == EQUAL
-                        || LA(1) == IN
-                        || ((inTransparentMode(MODE_CONTROL_CONDITION)
-                                || inLanguage(LANGUAGE_C)
-                                || inLanguage(LANGUAGE_CXX))
-                            && LA(1) == COLON)
-                        || (inLanguage(LANGUAGE_CSHARP)
-                            && LA(1) == RBRACKET))))
-                    || (inparam
-                        && (LA(1) == RPAREN
-                        || LA(1) == COMMA
-                        || LA(1) == BAR
-                        || LA(1) == LBRACKET
-                        || LA(1) == EQUAL
-                        || LA(1) == IN
-                        || (inLanguage(LANGUAGE_CSHARP)
-                            && LA(1) == RBRACKET))))
+            set_type[
+                type,
+                VARIABLE,
+                (
+                    (
+                        (
+                            (type_count - specifier_count - template_count) > 0
+                            && LA(1) != OPERATORS
+                            && LA(1) != CSPEC
+                            && LA(1) != MSPEC
+                            && (
+                                (
+                                    inLanguage(LANGUAGE_CXX)
+                                    && !inMode(MODE_ACCESS_REGION)
+                                )
+                                || LA(1) == 1
+                                || LA(1) == TERMINATE
+                                || LA(1) == COMMA
+                                || LA(1) == BAR
+                                || LA(1) == LBRACKET
+                                || (
+                                    LA(1) == LPAREN
+                                    && next_token() != RPAREN
+                                )
+                                || LA(1) == LCURLY
+                                || LA(1) == EQUAL
+                                || LA(1) == IN
+                                || (
+                                    (
+                                        inTransparentMode(MODE_CONTROL_CONDITION)
+                                        || inLanguage(LANGUAGE_C)
+                                        || inLanguage(LANGUAGE_CXX)
+                                    )
+                                    && LA(1) == COLON
+                                )
+                                || (
+                                    inLanguage(LANGUAGE_CSHARP)
+                                    && LA(1) == RBRACKET
+                                )
+                            )
+                        )
+                    )
+                    || (
+                        inparam
+                        && (
+                            LA(1) == RPAREN
+                            || LA(1) == COMMA
+                            || LA(1) == BAR
+                            || LA(1) == LBRACKET
+                            || LA(1) == EQUAL
+                            || LA(1) == IN
+                            || (
+                                inLanguage(LANGUAGE_CSHARP)
+                                && LA(1) == RBRACKET
+                            )
+                        )
+                    )
+                )
             ]
 
             // need to see if we possibly have a constructor/destructor name, with no type
-            set_bool[isconstructor,
-                    // operator methods may not have non-specifier types also
-                    !isoperator
+            set_bool[
+                isconstructor,
+                // operator methods may not have non-specifier types also
+                !isoperator
 
-                    && !ismain
-                    && !isdestructor
-                    && !inLanguage(LANGUAGE_OBJECTIVE_C)
+                && !ismain
+                && !isdestructor
+                && !inLanguage(LANGUAGE_OBJECTIVE_C)
 
-                    // entire type is specifiers
-                    && (type_count == (specifier_count + attribute_count + template_count))
+                // entire type is specifiers
+                && (type_count == (specifier_count + attribute_count + template_count))
 
-                    && (
-                        // inside of a C++ class definition; must match class name
-                        (inMode(MODE_ACCESS_REGION) && !class_namestack.empty() && class_namestack.top() == namestack[0])
-
-                        || (inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
-
-                        // directly inside the block of a Java or C# class
-                        || (inPrevMode(MODE_CLASS)
-                            && (inLanguage(LANGUAGE_JAVA_FAMILY)
-                                || inLanguage(LANGUAGE_CSHARP)))
-
-                        // by itself, but has specifiers so it is not a call
-                        || (specifier_count > 0
-                            && (inLanguage(LANGUAGE_JAVA_FAMILY)
-                                || inLanguage(LANGUAGE_CSHARP)))
-
-                        // outside of a class definition in C++, but with a properly prefixed name
-                        || (inLanguage(LANGUAGE_CXX_FAMILY) && namestack[0] != "" && namestack[0] == namestack[1])
+                && (
+                    // inside of a C++ class definition; must match class name
+                    (
+                        inMode(MODE_ACCESS_REGION)
+                        && !class_namestack.empty()
+                        && class_namestack.top() == namestack[0]
                     )
+
+                    || (inTransparentMode(MODE_ACCESS_REGION) && inMode(MODE_TEMPLATE))
+
+                    // directly inside the block of a Java or C# class
+                    || (
+                        inPrevMode(MODE_CLASS)
+                        && (
+                            inLanguage(LANGUAGE_JAVA_FAMILY)
+                            || inLanguage(LANGUAGE_CSHARP)
+                        )
+                    )
+
+                    // by itself, but has specifiers so it is not a call
+                    || (
+                        specifier_count > 0
+                        && (
+                            inLanguage(LANGUAGE_JAVA_FAMILY)
+                            || inLanguage(LANGUAGE_CSHARP)
+                        )
+                    )
+
+                    // outside of a class definition in C++, but with a properly prefixed name
+                    || (
+                        inLanguage(LANGUAGE_CXX_FAMILY)
+                        && namestack[0] != ""
+                        && namestack[0] == namestack[1]
+                    )
+                )
             ]
 
             // detecting a destructor name uses a data member, since it is detected in during name detection
@@ -6038,7 +6309,13 @@ pattern_check_core[ int& token,           /* second token, after name (always re
             (
                 (
                     // check for function pointer, which must have a non-specifier part of the type
-                    { (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX)) && real_type_count > 0 }?
+                    {
+                        (
+                            inLanguage(LANGUAGE_C)
+                            || inLanguage(LANGUAGE_CXX)
+                        )
+                        && real_type_count > 0
+                    }?
                     (function_pointer_name_grammar eat_optional_macro_call LPAREN) => function_pointer_name_grammar
 
                     // what was assumed to be the name of the function is actually part of the type
@@ -6051,25 +6328,43 @@ pattern_check_core[ int& token,           /* second token, after name (always re
 
                     // POF (Plain Old Function)
                     // need at least one non-specifier in the type (not including the name)
-                    { (type_count - specifier_count - attribute_count - template_count > 0) || isoperator || ismain || saveisdestructor || isconstructor }?
+                    {
+                        (type_count - specifier_count - attribute_count - template_count > 0)
+                        || isoperator
+                        || ismain
+                        || saveisdestructor
+                        || isconstructor
+                    }?
                     function_rest[fla]
                 ) |
 
-                { real_type_count == 0 && specifier_count == 0 && attribute_count == 0 }?
-                (objective_c_method
-                set_int[fla, LA(1)]
-                throw_exception[fla != TERMINATE && fla != LCURLY])
+                {
+                    real_type_count == 0
+                    && specifier_count == 0
+                    && attribute_count == 0
+                }?
+                (
+                    objective_c_method
+                    set_int[fla, LA(1)]
+                    throw_exception[fla != TERMINATE && fla != LCURLY]
+                )
             )
         
             // default to variable in function body; however, if it is an anonymous function (does not end in ":"), then it is not a variable
             throw_exception[
-                (inTransparentMode(MODE_FUNCTION_BODY)
+                (
+                    inTransparentMode(MODE_FUNCTION_BODY)
                     && type == VARIABLE
-                    && fla == TERMINATE)
-                || (inLanguage(LANGUAGE_JAVA)
+                    && fla == TERMINATE
+                )
+                || (
+                    inLanguage(LANGUAGE_JAVA)
                     && inMode(MODE_ENUM)
-                    && (fla == COMMA
-                        || fla == TERMINATE))
+                    && (
+                        fla == COMMA
+                        || fla == TERMINATE
+                    )
+                )
             ]
 
             // since we made it this far, we have a function
@@ -6080,7 +6375,14 @@ pattern_check_core[ int& token,           /* second token, after name (always re
             set_type[type, DESTRUCTOR, saveisdestructor]
 
             // however, we could also have a constructor
-            set_type[type, CONSTRUCTOR, isconstructor && !saveisdestructor && !isoperator && !ismain]
+            set_type[
+                type,
+                CONSTRUCTOR,
+                isconstructor
+                && !saveisdestructor
+                && !isoperator
+                && !ismain
+            ]
         )
 ;
 
