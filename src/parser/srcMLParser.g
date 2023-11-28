@@ -8844,7 +8844,9 @@ objective_c_selector[] { CompleteElement element(this); ENTRY_DEBUG } :
         (
             function_identifier
 
-            (options { greedy = true; } : COLON)* | COLON
+            (options { greedy = true; } : COLON)* |
+
+            COLON
         )
 ;
 
