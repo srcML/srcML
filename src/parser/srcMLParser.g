@@ -7456,8 +7456,15 @@ linq_expression_complete[] { CompleteElement element(this); int count_paren = 0;
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
 
-        (options { warnWhenFollowAmbig = false; } : { LA(1) != RPAREN || count_paren > 0 }?
-            { (LA(1) != RPAREN || count_paren > 0) && try_linq_expression_complete_inner(count_paren) }?
+        (options { warnWhenFollowAmbig = false; } :
+            { LA(1) != RPAREN || count_paren > 0 }?
+            {
+                (
+                    LA(1) != RPAREN
+                    || count_paren > 0
+                )
+                && try_linq_expression_complete_inner(count_paren)
+            }?
             linq_expression_complete_inner[count_paren, true]
         )*
 ;
