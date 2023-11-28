@@ -8363,14 +8363,15 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             PUBLIC | PRIVATE | PROTECTED |
 
             // C++
-            FINAL | STATIC | ABSTRACT | { inLanguage(LANGUAGE_CSHARP) }? NEW |
+            FINAL | STATIC | ABSTRACT |
+            { inLanguage(LANGUAGE_CSHARP) }? NEW |
             MUTABLE | CONSTEXPR | THREAD_LOCAL |
 
             // C
             REGISTER | RESTRICT | NORETURN | COMPLEX | IMAGINARY |
 
             // C/C++ mode
-            CRESTRICT | 
+            CRESTRICT |
 
             // C# and Java
             INTERNAL | SEALED | OVERRIDE | IMPLICIT | EXPLICIT | UNSAFE | READONLY | VOLATILE |
