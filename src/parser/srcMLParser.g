@@ -7348,7 +7348,7 @@ complete_default_parameter[] {
 
   Matches a complete Objective-C call (no stream).
 */
-complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; ENTRY_DEBUG} :
+complete_objective_c_call[] { CompleteElement element(this); int bracket_count = 0; ENTRY_DEBUG } :
         { inputState->guessing }?
         bracket_pair |
 
@@ -7363,11 +7363,13 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
         (options { greedy = true; } :
             // end of objective c call
             { inTransparentMode(MODE_OBJECTIVE_C_CALL) && bracket_count }?
-            rbracket set_int[bracket_count, bracket_count - 1] |
+            rbracket
+            set_int[bracket_count, bracket_count - 1] |
 
             // objective c argument list
             { LA(1) == LBRACKET }?
-            expression set_int[bracket_count, bracket_count + 1] |
+            expression
+            set_int[bracket_count, bracket_count + 1] |
 
             // objective c argument list
             { inTransparentMode(MODE_OBJECTIVE_C_CALL | MODE_ARGUMENT_LIST) }?
@@ -7375,13 +7377,18 @@ complete_objective_c_call[] { CompleteElement element(this); int bracket_count =
 
             // objective c argument
             { inTransparentMode(MODE_OBJECTIVE_C_CALL) }?
-            (function_identifier (COLON | RBRACKET) | COLON) => objective_c_call_argument |
+            (
+                function_identifier
+                (COLON | RBRACKET) |
+                
+                COLON
+            ) => objective_c_call_argument |
 
             // commas as in a list
             { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA) }?
             comma |
 
-            // right parentheses, unless we are in a pair of parentheses in an expression
+            // right parenthesis, unless we are in a pair of parentheses in an expression
             { !inTransparentMode(MODE_INTERNAL_END_PAREN) }?
             rparen[false] |
 
