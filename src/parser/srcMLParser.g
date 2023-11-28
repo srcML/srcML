@@ -8719,7 +8719,13 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             } while (--call_count > 0);
         }
 
-        ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? objective_c_call | function_identifier call_argument_list)
+        (
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            objective_c_call |
+
+            function_identifier
+            call_argument_list
+        )
 ;
 
 /*
