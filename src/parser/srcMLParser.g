@@ -9084,7 +9084,8 @@ keyword_calls[] { ENTRY_DEBUG } :
         encode_call | selector_call |
 
         // C#
-        typeof_call | { inLanguage(LANGUAGE_CSHARP) }? default_call |
+        typeof_call |
+        { inLanguage(LANGUAGE_CSHARP) }? default_call |
         checked_call | unchecked_call
 ;
 
