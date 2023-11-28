@@ -7921,22 +7921,24 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
             setTokenPosition(tp);
         }
 
-        ({ inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        compound_name_java[iscompound] |
+        (
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            compound_name_java[iscompound] |
 
-        { inLanguage(LANGUAGE_CSHARP) }?
-        compound_name_csharp[iscompound] |
+            { inLanguage(LANGUAGE_CSHARP) }?
+            compound_name_csharp[iscompound] |
 
-        { inLanguage(LANGUAGE_OBJECTIVE_C) }?
-        compound_name_objective_c[iscompound] |
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            compound_name_objective_c[iscompound] |
 
-        { inLanguage(LANGUAGE_C) }?
-        compound_name_c[iscompound] |
+            { inLanguage(LANGUAGE_C) }?
+            compound_name_c[iscompound] |
 
-        { inLanguage(LANGUAGE_CXX) }?
-        compound_name_cpp[iscompound] |
+            { inLanguage(LANGUAGE_CXX) }?
+            compound_name_cpp[iscompound] |
 
-        macro_type_name_call)
+            macro_type_name_call
+        )
 
         (options { greedy = true; } :
             { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
@@ -7944,9 +7946,13 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         )*
 
         (options { greedy = true; } :
-            { index
+            {
+                index
                 /* Commented-out code: && !inTransparentMode(MODE_EAT_TYPE) */
-                && (!inLanguage(LANGUAGE_CXX) || next_token() != LBRACKET)
+                && (
+                    !inLanguage(LANGUAGE_CXX)
+                    || next_token() != LBRACKET
+                )
             }?
             variable_identifier_array_grammar_sub[iscompound]
         )*
