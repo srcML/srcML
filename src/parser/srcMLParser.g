@@ -7490,25 +7490,36 @@ try_linq_expression_complete_inner[int& count_paren] returns [bool success = fal
 /*
   linq_expression_complete_inner
 */
-linq_expression_complete_inner[int& count_paren, bool update = false] { CALL_TYPE type = NOCALL; bool isempty = false; int call_count = 0; ENTRY_DEBUG } :
+linq_expression_complete_inner[int& count_paren, bool update = false] {
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 0;
+
+        ENTRY_DEBUG
+} :
         // commas as in a list
         comma |
 
-        // right parentheses, unless we are in a pair of parentheses in an expression
+        // right parenthesis, unless we are in a pair of parentheses in an expression
         { LA(1) == LPAREN }?
-        expression_setup_linq ({ update }? set_int[count_paren, count_paren + 1])? |
+        expression_setup_linq
+        ({ update }? set_int[count_paren, count_paren + 1])? |
 
         { LA(1) == RPAREN && inputState->guessing }?
-        rparen ({ update }? set_int[count_paren, count_paren - 1])? |
+        rparen
+        ({ update }? set_int[count_paren, count_paren - 1])? |
 
         { LA(1) == RPAREN && !inputState->guessing }?
-        expression_setup_linq ({ update }? set_int[count_paren, count_paren - 1])? |
+        expression_setup_linq
+        ({ update }? set_int[count_paren, count_paren - 1])? |
 
         { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
-        ({ update }? set_int[count_paren, isempty ? count_paren : count_paren + 1])? expression_setup_linq |
+        ({ update }? set_int[count_paren, isempty ? count_paren : count_paren + 1])?
+        expression_setup_linq |
 
         // argument mode (as part of call)
-        { inMode(MODE_ARGUMENT) }? argument |
+        { inMode(MODE_ARGUMENT) }?
+        argument |
 
         // expression with right parentheses if a previous match is in one
         {
@@ -7526,7 +7537,10 @@ linq_expression_complete_inner[int& count_paren, bool update = false] { CALL_TYP
             && LA(1) != IN
             && LA(1) != EQUALS
             && LA(1) != INTO
-            && (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN))
+            && (
+                LA(1) != RPAREN
+                || inTransparentMode(MODE_INTERNAL_END_PAREN)
+            )
         }?
         expression_setup_linq |
 
