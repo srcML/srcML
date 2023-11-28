@@ -7037,6 +7037,7 @@ linq_ascending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
+
         ASCENDING
 ;
 
