@@ -6427,7 +6427,8 @@ set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] {
   Sets the integer to a value if the condition is true.
 */
 set_int[int& name, int value, bool condition = true] {
-        if (condition) name = value;
+        if (condition)
+            name = value;
 } :;
 
 /*
