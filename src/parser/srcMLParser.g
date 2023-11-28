@@ -6407,7 +6407,8 @@ check_global_attribute[] returns [bool flag] {
   Throws an exception if the condition is true.
 */
 throw_exception[bool condition = true] {
-        if (condition) throw antlr::RecognitionException();
+        if (condition)
+            throw antlr::RecognitionException();
 } :;
 
 /*
