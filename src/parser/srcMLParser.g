@@ -7202,7 +7202,8 @@ attribute_cpp[] { CompleteElement element(this); ENTRY_DEBUG } :
 complete_argument_list[] { ENTRY_DEBUG } :
         call_argument_list
 
-        (options { greedy = true; } : { LA(1) != RPAREN && LA(1) != RCURLY }?
+        (options { greedy = true; } :
+            { LA(1) != RPAREN && LA(1) != RCURLY }?
             complete_arguments
         )*
 
