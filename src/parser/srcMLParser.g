@@ -8318,7 +8318,8 @@ function_specifier[] { CompleteElement element(this); ENTRY_DEBUG } :
             specifier |
 
             // pure virtual specifier, = default, and = delete
-            EQUAL (literal | function_equal_specifier) |
+            EQUAL
+            (literal | function_equal_specifier) |
 
             simple_name_optional_template
         )
