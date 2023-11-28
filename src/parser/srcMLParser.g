@@ -8253,7 +8253,17 @@ keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
         // "a::" causes an exception to be thrown
         (options { greedy = true; } :
-            (dcolon { iscompound = true; } | (period | member_pointer | member_pointer_dereference | dot_dereference) { iscompound = true; })
+            (
+                dcolon
+                {
+                    iscompound = true;
+                } |
+
+                (period | member_pointer | member_pointer_dereference | dot_dereference)
+                {
+                    iscompound = true;
+                }
+            )
 
             (options { greedy = true; } : dcolon)*
 
@@ -8261,9 +8271,17 @@ keyword_name_inner[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
 
             (multops)*
 
-            (simple_name_optional_template_optional_specifier | push_namestack overloaded_operator | function_identifier_main | keyword_identifier)
+            (
+                simple_name_optional_template_optional_specifier |
+                push_namestack overloaded_operator |
+                function_identifier_main |
+                keyword_identifier
+            )
 
-            (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
+            (options { greedy = true; } :
+                { look_past_rule(&srcMLParser::multops_star) == DCOLON }?
+                multops
+            )*
         )*
 
         {
