@@ -8909,13 +8909,25 @@ expression_part_plus_linq_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1
 /*
   expression_part_no_ternary
 */
-expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_control_incr = false; ENTRY_DEBUG } :
+expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
+        bool flag;
+        bool isempty = false;
+        bool end_control_incr = false;
+
+        ENTRY_DEBUG
+} :
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         UNION |
 
         // cast
-        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
+        {
+            inTransparentMode(MODE_INTERNAL_END_PAREN)
+            && (
+                LA(1) != CXX_CLASS
+                || !keyword_name_token_set.member(next_token())
+            )
+        }?
         (CLASS | CXX_CLASS) |
 
         { next_token() == LPAREN || next_token() == LCURLY }?
@@ -8928,7 +8940,12 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         (lambda_expression_full_csharp) => lambda_expression_csharp |
 
         { inLanguage(LANGUAGE_CXX) }?
-        (bracket_pair (options { warnWhenFollowAmbig = false; } : paren_pair)* function_tail LCURLY) => lambda_expression_cpp |
+        (
+            bracket_pair
+            (options { warnWhenFollowAmbig = false; } : paren_pair)*
+            function_tail
+            LCURLY
+        ) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
@@ -8940,7 +8957,12 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
         (NEW generic_argument_list) => sole_new generic_argument_list |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW function_identifier paren_pair LCURLY) => sole_new anonymous_class_definition |
+        (
+            NEW
+            function_identifier
+            paren_pair
+            LCURLY
+        ) => sole_new anonymous_class_definition |
 
         { notdestructor }?
         sole_destop { notdestructor = false; } |
@@ -8950,7 +8972,13 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
 
         // call
         // need to distinguish between a call and a macro
-        { type == CALL || (perform_call_check(type, isempty, call_count, -1) && type == CALL) }?
+        {
+            type == CALL
+            || (
+                perform_call_check(type, isempty, call_count, -1)
+                && type == CALL
+            )
+        }?
         // added argument to correct markup of default parameters using a call
         // normally call claims left paren and starts call argument; however, I believe parameter_list matches a right paren of the call
         (call[call_count] | keyword_calls) argument |
@@ -8969,12 +8997,10 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
                     if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                         general_operators();
                 } |
-                
-                qmark |
-                period |
-                member_pointer |
-                member_pointer_dereference |
-                dot_dereference |
+
+                qmark | period |
+
+                member_pointer | member_pointer_dereference | dot_dereference |
 
                 /* Commented-out code: newop | */
 
@@ -8995,7 +9021,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
 
                     // stop at this matching paren, or a preprocessor statement
                     endDownToModeSet(MODE_INTERNAL_END_PAREN | MODE_PREPROC);
-                    
+
                     if (inMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN))
                         endMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
 
@@ -9021,7 +9047,11 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
 
                 { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
                 {
-                    if (!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
+                    if (
+                        !inTransparentMode(MODE_CALL)
+                        && !inTransparentMode(MODE_INIT)
+                        && !inTransparentMode(MODE_FUNCTION_CALL)
+                    ) {
                         endDownToMode(MODE_INTERNAL_END_CURLY);
 
                         endMode(MODE_INTERNAL_END_CURLY);
@@ -9031,7 +9061,11 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] { bool f
 
                 // variable or literal
                 variable_identifier | keyword_name | auto_keyword[false] | single_keyword_specifier
-        ) | literals | noexcept_list |
+        ) |
+
+        literals |
+
+        noexcept_list |
 
         variable_identifier_array_grammar_sub[flag]
 ;
