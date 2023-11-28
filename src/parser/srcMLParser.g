@@ -7832,7 +7832,7 @@ function_pointer_name_check[] returns [bool is_fp_name = false] {
 /*
   function_pointer_name
 */
-function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
+function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
@@ -7842,7 +7842,8 @@ function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG }:
         pointer_dereference
         (period | member_pointer | member_pointer_dereference | dot_dereference)
 
-        ({ function_pointer_name_check() }?
+        (
+            { function_pointer_name_check() }?
             pointer_dereference
             (period | member_pointer | member_pointer_dereference | dot_dereference)
         )*
