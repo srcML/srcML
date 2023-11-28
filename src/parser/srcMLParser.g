@@ -7221,6 +7221,7 @@ complete_arguments[] {
         CALL_TYPE type = NOCALL;
         bool isempty = false;
         int call_count = 0;
+
         ENTRY_DEBUG
 } :
         { getParen() == 0 }?
@@ -7237,19 +7238,40 @@ complete_arguments[] {
             startElement(SARGUMENT);
         }
 
-        (options { warnWhenFollowAmbig = false; } : { count_paren > 0 && (count_paren != 1 || LA(1) != RPAREN) }?
+        (options { warnWhenFollowAmbig = false; } :
+            {
+                count_paren > 0
+                && (
+                    count_paren != 1
+                    || LA(1) != RPAREN
+                )
+            }?
             (options { generateAmbigWarnings = false; } :
-                { LA(1) == LPAREN }? expression { ++count_paren; } |
+                { LA(1) == LPAREN }?
+                expression
+                {
+                    ++count_paren;
+                } |
 
-                { LA(1) == RPAREN }? expression { --count_paren; } |
+                { LA(1) == RPAREN }?
+                expression
+                {
+                    --count_paren;
+                } |
 
                 { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
-                { if (!isempty) {
-                    ++count_paren;
-                }}
-                expression_process (call[call_count] | keyword_calls) complete_arguments |
+                {
+                    if (!isempty) {
+                        ++count_paren;
+                    }
+                }
+                expression_process
+                (call[call_count] | keyword_calls)
+                complete_arguments |
 
-                expression | (type_identifier) => expression_process type_identifier |
+                expression |
+
+                (type_identifier) => expression_process type_identifier |
 
                 comma
 
