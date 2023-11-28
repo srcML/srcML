@@ -8865,13 +8865,16 @@ ternary_expression[] { ENTRY_DEBUG } :
 
         (
             { LA(1) == LPAREN }?
-            expression_process lparen_marked
+            expression_process
+            lparen_marked
 
             {
                 startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_INTERNAL_END_PAREN);
             }
 
-            ({ perform_ternary_check() }? ternary_expression)? | expression_no_ternary
+            ({ perform_ternary_check() }? ternary_expression)? |
+
+            expression_no_ternary
         )
 ;
 
