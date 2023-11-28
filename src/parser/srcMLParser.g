@@ -7050,6 +7050,7 @@ linq_descending[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SNAME);
         }
+
         DESCENDING
 ;
 
