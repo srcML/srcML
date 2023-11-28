@@ -9168,7 +9168,7 @@ typeid_call[] { ENTRY_DEBUG } :
             // start a new mode that will end after the argument list
             startNewMode(MODE_ARGUMENT | MODE_LIST);
 
-            // start the function call element
+            // start the typeid element
             startElement(STYPEID);
         }
 
