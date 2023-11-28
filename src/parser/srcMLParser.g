@@ -8063,33 +8063,57 @@ catch[antlr::RecognitionException&] {}
 compound_name_csharp[bool& iscompound] { namestack.fill(""); ENTRY_DEBUG } :
         (modifiers_csharp)*
 
-        (dcolon { iscompound = true; })*
+        (
+            dcolon
+            {
+                iscompound = true;
+            }
+        )*
 
-        (set_bool[isdestructor] { /* Commented-out code: iscompound = true; */}
-            simple_name_optional_template_destop
-            | simple_name_optional_template
-            | push_namestack overloaded_operator
+        (
+            set_bool[isdestructor]
+            { /* Commented-out code: iscompound = true; */ }
+            simple_name_optional_template_destop |
+
+            simple_name_optional_template |
+
+            push_namestack
+            overloaded_operator
         )
 
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
-        ( options { greedy = true; } :
-            ({ !modifier_tokens_set.member(last_consumed) }?
+        (options { greedy = true; } :
+            (
+                { !modifier_tokens_set.member(last_consumed) }?
                 dcolon
-                { iscompound = true; }
-                    | (period | member_pointer) { iscompound = true; }
+                {
+                    iscompound = true;
+                } |
+
+                (period | member_pointer)
+                {
+                    iscompound = true;
+                }
             )
 
             (options { greedy = true; } : dcolon)*
 
             (
                 set_bool[isdestructor]
-                simple_name_optional_template_destop | (multops)*
+                simple_name_optional_template_destop |
 
-                (simple_name_optional_template
-                    | push_namestack overloaded_operator
-                    | function_identifier_main)
+                (multops)*
+
+                (
+                    simple_name_optional_template |
+
+                    push_namestack
+                    overloaded_operator |
+
+                    function_identifier_main
+                )
             )
 
             // Commented-out code: (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
