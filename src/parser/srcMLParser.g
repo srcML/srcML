@@ -7657,7 +7657,13 @@ simple_name_optional_template_optional_specifier[bool push = true] { CompleteEle
 
   Handles a name (including a template argument list).  Used for optional specifiers with destructor identifiers.
 */
-simple_name_optional_template_optional_specifier_destop[bool push = true] { CompleteElement element(this); TokenPosition tp; bool is_nop = true; ENTRY_DEBUG } :
+simple_name_optional_template_optional_specifier_destop[bool push = true] {
+        CompleteElement element(this);
+        TokenPosition tp;
+        bool is_nop = true;
+
+        ENTRY_DEBUG
+} :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -7673,7 +7679,8 @@ simple_name_optional_template_optional_specifier_destop[bool push = true] { Comp
 
         (
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list (options { greedy = true; } : generic_type_constraint)* |
+            (generic_argument_list) => generic_argument_list
+            (options { greedy = true; } : generic_type_constraint)* |
 
             (cuda_argument_list) => cuda_argument_list |
 
