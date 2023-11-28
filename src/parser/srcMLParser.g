@@ -7797,15 +7797,29 @@ typename_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
   function_pointer_name_check
 */
 function_pointer_name_check[] returns [bool is_fp_name = false] {
-        if (LA(1) == LPAREN && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
+        if (
+            LA(1) == LPAREN
+            && (
+                inLanguage(LANGUAGE_C)
+                || inLanguage(LANGUAGE_CXX)
+            )
+        ) {
             ++inputState->guessing;
             int start = mark();
 
             try {
                 function_pointer_name_grammar();
-                is_fp_name = LA(1) == PERIOD
+
+                is_fp_name =
+                    LA(1) == PERIOD
                     || LA(1) == TRETURN
-                    || (inLanguage(LANGUAGE_CXX) && (LA(1) == MPDEREF || LA(1) == DOTDEREF));
+                    || (
+                        inLanguage(LANGUAGE_CXX)
+                        && (
+                            LA(1) == MPDEREF
+                            || LA(1) == DOTDEREF
+                        )
+                    );
             } catch (...) {}
 
             rewind(start);
