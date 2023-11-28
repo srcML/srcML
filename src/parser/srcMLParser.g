@@ -7158,6 +7158,7 @@ attribute_csharp_target[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(STARGET);
         }
+
         (RETURN | EVENT | identifier_list)
 ;
 
