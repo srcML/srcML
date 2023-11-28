@@ -6669,7 +6669,9 @@ non_lead_type_identifier[] { bool iscomplex = false; ENTRY_DEBUG } :
 */
 type_specifier_call[] { ENTRY_DEBUG } :
         { inputState->guessing }?
-        (decltype_call_full) | decltype_call
+        (decltype_call_full) |
+
+        decltype_call
 ;
 
 /*
