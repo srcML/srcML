@@ -6732,6 +6732,7 @@ atomic_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
+
         ATOMIC
 ;
 
