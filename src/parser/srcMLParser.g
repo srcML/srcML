@@ -6691,7 +6691,9 @@ decltype_call[] { CompleteElement element(this); int save_type_count = getTypeCo
         DECLTYPE
         complete_argument_list
 
-        { setTypeCount(save_type_count); }
+        {
+            setTypeCount(save_type_count);
+        }
 ;
 
 /*
