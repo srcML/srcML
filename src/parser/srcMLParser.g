@@ -6529,7 +6529,12 @@ deduct[int& type_count] { --type_count; } :;
 
   Used to consume a type.
 */
-eat_type[int& count] { if (count <= 0 || LA(1) == BAR) return; ENTRY_DEBUG } :
+eat_type[int& count] {
+        if (count <= 0 || LA(1) == BAR)
+            return;
+
+        ENTRY_DEBUG
+} :
         // Mark as name before mark without name
         (options { generateAmbigWarnings = false; } : keyword_name | type_identifier)
 
