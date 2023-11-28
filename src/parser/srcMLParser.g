@@ -7297,6 +7297,7 @@ complete_default_parameter[] {
         CALL_TYPE type = NOCALL;
         bool isempty = false;
         int call_count = 0;
+
         ENTRY_DEBUG
 } :
         { getParen() == 0 }?
@@ -7310,20 +7311,35 @@ complete_default_parameter[] {
             startNewMode(MODE_TOP | MODE_EXPECT | MODE_EXPRESSION);
         }
 
-        (options {warnWhenFollowAmbig = false; } : { (LA(1) != RPAREN && LA(1) != COMMA) || count_paren > 0 }?
-            ({ LA(1) == LPAREN }?
-            expression set_int[count_paren, count_paren + 1] |
+        (options {warnWhenFollowAmbig = false; } :
+            {
+                (
+                    LA(1) != RPAREN
+                    && LA(1) != COMMA
+                )
+                || count_paren > 0
+            }?
+            (
+                { LA(1) == LPAREN }?
+                expression
+                set_int[count_paren, count_paren + 1] |
 
-            { LA(1) == RPAREN && inputState->guessing }?
-            rparen set_int[count_paren, count_paren - 1] |
+                { LA(1) == RPAREN && inputState->guessing }?
+                rparen
+                set_int[count_paren, count_paren - 1] |
 
-            { LA(1) == RPAREN && !inputState->guessing}?
-            expression set_int[count_paren, count_paren - 1] |
+                { LA(1) == RPAREN && !inputState->guessing }?
+                expression
+                set_int[count_paren, count_paren - 1] |
 
-            { perform_call_check(type, isempty, call_count, -1) && type == CALL }? 
-            set_int[count_paren, isempty ? count_paren : count_paren + 1] expression |
+                { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
+                set_int[count_paren, isempty ? count_paren : count_paren + 1]
+                expression |
 
-            expression | comma)
+                expression |
+
+                comma
+            )
         )*
 ;
 
