@@ -6389,7 +6389,7 @@ pattern_check_core[
 /*
   check_global_attribute
 
-  C# global attribute target
+  Handles a C# global attribute target.
 */
 check_global_attribute[] returns [bool flag] {
         flag = LT(1)->getText() == "module"sv || LT(1)->getText() == "assembly"sv;
