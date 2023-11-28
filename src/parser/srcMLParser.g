@@ -6487,7 +6487,11 @@ update_typecount[srcMLState::MODE_TYPE mode] {} :
 type_identifier_count[int& type_count] { ++type_count; ENTRY_DEBUG } :
         // overloaded parentheses operator
         { LA(1) == OPERATOR /* turns off ANTLR warning */ }?
-        overloaded_operator | type_identifier | MAIN
+        overloaded_operator |
+
+        type_identifier |
+
+        MAIN
 ;
 
 /*
