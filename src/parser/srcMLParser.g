@@ -7978,38 +7978,71 @@ multops_star[] { ENTRY_DEBUG } :
   Handles a compound name (C++).
 */
 compound_name_cpp[bool& iscompound] { namestack.fill(""); bool iscolon = false; ENTRY_DEBUG } :
-        (options { greedy = true; } : { !in_template_param }? typename_keyword { iscompound = true; })*
+        (options { greedy = true; } :
+            { !in_template_param }?
+            typename_keyword
+            {
+                iscompound = true;
+            }
+        )*
 
-        (dcolon { iscompound = true; })*
+        (
+            dcolon
+            {
+                iscompound = true;
+            }
+        )*
 
-        (set_bool[isdestructor] { /* Commented-out code: iscompound = true; */ }
-            simple_name_optional_template_destop
-            | typename_keyword
-            | simple_name_optional_template
-            | push_namestack overloaded_operator
+        (
+            set_bool[isdestructor]
+            { /* Commented-out code: iscompound = true; */ }
+            simple_name_optional_template_destop |
+
+            typename_keyword |
+
+            simple_name_optional_template | 
+
+            push_namestack
+            overloaded_operator
         )
 
         (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
 
         // "a::" causes an exception to be thrown
-        ( options { greedy = true; } :
-            ({ !modifier_tokens_set.member(last_consumed) }?
+        (options { greedy = true; } :
+            (
+                { !modifier_tokens_set.member(last_consumed) }?
                 dcolon
                 set_bool[iscolon, true]
-                { iscompound = true; }
-                    | (period | member_pointer | member_pointer_dereference | dot_dereference) clearnamestack { iscompound = true; }
+                {
+                    iscompound = true;
+                } |
+
+                (period | member_pointer | member_pointer_dereference | dot_dereference)
+                clearnamestack
+                {
+                    iscompound = true;
+                }
             )
 
             (options { greedy = true; } : dcolon)*
 
             (
                 set_bool[isdestructor]
-                simple_name_optional_template_optional_specifier_destop[iscolon] | (multops)*
+                simple_name_optional_template_optional_specifier_destop[iscolon] |
 
-                (simple_name_optional_template_optional_specifier[iscolon]
-                    | push_namestack overloaded_operator
-                    | function_identifier_main
-                    | keyword_identifier)
+                (multops)*
+
+                (
+                    simple_name_optional_template_optional_specifier[iscolon] |
+
+                    push_namestack
+                    overloaded_operator |
+
+                    function_identifier_main |
+
+                    keyword_identifier
+                )
             )
 
             // Commented-out code: (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
