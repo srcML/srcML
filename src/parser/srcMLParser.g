@@ -8742,7 +8742,15 @@ call_argument_list[] { ENTRY_DEBUG } :
             startElement(SARGUMENT_LIST);
         }
 
-        (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
+        (
+            LPAREN |
+
+            {
+                setMode(MODE_INTERNAL_END_CURLY);
+            }
+
+            LCURLY
+        )
 ;
 
 /*
