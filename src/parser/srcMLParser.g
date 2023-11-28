@@ -6548,12 +6548,16 @@ eat_type[int& count] {
 pure_lead_type_identifier[] { ENTRY_DEBUG } :
         // ambigous on template keyword from template specifier and probably class_preamble template
         (options { generateAmbigWarnings = false; } :
-        // specifiers that occur in a type
+            // specifiers that occur in a type
             { argument_token_set.member(LA(1)) }?
-            specifier | template_specifier | auto_keyword[true] |
+            specifier |
+
+            template_specifier | auto_keyword[true] |
 
             { inLanguage(LANGUAGE_CSHARP) && look_past(COMMA) == RBRACKET }?
-            LBRACKET (COMMA)* RBRACKET |
+            LBRACKET
+            (COMMA)*
+            RBRACKET |
 
             { inLanguage(LANGUAGE_JAVA) }?
             annotation |
@@ -6561,7 +6565,7 @@ pure_lead_type_identifier[] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_CSHARP) }?
             attribute_csharp |
 
-            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}?
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
             attribute_cpp |
 
             pure_lead_type_identifier_no_specifiers
