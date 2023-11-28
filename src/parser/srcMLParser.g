@@ -6417,7 +6417,8 @@ throw_exception[bool condition = true] {
   Sets the declaration type to a value if the condition is true.
 */
 set_type[STMT_TYPE& name, STMT_TYPE value, bool condition = true] {
-        if (condition) name = value;
+        if (condition)
+            name = value;
 } :;
 
 /*
