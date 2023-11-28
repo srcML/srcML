@@ -6713,7 +6713,14 @@ decltype_call_full[] { ENTRY_DEBUG } :
 */
 atomic[] { ENTRY_DEBUG } :
         { next_token() == LPAREN }?
-        ({ inputState->guessing }? atomic_call_full | atomic_call) | atomic_specifier
+        (
+            { inputState->guessing }?
+            atomic_call_full |
+
+            atomic_call
+        ) |
+
+        atomic_specifier
 ;
 
 /*
