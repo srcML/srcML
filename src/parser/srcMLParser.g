@@ -7064,7 +7064,13 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
             iscomplex = true;
 
             // start a mode to end at right bracket with expressions inside
-            if (inLanguage(LANGUAGE_CSHARP) || (LA(1) == ATLBRACKET && inLanguage(LANGUAGE_OBJECTIVE_C)))
+            if (
+                inLanguage(LANGUAGE_CSHARP)
+                || (
+                    LA(1) == ATLBRACKET
+                    && inLanguage(LANGUAGE_OBJECTIVE_C)
+                )
+            )
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST | MODE_END_AT_COMMA);
             else
                 startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
