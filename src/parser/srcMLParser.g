@@ -6609,6 +6609,7 @@ class_lead_type_identifier[] { SingleElement element(this); ENTRY_DEBUG } :
             else
                 startElement(SNOP);
         }
+
         (CLASS | CXX_CLASS | STRUCT | UNION | ENUM)
 ;
 
