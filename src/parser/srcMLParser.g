@@ -6624,8 +6624,15 @@ lead_type_identifier[] { ENTRY_DEBUG } :
         // typical type name
         {
             LA(1) != ASYNC
-            && (inLanguage(LANGUAGE_CXX) || (LA(1) != FINAL && LA(1) != OVERRIDE))
-            && LA(1) != CRESTRICT && LA(1) != MUTABLE
+            && (
+                inLanguage(LANGUAGE_CXX)
+                || (
+                    LA(1) != FINAL
+                    && LA(1) != OVERRIDE
+                )
+            )
+            && LA(1) != CRESTRICT
+            && LA(1) != MUTABLE
         }?
         compound_name |
 
