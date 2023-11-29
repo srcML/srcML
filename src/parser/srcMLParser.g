@@ -12807,7 +12807,13 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
             // local mode
             startNewMode(MODE_LOCAL);
 
-            if (!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
+            if (
+                !inLanguage(LANGUAGE_JAVA)
+                || (
+                    !inTransparentMode(MODE_CLASS_NAME)
+                    && !in_function_type
+                )
+            )
                startElement(SGENERIC_ARGUMENT);
             else
                startElement(STEMPLATE_PARAMETER);
@@ -12820,14 +12826,24 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
             { LA(1) != SUPER && LA(1) != QMARK }?
             (options { generateAmbigWarnings = false; } : generic_specifiers_csharp)*
             (
-                (options { generateAmbigWarnings = false; } : { LA(1) != IN }? template_operators)*
-                (type_identifier | { !inLanguage(LANGUAGE_JAVA) }? literals)
+                (options { generateAmbigWarnings = false; } :
+                    { LA(1) != IN }?
+                    template_operators
+                )*
+                (
+                    type_identifier |
+
+                    { !inLanguage(LANGUAGE_JAVA) }?
+                    literals
+                )
                 (options { generateAmbigWarnings = false; } : template_operators)*
             ) |
 
             template_extends_java |
 
-            template_super_java | qmark_name |
+            template_super_java |
+
+            qmark_name |
 
             { !inLanguage(LANGUAGE_JAVA) }?
             template_argument_expression
