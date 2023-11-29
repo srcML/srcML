@@ -9811,7 +9811,7 @@ unsafe_statement[] { ENTRY_DEBUG } :
             // treat try block as nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
-            // start of the try statement
+            // start of the unsafe statement
             startElement(SUNSAFE_STATEMENT);
         }
 
