@@ -9583,7 +9583,7 @@ macro_specifier_call[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SMACRO_CALL);
 
             startNewMode(MODE_LOCAL);
-            
+
             startElement(SNAME);
         }
 
