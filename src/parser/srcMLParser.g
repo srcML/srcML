@@ -10378,7 +10378,7 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
                 setMode(MODE_LIST);
 
             if (output_decl)
-                // start the declaration
+                // start the declaration statement
                 startElement(SDECLARATION);
         }
 
@@ -10391,11 +10391,24 @@ variable_declaration[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             {
                 type_count > 0
-                && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX))
                 && (
-                    (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN)
-                    || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET)
-                    || (inLanguage(LANGUAGE_CXX) && LA(1) == LBRACKET && next_token() == LBRACKET)
+                    LA(1) != OVERRIDE
+                    || !inLanguage(LANGUAGE_CXX)
+                )
+                && (
+                    (
+                        inLanguage(LANGUAGE_JAVA)
+                        && LA(1) == ATSIGN
+                    )
+                    || (
+                        inLanguage(LANGUAGE_CSHARP)
+                        && LA(1) == LBRACKET
+                    )
+                    || (
+                        inLanguage(LANGUAGE_CXX)
+                        && LA(1) == LBRACKET
+                        && next_token() == LBRACKET
+                    )
                 )
             }?
             decl_pre_type_annotation[type_count]
