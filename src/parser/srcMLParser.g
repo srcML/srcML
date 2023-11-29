@@ -10782,7 +10782,7 @@ function_pointer_initialization[] { ENTRY_DEBUG } :
             // end the init correctly
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
-            // start the initialization element
+            // start the declaration initialization statement
             startElement(SDECLARATION_INITIALIZATION);
         }
 
