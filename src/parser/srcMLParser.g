@@ -10151,7 +10151,12 @@ generic_selection_association_list[] { CompleteElement element(this); ENTRY_DEBU
             startElement(SGENERIC_ASSOCIATION_LIST);
         }
 
-        (COMMA | { LA(1) != RPAREN }? generic_selection_association)*
+        (
+            COMMA |
+
+            { LA(1) != RPAREN }?
+            generic_selection_association
+        )*
 
         // Commented-out code
         // (LPAREN | { setMode(MODE_INTERNAL_END_CURLY); } LCURLY)
