@@ -11646,19 +11646,31 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
             // end all elements at the end of the rule automatically
             startNewMode(MODE_LOCAL);
 
-            // start the derivation
+            // start the derivation statement
             startElement(SDERIVATION);
         }
 
-        ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET}? attribute_cpp)*
+        ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
 
         (derive_virtual | derive_access)*
 
-        ({ inLanguage(LANGUAGE_OBJECTIVE_C) }? identifier | variable_identifier)
+        (
+            { inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            identifier |
 
-        ({ inLanguage(LANGUAGE_CSHARP) }? period variable_identifier)*
+            variable_identifier
+        )
 
-        (options { greedy = true; } : { !inLanguage(LANGUAGE_OBJECTIVE_C) }? generic_argument_list)*
+        (
+            { inLanguage(LANGUAGE_CSHARP) }?
+            period
+            variable_identifier
+        )*
+
+        (options { greedy = true; } :
+            { !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+            generic_argument_list
+        )*
 ;
 
 /*
