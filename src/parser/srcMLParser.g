@@ -12667,7 +12667,9 @@ cuda_end[] { ENTRY_DEBUG } :
             endDownToMode(MODE_LIST);
         }
 
-        TEMPOPE TEMPOPE TEMPOPE
+        TEMPOPE
+        TEMPOPE
+        TEMPOPE
 
         {
             // end the mode created by the cuda_start argument list operator
