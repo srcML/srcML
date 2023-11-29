@@ -12112,7 +12112,12 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
 
   Used to count types in a parameter.
 */
-parameter_type_count[int& type_count, bool output_type = true] { CompleteElement element(this); bool is_compound = false; ENTRY_DEBUG } :
+parameter_type_count[int& type_count, bool output_type = true] {
+        CompleteElement element(this);
+        bool is_compound = false;
+        
+        ENTRY_DEBUG
+} :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
@@ -12125,7 +12130,9 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
         // match auto keyword first as a special case; do not warn about ambiguity
         (
             (options { generateAmbigWarnings = false; } :
-                this_specifier | auto_keyword[type_count > 1] |
+                this_specifier |
+
+                auto_keyword[type_count > 1] |
 
                 { is_class_type_identifier() }?
                 (options { greedy = true; } :
@@ -12153,14 +12160,22 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
         )
 
         // sometimes there is no parameter name; if so, we need to eat it
-        ( options { greedy = true; generateAmbigWarnings = false; } :
-            multops | tripledotop | LBRACKET RBRACKET |
+        (options { greedy = true; generateAmbigWarnings = false; } :
+            multops |
+
+            tripledotop |
+
+            LBRACKET
+            RBRACKET |
 
             {
                 next_token() == MULTOPS
                 || next_token() == REFOPS
                 || next_token() == RVALUEREF
-                || (inLanguage(LANGUAGE_CSHARP) &&  next_token() == QMARK)
+                || (
+                    inLanguage(LANGUAGE_CSHARP)
+                    && next_token() == QMARK
+                )
                 || next_token() == BLOCKOP
             }?
             type_identifier
