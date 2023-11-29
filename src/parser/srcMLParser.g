@@ -10877,11 +10877,17 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         (
-            OPERATORS | ASSIGNMENT | TEMPOPS |
+            OPERATORS |
+
+            ASSIGNMENT |
+
+            TEMPOPS |
 
             TEMPOPE
+
             (options { greedy = true; } :
                 ({ SkipBufferSize() == 0 }? TEMPOPE)
+
                 ({ SkipBufferSize() == 0 }? TEMPOPE)? |
 
                 ({ inLanguage(LANGUAGE_JAVA) && LT(1)->getText() == ">>="sv }? ASSIGNMENT)
