@@ -13045,7 +13045,15 @@ paren_pair[] { ENTRY_DEBUG } :
 */
 curly_pair[] { ENTRY_DEBUG } :
         LCURLY
-        (curly_pair | qmark | ~(QMARK | LCURLY | RCURLY))*
+
+        (
+            curly_pair |
+
+            qmark |
+
+            ~(QMARK | LCURLY | RCURLY)
+        )*
+
         RCURLY
 ;
 
