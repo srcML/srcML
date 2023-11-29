@@ -11755,7 +11755,7 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
 
-            // start the parameter list element
+            // start the parameter list statement
             startElement(SPARAMETER_LIST);
         }
 
@@ -11773,14 +11773,21 @@ parameter_list[] { CompleteElement element(this); bool lastwasparam = false; boo
             }
 
             {
-                // We are in a parameter list; need to make sure we end it down to the start of the parameter list
+                // we are in a parameter list; need to make sure we end it down to the start of the parameter list
                 if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                     endMode();
             }
 
             comma |
-            { inLanguage(LANGUAGE_JAVA) }? bar |
-            complete_parameter { foundparam = lastwasparam = true; }
+
+            { inLanguage(LANGUAGE_JAVA) }?
+            bar |
+
+            complete_parameter
+
+            {
+                foundparam = lastwasparam = true;
+            }
         )*
 
         empty_element[SPARAMETER, !lastwasparam && foundparam]
