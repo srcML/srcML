@@ -8982,7 +8982,8 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         // added argument to correct markup of default parameters using a call
         // normally call claims left paren and starts call argument; however, I believe parameter_list matches a right paren of the call
-        (call[call_count] | keyword_calls) argument |
+        (call[call_count] | keyword_calls)
+        argument |
 
         // macro call
         { type == MACRO }?
@@ -8999,10 +9000,11 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
                         general_operators();
                 } |
 
-                qmark | period |
-
-                member_pointer | member_pointer_dereference | dot_dereference |
-
+                qmark |
+                period |
+                member_pointer |
+                member_pointer_dereference |
+                dot_dereference |
                 /* Commented-out code: newop | */
 
                 // left parentheses
@@ -9061,7 +9063,13 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
                 rcurly_argument |
 
                 // variable or literal
-                variable_identifier | keyword_name | auto_keyword[false] | single_keyword_specifier
+                variable_identifier |
+
+                keyword_name |
+
+                auto_keyword[false] |
+
+                single_keyword_specifier
         ) |
 
         literals |
