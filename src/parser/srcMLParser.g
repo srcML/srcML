@@ -10611,13 +10611,15 @@ class_type_identifier_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
 */
 variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev = false; ENTRY_DEBUG } :
         {
-            if (!inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
+            if (
+                !inMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
                 && inMode(MODE_LIST | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT)
-                && !inTransparentMode(MODE_TYPEDEF) && !inTransparentMode(MODE_USING))
-            {
+                && !inTransparentMode(MODE_TYPEDEF)
+                && !inTransparentMode(MODE_USING)
+            ) {
                 startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
-                // start the declaration
+                // start the declaration statement
                 startElement(SDECLARATION);
 
                 startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
@@ -10638,7 +10640,11 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev 
         // Mark as name before mark without name
         (options { generateAmbigWarnings = false; } :
             { inLanguage(LANGUAGE_CSHARP) }?
-            compound_name_inner[!isthis] | compound_name | keyword_name
+            compound_name_inner[!isthis] |
+
+            compound_name |
+
+            keyword_name
         )
 
         {
