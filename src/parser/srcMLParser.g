@@ -11270,11 +11270,20 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 /*
   expression_part
 */
-expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool isempty = false; bool end_control_incr = false; ENTRY_DEBUG } :
+expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
+        bool flag;
+        bool isempty = false;
+        bool end_control_incr = false;
+
+        ENTRY_DEBUG
+} :
         {
             !skip_ternary
             && !inMode(MODE_TERNARY_CONDITION)
-            && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
+            && (
+                !inLanguage(LANGUAGE_JAVA)
+                || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
+            )
             && perform_ternary_check()
         }?
         ternary_expression |
@@ -11284,7 +11293,13 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         UNION |
 
         // cast
-        { inTransparentMode(MODE_INTERNAL_END_PAREN) && (LA(1) != CXX_CLASS || !keyword_name_token_set.member(next_token())) }?
+        {
+            inTransparentMode(MODE_INTERNAL_END_PAREN)
+            && (
+                LA(1) != CXX_CLASS
+                || !keyword_name_token_set.member(next_token())
+            )
+        }?
         (CLASS | CXX_CLASS) |
 
         { next_token() == LPAREN || next_token() == LCURLY }?
@@ -11297,7 +11312,12 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         (lambda_expression_full_csharp) => lambda_expression_csharp |
 
         { inLanguage(LANGUAGE_CXX) }?
-        (bracket_pair (options { warnWhenFollowAmbig = false; } : paren_pair)* function_tail LCURLY) => lambda_expression_cpp |
+        (
+            bracket_pair
+            (options { warnWhenFollowAmbig = false; } : paren_pair)*
+            function_tail
+            LCURLY
+        ) => lambda_expression_cpp |
 
         { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) }?
         (block_lambda_expression_full) => block_lambda_expression |
@@ -11306,23 +11326,40 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
         ((paren_pair | variable_identifier) TRETURN) => lambda_expression_java |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW generic_argument_list) => sole_new generic_argument_list |
+        (NEW generic_argument_list) => sole_new
+        generic_argument_list |
 
         { inLanguage(LANGUAGE_JAVA_FAMILY) }?
-        (NEW function_identifier paren_pair LCURLY) => sole_new anonymous_class_definition |
+        (
+            NEW
+            function_identifier
+            paren_pair
+            LCURLY
+        ) => sole_new
+        anonymous_class_definition |
 
         { notdestructor }?
-        sole_destop { notdestructor = false; } |
+        sole_destop
+        {
+            notdestructor = false;
+        } |
 
         { next_token() != LPAREN && next_token() != DOTDOTDOT }?
         sizeof_unary_expression |
 
         // call
-        // distinguish between a call and a macro
-        { type == CALL || (perform_call_check(type, isempty, call_count, -1) && type == CALL) }?
+        // need to distinguish between a call and a macro
+        {
+            type == CALL
+            || (
+                perform_call_check(type, isempty, call_count, -1)
+                && type == CALL
+            )
+        }?
         // added argument to correct markup of default parameters using a call
         // normally call claims left paren and starts call argument; however, I believe parameter_list matches a right paren of the call
-        (call[call_count] | keyword_calls) argument |
+        (call[call_count] | keyword_calls)
+        argument |
 
         // macro call
         { type == MACRO }?
@@ -11339,9 +11376,14 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             {
                 if (inLanguage(LANGUAGE_CXX_FAMILY) && LA(1) == DESTOP)
                     general_operators();
-            }
+            } |
 
-            | qmark | /* Commented-out code: newop | */ period | member_pointer | member_pointer_dereference | dot_dereference |
+            qmark |
+            period |
+            member_pointer |
+            member_pointer_dereference |
+            dot_dereference |
+            /* Commented-out code: newop | */
 
             // left parentheses
             { function_pointer_name_check() }?
@@ -11356,8 +11398,12 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
             // can have (ternary) in a ternary condition
             (options { greedy = true; } :
                 {
-                    !skip_ternary && inMode(MODE_TERNARY_CONDITION)
-                    && (!inLanguage(LANGUAGE_JAVA) || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST))
+                    !skip_ternary
+                    && inMode(MODE_TERNARY_CONDITION)
+                    && (
+                        !inLanguage(LANGUAGE_JAVA)
+                        || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
+                    )
                     && perform_ternary_check()
                 }?
                 ternary_expression
@@ -11396,18 +11442,31 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] { bool flag; bool i
 
             { inTransparentMode(MODE_INTERNAL_END_CURLY) }?
             {
-                if (!inTransparentMode(MODE_CALL) && !inTransparentMode(MODE_INIT) && !inTransparentMode(MODE_FUNCTION_CALL)) {
+                if (
+                    !inTransparentMode(MODE_CALL)
+                    && !inTransparentMode(MODE_INIT)
+                    && !inTransparentMode(MODE_FUNCTION_CALL)
+                ) {
                     endDownToMode(MODE_INTERNAL_END_CURLY);
 
                     endMode(MODE_INTERNAL_END_CURLY);
                 }
             }
-
             rcurly_argument |
 
             // variable or literal
-            variable_identifier | keyword_name | auto_keyword[false] | single_keyword_specifier
-        ) | literals | noexcept_list |
+            variable_identifier |
+
+            keyword_name |
+
+            auto_keyword[false] |
+
+            single_keyword_specifier
+        ) |
+
+        literals |
+
+        noexcept_list |
 
         variable_identifier_array_grammar_sub[flag]
 ;
