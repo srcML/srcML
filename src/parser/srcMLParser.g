@@ -12861,13 +12861,19 @@ template_argument_expression[] { ENTRY_DEBUG } :
             { LA(1) != RPAREN }?
             (
                 options { generateAmbigWarnings = false; } :
-                    general_operators
-                    | qmark
-                    | (variable_identifier) => variable_identifier
-                    | literals
-                    | type_identifier
-                    | template_argument_expression
-                    | COMMA
+                    general_operators |
+
+                    qmark |
+
+                    (variable_identifier) => variable_identifier |
+
+                    literals |
+
+                    type_identifier |
+
+                    template_argument_expression |
+
+                    COMMA
             )
         )*
 
