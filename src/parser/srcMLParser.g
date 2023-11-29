@@ -13099,7 +13099,11 @@ nested_terminate[] {
             if (bracecount < 0)
                 break;
 
-            if (LA(1) == TERMINATE && parencount == 0 && bracecount == 0)
+            if (
+                LA(1) == TERMINATE
+                && parencount == 0
+                && bracecount == 0
+            )
                 break;
 
             consume();
