@@ -11625,8 +11625,16 @@ derived_list[] { CompleteElement element(this); bool first = true; ENTRY_DEBUG }
         COLON
 
         (options { greedy = true; } :
-            { LA(1) != WHERE && (!inLanguage(LANGUAGE_OBJECTIVE_C) || first) }?
-            (derived set_bool[first, false]) | COMMA
+            {
+                LA(1) != WHERE
+                && (
+                    !inLanguage(LANGUAGE_OBJECTIVE_C)
+                    || first
+                )
+            }?
+            (derived set_bool[first, false]) |
+
+            COMMA
         )*
 ;
 
