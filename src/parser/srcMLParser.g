@@ -11578,7 +11578,13 @@ literal[bool markup = true] { LightweightElement element(this); TokenPosition tp
         CONSTANTS
 
         (
-            { (LT(1)->getText() == "+"sv || LT(1)->getText() == "-"sv) && next_token() == COMPLEX_NUMBER }?
+            {
+                (
+                    LT(1)->getText() == "+"sv
+                    || LT(1)->getText() == "-"sv
+                )
+                && next_token() == COMPLEX_NUMBER
+            }?
             OPERATORS
             COMPLEX_NUMBER
 
