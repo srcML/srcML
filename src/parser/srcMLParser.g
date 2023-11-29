@@ -12576,7 +12576,11 @@ generic_parameter_list[] { CompleteElement element(this); decltype(namestack) na
         savenamestack[namestack_save]
 
         tempops
-        (options { generateAmbigWarnings = false; } : COMMA | generic_parameter)*
+        (options { generateAmbigWarnings = false; } :
+            COMMA |
+
+            generic_parameter
+        )*
         tempope
 
         restorenamestack[namestack_save]
