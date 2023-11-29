@@ -10522,7 +10522,11 @@ specifiers_or_macro[] { bool first = true; ENTRY_DEBUG } :
 is_class_type_identifier[] returns [bool is_class_type = false] {
         ENTRY_DEBUG
 
-        if (inputState->guessing || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST) || inTransparentMode(MODE_ASSOCIATION_TYPE))
+        if (
+            inputState->guessing
+            || inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
+            || inTransparentMode(MODE_ASSOCIATION_TYPE)
+        )
             return is_class_type;
 
         int token = look_past_rule(&srcMLParser::specifiers_or_macro);
