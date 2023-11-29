@@ -12978,7 +12978,7 @@ label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT);
 
-            // start the label element
+            // start the label statement
             startElement(SLABEL_STATEMENT);
         }
 
