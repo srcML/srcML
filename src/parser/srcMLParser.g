@@ -10824,7 +10824,7 @@ variable_declaration_range[] { ENTRY_DEBUG } :
             // start a new mode that will end after the argument list
             startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
 
-            // start the range element
+            // start the declaration range statement
             startElement(SDECLARATION_RANGE);
         }
 
