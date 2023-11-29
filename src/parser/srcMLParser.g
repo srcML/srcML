@@ -12694,7 +12694,10 @@ generic_type_constraint[] { CompleteElement element(this); ENTRY_DEBUG } :
         COLON
 
         type_constraint
-        (options { greedy = true; } : COMMA type_constraint)*
+        (options { greedy = true; } :
+            COMMA
+            type_constraint
+        )*
 ;
 
 /*
