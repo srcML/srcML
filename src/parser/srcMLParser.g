@@ -12012,22 +12012,31 @@ annotation_argument[] { ENTRY_DEBUG } :
 /*
   parameter
 */
-parameter[] { int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+parameter[] {
+        int type_count = 0;
+        int secondtoken = 0;
+        int after_token = 0;
+        STMT_TYPE stmt_type = NONE;
+
+        ENTRY_DEBUG
+} :
         {
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
 
-            // start the parameter element
+            // start the parameter statement
             startElement(SPARAMETER);
         }
 
         (
             {
                 pattern_check(stmt_type, secondtoken, type_count, after_token, true)
-                && (stmt_type == FUNCTION_DECL
+                && (
+                    stmt_type == FUNCTION_DECL
                     || stmt_type == FUNCTION
                     || stmt_type == OPERATOR_FUNCTION_DECL
-                    || stmt_type == OPERATOR_FUNCTION)
+                    || stmt_type == OPERATOR_FUNCTION
+                )
             }?
             function_declaration[type_count]
             function_identifier
