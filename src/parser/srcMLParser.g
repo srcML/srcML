@@ -13010,7 +13010,7 @@ typedef_statement[] { ENTRY_DEBUG } :
             // statement
             startNewMode(MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME | MODE_ONLY_END_TERMINATE);
 
-            // start the typedef element
+            // start the typedef statement
             startElement(STYPEDEF);
 
             startNewMode(MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE);
