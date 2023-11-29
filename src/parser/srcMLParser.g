@@ -10841,7 +10841,7 @@ parameter_declaration_initialization[] { ENTRY_DEBUG } :
             // end the init correctly
             setMode(MODE_EXPRESSION | MODE_EXPECT);
 
-            // start the initialization element
+            // start the declaration initialization statement
             startElement(SDECLARATION_INITIALIZATION);
         }
 
