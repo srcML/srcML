@@ -11909,7 +11909,10 @@ complete_parameter[] { ENTRY_DEBUG } :
         parameter
 
         // suppress ()* warning
-        (options { greedy = true; } : parameter_declaration_initialization complete_default_parameter)*
+        (options { greedy = true; } :
+            parameter_declaration_initialization
+            complete_default_parameter
+        )*
 ;
 
 /*
