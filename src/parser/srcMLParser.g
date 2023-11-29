@@ -10742,11 +10742,22 @@ event_statement[int type_count] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             {
                 type_count > 0
-                && (LA(1) != OVERRIDE || !inLanguage(LANGUAGE_CXX))
-                && (decl_specifier_tokens_set.member(LA(1))
-                    || (inLanguage(LANGUAGE_JAVA) && LA(1) == ATSIGN)
-                    || (inLanguage(LANGUAGE_CSHARP) && LA(1) == LBRACKET)
-                    || (inLanguage(LANGUAGE_CXX)
+                && (
+                    LA(1) != OVERRIDE
+                    || !inLanguage(LANGUAGE_CXX)
+                )
+                && (
+                    decl_specifier_tokens_set.member(LA(1))
+                    || (
+                        inLanguage(LANGUAGE_JAVA)
+                        && LA(1) == ATSIGN
+                    )
+                    || (
+                        inLanguage(LANGUAGE_CSHARP)
+                        && LA(1) == LBRACKET
+                    )
+                    || (
+                        inLanguage(LANGUAGE_CXX)
                         && LA(1) == LBRACKET
                         && next_token() == LBRACKET
                     )
