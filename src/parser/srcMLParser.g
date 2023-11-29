@@ -10240,7 +10240,7 @@ generic_selection_association[] { CompleteElement element(this); ENTRY_DEBUG } :
             // argument with a nested expression
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
-            // start the generic
+            // start the generic association statement
             startElement(SGENERIC_ASSOCIATION);
         }
 
