@@ -13026,7 +13026,15 @@ typedef_statement[] { ENTRY_DEBUG } :
 */
 paren_pair[] { ENTRY_DEBUG } :
         LPAREN
-        (paren_pair | qmark | ~(QMARK | LPAREN | RPAREN))*
+
+        (
+            paren_pair |
+
+            qmark |
+
+            ~(QMARK | LPAREN | RPAREN)
+        )*
+
         RPAREN
 ;
 
