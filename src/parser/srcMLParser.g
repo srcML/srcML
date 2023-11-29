@@ -11802,7 +11802,7 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
 
-            // start the parameter list element
+            // start the indexer parameter list statement
             startElement(SINDEXER_PARAMETER_LIST);
         }
 
@@ -11814,17 +11814,27 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
         }
 
         (
-            { if (!lastwasparam)
-                empty_element(SPARAMETER, !lastwasparam);
+            {
+                if (!lastwasparam)
+                    empty_element(SPARAMETER, !lastwasparam);
+
                 lastwasparam = false;
             }
 
             /* Commented-out code:
             // We are in a parameter list; Need to make sure we end it down to the start of the parameter list
-            { if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
-                endMode();
+            {
+                if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                    endMode();
             } */
-            comma | complete_parameter { lastwasparam = true; }
+
+            comma |
+
+            complete_parameter
+
+            {
+                lastwasparam = true;
+            }
         )*
 ;
 
