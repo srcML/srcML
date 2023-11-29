@@ -11549,7 +11549,13 @@ complex_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
         COMPLEX_NUMBER
 
         (
-            { (LT(1)->getText() == "+"sv || LT(1)->getText() == "-"sv) && next_token() == CONSTANTS }?
+            {
+                (
+                    LT(1)->getText() == "+"sv
+                    || LT(1)->getText() == "-"sv
+                )
+                && next_token() == CONSTANTS
+            }?
             OPERATORS
             CONSTANTS
         )?
