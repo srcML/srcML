@@ -12525,14 +12525,25 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
 /*
   generic_argument_list
 */
-generic_argument_list[] { CompleteElement element(this); decltype(namestack) namestack_save; bool in_function_type = false; ENTRY_DEBUG } :
+generic_argument_list[] {
+        CompleteElement element(this);
+        decltype(namestack) namestack_save;
+        bool in_function_type = false;
+
+        ENTRY_DEBUG
+} :
         {
             // local mode
             startNewMode(MODE_LOCAL);
 
             in_function_type = inPrevMode(MODE_FUNCTION_TYPE);
 
-            if (!inLanguage(LANGUAGE_JAVA) || (!inTransparentMode(MODE_CLASS_NAME) && !in_function_type))
+            if (
+                !inLanguage(LANGUAGE_JAVA)
+                || (
+                    !inTransparentMode(MODE_CLASS_NAME)
+                    && !in_function_type)
+            )
                 startElement(SGENERIC_ARGUMENT_LIST);
             else
                 startElement(STEMPLATE_PARAMETER_LIST);
@@ -12541,7 +12552,11 @@ generic_argument_list[] { CompleteElement element(this); decltype(namestack) nam
         savenamestack[namestack_save]
 
         tempops
-        (options { generateAmbigWarnings = false; } : COMMA | template_argument[in_function_type])*
+        (options { generateAmbigWarnings = false; } :
+            COMMA |
+            
+            template_argument[in_function_type]
+        )*
         tempope
 
         restorenamestack[namestack_save]
