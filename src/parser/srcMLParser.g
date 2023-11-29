@@ -10455,21 +10455,34 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         // match auto keyword first as a special case; do not warn about ambiguity
         (options { generateAmbigWarnings = false; } :
             { LA(1) == CXX_CLASS && keyword_name_token_set.member(next_token()) }?
-            keyword_name | auto_keyword[type_count > 1] |
+            keyword_name |
+
+            auto_keyword[type_count > 1] |
 
             { is_class_type_identifier() }?
             (options { greedy = true; } :
                 { !class_tokens_set.member(LA(1)) }?
                 (options { generateAmbigWarnings = false; } :
-                    specifier | { look_past_rule(&srcMLParser::identifier) != LPAREN }? identifier | macro_call
+                    specifier |
+
+                    { look_past_rule(&srcMLParser::identifier) != LPAREN }?
+                    identifier |
+
+                    macro_call
                 )
-                { decTypeCount(); }
+                {
+                    decTypeCount();
+                }
             )*
             class_type_identifier[is_compound]
-            { decTypeCount(); }
+            {
+                decTypeCount();
+            }
             (options { greedy = true; } : { !is_compound }?  multops)* |
 
-            lead_type_identifier | EVENT
+            lead_type_identifier |
+
+            EVENT
         )
 
         {
@@ -10480,7 +10493,9 @@ variable_declaration_type[int type_count] { bool is_compound = false; ENTRY_DEBU
         (options { greedy = true; } :
             { !inTransparentMode(MODE_TYPEDEF) && getTypeCount() > 0 }?
             (options { generateAmbigWarnings = false; } : keyword_name | type_identifier)
-            { decTypeCount(); }
+            {
+                decTypeCount();
+            }
         )*
 
         update_typecount[MODE_VARIABLE_NAME | MODE_INIT]
