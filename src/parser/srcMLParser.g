@@ -11037,7 +11037,7 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                 } else if (end_control_incr) {
                     if (inMode(MODE_LIST))
                         endMode(MODE_LIST);
-    
+
                     if (LA(1) != LCURLY) {
                         startNoSkipElement(SPSEUDO_BLOCK);
                         startNoSkipElement(SCONTENT);
