@@ -12249,7 +12249,16 @@ tripledotop[] { LightweightElement element(this); ENTRY_DEBUG } :
 
   Handles a parameter type.
 */
-parameter_type[] { CompleteElement element(this); int type_count = 0; int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; bool is_compound = false; ENTRY_DEBUG } :
+parameter_type[] {
+        CompleteElement element(this);
+        int type_count = 0;
+        int secondtoken = 0;
+        int after_token = 0;
+        STMT_TYPE stmt_type = NONE;
+        bool is_compound = false;
+
+        ENTRY_DEBUG
+} :
         {
             // local mode so start element will end correctly
             startNewMode(MODE_LOCAL);
