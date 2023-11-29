@@ -10354,7 +10354,7 @@ short_variable_declaration[] { ENTRY_DEBUG } :
             // declaration
             startNewMode(MODE_LOCAL | MODE_VARIABLE_NAME | MODE_INIT | MODE_EXPECT);
 
-            // start the declaration
+            // start the declaration statement
             startElement(SDECLARATION);
         }
 ;
