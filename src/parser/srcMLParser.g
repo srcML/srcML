@@ -9962,7 +9962,7 @@ autoreleasepool_block[] { ENTRY_DEBUG } :
             // treat try block as a nested block statement
             startNewMode(MODE_STATEMENT | MODE_NEST);
 
-            // start of the try statement
+            // start of the autorelease pool statement
             startElement(SAUTORELEASEPOOL);
         }
 
