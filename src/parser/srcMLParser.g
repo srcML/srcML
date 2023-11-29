@@ -10165,8 +10165,14 @@ generic_selection_association_list[] { CompleteElement element(this); ENTRY_DEBU
 /*
   generic_selection_complete_expression
 */
-generic_selection_complete_expression[] { CompleteElement element(this); int count_paren = 1; CALL_TYPE type = NOCALL;
-                                          bool isempty = false; int call_count = 0; ENTRY_DEBUG
+generic_selection_complete_expression[] {
+        CompleteElement element(this);
+        int count_paren = 1;
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 0;
+
+        ENTRY_DEBUG
 } :
         {
             // start a mode to end at a right bracket with expressions inside
@@ -10177,27 +10183,49 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
         }
 
         (options { warnWhenFollowAmbig = false; } :
-            { count_paren > 0 && (LA(1) != COMMA || !inMode(MODE_END_AT_COMMA)) && (count_paren != 1 || LA(1) != RPAREN) }?
+            {
+                count_paren > 0
+                && (
+                    LA(1) != COMMA
+                    || !inMode(MODE_END_AT_COMMA)
+                )
+                && (
+                    count_paren != 1
+                    || LA(1) != RPAREN
+                )
+            }?
             (
                 { !inMode(MODE_END_AT_COMMA) }?
                 comma |
 
                 // argument mode (as part of call)
-                { inMode(MODE_ARGUMENT) && LA(1) != RPAREN && LA(1) != RCURLY }?
+                {
+                    inMode(MODE_ARGUMENT)
+                    && LA(1) != RPAREN
+                    && LA(1) != RCURLY
+                }?
                 complete_arguments |
 
                 { LA(1) == LPAREN }?
-                expression { ++count_paren; } |
+                expression
+                {
+                    ++count_paren;
+                } |
 
                 { LA(1) == RPAREN }?
-                expression { --count_paren; } |
+                expression
+                {
+                    --count_paren;
+                } |
 
                 { perform_call_check(type, isempty, call_count, -1) && type == CALL }?
                 { 
                     if (!isempty)
                         ++count_paren;
                 }
-                expression_process (call[call_count] | keyword_calls) complete_arguments |
+                expression_process
+                (call[call_count] | keyword_calls)
+                complete_arguments |
 
                 expression
             )
