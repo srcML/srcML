@@ -9712,7 +9712,13 @@ macro_call_contents[] {
         int parencount = 0;
         bool start = true;
 
-        while (LA(1) != 1 /* Commented-out code: EOF? */ && !(parencount == 0 && LA(1) == RPAREN)) {
+        while (
+            LA(1) != 1 /* EOF? */
+            && !(
+                parencount == 0
+                && LA(1) == RPAREN
+            )
+        ) {
             if (LA(1) == LPAREN)
                 ++parencount;
 
@@ -9729,7 +9735,11 @@ macro_call_contents[] {
                 start = false;
             }
 
-            if (inputState->guessing == 0 && LA(1) == COMMA && parencount == 0) {
+            if (
+                inputState->guessing == 0
+                && LA(1) == COMMA
+                && parencount == 0
+            ) {
                 endMode();
                 start = true;
             }
