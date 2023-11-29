@@ -13064,7 +13064,15 @@ curly_pair[] { ENTRY_DEBUG } :
 */
 bracket_pair[] { ENTRY_DEBUG } :
         LBRACKET
-        (bracket_pair | qmark | ~(QMARK | LBRACKET | RBRACKET))*
+
+        (
+            bracket_pair |
+
+            qmark |
+
+            ~(QMARK | LBRACKET | RBRACKET)
+        )*
+
         RBRACKET
 ;
 
