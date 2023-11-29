@@ -12350,7 +12350,7 @@ template_param[] { in_template_param = true; ENTRY_DEBUG } :
             // end the parameter correctly
             startNewMode(MODE_LOCAL);
 
-            // start the parameter element
+            // start the template parameter statement
             startElement(STEMPLATE_PARAMETER);
         }
 
@@ -12364,7 +12364,10 @@ template_param[] { in_template_param = true; ENTRY_DEBUG } :
                 setMode(MODE_VARIABLE_NAME | MODE_INIT);
             }
 
-            (options { greedy = true; } : { true }? variable_declaration_nameinit)* |
+            (options { greedy = true; } :
+                { true }?
+                variable_declaration_nameinit
+            )* |
 
             template_inner_full
         )
