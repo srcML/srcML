@@ -10570,13 +10570,23 @@ class_type_compound_name[bool& is_compound] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_C) }?
             compound_name_c[is_compound] |
 
-            { !inLanguage(LANGUAGE_JAVA_FAMILY) && !inLanguage(LANGUAGE_C) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
-            compound_name_cpp[is_compound] | keyword_name_inner[is_compound] |
+            {
+                !inLanguage(LANGUAGE_JAVA_FAMILY)
+                && !inLanguage(LANGUAGE_C)
+                && !inLanguage(LANGUAGE_CSHARP)
+                && !inLanguage(LANGUAGE_OBJECTIVE_C)
+            }?
+            compound_name_cpp[is_compound] |
+
+            keyword_name_inner[is_compound] |
 
             macro_type_name_call
         )
 
-        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }?
+            attribute_cpp
+        )*
 
         {
             endMode();
