@@ -7717,7 +7717,8 @@ identifier_optional_specifier_destop[bool push, bool& is_nop] { SingleElement el
             startElement(SNAME);
         }
 
-        DESTOP push_namestack[push]
+        DESTOP
+        push_namestack[push]
         (template_specifier { is_nop = false; })*
         identifier_list
 ;
