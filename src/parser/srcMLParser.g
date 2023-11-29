@@ -12193,10 +12193,15 @@ multops[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         (
-            MULTOPS | REFOPS | RVALUEREF |
+            MULTOPS |
+
+            REFOPS |
+
+            RVALUEREF |
 
             { inLanguage(LANGUAGE_CSHARP) }?
-            QMARK set_bool[is_qmark, true] |
+            QMARK
+            set_bool[is_qmark, true] |
 
             BLOCKOP
         )
