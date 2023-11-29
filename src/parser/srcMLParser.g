@@ -10105,7 +10105,7 @@ generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
 
-            // start the generic
+            // start the generic selection statement
             startElement(SGENERIC_SELECTION);
 
             startNewMode(MODE_LIST);
@@ -10113,9 +10113,16 @@ generic_selection[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         (
             { inputState->guessing }?
-            GENERIC_SELECTION paren_pair |
+            GENERIC_SELECTION
+            paren_pair |
 
-            GENERIC_SELECTION LPAREN generic_selection_selector COMMA generic_selection_association_list rparen[false]
+            GENERIC_SELECTION
+            LPAREN
+            generic_selection_selector
+            COMMA
+            generic_selection_association_list
+
+            rparen[false]
         )
 ;
 
