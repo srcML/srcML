@@ -13638,7 +13638,14 @@ cppendif_skip[] {
         int endif_count = 1;
 
         while (endif_count && LA(1) != 1 /* EOF */) {
-            if ((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF)
+            if (
+                (
+                    prev == PREPROC
+                    && LA(1) == IF
+                )
+                || LA(1) == IFDEF
+                || LA(1) == IFNDEF
+            )
                 ++endif_count;
 
             if (LA(1) == ENDIF)
