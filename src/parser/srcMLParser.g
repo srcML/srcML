@@ -11822,7 +11822,7 @@ indexer_parameter_list[] { bool lastwasparam = false; ENTRY_DEBUG } :
             }
 
             /* Commented-out code:
-            // We are in a parameter list; Need to make sure we end it down to the start of the parameter list
+            // we are in a parameter list; need to make sure we end it down to the start of the parameter list
             {
                 if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                     endMode();
