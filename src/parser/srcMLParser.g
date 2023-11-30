@@ -14210,7 +14210,15 @@ cpp_literal[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SCPP_LITERAL);
         }
 
-        (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
+        (
+            string_literal[false] |
+
+            char_literal[false] |
+
+            TEMPOPS
+            (~(TEMPOPE | EOL))*
+            TEMPOPE
+        )
 ;
 
 /*
