@@ -819,7 +819,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_NAMESPACE) }?
         lcurly[false] |
 
-        // don't confuse with expression block
+        // do not confuse with expression block
         {
             (
                 (
@@ -1010,7 +1010,7 @@ keyword_statements[] { ENTRY_DEBUG } :
 
   Statements, declarations, and definitions that must be matched by pattern.
 
-  Basically we have an identifier and we don't know yet whether it starts an expression,
+  Basically we have an identifier and we do not know yet whether it starts an expression,
   function definition, function declaration, or even a label.
 */
 pattern_statements[] {
@@ -1138,7 +1138,7 @@ pattern_statements[] {
         { stmt_type == NONE && inTransparentMode(MODE_FRIEND) }?
         compound_name |
 
-        // "~" which looked like destructor, but isn't
+        // "~" which looked like destructor, but is not
         { stmt_type == NONE }?
         expression_statement_process
         expression_process
@@ -1327,7 +1327,7 @@ function_pointer_name_grammar[] { ENTRY_DEBUG } :
   The inner portion of the functon pointer name.
 */
 function_pointer_name_base[] { ENTRY_DEBUG bool flag = false; } :
-        // special case for function pointer names that don't have '*'
+        // special case for function pointer names that do not have '*'
         { !inMode(MODE_EXPRESSION) && macro_call_token_set.member(LA(1)) }?
         (compound_name_inner[false])* |
 
@@ -1825,7 +1825,7 @@ lambda_capture[] { CompleteElement element(this); ENTRY_DEBUG } :
         (
             LBRACKET
 
-            // suppress warning where compound_name's can match RBRACKET and is also matched by RBRACKET afterwards
+            // suppress warning where "compound_name"s can match RBRACKET and is also matched by RBRACKET afterwards
             (options { warnWhenFollowAmbig = false; } :
                 { /* warning suppression */ LA(1) == COMMA }?
                 COMMA |
@@ -2623,7 +2623,7 @@ perform_ternary_check[] returns [bool is_ternary] {
   ternary_check
 */
 ternary_check[] { ENTRY_DEBUG } :
-        // ends are catch alls; it's ok if they overlap
+        // ends are catch alls; it is ok if they overlap
         (
             { LA(1) != 1 }?
             (options { generateAmbigWarnings = false; } :
@@ -2639,7 +2639,7 @@ ternary_check[] { ENTRY_DEBUG } :
             )
         )
 
-        // ends are catch alls; it's ok if they overlap
+        // ends are catch alls; it is ok if they overlap
         (
             { LA(1) != 1 }?
             (options { generateAmbigWarnings = false; } :
@@ -2740,7 +2740,7 @@ do_statement[] { ENTRY_DEBUG } :
 /*
   do_while
 
-  Handles the 'while' part of a do-while statement.
+  Handles the "while" part of a do-while statement.
 */
 do_while[] { ENTRY_DEBUG } :
         {
@@ -4664,7 +4664,7 @@ rcurly[] { ENTRY_DEBUG } :
         RCURLY
 
         {
-            // end the current mode for the block; don't end more than one since they may be nested
+            // end the current mode for the block; do not end more than one since they may be nested
             endMode(MODE_TOP);
         }
 ;
@@ -4781,7 +4781,7 @@ terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_P
   Called from all places that end a statement, and could possibly end the "else" that the target statement was in.
   I.e., terminate (";"), end of a statement block, etc.
 
-  If in an if-statement, relatively straightforward.  Note that we could be ending with multiple else's.
+  If in an if-statement, relatively straightforward.  Note that we could be ending with multiple "else"s.
 
   Special case: "else" with no matching "if."  This occurs with either a single "else" or with an "else" in a
   preprocessor "#if ... #else ... #endif" construct (this is very common).
@@ -6321,7 +6321,7 @@ pattern_check_core[
                     // what was assumed to be the name of the function is actually part of the type
                     set_int[type_count, type_count + 1]
 
-                    // this isn't a constructor
+                    // this is not a constructor
                     set_bool[isconstructor, false]
 
                     function_rest[fla] |
@@ -7858,7 +7858,7 @@ function_pointer_name[] { CompleteElement element(this); ENTRY_DEBUG } :
 pointer_dereference[] { ENTRY_DEBUG bool flag = false; } :
         lparen_marked
 
-        // special case for function pointer names that don't have a '*'
+        // special case for function pointer names that do not have a '*'
         (
             { macro_call_token_set.member(LA(1)) }?
             (compound_name_inner[false])* |
@@ -7959,7 +7959,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
         )*
 
         {
-            // if it isn't a compound name, nop the element
+            // if it is not a compound name, nop the element
             if (!iscompound)
                 // set the token to NOP
                 tp.setType(SNOP);
@@ -8232,7 +8232,7 @@ keyword_name[] { CompleteElement element(this); TokenPosition tp; bool iscompoun
         )*
 
         {
-            // if it isn't a compound name, nop the element
+            // if it is not a compound name, nop the element
             if (!iscompound)
                 // set the token to NOP
                 tp.setType(SNOP);
@@ -9904,7 +9904,7 @@ for_like_list_item[] {
         control_initialization_variable_declaration[type_count] |
 
         {
-            // use a new mode without the expect so we don't nest expression parts
+            // use a new mode without the expect so we do not nest expression parts
             startNewMode(MODE_EXPRESSION);
 
             // start the expression element
@@ -10973,7 +10973,7 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
                 if (inMode(MODE_VARIABLE_NAME) && inTransparentMode(MODE_CONTROL_CONDITION))
                     endDownToModeSet(MODE_CONTROL_CONDITION);
 
-                // don't markup since it is not a normal operator
+                // do not markup since it is not a normal operator
                 markup = false;
             } else {
                 decParen();
@@ -11080,7 +11080,7 @@ rparen[bool markup = true, bool end_control_incr = false] { bool isempty = getPa
 
                     cppif_duplicate = false;
                 } else {
-                // end the single mode that started the list; don't end more than one since they may be nested
+                // end the single mode that started the list; do not end more than one since they may be nested
                 if (inMode(MODE_LIST))
                     endMode(MODE_LIST);
                 }
@@ -11105,7 +11105,7 @@ rcurly_argument[] { bool isempty = getCurly() == 0; ENTRY_DEBUG } :
         RCURLY
 
         {
-            // end the single mode that started the list; don't end more than one since they may be nested
+            // end the single mode that started the list; do not end more than one since they may be nested
             if (isempty && inMode(MODE_LIST)) {
                 while (
                     inMode(MODE_LIST)
@@ -11224,7 +11224,7 @@ expression_process[] { ENTRY_DEBUG } :
                     && LA(1) == RPAREN
                 )
             ) {
-                // use a new mode without the expect so we don't nest expression parts
+                // use a new mode without the expect so we do not nest expression parts
                 startNewMode(MODE_EXPRESSION);
 
                 if (inPrevMode(MODE_TERNARY_CONDITION))
@@ -13267,7 +13267,7 @@ enum_csharp_declaration[] { ENTRY_DEBUG } :
 /*
   enum_definition_complete
 
-  Used for enum's embedded in typedef's where the entire enum must be parsed since it is part of the type.
+  Used for "enum"s embedded in "typedef"s where the entire enum must be parsed since it is part of the type.
 */
 enum_definition_complete[] { CompleteElement element(this); ENTRY_DEBUG } :
         enum_definition
@@ -13814,12 +13814,12 @@ eol_post[int directive_token, bool markblockzero] {
                     }
                 }
 
-                // start a new blank mode for the new zero'ed blocks
+                // start a new blank mode for the new zeroed blocks
                 if (!cpp_zeromode && markblockzero) {
                     // start a new blank mode for if
                     cpp_zeromode = true;
 
-                    // keep track of nested if's (inside the "#if 0") so we know when we reach the proper "#endif"
+                    // keep track of nested "if"s (inside the "#if 0") so we know when we reach the proper "#endif"
                     cpp_ifcount = 0;
                 }
 
@@ -13846,7 +13846,7 @@ eol_post[int directive_token, bool markblockzero] {
                 }
 
                 if (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && !inputState->guessing) {
-                    // create an empty cppmode for "#if" if one doesn't exist
+                    // create an empty cppmode for "#if" if one does not exist
                     if (cppmode.empty())
                         cppmode.push(cppmodeitem(size()));
 
