@@ -13668,11 +13668,22 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
 
         int prev = -1;
 
-        while (LA(1) != ENDIF
-            && !(prev == PREPROC && LA(1) == ELSE)
-            && LA(1) != 1 /* EOF */)
-        {
-            if ((prev == PREPROC && LA(1) == IF) || LA(1) == IFDEF || LA(1) == IFNDEF) {
+        while (
+            LA(1) != ENDIF
+            && !(
+                prev == PREPROC
+                && LA(1) == ELSE
+            )
+            && LA(1) != 1 /* EOF */
+        ) {
+            if (
+                (
+                    prev == PREPROC
+                    && LA(1) == IF
+                )
+                || LA(1) == IFDEF
+                || LA(1) == IFNDEF
+            ) {
                 cppendif_skip();
                 continue;
             }
@@ -13700,11 +13711,14 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
                     end_order.push_back(RCURLY);
             }
 
-            if (LA(1) == TERMINATE
+            if (
+                LA(1) == TERMINATE
                 && !wait_terminate_post
-                && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)
-                    || inMode(MODE_END_CONTROL)))
-            {
+                && (
+                    inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT)
+                    || inMode(MODE_END_CONTROL)
+                )
+            ) {
                 end_order.push_back(TERMINATE);
             }
 
