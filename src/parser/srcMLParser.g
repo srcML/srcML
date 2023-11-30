@@ -14171,7 +14171,15 @@ cpp_filename[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SCPP_FILENAME);
         }
 
-        (string_literal[false] | char_literal[false] | TEMPOPS (~(TEMPOPE | EOL))* TEMPOPE)
+        (
+            string_literal[false] |
+
+            char_literal[false] |
+
+            TEMPOPS
+            (~(TEMPOPE | EOL))*
+            TEMPOPE
+        )
 ;
 
 /*
