@@ -13307,7 +13307,7 @@ enum_block[] { ENTRY_DEBUG } :
         lcurly_base[false]
 
         {
-            // nesting blocks, not statement
+            // nesting blocks, not statements
             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST | MODE_BLOCK | MODE_ENUM);
         }
 ;
