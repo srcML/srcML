@@ -14133,7 +14133,7 @@ cpp_define_parameter[] { int type_count = 1; ENTRY_DEBUG } :
             // end parameter correctly
             startNewMode(MODE_PARAMETER);
 
-            // start the parameter element
+            // start the parameter statement
             startElement(SPARAMETER);
         }
 
