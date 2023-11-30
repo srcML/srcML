@@ -14010,10 +14010,10 @@ cpp_complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             { !cpp_check_end() }?
             (
                 // commas in a list
-                { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA )}?
+                { inTransparentMode(MODE_END_ONLY_AT_RPAREN) || !inTransparentMode(MODE_END_AT_COMMA) }?
                 comma |
 
-                // right parentheses, unless we are in a pair of parentheses in an expression
+                // right parenthesis, unless we are in a pair of parentheses in an expression
                 { !inTransparentMode(MODE_INTERNAL_END_PAREN) }?
                 rparen[false] |
 
