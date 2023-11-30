@@ -13470,7 +13470,8 @@ preprocessor[] {
                 tp.setType(SCPP_LINE);
             }
             (options { generateAmbigWarnings = false; } :
-                cpp_linenumber (cpp_filename)* |
+                cpp_linenumber
+                (cpp_filename)* |
 
                 { inLanguage(LANGUAGE_CSHARP) }?
                 cpp_symbol_optional
@@ -13484,7 +13485,9 @@ preprocessor[] {
             }
             (
                 (OMP_OMP) => omp_directive |
+
                 (CHAR_START | STRING_START | TEMPOPS) => cpp_literal |
+
                 cpp_symbol
             )* |
 
@@ -13528,7 +13531,11 @@ preprocessor[] {
             (cpp_filename)* |
 
             // blank preproc; suppress ()* warning
-            { tp_directive.setType(SNOP); endMode(); }
+            {
+                tp_directive.setType(SNOP);
+                endMode();
+            }
+
             (options { greedy = true; } : cpp_garbage)*
         )
 
