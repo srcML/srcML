@@ -13131,7 +13131,15 @@ enum_preprocessing[bool decl] { ENTRY_DEBUG } :
             startNewMode(mode);
 
             // start the enum definition
-            if (inLanguage(LANGUAGE_CXX) && (next_token() == CLASS || next_token() == CXX_CLASS || next_token() == STRUCT || next_token() == UNION)) {
+            if (
+                inLanguage(LANGUAGE_CXX)
+                && (
+                    next_token() == CLASS
+                    || next_token() == CXX_CLASS
+                    || next_token() == STRUCT
+                    || next_token() == UNION
+                )
+            ) {
                 if (decl)
                     startElement(SENUM_CLASS_DECLARATION);
                 else
