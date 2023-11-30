@@ -13939,7 +13939,13 @@ cppmode_cleanup[] {
             }
         }
 
-        if (!cppmode.empty() && (equal || cppmode.top().statesize.size() == 2))
+        if (
+            !cppmode.empty()
+            && (
+                equal
+                || cppmode.top().statesize.size() == 2
+            )
+        )
             cppmode.pop();
 
         ENTRY_DEBUG
