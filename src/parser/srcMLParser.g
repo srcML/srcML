@@ -13785,11 +13785,18 @@ eol_post[int directive_token, bool markblockzero] {
                             open_elements.push(SCONDITION);
 
                             if (number_finishing_elements) {
-                                finish_elements_add.push_back(std::make_pair(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP, open_elements));
+                                finish_elements_add.push_back(
+                                    std::make_pair(
+                                        MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP,
+                                        open_elements
+                                    )
+                                );
                             } else {
-                                insertModeAfter(MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT,
-                                                MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP,
-                                                open_elements);
+                                insertModeAfter(
+                                    MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT,
+                                    MODE_CONDITION | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_ISSUE_EMPTY_AT_POP,
+                                    open_elements
+                                );
                             }
                         }
 
@@ -13812,14 +13819,14 @@ eol_post[int directive_token, bool markblockzero] {
                     // start a new blank mode for if
                     cpp_zeromode = true;
 
-                    // keep track of nested if's (inside the #if 0) so we know when we reach the proper #endif
+                    // keep track of nested if's (inside the "#if 0") so we know when we reach the proper "#endif"
                     cpp_ifcount = 0;
                 }
 
                 // found another if
                 ++cpp_ifcount;
 
-                // create new context for #if (and possible #else)
+                // create new context for "#if" (and possible "#else")
                 if (!isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && !inputState->guessing)
                     cppmode.push(cppmodeitem(size()));
 
@@ -13828,22 +13835,22 @@ eol_post[int directive_token, bool markblockzero] {
             case ELSE :
 
             case ELIF :
-                // found the #else for #if 0 that started this mode
+                // found the "#else" for "#if 0" that started this mode
                 if (cpp_zeromode && cpp_ifcount == 1)
                     cpp_zeromode = false;
 
-                // not in skipped #if, so skip #else until #endif of #if is reached
+                // not in skipped "#if," so skip "#else" until "#endif" of "#if" is reached
                 else if (!cpp_zeromode) {
                     cpp_skipelse = true;
                     cpp_ifcount = 1;
                 }
 
                 if (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && !inputState->guessing) {
-                    // create an empty cppmode for #if if one doesn't exist
+                    // create an empty cppmode for "#if" if one doesn't exist
                     if (cppmode.empty())
                         cppmode.push(cppmodeitem(size()));
 
-                    // add new context for #else in current #if
+                    // add new context for "#else" in current "#if"
                     cppmode.top().statesize.push_back(size());
 
                     if (!cpp_zeromode && cppmode.top().statesize.front() > size())
@@ -13853,25 +13860,26 @@ eol_post[int directive_token, bool markblockzero] {
                 break;
 
             case ENDIF :
-                // reached the end of an #if
+                // reached the end of an "#if"
                 --cpp_ifcount;
 
-                // found the #else for #if 0 that started this mode
+                // found the "#else" for "#if 0" that started this mode
                 if (cpp_zeromode && cpp_ifcount == 0)
                     cpp_zeromode = false;
 
-                // found the #else for #else 0 that started this mode
+                // found the "#else" for "#else 0" that started this mode
                 if (cpp_skipelse && cpp_ifcount == 0)
                     cpp_skipelse = false;
 
-                if (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE)
+                if (
+                    isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE)
                     && !inputState->guessing
-                    && !cppmode.empty())
-                {
-                    // add new context for #endif in current #if
+                    && !cppmode.empty()
+                ) {
+                    // add new context for "#endif" in current "#if"
                     cppmode.top().statesize.push_back(size());
 
-                    // reached #endif, so we are finished adding to this mode
+                    // reached "#endif," so we are finished adding to this mode
                     cppmode.top().isclosed = true;
 
                     // remove any finished modes
@@ -13884,16 +13892,31 @@ eol_post[int directive_token, bool markblockzero] {
 
         /*
           Skip elements when:
-            - in a zero block (cpp_zeromode) and not marking #if 0
-            - when processing only the #if part, not #else
+            - in a zero block (cpp_zeromode) and not marking "#if 0"
+            - when processing only the "#if" part, not "#else"
             - when guessing and in else (unless in zero block)
             - when ??? for cppmode
         */
-        if ((!isoption(parser_options, SRCML_PARSER_OPTION_CPP_MARKUP_IF0) && cpp_zeromode)
-            || (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && cpp_skipelse)
-            || (isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE) && inputState->guessing && cpp_skipelse)
-            || (!cppmode.empty() && !cppmode.top().isclosed && cppmode.top().skipelse))
-        {
+        if (
+            (
+                !isoption(parser_options, SRCML_PARSER_OPTION_CPP_MARKUP_IF0)
+                && cpp_zeromode
+            )
+            || (
+                isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE)
+                && cpp_skipelse
+            )
+            || (
+                isoption(parser_options, SRCML_PARSER_OPTION_CPP_TEXT_ELSE)
+                && inputState->guessing
+                && cpp_skipelse
+            )
+            || (
+                !cppmode.empty()
+                && !cppmode.top().isclosed
+                && cppmode.top().skipelse
+            )
+        ) {
             while (LA(1) != PREPROC && LA(1) != 1 /* EOF */)
                 consume();
         }
