@@ -14078,7 +14078,13 @@ cpp_define_name[] {
 /*
   cpp_define_parameter_list
 */
-cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam = false; bool foundparam = false; ENTRY_DEBUG } :
+cpp_define_parameter_list[] {
+        CompleteElement element(this);
+        bool lastwasparam = false;
+        bool foundparam = false;
+
+        ENTRY_DEBUG
+} :
         {
             // list of parameters
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
@@ -14096,7 +14102,8 @@ cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam =
 
                 if (!lastwasparam)
                     empty_element(SPARAMETER, !lastwasparam);
-                    lastwasparam = false;
+
+                lastwasparam = false;
             }
 
             {
@@ -14107,7 +14114,11 @@ cpp_define_parameter_list[] { CompleteElement element(this); bool lastwasparam =
 
             comma |
 
-            cpp_define_parameter { foundparam = lastwasparam = true; }
+            cpp_define_parameter
+
+            {
+                foundparam = lastwasparam = true;
+            }
         )*
 
         empty_element[SPARAMETER, !lastwasparam && foundparam]
