@@ -13,6 +13,8 @@
 
 void add_element(xmlXPathParserContext* context, int nargs);
 
+void match_element(xmlXPathParserContext* context, int nargs);
+
 void clear_elements(xmlXPathParserContext* context, int nargs);
 
 void is_valid_element(xmlXPathParserContext* context, int nargs);
@@ -20,5 +22,7 @@ void is_valid_element(xmlXPathParserContext* context, int nargs);
 void intersect(xmlXPathParserContext* ctxt, int nargs);
 
 void difference(xmlXPathParserContext* ctxt, int nargs);
+
+void debug_print(xmlXPathParserContext* ctxt, int nargs);
 
 #endif

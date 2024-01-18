@@ -661,11 +661,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
 
             xmlDocSetRootElement(curdoc.get(), pr->nodeTab[i]);
 
-            int lang = srcml_check_language(srcml_unit_get_language(unit));
-
-
-
-            lastresult = trans->apply(curdoc.get(), lang);
+            int language = srcml_check_language(srcml_unit_get_language(unit));
+            lastresult = trans->apply(curdoc.get(), language);
             std::unique_ptr<xmlNodeSet> results(std::move(lastresult.nodeset));
             if (results == nullptr)
                 break;

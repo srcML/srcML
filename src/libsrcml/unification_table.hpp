@@ -42,6 +42,7 @@ public:
     void add_to_token_list(std::string_view, int, std::string_view, std::uintptr_t);
 
     bool does_element_match_variable(std::string_view, int, std::string_view first, uintptr_t second) const;
+    bool is_element_in_bucket(std::string_view, int, std::string_view first, uintptr_t second) const;
 
     void empty_buckets();
     void empty_bucket(std::string_view);

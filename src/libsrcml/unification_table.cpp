@@ -92,6 +92,21 @@ bool UnificationTable::does_element_match_variable(std::string_view variable_ide
     return true;
 }
 
+bool UnificationTable::is_element_in_bucket(std::string_view variable_identifier, int order, std::string_view t, uintptr_t address) const {
+    std::string token(t);
+    const auto bucketVar = bucket.find(variable_identifier);
+    for (int i = size_of_variable_bucket(variable_identifier); i > 0; --i) {
+        //std::cout << "2:" << i << std::endl;
+        for (const auto& element : bucketVar->second.find(i)->second) {
+            //std::cout << "3" << std::endl;
+            if(token == element.token && address == element.address) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void UnificationTable::empty_buckets() {
 
     for (auto& variable : bucket) {

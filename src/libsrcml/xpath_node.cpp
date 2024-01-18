@@ -55,12 +55,20 @@ std::string XPathNode::to_string(std::string_view rtn_view) {
     else {
         rtn += "(";
         int i = 0;
+        bool union_child = false;
         for(auto child : children) {
+            if(child->get_type() == UNION) {
+                union_child = true;
+                break;
+            }
             if(i != 0) { rtn += ","; }
             rtn += child->to_string();
             ++i;
         }
         rtn += ")";
+        if(union_child) {
+            rtn += children[i]->to_string();
+        }
     }
 
     if(type == PREDICATE) { rtn += ']' ; }
