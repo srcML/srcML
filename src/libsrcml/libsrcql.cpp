@@ -15,7 +15,6 @@
 #include <unordered_map>
 
 static std::unordered_map<std::string, std::string> queries;
-static int count = 0;
 
 const char* srcql_convert_query_to_xpath(const char* src_query, const char* language) {
     //////////////////////////////////////////////
@@ -68,9 +67,6 @@ const char* srcql_convert_query_to_xpath(const char* src_query, const char* lang
         XPathGenerator generator(src_query,language);
         xpath = generator.convert();
         queries.insert(std::make_pair(std::string(language)+":"+src_query,xpath));
-        ++count;
-        std::cout << "RAN " << count << " TIMES! " << xpath << "\n" << std::endl;
-        //std::cout << "RAN " << count << " TIMES! " << std::string(language)+":"+src_query << "|" << &queries << std::endl;
     }
 
     char* returned_xpath = new char[xpath.length()+1];

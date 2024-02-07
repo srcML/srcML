@@ -166,14 +166,11 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
 
         const auto itpair = tokens.insert(token.size() == tokenView.size() ? std::move(token) : std::string(tokenView));
 
-        // std::cerr << "TOKEN: " << *(itpair.first) << '\n';
-
-        // if (tokens.size() > 1000)
-        //     fprintf(stderr, "DEBUG:  %s %s %d tokens.size(): %d\n", __FILE__,  __FUNCTION__, __LINE__,  (int) tokens.size());
 
         // if the variable matches the token, add to the tokens
         // std::cout << ": Add " << token << "|" << node_ptr << " to " << bucket << "_" << number << std::endl;
-        const bool valid = table.does_element_match_variable(bucket, number, *(itpair.first), node_ptr);
+        const bool valid = table.does_element_match_variable(bucket, number, *(itpair.first), node_ptr) && table.check_regex(std::string(bucket), std::string(tokenView));
+        // Check that the name matches all of the regex rules
         if (valid) {
             table.add_to_token_list(bucket, number, *(itpair.first), node_ptr);
         }
@@ -270,7 +267,7 @@ void match_element(xmlXPathParserContext* ctxt, int nargs) {
         isValid = isValid || valid;
     }
     // std::cout << "Worked? " << (isValid ? "true" : "false") << std::endl;
-    // std::cout << std::endl << table << std::endl << "-----------------------------" << std::endl;
+    //std::cout << std::endl << table << std::endl << "-----------------------------" << std::endl;
 
     // return if token matches
     xmlXPathReturnBoolean(ctxt, isValid);
@@ -347,14 +344,12 @@ void intersect(xmlXPathParserContext* ctxt, int nargs){
     }
     xmlNodeSetPtr res = xmlXPathNodeSetCreate(NULL);
 
-    int i_lhs = 0;
-    int i_rhs = 0;
-    while(i_lhs < lhs->nodeNr && i_rhs < rhs->nodeNr) {
-        std::uintptr_t l = reinterpret_cast<std::uintptr_t>(lhs->nodeTab[i_lhs]);
-        std::uintptr_t r = reinterpret_cast<std::uintptr_t>(rhs->nodeTab[i_rhs]);
-        if(l == r) { xmlXPathNodeSetAdd(res,lhs->nodeTab[i_lhs]); ++i_lhs; ++i_rhs; }
-        else if(l < r) { ++i_lhs; }
-        else if(l > r) { ++i_rhs; }
+    for(int i_lhs = 0; i_lhs < lhs->nodeNr; ++i_lhs) {
+        for(int i_rhs = 0; i_rhs < rhs->nodeNr; ++i_rhs) {
+            std::uintptr_t l = reinterpret_cast<std::uintptr_t>(lhs->nodeTab[i_lhs]);
+            std::uintptr_t r = reinterpret_cast<std::uintptr_t>(rhs->nodeTab[i_rhs]);
+            if(l == r) { xmlXPathNodeSetAdd(res,lhs->nodeTab[i_lhs]); }
+        }
     }
 
     xmlXPathReturnNodeSet(ctxt,res);
@@ -388,6 +383,22 @@ void difference(xmlXPathParserContext* ctxt, int nargs) {
     }
 
     xmlXPathReturnNodeSet(ctxt,res);
+}
+
+void regex_match(xmlXPathParserContext* ctxt, int nargs) {
+    if(nargs != 2) {
+        std::cout << "Arg arity error" << std::endl;
+        return;
+    }
+    xmlChar* r = xmlXPathPopString(ctxt);
+    std::string regex = (const char*)(r);
+    xmlChar* id = xmlXPathPopString(ctxt);
+    std::string identifier = (const char*)(id);
+    identifier = identifier.substr(1,identifier.size()-1);
+
+    table.add_regex_rule(identifier,regex);
+
+    xmlXPathReturnBoolean(ctxt, true);
 }
 
 void debug_print(xmlXPathParserContext* ctxt, int nargs) {

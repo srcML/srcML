@@ -97,7 +97,7 @@ static int reparse_root(void* ctx) {
     memset(&roottagsax, 0, sizeof(roottagsax));
     roottagsax.initialized    = XML_SAX2_MAGIC;
     xmlSetStructuredErrorFunc(ctx, [](void * userData,
-                     xmlErrorPtr /* error */) {
+                     const xmlError* /* error */) {
 
         auto ctxt = (xmlParserCtxtPtr) userData;
         if (ctxt == nullptr)

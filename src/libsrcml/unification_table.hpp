@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <functional>
 #include <cstdint>
+#include <regex>
 
 struct unique_element {
     std::string_view token;
@@ -43,16 +44,20 @@ public:
 
     bool does_element_match_variable(std::string_view, int, std::string_view first, uintptr_t second) const;
     bool is_element_in_bucket(std::string_view, int, std::string_view first, uintptr_t second) const;
+    bool regex_match_bucket(std::string_view, std::string);
 
     void empty_buckets();
     void empty_bucket(std::string_view);
 
+    void add_regex_rule(std::string_view, std::string_view);
+    bool check_regex(std::string_view, std::string_view);
     // void clear_storage();
 
     friend std::ostream& operator<<(std::ostream&, const UnificationTable&);
 
 private:
     variable_bucket bucket;
+    std::map<std::string,std::set<std::string>> regex_rules;
 };
 
 #endif

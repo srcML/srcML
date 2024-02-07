@@ -20,10 +20,42 @@
 #include <libxml2_utilities.hpp>
 #include <memory>
 
+#include <iostream>
+
 #include <Language.hpp>
 
 #include <qli_extensions.hpp>
 #include <srcql.hpp>
+
+// void get_node_text(const xmlNode* top_node, std::string& text, bool top) {
+
+//         // process list of nodes
+//         for (const xmlNode* node = top_node; node != NULL && (!top || node == top_node); node = node->next) {
+//             if (node->type == XML_TEXT_NODE) {
+//                 xmlChar* t = xmlNodeGetContent(node);
+//                 std::string_view st((const char*) t);
+
+//                 // add normalized whitespace to the text
+//                 if (st.find_first_not_of(" \t\n\r") != st.npos) {
+//                     text += (st);
+//                     text += ' ';
+//                 }
+//                 xmlFree(t);
+//             }
+
+//             // process children depth first
+//             if (node->children) {
+//                 get_node_text(node->children, text, false);
+//             }
+//         }
+//     }
+//     std::string get_node_text(const xmlNode* top_node) {
+
+//         // use single string to avoid copying
+//         std::string s;
+//         get_node_text(top_node, s, true);
+//         return s;
+//     }
 
 const char* const xpathTransformation::simple_xpath_attribute_name = "location";
 
@@ -178,7 +210,8 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
  */
 TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
 
-    std::unique_ptr<xmlXPathContext> context(createContext(doc));
+
+    std::unique_ptr<xmlXPathContext> context(xmlXPathNewContext(doc));
     if (!context) {
         fprintf(stderr, "%s: Error in executing xpath\n", "libsrcml");
         return TransformationResult();
@@ -214,6 +247,8 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     // Set Operations
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"intersect",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&intersect);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"difference",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&difference);
+    // WHERE Clause Functions
+    xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"regex-match",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&regex_match);
     // Debug
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"debug-print",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&debug_print);
 
@@ -224,6 +259,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         std::string_view srcql_string(xpath);
         srcql_string.remove_prefix("srcql:"sv.size());
         const auto srcqlXPath = srcql_convert_query_to_xpath(srcql_string.data(), Language(position).getLanguageString());
+        // std::cout << "XPath: " << srcqlXPath << std::endl;
         localCompiledXPath = xmlXPathCompile(BAD_CAST srcqlXPath);
     }
 
@@ -238,6 +274,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     tresult.unitWrapped = false;
 
     // xpath evaluation produces a nodeset result, even if there are no results
+    
     tresult.nodeType = result_nodes->type == XPATH_NODESET && (result_nodes->nodesetval == nullptr || result_nodes->nodesetval->nodeNr == 0)? 0 : result_nodes->type;
 
     // update scalar values, if the type is right
@@ -252,8 +289,9 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     }
 
     // when result is not a nodeset, then return nullptr, and the calling code will check the other values
-    if (result_nodes->type != XPATH_NODESET)
+    if (result_nodes->type != XPATH_NODESET) {
         return tresult;
+    }
 
     if (!element.empty()) {
 
@@ -283,11 +321,13 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         return tresult;
     }
 
-    if (!result_nodes->nodesetval)
+    if (!result_nodes->nodesetval) {
         return tresult;
+    }
 
-    if (!result_nodes->nodesetval->nodeNr)
+    if (!result_nodes->nodesetval->nodeNr) {
         return tresult;
+    }
 
     if (result_nodes->nodesetval->nodeTab[0] && result_nodes->nodesetval->nodeTab[0]->name &&
         (const char*) result_nodes->nodesetval->nodeTab[0]->name == "unit"sv)
@@ -295,7 +335,6 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
 
     tresult.nodeset.reset(result_nodes->nodesetval);
     result_nodes->nodesetval = nullptr;
-
     return tresult;
 }
 

@@ -62,6 +62,22 @@ void change_adds_to_matches(XPathNode* node) {
     }
 }
 
+void add_inner_specifier(XPathNode* node, int scope_count) {
+    std::string node_text = node->get_text();
+    if(node_text.find("qli:add-element",0) != std::string::npos) {
+        //std::cout << node_text << " -> ";
+        int start = node_text.find("qli:add-element",0);
+        int start_quote = node_text.find("\"",start);
+        int end_quote = node_text.find("\"",start_quote+1);
+        std::string identifier = node_text.substr(start_quote+1, end_quote-start_quote-1);
+        node_text.insert(end_quote,"_INNER_"+std::to_string(scope_count));
+        node->set_text(node_text);
+    }
+    for(auto child : node->get_children()) {
+        add_inner_specifier(child,scope_count);
+    }
+}
+
 // Takes the raw XPath string and orders all add-element calls with the correct #
 void number_add_calls(XPathNode* node, int group, std::map<std::string,int>* count = nullptr) {
     bool clean = false;
@@ -102,6 +118,13 @@ void number_add_calls(XPathNode* node, int group, std::map<std::string,int>* cou
         node_text.insert(end_quote,"_"+std::to_string(group));
         node->set_text(node_text);
         //std::cout << node_text << std::endl;
+    }
+    else if(node_text.find("qli:regex-match",0) != std::string::npos) {
+        XPathNode* id_child = node->get_children()[0];
+        std::string id_text = id_child->get_text();
+        int end_quote = node_text.find("\"",1);
+        id_text.insert(id_text.size()-1,"_"+std::to_string(group));
+        id_child->set_text(id_text);
     }
     for(auto child : node->get_children()) {
         number_add_calls(child,group,count);
@@ -188,9 +211,9 @@ std::string XPathGenerator::convert() {
     std::vector<XPathNode*> source_exprs;
 
     std::vector<std::string> tokens = split(src_query, " ");
-    int a_1 = 0;
-    for(auto a_2 : tokens) { std::cout << a_1++ << ": " << a_2 << std::endl; }
-    std::cout << std::endl; a_1 = 0;
+    // int a_1 = 0;
+    // for(auto a_2 : tokens) { std::cout << a_1++ << ": " << a_2 << std::endl; }
+    // std::cout << std::endl; a_1 = 0;
     /*****
     Loop through each token within the provides srcQL query.
 
@@ -202,6 +225,8 @@ std::string XPathGenerator::convert() {
     *****/
     std::string expr_type = "";
     std::string build_expr = "";
+    bool is_where_clause = false;
+    int inner_id = 0;
     for (size_t i = 0; i < tokens.size(); ++i) {
         std::string token = tokens[i];
         // FIND - no-op, does nothing
@@ -214,6 +239,7 @@ std::string XPathGenerator::convert() {
         else if (token == "CONTAINS"   ||
                  token == "FOLLOWED"   ||
                  token == "WITHIN"     ||
+                 token == "WHERE"      ||
                  token == "FROM"       ||
                  token == "UNION"      ||
                  token == "INTERSECT"  ||
@@ -225,40 +251,131 @@ std::string XPathGenerator::convert() {
                 else { build_expr += " " + token; }
                 token = "END";
             }
-            // Then determine expr type if not set
-            if (expr_type == "") {
-                // XPATH
-                if (build_expr.find("/",0) == 0) { expr_type = "XPATH"; }
-                else if(build_expr.find(" ",0) == std::string::npos &&
-                        build_expr.find(":",0) != std::string::npos) {
-                    if (split(build_expr,":").size() <= 2) {
-                        expr_type = "TAG";
-                    }
-                    else { expr_type = "PATTERN"; }
-                }
-                else {
-                    expr_type = "PATTERN";
-                }
-            }
-            // Next, convert into an XPathNode
+
             XPathNode* node;
-            if (expr_type == "PATTERN") {
-                node = get_xpath_from_argument(build_expr);
-            }
-            else if (expr_type == "XPATH") {
-                while(build_expr.find("/",0) == 0) {
-                    build_expr.erase(0,1);
+
+            // If this is a where clause, do different steps
+            if(!is_where_clause) {
+                // Then determine expr type if not set
+                if (expr_type == "") {
+                    // XPATH
+                    if (build_expr.find("/",0) == 0) { expr_type = "XPATH"; }
+                    else if(build_expr.find(" ",0) == std::string::npos &&
+                            build_expr.find(":",0) != std::string::npos) {
+                        if (split(build_expr,":").size() <= 2) {
+                            expr_type = "TAG";
+                        }
+                        else { expr_type = "PATTERN"; }
+                    }
+                    else {
+                        expr_type = "PATTERN";
+                    }
                 }
-                node = new XPathNode(build_expr);
+                // Next, convert into an XPathNode
+                if (expr_type == "PATTERN") {
+                    node = get_xpath_from_argument(build_expr);
+                }
+                else if (expr_type == "XPATH") {
+                    int count = 0;
+                    while(build_expr.find("/",0) == 0) {
+                        ++count;
+                        build_expr.erase(0,1);
+                    }
+                    node = new XPathNode(build_expr);
+                    if(count == 1) { node->set_type(NEXT); }
+                }
+                else if (expr_type == "TAG") {
+                    node = new XPathNode(build_expr);
+                }
             }
-            else if (expr_type == "TAG") {
-                node = new XPathNode(build_expr);
+            else {
+                // Need to check what kind of where clause
+                // NOT([source_expr])
+                if(build_expr.find("NOT",0) == 0) {
+                    size_t start_paren = build_expr.find_first_of("(");
+                    size_t end_paren = build_expr.find_last_of(")");
+                    std::string not_content = build_expr.substr(start_paren+1,end_paren - start_paren - 1);
+                    node = get_xpath_from_argument(not_content);
+                    add_inner_specifier(node,inner_id);
+                    ++inner_id;
+                    operations.push_back("WHERE-NOT");
+                }
+                // MATCH([logical_variable],[regex])
+                else if(build_expr.find("MATCH",0) == 0) {
+                    size_t start_paren = build_expr.find_first_of("(");
+                    size_t end_paren = build_expr.find_last_of(")");
+                    std::string match_content = build_expr.substr(start_paren+1,end_paren - start_paren - 1);
+                    std::vector<std::string> args = split(match_content,",");
+                    node = new XPathNode("qli:regex-match",CALL);
+                    node->add_child(new XPathNode("\""+args[0]+"\""));
+                    node->add_child(new XPathNode(args[1]));
+                    operations.push_back("WHERE-MATCH");
+                }
+                // COUNT([source_expr]) and other predicates
+                else {
+                    node = new XPathNode("",NO_CONN);
+                    XPathNode* insert_point = node;
+                    std::string other_clause = build_expr;
+                    int start = 0;
+                    while(other_clause.find("COUNT",start) != std::string::npos) {
+                        int count_pos = other_clause.find("COUNT",start);
+                        XPathNode* extra_text = new XPathNode(other_clause.substr(start,count_pos-start),NO_CONN);
+                        insert_point->add_child(extra_text);
+                        insert_point = extra_text;
+                        int start_paren = other_clause.find("(",count_pos);
+                        int i = start_paren+1;
+                        int count = 1;
+                        while (count != 0) {
+                            if (other_clause[i] == '(') { ++count; }
+                            else if (other_clause[i] == ')') { --count; }
+                            i++;
+                        }
+                        int end_paren = i;
+                        start = end_paren;
+                        std::string count_expr = other_clause.substr(start_paren+1,end_paren-start_paren-2);\
+
+                        // Determine type of expr, and convert to XPathNode
+                        XPathNode* inner;
+                        if (count_expr.find("/",0) == 0) { 
+                            int count = 0;
+                            while(count_expr.find("/",0) == 0) {
+                                ++count;
+                                count_expr.erase(0,1);
+                            }
+                            inner = new XPathNode(count_expr);
+                            if(count == 1) { inner->set_type(NEXT); }
+                        }
+                        else if(count_expr.find(" ",0) == std::string::npos &&
+                                count_expr.find(":",0) != std::string::npos) {
+                            if (split(count_expr,":").size() == 2) {
+                                inner = new XPathNode(count_expr);
+                            }
+                            else { inner = get_xpath_from_argument(count_expr); }
+                        }
+                        else {
+                            inner = get_xpath_from_argument(count_expr);
+                        }
+                        if (inner->get_type() != NEXT) { inner->set_type(ANY); }
+                        XPathNode* call_arg = new XPathNode(".",NO_CONN);
+                        call_arg->add_child(inner);
+                        XPathNode* count_call = new XPathNode("count",CALL);
+                        count_call->add_child(call_arg);
+                        insert_point->add_child(count_call);
+                    }
+                    insert_point->add_child(new XPathNode(other_clause.substr(start,other_clause.size() - start)));
+                    add_inner_specifier(node,inner_id);
+                    ++inner_id;
+                    operations.push_back("WHERE-COUNT");
+                }
+
+                is_where_clause = false;
             }
 
             // Add node and operation to vectors
-            if (token != "END") { operations.push_back(token); }
+            if (token == "WHERE") { is_where_clause = true; }
+            else if (token != "END") { operations.push_back(token); }
             source_exprs.push_back(node);
-            std::cout << (a_1++) << ": " << build_expr << "\n" << (a_1++) << ": " << token << std::endl;
+            // std::cout << (a_1++) << ": " << build_expr << "\n" << (a_1++) << ": " << token << std::endl;
             // Reset strings
             expr_type = "";
             build_expr = "";
@@ -278,15 +395,53 @@ std::string XPathGenerator::convert() {
         }
     }
 
-    std::cout << std::endl;
-    for(auto op : operations) { std::cout << "op:" << op << std::endl; }
-    for(auto arg : source_exprs) { std::cout << "arg:" << arg->to_string() << std::endl; }
-    std::cout << "---------------------" << std::endl;
+    // std::cout << std::endl;
+    // for(auto op : operations) { std::cout << "op:" << op << std::endl; }
+    // for(auto arg : source_exprs) { std::cout << "arg:" << arg->to_string() << std::endl; }
+    // std::cout << "---------------------" << std::endl;
 
 
     XPathNode* top_copy = new XPathNode(*source_exprs[0]);
 
     if(operations.size() != source_exprs.size()-1) { return "ASSERT ERROR: OPS and ARGS COUNT OFF"; }
+
+    /* WHERE NOT check
+     *     x WHERE not(y)
+     *     x[not(self::y)]
+     */
+    for(size_t i = 0; i < operations.size(); ++i) {
+        if(operations[i] == "WHERE-NOT") {
+            XPathNode* lhs = source_exprs[i];
+            XPathNode* rhs = source_exprs[i+1];
+            rhs->set_type(NO_CONN);
+            XPathNode* self_axis = new XPathNode("self::",NO_CONN);
+            self_axis->add_child_beginning(rhs);
+            XPathNode* not_call = new XPathNode("not",CALL);
+            not_call->add_child_beginning(self_axis);
+            XPathNode* empty_pred = new XPathNode("",PREDICATE);
+            empty_pred->add_child(not_call);
+            lhs->add_child(empty_pred);
+            operations.erase(operations.begin()+i);
+            source_exprs.erase(source_exprs.begin()+i+1);
+            --i;
+        }
+    }
+
+    /* WHERE COUNT check
+     *     x WHERE not(y)
+     *     x[not(self::y)]
+     */
+    for(size_t i = 0; i < operations.size(); ++i) {
+        if(operations[i] == "WHERE-COUNT") {
+            XPathNode* lhs = source_exprs[i];
+            XPathNode* rhs = source_exprs[i+1];
+            rhs->set_type(PREDICATE);
+            lhs->add_child(rhs);
+            operations.erase(operations.begin()+i);
+            source_exprs.erase(source_exprs.begin()+i+1);
+            --i;
+        }
+    }
 
     /* WITHIN Check
      *     x WITHIN y
@@ -362,6 +517,25 @@ std::string XPathGenerator::convert() {
         }
     }
 
+
+    /* WHERE-MATCH check
+     *     x WHERE match($,"reg")
+     *     x[qli:regex-match("$","reg")]
+     *
+     */
+    for(size_t i = 0; i < operations.size(); ++i) {
+        if(operations[i] == "WHERE-MATCH") {
+            XPathNode* lhs = source_exprs[i];
+            XPathNode* rhs = source_exprs[i+1];
+            XPathNode* empty_pred = new XPathNode("",PREDICATE);
+            empty_pred->add_child(rhs);
+            lhs->add_child_beginning(empty_pred);
+            operations.erase(operations.begin()+i);
+            source_exprs.erase(source_exprs.begin()+i+1);
+            --i;
+        }
+    }
+
     // Number the add calls and add clears before grouping into set operations
     for(size_t i = 0; i < source_exprs.size(); ++i) {
         add_bucket_clears(source_exprs[i],i);
@@ -376,7 +550,9 @@ std::string XPathGenerator::convert() {
         if(operations[i] == "FROM") {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
-            lhs->set_type(ANY);
+            if(lhs->get_type() != NEXT) {
+                lhs->set_type(ANY);
+            }
             rhs->add_child(lhs);
             operations.erase(operations.begin()+i);
             source_exprs.erase(source_exprs.begin()+i);
@@ -440,8 +616,6 @@ std::string XPathGenerator::convert() {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
             XPathNode* call = new XPathNode("qli:difference",CALL);
-            // if(lhs->get_text().find("qli:",0))
-            //std::cout << lhs->get_type() << " ??? " << lhs->get_text() << std::endl;
             if(lhs->get_type() != CALL) {
                 lhs->set_type(ANY);
             }
@@ -457,24 +631,10 @@ std::string XPathGenerator::convert() {
         }
     }
 
+
     if(!is_a_call == true) { source_exprs[0]->set_type(ANY); }
 
     std::string xpath = source_exprs[0]->to_string();
-    //std::cout << "RESULT: " << xpath << std::endl;
-
-    // xpath = "//src:decl_stmt[qli:clear(\"VAR_0\")][src:decl[src:type[*[qli:is-valid-element(.)][qli:add-element(.,\"TYPE_0\",1)]][following-sibling::*[qli:is-valid-element(.)][following-sibling::src:init[src:expr[src:operator[text()=\"new\"][following-sibling::src:name[*[qli:is-valid-element(.)][following-sibling::src:index][qli:add-element(.,\"TYPE_0\",2)]]]]]][qli:add-element(.,\"VAR_0\",1)]]]] \
-    // [qli:debug-print(\
-    // .//ancestor::src:function[src:type[*[qli:is-valid-element(.)][qli:match-element(.,\"TYPE_0\",3)]][following-sibling::*[qli:is-valid-element(.)][following-sibling::src:parameter_list[following-sibling::src:block[src:block_content]]][qli:match-element(.,\"FNAME_0\",2)]]]//src:expr_stmt \
-    // )]\
-    // ";\
-
-    // xpath = "//* \
-    // [qli:debug-print(\
-    // .//*[false()] //* \
-    // )]\
-    // ";
-
-    // xpath = "//*[qli:debug-print(.//*[false()]//*)]";
     return xpath;
 }
 

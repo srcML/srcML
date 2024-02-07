@@ -11,6 +11,7 @@
 #include <libxml/parser.h>
 #include <libxml/xpathInternals.h>
 
+// Searching Functions
 void add_element(xmlXPathParserContext* context, int nargs);
 
 void match_element(xmlXPathParserContext* context, int nargs);
@@ -22,6 +23,12 @@ void is_valid_element(xmlXPathParserContext* context, int nargs);
 void intersect(xmlXPathParserContext* ctxt, int nargs);
 
 void difference(xmlXPathParserContext* ctxt, int nargs);
+
+// WHERE clause functions
+
+void regex_match(xmlXPathParserContext* ctxt, int nargs);
+
+// Debugging functions
 
 void debug_print(xmlXPathParserContext* ctxt, int nargs);
 

@@ -12,6 +12,8 @@ endif()
 
 cmake_minimum_required(VERSION 3.24)
 
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # If performed here, before project(), then this prefix becomes part of the CMAKE_SYSTEM_PREFIX_PATH
 # and then the installed version of srcML can be found by the tests without building srcml.
 # Note that the default for the install prefix is "C:/Program Files (x86)/srcML", which contradicts

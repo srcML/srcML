@@ -31,6 +31,7 @@
 #include <cstring>
 #include <vector>
 #include <optional>
+#include <iostream>
 
 /**
  * Transformation result. Passed to srcml_unit_apply_transforms() to collect results of transformation
@@ -608,7 +609,6 @@ static bool usesURI(xmlNode* cur_node, std::string_view URI) {
  * @returns Returns SRCML_STATUS_OK on success and a status error codes on failure.
  */
 int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit* unit, struct srcml_transform_result** presult) {
-
     if (archive == nullptr || unit == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
@@ -635,7 +635,8 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     }
 
     // create a DOM of the unit
-    std::shared_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.data(), (int) unit->srcml.size(), 0, 0, 0), [](xmlDoc* doc) { xmlFreeDoc(doc); });
+
+    std::shared_ptr<xmlDoc> doc(xmlReadMemory(unit->srcml.data(), (int) unit->srcml.size(), 0, 0, XML_PARSE_HUGE), [](xmlDoc* doc) { xmlFreeDoc(doc); });
     if (doc == nullptr)
         return SRCML_STATUS_ERROR;
 
@@ -648,7 +649,6 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
     TransformationResult lastresult;
     std::shared_ptr<xmlDoc> curdoc(doc);
     for (const auto& trans : archive->transformations) {
-
         // preserve the fullresults to iterate through
         // collect results from this transformation applied to the potentially multiple
         // results of the previous transformation step
@@ -664,8 +664,9 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             int language = srcml_check_language(srcml_unit_get_language(unit));
             lastresult = trans->apply(curdoc.get(), language);
             std::unique_ptr<xmlNodeSet> results(std::move(lastresult.nodeset));
-            if (results == nullptr)
+            if (results == nullptr) {
                 break;
+            }
 
             xmlXPathNodeSetMerge(fullresults.get(), results.get());
         }
