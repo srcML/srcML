@@ -468,7 +468,7 @@ std::string XPathGenerator::convert() {
         if(operations[i] == "FOLLOWED") {
             XPathNode* rhs = source_exprs[i+1];
             XPathNode* lhs = source_exprs[i];
-            XPathNode* call = new XPathNode("qli:intersect",CALL);
+            XPathNode* call = new XPathNode("set:intersection",CALL);
             XPathNode* left_arg = new XPathNode("./following::",NO_CONN);
             rhs->set_type(NO_CONN);
             left_arg->add_child(rhs);
@@ -593,7 +593,7 @@ std::string XPathGenerator::convert() {
             is_a_call = true;
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
-            XPathNode* call = new XPathNode("qli:intersect",CALL);
+            XPathNode* call = new XPathNode("set:intersection",CALL);
             if(lhs->get_type() != CALL) {
                 lhs->set_type(ANY);
             }
@@ -615,7 +615,7 @@ std::string XPathGenerator::convert() {
             is_a_call = true;
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
-            XPathNode* call = new XPathNode("qli:difference",CALL);
+            XPathNode* call = new XPathNode("set:difference",CALL);
             if(lhs->get_type() != CALL) {
                 lhs->set_type(ANY);
             }
