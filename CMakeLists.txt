@@ -10,7 +10,7 @@ if(DEFINED ENV{VCPKG_ROOT} OR DEFINED CMAKE_TOOLCHAIN_FILE)
     set(VCPKG_BUILD_TYPE "release")
 endif()
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 
 # If performed here, before project(), then this prefix becomes part of the CMAKE_SYSTEM_PREFIX_PATH
 # and then the installed version of srcML can be found by the tests without building srcml.

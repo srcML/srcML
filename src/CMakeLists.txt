@@ -13,6 +13,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_INSTALL_SYSTEM_RUNTIME_COMPONENT SRCML)
 include(InstallRequiredSystemLibraries)
 
+# For nixes, set -fPIC compil flag
+if (UNIX AND NOT APPLE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+endif()
+
 # Build options
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(BUILD_LIBSRCML "Build (and potentially install) libsrcml" ON)

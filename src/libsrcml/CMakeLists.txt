@@ -6,6 +6,13 @@
 #
 # CMake files for the library libsrcml
 
+if(APPLE)
+    # Apple specific issue: libxslt provided by macOS is *broken*, we need to replace it by homebrew version
+    #     brew install libxslt
+    # And then tell pkg_config to prefer homebrew's version
+    set( ENV{PKG_CONFIG_PATH} "/opt/homebrew/opt/libxslt/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}" )
+endif()
+
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt REQUIRED)
 find_package(Iconv REQUIRED)
