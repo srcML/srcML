@@ -289,6 +289,7 @@ void clear_elements(xmlXPathParserContext* ctxt, int nargs) {
 
         // clear this bucket
         xmlChar* var = xmlXPathPopString(ctxt);
+        // std::cout << "Clearing " << ((const char*) var) << std::endl;
         table.empty_bucket((const char*) var);
         xmlFree(var);
     }

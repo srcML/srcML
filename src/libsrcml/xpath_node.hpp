@@ -9,6 +9,7 @@
 enum NodeConnectionType {
     NO_CONN = 0,   // TEXT
     PREDICATE,     // [TEXT]
+    PARENTHESES,   // (TEXT)
     NEXT,          // /TEXT
     ANY,           // //TEXT
     CALL,          // TEXT()

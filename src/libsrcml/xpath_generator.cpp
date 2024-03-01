@@ -370,7 +370,6 @@ std::string XPathGenerator::convert() {
 
                 is_where_clause = false;
             }
-
             // Add node and operation to vectors
             if (token == "WHERE") { is_where_clause = true; }
             else if (token != "END") { operations.push_back(token); }
@@ -632,9 +631,10 @@ std::string XPathGenerator::convert() {
     }
 
 
-    if(!is_a_call == true) { source_exprs[0]->set_type(ANY); }
+    if(!is_a_call && source_exprs[0]->get_type() != PARENTHESES) { source_exprs[0]->set_type(ANY); }
 
     std::string xpath = source_exprs[0]->to_string();
+
     return xpath;
 }
 
@@ -705,7 +705,36 @@ void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) 
 
             // If not a variable node
             if(!is_variable_node(node)) {
-                x_node->set_text((child_num != 0 ? "following-sibling::" : "") + get_full_name(node));
+                // Special check for converting expr patterns to include decls
+                if(get_full_name(node) == "src:expr_stmt" && get_full_name(node->children) == "src:expr" && xmlChildElementCount(node->children) == 1 && get_full_name(node->children->children) == "src:name") {
+                    std::cout << "|{}| " << xmlChildElementCount(node->children) << std::endl;
+
+                    if(x_node->get_parent() == nullptr) {
+                        x_node->set_type(PARENTHESES);
+                        x_node->set_text("//src:expr_stmt|//src:decl_stmt");
+                    }
+                    else { 
+                        XPathNode* parentheses = new XPathNode("src:expr_stmt|src:decl_stmt",PARENTHESES);
+                        x_node->add_child(parentheses);
+                        x_node = parentheses;
+                    }
+                }
+                else if(get_full_name(node) == "src:expr" && xmlChildElementCount(node) == 1 && get_full_name(node->children) == "src:name") {
+                    std::cout << "||{}|| " << xmlChildElementCount(node) << std::endl;
+
+                    if(x_node->get_parent() == nullptr) {
+                        x_node->set_type(PARENTHESES);
+                        x_node->set_text("//src:expr|//src:decl");
+                    }
+                    else { 
+                        XPathNode* parentheses = new XPathNode("src:expr|src:decl",PARENTHESES);
+                        x_node->add_child(parentheses);
+                        x_node = parentheses;
+                    }
+                }
+                else { // Otherwise, just add the tag normally
+                    x_node->set_text((child_num != 0 ? "following-sibling::" : "") + get_full_name(node));
+                }
 
                 // TODO Attribute Selectors
 

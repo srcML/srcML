@@ -259,7 +259,7 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         std::string_view srcql_string(xpath);
         srcql_string.remove_prefix("srcql:"sv.size());
         const auto srcqlXPath = srcql_convert_query_to_xpath(srcql_string.data(), Language(position).getLanguageString());
-        // std::cout << "XPath: " << srcqlXPath << std::endl;
+        std::cout << "XPath: " << srcqlXPath << std::endl;
         localCompiledXPath = xmlXPathCompile(BAD_CAST srcqlXPath);
     }
 
