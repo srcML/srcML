@@ -230,6 +230,9 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         }
     }
 
+    // register exslt set functions for sets
+    exsltSetsXpathCtxtRegister (context.get(), BAD_CAST "set");
+
     // register prefixes from the doc
     for (auto p = doc->children->nsDef; p; p = p->next) {
 
@@ -244,9 +247,6 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"match-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&match_element);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"clear",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&clear_elements);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"is-valid-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&is_valid_element);
-    // Set Operations
-    xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"intersect",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&intersect);
-    xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"difference",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&difference);
     // WHERE Clause Functions
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"regex-match",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&regex_match);
     // Debug

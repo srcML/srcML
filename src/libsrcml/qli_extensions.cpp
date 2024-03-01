@@ -329,63 +329,6 @@ void is_valid_element(xmlXPathParserContext* ctxt, int nargs) {
     xmlXPathReturnBoolean(ctxt, !invalidElement);
 }
 
-void intersect(xmlXPathParserContext* ctxt, int nargs){
-    if(nargs != 2) {
-        std::cout << "Arg arity error" << std::endl;
-        return;
-    }
-
-    xmlNodeSetPtr rhs = xmlXPathPopNodeSet(ctxt);
-    if(rhs == NULL && xmlXPathCheckError(ctxt) == false) {
-        rhs = xmlXPathNodeSetCreate(NULL);
-    }
-    xmlNodeSetPtr lhs = xmlXPathPopNodeSet(ctxt);
-    if(lhs == NULL && xmlXPathCheckError(ctxt) == false) {
-        lhs = xmlXPathNodeSetCreate(NULL);
-    }
-    xmlNodeSetPtr res = xmlXPathNodeSetCreate(NULL);
-
-    for(int i_lhs = 0; i_lhs < lhs->nodeNr; ++i_lhs) {
-        for(int i_rhs = 0; i_rhs < rhs->nodeNr; ++i_rhs) {
-            std::uintptr_t l = reinterpret_cast<std::uintptr_t>(lhs->nodeTab[i_lhs]);
-            std::uintptr_t r = reinterpret_cast<std::uintptr_t>(rhs->nodeTab[i_rhs]);
-            if(l == r) { xmlXPathNodeSetAdd(res,lhs->nodeTab[i_lhs]); }
-        }
-    }
-
-    xmlXPathReturnNodeSet(ctxt,res);
-}
-
-void difference(xmlXPathParserContext* ctxt, int nargs) {
-    if(nargs != 2) {
-        std::cout << "Arg arity error" << std::endl;
-        return;
-    }
-
-    xmlNodeSetPtr rhs = xmlXPathPopNodeSet(ctxt);
-    if(rhs == NULL && xmlXPathCheckError(ctxt) == false) {
-        rhs = xmlXPathNodeSetCreate(NULL);
-    }
-    xmlNodeSetPtr lhs = xmlXPathPopNodeSet(ctxt);
-    if(lhs == NULL && xmlXPathCheckError(ctxt) == false) {
-        lhs = xmlXPathNodeSetCreate(NULL);
-    }
-    xmlNodeSetPtr res = xmlXPathNodeSetCreate(NULL);
-
-
-    for(int i = 0; i < lhs->nodeNr; ++i) {
-        std::uintptr_t l = reinterpret_cast<std::uintptr_t>(lhs->nodeTab[i]);
-        bool add = true;
-        for(int j = 0; j < rhs->nodeNr; ++j) {
-            std::uintptr_t r = reinterpret_cast<std::uintptr_t>(rhs->nodeTab[j]);
-            if(l == r) { add = false; break; }
-        }
-        if(add) { xmlXPathNodeSetAdd(res,lhs->nodeTab[i]); }
-    }
-
-    xmlXPathReturnNodeSet(ctxt,res);
-}
-
 void regex_match(xmlXPathParserContext* ctxt, int nargs) {
     if(nargs != 2) {
         std::cout << "Arg arity error" << std::endl;
