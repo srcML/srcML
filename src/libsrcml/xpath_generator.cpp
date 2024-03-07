@@ -450,8 +450,17 @@ std::string XPathGenerator::convert() {
         if(operations[i] == "WITHIN") {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
-            rhs->set_type(NO_CONN);
-            XPathNode* insert = new XPathNode("ancestor::",PREDICATE);
+            XPathNode* insert;
+            if(rhs->get_type() == PARENTHESES) {
+                auto terms = split(rhs->get_text(),"|");
+                rhs->set_text(std::string("ancestor::"+split(terms[0],"//")[0]+"|ancestor::"+split(terms[1],"//")[0]));
+                insert = new XPathNode("",PREDICATE);
+            }
+            else {
+                rhs->set_type(NO_CONN);
+                insert = new XPathNode("ancestor::",PREDICATE);
+            }
+
             insert->add_child_beginning(rhs);
             lhs->add_child(insert);
             operations.erase(operations.begin()+i);
@@ -465,22 +474,57 @@ std::string XPathGenerator::convert() {
      */
     for(int i = operations.size()-1; i >= 0; --i) {
         if(operations[i] == "FOLLOWED") {
-            XPathNode* rhs = source_exprs[i+1];
-            XPathNode* lhs = source_exprs[i];
+            XPathNode* rhs = source_exprs[i+1]; // y
+            XPathNode* lhs = source_exprs[i]; // z
             XPathNode* call = new XPathNode("set:intersection",CALL);
             XPathNode* left_arg = new XPathNode("./following::",NO_CONN);
-            rhs->set_type(NO_CONN);
-            left_arg->add_child(rhs);
-            XPathNode* right_arg_end = new XPathNode("descendant::",ANY);
             XPathNode* rhs_copy = new XPathNode(*rhs);
-            rhs_copy->set_type(NO_CONN);
+            XPathNode* insert = new XPathNode(*rhs);
+
+            // Left Argument
+            if(rhs->get_type() == PARENTHESES) {
+                auto terms = split(rhs->get_text(),"|");
+                rhs->set_text(std::string("./following::"+split(terms[0],"//")[0]+"|./following::"+split(terms[1],"//")[0]));
+                left_arg->set_text("");
+            }
+            else {
+                rhs->set_type(NO_CONN);
+            }
+            left_arg->add_child(rhs);
+
+            // Right Argument Z part
+            XPathNode* right_arg;
+            XPathNode* right_arg_end;
+            if(rhs_copy->get_type() == PARENTHESES) {
+                right_arg_end = new XPathNode("descendant::*",ANY);
+                XPathNode* temp = new XPathNode("",PREDICATE);
+                auto terms = split(rhs_copy->get_text(),"|");
+                rhs_copy->set_text(std::string("self::"+split(terms[0],"//")[0]+"|self::"+split(terms[1],"//")[0]));
+                temp->add_child(rhs_copy);
+                rhs_copy = temp;
+            }
+            else {
+                right_arg_end = new XPathNode("descendant::",ANY);
+                rhs_copy->set_type(NO_CONN);
+            }
             right_arg_end->add_child(rhs_copy);
+
+            // Right Argument X part
             XPathNode* add_top = new XPathNode(*top_copy);
-            add_top->set_type(NO_CONN);
-            add_top->add_child(right_arg_end);
-            XPathNode* right_arg = new XPathNode("./ancestor::");
+            if(add_top->get_type() == PARENTHESES) {
+                auto terms = split(add_top->get_text(),"|");
+                add_top->set_text(std::string("./ancestor::"+split(terms[0],"//")[0]+"|./ancestor::"+split(terms[1],"//")[0]));
+                add_top->add_child(right_arg_end);
+                right_arg = new XPathNode("");
+            }
+            else {
+                add_top->set_type(NO_CONN);
+                add_top->add_child(right_arg_end);
+                right_arg = new XPathNode("./ancestor::");
+            }
+
             right_arg->add_child(add_top);
-            //change_adds_to_matches(left_arg);
+
             change_adds_to_matches(right_arg);
             call->add_child(left_arg);
             call->add_child(right_arg);
@@ -490,7 +534,7 @@ std::string XPathGenerator::convert() {
             lhs->add_child(pred);
 
             operations[i] = "CONTAINS";
-            XPathNode* insert = new XPathNode(*rhs);
+
             change_adds_to_matches(insert);
             source_exprs[i+1] = insert;
 
@@ -506,8 +550,15 @@ std::string XPathGenerator::convert() {
         if(operations[i] == "CONTAINS") {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
-            rhs->set_type(ANY);
             XPathNode* insert = new XPathNode(".",PREDICATE);
+            if(rhs->get_type() == PARENTHESES) {
+                auto terms = split(rhs->get_text(),"|");
+                rhs->set_text(std::string(".")+terms[0]+"|."+terms[1]);
+                insert->set_text("");
+            }
+            else {
+                rhs->set_type(ANY);
+            }
             insert->add_child_beginning(rhs);
             lhs->add_child(insert);
             operations.erase(operations.begin()+i);
@@ -549,9 +600,22 @@ std::string XPathGenerator::convert() {
         if(operations[i] == "FROM") {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
-            if(lhs->get_type() != NEXT) {
-                lhs->set_type(ANY);
+
+            if(lhs->get_type() == PARENTHESES) {
+                XPathNode* pred_temp = new XPathNode("",PREDICATE);
+                XPathNode* any_temp = new XPathNode("descendant::*",ANY);
+                auto terms = split(lhs->get_text(),"|");
+                lhs->set_text(std::string("self::"+split(terms[0],"//")[0]+"|self::"+split(terms[1],"//")[0]));
+                pred_temp->add_child(lhs);
+                any_temp->add_child(pred_temp);
+                lhs = any_temp;
             }
+            else {
+                if(lhs->get_type() != NEXT) {
+                    lhs->set_type(ANY);
+                }
+            }
+            
             rhs->add_child(lhs);
             operations.erase(operations.begin()+i);
             source_exprs.erase(source_exprs.begin()+i);
@@ -572,10 +636,10 @@ std::string XPathGenerator::convert() {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
             XPathNode* uni = new XPathNode("",UNION);
-            if(lhs->get_type() != CALL) {
+            if(lhs->get_type() != CALL && lhs->get_type() != PARENTHESES) {
                 lhs->set_type(ANY);
             }
-            if(rhs->get_type() != CALL) {
+            if(rhs->get_type() != CALL && rhs->get_type() != PARENTHESES) {
                 rhs->set_type(ANY);
             }
             uni->add_child(rhs);
@@ -593,10 +657,10 @@ std::string XPathGenerator::convert() {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
             XPathNode* call = new XPathNode("set:intersection",CALL);
-            if(lhs->get_type() != CALL) {
+            if(lhs->get_type() != CALL && lhs->get_type() != PARENTHESES) {
                 lhs->set_type(ANY);
             }
-            if(rhs->get_type() != CALL) {
+            if(rhs->get_type() != CALL && rhs->get_type() != PARENTHESES) {
                 rhs->set_type(ANY);
             }
             call->add_child(lhs);
@@ -615,10 +679,10 @@ std::string XPathGenerator::convert() {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
             XPathNode* call = new XPathNode("set:difference",CALL);
-            if(lhs->get_type() != CALL) {
+            if(lhs->get_type() != CALL && lhs->get_type() != PARENTHESES) {
                 lhs->set_type(ANY);
             }
-            if(rhs->get_type() != CALL) {
+            if(rhs->get_type() != CALL && rhs->get_type() != PARENTHESES) {
                 rhs->set_type(ANY);
             }
             call->add_child(lhs);
@@ -707,27 +771,25 @@ void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) 
             if(!is_variable_node(node)) {
                 // Special check for converting expr patterns to include decls
                 if(get_full_name(node) == "src:expr_stmt" && get_full_name(node->children) == "src:expr" && xmlChildElementCount(node->children) == 1 && get_full_name(node->children->children) == "src:name") {
-                    std::cout << "|{}| " << xmlChildElementCount(node->children) << std::endl;
 
                     if(x_node->get_parent() == nullptr) {
                         x_node->set_type(PARENTHESES);
                         x_node->set_text("//src:expr_stmt|//src:decl_stmt");
                     }
                     else { 
-                        XPathNode* parentheses = new XPathNode("src:expr_stmt|src:decl_stmt",PARENTHESES);
+                        XPathNode* parentheses = new XPathNode(child_num != 0 ? "following-sibling::src:expr_stmt|following-sibling::src:decl_stmt" : "src:expr_stmt|src:decl_stmt",PARENTHESES);
                         x_node->add_child(parentheses);
                         x_node = parentheses;
                     }
                 }
                 else if(get_full_name(node) == "src:expr" && xmlChildElementCount(node) == 1 && get_full_name(node->children) == "src:name") {
-                    std::cout << "||{}|| " << xmlChildElementCount(node) << std::endl;
 
                     if(x_node->get_parent() == nullptr) {
                         x_node->set_type(PARENTHESES);
                         x_node->set_text("//src:expr|//src:decl");
                     }
                     else { 
-                        XPathNode* parentheses = new XPathNode("src:expr|src:decl",PARENTHESES);
+                        XPathNode* parentheses = new XPathNode(child_num != 0 ? "following-sibling::src:expr|following-sibling::src:decl" : "src:expr|src:decl",PARENTHESES);
                         x_node->add_child(parentheses);
                         x_node = parentheses;
                     }

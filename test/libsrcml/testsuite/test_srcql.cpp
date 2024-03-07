@@ -9383,5 +9383,408 @@ cout << "bar(a): " << bar(a);
         srcml_archive_free(iarchive);
     }
 
+    const std::string exprs_and_decls_src = R"(
+int x;
+x;
+int y = a;
+int z = x;
+int foo(int i) {}
+for(int j = 0; j < 10; ++j) {}
+)";
+
+    //// expr and decl combination
+    // FIND $T
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_src.c_str(),exprs_and_decls_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $T"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 11);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), std::string(R"(<decl><type><name>int</name></type> <name>x</name></decl>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), std::string(R"(<expr><name>x</name></expr>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), std::string(R"(<decl><type><name>int</name></type> <name>y</name> <init>= <expr><name>a</name></expr></init></decl>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), std::string(R"(<expr><name>a</name></expr>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), std::string(R"(<decl><type><name>int</name></type> <name>z</name> <init>= <expr><name>x</name></expr></init></decl>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), std::string(R"(<expr><name>x</name></expr>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,6)), std::string(R"(<decl><type><name>int</name></type> <name>i</name></decl>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,7)), std::string(R"(<decl><type><name>int</name></type> <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,8)), std::string(R"(<expr><literal type="number">0</literal></expr>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,9)), std::string(R"(<expr><name>j</name> <operator>&lt;</operator> <literal type="number">10</literal></expr>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,10)), std::string(R"(<expr><operator>++</operator><name>j</name></expr>)"));
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $T;
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_src.c_str(),exprs_and_decls_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $T;"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 4);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), std::string(R"(<decl_stmt><decl><type><name>int</name></type> <name>x</name></decl>;</decl_stmt>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), std::string(R"(<expr_stmt><expr><name>x</name></expr>;</expr_stmt>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), std::string(R"(<decl_stmt><decl><type><name>int</name></type> <name>y</name> <init>= <expr><name>a</name></expr></init></decl>;</decl_stmt>)"));
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), std::string(R"(<decl_stmt><decl><type><name>int</name></type> <name>z</name> <init>= <expr><name>x</name></expr></init></decl>;</decl_stmt>)"));
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    const std::string exprs_and_decls_in_fors_src = R"(
+for(int a = 0; a < 10; ++a) {}
+for(a = 10; a != 0; --a) {}
+for(int b = 10; b != 10; --b) {}
+for(b = 0; b < 10; ++b) {}
+for(int c = 0; b != 10; ++a) {}
+for(auto i : list) {}
+for(;;) {}
+)";
+
+    const std::vector<std::string> exprs_and_decls_in_fors_srcml {
+        R"(<for>for<control>(<init><decl><type><name>int</name></type> <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>a</name> <operator>&lt;</operator> <literal type="number">10</literal></expr>;</condition> <incr><expr><operator>++</operator><name>a</name></expr></incr>)</control> <block>{<block_content/>}</block></for>)",
+        R"(<for>for<control>(<init><expr><name>a</name> <operator>=</operator> <literal type="number">10</literal></expr>;</init> <condition><expr><name>a</name> <operator>!=</operator> <literal type="number">0</literal></expr>;</condition> <incr><expr><operator>--</operator><name>a</name></expr></incr>)</control> <block>{<block_content/>}</block></for>)",
+        R"(<for>for<control>(<init><decl><type><name>int</name></type> <name>b</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</init> <condition><expr><name>b</name> <operator>!=</operator> <literal type="number">10</literal></expr>;</condition> <incr><expr><operator>--</operator><name>b</name></expr></incr>)</control> <block>{<block_content/>}</block></for>)",
+        R"(<for>for<control>(<init><expr><name>b</name> <operator>=</operator> <literal type="number">0</literal></expr>;</init> <condition><expr><name>b</name> <operator>&lt;</operator> <literal type="number">10</literal></expr>;</condition> <incr><expr><operator>++</operator><name>b</name></expr></incr>)</control> <block>{<block_content/>}</block></for>)",
+        R"(<for>for<control>(<init><decl><type><name>int</name></type> <name>c</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>b</name> <operator>!=</operator> <literal type="number">10</literal></expr>;</condition> <incr><expr><operator>++</operator><name>a</name></expr></incr>)</control> <block>{<block_content/>}</block></for>)",
+        R"(<for>for<control>(<init><decl><type><name>auto</name></type> <name>i</name> <range>: <expr><name>list</name></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>)",
+        R"(<for>for<control>(<init>;</init><condition>;</condition><incr/>)</control> <block>{<block_content/>}</block></for>)"
+    };
+
+    // FIND for
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_in_fors_src.c_str(),exprs_and_decls_in_fors_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND for"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 7);
+        for(size_t i = 0; i < 7; ++i) {
+            dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,i)), exprs_and_decls_in_fors_srcml[i]);
+        }
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND for($T) {}
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_in_fors_src.c_str(),exprs_and_decls_in_fors_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND for($T) {}"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 6);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), exprs_and_decls_in_fors_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), exprs_and_decls_in_fors_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), exprs_and_decls_in_fors_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), exprs_and_decls_in_fors_srcml[3]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), exprs_and_decls_in_fors_srcml[4]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), exprs_and_decls_in_fors_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND for($T;;) {}
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_in_fors_src.c_str(),exprs_and_decls_in_fors_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND for($T;;) {}"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 5);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), exprs_and_decls_in_fors_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), exprs_and_decls_in_fors_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), exprs_and_decls_in_fors_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), exprs_and_decls_in_fors_srcml[3]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), exprs_and_decls_in_fors_srcml[4]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND for($T;;$T) {}
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_in_fors_src.c_str(),exprs_and_decls_in_fors_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"for($T;;$T)"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 4);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), exprs_and_decls_in_fors_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), exprs_and_decls_in_fors_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), exprs_and_decls_in_fors_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), exprs_and_decls_in_fors_srcml[3]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND for($T;$T;$T) {}
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_in_fors_src.c_str(),exprs_and_decls_in_fors_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"for($T;$T;$T)"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 4);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), exprs_and_decls_in_fors_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), exprs_and_decls_in_fors_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), exprs_and_decls_in_fors_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), exprs_and_decls_in_fors_srcml[3]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND for($T;;++$T) {}
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_in_fors_src.c_str(),exprs_and_decls_in_fors_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"for($T;;++$T)"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), exprs_and_decls_in_fors_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), exprs_and_decls_in_fors_srcml[3]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND for($T;;--$T) {}
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,exprs_and_decls_in_fors_src.c_str(),exprs_and_decls_in_fors_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"for($T;;--$T)"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), exprs_and_decls_in_fors_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), exprs_and_decls_in_fors_srcml[2]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
 }
 
