@@ -33,9 +33,10 @@ public:
    NodeConnectionType get_type() { return type; }
    std::deque<XPathNode*> get_children() { return children; }
 
-   bool is_variable_node()   { return text.find("*") != std::string::npos && text.find("text()") == std::string::npos; }
-   bool is_add_call_node()   { return text.find("qli:add-element") != std::string::npos; }
-   bool is_match_call_node() { return text.find("qli:match-element") != std::string::npos; }
+   bool is_variable_node()         { return text.find("*") != std::string::npos && text.find("text()") == std::string::npos; }
+   bool is_add_call_node()         { return text.find("qli:add-element") != std::string::npos; }
+   bool is_match_call_node()       { return text.find("qli:match-element") != std::string::npos; }
+   bool is_regex_match_call_node() { return text.find("qli:regex-match") != std::string::npos; }
 
    void set_parent(XPathNode* p) { parent = p; }
    XPathNode* get_parent() { return parent; }

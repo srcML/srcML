@@ -25,37 +25,8 @@
 #include <Language.hpp>
 
 #include <qli_extensions.hpp>
+#include <unification_table.hpp>
 #include <srcql.hpp>
-
-// void get_node_text(const xmlNode* top_node, std::string& text, bool top) {
-
-//         // process list of nodes
-//         for (const xmlNode* node = top_node; node != NULL && (!top || node == top_node); node = node->next) {
-//             if (node->type == XML_TEXT_NODE) {
-//                 xmlChar* t = xmlNodeGetContent(node);
-//                 std::string_view st((const char*) t);
-
-//                 // add normalized whitespace to the text
-//                 if (st.find_first_not_of(" \t\n\r") != st.npos) {
-//                     text += (st);
-//                     text += ' ';
-//                 }
-//                 xmlFree(t);
-//             }
-
-//             // process children depth first
-//             if (node->children) {
-//                 get_node_text(node->children, text, false);
-//             }
-//         }
-//     }
-//     std::string get_node_text(const xmlNode* top_node) {
-
-//         // use single string to avoid copying
-//         std::string s;
-//         get_node_text(top_node, s, true);
-//         return s;
-//     }
 
 const char* const xpathTransformation::simple_xpath_attribute_name = "location";
 
@@ -252,6 +223,9 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
     // Debug
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"debug-print",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&debug_print);
 
+    // Add Unification Table to userData
+    UnificationTable* table = new UnificationTable();
+    context.get()->userData = (void*)(table);
 
     auto localCompiledXPath = compiled_xpath;
     // process srcQL query

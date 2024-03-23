@@ -355,8 +355,23 @@ std::string XPathGenerator::convert() {
                         else {
                             inner = get_xpath_from_argument(count_expr);
                         }
-                        if (inner->get_type() != NEXT) { inner->set_type(ANY); }
-                        XPathNode* call_arg = new XPathNode(".",NO_CONN);
+
+                        XPathNode* call_arg;
+
+                        if (inner->get_type() == PARENTHESES) {
+                            auto terms = split(inner->get_text(),"|");
+                            inner->set_text(std::string(".")+terms[0]+"|."+terms[1]);
+                            call_arg = new XPathNode("",NO_CONN);
+                        }
+                        else if (inner->get_type() != NEXT) { 
+                            inner->set_type(ANY);
+                            call_arg = new XPathNode(".",NO_CONN);
+                        }
+                        else {
+                            call_arg = new XPathNode(".",NO_CONN);
+                        }
+                        
+                        
                         call_arg->add_child(inner);
                         XPathNode* count_call = new XPathNode("count",CALL);
                         count_call->add_child(call_arg);

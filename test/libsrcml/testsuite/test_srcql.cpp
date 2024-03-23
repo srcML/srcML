@@ -6610,48 +6610,43 @@ if(true) { if(true) { a; } if(true) { if(true) { b; } } if(true) { c; } }
         srcml_archive_free(iarchive);
     }
 
-    /* TODO - Test randomly fails - randomly returns 0 or 1 or 2 (very rare) results.
-              Issue is not present when test case is isolated.
-              Likely cause is somewhere in how the Doc/Context is created in libxml, but cannot confirm
-    */
     // FIND if(true) {} CONTAINS if(){} FOLLOWED BY if(){} FOLLOWED BY if(){}
     {
-        // std::cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n------------------------------------"<<std::endl;
-        // char* s;
-        // size_t size;
+        char* s;
+        size_t size;
 
-        // srcml_archive* oarchive = srcml_archive_create();
-        // srcml_archive_write_open_memory(oarchive,&s, &size);
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
 
-        // srcml_unit* unit = srcml_unit_create(oarchive);
-        // srcml_unit_set_language(unit,"C++");
-        // srcml_unit_parse_memory(unit,(followed_ifs_src+"//COMMENT9").c_str(),(followed_ifs_src+"//COMMENT9").size());
-        // dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,followed_ifs_src.c_str(),followed_ifs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
 
-        // srcml_unit_free(unit);
-        // srcml_archive_close(oarchive);
-        // srcml_archive_free(oarchive);
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
 
-        // std::string srcml_text = std::string(s, size);
-        // free(s);
+        std::string srcml_text = std::string(s, size);
+        free(s);
 
-        // srcml_archive* iarchive = srcml_archive_create();
-        // srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
-        // dassert(srcml_append_transform_srcql(iarchive,"FIND src:if_stmt CONTAINS src:if_stmt FOLLOWED BY src:if_stmt FOLLOWED BY src:if_stmt"), SRCML_STATUS_OK);
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND src:if_stmt CONTAINS src:if_stmt FOLLOWED BY src:if_stmt FOLLOWED BY src:if_stmt"), SRCML_STATUS_OK);
 
-        // unit = srcml_archive_read_unit(iarchive);
-        // srcml_transform_result* result = nullptr;
-        // srcml_unit_apply_transforms(iarchive, unit, &result);
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
 
-        // dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
-        // dassert(srcml_transform_get_unit_size(result), 2);
-        // dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), followed_ifs_srcml[12]);
-        // dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), followed_ifs_srcml[13]);
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), followed_ifs_srcml[12]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), followed_ifs_srcml[13]);
 
-        // srcml_unit_free(unit);
-        // srcml_transform_free(result);
-        // srcml_archive_close(iarchive);
-        // srcml_archive_free(iarchive);
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
     }
 
     // FIND if(true) {} CONTAINS a; FOLLOWED BY b; CONTAINS b; FOLLOWED BY c;
@@ -8594,9 +8589,9 @@ float five(double b) {}
         srcml_unit_apply_transforms(iarchive, unit, &result);
 
         dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
-        for(size_t i = 0; i < srcml_transform_get_unit_size(result); ++i) {
-            std::cout << "!!!!" << i << ": " << srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,i)) << std::endl;
-        }
+        // for(int i = 0; i < srcml_transform_get_unit_size(result); ++i) {
+        //     std::cout << "!!!!" << i << ": " << srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,i)) << std::endl;
+        // }
         dassert(srcml_transform_get_unit_size(result), 14);
 
         dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), exprs_srcml[9]);
@@ -8938,6 +8933,698 @@ float five(double b) {}
         srcml_archive_free(iarchive);
     }
 
+
+    ////// WHERE
+    const std::string name_style_funcs_src = R"(
+void foo() {}
+int snake_case(int a) { a + 1; }
+bool long_snake_case(int b, bool c) { b + c; }
+char CAP_SNAKE_CASE(int c, int d) { c + 1; d + 1;}
+int camelCase(int e, int f, int g) { _e + 1; _f + 1; _g + 1 }
+int PascalCase() { call(); }
+)";
+
+    const std::vector<std::string> name_style_funcs_srcml {
+        R"(<function><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>)",
+        R"(<function><type><name>int</name></type> <name>snake_case</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>)</parameter_list> <block>{<block_content> <expr_stmt><expr><name>a</name> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt> </block_content>}</block></function>)",
+        R"(<function><type><name>bool</name></type> <name>long_snake_case</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>, <parameter><decl><type><name>bool</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content> <expr_stmt><expr><name>b</name> <operator>+</operator> <name>c</name></expr>;</expr_stmt> </block_content>}</block></function>)",
+        R"(<function><type><name>char</name></type> <name>CAP_SNAKE_CASE</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>c</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>d</name></decl></parameter>)</parameter_list> <block>{<block_content> <expr_stmt><expr><name>c</name> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt> <expr_stmt><expr><name>d</name> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt></block_content>}</block></function>)",
+        R"(<function><type><name>int</name></type> <name>camelCase</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>e</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>f</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>g</name></decl></parameter>)</parameter_list> <block>{<block_content> <expr_stmt><expr><name>_e</name> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt> <expr_stmt><expr><name>_f</name> <operator>+</operator> <literal type="number">1</literal></expr>;</expr_stmt> <expr_stmt><expr><name>_g</name> <operator>+</operator> <literal type="number">1</literal></expr></expr_stmt> </block_content>}</block></function>)",
+        R"(<function><type><name>int</name></type> <name>PascalCase</name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><call><name>call</name><argument_list>()</argument_list></call></expr>;</expr_stmt> </block_content>}</block></function>)"
+    };
+
+
+    //// MATCH
+    // FIND $TYPE $NAME() {} WHERE MATCH($NAME,"[a-z]+(?:_[a-z]+)*")
+    {
+        std::cout << "-----------------------------------------------------" << std::endl;
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE MATCH($NAME,\"[a-z]+(?:_[a-z]+)*\")"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        std::cout << "EX: " << srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)) << std::endl;
+        dassert(srcml_transform_get_unit_size(result), 3);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), name_style_funcs_srcml[2]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME($TYPE $PARAM) {} WHERE MATCH($TYPE,"int|bool")
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME($TYPE $PARAM) {} WHERE MATCH($TYPE,\"int|bool\")"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 3);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), name_style_funcs_srcml[4]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME($TYPE $PARAM) {} WHERE MATCH($NAME,"[a-z]+(?:_[a-z]+)*") WHERE MATCH($TYPE,"int|bool")
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME($TYPE $PARAM) {} WHERE MATCH($NAME,\"[a-z]+(?:_[a-z]+)*\") WHERE MATCH($TYPE,\"int|bool\")"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[2]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+
+    //// NOT
+    // FIND $TYPE $NAME() {} WHERE NOT(int $NAME() {})
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE NOT(int $NAME() {})"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 3);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), name_style_funcs_srcml[3]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} CONTAINS src:expr_stmt WHERE NOT($E + 1;)
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} CONTAINS src:expr_stmt WHERE NOT($E + 1;)"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE NOT(int $NAME() {}) CONTAINS src:expr_stmt WHERE NOT($E + 1;)
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE NOT(int $NAME() {}) CONTAINS src:expr_stmt WHERE NOT($E + 1;)"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[2]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    //// COUNT
+    // FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 0
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 0"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 1
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 1"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[1]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 2
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 2"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[3]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 3
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 3"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[4]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 4
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) = 4"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_NONE);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) < 1
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) < 1"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) <= 1
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT(src:parameter) <= 1"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 3);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), name_style_funcs_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT($E + 1;) > 2
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT($E + 1;) > 2"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[4]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT($E + 1;) < 2
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT($E + 1;) < 2"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 4);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), name_style_funcs_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), name_style_funcs_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} WHERE COUNT($E) < 3
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} WHERE COUNT($E) < 3"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 3);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), name_style_funcs_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // FIND $TYPE $NAME() {} CONTAINS src:block WHERE COUNT($E) < 3
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,name_style_funcs_src.c_str(),name_style_funcs_src.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_srcql(iarchive,"FIND $TYPE $NAME() {} CONTAINS src:block WHERE COUNT($E) < 3"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 5);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), name_style_funcs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), name_style_funcs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), name_style_funcs_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), name_style_funcs_srcml[3]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), name_style_funcs_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
 
     ////// OTHER
     //// Prefix Unification
