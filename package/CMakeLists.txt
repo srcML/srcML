@@ -65,13 +65,13 @@ cpack_add_install_type(CLIENT DISPLAY_NAME "srcml cli")
 cpack_add_install_type(DEVELOPER DISPLAY_NAME "development")
 
 cpack_add_component(SRCML
-                    DISPLAY_NAME "srcml client"
+                    DISPLAY_NAME "srcml"
                     DESCRIPTION "srcml cli program with required libraries"
                     REQUIRED
                     INSTALL_TYPES CLIENT DEVELOPER)
 
 cpack_add_component(DEVLIBS
-                    DISPLAY_NAME "libsrcml development"
+                    DISPLAY_NAME "libsrcml"
                     DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
                     INSTALL_TYPES DEVELOPER)
 
