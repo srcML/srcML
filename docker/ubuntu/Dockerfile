@@ -51,15 +51,19 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install cmake
-# CMake
-# ARG TARGETPLATFORM
-# RUN case "${TARGETPLATFORM}" in \
-#          "linux/amd64")  ARCHITECTURE="x86_64"   ;; \
-#          "linux/arm64")  ARCHITECTURE="aarch64"  ;; \
-#          *)  exit 1 ;; \
-#     esac; \
-#     curl --insecure -L "https://github.com/Kitware/CMake/releases/download/v3.29.0/cmake-3.29.0-linux-${ARCHITECTURE}.tar.gz" | tar xz --strip-components=1 -C /usr/local
-RUN apt-get update && \
+# Install direct binary for Ubuntu 20.04
+ARG TAG
+ENV TAG=$TAG
+ARG TARGETPLATFORM
+RUN if [ "$TAG" = "20.04" ]; then case "${TARGETPLATFORM}" in \
+         "linux/amd64")  ARCHITECTURE="x86_64"   ;; \
+         "linux/arm64")  ARCHITECTURE="aarch64"  ;; \
+         *)  exit 1 ;; \
+    esac; \
+    curl --insecure -L "https://github.com/Kitware/CMake/releases/download/v3.29.0/cmake-3.29.0-linux-${ARCHITECTURE}.tar.gz" | tar xz --strip-components=1 -C /usr/local; \
+    fi
+# Install via apt.kitware.com package repo for all but Ubuntu 20.04
+RUN if [ "$TAG" != "20.04" ]; then apt-get update && \
     apt-get install gpg wget --no-install-recommends -y && \
     wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null && \
     echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null && \
@@ -69,7 +73,8 @@ RUN apt-get update && \
     apt-get update && \
     apt-get upgrade -y && \
     apt-get install cmake --no-install-recommends -y && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*; \
+    fi
 
 # Allow man pages to be installed
 RUN sed -i '/path-exclude=\/usr\/share\/man\/*/c\#path-exclude=\/usr\/share\/man\/*' /etc/dpkg/dpkg.cfg.d/excludes

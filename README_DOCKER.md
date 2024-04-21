@@ -40,7 +40,7 @@ To package srcML:
 docker compose --env-file .env-package up
 ```
 
-All packages are output to the docker volume `srcml_data`. You can view the contents of the volume and download individual packages in the Docker Desktop.
+All packages are output to the docker volume `srcml_dist`. You can view the contents of the volume and download individual packages in the Docker Desktop.
 
 To view via docker:
 
