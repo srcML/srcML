@@ -1,0 +1,20 @@
+---
+name: Docker
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup macOS
+        shell: bash
+        run: |
+          brew install docker
+          docker --version
+          docker compose --version
