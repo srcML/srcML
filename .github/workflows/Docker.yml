@@ -15,7 +15,7 @@ jobs:
       - name: Setup macOS
         shell: bash
         run: |
-          brew install docker
+          brew install docker docker-compose
           docker --version
           docker compose --version
 
