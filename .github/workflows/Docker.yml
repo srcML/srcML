@@ -18,3 +18,8 @@ jobs:
           brew install docker
           docker --version
           docker compose --version
+
+      - name: Setup macOS
+        shell: bash
+        run: |
+          docker compose build ubuntu_24.04
