@@ -15,11 +15,12 @@ jobs:
       - name: Setup macOS
         shell: bash
         run: |
-          brew install docker docker-compose
-          echo "\"cliPluginsExtraDirs\": [\"/opt/homebrew/lib/docker/cli-plugins\"] >> ~/.docker/config.json"
-          cat ~/.docker/config.json
+          brew install docker
+          open /Applications/Docker.app
+          while ! docker system info > /dev/null 2>&1; do sleep 1; done
+          brew install docker-compose
           docker --version
-          docker compose --version
+          docker-compose --version
 
       - name: Setup macOS
         shell: bash
