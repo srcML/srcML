@@ -10336,7 +10336,7 @@ for(;;) {}
 
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
-        dassert(srcml_append_transform_srcql(iarchive,"for($T;;$T)"), SRCML_STATUS_OK);
+        dassert(srcml_append_transform_srcql(iarchive,"for($T;;$T) {}"), SRCML_STATUS_OK);
 
         unit = srcml_archive_read_unit(iarchive);
         srcml_transform_result* result = nullptr;
@@ -10377,7 +10377,7 @@ for(;;) {}
 
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
-        dassert(srcml_append_transform_srcql(iarchive,"for($T;$T;$T)"), SRCML_STATUS_OK);
+        dassert(srcml_append_transform_srcql(iarchive,"for($T;$T;$T) {}"), SRCML_STATUS_OK);
 
         unit = srcml_archive_read_unit(iarchive);
         srcml_transform_result* result = nullptr;
@@ -10418,7 +10418,7 @@ for(;;) {}
 
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
-        dassert(srcml_append_transform_srcql(iarchive,"for($T;;++$T)"), SRCML_STATUS_OK);
+        dassert(srcml_append_transform_srcql(iarchive,"for($T;;++$T) {}"), SRCML_STATUS_OK);
 
         unit = srcml_archive_read_unit(iarchive);
         srcml_transform_result* result = nullptr;
@@ -10457,7 +10457,7 @@ for(;;) {}
 
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
-        dassert(srcml_append_transform_srcql(iarchive,"for($T;;--$T)"), SRCML_STATUS_OK);
+        dassert(srcml_append_transform_srcql(iarchive,"for($T;;--$T) {}"), SRCML_STATUS_OK);
 
         unit = srcml_archive_read_unit(iarchive);
         srcml_transform_result* result = nullptr;

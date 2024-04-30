@@ -814,6 +814,12 @@ void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) 
                 }
 
                 // TODO Attribute Selectors
+                xmlAttrPtr attr = node->properties;
+                while(attr != NULL) {
+                    XPathNode* attribute_selector = new XPathNode(std::string("@")+(char*)(attr->name)+"='"+(char*)(attr->children->content)+"'",PREDICATE);
+                    x_node->add_child_beginning(attribute_selector);
+                    attr = attr->next;
+                }
 
                 // Add Text Selectors
                 if(has_only_text_child(node) && is_primitive_element(node)) {
