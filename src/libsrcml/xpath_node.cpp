@@ -99,3 +99,12 @@ XPathNode* XPathNode::pop_child_beginning() {
     }
     return nullptr;
 }
+
+XPathNode* XPathNode::pop_child_end() {
+    if(children.size()) {
+        XPathNode* rtn = children.back();
+        children.pop_back();
+        return rtn;
+    }
+    return nullptr;
+}

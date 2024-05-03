@@ -45,6 +45,7 @@ public:
    void add_child(XPathNode* c) { c->set_parent(this); children.push_back(c); }
    void add_child_beginning(XPathNode* c) { c->set_parent(this); children.push_front(c); }
    XPathNode* pop_child_beginning();
+   XPathNode* pop_child_end();
 
 private:
     std::string text;

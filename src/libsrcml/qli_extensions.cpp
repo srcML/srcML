@@ -315,8 +315,6 @@ void is_valid_element(xmlXPathParserContext* ctxt, int nargs) {
     if(node_set.get() == NULL && xmlXPathCheckError(ctxt) == false) {
         node_set = std::unique_ptr<xmlNodeSet>(xmlXPathNodeSetCreate(NULL));
     }
-    xmlXPathReturnBoolean(ctxt, true);
-    return;
 
     // @TODO Might there be more than one node?
     assert(node_set.get()->nodeNr == 1);
@@ -330,6 +328,8 @@ void is_valid_element(xmlXPathParserContext* ctxt, int nargs) {
                                 "comment"sv == nodeName ||
                                 "modifier"sv == nodeName ||
                                 "specifier"sv == nodeName);
+
+    // std::cout << "Checking " << get_node_text(node) << "|" << std::string(nodeURI) << ":" << std::string(nodeName) << " = " << (!invalidElement ? "true" : "false") << std::endl;
 
     // return whether element is valid
     xmlXPathReturnBoolean(ctxt, !invalidElement);

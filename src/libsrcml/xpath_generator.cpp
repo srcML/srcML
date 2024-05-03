@@ -134,6 +134,7 @@ void number_add_calls(XPathNode* node, int group, std::map<std::string,int>* cou
         delete count;
     }
 }
+
 std::string number_add_calls(std::string_view xpath_view) {
     std::string xpath(xpath_view);
     std::map<std::string,int> count;
@@ -152,7 +153,6 @@ std::string number_add_calls(std::string_view xpath_view) {
     }
     return xpath;
 }
-
 
 XPathNode* XPathGenerator::get_xpath_from_argument(std::string src_query) {
     // GET SRCML
@@ -779,12 +779,13 @@ void XPathGenerator::add_bucket_clears(XPathNode* x_node,int group = 0) {
 void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) {
     int child_num = 0;
     for(xmlNode* node = top_xml_node; node != NULL; node = node->next) {
+        std::cout << get_full_name(node) << "|" << get_text(node) << "|" << child_num << "|" <<  (node->parent ? get_full_name(node->parent) : "N/A") << std::endl;
         if(node->type == XML_ELEMENT_NODE && get_full_name(node) != "src:comment") { 
             x_node->set_type(x_node->get_parent() ? PREDICATE : ANY);
-
             // If not a variable node
             if(!is_variable_node(node)) {
-                // Special check for converting expr patterns to include decls
+                std::cout << "\tNot Variable Node" << std::endl;
+                // Special check for converting expr_stmt patterns to include decl_stmt
                 if(get_full_name(node) == "src:expr_stmt" && get_full_name(node->children) == "src:expr" && xmlChildElementCount(node->children) == 1 && get_full_name(node->children->children) == "src:name") {
 
                     if(x_node->get_parent() == nullptr) {
@@ -797,6 +798,7 @@ void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) 
                         x_node = parentheses;
                     }
                 }
+                // Special check for converting expr patterns to include decls
                 else if(get_full_name(node) == "src:expr" && xmlChildElementCount(node) == 1 && get_full_name(node->children) == "src:name") {
 
                     if(x_node->get_parent() == nullptr) {
@@ -809,11 +811,25 @@ void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) 
                         x_node = parentheses;
                     }
                 }
-                else { // Otherwise, just add the tag normally
+                // Special check for unenforcing order on type specifiers
+                else if(get_full_name(node) == "src:specifier" && child_num != 0) {
+                    std::cout << "\tIn here? " << get_full_name(node->parent) << std::endl;
+                    child_num = 0;
+                    XPathNode* loop_node = x_node->get_parent();
+                    while(loop_node->get_text().find("following-sibling") != std::string::npos) {
+                        std::cout << "\t{" << loop_node->get_text() << std::endl;
+                        loop_node = loop_node->get_parent();
+                    }
+                    std::cout << "\t{Final " << loop_node->get_text() << std::endl;
+                    loop_node->get_parent()->add_child(x_node);
+                    loop_node->pop_child_end();
+                    x_node->set_text(get_full_name(node));
+                }
+                // Otherwise, just add the tag normally
+                else {
                     x_node->set_text((child_num != 0 ? "following-sibling::" : "") + get_full_name(node));
                 }
 
-                // TODO Attribute Selectors
                 xmlAttrPtr attr = node->properties;
                 while(attr != NULL) {
                     XPathNode* attribute_selector = new XPathNode(std::string("@")+(char*)(attr->name)+"='"+(char*)(attr->children->content)+"'",PREDICATE);
@@ -872,10 +888,17 @@ void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) 
         // ONLY DO IF NEXT CHILD IS A VALID ELEMENT,
         // AND CURRENT XPATHNODE IS USED
         if(node->next && node->next->type == XML_ELEMENT_NODE && x_node->get_text() != "") {
+            std::cout << "\tNew item |" << get_full_name(node) << "|" << get_text(node) << std::endl;
             XPathNode* next_node = new XPathNode();
-            x_node->add_child(next_node);
+            // If node is a specifier, need special tree rules
+            if(x_node->get_text() == "src:specifier") {
+                x_node->get_parent()->add_child(next_node);
+            }
+            else {
+                x_node->add_child(next_node);
+                ++child_num;
+            }
             x_node = next_node;
-            ++child_num;
         }
     }
 }
