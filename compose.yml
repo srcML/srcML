@@ -9,97 +9,66 @@ x-configuration: &CONFIGURATION
     - ccache:/ccache
     - data:/Data:ro
     - dist:/Builds
-  working_dir: /srcML-build
-  command: bash -c "${COMPOSE_COMMAND-
-    cmake -G Ninja --preset $$PRESET -DBUILD_PARSER_TESTS=ON -DBUILD_CLIENT_TESTS=ON -DBUILD_LIBSRCML_TESTS=OFF -DBUILD_EXAMPLES=OFF /srcML &&
-    ninja &&
-    echo "HELLO" &&
-    ninja install &&
-    ldconfig &&
-    srcml --version &&
-    ctest -j 6 --timeout 10 &&
-    ninja gen_parser_tests &&
-    ninja run_parser_tests }
-    ${COMPOSE_APPEND- }"
+  working_dir: /srcML
+  command: bash -c "${COMPOSE_COMMAND-cmake --workflow --preset $$WORKFLOW}"
 
 x-platforms: &PLATFORMS
   platforms:
     - "linux/amd64"
     - "linux/arm64"
 
-x-deb:
-  environment:
-    - &DEB_PACKAGE_PREFIX PACKAGE_PREFIX="deb"
-    - &DEB_INSTALL INSTALL_COMMAND=apt-get install -y
-    - &OLD_DEB_INSTALL INSTALL_COMMAND=gdebi --non-interactive
-    - &DEB_CONTENTS CONTENTS_COMMAND=dpkg -c
-    - &DEB_METADATA METADATA_COMMAND=dpkg -I
-    - &DEB_EXTENSION EXTENSION=deb
-    - &DEB_VERSION_PREFIX VERSION_PREFIX=_
-    - &DEB_PLATFORM_PREFIX PLATFORM_PREFIX=_
-
-# x-RPM:
-#   environment:
-#       - &RPM_FEDORA_INSTALL INSTALL_COMMAND=dnf install -y
-#       - &RPM_CENTOS_INSTALL INSTALL_COMMAND=yum install -y
-#       - &RPM_OPENSUSE_INSTALL INSTALL_COMMAND=zypper --non-interactive install
-#       - &RPM_CONTENTS CONTENTS_COMMAND=rpm -qlp
-#       - &RPM_METADATA METADATA_COMMAND=ls
-#       - &RPM_EXTENSION EXTENSION=rpm
-#       - &RPM_FEDORA_VERSION_PREFIX VERSION_PREFIX=-
-#       - &RPM_FEDORA_PLATFORM_PREFIX PLATFORM_PREFIX=.
-#       - &RPM_CENTOS_VERSION_PREFIX VERSION_PREFIX=-
-#       - &RPM_CENTOS_PLATFORM_PREFIX PLATFORM_PREFIX=.
-
 services:
 
-  # tardist:
-  #   image: alpine
-  #   volumes:
-  #       - dist:/dist
-  #   command: tar -cz -C /dist .
+  tar:
+    image: alpine
+    profiles: [utility]
+    volumes:
+        - dist:/dist
+    command: tar --exclude=srcML.tar.gz -czf /dist/srcML.tar.gz -C /dist .
 
-  ubuntu:
-    image: srcml/ubuntu:latest
-    platform: ${PLATFORM}
-    environment:
-      - VERSION=${VERSION}
-      - PRESET=gcc-release
-    <<: *CONFIGURATION
+  clean:
+    image: alpine
+    profiles: [utility]
+    volumes:
+        - dist:/dist
+    command: rm -fr /dist/*
 
   ubuntu_24.04:
     image: srcml/ubuntu:24.04
     platform: ${PLATFORM}
+    profiles: [ubuntu, platform, latest]
     build:
       context: docker/ubuntu/
       tags:
-        - "srcml/ubuntu:latest"
+        - "srcml/ubuntu:24.04"
       args:
         TAG: "24.04"
       <<: *PLATFORMS
     environment:
       - VERSION=${VERSION}
-      - PRESET=gcc-release
+      - PRESET=deb
+      - WORKFLOW=deb
     <<: *CONFIGURATION
 
   ubuntu_23.10:
     image: srcml/ubuntu:23.10
     platform: ${PLATFORM}
+    profiles: [ubuntu, platform]
     build:
       context: docker/ubuntu/
       args:
         TAG: "23.10"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=ubuntu_23.10
       - VERSION=${VERSION}
-      - PRESET=gcc-release
-      - *DEB_PACKAGE_PREFIX
+      - PRESET=deb
+      - WORKFLOW=deb
     <<: *CONFIGURATION
 
   ubuntu_22.04:
     image: srcml/ubuntu:22.04
     platform: ${PLATFORM}
+    profiles: [ubuntu, platform]
     build:
       context: docker/ubuntu/
       args:
@@ -108,36 +77,31 @@ services:
     environment:
       # - PLATFORM=ubuntu_22.04
       - VERSION=${VERSION}
-      - PRESET=gcc-release
-      - *DEB_PACKAGE_PREFIX
+      - PRESET=deb
+      - WORKFLOW=deb
     <<: *CONFIGURATION
 
   ubuntu_20.04:
     image: srcml/ubuntu:20.04
     platform: ${PLATFORM}
+    profiles: [ubuntu, platform, earliest]
     build:
       context: docker/ubuntu/
       args:
         TAG: "20.04"
+        CMAKE_BINARY: "ON"
       <<: *PLATFORMS
     environment:
       # - PLATFORM=ubuntu_20.04
       - VERSION=${VERSION}
-      - PRESET=gcc-release
-      - *DEB_PACKAGE_PREFIX
-    <<: *CONFIGURATION
-
-  fedora:
-    image: srcml/fedora:latest
-    platform: ${PLATFORM}
-    environment:
-      - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=deb
+      - WORKFLOW=deb
     <<: *CONFIGURATION
 
   fedora_41:
     image: srcml/fedora:41
     platform: ${PLATFORM}
+    profiles: [fedora, platform, latest]
     build:
       context: docker/fedora/
       tags:
@@ -148,12 +112,14 @@ services:
     environment:
       # - PLATFORM=fedora_41
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   fedora_40:
     image: srcml/fedora:40
     platform: ${PLATFORM}
+    profiles: [fedora, platform]
     build:
       context: docker/fedora/
       args:
@@ -162,12 +128,14 @@ services:
     environment:
       # - PLATFORM=fedora_40
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   fedora_39:
     image: srcml/fedora:39
     platform: ${PLATFORM}
+    profiles: [fedora, platform]
     build:
       context: docker/fedora/
       args:
@@ -176,12 +144,14 @@ services:
     environment:
       # - PLATFORM=fedora_39
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   fedora_38:
     image: srcml/fedora:38
     platform: ${PLATFORM}
+    profiles: [fedora, platform, earliest]
     build:
       context: docker/fedora/
       args:
@@ -190,11 +160,13 @@ services:
     environment:
       # - PLATFORM=fedora_38
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15:
     image: srcml/opensuse:15
+    profiles: [opensuse, platform]
     build:
       context: docker/opensuse/
       args:
@@ -204,11 +176,13 @@ services:
     environment:
       # - PLATFORM=opensuse_15
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15.5:
     image: srcml/opensuse:15.5
+    profiles: [opensuse, platform, latest]
     build:
       context: docker/opensuse/
       args:
@@ -218,11 +192,13 @@ services:
     environment:
       # - PLATFORM=opensuse_15.5
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15.4:
     image: srcml/opensuse:15.4
+    profiles: [opensuse, platform]
     build:
       context: docker/opensuse/
       args:
@@ -232,11 +208,13 @@ services:
     environment:
       # - PLATFORM=opensuse_15.4
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15.3:
     image: srcml/opensuse:15.3
+    profiles: [opensuse, platform]
     build:
       context: docker/opensuse/
       args:
@@ -246,11 +224,13 @@ services:
     environment:
       # - PLATFORM=opensuse_15.3
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15.2:
     image: srcml/opensuse:15.2
+    profiles: [opensuse, platform, earliest]
     build:
       context: docker/opensuse/
       args:
@@ -260,11 +240,13 @@ services:
     environment:
       # - PLATFORM=opensuse_15.2
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_tumbleweed:
     image: srcml/opensuse:tumbleweed
+    profiles: [opensuse, platform]
     build:
       context: docker/opensuse/
       args:
@@ -274,5 +256,6 @@ services:
     environment:
       # - PLATFORM=opensuse_15.0
       - VERSION=${VERSION}
-      - PRESET=rpm-release
+      - PRESET=rpm
+      - WORKFLOW=rpm
     <<: *CONFIGURATION
