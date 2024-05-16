@@ -98,3 +98,17 @@ set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, tar, man")
 set(TRIGGERS_FILE "${CMAKE_CURRENT_BINARY_DIR}/triggers")
 file(WRITE "${TRIGGERS_FILE}" "activate-noawait ldconfig\n")
 set(CPACK_DEBIAN_SRCML_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE}")
+
+# Targets for installing generated packages
+add_custom_target(install_package
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND apt-get install -y ./${CPACK_DEBIAN_SRCML_FILE_NAME}
+)
+add_custom_target(install_targz
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.gz -C /usr
+)
+add_custom_target(install_tarbz2
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.bz2 -C /usr
+)

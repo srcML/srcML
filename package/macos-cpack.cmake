@@ -22,6 +22,16 @@ set(CPACK_SYSTEM_NAME "macOS-${OS_NUMERIC}")
 # Archive package filenames
 set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
 
+# Targets for installing generated packages
+add_custom_target(install_package
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
+    COMMAND installer -pkg srcml-1.0.0-macOS-14.4.1.pkg -target CurrentUserHomeDirectory
+)
+add_custom_target(install_archive
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND apt-get install -y ./${CPACK_ARCHIVE_SRCML_FILE_NAME}.tgz
+)
+
 # Set for discovery of custom template CPack.distribution.dist.in
 # * Removes readme
 # * Adds conclusion
