@@ -78,7 +78,7 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
 # Generators are defined in the *.cpack files
 set(CPACK_GENERATOR)
-file(GLOB INSTALLERS "*.cpack")
+file(GLOB INSTALLERS "*-cpack.cmake")
 foreach(INSTALLER IN ITEMS ${INSTALLERS})
     include(${INSTALLER})
 endforeach()
