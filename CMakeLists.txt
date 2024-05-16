@@ -52,6 +52,11 @@ if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
     set(CMAKE_INSTALL_PREFIX /usr)
 endif()
 
+# Link the stdc++fs library if on gcc 7.5.0
+if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
+    link_libraries(stdc++fs)
+endif()
+
 # used as defaults for installation and packaging
 include(GNUInstallDirs)
 
