@@ -166,6 +166,7 @@ services:
 
   opensuse_15:
     image: srcml/opensuse:15
+    platform: ${PLATFORM}
     profiles: [opensuse, platform]
     build:
       context: docker/opensuse/
@@ -182,6 +183,7 @@ services:
 
   opensuse_15.5:
     image: srcml/opensuse:15.5
+    platform: ${PLATFORM}
     profiles: [opensuse, platform, latest]
     build:
       context: docker/opensuse/
@@ -198,6 +200,7 @@ services:
 
   opensuse_15.4:
     image: srcml/opensuse:15.4
+    platform: ${PLATFORM}
     profiles: [opensuse, platform]
     build:
       context: docker/opensuse/
@@ -214,6 +217,7 @@ services:
 
   opensuse_15.3:
     image: srcml/opensuse:15.3
+    platform: ${PLATFORM}
     profiles: [opensuse, platform]
     build:
       context: docker/opensuse/
@@ -230,6 +234,7 @@ services:
 
   opensuse_15.2:
     image: srcml/opensuse:15.2
+    platform: ${PLATFORM}
     profiles: [opensuse, platform, earliest]
     build:
       context: docker/opensuse/
@@ -246,6 +251,7 @@ services:
 
   opensuse_tumbleweed:
     image: srcml/opensuse:tumbleweed
+    platform: ${PLATFORM}
     profiles: [opensuse, platform]
     build:
       context: docker/opensuse/
