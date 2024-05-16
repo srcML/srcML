@@ -1,0 +1,84 @@
+{
+  "version": 8,
+  "configurePresets": [
+    {
+      "name": "ci-sibling_build",
+      "hidden": true,
+      "description": "Sibling build",
+      "binaryDir": "${sourceParentDir}/${sourceDirName}-build"
+    },
+    {
+      "name": "ci-subdirectory_build",
+      "hidden": true,
+      "description": "Subdirectory build",
+      "binaryDir": "build"
+    },
+    {
+      "name": "ci-pch",
+      "description": "Use PCH",
+      "hidden": true,
+      "cacheVariables": {
+        // Determined via clang-trace
+        "SRCML_CLIENT_PCH": "<srcml_cli.hpp>;<srcml_input_src.hpp>;<srcml_pipe.hpp>;<ParseQueue.hpp>;<src_input_libarchive.hpp>;<SRCMLStatus.hpp>;<WriteQueue.hpp>;<ParseRequest.hpp>;<TraceLog.hpp>;<curl/curl.h>",
+        "SRCML_LIBSRCML_PCH": "<srcmlns.hpp>;<srcml_types.hpp>;<srcml_sax2_utilities.hpp>;<srcml_translator.hpp>;<srcml_sax2_reader.hpp>",
+        "SRCML_PARSER_PCH": "<srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp> <UTF8CharBuffer.hpp>"
+      }
+    },
+    {
+      "name": "ci-vcpkg",
+      "hidden": true,
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "ci-ccache",
+      "hidden": true,
+      "description": "ccache setup",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER_LAUNCHER": "ON"
+      }
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "ci-base",
+      "hidden": true,
+      "configurations": [ "Release" ],
+      "packageDirectory": "dist"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "ci-client",
+      "hidden": true,
+      "execution": {
+        "jobs": 8,
+        "timeout": 15
+      },
+      "filter": {
+        "include": {
+            "name": "^srcml[.]"
+        }
+      },
+      "output": {
+        "verbosity": "extra",
+        "outputLogFile": "ctest.log"
+      }
+    },
+    {
+      "name": "ci-libsrcml",
+      "hidden": true,
+      "execution": {
+        "jobs": 8,
+        "timeout": 10
+      },
+      "filter": {
+        "include": {
+            "name": "^libsrcml[.]"
+        }
+      },
+      "output": {
+        "outputLogFile": "ctest.log"
+      }
+    }
+  ]
+}
