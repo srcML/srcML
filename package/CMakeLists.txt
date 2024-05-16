@@ -51,9 +51,6 @@ set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
 # strip executables
 set(CPACK_STRIP_FILES ON)
 
-# output directory
-set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
-
 # Generate user and development tar.gz's
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
