@@ -7,11 +7,11 @@
   },
   "configurePresets": [
     {
-      "name": "ubuntu",
+      "name": "ci-ubuntu",
       "displayName": "Ubuntu Release",
       "description": "Default build options for Ubuntu release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["gcc", "sibling_build"],
+      "inherits": ["ci-gcc", "ci-sibling_build"],
       "cacheVariables": {
         "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
         "BUILD_LIBSRCML_TESTS": "ON",
@@ -19,21 +19,21 @@
       }
     },
     {
-      "name": "rpm",
+      "name": "ci-rpm",
       "displayName": "RPM Release",
       "description": "Default build options for RPM release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["gcc", "sibling_build"],
+      "inherits": ["ci-gcc", "ci-sibling_build"],
       "cacheVariables": {
         "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
       }
     },
     {
-      "name": "macos",
+      "name": "ci-macos",
       "displayName": "macOS Release",
       "description": "Default build options for macOS release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "inherits": ["clang", "sibling_build"],
+      "inherits": ["ci-clang", "ci-sibling_build"],
       "generator": "Ninja",
       "cacheVariables": {
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
@@ -47,7 +47,7 @@
       }
     },
     {
-      "name": "msvc",
+      "name": "ci-msvc",
       "displayName": "MSVC",
       "description": "Default build options for MSVC",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
@@ -117,7 +117,7 @@
       }
     },
     {
-      "name": "ccache",
+      "name": "ci-ccache",
       "hidden": true,
       "description": "ccache setup",
       "cacheVariables": {
@@ -125,7 +125,7 @@
       }
     },
     {
-      "name": "linux",
+      "name": "ci-linux",
       "description": "Default build options for Linux",
       "hidden": true,
       "generator": "Ninja",
@@ -137,7 +137,7 @@
       }
     },
     {
-      "name": "pch",
+      "name": "ci-pch",
       "description": "Use PCH",
       "hidden": true,
       "cacheVariables": {
@@ -148,9 +148,9 @@
       }
     },
     {
-      "name": "gcc",
+      "name": "ci-gcc",
       "hidden": true,
-      "inherits": ["linux"],
+      "inherits": ["ci-linux"],
       "displayName": "GCC",
       "description": "Default build options for GCC",
       "toolchainFile": "toolchain-gcc.cmake",
@@ -160,7 +160,7 @@
       }
     },
     {
-      "name": "clang-trace",
+      "name": "ci-clang-trace",
       "displayName": "Clang Trace",
       "hidden": true,
       "description": "Default build options for Clang trace",
@@ -170,13 +170,13 @@
       }
     },
     {
-      "name": "clang-ccache",
-      "inherits": ["clang", "ccache"],
+      "name": "ci-clang-ccache",
+      "inherits": ["ci-clang", "ci-ccache"],
       "displayName": "Clang Release ccache",
       "description": "Default build options for Clang release with ccache"
     },
     {
-      "name": "clang",
+      "name": "ci-clang",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "displayName": "Clang Release",
       "description": "Default build options for Clang release",
@@ -191,18 +191,18 @@
       }
     },
     {
-      "name": "vcpkg",
+      "name": "ci-vcpkg",
       "hidden": true,
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
     },
     {
-      "name": "sibling_build",
+      "name": "ci-sibling_build",
       "hidden": true,
       "description": "Sibling build",
       "binaryDir": "${sourceParentDir}/${sourceDirName}-build"
     },
     {
-      "name": "subdirectory_build",
+      "name": "ci-subdirectory_build",
       "hidden": true,
       "description": "Subdirectory build",
       "binaryDir": "build"
@@ -210,141 +210,121 @@
   ],
   "buildPresets" : [
     {
-      "name": "ninja",
+      "name": "ci-rpm",
       // "hidden": true,
-      "configurePreset": "rpm",
+      "configurePreset": "ci-rpm",
       "configuration": "Release"
     },
     {
-      "name": "ninja-ubuntu",
+      "name": "ci-ubuntu",
       // "hidden": true,
-      "configurePreset": "ubuntu",
+      "configurePreset": "ci-ubuntu",
       "configuration": "Release"
     },
     {
-      "name": "clean",
-      "configurePreset": "ubuntu",
+      "name": "ci-clean",
+      "configurePreset": "ci-ubuntu",
       // "hidden": true,
       "targets": "clean"
     },
     {
-      "name": "gen_parser_tests",
-      // "hidden": true,
-      "targets": "gen_parser_tests",
-      "configurePreset": "macos"
+      "name": "ci-parser-tests-macos",
+      "targets": ["gen_parser_tests","run_parser_tests"],
+      "configurePreset": "ci-macos"
     },
     {
-      "name": "gen_parser_tests_ubuntu",
-      // "hidden": true,
-      "targets": "gen_parser_tests",
-      "configurePreset": "ubuntu"
+      "name": "ci-parser-tests-ubuntu",
+      "targets": ["gen_parser_tests","run_parser_tests"],
+      "configurePreset": "ci-ubuntu"
     },
     {
-      "name": "run_parser_tests",
-      // "hidden": true,
-      "targets": "run_parser_tests",
-      "configurePreset": "macos"
-    },
-    {
-      "name": "run_parser_tests_ubuntu",
-      // "hidden": true,
-      "targets": "run_parser_tests",
-      "configurePreset": "ubuntu"
-    },
-    {
-      "name": "install_package",
-      "configurePreset": "macos",
+      "name": "ci-install-package-macos",
+      "configurePreset": "ci-macos",
       "targets": "install_package"
     },
     {
-      "name": "install_package_ubuntu",
-      "configurePreset": "ubuntu",
+      "name": "ci-install-package-ubuntu",
+      "configurePreset": "ci-ubuntu",
       "targets": "install_package"
     },
     {
-      "name": "ninja-macos",
+      "name": "ci-macos",
       // "hidden": true,
-      "configurePreset": "macos",
+      "configurePreset": "ci-macos",
       "configuration": "Release"
     },
     {
-      "name": "msvc",
+      "name": "ci-msvc",
       // "hidden": true,
-      "configurePreset": "msvc",
+      "configurePreset": "ci-msvc",
       "configuration": "Release"
     }
   ],
   "packagePresets": [
     {
-      "name": "base",
+      "name": "ci-base",
       "hidden": true,
+      "configurations": [ "Release" ],
       "packageDirectory": "dist"
     },
     {
-      "name": "rpm",
-      "configurePreset": "rpm",
+      "name": "ci-rpm",
+      "configurePreset": "ci-rpm",
       "generators": [ "RPM", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ],
-      "inherits": ["base"]
+      "inherits": ["ci-base"]
     },
     {
-      "name": "ubuntu",
-      "configurePreset": "ubuntu",
+      "name": "ci-ubuntu",
+      "configurePreset": "ci-ubuntu",
       "generators": [ "DEB", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ],
-      "inherits": ["base"]
+      "inherits": ["ci-base"]
     },
     {
-      "name": "macos",
-      "configurePreset": "macos",
+      "name": "ci-macos",
+      "configurePreset": "ci-macos",
       "generators": [ "productbuild", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ],
-      "inherits": ["base"]
+      "inherits": ["ci-base"]
     },
     {
-      "name": "msvc",
-      "configurePreset": "msvc",
+      "name": "ci-msvc",
+      "configurePreset": "ci-msvc",
       "generators": [ "WIX", "INNOSETUP", "NuGet", "ZIP" ],
-      "configurations": [ "Release" ],
-      "inherits": ["base"]
+      "inherits": ["ci-base"]
     },
     {
-      "name": "msvc-wix",
-      "configurePreset": "msvc",
+      "name": "ci-msvc-wix",
+      "configurePreset": "ci-msvc",
       "generators": [ "WIX", "ZIP" ],
-      "configurations": [ "Release" ],
-      "inherits": ["base"]
+      "inherits": ["ci-base"]
     },
     {
-      "name": "msvc-inno",
-      "configurePreset": "msvc",
+      "name": "ci-msvc-inno",
+      "configurePreset": "ci-msvc",
       "generators": [ "INNOSETUP", "ZIP" ],
-      "configurations": [ "Release" ],
-      "inherits": ["base"]
+      "inherits": ["ci-base"]
     },
     {
-      "name": "msvc-nuget",
-      "configurePreset": "msvc",
+      "name": "ci-msvc-nuget",
+      "configurePreset": "ci-msvc",
       "generators": [ "NuGet", "ZIP" ],
-      "configurations": [ "Release" ],
-      "inherits": ["base"]
+      "inherits": ["ci-base"]
     }
   ],
   "testPresets": [
     {
-      "name": "client-macos",
+      "name": "ci-client-macos",
       // "hidden": true,
-      "configurePreset": "macos",
-      "inherits": ["client"]
+      "configurePreset": "ci-macos",
+      "inherits": ["ci-client"]
     },
     {
-      "name": "libsrcml-macos",
+      "name": "ci-libsrcml-macos",
       // "hidden": true,
-      "configurePreset": "macos",
-      "inherits": ["libsrcml"]
+      "configurePreset": "ci-macos",
+      "inherits": ["ci-libsrcml"]
     },
     {
-      "name": "client",
+      "name": "ci-client",
       "hidden": true,
       "execution": {
         "jobs": 8,
@@ -361,7 +341,7 @@
       }
     },
     {
-      "name": "libsrcml",
+      "name": "ci-libsrcml",
       "hidden": true,
       "execution": {
         "jobs": 8,
@@ -379,43 +359,41 @@
   ],
   "workflowPresets": [
     {
-      "name": "deb",
+      "name": "ci-deb",
       "steps": [
-        { "type": "configure", "name": "ubuntu" },
-        { "type": "build",     "name": "ninja-ubuntu" },
-        { "type": "package",   "name": "ubuntu" },
-        { "type": "build",     "name": "install_package_ubuntu" },
-        { "type": "build",     "name": "gen_parser_tests_ubuntu" },
-        { "type": "build",     "name": "run_parser_tests_ubuntu" }
+        { "type": "configure", "name": "ci-ubuntu" },
+        { "type": "build",     "name": "ci-ubuntu" },
+        { "type": "package",   "name": "ci-ubuntu" },
+        { "type": "build",     "name": "ci-install-package-ubuntu" },
+        { "type": "build",     "name": "ci-parser-tests-ubuntu" }
       ]
     },
     {
-      "name": "rpm",
+      "name": "ci-rpm",
       "steps": [
-        { "type": "configure", "name": "rpm" },
-        { "type": "build",     "name": "ninja" },
-        { "type": "package",   "name": "rpm" }
+        { "type": "configure", "name": "ci-rpm" },
+        { "type": "build",     "name": "ci-rpm" },
+        { "type": "package",   "name": "ci-rpm" }
       ]
     },
     {
-      "name": "macos",
+      "name": "ci-macos",
       "steps": [
-        { "type": "configure", "name": "macos" },
-        { "type": "build",     "name": "ninja-macos" },
-        { "type": "package",   "name": "macos" },
-        { "type": "build",     "name": "install_package" },
-        { "type": "test",      "name": "libsrcml-macos" },
-        { "type": "build",     "name": "gen_parser_tests" },
-        { "type": "build",     "name": "run_parser_tests" },
-        { "type": "test",      "name": "client-macos" }
+        { "type": "configure", "name": "ci-macos" },
+        { "type": "build",     "name": "ci-macos" },
+        { "type": "package",   "name": "ci-macos" },
+        { "type": "build",     "name": "ci-install-package-macos" },
+        { "type": "test",      "name": "ci-libsrcml-macos" },
+        { "type": "build",     "name": "ci-parser-tests-macos" },
+        { "type": "test",      "name": "ci-client-macos" }
       ]
     },
     {
-      "name": "msvc",
+      "name": "ci-msvc",
       "steps": [
-        { "type": "configure", "name": "msvc" },
-        { "type": "build",     "name": "msvc" },
-        { "type": "package", "name": "msvc" }
+        { "type": "configure", "name": "ci-msvc" },
+        { "type": "build",     "name": "ci-msvc" },
+        { "type": "package",   "name": "ci-msvc" }
       ]
     }
   ]
