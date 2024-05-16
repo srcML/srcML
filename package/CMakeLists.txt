@@ -76,7 +76,7 @@ cpack_add_component(DEVLIBS
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
-# Generators are defined in the *.cpack files
+# Generators are defined in the *-cpack.cmake files
 set(CPACK_GENERATOR)
 file(GLOB INSTALLERS "*-cpack.cmake")
 foreach(INSTALLER IN ITEMS ${INSTALLERS})
