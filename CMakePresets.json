@@ -1,39 +1,49 @@
 {
-  "version": 6,
+  "version": 8,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 24,
+    "minor": 28,
     "patch": 0
   },
   "configurePresets": [
     {
-      "name": "ubuntu-release",
+      "name": "ubuntu",
       "displayName": "Ubuntu Release",
       "description": "Default build options for Ubuntu release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["gcc-release"]
+      "inherits": ["gcc", "sibling_build"],
+      "cacheVariables": {
+        "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
+        "BUILD_LIBSRCML_TESTS": "ON",
+        "BUILD_PARSER_TESTS": "ON"
+      }
     },
     {
-      "name": "rpm-release",
-      "displayName": "GCC Release",
-      "description": "Default build options for GCC release",
+      "name": "rpm",
+      "displayName": "RPM Release",
+      "description": "Default build options for RPM release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["gcc-release"]
+      "inherits": ["gcc", "sibling_build"],
+      "cacheVariables": {
+        "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
+      }
     },
     {
-      "name": "macos-release",
-      "inherits": ["clang-release"],
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "name": "macos",
       "displayName": "macOS Release",
       "description": "Default build options for macOS release",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "inherits": ["clang", "sibling_build"],
+      "generator": "Ninja",
       "cacheVariables": {
-        // "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
         "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
         "CMAKE_BUILD_TYPE": "Release",
         // Build for both x86 and arm64
         "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
-        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15"
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15",
+        "BUILD_LIBSRCML_TESTS": "ON",
+        "BUILD_PARSER_TESTS": "ON"
       }
     },
     {
@@ -42,7 +52,7 @@
       "description": "Default build options for MSVC",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
       "toolchainFile": "toolchain-msvc.cmake",
-      "binaryDir": "${sourceDir}/build",
+      // "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "cl",
         "CMAKE_C_COMPILER": "cl",
@@ -139,36 +149,20 @@
     },
     {
       "name": "gcc",
+      "hidden": true,
       "inherits": ["linux"],
       "displayName": "GCC",
       "description": "Default build options for GCC",
       "toolchainFile": "toolchain-gcc.cmake",
       "cacheVariables": {
-        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,--version-script=${sourceDir}/src/libsrcml/libsrcml.version"
-      }
-    },
-    {
-      "name": "gcc-release",
-      "inherits": ["gcc"],
-      "displayName": "GCC Release",
-      "description": "Default build options for GCC release",
-      "cacheVariables": {
+        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,--version-script=${sourceDir}/src/libsrcml/libsrcml.version",
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
-      "name": "clang",
-      "inherits": ["linux"],
-      "displayName": "Clang",
-      "description": "Default build options for Clang",
-      "cacheVariables": {
-        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,-exported_symbols_list ${sourceDir}/src/libsrcml/export_list"
-      }
-    },
-    {
       "name": "clang-trace",
-      "inherits": ["clang"],
       "displayName": "Clang Trace",
+      "hidden": true,
       "description": "Default build options for Clang trace",
       "cacheVariables": {
         "CMAKE_C_FLAGS": "-ftime-trace",
@@ -176,19 +170,13 @@
       }
     },
     {
-      "name": "macos-universal",
-      "displayName": "macOS Universal Binary",
-      "description": "Universal binary for macOS",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "hidden": true,
-      "cacheVariables": {
-        // Build for both x86 and arm64
-        "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64"
-      }
+      "name": "clang-ccache",
+      "inherits": ["clang", "ccache"],
+      "displayName": "Clang Release ccache",
+      "description": "Default build options for Clang release with ccache"
     },
     {
-      "name": "clang-release",
-      "inherits": ["clang"],
+      "name": "clang",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "displayName": "Clang Release",
       "description": "Default build options for Clang release",
@@ -198,14 +186,9 @@
         "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
         "CMAKE_BUILD_TYPE": "Release",
         "SRCML_GLOBAL_COMPILE_OPTIONS": "-flto",
-        "SRCML_GLOBAL_LINK_OPTIONS": "-flto;-dead_strip"
+        "SRCML_GLOBAL_LINK_OPTIONS": "-flto;-dead_strip",
+        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,-exported_symbols_list ${sourceDir}/src/libsrcml/export_list"
       }
-    },
-    {
-      "name": "clang-release-ccache",
-      "inherits": ["clang-release", "ccache"],
-      "displayName": "Clang Release ccache",
-      "description": "Default build options for Clang release with ccache"
     },
     {
       "name": "vcpkg",
@@ -213,55 +196,227 @@
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
     },
     {
-      "name": "macos-vcpkg",
-      "inherits": ["clang-release", "vcpkg"],
-      "cacheVariables": {
-        // "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
-      }
+      "name": "sibling_build",
+      "hidden": true,
+      "description": "Sibling build",
+      "binaryDir": "${sourceParentDir}/${sourceDirName}-build"
+    },
+    {
+      "name": "subdirectory_build",
+      "hidden": true,
+      "description": "Subdirectory build",
+      "binaryDir": "build"
+    }
+  ],
+  "buildPresets" : [
+    {
+      "name": "ninja",
+      // "hidden": true,
+      "configurePreset": "rpm",
+      "configuration": "Release"
+    },
+    {
+      "name": "ninja-ubuntu",
+      // "hidden": true,
+      "configurePreset": "ubuntu",
+      "configuration": "Release"
+    },
+    {
+      "name": "clean",
+      "configurePreset": "ubuntu",
+      // "hidden": true,
+      "targets": "clean"
+    },
+    {
+      "name": "gen_parser_tests",
+      // "hidden": true,
+      "targets": "gen_parser_tests",
+      "configurePreset": "macos"
+    },
+    {
+      "name": "gen_parser_tests_ubuntu",
+      // "hidden": true,
+      "targets": "gen_parser_tests",
+      "configurePreset": "ubuntu"
+    },
+    {
+      "name": "run_parser_tests",
+      // "hidden": true,
+      "targets": "run_parser_tests",
+      "configurePreset": "macos"
+    },
+    {
+      "name": "run_parser_tests_ubuntu",
+      // "hidden": true,
+      "targets": "run_parser_tests",
+      "configurePreset": "ubuntu"
+    },
+    {
+      "name": "install_package",
+      "configurePreset": "macos",
+      "targets": "install_package"
+    },
+    {
+      "name": "install_package_ubuntu",
+      "configurePreset": "ubuntu",
+      "targets": "install_package"
+    },
+    {
+      "name": "ninja-macos",
+      // "hidden": true,
+      "configurePreset": "macos",
+      "configuration": "Release"
+    },
+    {
+      "name": "msvc",
+      // "hidden": true,
+      "configurePreset": "msvc",
+      "configuration": "Release"
     }
   ],
   "packagePresets": [
     {
-      "name": "rpm",
-      "configurePreset": "rpm-release",
-      "generators": [ "RPM", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ]
+      "name": "base",
+      "hidden": true,
+      "packageDirectory": "dist"
     },
     {
-      "name": "deb",
-      "configurePreset": "ubuntu-release",
+      "name": "rpm",
+      "configurePreset": "rpm",
+      "generators": [ "RPM", "TGZ", "TBZ2" ],
+      "configurations": [ "Release" ],
+      "inherits": ["base"]
+    },
+    {
+      "name": "ubuntu",
+      "configurePreset": "ubuntu",
       "generators": [ "DEB", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ]
+      "configurations": [ "Release" ],
+      "inherits": ["base"]
     },
     {
       "name": "macos",
-      "configurePreset": "macos-release",
+      "configurePreset": "macos",
       "generators": [ "productbuild", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ]
+      "configurations": [ "Release" ],
+      "inherits": ["base"]
     },
     {
       "name": "msvc",
       "configurePreset": "msvc",
       "generators": [ "WIX", "INNOSETUP", "NuGet", "ZIP" ],
-      "configurations": [ "Release" ]
+      "configurations": [ "Release" ],
+      "inherits": ["base"]
     },
     {
       "name": "msvc-wix",
       "configurePreset": "msvc",
       "generators": [ "WIX", "ZIP" ],
-      "configurations": [ "Release" ]
+      "configurations": [ "Release" ],
+      "inherits": ["base"]
     },
     {
       "name": "msvc-inno",
       "configurePreset": "msvc",
       "generators": [ "INNOSETUP", "ZIP" ],
-      "configurations": [ "Release" ]
+      "configurations": [ "Release" ],
+      "inherits": ["base"]
     },
     {
       "name": "msvc-nuget",
       "configurePreset": "msvc",
       "generators": [ "NuGet", "ZIP" ],
-      "configurations": [ "Release" ]
+      "configurations": [ "Release" ],
+      "inherits": ["base"]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "client-macos",
+      // "hidden": true,
+      "configurePreset": "macos",
+      "inherits": ["client"]
+    },
+    {
+      "name": "libsrcml-macos",
+      // "hidden": true,
+      "configurePreset": "macos",
+      "inherits": ["libsrcml"]
+    },
+    {
+      "name": "client",
+      "hidden": true,
+      "execution": {
+        "jobs": 8,
+        "timeout": 15
+      },
+      "filter": {
+        "include": {
+            "name": "^srcml[.]"
+        }
+      },
+      "output": {
+        "verbosity": "extra",
+        "outputLogFile": "ctest.log"
+      }
+    },
+    {
+      "name": "libsrcml",
+      "hidden": true,
+      "execution": {
+        "jobs": 8,
+        "timeout": 10
+      },
+      "filter": {
+        "include": {
+            "name": "^libsrcml[.]"
+        }
+      },
+      "output": {
+        "outputLogFile": "ctest.log"
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "deb",
+      "steps": [
+        { "type": "configure", "name": "ubuntu" },
+        { "type": "build",     "name": "ninja-ubuntu" },
+        { "type": "package",   "name": "ubuntu" },
+        { "type": "build",     "name": "install_package_ubuntu" },
+        { "type": "build",     "name": "gen_parser_tests_ubuntu" },
+        { "type": "build",     "name": "run_parser_tests_ubuntu" }
+      ]
+    },
+    {
+      "name": "rpm",
+      "steps": [
+        { "type": "configure", "name": "rpm" },
+        { "type": "build",     "name": "ninja" },
+        { "type": "package",   "name": "rpm" }
+      ]
+    },
+    {
+      "name": "macos",
+      "steps": [
+        { "type": "configure", "name": "macos" },
+        { "type": "build",     "name": "ninja-macos" },
+        { "type": "package",   "name": "macos" },
+        { "type": "build",     "name": "install_package" },
+        { "type": "test",      "name": "libsrcml-macos" },
+        { "type": "build",     "name": "gen_parser_tests" },
+        { "type": "build",     "name": "run_parser_tests" },
+        { "type": "test",      "name": "client-macos" }
+      ]
+    },
+    {
+      "name": "msvc",
+      "steps": [
+        { "type": "configure", "name": "msvc" },
+        { "type": "build",     "name": "msvc" },
+        { "type": "package", "name": "msvc" }
+      ]
     }
   ]
 }
