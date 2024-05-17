@@ -1,0 +1,66 @@
+{
+  "version": 8,
+  "include": [
+    "CMakePresets-base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "ci-ubuntu",
+      "displayName": "Ubuntu Release",
+      "description": "Default build options for Ubuntu release",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "inherits": ["ci-gcc", "ci-sibling-build"],
+      "cacheVariables": {
+        "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
+        "BUILD_LIBSRCML_TESTS": "ON",
+        "BUILD_PARSER_TESTS": "ON"
+      }
+    }
+  ],
+  "buildPresets" : [
+    {
+      "name": "ci-ubuntu",
+      // "hidden": true,
+      "configurePreset": "ci-ubuntu",
+      "configuration": "Release"
+    },
+    {
+      "name": "ci-clean-ubuntu",
+      "configurePreset": "ci-ubuntu",
+      // "hidden": true,
+      "targets": "clean"
+    },
+    {
+      "name": "ci-parser-tests-ubuntu",
+      "targets": ["gen_parser_tests","run_parser_tests"],
+      "configurePreset": "ci-ubuntu"
+    },
+    {
+      "name": "ci-install-package-ubuntu",
+      "configurePreset": "ci-ubuntu",
+      "targets": "install_package"
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "ci-ubuntu",
+      "configurePreset": "ci-ubuntu",
+      "generators": [ "DEB", "TGZ", "TBZ2" ],
+      "inherits": ["ci-base"]
+    }
+  ],
+  "testPresets": [
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-deb",
+      "steps": [
+        { "type": "configure", "name": "ci-ubuntu" },
+        { "type": "build",     "name": "ci-ubuntu" },
+        { "type": "package",   "name": "ci-ubuntu" },
+        { "type": "build",     "name": "ci-install-package-ubuntu" },
+        { "type": "build",     "name": "ci-parser-tests-ubuntu" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "version": 8,
+  "include": [
+    "CMakePresets-base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "ci-rpm",
+      "displayName": "RPM Release",
+      "description": "Default build options for RPM release",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "inherits": ["ci-gcc", "ci-sibling-build"],
+      "cacheVariables": {
+        "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
+      }
+    }
+  ],
+  "buildPresets" : [
+    {
+      "name": "ci-rpm",
+      // "hidden": true,
+      "configurePreset": "ci-rpm",
+      "configuration": "Release"
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "ci-rpm",
+      "configurePreset": "ci-rpm",
+      "generators": [ "RPM", "TGZ", "TBZ2" ],
+      "inherits": ["ci-base"]
+    }
+  ],
+  "testPresets": [
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-rpm",
+      "steps": [
+        { "type": "configure", "name": "ci-rpm" },
+        { "type": "build",     "name": "ci-rpm" },
+        { "type": "package",   "name": "ci-rpm" }
+      ]
+    }
+  ]
+}

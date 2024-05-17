@@ -7,56 +7,12 @@
   },
   "include": [
     "CMakePresets-base.json",
+    "CMakePresets-ubuntu.json",
+    "CMakePresets-rpm.json",
     "CMakePresets-macos.json",
     "CMakePresets-msvc.json"
   ],
   "configurePresets": [
-    {
-      "name": "ci-ubuntu",
-      "displayName": "Ubuntu Release",
-      "description": "Default build options for Ubuntu release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["ci-gcc", "ci-sibling_build"],
-      "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
-        "BUILD_LIBSRCML_TESTS": "ON",
-        "BUILD_PARSER_TESTS": "ON"
-      }
-    },
-    {
-      "name": "ci-rpm",
-      "displayName": "RPM Release",
-      "description": "Default build options for RPM release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["ci-gcc", "ci-sibling_build"],
-      "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
-      }
-    },
-    {
-      "name": "ci-linux",
-      "description": "Default build options for Linux",
-      "hidden": true,
-      "generator": "Ninja",
-      "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "-Wall -Wextra -pedantic",
-        // "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON",
-        "SRCML_ANTLR_DISABLED_WARNINGS": "-Wno-format;-Wno-misleading-indentation;-Wno-deprecated-declarations",
-        "SRCML_PARSER_DISABLED_WARNINGS": "-Wno-unused-but-set-variable"
-      }
-    },
-    {
-      "name": "ci-gcc",
-      "hidden": true,
-      "inherits": ["ci-linux"],
-      "displayName": "GCC",
-      "description": "Default build options for GCC",
-      "toolchainFile": "toolchain-gcc.cmake",
-      "cacheVariables": {
-        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,--version-script=${sourceDir}/src/libsrcml/libsrcml.version",
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
     {
       "name": "ci-clang-trace",
       "displayName": "Clang Trace",
@@ -73,72 +29,6 @@
       "hidden": true,
       "displayName": "Clang Release ccache",
       "description": "Default build options for Clang release with ccache"
-    }
-  ],
-  "buildPresets" : [
-    {
-      "name": "ci-rpm",
-      // "hidden": true,
-      "configurePreset": "ci-rpm",
-      "configuration": "Release"
-    },
-    {
-      "name": "ci-ubuntu",
-      // "hidden": true,
-      "configurePreset": "ci-ubuntu",
-      "configuration": "Release"
-    },
-    {
-      "name": "ci-clean",
-      "configurePreset": "ci-ubuntu",
-      // "hidden": true,
-      "targets": "clean"
-    },
-    {
-      "name": "ci-parser-tests-ubuntu",
-      "targets": ["gen_parser_tests","run_parser_tests"],
-      "configurePreset": "ci-ubuntu"
-    },
-    {
-      "name": "ci-install-package-ubuntu",
-      "configurePreset": "ci-ubuntu",
-      "targets": "install_package"
-    }
-  ],
-  "packagePresets": [
-    {
-      "name": "ci-rpm",
-      "configurePreset": "ci-rpm",
-      "generators": [ "RPM", "TGZ", "TBZ2" ],
-      "inherits": ["ci-base"]
-    },
-    {
-      "name": "ci-ubuntu",
-      "configurePreset": "ci-ubuntu",
-      "generators": [ "DEB", "TGZ", "TBZ2" ],
-      "inherits": ["ci-base"]
-    }
-  ],
-  "testPresets": [
-  ],
-  "workflowPresets": [
-    {
-      "name": "ci-deb",
-      "steps": [
-        { "type": "configure", "name": "ci-ubuntu" },
-        { "type": "build",     "name": "ci-ubuntu" },
-        { "type": "package",   "name": "ci-ubuntu" },
-        { "type": "build",     "name": "ci-install-package-ubuntu" },
-        { "type": "build",     "name": "ci-parser-tests-ubuntu" }
-      ]
-    },
-    {
-      "name": "ci-rpm",
-      "steps": [
-        { "type": "configure", "name": "ci-rpm" },
-        { "type": "build",     "name": "ci-rpm" },
-        { "type": "package",   "name": "ci-rpm" }
-      ]
     }
   ]
 }

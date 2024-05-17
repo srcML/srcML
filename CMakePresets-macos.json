@@ -9,7 +9,7 @@
       "displayName": "macOS Release",
       "description": "Default build options for macOS release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "inherits": ["ci-clang", "ci-sibling_build"],
+      "inherits": ["ci-clang", "ci-sibling-build"],
       "generator": "Ninja",
       "cacheVariables": {
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
