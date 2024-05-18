@@ -83,7 +83,7 @@ jobs:
         working-directory: build
         continue-on-error: true
         run: |
-          cpack -V --preset msvc
+          cpack -V --preset ci-msvc
           dir dist/*
       # - uses: actions/upload-artifact@v3
       #   with:
