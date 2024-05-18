@@ -231,12 +231,12 @@ jobs:
       #     path: ./msi.log
 
       - name: Install package Nuget
-        # continue-on-error: true
+        continue-on-error: true
         if: ${{ matrix.installer == 'nuget' }}
         run: |
           mkdir LocalNuGetFeed
           nuget add srcml.1.0.0.nupkg -Source LocalNuGetFeed
-          nuget install srcml -Source D:\a\srcML-1942\srcML-1942\LocalNuGetFeed -OutputDirectory "C:\Program Files"
+          nuget install srcml -Source D:\a\srcML\srcML\LocalNuGetFeed -OutputDirectory "C:\Program Files"
           mv "C:\Program Files\srcml.1.0.0" "C:\Program Files\srcML"
       # - uses: actions/upload-artifact@v3
       #   if: ${{ matrix.installer == 'msi' }}
