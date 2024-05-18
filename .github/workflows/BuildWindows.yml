@@ -80,11 +80,12 @@ jobs:
           cmake --build . --config Release
 
       - name: Package
-        working-directory: build
+        # working-directory: build
         continue-on-error: true
         run: |
-          cpack -V --preset ci-msvc
-          dir dist/*
+          # cpack -V --preset ci-msvc
+          cmake --build build --preset ci-msvc --target package
+          # dir dist/*
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: wix.log
@@ -94,10 +95,14 @@ jobs:
         with:
           name: installers
           path: |
-            build/dist/*.msi
-            build/dist/*.zip
-            build/dist/*.exe
-            build/dist/*.nupkg
+            # build/dist/*.msi
+            # build/dist/*.zip
+            # build/dist/*.exe
+            # build/dist/*.nupkg
+            build/*.msi
+            build/*.zip
+            build/*.exe
+            build/*.nupkg
 
       # - name: Install from build
       #   working-directory: build
