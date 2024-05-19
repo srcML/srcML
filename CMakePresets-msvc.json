@@ -81,6 +81,11 @@
       // "hidden": true,
       "configurePreset": "ci-msvc",
       "configuration": "Release"
+    },
+    {
+      "name": "ci-install-package-wix",
+      "configurePreset": "ci-msvc",
+      "targets": "install_package_wix"
     }
   ],
   "packagePresets": [
@@ -117,7 +122,8 @@
       "steps": [
         { "type": "configure", "name": "ci-msvc" },
         { "type": "build",     "name": "ci-msvc" },
-        { "type": "package",   "name": "ci-msvc" }
+        { "type": "package",   "name": "ci-msvc" },
+        { "type": "build",     "name": "ci-install-package-wix" }
       ]
     }
   ]
