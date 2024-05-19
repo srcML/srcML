@@ -20,30 +20,47 @@
   "buildPresets" : [
     {
       "name": "ci-ubuntu",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       // "hidden": true,
       "configurePreset": "ci-ubuntu",
       "configuration": "Release"
     },
     {
       "name": "ci-clean-ubuntu",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "configurePreset": "ci-ubuntu",
       // "hidden": true,
       "targets": "clean"
     },
     {
-      "name": "ci-parser-tests-ubuntu",
-      "targets": ["gen_parser_tests","run_parser_tests"],
-      "configurePreset": "ci-ubuntu"
-    },
-    {
       "name": "ci-install-package-ubuntu",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "configurePreset": "ci-ubuntu",
       "targets": "install_package"
+    },
+    {
+      "name": "ci-test-client-ubuntu",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "configurePreset": "ci-ubuntu",
+      "targets": ["test_client"]
+    },
+    {
+      "name": "ci-test-libsrcml-ubuntu",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "configurePreset": "ci-ubuntu",
+      "targets": ["test_libsrcml"]
+    },
+    {
+      "name": "ci-test-parser-ubuntu",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "targets": ["test_parser"],
+      "configurePreset": "ci-ubuntu"
     }
   ],
   "packagePresets": [
     {
       "name": "ci-ubuntu",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "configurePreset": "ci-ubuntu",
       "generators": [ "DEB", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
@@ -53,13 +70,15 @@
   ],
   "workflowPresets": [
     {
-      "name": "ci-deb",
+      "name": "ci-ubuntu",
       "steps": [
         { "type": "configure", "name": "ci-ubuntu" },
         { "type": "build",     "name": "ci-ubuntu" },
         { "type": "package",   "name": "ci-ubuntu" },
         { "type": "build",     "name": "ci-install-package-ubuntu" },
-        { "type": "build",     "name": "ci-parser-tests-ubuntu" }
+        { "type": "build",     "name": "ci-test-client-ubuntu" },
+        { "type": "build",     "name": "ci-test-libsrcml-ubuntu" },
+        { "type": "build",     "name": "ci-test-parser-ubuntu" }
       ]
     }
   ]

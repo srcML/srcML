@@ -62,8 +62,6 @@ set(CPACK_RPM_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}.rpm")
 set(CPACK_RPM_DEVLIBS_FILE_NAME "${BASE_DEVLIBS_FILE_NAME}.rpm")
 set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
 set(CPACK_ARCHIVE_DEVLIBS_FILE_NAME "${BASE_DEVLIBS_FILE_NAME}")
-unset(BASE_SRCML_FILE_NAME)
-unset(BASE_DEVLIBS_FILE_NAME)
 
 # SRCML package is main, so no extension is added
 set(CPACK_RPM_MAIN_COMPONENT SRCML)
@@ -103,3 +101,33 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 $
         /usr/local /usr/local/include /usr/local/lib64 /usr/local/bin /usr/local/man /usr/local/man/man1 
         /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1
         /usr/share/man1)
+message("DISTRO: ${DISTRO}")
+
+# Targets for workflow testing
+add_custom_target(test_client
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcml --timeout 5 --output-log ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_SRCML_FILE_NAME}.log || true
+)
+add_custom_target(test_libsrcml
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_CTEST_COMMAND} -R ^libsrcml --timeout 5 --output-log ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_DEVLIBS_FILE_NAME}.log || true
+)
+add_custom_target(test_parser
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_SRCML_FILE_NAME}-parser.log
+    DEPENDS gen_parser_tests
+)
+
+# Targets for installing generated packages
+add_custom_target(install_package
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND dnf install -y ./${CPACK_RPM_SRCML_FILE_NAME}
+)
+add_custom_target(install_targz
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.gz -C /usr
+)
+add_custom_target(install_tarbz2
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.bz2 -C /usr
+)

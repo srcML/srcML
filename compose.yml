@@ -10,7 +10,7 @@ x-configuration: &CONFIGURATION
     - data:/Data:ro
     - dist:/Builds
   working_dir: /srcML
-  command: bash -c "${COMPOSE_COMMAND-cmake --workflow --preset $$WORKFLOW}"
+  command: bash -c "${COMPOSE_COMMAND-cmake --workflow --preset ci-$$WORKFLOW}"
 
 x-platforms: &PLATFORMS
   platforms:
@@ -36,7 +36,7 @@ services:
   ubuntu_24.04:
     image: srcml/ubuntu:24.04
     platform: ${PLATFORM}
-    profiles: [ubuntu, platform, latest]
+    profiles: [ubuntu, package, latest]
     build:
       context: docker/ubuntu/
       tags:
@@ -45,46 +45,39 @@ services:
         TAG: "24.04"
       <<: *PLATFORMS
     environment:
-      - VERSION=${VERSION}
-      - PRESET=deb
-      - WORKFLOW=deb
+      - WORKFLOW=ubuntu
     <<: *CONFIGURATION
 
   ubuntu_23.10:
     image: srcml/ubuntu:23.10
     platform: ${PLATFORM}
-    profiles: [ubuntu, platform]
+    profiles: [ubuntu, package]
     build:
       context: docker/ubuntu/
       args:
         TAG: "23.10"
       <<: *PLATFORMS
     environment:
-      - VERSION=${VERSION}
-      - PRESET=deb
-      - WORKFLOW=deb
+      - WORKFLOW=ubuntu
     <<: *CONFIGURATION
 
   ubuntu_22.04:
     image: srcml/ubuntu:22.04
     platform: ${PLATFORM}
-    profiles: [ubuntu, platform]
+    profiles: [ubuntu, package]
     build:
       context: docker/ubuntu/
       args:
         TAG: "22.04"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=ubuntu_22.04
-      - VERSION=${VERSION}
-      - PRESET=deb
-      - WORKFLOW=deb
+      - WORKFLOW=ubuntu
     <<: *CONFIGURATION
 
   ubuntu_20.04:
     image: srcml/ubuntu:20.04
     platform: ${PLATFORM}
-    profiles: [ubuntu, platform, earliest]
+    profiles: [ubuntu, package, oldest]
     build:
       context: docker/ubuntu/
       args:
@@ -92,16 +85,13 @@ services:
         CMAKE_BINARY: "ON"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=ubuntu_20.04
-      - VERSION=${VERSION}
-      - PRESET=deb
-      - WORKFLOW=deb
+      - WORKFLOW=ubuntu
     <<: *CONFIGURATION
 
   fedora_41:
     image: srcml/fedora:41
     platform: ${PLATFORM}
-    profiles: [fedora, platform, latest]
+    profiles: [fedora, package, latest]
     build:
       context: docker/fedora/
       tags:
@@ -110,64 +100,52 @@ services:
         TAG: "41"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=fedora_41
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   fedora_40:
     image: srcml/fedora:40
     platform: ${PLATFORM}
-    profiles: [fedora, platform]
+    profiles: [fedora, package]
     build:
       context: docker/fedora/
       args:
         TAG: "40"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=fedora_40
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   fedora_39:
     image: srcml/fedora:39
     platform: ${PLATFORM}
-    profiles: [fedora, platform]
+    profiles: [fedora, package]
     build:
       context: docker/fedora/
       args:
         TAG: "39"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=fedora_39
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   fedora_38:
     image: srcml/fedora:38
     platform: ${PLATFORM}
-    profiles: [fedora, platform, earliest]
+    profiles: [fedora, package, oldest]
     build:
       context: docker/fedora/
       args:
         TAG: "38"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=fedora_38
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15:
     image: srcml/opensuse:15
     platform: ${PLATFORM}
-    profiles: [opensuse, platform]
+    profiles: [opensuse, package]
     build:
       context: docker/opensuse/
       args:
@@ -175,16 +153,13 @@ services:
         TAG: "15"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=opensuse_15
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15.5:
     image: srcml/opensuse:15.5
     platform: ${PLATFORM}
-    profiles: [opensuse, platform, latest]
+    profiles: [opensuse, package, latest]
     build:
       context: docker/opensuse/
       args:
@@ -192,16 +167,13 @@ services:
         TAG: "15.5"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=opensuse_15.5
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15.4:
     image: srcml/opensuse:15.4
     platform: ${PLATFORM}
-    profiles: [opensuse, platform]
+    profiles: [opensuse, package]
     build:
       context: docker/opensuse/
       args:
@@ -209,16 +181,13 @@ services:
         TAG: "15.4"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=opensuse_15.4
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15.3:
     image: srcml/opensuse:15.3
     platform: ${PLATFORM}
-    profiles: [opensuse, platform]
+    profiles: [opensuse, package]
     build:
       context: docker/opensuse/
       args:
@@ -226,16 +195,13 @@ services:
         TAG: "15.3"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=opensuse_15.3
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_15.2:
     image: srcml/opensuse:15.2
     platform: ${PLATFORM}
-    profiles: [opensuse, platform, earliest]
+    profiles: [opensuse, package, oldest]
     build:
       context: docker/opensuse/
       args:
@@ -243,16 +209,13 @@ services:
         TAG: "15.2"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=opensuse_15.2
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION
 
   opensuse_tumbleweed:
     image: srcml/opensuse:tumbleweed
     platform: ${PLATFORM}
-    profiles: [opensuse, platform]
+    profiles: [opensuse, package]
     build:
       context: docker/opensuse/
       args:
@@ -260,8 +223,5 @@ services:
         TAG: "latest"
       <<: *PLATFORMS
     environment:
-      # - PLATFORM=opensuse_15.0
-      - VERSION=${VERSION}
-      - PRESET=rpm
       - WORKFLOW=rpm
     <<: *CONFIGURATION

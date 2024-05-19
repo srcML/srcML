@@ -11,16 +11,42 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "inherits": ["ci-gcc", "ci-sibling-build"],
       "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
+        "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
+        "BUILD_LIBSRCML_TESTS": "ON",
+        "BUILD_PARSER_TESTS": "ON"
       }
     }
   ],
   "buildPresets" : [
     {
       "name": "ci-rpm",
-      // "hidden": true,
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "configurePreset": "ci-rpm",
       "configuration": "Release"
+    },
+    {
+      "name": "ci-install-package-rpm",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "configurePreset": "ci-rpm",
+      "targets": "install_package"
+    },
+    {
+      "name": "ci-test-client-rpm",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "configurePreset": "ci-rpm",
+      "targets": ["test_client"]
+    },
+    {
+      "name": "ci-test-libsrcml-rpm",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "configurePreset": "ci-rpm",
+      "targets": ["test_libsrcml"]
+    },
+    {
+      "name": "ci-test-parser-rpm",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "targets": ["test_parser"],
+      "configurePreset": "ci-rpm"
     }
   ],
   "packagePresets": [
@@ -28,6 +54,7 @@
       "name": "ci-rpm",
       "configurePreset": "ci-rpm",
       "generators": [ "RPM", "TGZ", "TBZ2" ],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "inherits": ["ci-base"]
     }
   ],
@@ -39,7 +66,11 @@
       "steps": [
         { "type": "configure", "name": "ci-rpm" },
         { "type": "build",     "name": "ci-rpm" },
-        { "type": "package",   "name": "ci-rpm" }
+        { "type": "package",   "name": "ci-rpm" },
+        { "type": "build",     "name": "ci-install-package-rpm" },
+        { "type": "build",     "name": "ci-test-client-rpm" },
+        { "type": "build",     "name": "ci-test-libsrcml-rpm" },
+        { "type": "build",     "name": "ci-test-parser-rpm" }
       ]
     }
   ]

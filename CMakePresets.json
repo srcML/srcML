@@ -19,8 +19,8 @@
       "hidden": true,
       "description": "Default build options for Clang trace",
       "cacheVariables": {
-        "CMAKE_C_FLAGS": "-ftime-trace",
-        "CMAKE_CXX_FLAGS": "-ftime-trace"
+        "CMAKE_C_FLAGS_INIT": "-ftime-trace",
+        "CMAKE_CXX_FLAGS_INIT": "-ftime-trace"
       }
     },
     {

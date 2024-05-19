@@ -64,3 +64,16 @@ configure_file(${CMAKE_SOURCE_DIR}/package/background.png ${CPACK_PRODUCTBUILD_R
 
 # Conclusion
 configure_file(${CMAKE_SOURCE_DIR}/package/installed.html ${CPACK_PRODUCTBUILD_RESOURCES_DIR}/installed.html COPYONLY)
+
+# In your CMakeLists.txt
+add_custom_target(set_env ALL
+  COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/set_env.cmake
+)
+
+# Create the CMake script to set environment variables
+file(WRITE ${CMAKE_BINARY_DIR}/set_env.cmake "
+  execute_process(COMMAND ${CMAKE_COMMAND} -E env MY_VAR=some_value ANOTHER_VAR=another_value)
+")
+
+# CTestConfig.cmake
+set(CTEST_CMAKE_OUTPUT_FILE_NAME "CMakeOutputFoo.log")

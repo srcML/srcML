@@ -41,24 +41,27 @@
   ],
   "buildPresets" : [
     {
-      "name": "ci-parser-tests-macos",
-      "targets": ["gen_parser_tests","run_parser_tests"],
+      "name": "ci-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos"
     },
     {
-      "name": "ci-install-package-macos",
+      "name": "ci-parser-tests-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos",
-      "targets": "install_package"
+      "inherits": [ "ci-parser-tests" ]
     },
     {
-      "name": "ci-macos",
+      "name": "ci-install-package-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos",
-      "configuration": "Release"
+      "inherits": [ "ci-install-package" ]
     }
   ],
   "packagePresets": [
     {
       "name": "ci-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos",
       "generators": [ "productbuild", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
@@ -67,13 +70,13 @@
   "testPresets": [
     {
       "name": "ci-client-macos",
-      // "hidden": true,
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos",
       "inherits": ["ci-client"]
     },
     {
       "name": "ci-libsrcml-macos",
-      // "hidden": true,
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos",
       "inherits": ["ci-libsrcml"]
     }

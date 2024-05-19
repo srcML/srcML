@@ -62,11 +62,24 @@
       }
     }
   ],
+  "buildPresets": [
+    {
+      "name": "ci-parser-tests",
+      "hidden": true,
+      "targets": ["gen_parser_tests","run_parser_tests"]
+    },
+    {
+      "name": "ci-install-package",
+      "hidden": true,
+      "targets": "install_package"
+    }
+  ],
   "packagePresets": [
     {
       "name": "ci-base",
       "hidden": true,
       "configurations": [ "Release" ],
+      "generators": [ "TGZ", "TBZ2" ],
       "packageDirectory": "dist"
     }
   ],
@@ -85,7 +98,7 @@
       },
       "output": {
         "verbosity": "extra",
-        "outputLogFile": "ctest.log"
+        "outputLogFile": "/Builds/$env{FILENAME}_ctest.log"
       }
     },
     {
@@ -101,7 +114,7 @@
         }
       },
       "output": {
-        "outputLogFile": "ctest.log"
+        "outputLogFile": "/Builds/$env{FILENAME}_libsrcml_ctest.log"
       }
     }
   ]
