@@ -2,11 +2,11 @@
 
 Docker images are used to build, package, and test srcML on Linux. A Docker Compose file, `compose.yml`, is in the root directory and manages docker image management (build, push, pull) and execution on all the Linux distributions for packaging. The Dockerfiles are in the directory `docker` with a subdirectory for each platform.
 
-All docker compose command are entered in the root directory of the srcML repository. They do not work in the docker subdirectory nor in the build directory.
+All docker-compose commands are entered in the root directory of the srcML repository. They do not work in the docker subdirectory or the build directory.
 
 ## Build and Package srcML on Linux
 
-The default operation is to run the workflow `ci-<platform>` which includes build, packaging, and testing the installed package. By default, it runs the cmake workflow `ci-package-<installer>` where the <installer> is `deb` or `rpm`. I.e., for Ubuntu, it is equivalent to running the following:
+The default operation is running the workflow `ci-<platform>`, which includes building, packaging, and testing the installed package. By default, it runs the cmake workflow `ci-package-<installer>` where the <installer> is `deb` or `rpm`. I.e., for Ubuntu, it is equivalent to running the following:
 
 ```console
 cmake --workflow --preset ci-ubuntu
@@ -18,7 +18,7 @@ To build and package srcML on all supported Linux distributions:
 docker compose up
 ```
 
-All packages are saved to the docker volume `srcml_dist`. The Docker Desktop allows you to view the volume's contents and download individual packages.
+All packages are saved to the docker volume `srcml_dist`. The Docker Desktop lets you view the volume's contents and download individual packages.
 
 There is a lot of control to only build and package for specific distributions or platforms. To build and package srcML on Ubuntu 24.04
 
@@ -32,11 +32,11 @@ To build and package srcML for all Ubuntu distributions:
 docker compose --profile ubuntu up
 ```
 
-All Linux services are organized into Docker Compose profiles. They include a default profile, e.g., `package`, Linux distributions, e.g., `ubuntu`, `fedora`, and `opensuse`, and age, e.g., `latest`, `earliest`.
+All Linux services are organized into Docker Compose profiles. They include a default profile, e.g., `package`; Linux distributions, e.g., `ubuntu`, `fedora`, and `opensuse`, and age, e.g., `latest`, `earliest`.
 
 ## Architecture
 
-The default architecture is the architecture of your machine, i.e., either `linux/amd64` or `linux/arm64`. To
+The default architecture is your host machine's architecture, i.e., `linux/amd64` or `linux/arm64`. To
 build on the non-default architecture, set the environment variable `PLATFORM`. E.g., To build for x86 while on  an ARM architecture, you can set the environment variable:
 
 ```console
@@ -81,7 +81,7 @@ Docker images are automatically pulled when they are not in the local cache. If 
 docker compose pull
 ```
 
-If the Dockerfiles change, a new one is added, or a previous one is updated, the Docker image needs to be rebuilt. To build all docker images (after Dockerfile change):
+If the Dockerfiles change, a new one is added, or a previous one is updated, the image needs to be rebuilt. To build all docker images (after Dockerfile change):
 
 ```console
 docker compose build
