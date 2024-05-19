@@ -62,3 +62,12 @@ set(CPACK_WIX_PATCH_FILE "${CMAKE_CURRENT_SOURCE_DIR}/patch_path_env.xml")
 
 # Template instead of default WiX template
 set(CPACK_WIX_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/WIX.template.in")
+
+# Package filename
+set(SRCML_WIX_FILE_NAME "${CPACK_PACKAGE_NAME}_${PROJECT_VERSION}-windows-${CMAKE_SYSTEM_PROCESSOR}.msi")
+
+# Targets for installing generated packages
+add_custom_target(install_package_wix
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND msiexec /i ${SRCML_WIX_FILE_NAME} /qn
+)
