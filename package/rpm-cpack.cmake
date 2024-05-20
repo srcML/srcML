@@ -104,19 +104,7 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 $
 message("DISTRO: ${DISTRO}")
 
 # Targets for workflow testing
-add_custom_target(test_client
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcml --timeout 5 --output-log ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_SRCML_FILE_NAME}.log || true
-)
-add_custom_target(test_libsrcml
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_CTEST_COMMAND} -R ^libsrcml --timeout 5 --output-log ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_DEVLIBS_FILE_NAME}.log || true
-)
-add_custom_target(test_parser
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_SRCML_FILE_NAME}-parser.log
-    DEPENDS gen_parser_tests
-)
+add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCML_FILE_NAME})
 
 # Targets for installing generated packages
 add_custom_target(install_package
