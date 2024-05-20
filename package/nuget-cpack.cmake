@@ -31,6 +31,6 @@ add_custom_target(install_package_nuget
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
     COMMAND mkdir LocalNuGetFeed
     COMMAND nuget add ${SRCML_NUGET_FILE_NAME} -Source LocalNuGetFeed
-    COMMAND nuget install srcML -Source %cd%\LocalNuGetFeed -OutputDirectory "C:\Program Files"
-    COMMAND powershell -Command "[System.Environment]::SetEnvironmentVariable('Path', [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';C:\Program Files\srcML\bin', [System.EnvironmentVariableTarget]::Machine)"
+    COMMAND nuget install srcML -Source ${CMAKE_BINARY_DIR}/LocalNuGetFeed -OutputDirectory "C:/Program Files"
+    COMMAND powershell -Command "[System.Environment]::SetEnvironmentVariable('Path', [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';C:/Program Files/srcML/bin', [System.EnvironmentVariableTarget]::Machine)"
 )

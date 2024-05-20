@@ -86,6 +86,11 @@
       "name": "ci-install-package-wix",
       "configurePreset": "ci-msvc",
       "targets": "install_package_wix"
+    },
+    {
+      "name": "ci-install-package-nuget",
+      "configurePreset": "ci-msvc",
+      "targets": "install_package_nuget"
     }
   ],
   "packagePresets": [
@@ -123,7 +128,8 @@
         { "type": "configure", "name": "ci-msvc" },
         { "type": "build",     "name": "ci-msvc" },
         { "type": "package",   "name": "ci-msvc" },
-        { "type": "build",     "name": "ci-install-package-wix" }
+        { "type": "build",     "name": "ci-install-package-wix" },
+        { "type": "build",     "name": "ci-install-package-nuget" }
       ]
     }
   ]
