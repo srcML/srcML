@@ -116,7 +116,7 @@ int srcsax_parse(srcsax_context* context) {
 
     if (status != 0 && context->srcsax_error) {
 
-        xmlErrorPtr ep = xmlCtxtGetLastError(context->libxml2_context);
+        auto ep = xmlCtxtGetLastError(context->libxml2_context);
 
         auto str_length = std::string_view(ep->message).size();
         ep->message[str_length - 1] = '\0';
