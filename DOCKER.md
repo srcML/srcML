@@ -49,14 +49,14 @@ Or, you can run the command with the environment set:
 env PLATFORM="linux/amd64" docker compose up
 ```
 
-## Special Commands
+## Mangage Packages
 
-There are some special services to manage the built packages.
+There are some special services to manage the packages.
 
-To view the packages via docker:
+To list the built packages:
 
 ```console
-docker compose run view
+docker compose run ls
 ```
 
 To combine all packages into one archive file:
