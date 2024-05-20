@@ -128,8 +128,7 @@
         { "type": "configure", "name": "ci-msvc" },
         { "type": "build",     "name": "ci-msvc" },
         { "type": "package",   "name": "ci-msvc" },
-        { "type": "build",     "name": "ci-install-package-wix" },
-        { "type": "build",     "name": "ci-install-package-nuget" }
+        { "type": "build",     "name": "ci-install-package-wix" }
       ]
     }
   ]
