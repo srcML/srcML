@@ -20,41 +20,46 @@
   "buildPresets" : [
     {
       "name": "ci-rpm",
+      "description": "Build for a release rpm",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
       "configuration": "Release"
     },
     {
       "name": "ci-install-package-rpm",
+      "description": "Install an rpm package",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
-      "targets": "install_package"
+      "inherits": "ci-install-package"
     },
     {
       "name": "ci-test-client-rpm",
+      "description": "Test the client for an rpm",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
-      "targets": ["test_client"]
+      "inherits": "ci-test-client"
     },
     {
       "name": "ci-test-libsrcml-rpm",
+      "description": "Test libsrcml for an rpm",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
-      "targets": ["test_libsrcml"]
+      "inherits": "ci-test-libsrcml"
     },
     {
       "name": "ci-test-parser-rpm",
+      "description": "Test the parser for an rpm",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
-      "targets": ["test_parser"],
-      "configurePreset": "ci-rpm"
+      "configurePreset": "ci-rpm",
+      "inherits": "ci-test-parser"
     }
   ],
   "packagePresets": [
     {
       "name": "ci-rpm",
       "configurePreset": "ci-rpm",
-      "generators": [ "RPM", "TGZ", "TBZ2" ],
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
+      "generators": [ "RPM", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
     }
   ],

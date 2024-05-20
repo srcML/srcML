@@ -3,14 +3,14 @@
   "configurePresets": [
     {
       "name": "ci-sibling-build",
-      "hidden": true,
       "description": "Sibling build",
+      "hidden": true,
       "binaryDir": "${sourceParentDir}/${sourceDirName}-build"
     },
     {
       "name": "ci-subdirectory-build",
-      "hidden": true,
       "description": "Subdirectory build",
+      "hidden": true,
       "binaryDir": "build"
     },
     {
@@ -26,13 +26,14 @@
     },
     {
       "name": "ci-vcpkg",
+      "description": "Use vcpkg",
       "hidden": true,
       "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
     },
     {
       "name": "ci-ccache",
+      "description": "Use ccache",
       "hidden": true,
-      "description": "ccache setup",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER_LAUNCHER": "ON"
       }
@@ -64,15 +65,30 @@
   ],
   "buildPresets": [
     {
-      "name": "ci-parser-tests",
+      "name": "ci-install-package",
+      "description": "Install a package",
       "hidden": true,
-      "targets": ["gen_parser_tests","run_parser_tests"]
+      "targets": ["install_package"]
     },
     {
-      "name": "ci-install-package",
+      "name": "ci-test-client",
+      "description": "Test a client",
       "hidden": true,
-      "targets": "install_package"
+      "targets": ["test_client"]
+    },
+    {
+      "name": "ci-test-libsrcml",
+      "description": "Test libsrcml",
+      "hidden": true,
+      "targets": ["test_libsrcml"]
+    },
+    {
+      "name": "ci-test-parser",
+      "description": "Test the parser",
+      "hidden": true,
+      "targets": ["test_parser"]
     }
+
   ],
   "packagePresets": [
     {
@@ -81,41 +97,6 @@
       "configurations": [ "Release" ],
       "generators": [ "TGZ", "TBZ2" ],
       "packageDirectory": "dist"
-    }
-  ],
-  "testPresets": [
-    {
-      "name": "ci-client",
-      "hidden": true,
-      "execution": {
-        "jobs": 8,
-        "timeout": 15
-      },
-      "filter": {
-        "include": {
-            "name": "^srcml[.]"
-        }
-      },
-      "output": {
-        "verbosity": "extra",
-        "outputLogFile": "/Builds/$env{FILENAME}_ctest.log"
-      }
-    },
-    {
-      "name": "ci-libsrcml",
-      "hidden": true,
-      "execution": {
-        "jobs": 8,
-        "timeout": 10
-      },
-      "filter": {
-        "include": {
-            "name": "^libsrcml[.]"
-        }
-      },
-      "output": {
-        "outputLogFile": "/Builds/$env{FILENAME}_libsrcml_ctest.log"
-      }
     }
   ]
 }
