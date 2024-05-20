@@ -33,20 +33,15 @@ set(CPACK_RPM_SRCML_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 set(CPACK_RPM_DEVLIBS_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
 
 # Per-distribution package name
+cmake_host_system_information(RESULT RPM_VERSION_NUMBER QUERY DISTRIB_VERSION_ID)
 if(DISTRO MATCHES "Fedora|CentOS")
 
     # Distribution version, e.g., fc39 for Fedora 39 ("Fedora Core")
-    file(STRINGS "/etc/os-release" OS_RELEASE)
-    string(REGEX MATCH "VERSION_ID=\([0-9]+\)" _ "${OS_RELEASE}")
-    string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
     set(RPM_VERSION "fc${RPM_VERSION_NUMBER}")
 
 elseif(DISTRO MATCHES "OpenSUSE")
 
     # Distribution version, e.g., lp152 for leap/15.2
-    file(STRINGS "/etc/os-release" OS_RELEASE)
-    string(REGEX MATCH "VERSION_ID=\"\([^\"]+\)\"" _ "${OS_RELEASE}")
-    string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
     set(RPM_VERSION "lp${RPM_VERSION_NUMBER}")
 
 endif()
