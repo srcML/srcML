@@ -12,7 +12,7 @@ x-configuration: &CONFIGURATION
   working_dir: /srcML
   command: bash -c "${COMPOSE_COMMAND-cmake --workflow --preset ci-$$WORKFLOW}"
 
-x-platforms: &PLATFORMS
+x-platforms: &BUILD_PLATFORMS
   platforms:
     - "linux/amd64"
     - "linux/arm64"
@@ -41,7 +41,7 @@ services:
       context: docker/ubuntu/
       args:
         TAG: "24.04"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=ubuntu
     <<: *CONFIGURATION
@@ -54,7 +54,7 @@ services:
       context: docker/ubuntu/
       args:
         TAG: "23.10"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=ubuntu
     <<: *CONFIGURATION
@@ -67,7 +67,7 @@ services:
       context: docker/ubuntu/
       args:
         TAG: "22.04"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=ubuntu
     <<: *CONFIGURATION
@@ -81,7 +81,7 @@ services:
       args:
         TAG: "20.04"
         CMAKE_BINARY: "ON"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=ubuntu
     <<: *CONFIGURATION
@@ -94,7 +94,7 @@ services:
       context: docker/fedora/
       args:
         TAG: "41"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -107,7 +107,7 @@ services:
       context: docker/fedora/
       args:
         TAG: "40"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -120,7 +120,7 @@ services:
       context: docker/fedora/
       args:
         TAG: "39"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -133,7 +133,7 @@ services:
       context: docker/fedora/
       args:
         TAG: "38"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -147,7 +147,7 @@ services:
       args:
         OPENSUSE: "leap"
         TAG: "15"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -161,7 +161,7 @@ services:
       args:
         OPENSUSE: "leap"
         TAG: "15.5"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -175,7 +175,7 @@ services:
       args:
         OPENSUSE: "leap"
         TAG: "15.4"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -189,7 +189,7 @@ services:
       args:
         OPENSUSE: "leap"
         TAG: "15.3"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -203,7 +203,7 @@ services:
       args:
         OPENSUSE: "leap"
         TAG: "15.2"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
@@ -217,7 +217,7 @@ services:
       args:
         OPENSUSE: "tumbleweed"
         TAG: "latest"
-      <<: *PLATFORMS
+      <<: *BUILD_PLATFORMS
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
