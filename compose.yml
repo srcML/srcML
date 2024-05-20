@@ -39,8 +39,6 @@ services:
     profiles: [ubuntu, package, latest]
     build:
       context: docker/ubuntu/
-      tags:
-        - "srcml/ubuntu:24.04"
       args:
         TAG: "24.04"
       <<: *PLATFORMS
@@ -94,8 +92,6 @@ services:
     profiles: [fedora, package, latest]
     build:
       context: docker/fedora/
-      tags:
-        - "srcml/fedora:latest"
       args:
         TAG: "41"
       <<: *PLATFORMS
