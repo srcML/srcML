@@ -9,6 +9,7 @@
 find_package(LibXml2 REQUIRED)
 find_package(LibXslt REQUIRED)
 find_package(Iconv REQUIRED)
+find_package(Threads REQUIRED)
 
 # libsrcml library
 file(GLOB LIBSRCML_SOURCE *.cpp)
@@ -25,7 +26,7 @@ target_include_directories(libsrcml
 target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 # libsrcml dependencies
-target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt parser)
+target_link_libraries(libsrcml PRIVATE LibXml2::LibXml2 Iconv::Iconv LibXslt::LibXslt LibXslt::LibExslt Threads::Threads parser)
 
 # On macOS, what architecturesBuilding static library for srcML
 if(APPLE)

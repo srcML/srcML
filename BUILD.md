@@ -106,7 +106,7 @@ Building in Windows requires that you have MSVC installed. Visual Studio 2017 or
     * Click Generate
     * Open srcML.sln with Visual Studio located in your the target build directory
     * Right click Project "ALL_BUILD" and choose "build"
-* Command Line Buid:
+* Command Line Build:
     * Generate the build files in your target build directory.
 
         ```
