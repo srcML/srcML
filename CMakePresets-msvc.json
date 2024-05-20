@@ -91,6 +91,11 @@
       "name": "ci-install-package-nuget",
       "configurePreset": "ci-msvc",
       "targets": "install_package_nuget"
+    },
+    {
+      "name": "ci-install-package-inno",
+      "configurePreset": "ci-msvc",
+      "targets": "install_package_inno"
     }
   ],
   "packagePresets": [
