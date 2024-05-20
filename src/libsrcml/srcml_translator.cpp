@@ -222,15 +222,15 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     // create a new unit start tag with all new info (hash value, namespaces actually used, etc.)
     out.initNamespaces(mergedns);
-    auto nrevision = unit->archive->revision_number;
+
     out.startUnit(derivedLanguage.data(),
             (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->data() : revision,
-            (options & SRCML_OPTION_ARCHIVE) || !unit->url       ? 0 : (nrevision ? attribute_revision(*unit->url, (int) *nrevision).data() : unit->url->data()),
-            !unit->filename  ? 0 : (nrevision ? attribute_revision(*unit->filename, (int) *nrevision).data() : unit->filename->data()),
-            !unit->version   ? 0 : (nrevision ? attribute_revision(*unit->version, (int) *nrevision).data() : unit->version->data()),
-            !unit->timestamp ? 0 : (nrevision ? attribute_revision(*unit->timestamp, (int) *nrevision).data() : unit->timestamp->data()),
-            !unit->hash      ? 0 : (nrevision ? attribute_revision(*unit->hash, (int) *nrevision).data() : unit->hash->data()),
-            !unit->encoding  ? 0 : (nrevision ? attribute_revision(*unit->encoding, (int) *nrevision).data() : unit->encoding->data()),
+            (options & SRCML_OPTION_ARCHIVE) || !unit->url       ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->url, (int) *unit->archive->revision_number).data() : unit->url->data()),
+            !unit->filename  ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->filename, (int) *unit->archive->revision_number).data() : unit->filename->data()),
+            !unit->version   ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->version, (int) *unit->archive->revision_number).data() : unit->version->data()),
+            !unit->timestamp ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->timestamp, (int) *unit->archive->revision_number).data() : unit->timestamp->data()),
+            !unit->hash      ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->hash, (int) *unit->archive->revision_number).data() : unit->hash->data()),
+            !unit->encoding  ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->encoding, (int) *unit->archive->revision_number).data() : unit->encoding->data()),
             unit->attributes,
             false);
 
