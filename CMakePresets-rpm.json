@@ -8,7 +8,7 @@
       "name": "ci-rpm",
       "displayName": "RPM Release",
       "description": "Default build options for RPM release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "inherits": ["ci-gcc", "ci-sibling-build"],
       "cacheVariables": {
         "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
@@ -20,31 +20,31 @@
   "buildPresets" : [
     {
       "name": "ci-rpm",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
       "configuration": "Release"
     },
     {
       "name": "ci-install-package-rpm",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
       "targets": "install_package"
     },
     {
       "name": "ci-test-client-rpm",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
       "targets": ["test_client"]
     },
     {
       "name": "ci-test-libsrcml-rpm",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
       "targets": ["test_libsrcml"]
     },
     {
       "name": "ci-test-parser-rpm",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "targets": ["test_parser"],
       "configurePreset": "ci-rpm"
     }
@@ -54,7 +54,7 @@
       "name": "ci-rpm",
       "configurePreset": "ci-rpm",
       "generators": [ "RPM", "TGZ", "TBZ2" ],
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "inherits": ["ci-base"]
     }
   ],

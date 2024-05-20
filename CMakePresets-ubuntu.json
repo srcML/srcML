@@ -8,7 +8,7 @@
       "name": "ci-ubuntu",
       "displayName": "Ubuntu Release",
       "description": "Default build options for Ubuntu release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "inherits": ["ci-gcc", "ci-sibling-build"],
       "cacheVariables": {
         "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
@@ -20,39 +20,39 @@
   "buildPresets" : [
     {
       "name": "ci-ubuntu",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       // "hidden": true,
       "configurePreset": "ci-ubuntu",
       "configuration": "Release"
     },
     {
       "name": "ci-clean-ubuntu",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
       // "hidden": true,
       "targets": "clean"
     },
     {
       "name": "ci-install-package-ubuntu",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
       "targets": "install_package"
     },
     {
       "name": "ci-test-client-ubuntu",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
       "targets": ["test_client"]
     },
     {
       "name": "ci-test-libsrcml-ubuntu",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
       "targets": ["test_libsrcml"]
     },
     {
       "name": "ci-test-parser-ubuntu",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "targets": ["test_parser"],
       "configurePreset": "ci-ubuntu"
     }
@@ -60,7 +60,7 @@
   "packagePresets": [
     {
       "name": "ci-ubuntu",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
       "generators": [ "DEB", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
