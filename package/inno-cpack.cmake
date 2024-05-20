@@ -145,3 +145,17 @@ begin
   end;
 end;
 ]=])
+
+# Architecture
+set(SRCML_SYSTEM_ARCHITECTURE "x86_64")
+
+# Package filename
+set(SRCML_INNO_FILE_NAME "${CPACK_PACKAGE_NAME}-${PROJECT_VERSION}-windows-${SRCML_SYSTEM_ARCHITECTURE}.exe")
+
+# Targets for installing generated packages
+add_custom_target(install_package_inno
+    #WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND ./${SRCML_INNO_FILE_NAME} /VERYSILENT
+    COMMAND COMMAND powershell -Command "[System.Environment]::SetEnvironmentVariable('Path', [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';C:/Program Files/srcML/bin', [System.EnvironmentVariableTarget]::Machine)"
+)
