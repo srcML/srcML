@@ -20,12 +20,13 @@ execute_process(COMMAND /usr/bin/sw_vers -productVersion OUTPUT_VARIABLE OS_NUME
 set(CPACK_SYSTEM_NAME "macOS-${OS_NUMERIC}")
 
 # Archive package filenames
-set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
+set(BASE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
+set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
 
 # Targets for installing generated packages
 add_custom_target(install_package
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
-    COMMAND installer -pkg srcml-1.0.0-macOS-14.4.1.pkg -target CurrentUserHomeDirectory
+    COMMAND installer -pkg ${BASE_SRCML_FILE_NAME}.pkg -target CurrentUserHomeDirectory
 )
 add_custom_target(install_archive
     WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
