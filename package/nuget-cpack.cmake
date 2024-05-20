@@ -28,9 +28,10 @@ set(SRCML_NUGET_FILE_NAME "${CPACK_PACKAGE_NAME}.${PROJECT_VERSION}.nupkg")
 # Targets for installing generated packages
 add_custom_target(install_package_nuget
     #WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     COMMAND mkdir LocalNuGetFeed
     COMMAND nuget add ${SRCML_NUGET_FILE_NAME} -Source LocalNuGetFeed
-    COMMAND nuget install srcML -Source ${CMAKE_BINARY_DIR}/LocalNuGetFeed -OutputDirectory "C:/Program Files"
+    COMMAND nuget install srcml -Source ${CMAKE_BINARY_DIR}/LocalNuGetFeed -OutputDirectory "C:/Program Files"
+    COMMAND move "C:/Program Files/srcml.${PROJECT_VERSION}" "C:/Program Files/srcML"
     COMMAND powershell -Command "[System.Environment]::SetEnvironmentVariable('Path', [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';C:/Program Files/srcML/bin', [System.EnvironmentVariableTarget]::Machine)"
 )
