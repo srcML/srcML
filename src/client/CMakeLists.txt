@@ -20,6 +20,7 @@ endif()
 
 find_package(LibArchive 3 REQUIRED)
 find_package(CURL REQUIRED)
+find_package(Threads REQUIRED)
 
 # rpath needs help on macos
 if(APPLE)
@@ -54,7 +55,7 @@ target_include_directories(ctpl_stl SYSTEM INTERFACE ${ctpl_stl_SOURCE_DIR})
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml BEFORE PRIVATE .)
-target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl cli11 ctpl_stl)
+target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl Threads::Threads cli11 ctpl_stl)
 
 # Put executable in bin directory
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
