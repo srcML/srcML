@@ -39,7 +39,7 @@ if(DISTRO MATCHES "Fedora|CentOS")
     # Distribution version, e.g., fc39 for Fedora 39 ("Fedora Core")
     set(RPM_VERSION "fc${RPM_VERSION_NUMBER}")
 
-elseif(DISTRO MATCHES "OpenSUSE")
+elseif(DISTRO MATCHES "openSUSE")
 
     # Distribution version, e.g., lp152 for leap/15.2
     set(RPM_VERSION "lp${RPM_VERSION_NUMBER}")
@@ -92,7 +92,6 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 $
         /usr/local /usr/local/include /usr/local/lib64 /usr/local/bin /usr/local/man /usr/local/man/man1 
         /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1
         /usr/share/man1)
-message("DISTRO: ${DISTRO}")
 
 # Targets for workflow testing
 add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCML_FILE_NAME})
