@@ -17,21 +17,13 @@ x-platforms: &BUILD_PLATFORMS
     - "linux/amd64"
     - "linux/arm64"
 
+x-utilities: &UTILITIES
+  image: srcml/utility
+  profiles: [utility]
+  volumes:
+    - dist:/dist
+
 services:
-
-  tar:
-    image: alpine
-    profiles: [utility]
-    volumes:
-        - dist:/dist
-    command: tar --exclude=srcML.tar.gz -czf /dist/srcML.tar.gz -C /dist .
-
-  clean:
-    image: alpine
-    profiles: [utility]
-    volumes:
-        - dist:/dist
-    command: rm -fr /dist/*
 
   ubuntu_24.04:
     image: srcml/ubuntu:24.04
