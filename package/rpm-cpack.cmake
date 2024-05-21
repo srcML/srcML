@@ -97,9 +97,18 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 $
 add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCML_FILE_NAME})
 
 # Targets for installing generated packages
+if(DISTRO MATCHES "Fedora|CentOS")
+
+    set(RPM_INSTALLER_COMMAND dnf install -y)
+
+elseif(DISTRO MATCHES "openSUSE")
+
+    set(RPM_INSTALLER_COMMAND zypper install -y --allow-unsigned-rpm)
+
+endif()
 add_custom_target(install_package
     WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
-    COMMAND dnf install -y ./${CPACK_RPM_SRCML_FILE_NAME}
+    COMMAND ${RPM_INSTALLER_COMMAND} ./${CPACK_RPM_SRCML_FILE_NAME}
 )
 add_custom_target(install_targz
     WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
