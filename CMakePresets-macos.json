@@ -6,7 +6,7 @@
   "configurePresets": [
     {
       "name": "ci-macos",
-      "displayName": "macOS Release",
+      "displayName": "macOS standard build",
       "description": "Default build options for macOS release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "inherits": ["ci-clang", "ci-sibling-build"],
