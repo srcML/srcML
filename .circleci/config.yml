@@ -8,8 +8,4 @@ jobs:
         - image: srcml/ubuntu:24.04
       steps:
         - checkout
-        - run: apt-get update
-        - run: apt-get install -y git ssh xsltproc
-        - run: git submodule update --init --recursive
         - run: cmake --workflow --preset ci-ubuntu
-
