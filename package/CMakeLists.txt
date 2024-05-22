@@ -51,9 +51,6 @@ set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
 # strip executables
 set(CPACK_STRIP_FILES ON)
 
-# output directory
-set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
-
 # Generate user and development tar.gz's
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
@@ -79,9 +76,32 @@ cpack_add_component(DEVLIBS
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
-# Generators are defined in the *.cpack files
+# Test targets for workflows
+function(add_workflow_test_targets binary_dir output_directory package_file_name)
+
+    # Target for test_client
+    add_custom_target(test_client
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcml --timeout 5 --output-log ${output_directory}/${package_file_name}-client.log || true
+    )
+
+    # Target for test_libsrcml
+    add_custom_target(test_libsrcml
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_CTEST_COMMAND} -R ^libsrcml --timeout 5 --output-log ${output_directory}/${package_file_name}-libsrcml.log || true
+    )
+
+    # Target for test_parser
+    add_custom_target(test_parser
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${output_directory}/${package_file_name}-parser.log
+        DEPENDS gen_parser_tests
+    )
+endfunction()
+
+# Generators are defined in the *-cpack.cmake files
 set(CPACK_GENERATOR)
-file(GLOB INSTALLERS "*.cpack")
+file(GLOB INSTALLERS "*-cpack.cmake")
 foreach(INSTALLER IN ITEMS ${INSTALLERS})
     include(${INSTALLER})
 endforeach()

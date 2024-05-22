@@ -6,11 +6,6 @@
 #
 # MSVC-specific tool configuration
 
-# Link the stdc++fs library if on gcc 7.5.0
-if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
-    link_libraries(stdc++fs)
-endif()
-
 set(CMAKE_OPTIMIZE_DEPENDENCIES ON)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
