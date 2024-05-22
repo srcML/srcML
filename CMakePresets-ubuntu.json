@@ -21,7 +21,6 @@
     {
       "name": "ci-ubuntu",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
-      // "hidden": true,
       "configurePreset": "ci-ubuntu",
       "configuration": "Release"
     },
@@ -29,7 +28,6 @@
       "name": "ci-clean-ubuntu",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
-      // "hidden": true,
       "targets": "clean"
     },
     {

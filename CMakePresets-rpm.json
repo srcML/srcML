@@ -57,8 +57,8 @@
   "packagePresets": [
     {
       "name": "ci-rpm",
-      "configurePreset": "ci-rpm",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
+      "configurePreset": "ci-rpm",
       "generators": [ "RPM", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
     }
