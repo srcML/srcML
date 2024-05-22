@@ -5,14 +5,11 @@ jobs:
         only:
           - develop
       docker:
-        - image: srcml/ubuntu:21.10
+        - image: srcml/ubuntu:24.04
       steps:
         - checkout
         - run: apt-get update
         - run: apt-get install -y git ssh xsltproc
         - run: git submodule update --init --recursive
-        - run: mkdir build
-        - run: cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
-        - run: cd build && make && make install && ldconfig
-        - run: ln -s build/bin bin
-        - run: cd test/parser && srcml --parser-test testsuite
+        - run: cmake --workflow --preset ci-ubuntu
+
