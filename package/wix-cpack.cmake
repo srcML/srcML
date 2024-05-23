@@ -71,7 +71,6 @@ set(SRCML_WIX_FILE_NAME "${CPACK_PACKAGE_NAME}-${PROJECT_VERSION}-windows-${SRCM
 
 # Targets for installing generated packages
 add_custom_target(install_package_wix
-    #WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
     COMMAND msiexec /i ${SRCML_WIX_FILE_NAME} /qn
 )
