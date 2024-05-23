@@ -32,38 +32,27 @@ set(CPACK_RPM_PACKAGE_RELEASE "${SRCML_PACKAGE_RELEASE}")
 set(CPACK_RPM_SRCML_PACKAGE_NAME "${CPACK_PACKAGE_NAME}")
 set(CPACK_RPM_DEVLIBS_PACKAGE_NAME "${CPACK_PACKAGE_NAME}-devel")
 
-# Extract processor type
-execute_process(COMMAND /usr/bin/uname --machine OUTPUT_VARIABLE PROCESSOR OUTPUT_STRIP_TRAILING_WHITESPACE)
-message(STATUS "Processor: ${PROCESSOR}")
-
 # Per-distribution package name
+cmake_host_system_information(RESULT RPM_VERSION_NUMBER QUERY DISTRIB_VERSION_ID)
 if(DISTRO MATCHES "Fedora|CentOS")
 
     # Distribution version, e.g., fc39 for Fedora 39 ("Fedora Core")
-    file(STRINGS "/etc/os-release" OS_RELEASE)
-    string(REGEX MATCH "VERSION_ID=\([0-9]+\)" _ "${OS_RELEASE}")
-    string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
     set(RPM_VERSION "fc${RPM_VERSION_NUMBER}")
 
-elseif(DISTRO MATCHES "OpenSUSE")
+elseif(DISTRO MATCHES "openSUSE")
 
     # Distribution version, e.g., lp152 for leap/15.2
-    file(STRINGS "/etc/os-release" OS_RELEASE)
-    string(REGEX MATCH "VERSION_ID=\"\([^\"]+\)\"" _ "${OS_RELEASE}")
-    string(REPLACE "." "" RPM_VERSION_NUMBER ${CMAKE_MATCH_1})
     set(RPM_VERSION "lp${RPM_VERSION_NUMBER}")
 
 endif()
 
 # Package filenames
-set(BASE_SRCML_FILE_NAME    "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}.${PROCESSOR}")
-set(BASE_DEVLIBS_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-devel-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}.${PROCESSOR}")
+set(BASE_SRCML_FILE_NAME    "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}.${CMAKE_HOST_SYSTEM_PROCESSOR}")
+set(BASE_DEVLIBS_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-devel-${PROJECT_VERSION}-${CPACK_RPM_PACKAGE_RELEASE}.${RPM_VERSION}.${CMAKE_HOST_SYSTEM_PROCESSOR}")
 set(CPACK_RPM_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}.rpm")
 set(CPACK_RPM_DEVLIBS_FILE_NAME "${BASE_DEVLIBS_FILE_NAME}.rpm")
 set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
 set(CPACK_ARCHIVE_DEVLIBS_FILE_NAME "${BASE_DEVLIBS_FILE_NAME}")
-unset(BASE_SRCML_FILE_NAME)
-unset(BASE_DEVLIBS_FILE_NAME)
 
 # SRCML package is main, so no extension is added
 set(CPACK_RPM_MAIN_COMPONENT SRCML)
@@ -103,3 +92,29 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 $
         /usr/local /usr/local/include /usr/local/lib64 /usr/local/bin /usr/local/man /usr/local/man/man1 
         /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1
         /usr/share/man1)
+
+# Targets for workflow testing
+add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCML_FILE_NAME})
+
+# Targets for installing generated packages
+if(DISTRO MATCHES "Fedora|CentOS")
+
+    set(RPM_INSTALLER_COMMAND dnf install -y)
+
+elseif(DISTRO MATCHES "openSUSE")
+
+    set(RPM_INSTALLER_COMMAND zypper install -y --allow-unsigned-rpm)
+
+endif()
+add_custom_target(install_package
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND ${RPM_INSTALLER_COMMAND} ./${CPACK_RPM_SRCML_FILE_NAME}
+)
+add_custom_target(install_targz
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.gz -C /usr
+)
+add_custom_target(install_tarbz2
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.bz2 -C /usr
+)

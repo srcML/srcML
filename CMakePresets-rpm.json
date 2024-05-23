@@ -8,24 +8,56 @@
       "name": "ci-rpm",
       "displayName": "RPM Release",
       "description": "Default build options for RPM release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "inherits": ["ci-gcc", "ci-sibling-build"],
       "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
+        "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
+        "BUILD_LIBSRCML_TESTS": "ON",
+        "BUILD_PARSER_TESTS": "ON"
       }
     }
   ],
   "buildPresets" : [
     {
       "name": "ci-rpm",
-      // "hidden": true,
+      "description": "Build for a release rpm",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
       "configuration": "Release"
+    },
+    {
+      "name": "ci-install-package-rpm",
+      "description": "Install an rpm package",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
+      "configurePreset": "ci-rpm",
+      "inherits": "ci-install-package"
+    },
+    {
+      "name": "ci-test-client-rpm",
+      "description": "Test the client for an rpm",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
+      "configurePreset": "ci-rpm",
+      "inherits": "ci-test-client"
+    },
+    {
+      "name": "ci-test-libsrcml-rpm",
+      "description": "Test libsrcml for an rpm",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
+      "configurePreset": "ci-rpm",
+      "inherits": "ci-test-libsrcml"
+    },
+    {
+      "name": "ci-test-parser-rpm",
+      "description": "Test the parser for an rpm",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
+      "configurePreset": "ci-rpm",
+      "inherits": "ci-test-parser"
     }
   ],
   "packagePresets": [
     {
       "name": "ci-rpm",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rpm",
       "generators": [ "RPM", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
@@ -39,7 +71,11 @@
       "steps": [
         { "type": "configure", "name": "ci-rpm" },
         { "type": "build",     "name": "ci-rpm" },
-        { "type": "package",   "name": "ci-rpm" }
+        { "type": "package",   "name": "ci-rpm" },
+        { "type": "build",     "name": "ci-install-package-rpm" },
+        { "type": "build",     "name": "ci-test-client-rpm" },
+        { "type": "build",     "name": "ci-test-libsrcml-rpm" },
+        { "type": "build",     "name": "ci-test-parser-rpm" }
       ]
     }
   ]

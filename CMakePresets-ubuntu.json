@@ -8,7 +8,7 @@
       "name": "ci-ubuntu",
       "displayName": "Ubuntu Release",
       "description": "Default build options for Ubuntu release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "inherits": ["ci-gcc", "ci-sibling-build"],
       "cacheVariables": {
         "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
@@ -20,30 +20,45 @@
   "buildPresets" : [
     {
       "name": "ci-ubuntu",
-      // "hidden": true,
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
       "configuration": "Release"
     },
     {
       "name": "ci-clean-ubuntu",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
-      // "hidden": true,
       "targets": "clean"
     },
     {
-      "name": "ci-parser-tests-ubuntu",
-      "targets": ["gen_parser_tests","run_parser_tests"],
-      "configurePreset": "ci-ubuntu"
-    },
-    {
       "name": "ci-install-package-ubuntu",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
       "targets": "install_package"
+    },
+    {
+      "name": "ci-test-client-ubuntu",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
+      "configurePreset": "ci-ubuntu",
+      "targets": ["test_client"]
+    },
+    {
+      "name": "ci-test-libsrcml-ubuntu",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
+      "configurePreset": "ci-ubuntu",
+      "targets": ["test_libsrcml"]
+    },
+    {
+      "name": "ci-test-parser-ubuntu",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
+      "targets": ["test_parser"],
+      "configurePreset": "ci-ubuntu"
     }
   ],
   "packagePresets": [
     {
       "name": "ci-ubuntu",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
       "configurePreset": "ci-ubuntu",
       "generators": [ "DEB", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
@@ -53,13 +68,15 @@
   ],
   "workflowPresets": [
     {
-      "name": "ci-deb",
+      "name": "ci-ubuntu",
       "steps": [
         { "type": "configure", "name": "ci-ubuntu" },
         { "type": "build",     "name": "ci-ubuntu" },
         { "type": "package",   "name": "ci-ubuntu" },
         { "type": "build",     "name": "ci-install-package-ubuntu" },
-        { "type": "build",     "name": "ci-parser-tests-ubuntu" }
+        { "type": "build",     "name": "ci-test-client-ubuntu" },
+        { "type": "build",     "name": "ci-test-libsrcml-ubuntu" },
+        { "type": "build",     "name": "ci-test-parser-ubuntu" }
       ]
     }
   ]

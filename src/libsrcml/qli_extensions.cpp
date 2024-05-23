@@ -35,7 +35,7 @@ namespace std {
     struct default_delete<xmlNodeSet> {
         void operator()(xmlNodeSet* nodes) { xmlXPathFreeNodeSet(nodes); }
     };
-};
+}
 
 namespace {
     // remove leading and trailing whitespace
@@ -82,7 +82,7 @@ namespace {
         get_node_text(top_node, s, true);
         return s;
     }
-};
+}
 
 void add_element(xmlXPathParserContext* ctxt, int nargs) {
 

@@ -6,7 +6,7 @@
   "configurePresets": [
     {
       "name": "ci-macos",
-      "displayName": "macOS Release",
+      "displayName": "macOS standard build",
       "description": "Default build options for macOS release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "inherits": ["ci-clang", "ci-sibling-build"],
@@ -19,7 +19,8 @@
         "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
         "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15",
         "BUILD_LIBSRCML_TESTS": "ON",
-        "BUILD_PARSER_TESTS": "ON"
+        "BUILD_PARSER_TESTS": "ON",
+        "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
     },
     {
@@ -41,42 +42,45 @@
   ],
   "buildPresets" : [
     {
-      "name": "ci-parser-tests-macos",
-      "targets": ["gen_parser_tests","run_parser_tests"],
+      "name": "ci-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos"
     },
     {
       "name": "ci-install-package-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos",
-      "targets": "install_package"
+      "inherits": [ "ci-install-package" ]
     },
     {
-      "name": "ci-macos",
+      "name": "ci-test-parser-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos",
-      "configuration": "Release"
+      "inherits": [ "ci-test-parser" ]
+    },
+    {
+      "name": "ci-test-client-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "inherits": [ "ci-test-client" ]
+    },
+    {
+      "name": "ci-test-libsrcml-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "inherits": [ "ci-test-libsrcml" ]
     }
   ],
   "packagePresets": [
     {
       "name": "ci-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos",
       "generators": [ "productbuild", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
     }
   ],
   "testPresets": [
-    {
-      "name": "ci-client-macos",
-      // "hidden": true,
-      "configurePreset": "ci-macos",
-      "inherits": ["ci-client"]
-    },
-    {
-      "name": "ci-libsrcml-macos",
-      // "hidden": true,
-      "configurePreset": "ci-macos",
-      "inherits": ["ci-libsrcml"]
-    }
   ],
   "workflowPresets": [
     {
@@ -86,9 +90,9 @@
         { "type": "build",     "name": "ci-macos" },
         { "type": "package",   "name": "ci-macos" },
         { "type": "build",     "name": "ci-install-package-macos" },
-        { "type": "test",      "name": "ci-libsrcml-macos" },
-        { "type": "build",     "name": "ci-parser-tests-macos" },
-        { "type": "test",      "name": "ci-client-macos" }
+        { "type": "build",     "name": "ci-test-client-macos" },
+        { "type": "build",     "name": "ci-test-libsrcml-macos" },
+        { "type": "build",     "name": "ci-test-parser-macos" }
       ]
     }
   ]

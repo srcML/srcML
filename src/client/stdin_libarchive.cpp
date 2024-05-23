@@ -37,7 +37,7 @@ namespace {
         return buffer.substr(0, "<src:unit"sv.size()) == "<src:unit"sv ||
                buffer.substr(0, "<unit"sv.size()) == "<unit"sv;
     }
-};
+}
 
 void open_stdin_libarchive(srcml_input_src& input_source) {
 
