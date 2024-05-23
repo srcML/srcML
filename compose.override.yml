@@ -1,0 +1,41 @@
+volumes:
+  dist: # Installers
+
+x-platforms: &BUILD_PLATFORMS
+  platforms:
+    - "linux/amd64"
+    - "linux/arm64"
+
+x-utilities: &UTILITIES
+  image: srcml/utility
+  profiles: [utility]
+  volumes:
+    - dist:/dist
+
+services:
+
+  utility:
+    <<: *UTILITIES
+    build:
+      context: docker/utility/
+      <<: *BUILD_PLATFORMS
+
+  ls:
+    <<: *UTILITIES
+    command: sh -c 'ls -lh /dist'
+
+  tar:
+    <<: *UTILITIES
+    command: sh -c 'tar --exclude=srcML.tar.gz -czf /dist/srcML.tar.gz -C /dist .; ls -lh /dist/srcML.tar.gz'
+
+  clean:
+    <<: *UTILITIES
+    command: sh -c 'rm -fr /dist/*; ls -lh /dist'
+
+  parser:
+    <<: *UTILITIES
+    command: sh -c 'grep "Counts:" /dist/*-parser.log'
+
+  client:
+    <<: *UTILITIES
+    command: sh -c 'grep "Counts:" /dist/*-parser.log'

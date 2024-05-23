@@ -195,6 +195,9 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int /* position *
         }
     }
 
+    // register exslt set functions for sets
+    exsltSetsXpathCtxtRegister (context.get(), BAD_CAST "set");
+
     // register prefixes from the doc
     for (auto p = doc->children->nsDef; p; p = p->next) {
 

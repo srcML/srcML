@@ -33,6 +33,8 @@ if(NOT SRCML_BUILD_BREW_LIBARCHIVE AND OS_VERSION GREATER_EQUAL "19")
     set(LIBARCHIVE21 "83.100.2")
     # Ventura
     set(LIBARCHIVE22 "83.100.2")
+    # Sonoma
+    set(LIBARCHIVE23 "83.100.2")
     set(LIBARCHIVE_VERSION "${LIBARCHIVE${OS_VERSION}}")
 
     # fetch via Apple opensource

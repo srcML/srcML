@@ -43,13 +43,18 @@ endif()
 # Determine distribution
 # Does not work for all distributions, but does work for supported Linux distributions
 if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
-    file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
+    cmake_host_system_information(RESULT DISTRO QUERY DISTRIB_NAME)
 endif()
 
 # Fedora and CentOS do not put /usr/local/{bin,lib64} on the default search paths
 # So change installation to /usr
 if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
     set(CMAKE_INSTALL_PREFIX /usr)
+endif()
+
+# Link the stdc++fs library if on gcc 7.5.0
+if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
+    link_libraries(stdc++fs)
 endif()
 
 # used as defaults for installation and packaging

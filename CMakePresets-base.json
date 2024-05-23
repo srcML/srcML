@@ -1,0 +1,102 @@
+{
+  "version": 8,
+  "configurePresets": [
+    {
+      "name": "ci-sibling-build",
+      "description": "Sibling build",
+      "hidden": true,
+      "binaryDir": "${sourceParentDir}/${sourceDirName}-build"
+    },
+    {
+      "name": "ci-subdirectory-build",
+      "description": "Subdirectory build",
+      "hidden": true,
+      "binaryDir": "build"
+    },
+    {
+      "name": "ci-pch",
+      "description": "Use PCH",
+      "hidden": true,
+      "cacheVariables": {
+        // Determined via clang-trace
+        "SRCML_CLIENT_PCH": "<srcml_cli.hpp>;<srcml_input_src.hpp>;<srcml_pipe.hpp>;<ParseQueue.hpp>;<src_input_libarchive.hpp>;<SRCMLStatus.hpp>;<WriteQueue.hpp>;<ParseRequest.hpp>;<TraceLog.hpp>;<curl/curl.h>",
+        "SRCML_LIBSRCML_PCH": "<srcmlns.hpp>;<srcml_types.hpp>;<srcml_sax2_utilities.hpp>;<srcml_translator.hpp>;<srcml_sax2_reader.hpp>",
+        "SRCML_PARSER_PCH": "<srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp> <UTF8CharBuffer.hpp>"
+      }
+    },
+    {
+      "name": "ci-vcpkg",
+      "description": "Use vcpkg",
+      "hidden": true,
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+    },
+    {
+      "name": "ci-ccache",
+      "description": "Use ccache",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER_LAUNCHER": "ON"
+      }
+    },
+    {
+      "name": "ci-linux",
+      "description": "Default build options for Linux",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -pedantic",
+        // "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON",
+        "SRCML_ANTLR_DISABLED_WARNINGS": "-Wno-format;-Wno-misleading-indentation;-Wno-deprecated-declarations",
+        "SRCML_PARSER_DISABLED_WARNINGS": "-Wno-unused-but-set-variable"
+      }
+    },
+    {
+      "name": "ci-gcc",
+      "hidden": true,
+      "inherits": ["ci-linux"],
+      "displayName": "GCC",
+      "description": "Default build options for GCC",
+      "toolchainFile": "toolchain-gcc.cmake",
+      "cacheVariables": {
+        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,--version-script=${sourceDir}/src/libsrcml/libsrcml.version",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ci-install-package",
+      "description": "Install a package",
+      "hidden": true,
+      "targets": ["install_package"]
+    },
+    {
+      "name": "ci-test-client",
+      "description": "Test a client",
+      "hidden": true,
+      "targets": ["test_client"]
+    },
+    {
+      "name": "ci-test-libsrcml",
+      "description": "Test libsrcml",
+      "hidden": true,
+      "targets": ["test_libsrcml"]
+    },
+    {
+      "name": "ci-test-parser",
+      "description": "Test the parser",
+      "hidden": true,
+      "targets": ["test_parser"]
+    }
+
+  ],
+  "packagePresets": [
+    {
+      "name": "ci-base",
+      "hidden": true,
+      "configurations": [ "Release" ],
+      "generators": [ "TGZ", "TBZ2" ],
+      "packageDirectory": "dist"
+    }
+  ]
+}

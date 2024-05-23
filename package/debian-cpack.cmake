@@ -54,6 +54,8 @@ set(CPACK_DEBIAN_DEVLIBS_FILE_NAME "${BASE_DEVLIBS_FILE_NAME}.deb")
 set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
 set(CPACK_ARCHIVE_DEVLIBS_FILE_NAME "${BASE_DEVLIBS_FILE_NAME}")
 
+set(ENV{BASE_SRCML_FILE_NAME} "${BASE_SRCML_FILE_NAME}")
+
 # Package types
 # Current CPack defaults
 # Note: unclear whether CPACK_DEBIAN_PACKAGE_SECTION is default for components
@@ -98,3 +100,32 @@ set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, tar, man")
 set(TRIGGERS_FILE "${CMAKE_CURRENT_BINARY_DIR}/triggers")
 file(WRITE "${TRIGGERS_FILE}" "activate-noawait ldconfig\n")
 set(CPACK_DEBIAN_SRCML_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE}")
+
+# Targets for workflow testing
+add_custom_target(test_client
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcml --timeout 5 --output-log ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_SRCML_FILE_NAME}.log || true
+)
+add_custom_target(test_libsrcml
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_CTEST_COMMAND} -R ^libsrcml --timeout 5 --output-log ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_DEVLIBS_FILE_NAME}.log || true
+)
+add_custom_target(test_parser
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_SRCML_FILE_NAME}-parser.log
+    DEPENDS gen_parser_tests
+)
+
+# Targets for installing generated packages
+add_custom_target(install_package
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND apt-get install -y ./${CPACK_DEBIAN_SRCML_FILE_NAME}
+)
+add_custom_target(install_targz
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.gz -C /usr
+)
+add_custom_target(install_tarbz2
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.bz2 -C /usr
+)

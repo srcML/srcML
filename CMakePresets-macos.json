@@ -1,0 +1,99 @@
+{
+  "version": 8,
+  "include": [
+    "CMakePresets-base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "ci-macos",
+      "displayName": "macOS standard build",
+      "description": "Default build options for macOS release",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "inherits": ["ci-clang", "ci-sibling-build"],
+      "generator": "Ninja",
+      "cacheVariables": {
+        // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
+        "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
+        "CMAKE_BUILD_TYPE": "Release",
+        // Build for both x86 and arm64
+        "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15",
+        "BUILD_LIBSRCML_TESTS": "ON",
+        "BUILD_PARSER_TESTS": "ON",
+        "CPACK_OUTPUT_FILE_PREFIX": "dist"
+      }
+    },
+    {
+      "name": "ci-clang",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "displayName": "Clang Release",
+      "description": "Default build options for Clang release",
+      "hidden": true,
+      "cacheVariables": {
+        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
+        // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
+        "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
+        "CMAKE_BUILD_TYPE": "Release",
+        "SRCML_GLOBAL_COMPILE_OPTIONS": "-flto",
+        "SRCML_GLOBAL_LINK_OPTIONS": "-flto;-dead_strip",
+        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,-exported_symbols_list ${sourceDir}/src/libsrcml/export_list"
+      }
+    }
+  ],
+  "buildPresets" : [
+    {
+      "name": "ci-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos"
+    },
+    {
+      "name": "ci-install-package-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "inherits": [ "ci-install-package" ]
+    },
+    {
+      "name": "ci-test-parser-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "inherits": [ "ci-test-parser" ]
+    },
+    {
+      "name": "ci-test-client-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "inherits": [ "ci-test-client" ]
+    },
+    {
+      "name": "ci-test-libsrcml-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "inherits": [ "ci-test-libsrcml" ]
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "ci-macos",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "generators": [ "productbuild", "TGZ", "TBZ2" ],
+      "inherits": ["ci-base"]
+    }
+  ],
+  "testPresets": [
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-macos",
+      "steps": [
+        { "type": "configure", "name": "ci-macos" },
+        { "type": "build",     "name": "ci-macos" },
+        { "type": "package",   "name": "ci-macos" },
+        { "type": "build",     "name": "ci-install-package-macos" },
+        { "type": "build",     "name": "ci-test-client-macos" },
+        { "type": "build",     "name": "ci-test-libsrcml-macos" },
+        { "type": "build",     "name": "ci-test-parser-macos" }
+      ]
+    }
+  ]
+}
