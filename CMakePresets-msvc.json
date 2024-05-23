@@ -71,7 +71,8 @@
         // wd4355 # this': used in base member initializer list
         // wd5204 # class has virtual functions, but its trivial destructor is not virtual
         "SRCML_CLIENT_COMPILE_FLAGS": "/wd4355;/wd5204",
-        "SRCML_CLIENT_LINK_FLAGS": ""
+        "SRCML_CLIENT_LINK_FLAGS": "",
+        "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
     }
   ],
