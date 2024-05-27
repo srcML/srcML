@@ -95,14 +95,10 @@ jobs:
         with:
           name: installers
           path: |
-            # build/dist/*.msi
-            # build/dist/*.zip
-            # build/dist/*.exe
-            # build/dist/*.nupkg
-            build/*.msi
-            build/*.zip
-            build/*.exe
-            build/*.nupkg
+            build/dist/*.msi
+            build/dist/*.zip
+            build/dist/*.exe
+            build/dist/*.nupkg
 
       # - name: Install from build
       #   working-directory: build
