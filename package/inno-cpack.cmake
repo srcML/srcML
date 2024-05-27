@@ -154,7 +154,7 @@ set(SRCML_INNO_FILE_NAME "${CPACK_PACKAGE_NAME}-${PROJECT_VERSION}-windows-${SRC
 
 # Targets for installing generated packages
 add_custom_target(install_package_inno
-    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${CPACK_OUTPUT_FILE_PREFIX}
     COMMAND ./${SRCML_INNO_FILE_NAME} /VERYSILENT
     COMMAND COMMAND powershell -Command "[System.Environment]::SetEnvironmentVariable('Path', [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine) + ';C:/Program Files/srcML/bin', [System.EnvironmentVariableTarget]::Machine)"
 )
