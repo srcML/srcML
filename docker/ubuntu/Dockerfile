@@ -4,9 +4,10 @@ FROM ubuntu:${TAG} AS ubuntu
 # Generate lightweight jre
 FROM ubuntu AS java
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update -q && apt-get upgrade -q -y && apt-get install -q -y \
-    binutils \
-    openjdk-11-jdk-headless
+RUN apt-get update -q && apt-get install -q -y \
+    binutils openjdk-11-jdk-headless \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN jlink --compress=2 --strip-debug --add-modules=java.base --output /opt/java \
     && strip -p --strip-unneeded /opt/java/lib/server/*.so \
@@ -72,8 +73,8 @@ RUN if [ "$CMAKE_BINARY" != "ON" ]; then apt-get update && \
     rm /usr/share/keyrings/kitware-archive-keyring.gpg && \
     apt-get install kitware-archive-keyring && \
     apt-get update && \
-    apt-get upgrade -y && \
     apt-get install cmake --no-install-recommends -y && \
+    apt-get clean && \
     rm -rf /var/lib/apt/lists/*; \
     fi
 
