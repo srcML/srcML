@@ -1,7 +1,7 @@
 {
   "version": 8,
   "include": [
-    "CMakePresets-base.json"
+    "CMakeBasePresets.json"
   ],
   "configurePresets": [
     {
