@@ -5,63 +5,79 @@
   ],
   "configurePresets": [
     {
+      "name": "ci-ubuntu-only",
+      "displayName": "Ubuntu only",
+      "description": "Restrict to Ubuntu",
+      "hidden": true,
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+          { "type": "inList", "string": "$env{WORKFLOW}", "list": ["ubuntu", ""] }
+        ]
+      }
+    },
+    {
       "name": "ci-ubuntu",
       "displayName": "Ubuntu Release",
       "description": "Default build options for Ubuntu release",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
-      "inherits": ["ci-gcc", "ci-sibling-build"],
-      "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
-        "BUILD_LIBSRCML_TESTS": "ON",
-        "BUILD_PARSER_TESTS": "ON"
-      }
+      "inherits": ["ci-base", "ci-docker", "ci-ubuntu-only", "ci-gcc", "ci-sibling-build"]
     }
   ],
   "buildPresets" : [
     {
+      "name": "ci-ubuntu-only",
+      "displayName": "Ubuntu only",
+      "description": "Restrict to Ubuntu",
+      "hidden": true,
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+          { "type": "inList", "string": "$env{WORKFLOW}", "list": ["ubuntu", ""] }
+        ]
+      },
+      "configurePreset": "ci-ubuntu"
+    },
+    {
       "name": "ci-ubuntu",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
-      "configurePreset": "ci-ubuntu",
+      "inherits": ["ci-ubuntu-only"],
       "configuration": "Release"
     },
     {
-      "name": "ci-clean-ubuntu",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
-      "configurePreset": "ci-ubuntu",
-      "targets": "clean"
+      "name": "ci-clean-install-ubuntu",
+      "inherits": ["ci-clean-install", "ci-ubuntu-only"]
     },
     {
       "name": "ci-install-package-ubuntu",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
-      "configurePreset": "ci-ubuntu",
-      "targets": "install_package"
+      "inherits": ["ci-install-package", "ci-ubuntu-only"]
     },
     {
       "name": "ci-test-client-ubuntu",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
-      "configurePreset": "ci-ubuntu",
-      "targets": ["test_client"]
+      "inherits": ["ci-test-client", "ci-ubuntu-only"]
     },
     {
       "name": "ci-test-libsrcml-ubuntu",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
-      "configurePreset": "ci-ubuntu",
-      "targets": ["test_libsrcml"]
+      "inherits": ["ci-test-libsrcml", "ci-ubuntu-only"]
     },
     {
       "name": "ci-test-parser-ubuntu",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
-      "targets": ["test_parser"],
-      "configurePreset": "ci-ubuntu"
+      "inherits": ["ci-test-parser", "ci-ubuntu-only"]
     }
   ],
   "packagePresets": [
     {
       "name": "ci-ubuntu",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "ubuntu" },
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+          { "type": "inList", "string": "$env{WORKFLOW}", "list": ["ubuntu", ""] }
+        ]
+      },
+      "inherits": ["ci-base"],
       "configurePreset": "ci-ubuntu",
-      "generators": [ "DEB", "TGZ", "TBZ2" ],
-      "inherits": ["ci-base"]
+      "generators": [ "DEB", "TGZ", "TBZ2" ]
     }
   ],
   "testPresets": [

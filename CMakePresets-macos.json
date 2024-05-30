@@ -5,11 +5,17 @@
   ],
   "configurePresets": [
     {
+      "name": "ci-macos-only",
+      "displayName": "macOS only",
+      "description": "Restrict to macOS",
+      "hidden": true,
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "ci-macos",
       "displayName": "macOS standard build",
       "description": "Default build options for macOS release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "inherits": ["ci-clang", "ci-sibling-build"],
+      "inherits": ["ci-macos-only", "ci-clang", "ci-sibling-build"],
       "generator": "Ninja",
       "cacheVariables": {
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
@@ -28,6 +34,7 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "displayName": "Clang Release",
       "description": "Default build options for Clang release",
+      "inherits": ["ci-macos-only"],
       "hidden": true,
       "cacheVariables": {
         "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
@@ -42,33 +49,33 @@
   ],
   "buildPresets" : [
     {
-      "name": "ci-macos",
+      "name": "ci-macos-only",
+      "displayName": "macOS only",
+      "description": "Restrict to macOS",
+      "hidden": true,
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "configurePreset": "ci-macos"
     },
     {
+      "name": "ci-macos",
+      "inherits": [ "ci-macos-only" ],
+      "configuration": "Release"
+    },
+    {
       "name": "ci-install-package-macos",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "configurePreset": "ci-macos",
-      "inherits": [ "ci-install-package" ]
+      "inherits": [ "ci-macos-only", "ci-install-package" ]
     },
     {
       "name": "ci-test-parser-macos",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "configurePreset": "ci-macos",
-      "inherits": [ "ci-test-parser" ]
+      "inherits": [ "ci-macos-only", "ci-test-parser" ]
     },
     {
       "name": "ci-test-client-macos",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "configurePreset": "ci-macos",
-      "inherits": [ "ci-test-client" ]
+      "inherits": [ "ci-macos-only", "ci-test-client" ]
     },
     {
       "name": "ci-test-libsrcml-macos",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "configurePreset": "ci-macos",
-      "inherits": [ "ci-test-libsrcml" ]
+      "inherits": [ "ci-macos-only", "ci-test-libsrcml" ]
     }
   ],
   "packagePresets": [

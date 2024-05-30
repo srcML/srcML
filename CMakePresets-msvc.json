@@ -77,36 +77,65 @@
   ],
   "buildPresets" : [
     {
+      "name": "ci-msvc-only",
+      "displayName": "Ubuntu only",
+      "description": "Restrict to Ubuntu",
+      "hidden": true,
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "configurePreset": "ci-msvc"
+    },
+    {
       "name": "ci-msvc",
-      // "hidden": true,
-      "configurePreset": "ci-msvc",
+      "inherits": ["ci-msvc-only"],
       "configuration": "Release"
+    },
+    {
+      "name": "ci-clean-install-msvc3",
+      "inherits": ["ci-msvc-only", "ci-clean-install"]
+    },
+    {
+      "name": "ci-install-package-msvc",
+      "inherits": ["ci-install-package", "ci-msvc-only"]
+    },
+    {
+      "name": "ci-test-client-msvc",
+      "inherits": ["ci-test-client", "ci-msvc-only"]
+    },
+    {
+      "name": "ci-test-libsrcml-msvc",
+      "inherits": ["ci-test-libsrcml", "ci-msvc-only"]
+    },
+    {
+      "name": "ci-test-parser-msvc",
+      "inherits": ["ci-test-parser", "ci-msvc-only"]
     }
   ],
   "packagePresets": [
     {
+      "name": "ci-msvc-only",
+      "hidden": true,
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "configurePreset": "ci-msvc"
+    },
+    {
       "name": "ci-msvc",
-      "configurePreset": "ci-msvc",
       "generators": [ "WIX", "INNOSETUP", "NuGet", "ZIP" ],
-      "inherits": ["ci-base"]
+      "inherits": ["ci-msvc-only", "ci-base"]
     },
     {
       "name": "ci-msvc-wix",
-      "configurePreset": "ci-msvc",
       "generators": [ "WIX", "ZIP" ],
-      "inherits": ["ci-base"]
+      "inherits": ["ci-msvc-only", "ci-base"]
     },
     {
       "name": "ci-msvc-inno",
-      "configurePreset": "ci-msvc",
       "generators": [ "INNOSETUP", "ZIP" ],
-      "inherits": ["ci-base"]
+      "inherits": ["ci-msvc-only", "ci-base"]
     },
     {
       "name": "ci-msvc-nuget",
-      "configurePreset": "ci-msvc",
       "generators": [ "NuGet", "ZIP" ],
-      "inherits": ["ci-base"]
+      "inherits": ["ci-msvc-only", "ci-base"]
     }
   ],
   "testPresets": [
