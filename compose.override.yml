@@ -1,41 +1,45 @@
 volumes:
   dist: # Installers
 
-x-platforms: &BUILD_PLATFORMS
-  platforms:
-    - "linux/amd64"
-    - "linux/arm64"
-
-x-utilities: &UTILITIES
+x-base: &BASE
   image: srcml/utility
   profiles: [utility]
+
+x-utilities: &UTILITIES
+  <<: *BASE
   volumes:
     - dist:/dist
 
 services:
 
+  # Base utility image
   utility:
     <<: *UTILITIES
     build:
       context: docker/utility/
       <<: *BUILD_PLATFORMS
 
+  # List the installers
   ls:
     <<: *UTILITIES
     command: sh -c 'ls -lh /dist'
 
+  # Tar the installers, .deb and .rpm, into a single tar file, srcML.tar.gz to download via Docker Desktop
   tar:
     <<: *UTILITIES
     command: sh -c 'tar --exclude=srcML.tar.gz -czf /dist/srcML.tar.gz -C /dist .; ls -lh /dist/srcML.tar.gz'
 
+  # Remove all installers
   clean:
     <<: *UTILITIES
     command: sh -c 'rm -fr /dist/*; ls -lh /dist'
 
-  parser:
+  # Short results of client tests
+  client:
     <<: *UTILITIES
     command: sh -c 'grep "Counts:" /dist/*-parser.log'
 
-  client:
+  # Short results of parser tests
+  parser:
     <<: *UTILITIES
     command: sh -c 'grep "Counts:" /dist/*-parser.log'
