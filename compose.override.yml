@@ -17,7 +17,9 @@ services:
     <<: *UTILITIES
     build:
       context: docker/utility/
-      <<: *BUILD_PLATFORMS
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
 
   # List the installers
   ls:
@@ -43,3 +45,18 @@ services:
   parser:
     <<: *UTILITIES
     command: sh -c 'grep "Counts:" /dist/*-parser.log'
+
+  upload:
+    <<: *BASE
+    volumes:
+      - .:/Source
+      - dist:/dist
+      - ~/.config/gh:/root/.config/gh
+      # Do not change this hard-coded Docker path. Redirects to SSH_AUTH_SOCK
+      # as set when the Docker Desktop is started
+      # Start Docker Desktop from command line after SSH_AUTH_SOCK is set correctly
+      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
+    working_dir: /Source
+    environment:
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+    command: /bin/sh
