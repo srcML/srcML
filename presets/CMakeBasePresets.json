@@ -2,6 +2,21 @@
   "version": 8,
   "configurePresets": [
     {
+      "name": "ci-base",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_LIBSRCML_TESTS": "ON",
+        "BUILD_PARSER_TESTS": "ON"
+      }
+    },
+    {
+      "name": "ci-docker",
+      "hidden": true,
+      "cacheVariables": {
+        "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
+      }
+    },
+    {
       "name": "ci-sibling-build",
       "description": "Sibling build",
       "hidden": true,
@@ -71,8 +86,14 @@
       "targets": ["install_package"]
     },
     {
+      "name": "ci-clean-install",
+      "description": "Clean the installed package",
+      "hidden": true,
+      "targets": ["clean_install"]
+    },
+    {
       "name": "ci-test-client",
-      "description": "Test a client",
+      "description": "Test the client",
       "hidden": true,
       "targets": ["test_client"]
     },
