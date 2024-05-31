@@ -23,6 +23,7 @@
 #include <UTF8CharBuffer.hpp>
 
 #include <sha1utilities.hpp>
+#include <algorithm>
 #include <iostream>
 #include <fcntl.h>
 #include <iterator>
