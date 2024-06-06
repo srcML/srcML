@@ -94,7 +94,7 @@ set(CPACK_DEBIAN_DEVLIBS_PACKAGE_DEPENDS "${CPACK_PACKAGE_NAME} (>= ${PROJECT_VE
 
 # Recommended packages
 # Shared between client and dev packages
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, tar, man")
+set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "zip, unzip, cpio, tar, man")
 
 # Trigger required for library installed in client to initiate ldconfig
 set(TRIGGERS_FILE "${CMAKE_CURRENT_BINARY_DIR}/triggers")
@@ -102,19 +102,7 @@ file(WRITE "${TRIGGERS_FILE}" "activate-noawait ldconfig\n")
 set(CPACK_DEBIAN_SRCML_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE}")
 
 # Targets for workflow testing
-add_custom_target(test_client
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcml --timeout 5 --output-log ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_SRCML_FILE_NAME}.log || true
-)
-add_custom_target(test_libsrcml
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_CTEST_COMMAND} -R ^libsrcml --timeout 5 --output-log ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_DEVLIBS_FILE_NAME}.log || true
-)
-add_custom_target(test_parser
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${CPACK_OUTPUT_FILE_PREFIX}/${BASE_SRCML_FILE_NAME}-parser.log
-    DEPENDS gen_parser_tests
-)
+add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCML_FILE_NAME})
 
 # Targets for installing generated packages
 add_custom_target(install_package

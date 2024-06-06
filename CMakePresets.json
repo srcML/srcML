@@ -6,11 +6,11 @@
     "patch": 0
   },
   "include": [
-    "CMakePresets-base.json",
-    "CMakePresets-ubuntu.json",
-    "CMakePresets-rpm.json",
-    "CMakePresets-macos.json",
-    "CMakePresets-msvc.json"
+    "presets/CMakeBasePresets.json",
+    "presets/CMakeUbuntuPresets.json",
+    "presets/CMakeRPMPresets.json",
+    "presets/CMakeMacOSPresets.json",
+    "presets/CMakeMSVCPresets.json"
   ],
   "configurePresets": [
     {
