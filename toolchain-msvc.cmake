@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-only
 ##
-# @file msvc.toolchain.cmake
+# @file toolchain-msvc.cmake
 #
 # @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
 #

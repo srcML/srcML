@@ -6,7 +6,8 @@
       "hidden": true,
       "cacheVariables": {
         "BUILD_LIBSRCML_TESTS": "ON",
-        "BUILD_PARSER_TESTS": "ON"
+        "BUILD_PARSER_TESTS": "ON",
+        "CMAKE_OPTIMIZE_DEPENDENCIES": "ON"
       }
     },
     {
@@ -71,7 +72,6 @@
       "inherits": ["ci-linux"],
       "displayName": "GCC",
       "description": "Default build options for GCC",
-      "toolchainFile": "toolchain-gcc.cmake",
       "cacheVariables": {
         "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,--version-script=${sourceDir}/src/libsrcml/libsrcml.version",
         "CMAKE_BUILD_TYPE": "Release"

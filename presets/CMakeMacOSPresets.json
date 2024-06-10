@@ -15,7 +15,7 @@
       "name": "ci-macos",
       "displayName": "macOS standard build",
       "description": "Default build options for macOS release",
-      "inherits": ["ci-macos-only", "ci-clang", "ci-sibling-build"],
+      "inherits": ["ci-base", "ci-macos-only", "ci-clang", "ci-sibling-build"],
       "generator": "Ninja",
       "cacheVariables": {
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
@@ -24,8 +24,6 @@
         // Build for both x86 and arm64
         "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
         "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15",
-        "BUILD_LIBSRCML_TESTS": "ON",
-        "BUILD_PARSER_TESTS": "ON",
         "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
     },
