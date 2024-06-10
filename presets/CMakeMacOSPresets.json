@@ -15,7 +15,7 @@
       "name": "ci-macos",
       "displayName": "macOS standard build",
       "description": "Default build options for macOS release",
-      "inherits": ["ci-base", "ci-macos-only", "ci-clang", "ci-sibling-build"],
+      "inherits": ["ci-base", "ci-macos-only", "ci-clang"],
       "generator": "Ninja",
       "cacheVariables": {
         // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work

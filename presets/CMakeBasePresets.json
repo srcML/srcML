@@ -4,6 +4,7 @@
     {
       "name": "ci-base",
       "hidden": true,
+      "inherits": ["ci-sibling-build"],
       "cacheVariables": {
         "BUILD_LIBSRCML_TESTS": "ON",
         "BUILD_PARSER_TESTS": "ON",

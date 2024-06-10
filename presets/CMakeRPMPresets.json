@@ -9,7 +9,7 @@
       "displayName": "RPM Release",
       "description": "Default build options for RPM release",
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
-      "inherits": ["ci-gcc", "ci-sibling-build"],
+      "inherits": ["ci-base", "ci-gcc"],
       "cacheVariables": {
         "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
         "BUILD_LIBSRCML_TESTS": "ON",
