@@ -21,6 +21,9 @@ target_include_directories(libsrcml
     PRIVATE
         .
 )
+set_target_properties(libsrcml PROPERTIES
+    POSITION_INDEPENDENT_CODE ON
+)
 
 # Use the libsrcml/srcml.h rather than the /usr/local/include/srcml.h
 target_include_directories(libsrcml BEFORE PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)

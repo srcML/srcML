@@ -7,5 +7,3 @@
 # MSVC-specific tool configuration
 
 set(CMAKE_OPTIMIZE_DEPENDENCIES ON)
-
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
