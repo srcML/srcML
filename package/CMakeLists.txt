@@ -6,6 +6,10 @@
 #
 # CPack configuration for all installers
 
+# Location of package files
+# Default case as typically this is configured in a preset
+set(CPACK_OUTPUT_FILE_PREFIX dist CACHE PATH "Directory for package files")
+
 # Copy preset file to build directory
 configure_file(${CMAKE_SOURCE_DIR}/CMakePresets.json ${CMAKE_BINARY_DIR} COPYONLY)
 
