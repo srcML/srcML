@@ -313,6 +313,10 @@ tokens {
     OMP_OMP;
 
     ASSIGNMENT; // +=, -=, etc.
+
+    // offside rule
+    INDENT;
+    DEDENT;
 }
 
 {

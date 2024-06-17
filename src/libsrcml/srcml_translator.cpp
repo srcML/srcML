@@ -30,6 +30,7 @@
 #include <srcml_types.hpp>
 #include <unit_utilities.hpp>
 #include <srcMLOutput.hpp>
+#include <OffSideRule.hpp>
 
 using namespace ::std::literals::string_view_literals;
 
@@ -139,8 +140,11 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
         selector.addInputStream(&textlexer, "text");
         selector.select(&lexer);
 
+        // intermediate token stage
+        OffSideRule offside(selector);
+
         // base stream parser srcML connected to lexical analyzer
-        StreamMLParser parser(selector, getLanguage(), options);
+        StreamMLParser parser(offside, getLanguage(), options);
 
         // connect local parser to attribute for output
         out.setTokenStream(parser);
