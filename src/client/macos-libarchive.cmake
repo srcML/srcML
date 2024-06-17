@@ -6,6 +6,10 @@
 # 
 # libarchive configuration of macOS for the srcML client
 
+if(NOT APPLE OR DEFINED VCPKG_TARGET_TRIPLET)
+    return()
+endif()
+
 # For macOS Catalina and more recent, the provided libarchive is at least version 3.3
 # and all that is needed is the matching header files.
 # For earlier versions of macOS, brew must be used with a more recent libarchive.a
@@ -24,21 +28,28 @@ option(SRCML_BUILD_BREW_LIBARCHIVE "Use the brew libarchive regardless of macOS 
 string(SUBSTRING ${CMAKE_SYSTEM_VERSION} 0 2 OS_VERSION)
 if(NOT SRCML_BUILD_BREW_LIBARCHIVE AND OS_VERSION GREATER_EQUAL "19")
 
-    # Map from macOS version to libarchive number
-    # Catalina
-    set(LIBARCHIVE19 "72.140.1")
-    # Big Sur
-    set(LIBARCHIVE20 "83.100.2")
-    # Monterey
-    set(LIBARCHIVE21 "83.100.2")
-    # Ventura
-    set(LIBARCHIVE22 "83.100.2")
-    # Sonoma
-    set(LIBARCHIVE23 "83.100.2")
-    set(LIBARCHIVE_VERSION "${LIBARCHIVE${OS_VERSION}}")
+    # Use the local tar to see which version of libarchive is needed
+    execute_process(
+        COMMAND /usr/bin/tar --version
+        OUTPUT_VARIABLE TAR_VERSION_OUTPUT
+        ERROR_VARIABLE TAR_VERSION_ERROR
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(TAR_VERSION_ERROR)
+        message(FATAL_ERROR "Error on macOS getting tar version: ${TAR_VERSION_ERROR}")
+    endif()
 
-    # fetch via Apple opensource
-    set(LIBARCHIVE_URL "https://opensource.apple.com/source/libarchive/libarchive-${LIBARCHIVE_VERSION}/libarchive/libarchive")
+    string(REGEX MATCH "libarchive ([0-9]+\\.[0-9]+\\.[0-9]+)" LIBARCHIVE_VERSION_MATCH "${TAR_VERSION_OUTPUT}")
+    if(NOT LIBARCHIVE_VERSION_MATCH)
+        message(FATAL_ERROR "Could not determine libarchive version from tar output")
+    endif()
+    string(REGEX REPLACE "libarchive " "" LIBARCHIVE_VERSION "${LIBARCHIVE_VERSION_MATCH}")
+
+    # Print the detected libarchive version
+    message(STATUS "Detected libarchive version: ${LIBARCHIVE_VERSION}")
+
+    # fetch via libarchive repositories
+    set(LIBARCHIVE_URL "https://raw.githubusercontent.com/libarchive/libarchive/v${LIBARCHIVE_VERSION}/libarchive")
     message(STATUS "Download ${LIBARCHIVE_URL}/archive.h")
     include(FetchContent)
     FetchContent_Declare(libarchiveInclude1
