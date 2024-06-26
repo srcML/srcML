@@ -778,6 +778,46 @@ public:
             last_consumed = LA(1);
         LLkParser::consume();
     }
+
+    struct Rule {
+
+        // Required next token
+        int nextToken = 0;
+
+        // Token for start element
+        int elementToken = 0;
+
+        // Mode not in
+        srcMLState::MODE_TYPE notInMode = 0;
+
+        // Mode to start before issuing
+        srcMLState::MODE_TYPE startingMode = 0;
+
+        // Mode following keyword
+        srcMLState::MODE_TYPE followingMode = 0;
+    };
+
+    bool processRule(const Rule& rule) {
+
+        if (rule.notInMode != 0 && inMode(rule.notInMode))
+            return false;
+
+        if (rule.nextToken && rule.nextToken != next_token())
+            return false;
+
+        if (rule.startingMode != 0)
+            startNewMode(rule.startingMode);
+
+//        if (rule.elementToken)
+            startElement(rule.elementToken);
+
+        if (rule.followingMode != 0)
+            startNewMode(rule.followingMode);
+
+        consume();
+
+        return true;
+    }
 }
 
 /*
@@ -792,13 +832,45 @@ public:
 
   Order of evaluation is important.
 */
-start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
+start[] { ++start_count;
+
+    if (inMode(MODE_PSEUDOBLOCK) && LA(1) != LCURLY) {
+        endMode(MODE_PSEUDOBLOCK);
+        startNoSkipElement(SPSEUDO_BLOCK);
+        startNoSkipElement(SCONTENT);
+        return;
+    }
+
+   static const std::array<Rule, 500> rules = [](){
+        std::array<Rule, 500> temp_array;
+        temp_array[WHILE] =    { 0, SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
+        temp_array[RETURN] =   { 0, SRETURN_STATEMENT,   0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_EXPRESSION | MODE_EXPECT };
+        temp_array[FOR] =      { 0, SFOR_STATEMENT,      0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT };
+        temp_array[BREAK] =    { 0, SBREAK_STATEMENT,    0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+        temp_array[CONTINUE] = { 0, SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+        temp_array[GOTO] =     { 0, SGOTO_STATEMENT,     0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+//        temp_array[IMPORT] =   { 0, SIMPORT, MODE_VARIABLE_NAME, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
+        temp_array[PACKAGE] =  { 0, SPACKAGE,    0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
+//        temp_array[FOREVER] =  { 0, SFOREVER_STATEMENT,  0, MODE_STATEMENT | MODE_NEST | MODE_SWITCH, 0 };
+        temp_array[SWITCH] =  { 0, SSWITCH,  0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
+        temp_array[TYPEDEF] =  { 0, STYPEDEF,  0, MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME | MODE_ONLY_END_TERMINATE, MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE };
+        return temp_array;
+    }();
+
+    if (inMode(MODE_NEST | MODE_STATEMENT)) {
+        const auto& rule = rules[LA(1)];
+        if (rule.elementToken && processRule(rule)) {
+            return;
+        }
+    }
+
+    ENTRY_DEBUG_START ENTRY_DEBUG } :
 
         // end of file
         eof |
 
         // end of line
-        line_continuation | EOL | LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START |
+        line_continuation | /* EOL | */ /* LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START | */
 
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
@@ -852,7 +924,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_CXX) && inMode(MODE_USING) }? using_aliasing |
 
         // statements identified by pattern (i.e., do not start with a keyword)
-        { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL)}? pattern_statements |
+        { inMode(MODE_NEST | MODE_STATEMENT) /* && !inMode(MODE_FUNCTION_TAIL) */}? pattern_statements |
 
         // in the middle of a statement
         statement_part
@@ -876,13 +948,13 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | { next_token() == IF }? elseif_statement | else_statement | switch_statement | switch_case | switch_default |
+        if_statement | { next_token() == IF }? elseif_statement | else_statement | /* switch_statement | */ switch_case | switch_default |
 
         // iterative statements
-        while_statement | for_statement | do_statement | foreach_statement |
+        /* while_statement | */ /* for_statement | */ do_statement | foreach_statement |
 
         // jump statements
-        return_statement | break_statement | continue_statement | goto_statement |
+        return_statement | /* break_statement | continue_statement | goto_statement | */
 
         // template declarations - both functions and classes
         template_declaration |
@@ -894,13 +966,13 @@ keyword_statements[] { ENTRY_DEBUG } :
         namespace_definition |
 
         // C/C++
-        typedef_statement | friend_statement | 
+        /*  typedef_statement | */ friend_statement |
 
         // C
         static_assert_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement | assert_statement | static_block |
+        import_statement | /* package_statement | */ assert_statement | static_block |
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -1611,6 +1683,10 @@ lambda_single_parameter { CompleteElement element(this); ENTRY_DEBUG } :
 // lambda character
 lambda_java[] { ENTRY_DEBUG } :
             
+        {
+
+//            startNewMode(MODE_PSEUDOBLOCK);
+        }
         TRETURN
         {
             if (LA(1) != LCURLY) {
@@ -1639,7 +1715,6 @@ throw_list[] { ENTRY_DEBUG } :
             startElement(STHROW_SPECIFIER);
         }
         THROW 
-
         {
 
             startElement(SARGUMENT_LIST);
@@ -2134,6 +2209,7 @@ do_while[] { ENTRY_DEBUG } :
         WHILE
 ;
 
+/*
 // start of for statement
 for_statement[] { ENTRY_DEBUG } :
         {
@@ -2142,13 +2218,13 @@ for_statement[] { ENTRY_DEBUG } :
 
             // start the for statement
             startElement(SFOR_STATEMENT);
-        }
-        FOR
-        {
+
             // statement with nested statement after the control group
             startNewMode(MODE_EXPECT | MODE_CONTROL);
         }
+        FOR
 ;
+*/
 
 // start of foreach statement (C#/Qt)
 foreach_statement[] { ENTRY_DEBUG } :
@@ -2548,7 +2624,7 @@ multop_name[] { SingleElement element(this); ENTRY_DEBUG } :
         MULTOPS
 ;
 
-
+/*
 // package statement
 package_statement[] { ENTRY_DEBUG } :
         {
@@ -2560,6 +2636,7 @@ package_statement[] { ENTRY_DEBUG } :
         }
         PACKAGE
 ;
+*/
 
 // package statement
 assert_statement[] { ENTRY_DEBUG } :
@@ -2596,7 +2673,7 @@ static_assert_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
         }
 
-        STATIC_ASSERT call_argument_list
+        STATIC_ASSERT //call_argument_list
 ;
 
 // return statement
@@ -2607,6 +2684,8 @@ return_statement[] { ENTRY_DEBUG } :
 
             // start the return statement
             startElement(SRETURN_STATEMENT);
+
+//            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
         RETURN
 ;
@@ -2653,14 +2732,17 @@ yield_break_statement[] { ENTRY_DEBUG } :
         yield_specifier BREAK
 ;
 
+/*
 // break statement
 break_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
+            startNewMode(MODE_STATEMENT);
 
             // start the break statement
             startElement(SBREAK_STATEMENT);
+
+            startNewMode(MODE_VARIABLE_NAME | MODE_EXPECT);
         }
         BREAK
 ;
@@ -2669,10 +2751,12 @@ break_statement[] { ENTRY_DEBUG } :
 continue_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
+            startNewMode(MODE_STATEMENT);
 
             // start the continue statement
             startElement(SCONTINUE_STATEMENT);
+
+            startNewMode(MODE_VARIABLE_NAME | MODE_EXPECT);
         }
         CONTINUE
 ;
@@ -2682,13 +2766,16 @@ goto_statement[] { ENTRY_DEBUG } :
         {
             // statement with an expected label name
             // label name is a subset of variable names
-            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
+            startNewMode(MODE_STATEMENT);
 
             // start the goto statement
             startElement(SGOTO_STATEMENT);
+
+            startNewMode(MODE_VARIABLE_NAME | MODE_EXPECT);
         }
         GOTO
 ;
+*/
 
 goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
     {
@@ -2850,13 +2937,11 @@ using_aliasing[]  { int type_count = 0;  int secondtoken = 0; int after_token = 
 //  Objectice-C compatibility alias
 compatibility_alias[] { ENTRY_DEBUG } :
     {
-
         // statement
         startNewMode(MODE_STATEMENT| MODE_VARIABLE_NAME);
 
         // start the namespace definition
         startElement(SCOMPATIBILITY_ALIAS);
-
     }
     COMPATIBILITY_ALIAS
 ;
@@ -2924,11 +3009,9 @@ emit_statement[] { ENTRY_DEBUG } :
 
 friend_statement[] { ENTRY_DEBUG } :
     {
-    
         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_FRIEND);
 
         startElement(SFRIEND);
-
     }
     FRIEND
 ;
@@ -3034,23 +3117,16 @@ protocol[] { ENTRY_DEBUG } :
 
 
 protocol_definition[] { bool first = true; ENTRY_DEBUG } :
-
     {
-
         startNewMode(MODE_STATEMENT | MODE_CLASS);
 
         startElement(SPROTOCOL);
 
         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_BLOCK  | MODE_TOP | MODE_CLASS);
-
     }
-
     ATPROTOCOL ({ first }? objective_c_class_header set_bool[first, false])*
-
     {
-
         class_default_access_action(SREQUIRED_DEFAULT);
-
     }
 ;
 
@@ -8867,6 +8943,7 @@ macro_label_statement[] { CompleteElement element(this); ENTRY_DEBUG } :
         macro_label_call COLON
 ;
 
+/*
 // typedef
 typedef_statement[] { ENTRY_DEBUG } :
         {
@@ -8880,6 +8957,7 @@ typedef_statement[] { ENTRY_DEBUG } :
         }
         TYPEDEF
 ;
+*/
 
 // matching set of parenthesis
 paren_pair[] { ENTRY_DEBUG } :

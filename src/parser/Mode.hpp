@@ -256,4 +256,6 @@ const static srcMLState::MODE_TYPE MODE_IF_STATEMENT;
 
 const static srcMLState::MODE_TYPE MODE_NO_BLOCK_CONTENT;
 
+const static srcMLState::MODE_TYPE MODE_PSEUDOBLOCK;
+
 #endif

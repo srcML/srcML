@@ -313,6 +313,8 @@ tokens {
     OMP_OMP;
 
     ASSIGNMENT; // +=, -=, etc.
+
+    GUARD;
 }
 
 {
@@ -688,8 +690,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "class"        , CXX_CLASS         , LANGUAGE_CXX },
 
         // OpenMp
-        { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY }, 
-
+        { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY },
    };
 
     // fill up the literals for the language that we are parsing
