@@ -31,6 +31,7 @@
 #include <unit_utilities.hpp>
 #include <srcMLOutput.hpp>
 #include <OffSideRule.hpp>
+#include <EolEnd.hpp>
 
 using namespace ::std::literals::string_view_literals;
 
@@ -140,11 +141,14 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
         selector.addInputStream(&textlexer, "text");
         selector.select(&lexer);
 
-        // intermediate token stage
+        // intermediate token stage for off-side rule
         OffSideRule offside(selector);
 
+        // intermediate token staget for line-oriented languages
+        EolEnd eolend(offside);
+
         // base stream parser srcML connected to lexical analyzer
-        StreamMLParser parser(offside, getLanguage(), options);
+        StreamMLParser parser(eolend, getLanguage(), options);
 
         // connect local parser to attribute for output
         out.setTokenStream(parser);
