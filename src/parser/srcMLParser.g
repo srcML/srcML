@@ -133,10 +133,8 @@ header "post_include_hpp" {
 
 using namespace ::std::literals::string_view_literals;
 
-//#define DEBUG_PARSER
-
 // Macros to introduce trace statements
-#ifdef DEBUG_PARSER
+#ifdef SRCML_DEBUG_PARSER
 class RuleTrace {
 public:
     RuleTrace(int guessing, int token, int rd, std::string text, const char* fun, int line) :
@@ -805,6 +803,9 @@ public:
         if (rule.nextToken && rule.nextToken != next_token())
             return false;
 
+        if (inMode(MODE_EXPRESSION))
+            endMode(MODE_EXPRESSION);
+
         if (rule.startingMode != 0)
             startNewMode(rule.startingMode);
 
@@ -851,9 +852,19 @@ start[] { ++start_count;
         temp_array[GOTO] =     { 0, SGOTO_STATEMENT,     0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
 //        temp_array[IMPORT] =   { 0, SIMPORT, MODE_VARIABLE_NAME, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
         temp_array[PACKAGE] =  { 0, SPACKAGE,    0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
-//        temp_array[FOREVER] =  { 0, SFOREVER_STATEMENT,  0, MODE_STATEMENT | MODE_NEST | MODE_SWITCH, 0 };
+        temp_array[FOREVER] =  { 0, SFOREVER_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0 };
         temp_array[SWITCH] =  { 0, SSWITCH,  0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
         temp_array[TYPEDEF] =  { 0, STYPEDEF,  0, MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME | MODE_ONLY_END_TERMINATE, MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE };
+        temp_array[DEFAULT] =  { COLON, SDEFAULT,  0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT };
+        temp_array[CHECKED] =    { LCURLY, SCHECKED_STATEMENT,      0, MODE_STATEMENT | MODE_NEST, 0};
+        temp_array[UNCHECKED] =  { LCURLY, SUNCHECKED_STATEMENT,    0, MODE_STATEMENT | MODE_NEST, 0};
+        temp_array[STATIC_ASSERT] =  { 0, SSTATIC_ASSERT_STATEMENT,  0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST };
+        temp_array[ASSERT] =  { 0, SASSERT_STATEMENT,  0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, 0 };
+        temp_array[UNSAFE] =  { 0, SUNSAFE_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0 };
+        temp_array[FRIEND] =  { 0, SFRIEND,  0, MODE_STATEMENT | MODE_NEST | MODE_FRIEND, 0 };
+//        temp_array[FOREACH] =  { 0, SFOREACH_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, inLanguage(LANGUAGE_CSHARP) ? MODE_EXPECT | MODE_CONTROL : MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA };
+
+        temp_array[GUARD] =  { 0, SIF,  0, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION };
         return temp_array;
     }();
 
@@ -871,6 +882,8 @@ start[] { ++start_count;
 
         // end of line
         line_continuation | /* EOL | */ /* LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START | */
+
+        { inMode(MODE_ARGUMENT_LIST) }? call_argument_list |
 
         comma | { inLanguage(LANGUAGE_JAVA) }? bar | { inTransparentMode(MODE_OBJECTIVE_C_CALL) }? rbracket |
 
@@ -891,8 +904,6 @@ start[] { ++start_count;
             (!inMode(MODE_EXPRESSION) && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT))) 
         && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
         && (!inLanguage(LANGUAGE_CXX) || !inTransparentMode(MODE_INIT | MODE_EXPECT))) || inTransparentMode(MODE_ANONYMOUS) }? lcurly |
-
-        { inMode(MODE_ARGUMENT_LIST) }? call_argument_list |
 
         // switch cases @test switch
         { !inMode(MODE_INIT) && (!inMode(MODE_EXPRESSION) || inTransparentMode(MODE_DETECT_COLON)) }?
@@ -948,13 +959,13 @@ catch[...] {
 keyword_statements[] { ENTRY_DEBUG } :
 
         // conditional statements
-        if_statement | { next_token() == IF }? elseif_statement | else_statement | /* switch_statement | */ switch_case | switch_default |
+        if_statement | { next_token() == IF }? elseif_statement | else_statement | /* switch_statement | */ switch_case | /* switch_default | */
 
         // iterative statements
         /* while_statement | */ /* for_statement | */ do_statement | foreach_statement |
 
         // jump statements
-        return_statement | /* break_statement | continue_statement | goto_statement | */
+        /* return_statement | */ /* break_statement | continue_statement | goto_statement | */
 
         // template declarations - both functions and classes
         template_declaration |
@@ -966,16 +977,16 @@ keyword_statements[] { ENTRY_DEBUG } :
         namespace_definition |
 
         // C/C++
-        /*  typedef_statement | */ friend_statement |
+        /*  typedef_statement | */ /* friend_statement | */
 
         // C
-        static_assert_statement |
+        /* static_assert_statement | */
 
         // Java - keyword only detected for Java
-        import_statement | /* package_statement | */ assert_statement | static_block |
+        import_statement | /* package_statement | */ /* assert_statement | */ static_block |
 
         // C# - keyword only detected for C#
-        checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
+        /* checked_statement | */ /* unchecked_statement | */ lock_statement | fixed_statement | /* unsafe_statement | */ yield_statements |
 
         // C/C++ assembly block
         asm_declaration |
@@ -986,7 +997,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         autoreleasepool_block | compatibility_alias | class_directive |
 
         // Qt
-        forever_statement | emit_statement
+        /* forever_statement | */ emit_statement
 ;
 
 /*
@@ -2158,6 +2169,7 @@ while_statement[] { ENTRY_DEBUG } :
         WHILE
 ;
 
+/*
 // Qt forever statement
 forever_statement[] { ENTRY_DEBUG } :
         {
@@ -2172,6 +2184,7 @@ forever_statement[] { ENTRY_DEBUG } :
         }
         FOREVER
 ;
+*/
 
 // do while statement
 do_statement[] { ENTRY_DEBUG } :
@@ -2234,14 +2247,16 @@ foreach_statement[] { ENTRY_DEBUG } :
 
             // start the for statement
             startElement(SFOREACH_STATEMENT);
+
+            startNewMode(inLanguage(LANGUAGE_CSHARP) ? MODE_EXPECT | MODE_CONTROL : MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
         }
         FOREACH
         {
             // statement with nested statement after the control group
-            if (inLanguage(LANGUAGE_CSHARP))
-                startNewMode(MODE_EXPECT | MODE_CONTROL);
-            else
-                startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
+//            if (inLanguage(LANGUAGE_CSHARP))
+//                startNewMode(MODE_EXPECT | MODE_CONTROL);
+//            else
+//                startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
         }
 ;
 
@@ -2661,6 +2676,7 @@ static_block  { ENTRY_DEBUG } :
     STATIC lcurly
 ;
 
+/*
 // C _Static_assert statement
 static_assert_statement[] { ENTRY_DEBUG } :
         {
@@ -2673,9 +2689,10 @@ static_assert_statement[] { ENTRY_DEBUG } :
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
         }
 
-        STATIC_ASSERT //call_argument_list
+        STATIC_ASSERT
 ;
-
+*/
+/*
 // return statement
 return_statement[] { ENTRY_DEBUG } :
         {
@@ -2689,7 +2706,7 @@ return_statement[] { ENTRY_DEBUG } :
         }
         RETURN
 ;
-
+*/
 // yield statements
 yield_statements[] { int t = next_token(); ENTRY_DEBUG } :
 
@@ -3007,6 +3024,7 @@ emit_statement[] { ENTRY_DEBUG } :
         EMIT
 ;
 
+/*
 friend_statement[] { ENTRY_DEBUG } :
     {
         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_FRIEND);
@@ -3015,6 +3033,7 @@ friend_statement[] { ENTRY_DEBUG } :
     }
     FRIEND
 ;
+*/
 
 /* Declarations Definitions CFG */
 
@@ -3879,6 +3898,7 @@ statement_part[] { int type_count; int secondtoken = 0; int after_token = 0; STM
         terminate_pre
         terminate_post
         keyword_statements |
+
         // already in an expression
         { inMode(MODE_EXPRESSION) }?
         expression_part_plus_linq |
@@ -6502,7 +6522,7 @@ default_call[] { ENTRY_DEBUG } :
 checked_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST);
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
 
             // start the function call element
             startElement(SCHECKED_STATEMENT);
@@ -6851,7 +6871,7 @@ try_statement_with_resource[] { ENTRY_DEBUG } :
 
         TRY
 
-        for_like_statement_post 
+        for_like_statement_post
 ;
 
 // a checked statement
@@ -6865,7 +6885,7 @@ checked_statement[] { ENTRY_DEBUG } :
         }
         CHECKED
 ;
-
+/*
 // unsafe statement
 unsafe_statement[] { ENTRY_DEBUG } :
         {
@@ -6877,7 +6897,7 @@ unsafe_statement[] { ENTRY_DEBUG } :
         }
         UNSAFE
 ;
-
+*/
 // using namespace 
 using_namespace_statement[] { ENTRY_DEBUG } :
 
@@ -6920,16 +6940,17 @@ for_like_statement_post[] { ENTRY_DEBUG } :
 
         startElement(SFOR_LIKE_CONTROL);
 
+        startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
     }
     LPAREN
 
     {
 
-        startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+//        startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
 
         //startElement(SCONTROL_INITIALIZATION);
     }
-    for_like_list_item
+ //   for_like_list_item
 ;
 
 for_like_list_item[] { int type_count = 0; int secondtoken = 0; int after_token = 0;  STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
@@ -6980,7 +7001,7 @@ synchronized_statement[] { ENTRY_DEBUG } :
 
         for_like_statement_post
 ;
-
+/*
 // unchecked statement
 unchecked_statement[] { ENTRY_DEBUG } :
         {
@@ -6993,7 +7014,7 @@ unchecked_statement[] { ENTRY_DEBUG } :
 
         UNCHECKED
 ;
-
+*/
 // a synchonized statement
 autoreleasepool_block[] { ENTRY_DEBUG } :
         {
@@ -7011,7 +7032,7 @@ autoreleasepool_block[] { ENTRY_DEBUG } :
 catch_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_PARAMETER | MODE_EXPECT);
 
             // start of the catch statement
             startElement(SCATCH_BLOCK);
@@ -7171,7 +7192,7 @@ generic_selection_complete_expression[] { CompleteElement element(this); int cou
         { LA(1) == RPAREN }? expression { --count_paren; } |
 
         { perform_call_check(type, isempty, call_count, -1) && type == CALL }? { if (!isempty) ++count_paren; } 
-            expression_process (call[call_count] | keyword_calls) complete_arguments  |
+            expression_process (call[call_count] /* | keyword_calls*/) complete_arguments  |
 
         expression
         )
