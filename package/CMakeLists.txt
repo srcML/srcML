@@ -21,14 +21,6 @@ endif()
 cmake_path(ABSOLUTE_PATH CPACK_OUTPUT_FILE_PREFIX BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
 message(STATUS "Installers will be written to: ${CPACK_OUTPUT_FILE_PREFIX}")
 
-# Copy preset file to build directory
-configure_file(${CMAKE_SOURCE_DIR}/CMakePresets.json ${CMAKE_BINARY_DIR} COPYONLY)
-
-# Copy user preset file to the build directory if it exists
-if(EXISTS ${CMAKE_SOURCE_DIR}/CMakeUserPresets.json)
-    configure_file(${CMAKE_SOURCE_DIR}/CMakeUserPresets.json ${CMAKE_BINARY_DIR} COPYONLY)
-endif()
-
 # especially for archives
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
 
