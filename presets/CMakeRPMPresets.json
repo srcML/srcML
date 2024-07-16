@@ -11,7 +11,6 @@
       "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "inherits": ["ci-gcc", "ci-sibling-build"],
       "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "/Builds",
         "BUILD_LIBSRCML_TESTS": "ON",
         "BUILD_PARSER_TESTS": "ON"
       }
