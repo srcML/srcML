@@ -844,7 +844,7 @@ start[] { ++start_count;
     const int CHECKED_LCURLY = 490;
     const int UNCHECKED_LCURLY = 491;
     const int DEFAULT_COLON = 492;
-    static const std::array<int, 500 * 500> pairs = [this](){
+    static const std::array<int, 500 * 500> duplexKeywords = [this](){
         std::array<int, 500 * 500> temp_array;
         temp_array[CHECKED + (LCURLY << 8)] = CHECKED_LCURLY;
         temp_array[UNCHECKED + (LCURLY << 8)] = UNCHECKED_LCURLY;
@@ -874,6 +874,9 @@ start[] { ++start_count;
         temp_array[DYNAMIC] =  { SDYNAMIC,  0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_implementation_inner };
         temp_array[SYNTHESIZE] =  { SSYNTHESIZE,  0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_implementation_inner };
         temp_array[PROPERTY] =  { SPROPERTY,  0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_declaration_post };
+        temp_array[COMPATIBILITY_ALIAS] =  { SCOMPATIBILITY_ALIAS,  0, MODE_STATEMENT| MODE_VARIABLE_NAME, 0 };
+        temp_array[ATCLASS] =  { SCLASS_DECLARATION,  0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_LIST, 0, nullptr, &srcMLParser::atclass_name };
+//        temp_array[USING] =  { SUSING_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0, nullptr, &srcMLParser::for_like_statement_post };
 
         temp_array[GUARD] =  { SIF,  0, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION };
         temp_array[CHECKED_LCURLY] =   { SCHECKED_STATEMENT,      0, MODE_STATEMENT | MODE_NEST, 0};
@@ -894,7 +897,7 @@ start[] { ++start_count;
     if (inMode(MODE_NEST | MODE_STATEMENT)) {
         auto token = LA(1);
         if (duplex_keyword_set.member((unsigned int) LA(1))) {
-            const auto lookup = pairs[token + (next_token() << 8)];
+            const auto lookup = duplexKeywords[token + (next_token() << 8)];
             if (lookup)
                 token = lookup;
         }
@@ -1023,7 +1026,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         // Objective-C - kewywords only detected for Objective-C
         objective_c_class | protocol | objective_c_class_end /* | property_declaration */ /* | synthesize_statement */ /* | dynamic_statement */|
 
-        autoreleasepool_block | compatibility_alias | class_directive |
+        autoreleasepool_block | /* compatibility_alias | */ /* class_directive | */
 
         // Qt
         /* forever_statement | */ emit_statement
@@ -3007,6 +3010,7 @@ using_aliasing[]  { int type_count = 0;  int secondtoken = 0; int after_token = 
             )*
 ;
 
+/*
 //  Objectice-C compatibility alias
 compatibility_alias[] { ENTRY_DEBUG } :
     {
@@ -3018,7 +3022,9 @@ compatibility_alias[] { ENTRY_DEBUG } :
     }
     COMPATIBILITY_ALIAS
 ;
+*/
 
+/*
 //  Objectice-C @class directive
 class_directive[] { ENTRY_DEBUG } :
     {
@@ -3030,7 +3036,12 @@ class_directive[] { ENTRY_DEBUG } :
         startElement(SCLASS_DECLARATION);
 
     }
-    ATCLASS (identifier | COMMA)*
+    ATCLASS atclass_name
+;
+*/
+
+atclass_name[] { ENTRY_DEBUG } :
+    (identifier | COMMA)*
 ;
 
 protocol_declaration[] { ENTRY_DEBUG } :
@@ -6930,6 +6941,7 @@ try_statement_with_resource[] { ENTRY_DEBUG } :
         for_like_statement_post
 ;
 
+/*
 // a checked statement
 checked_statement[] { ENTRY_DEBUG } :
         {
@@ -6941,6 +6953,7 @@ checked_statement[] { ENTRY_DEBUG } :
         }
         CHECKED
 ;
+*/
 /*
 // unsafe statement
 unsafe_statement[] { ENTRY_DEBUG } :
@@ -6965,11 +6978,14 @@ using_namespace_statement[] { ENTRY_DEBUG } :
 
 // using statement
 using_statement[] { ENTRY_DEBUG } :
+        {
 
-        // sometimes doing something like this does not work in antlr because it looks for something like EOF instead of nothing.
-        // However, this seems to work in this case possibly, becaused it is used with tokens required afterwards.
-        for_like_statement_pre[SUSING_STATEMENT]
+            // treat try block as nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
 
+            // start of the try statement
+            startElement(SUSING_STATEMENT);
+        }
         USING 
 
         for_like_statement_post
