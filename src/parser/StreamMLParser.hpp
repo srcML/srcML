@@ -195,8 +195,15 @@ private:
 
         // push a new start token
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
+
+        // Since a no-skip token, get the position from the next skipped token
+        if (!pskiptb->empty()) {
+            ntoken->setLine(pskiptb->front()->getLine());
+            ntoken->setColumn(pskiptb->front()->getColumn());
+        } else {
+            ntoken->setLine(LT(1)->getLine());
+            ntoken->setColumn(LT(1)->getColumn());
+        }
 
         if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             ends.emplace(ntoken);
@@ -273,6 +280,20 @@ private:
             if (token == srcMLParser::STYPEPREV) {
                 qetoken->endline = lasttypeendline;
                 qetoken->endcolumn = lasttypeendcolumn;
+            }
+
+            // No Skip elements, which include skipped elements inside of the end tag,
+            // have a stop position that is based on the previous element. This element could
+            // be statement, or it could be skipped whitespace and comments. Update the last line/column
+            // based on whichever it is.
+            if (token == srcMLParser::SCONTENT ||
+                token == srcMLParser::SPUBLIC_ACCESS || token == srcMLParser::SPUBLIC_ACCESS_DEFAULT ||
+                token == srcMLParser::SPRIVATE_ACCESS || token == srcMLParser::SPRIVATE_ACCESS_DEFAULT ||
+                token == srcMLParser::SPROTECTED_ACCESS || token == srcMLParser::SPROTECTED_ACCESS_DEFAULT) {
+                if (slastline > lastline)
+                    qetoken->endline = slastline;
+                if (slastcolumn > lastcolumn)
+                    qetoken->endcolumn = slastcolumn;
             }
 
             ends.pop();
@@ -481,6 +502,8 @@ private:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
                 srcMLParser::consume();
+                slastcolumn = LT(1)->getColumn() - 1;
+                slastline = LT(1)->getLine();
 
                 break;
             }

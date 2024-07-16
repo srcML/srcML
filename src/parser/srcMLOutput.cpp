@@ -464,6 +464,25 @@ inline void srcMLOutput::processText(std::string_view str) {
 
     // output remaining text after last '<', '>', or '&', or the entire string if these do not occur
     xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) &str.data()[lastp], str.size() - lastp);
+
+
+
+    int loc = 0;
+    auto lastNewline = str.begin();
+    for (auto p = str.begin(); p != str.end(); ++p) {
+        if (*p == '\n') {
+            lastNewline = p;
+            ++loc;
+        }
+    }
+
+    currentLine += loc;
+    if (loc == 0) {
+        currentColumn += str.size();
+    } else {
+        currentColumn = str.end() - lastNewline;
+    }
+
 }
 
 /**
@@ -500,8 +519,8 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
 
     // how we detect empty elements: the position is wrong
-    if (stoken->endline < stoken->getLine() || (stoken->endline == stoken->getLine() && stoken->endcolumn < stoken->getColumn()))
-            return;
+    // if (stoken->endline < stoken->getLine() || (stoken->endline == stoken->getLine() && stoken->endcolumn < stoken->getColumn()))
+    //         return;
 
     thread_local const std::string prefix(namespaces[POS].prefix);
     thread_local const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
@@ -511,9 +530,9 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
     // position start attribute, e.g. pos:start="1:4"
     xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.data());
-    xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
+    xmlOutputBufferWriteString(output_buffer, positoa(currentLine));
     xmlOutputBufferWrite(output_buffer, 1, ":");
-    xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
+    xmlOutputBufferWriteString(output_buffer, positoa(currentColumn));
     xmlOutputBufferWrite(output_buffer, 1, "\"");
 
     // position end attribute, e.g. pos:end="2:1"

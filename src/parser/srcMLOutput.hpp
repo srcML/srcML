@@ -112,6 +112,9 @@ private:
     // adds the position attributes to a token
     void addPosition(const antlr::RefToken& token);
 
+    int currentLine = 1;
+    int currentColumn = 1;
+
 public:
     /** token stream input */
     TokenStream* input = nullptr;
