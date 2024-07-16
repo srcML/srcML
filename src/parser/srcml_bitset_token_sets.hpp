@@ -154,4 +154,10 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::DOXYGEN_COMMENT_START
 )
 
+token_set(srcMLParser, duplex_keyword_set,
+    srcMLParser::CHECKED,
+    srcMLParser::UNCHECKED,
+    srcMLParser::DEFAULT
+)
+
 #endif

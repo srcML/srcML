@@ -713,6 +713,7 @@ public:
     int current_column = -1;
     int current_line = -1;
     int nxt_token = -1;
+    TokenPosition prevTokenPosition;
     int last_consumed = -1;
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
@@ -733,6 +734,7 @@ public:
     static const antlr::BitSet decl_specifier_tokens_set;
     static const antlr::BitSet identifier_list_tokens_set;
     static const antlr::BitSet whitespace_token_set;
+    static const antlr::BitSet duplex_keyword_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -779,9 +781,6 @@ public:
 
     struct Rule {
 
-        // Required next token
-        int nextToken = 0;
-
         // Token for start element
         int elementToken = 0;
 
@@ -793,6 +792,10 @@ public:
 
         // Mode following keyword
         srcMLState::MODE_TYPE followingMode = 0;
+
+        void (srcMLParser::*pre)() = nullptr;
+
+        void (srcMLParser::*post)() = nullptr;
     };
 
     bool processRule(const Rule& rule) {
@@ -800,11 +803,11 @@ public:
         if (rule.notInMode != 0 && inMode(rule.notInMode))
             return false;
 
-        if (rule.nextToken && rule.nextToken != next_token())
-            return false;
-
         if (inMode(MODE_EXPRESSION))
             endMode(MODE_EXPRESSION);
+
+        if (rule.pre)
+            (*this.*(rule.pre))();
 
         if (rule.startingMode != 0)
             startNewMode(rule.startingMode);
@@ -816,6 +819,9 @@ public:
             startNewMode(rule.followingMode);
 
         consume();
+
+        if (rule.post)
+            (*this.*(rule.post))();
 
         return true;
     }
@@ -835,41 +841,64 @@ public:
 */
 start[] { ++start_count;
 
-    if (inMode(MODE_PSEUDOBLOCK) && LA(1) != LCURLY) {
-        endMode(MODE_PSEUDOBLOCK);
-        startNoSkipElement(SPSEUDO_BLOCK);
-        startNoSkipElement(SCONTENT);
-        return;
-    }
-
-   static const std::array<Rule, 500> rules = [](){
-        std::array<Rule, 500> temp_array;
-        temp_array[WHILE] =    { 0, SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
-        temp_array[RETURN] =   { 0, SRETURN_STATEMENT,   0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_EXPRESSION | MODE_EXPECT };
-        temp_array[FOR] =      { 0, SFOR_STATEMENT,      0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT };
-        temp_array[BREAK] =    { 0, SBREAK_STATEMENT,    0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
-        temp_array[CONTINUE] = { 0, SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
-        temp_array[GOTO] =     { 0, SGOTO_STATEMENT,     0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
-//        temp_array[IMPORT] =   { 0, SIMPORT, MODE_VARIABLE_NAME, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
-        temp_array[PACKAGE] =  { 0, SPACKAGE,    0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
-        temp_array[FOREVER] =  { 0, SFOREVER_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0 };
-        temp_array[SWITCH] =  { 0, SSWITCH,  0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
-        temp_array[TYPEDEF] =  { 0, STYPEDEF,  0, MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME | MODE_ONLY_END_TERMINATE, MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE };
-        temp_array[DEFAULT] =  { COLON, SDEFAULT,  0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT };
-        temp_array[CHECKED] =    { LCURLY, SCHECKED_STATEMENT,      0, MODE_STATEMENT | MODE_NEST, 0};
-        temp_array[UNCHECKED] =  { LCURLY, SUNCHECKED_STATEMENT,    0, MODE_STATEMENT | MODE_NEST, 0};
-        temp_array[STATIC_ASSERT] =  { 0, SSTATIC_ASSERT_STATEMENT,  0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST };
-        temp_array[ASSERT] =  { 0, SASSERT_STATEMENT,  0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, 0 };
-        temp_array[UNSAFE] =  { 0, SUNSAFE_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0 };
-        temp_array[FRIEND] =  { 0, SFRIEND,  0, MODE_STATEMENT | MODE_NEST | MODE_FRIEND, 0 };
-//        temp_array[FOREACH] =  { 0, SFOREACH_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, inLanguage(LANGUAGE_CSHARP) ? MODE_EXPECT | MODE_CONTROL : MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA };
-
-        temp_array[GUARD] =  { 0, SIF,  0, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION };
+    const int CHECKED_LCURLY = 490;
+    const int UNCHECKED_LCURLY = 491;
+    const int DEFAULT_COLON = 492;
+    static const std::array<int, 500 * 500> pairs = [this](){
+        std::array<int, 500 * 500> temp_array;
+        temp_array[CHECKED + (LCURLY << 8)] = CHECKED_LCURLY;
+        temp_array[UNCHECKED + (LCURLY << 8)] = UNCHECKED_LCURLY;
+        temp_array[DEFAULT + (COLON << 8)] = DEFAULT_COLON;
         return temp_array;
     }();
 
+    static const std::array<Rule, 500> rules = [this](){
+        std::array<Rule, 500> temp_array;
+        temp_array[WHILE] =    { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
+        temp_array[RETURN] =   { SRETURN_STATEMENT,   0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_EXPRESSION | MODE_EXPECT };
+        temp_array[FOR] =      { SFOR_STATEMENT,      0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT };
+        temp_array[BREAK] =    { SBREAK_STATEMENT,    0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+        temp_array[CONTINUE] = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+        temp_array[GOTO] =     { SGOTO_STATEMENT,     0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+//        temp_array[IMPORT] =   { SIMPORT, MODE_VARIABLE_NAME, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
+        temp_array[PACKAGE] =  { SPACKAGE,    0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
+        temp_array[FOREVER] =  { SFOREVER_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0 };
+        temp_array[SWITCH] =  { SSWITCH,  0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
+        temp_array[TYPEDEF] =  { STYPEDEF,  0, MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME | MODE_ONLY_END_TERMINATE, MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE };
+        temp_array[STATIC_ASSERT] =  { SSTATIC_ASSERT_STATEMENT,  0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST };
+        temp_array[ASSERT] =  { SASSERT_STATEMENT,  0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, 0 };
+        temp_array[UNSAFE] =  { SUNSAFE_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0 };
+        temp_array[FRIEND] =  { SFRIEND,  0, MODE_STATEMENT | MODE_NEST | MODE_FRIEND, 0 };
+        temp_array[DO] =  { SDO_STATEMENT,  0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
+        temp_array[FOREACH] =  { SFOREACH_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA };
+        temp_array[DYNAMIC] =  { SDYNAMIC,  0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_implementation_inner };
+        temp_array[SYNTHESIZE] =  { SSYNTHESIZE,  0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_implementation_inner };
+        temp_array[PROPERTY] =  { SPROPERTY,  0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_declaration_post };
+
+        temp_array[GUARD] =  { SIF,  0, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION };
+        temp_array[CHECKED_LCURLY] =   { SCHECKED_STATEMENT,      0, MODE_STATEMENT | MODE_NEST, 0};
+        temp_array[UNCHECKED_LCURLY] = { SUNCHECKED_STATEMENT,      0, MODE_STATEMENT | MODE_NEST, 0};
+        temp_array[DEFAULT_COLON] =  { SDEFAULT,  0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT };
+
+        return temp_array;
+    }();
+
+   static const std::array<Rule, 500> rules2 = [this](){
+        std::array<Rule, 500> temp_array(rules);
+        temp_array[FOREACH] =  { SFOREACH_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, MODE_EXPECT | MODE_CONTROL };
+        return temp_array;
+    }();
+
+    const auto& currentRules = inLanguage(LANGUAGE_CSHARP) ? rules2 : rules;
+
     if (inMode(MODE_NEST | MODE_STATEMENT)) {
-        const auto& rule = rules[LA(1)];
+        auto token = LA(1);
+        if (duplex_keyword_set.member((unsigned int) LA(1))) {
+            const auto lookup = pairs[token + (next_token() << 8)];
+            if (lookup)
+                token = lookup;
+        }
+        const auto& rule = currentRules[token];
         if (rule.elementToken && processRule(rule)) {
             return;
         }
@@ -962,7 +991,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         if_statement | { next_token() == IF }? elseif_statement | else_statement | /* switch_statement | */ switch_case | /* switch_default | */
 
         // iterative statements
-        /* while_statement | */ /* for_statement | */ do_statement | foreach_statement |
+        /* while_statement | */ /* for_statement | */ /* do_statement | */ /* foreach_statement | */
 
         // jump statements
         /* return_statement | */ /* break_statement | continue_statement | goto_statement | */
@@ -992,7 +1021,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         asm_declaration |
 
         // Objective-C - kewywords only detected for Objective-C
-        objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
+        objective_c_class | protocol | objective_c_class_end /* | property_declaration */ /* | synthesize_statement */ /* | dynamic_statement */|
 
         autoreleasepool_block | compatibility_alias | class_directive |
 
@@ -1885,6 +1914,7 @@ objective_c_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 // Objective-C property declaration
+/*
 property_declaration[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
     {
 
@@ -1893,7 +1923,11 @@ property_declaration[] { int type_count = 0;  int secondtoken = 0; int after_tok
         startElement(SPROPERTY);
 
     }
-    PROPERTY (property_attribute_list)*
+    PROPERTY property_declaration_post
+;
+*/
+property_declaration_post[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
+    (property_attribute_list)*
     { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
     variable_declaration[type_count]
 ;
@@ -1933,6 +1967,7 @@ property_attribute_initialization[] { CompleteElement element(this); ENTRY_DEBUG
     EQUAL identifier
 ;
 
+/*
 synthesize_statement[] { ENTRY_DEBUG } :
     {
 
@@ -1943,7 +1978,9 @@ synthesize_statement[] { ENTRY_DEBUG } :
     }
     SYNTHESIZE property_implementation_inner
 ;
+*.
 
+/*
 dynamic_statement[] { ENTRY_DEBUG } :
     {
 
@@ -1954,6 +1991,7 @@ dynamic_statement[] { ENTRY_DEBUG } :
     }
     DYNAMIC property_implementation_inner
 ;
+*/
 
 property_implementation_inner[] { ENTRY_DEBUG } :
 
@@ -2154,6 +2192,7 @@ markend[int& token] { token = LA(1); } :;
 
 /* Keyword Statements */
 
+/*
 // while statement
 while_statement[] { ENTRY_DEBUG } :
         {
@@ -2168,6 +2207,7 @@ while_statement[] { ENTRY_DEBUG } :
         }
         WHILE
 ;
+*/
 
 /*
 // Qt forever statement
@@ -2185,7 +2225,7 @@ forever_statement[] { ENTRY_DEBUG } :
         FOREVER
 ;
 */
-
+/*
 // do while statement
 do_statement[] { ENTRY_DEBUG } :
         {
@@ -2198,15 +2238,26 @@ do_statement[] { ENTRY_DEBUG } :
             startElement(SDO_STATEMENT);
 
             // mode to nest while part of do while statement
-            startNewMode(MODE_STATEMENT | MODE_NEST);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_PSEUDOBLOCK);
         }
         DO
+//        {
+//            if (LA(1) != LCURLY) {
+//                startNoSkipElement(SPSEUDO_BLOCK);
+//                startNoSkipElement(SCONTENT);
+//            }
+//       }
+;
+*/
+
+// do while statement
+pseudoblock[] { ENTRY_DEBUG } :
         {
             if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
                 startNoSkipElement(SCONTENT);
             }
-        }
+       }
 ;
 
 // while part of do statement
@@ -2239,6 +2290,7 @@ for_statement[] { ENTRY_DEBUG } :
 ;
 */
 
+/*
 // start of foreach statement (C#/Qt)
 foreach_statement[] { ENTRY_DEBUG } :
         {
@@ -2259,6 +2311,7 @@ foreach_statement[] { ENTRY_DEBUG } :
 //                startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
         }
 ;
+*/
 
 // start of control group, i.e., initialization, test, increment
 control_group[] { ENTRY_DEBUG } :
@@ -2494,14 +2547,13 @@ else_statement[] { ENTRY_DEBUG } :
             // start the else part of the if statement
             startElement(SELSE);
         }
-        ELSE
-
-        {
-            if (LA(1) != LCURLY) {
-                startNoSkipElement(SPSEUDO_BLOCK);
-                startNoSkipElement(SCONTENT);
-            }
-        }
+        ELSE pseudoblock
+//        {
+//            if (LA(1) != LCURLY) {
+//                startNoSkipElement(SPSEUDO_BLOCK);
+//                startNoSkipElement(SCONTENT);
+//            }
+//        }
 ;
 
 /*
@@ -2550,6 +2602,7 @@ elseif_statement[] { ENTRY_DEBUG } :
         }
 ;
 
+/*
 //  start of switch statement
 switch_statement[] { ENTRY_DEBUG } :
         {
@@ -2564,6 +2617,7 @@ switch_statement[] { ENTRY_DEBUG } :
         }
         SWITCH
 ;
+*/
 
 // actions to perform before first starting a section.  Uses in multiple places.
 section_entry_action_first[] :
@@ -2604,6 +2658,7 @@ switch_case[] { ENTRY_DEBUG } :
         (CASE | macro_case_call)
 ;
 
+/*
 // default treated as a statement
 switch_default[] { ENTRY_DEBUG } :
         {
@@ -2618,6 +2673,7 @@ switch_default[] { ENTRY_DEBUG } :
         }
         DEFAULT
 ;
+*/
 
 // import statement
 import_statement[] { ENTRY_DEBUG } :
