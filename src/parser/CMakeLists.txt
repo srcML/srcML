@@ -27,30 +27,31 @@ FetchContent_Declare(antlrsrc
     URL https://www.antlr2.org/download/antlr-2.7.7.tar.gz
     URL_HASH MD5=01cc9a2a454dd33dcd8c856ec89af090
 )
-FetchContent_GetProperties(antlrsrc)
-if(NOT antlrsrc_POPULATED)
-    # Fetch the content using previously declared details
-    FetchContent_Populate(antlrsrc)
+# Fetch the content using previously declared details
+FetchContent_MakeAvailable(antlrsrc)
+# Custom marker file to check if modifications have been made
+set(MARKER_FILE "${antlrsrc_SOURCE_DIR}/antlr_patched.marker")
+# Fetch and modify only once
+if(NOT EXISTS ${MARKER_FILE})
+    message(STATUS "Modifying ANTLR sources")
 
-    if (NOT antlrsrc_PATCHED)
-        # Add needed include file for CharScanner.hpp
-        # Comment out use of std::binary_function, deprecated in C++11 and removed in C++17
-        set(CHARSCANNER_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/CharScanner.hpp")
-        file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
-        string(REPLACE "#include <antlr/config.hpp>\n\n" "#include <antlr/config.hpp>\n#include <string.h>\n\n" FILE_CONTENTS "${FILE_CONTENTS}")
-        string(REPLACE "class ANTLR_API CharScannerLiteralsLess : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool>"
+    # Add needed include file for CharScanner.hpp
+    # Comment out use of std::binary_function, deprecated in C++11 and removed in C++17
+    set(CHARSCANNER_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/CharScanner.hpp")
+    file(READ ${CHARSCANNER_HPP} FILE_CONTENTS)
+    string(REPLACE "#include <antlr/config.hpp>\n\n" "#include <antlr/config.hpp>\n#include <string.h>\n\n" FILE_CONTENTS "${FILE_CONTENTS}")
+    string(REPLACE "class ANTLR_API CharScannerLiteralsLess : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool>"
                     "class ANTLR_API CharScannerLiteralsLess /* : public ANTLR_USE_NAMESPACE(std)binary_function<ANTLR_USE_NAMESPACE(std)string,ANTLR_USE_NAMESPACE(std)string,bool> */" FILE_CONTENTS "${FILE_CONTENTS}")
-        file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
+    file(WRITE ${CHARSCANNER_HPP} "${FILE_CONTENTS}")
 
-        # Remove pragma warning disable that is no longer valid
-        set(CONFIG_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/config.hpp")
-        file(READ ${CONFIG_HPP} FILE_CONTENTS)
-        string(REPLACE "# pragma warning( disable : 4786 4231 )" "# pragma warning( disable : 4786 )" FILE_CONTENTS "${FILE_CONTENTS}")
-        file(WRITE ${CONFIG_HPP} "${FILE_CONTENTS}")
+    # Remove pragma warning disable that is no longer valid
+    set(CONFIG_HPP "${antlrsrc_SOURCE_DIR}/lib/cpp/antlr/config.hpp")
+    file(READ ${CONFIG_HPP} FILE_CONTENTS)
+    string(REPLACE "# pragma warning( disable : 4786 4231 )" "# pragma warning( disable : 4786 )" FILE_CONTENTS "${FILE_CONTENTS}")
+    file(WRITE ${CONFIG_HPP} "${FILE_CONTENTS}")
 
-        # Mark so that further patches are not performed
-        set(antlrsrc_PATCHED TRUE CACHE BOOL "Indicates that Antlr source was patched" FORCE)
-    endif()
+    # Create marker file to indicate that modifications have been done
+    file(WRITE ${MARKER_FILE} "Patched ANTLR sources.")
 endif()
 
 # antlr library
