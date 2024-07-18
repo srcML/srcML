@@ -290,10 +290,13 @@ private:
                 token == srcMLParser::SPUBLIC_ACCESS || token == srcMLParser::SPUBLIC_ACCESS_DEFAULT ||
                 token == srcMLParser::SPRIVATE_ACCESS || token == srcMLParser::SPRIVATE_ACCESS_DEFAULT ||
                 token == srcMLParser::SPROTECTED_ACCESS || token == srcMLParser::SPROTECTED_ACCESS_DEFAULT) {
-                if (slastline > lastline)
+
+                if (slastline > lastline) {
                     qetoken->endline = slastline;
-                if (slastcolumn > lastcolumn)
                     qetoken->endcolumn = slastcolumn;
+                } else if (slastcolumn > lastcolumn) {
+                    qetoken->endcolumn = slastcolumn;
+                }
             }
 
             ends.pop();
