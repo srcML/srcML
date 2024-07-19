@@ -519,8 +519,8 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     srcMLToken* stoken = static_cast<srcMLToken*>(&(*token));
 
     // how we detect empty elements: the position is wrong
-    // if (stoken->endline < stoken->getLine() || (stoken->endline == stoken->getLine() && stoken->endcolumn < stoken->getColumn()))
-    //         return;
+    if (stoken->endline < stoken->getLine() || (stoken->endline == stoken->getLine() && stoken->endcolumn < stoken->getColumn()))
+            return;
 
     thread_local const std::string prefix(namespaces[POS].prefix);
     thread_local const std::string startAttribute = " " + prefix + (!prefix.empty() ? ":" : "") + "start=\"";
