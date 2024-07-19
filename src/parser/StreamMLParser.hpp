@@ -286,11 +286,7 @@ private:
             // have a stop position that is based on the previous element. This element could
             // be statement, or it could be skipped whitespace and comments. Update the last line/column
             // based on whichever it is.
-            if (token == srcMLParser::SCONTENT ||
-                token == srcMLParser::SPUBLIC_ACCESS || token == srcMLParser::SPUBLIC_ACCESS_DEFAULT ||
-                token == srcMLParser::SPRIVATE_ACCESS || token == srcMLParser::SPRIVATE_ACCESS_DEFAULT ||
-                token == srcMLParser::SPROTECTED_ACCESS || token == srcMLParser::SPROTECTED_ACCESS_DEFAULT) {
-
+            if (!srcMLParser::no_skip_element_token_set.member(token)) {
                 if (slastline > lastline) {
                     qetoken->endline = slastline;
                     qetoken->endcolumn = slastcolumn;
