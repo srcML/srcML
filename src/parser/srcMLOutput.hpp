@@ -21,7 +21,10 @@
 #include <srcml_options.hpp>
 #include <libxml/xmlwriter.h>
 #include <srcmlns.hpp>
+#include <Position.hpp>
 #include <optional>
+#include <stack>
+#include <queue>
 
 /**
  * anonymous enum for prefix positions
@@ -112,8 +115,13 @@ private:
     // adds the position attributes to a token
     void addPosition(const antlr::RefToken& token);
 
-    int currentLine = 1;
-    int currentColumn = 1;
+    Position currentPosition;
+
+    std::stack<Position> positionStack;
+
+    std::string filename;
+
+    std::queue<int> lastColumnAttribute;
 
 public:
     /** token stream input */

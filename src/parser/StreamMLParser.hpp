@@ -22,6 +22,7 @@
 
 #include <srcMLToken.hpp>
 #include <srcMLParser.hpp>
+#include <Position.hpp>
 
 /**
  * StreamMLParser
@@ -235,14 +236,13 @@ private:
 
         // save the start position of a full type for any following previous types
         if (token == srcMLParser::STYPE) {
-            lasttypestartline = LT(1)->getLine();
-            lasttypestartcolumn = LT(1)->getColumn();
+            lastTypeStartPosition.set(LT(1));
         }
 
         // previous type get start positions from previous, well type
         if (token == srcMLParser::STYPEPREV) {
-            ntoken->setLine(lasttypestartline);
-            ntoken->setColumn(lasttypestartcolumn);
+            ntoken->setLine(lastTypeStartPosition.line);
+            ntoken->setColumn(lastTypeStartPosition.column);
         }
 
         if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
@@ -269,30 +269,25 @@ private:
         if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
 
-            qetoken->endline = lastline;
-            qetoken->endcolumn = lastcolumn;
+            qetoken->endline = lastPosition.line;
+            qetoken->endcolumn = lastPosition.column;
 
             if (token == srcMLParser::STYPE) {
-                lasttypeendline = lastline;
-                lasttypeendcolumn = lastcolumn;
+                lastTypeEndPosition = lastPosition;
             }
 
             if (token == srcMLParser::STYPEPREV) {
-                qetoken->endline = lasttypeendline;
-                qetoken->endcolumn = lasttypeendcolumn;
+                qetoken->endline = lastTypeEndPosition.line;
+                qetoken->endcolumn = lastTypeEndPosition.column;
             }
 
             // No Skip elements, which include skipped elements inside of the end tag,
             // have a stop position that is based on the previous element. This element could
             // be statement, or it could be skipped whitespace and comments. Update the last line/column
             // based on whichever it is.
-            if (!srcMLParser::no_skip_element_token_set.member(token)) {
-                if (slastline > lastline) {
-                    qetoken->endline = slastline;
-                    qetoken->endcolumn = slastcolumn;
-                } else if (slastcolumn > lastcolumn) {
-                    qetoken->endcolumn = slastcolumn;
-                }
+            if (srcMLParser::no_skip_element_token_set.member(token) && lastPosition < lastSkipPosition) {
+                qetoken->endline = lastSkipPosition.line;
+                qetoken->endcolumn = lastSkipPosition.column;
             }
 
             ends.pop();
@@ -308,8 +303,8 @@ private:
         // that was enqueued
         if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
             srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
-            qetoken->endline = slastline;
-            qetoken->endcolumn = slastcolumn;
+            qetoken->endline = lastSkipPosition.line;
+            qetoken->endcolumn = lastSkipPosition.column;
             ends.pop();
         }
      }
@@ -328,9 +323,9 @@ private:
         srcMLParser::consume();
 
         // record for end position of start elements
-        lastline = LT(1)->getLine();
-        lastcolumn = LT(1)->getColumn() - 1;
-
+        if (!inputState->guessing /* && !inskip */) {
+            lastPosition.set(LT(1));
+        }
         // consume any skipped tokens
         while (consumeSkippedToken())
             ;
@@ -387,12 +382,10 @@ private:
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     srcMLParser::consume();
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
+                    lastSkipPosition.set(LT(1));
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
+                    lastSkipPosition.set(LT(1));
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
@@ -415,8 +408,7 @@ private:
                 pushSSkipToken(srcMLParser::SCOMMENT);
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
+                lastSkipPosition.set(LT(1));
                 pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
@@ -427,8 +419,7 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
+                lastSkipPosition.set(LT(1));
                 pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
@@ -439,8 +430,7 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
+                lastSkipPosition.set(LT(1));
                 pushESkipToken(srcMLParser::SDOXYGEN_COMMENT);
 
                 break;
@@ -451,8 +441,7 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
+                lastSkipPosition.set(LT(1));
                 pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
 
                 break;
@@ -484,12 +473,10 @@ private:
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     srcMLParser::consume();
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
+                    lastSkipPosition.set(LT(1));
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
+                    lastSkipPosition.set(LT(1));
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
@@ -501,8 +488,7 @@ private:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
+                lastSkipPosition.set(LT(1));
 
                 break;
             }
@@ -650,8 +636,7 @@ private:
     inline void completeSkip() {
 
         if (!open_comments.empty()) {
-            slastcolumn = LT(1)->getColumn() - 1;
-            slastline = LT(1)->getLine();
+            lastSkipPosition.set(LT(1));
             pushESkipToken(open_comments.top());
             open_comments.pop();
         }
@@ -880,18 +865,14 @@ private:
 private:
 
     // record position of text elements
-    int lastline = 0;
-    int lastcolumn = 0;
+    Position lastPosition;
 
     // record position for comment elements
-    int slastline = 0;
-    int slastcolumn = 0;
+    Position lastSkipPosition;
 
     // record position for <type prev=""/>
-    int lasttypeendline = 0;
-    int lasttypeendcolumn = 0;
-    int lasttypestartline = 0;
-    int lasttypestartcolumn = 0;
+    Position lastTypeEndPosition;
+    Position lastTypeStartPosition;
 
     /** parser options */
     OPTION_TYPE & options;

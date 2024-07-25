@@ -465,24 +465,12 @@ inline void srcMLOutput::processText(std::string_view str) {
     // output remaining text after last '<', '>', or '&', or the entire string if these do not occur
     xmlTextWriterWriteRawLen(xout, BAD_CAST (unsigned char*) &str.data()[lastp], str.size() - lastp);
 
+    // maintain current column and line position for validating position attributes
+    if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
 
-
-    int loc = 0;
-    auto lastNewline = str.begin();
-    for (auto p = str.begin(); p != str.end(); ++p) {
-        if (*p == '\n') {
-            lastNewline = p;
-            ++loc;
-        }
+        // update the position for validation
+        currentPosition.append(str);
     }
-
-    currentLine += loc;
-    if (loc == 0) {
-        currentColumn += str.size();
-    } else {
-        currentColumn = str.end() - lastNewline;
-    }
-
 }
 
 /**
@@ -530,10 +518,20 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
 
     // position start attribute, e.g. pos:start="1:4"
     xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.data());
-    xmlOutputBufferWriteString(output_buffer, positoa(currentLine));
+    xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
     xmlOutputBufferWrite(output_buffer, 1, ":");
-    xmlOutputBufferWriteString(output_buffer, positoa(currentColumn));
+    xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
     xmlOutputBufferWrite(output_buffer, 1, "\"");
+    xmlOutputBufferFlush(output_buffer);
+
+    Position attribute(token);
+    if (attribute != currentPosition) {
+
+        if (currentPosition.column != attribute.column && currentPosition.column != attribute.column - 1) {
+        }
+        if (currentPosition.line != attribute.line) {
+        }
+    }
 
     // position end attribute, e.g. pos:end="2:1"
     xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.data());
@@ -547,6 +545,8 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     xmlOutputBufferWrite(output_buffer, 1, ":");
     xmlOutputBufferWriteString(output_buffer, positoa(stoken->endcolumn));
     xmlOutputBufferWrite(output_buffer, 1, "\"");
+
+    positionStack.push(Position( stoken->endline, stoken->endcolumn));
 }
 
 void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
@@ -582,6 +582,14 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 
         --openelementcount;
         xmlTextWriterEndElement(xout);
+    }
+
+    // validate that the end position of the corresponding start tag is correct
+    if (isposition && !isstart(token) && !isempty(token)) {
+
+        if (positionStack.top() != currentPosition) {
+        }
+        positionStack.pop();
     }
 }
 

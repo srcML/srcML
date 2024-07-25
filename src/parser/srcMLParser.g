@@ -716,6 +716,7 @@ public:
     int current_line = -1;
     int nxt_token = -1;
     int last_consumed = -1;
+    antlr::RefToken last_token;
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
     size_t number_finishing_elements = 0;

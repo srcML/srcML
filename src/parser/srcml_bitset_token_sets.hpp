@@ -161,7 +161,8 @@ token_set(srcMLParser, no_skip_element_token_set,
     srcMLParser::SPRIVATE_ACCESS,
     srcMLParser::SPRIVATE_ACCESS_DEFAULT,
     srcMLParser::SPROTECTED_ACCESS,
-    srcMLParser::SPROTECTED_ACCESS_DEFAULT
+    srcMLParser::SPROTECTED_ACCESS_DEFAULT,
+    srcMLParser::STHEN
 )
 
 #endif
