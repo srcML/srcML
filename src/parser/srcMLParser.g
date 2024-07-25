@@ -776,8 +776,12 @@ public:
 
     virtual void consume() {
 
-        if (!skip_tokens_set.member((unsigned int) LA(1)))
+        if (!skip_tokens_set.member((unsigned int) LA(1)) /* && !inMode(MODE_PREPROC) */) {
+
+            last_token = LT(1);
             last_consumed = LA(1);
+        }
+
         LLkParser::consume();
     }
 }
@@ -3544,7 +3548,6 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
                 startElement(SEMPTY);
 
             wait_terminate_post = true;
-
         }
         TERMINATE
         set_bool[skip_ternary, false]
@@ -3961,7 +3964,6 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 
             if (inMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_LIST) || inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA))
                 markup_comma = false;
-
         }
         comma_marked[markup_comma]
         {
@@ -8338,7 +8340,6 @@ parameter_type_count[int& type_count, bool output_type = true] { CompleteElement
                 startElement(STYPE);
         }
 
-
         // match auto keyword first as special case do no warn about ambiguity
         ((options { generateAmbigWarnings = false; } : this_specifier | auto_keyword[type_count > 1] |
          { is_class_type_identifier() }? (options { greedy = true; } :
@@ -9374,7 +9375,6 @@ cppif_end_count_check[] returns [std::list<int> end_order] {
 
         if (LA(1) == TERMINATE && !wait_terminate_post && (inTransparentMode(MODE_EXPRESSION | MODE_STATEMENT) || inMode(MODE_END_CONTROL))) {
             end_order.push_back(TERMINATE);
-
         }
 
         prev = LA(1);
