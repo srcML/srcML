@@ -23,30 +23,18 @@ public:
 
     OffSideRule(antlr::TokenStream& input) : input(input) {}
 
-    /** abstract method for getting next token */
-    antlr::RefToken nextToken() override {
-
-        const auto& token = input.nextToken();
-
-        // convert break token to goto (just an example)
-        if (token->getType() == srcMLParser::BREAK)
-            token->setType(srcMLParser::GOTO);
-
-        // replace while with if (including text)
-        if (token->getType() == srcMLParser::WHILE) {
-            auto token = srcMLToken::factory();
-            token->setType(srcMLParser::IF);
-            token->setText("if");
-
-            return token;
-        }
-
-        return token;
-    }
+    antlr::RefToken nextToken();
 
 private:
     antlr::TokenStream& input;
     std::deque<antlr::RefToken> buffer;
+
+    int prevStartCol = -1;
+    int currentStartCol = -1;
+    int numIndents = 0;
+
+    bool skippedColSet = false;
+    bool debugInfo = false;
 };
 
 #endif
