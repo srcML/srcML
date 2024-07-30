@@ -4992,21 +4992,56 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
         RBRACKET
 ;
 
-// contents of array index
-variable_identifier_array_grammar_sub_contents{ bool found_expr = false; bool is_expr = false; ENTRY_DEBUG } :
-        { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }? complete_expression |
+/*
+  variable_identifier_array_grammar_sub_contents
+
+  Handles the contents of a variables array index.
+*/
+variable_identifier_array_grammar_sub_contents {
+        bool found_expr = false;
+        bool is_expr = false;
+        int prev_look_ahead = LA(1);
+        int num_loops = 0;
+        int max_loops = 50;
+
+        ENTRY_DEBUG
+} :
+        { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
+        complete_expression |
 
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
-            (options { greedy = true; } : { LA(1) != RBRACKET }?
-                ({ /* stop warning */ LA(1) == COMMA }? { if (!found_expr) { empty_element(SEXPRESSION, true); }
+        (options { greedy = true; } :
+            { LA(1) != RBRACKET && num_loops < max_loops }?
+            (
+                { LA(1) == COMMA /* stop warning */ }?
+                {
+                    if (!found_expr) {
+                        empty_element(SEXPRESSION, true);
+                    }
+                }
+                COMMA
+                {
+                    found_expr = false;
+                } |
 
+                complete_expression
+                {
+                    found_expr = true;
 
-                 } COMMA { found_expr = false; } | complete_expression { found_expr = true; })
+                    if (prev_look_ahead == LA(1)) {
+                        num_loops += 1;
+                    }
+                }
+            )
 
-                set_bool[is_expr, true]
-
+            set_bool[is_expr, true]
         )*
-        { if (is_expr && !found_expr) empty_element(SEXPRESSION, true); }
+
+        {
+            if (is_expr && !found_expr) {
+                empty_element(SEXPRESSION, true);
+            }
+        }
 ;
 
 // handle C# attribute
