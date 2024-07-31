@@ -116,7 +116,7 @@ void srcMLOutput::close() {
 
     if (xout) {
 
-        if (didwrite)
+        if (startedOutput)
             xmlTextWriterEndDocument(xout);
         xmlFreeTextWriter(xout);
         xout = 0;
@@ -273,7 +273,7 @@ void srcMLOutput::outputProcessingInstruction() {
 
     if (depth == 0 && processing_instruction) {
 
-        didwrite = true;
+        startedOutput = true;
 
         xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.data());
         xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.data());
@@ -356,12 +356,11 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         encoding = "UTF-8";
     }
 
-    didwrite = true;
+    startedOutput = true;
 
     // start of main tag
     std::string_view unitprefix = namespaces[SRC].prefix;
     xmlTextWriterStartElementNS(xout, BAD_CAST (!unitprefix.empty() ? unitprefix.data() : 0), BAD_CAST "unit", 0);
-    ++openelementcount;
 
     // output namespaces for root and nested units
     if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
@@ -603,7 +602,6 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
             prefix = 0;
 
         xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
-        ++openelementcount;
 
         if (attr_name1)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name1, BAD_CAST attr_value1);
@@ -628,7 +626,6 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
 
     if (!isstart(token) || isempty(token)) {
 
-        --openelementcount;
         xmlTextWriterEndElement(xout);
     }
 }
