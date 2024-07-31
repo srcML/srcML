@@ -197,19 +197,6 @@ private:
         // push a new start token
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
 
-        // Since a no-skip token, get the position from the next skipped token
-        if (!pskiptb->empty()) {
-            ntoken->setLine(pskiptb->front()->getLine());
-            ntoken->setColumn(pskiptb->front()->getColumn());
-        } else {
-            ntoken->setLine(LT(1)->getLine());
-            ntoken->setColumn(LT(1)->getColumn());
-        }
-
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            ends.emplace(ntoken);
-        }
-
         pushToken(ntoken);
     }
 
@@ -217,12 +204,6 @@ private:
 
         // push a new start token
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            ends.emplace(ntoken);
-        }
 
         pushSkipToken(ntoken);
     }
@@ -231,23 +212,6 @@ private:
 
         // push a new start token
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-
-        // save the start position of a full type for any following previous types
-        if (token == srcMLParser::STYPE) {
-            lastTypeStartPosition.set(LT(1));
-        }
-
-        // previous type get start positions from previous, well type
-        if (token == srcMLParser::STYPEPREV) {
-            ntoken->setLine(lastTypeStartPosition.line);
-            ntoken->setColumn(lastTypeStartPosition.column);
-        }
-
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            ends.emplace(ntoken);
-        }
 
         pushTokenFlush(ntoken);
     }
@@ -263,50 +227,12 @@ private:
 
         // push a new end token
         pushToken(antlr::RefToken(EndTokenFactory(token)));
-
-        // end position info is needed from the matching last end token
-        // that was enqueued
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
-
-            qetoken->endline = lastPosition.line;
-            qetoken->endcolumn = lastPosition.column;
-
-            if (token == srcMLParser::STYPE) {
-                lastTypeEndPosition = lastPosition;
-            }
-
-            if (token == srcMLParser::STYPEPREV) {
-                qetoken->endline = lastTypeEndPosition.line;
-                qetoken->endcolumn = lastTypeEndPosition.column;
-            }
-
-            // No Skip elements, which include skipped elements inside of the end tag,
-            // have a stop position that is based on the previous element. This element could
-            // be statement, or it could be skipped whitespace and comments. Update the last line/column
-            // based on whichever it is.
-            if (srcMLParser::no_skip_element_token_set.member(token) && lastPosition < lastSkipPosition) {
-                qetoken->endline = lastSkipPosition.line;
-                qetoken->endcolumn = lastSkipPosition.column;
-            }
-
-            ends.pop();
-        }
     }
 
     inline void pushESkipToken(int token) {
 
         // push a new end token
         pushSkipToken(antlr::RefToken(EndTokenFactory(token)));
-
-        // end position info is needed from the matching last end token
-        // that was enqueued
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
-            qetoken->endline = lastSkipPosition.line;
-            qetoken->endcolumn = lastSkipPosition.column;
-            ends.pop();
-        }
      }
 
     /**
@@ -322,10 +248,6 @@ private:
         // rest of consume process
         srcMLParser::consume();
 
-        // record for end position of start elements
-        if (!inputState->guessing /* && !inskip */) {
-            lastPosition.set(LT(1));
-        }
         // consume any skipped tokens
         while (consumeSkippedToken())
             ;
@@ -382,10 +304,8 @@ private:
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     srcMLParser::consume();
-                    lastSkipPosition.set(LT(1));
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
-                    lastSkipPosition.set(LT(1));
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
@@ -408,7 +328,6 @@ private:
                 pushSSkipToken(srcMLParser::SCOMMENT);
                 pushSkipToken();
                 srcMLParser::consume();
-                lastSkipPosition.set(LT(1));
                 pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
@@ -419,7 +338,6 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                lastSkipPosition.set(LT(1));
                 pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
@@ -430,7 +348,6 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                lastSkipPosition.set(LT(1));
                 pushESkipToken(srcMLParser::SDOXYGEN_COMMENT);
 
                 break;
@@ -441,7 +358,6 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                lastSkipPosition.set(LT(1));
                 pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
 
                 break;
@@ -473,10 +389,8 @@ private:
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     srcMLParser::consume();
-                    lastSkipPosition.set(LT(1));
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
-                    lastSkipPosition.set(LT(1));
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
@@ -488,7 +402,6 @@ private:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
                 srcMLParser::consume();
-                lastSkipPosition.set(LT(1));
 
                 break;
             }
@@ -636,7 +549,6 @@ private:
     inline void completeSkip() {
 
         if (!open_comments.empty()) {
-            lastSkipPosition.set(LT(1));
             pushESkipToken(open_comments.top());
             open_comments.pop();
         }
@@ -667,21 +579,6 @@ private:
 
         while (paused)
             fillTokenBuffer();
-
-        // to calculate end position, need to buffer until end token in reached
-        // to prevent infinite loops, consume is called if no progress is made on the
-        // current token, e.g., double max const();
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            auto curline = LT(1)->getLine();
-            auto curcolumn = LT(1)->getColumn();
-            while (ends.size() > 1) {
-                fillTokenBuffer();
-                if (LT(1)->getLine() == curline && LT(1)->getColumn() == curcolumn)
-                    consume();
-                curline = LT(1)->getLine();
-                curcolumn = LT(1)->getColumn();
-            }
-        }
 
         // pop and send back the top token
         const antlr::RefToken& tok = std::move(tb.front());
@@ -864,16 +761,6 @@ private:
 
 private:
 
-    // record position of text elements
-    Position lastPosition;
-
-    // record position for comment elements
-    Position lastSkipPosition;
-
-    // record position for <type prev=""/>
-    Position lastTypeEndPosition;
-    Position lastTypeStartPosition;
-
     /** parser options */
     OPTION_TYPE & options;
 
@@ -902,7 +789,7 @@ private:
     bool paused = false;
 
     /** open position elements */
-    std::stack<antlr::RefToken> ends;
+    // std::stack<antlr::RefToken> ends;
 
     /** open comments */
     std::stack<int> open_comments;

@@ -115,13 +115,7 @@ private:
     // adds the position attributes to a token
     void addPosition(const antlr::RefToken& token);
 
-    Position currentPosition;
-
-    std::stack<Position> positionStack;
-
     std::string filename;
-
-    std::queue<int> lastColumnAttribute;
 
 public:
     /** token stream input */
@@ -191,6 +185,14 @@ public:
     void outputMacroList();
 
     bool didwrite = false;
+
+    std::deque<antlr::RefToken> tokenQueue;
+
+    std::stack<antlr::RefToken> startElementStack;
+
+    // record position for <type prev=""/>
+    Position lastTypeEndPosition;
+    Position lastTypeStartPosition;
 
 private:
 
