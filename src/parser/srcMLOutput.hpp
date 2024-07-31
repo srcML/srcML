@@ -200,8 +200,6 @@ private:
     void processToken(const antlr::RefToken& token, const char* name, const char* prefix, const char* attr_name1, const char* attr_value1,
                                 const char* attr_name2, const char* attr_value2);
 
-    int consume_next();
-
     void outputToken(const antlr::RefToken& token);
 
     static const std::unordered_map<int, Element> process;

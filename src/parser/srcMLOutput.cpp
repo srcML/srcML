@@ -253,22 +253,6 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
 }
 
 /**
- * consume_next
- *
- * Consume/get and output the next token.
- *
- * @returns the time of consumed token
- */
-int srcMLOutput::consume_next() {
-
-    const antlr::RefToken& token = input->nextToken();
-
-    outputToken(token);
-
-    return token->getType();
-}
-
-/**
  * outputXMLDecl
  *
  * Output the starting xml declaration.
