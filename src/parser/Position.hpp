@@ -31,7 +31,7 @@ struct Position {
         column = token->getColumn() - 1;
     }
 
-    void append(std::string_view text) {
+    void append(std::string_view text, size_t tabsize) {
 
         for (auto p = text.begin(); p != text.end(); ++p) {
             if (*p == '\n') {
@@ -60,9 +60,13 @@ struct Position {
         return line < other.line || (line == other.line && column < other.column);
     }
 
-    int tabsize = 8;
     int line = 1;
     int column = 0;
+};
+
+struct PositionRange {
+    Position start;
+    Position end;
 };
 
 #endif
