@@ -609,19 +609,28 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
-        if (token->getType() == srcMLParserTokenTypes::STYPE) {
-            lastTypeStartPosition = Position(token->getLine(), token->getColumn());
-        }
+        if (isposition) {
 
-        // previous type get start positions from previous, well type
-        if (token->getType() == srcMLParserTokenTypes::STYPEPREV) {
-            token->setLine(lastTypeStartPosition.line);
-            token->setColumn(lastTypeStartPosition.column);
-        }
+            // save start and end positions for any future previous type
+            if (token->getType() == srcMLParserTokenTypes::STYPE) {
+                lastTypeStartPosition = Position(token->getLine(), token->getColumn());
+                srcMLToken* qetoken = static_cast<srcMLToken*>(&(*token));
+                lastTypeEndPosition = Position(qetoken->endline, qetoken->endcolumn);
+            }
 
-        // if position attributes for non-empty start elements
-        if (isposition && (!isempty(token) || token->getType() == srcMLParserTokenTypes::STYPEPREV))
-            addPosition(token);
+            // previous type get start and end positions from previous, well type
+            if (token->getType() == srcMLParserTokenTypes::STYPEPREV) {
+                token->setLine(lastTypeStartPosition.line);
+                token->setColumn(lastTypeStartPosition.column);
+                srcMLToken* qetoken = static_cast<srcMLToken*>(&(*token));
+                qetoken->endline = lastTypeEndPosition.line;
+                qetoken->endcolumn = lastTypeEndPosition.column;
+            }
+
+            // if position attributes for non-empty start elements
+            if (!isempty(token) || token->getType() == srcMLParserTokenTypes::STYPEPREV)
+                addPosition(token);
+        }
     }
 
     if (!isstart(token) || isempty(token)) {
