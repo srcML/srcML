@@ -35,4 +35,20 @@ two
 three"</literal></expr>;</expr_stmt>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<expr_stmt><expr><literal type="string">@"\""\"")"</literal></expr>;</expr_stmt> <expr_stmt><expr><literal type="string">@"[@\"</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<expr_stmt><expr><literal type="string">@"\""\"")"</literal></expr>;</expr_stmt> <expr_stmt><expr><literal type="string">@"[]@\"</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<expr_stmt><expr><literal type="string">@"""""@\"</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C#">
+<expr_stmt><expr><literal type="string">@""""</literal><literal type="string">@""""</literal></expr>;</expr_stmt>
+</unit>
+
 </unit>
