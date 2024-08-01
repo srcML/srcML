@@ -51,6 +51,23 @@ antlr::RefToken OffSideRule::nextToken() {
             return token;
         }
 
+        // [DEDENT] Files that do not end with a newline need to be handled differently
+        if (token->getType() == srcMLParser::EOF_ && token->getText().empty() && numIndents > 0) {
+            buffer.emplace_back(token);
+
+            auto dedentToken = srcMLToken::factory();
+            dedentToken->setType(srcMLParser::DEDENT);
+            dedentToken->setText("</block>");
+            dedentToken->setColumn(1);
+
+            for (int i = 0; i < numIndents - 1; i++) {
+                buffer.emplace_back(dedentToken);
+            }
+
+            numIndents = 0;
+            return dedentToken;
+        }
+
         // [DEDENT] A newline ('\n') token could indicate the end of a block
         if (token->getType() == srcMLParser::EOL && token->getColumn() > 1 && numIndents > 0) {
             int blankLines = 0;
@@ -127,20 +144,21 @@ antlr::RefToken OffSideRule::nextToken() {
                     }
 
                     if (currentColStart < prevColStart) {
-                        auto dedentToken = srcMLToken::factory();
-                        dedentToken->setType(srcMLParser::DEDENT);
-                        dedentToken->setText("</block>");
-                        dedentToken->setColumn(1);
+                        while (numIndents > 0) {
+                            auto dedentToken = srcMLToken::factory();
+                            dedentToken->setType(srcMLParser::DEDENT);
+                            dedentToken->setText("</block>");
+                            dedentToken->setColumn(1);
 
-                        buffer.emplace_back(dedentToken);
-                        numIndents--;
+                            buffer.emplace_back(dedentToken);
+                            numIndents--;
+                        }
                     }
 
                     return token;
                 }
             }
         }
-
 
 /* ... */
 
