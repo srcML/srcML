@@ -56,6 +56,7 @@ endif()
 
 # antlr library
 add_library(antlr OBJECT)
+set_target_properties(antlr PROPERTIES POSITION_INDEPENDENT_CODE ON)
 file(GLOB ANTLR_SOURCE ${antlrsrc_SOURCE_DIR}/lib/cpp/src/*.cpp)
 list(REMOVE_ITEM ANTLR_SOURCE "${antlrsrc_SOURCE_DIR}/lib/cpp/src/dll.cpp")
 target_sources(antlr PRIVATE "${ANTLR_SOURCE}")
@@ -77,6 +78,7 @@ add_library(parser OBJECT
     ${CMAKE_GENERATED_SOURCE_DIR}/CommentTextLexer.cpp
     ${PARSER_SOURCE}
 )
+set_target_properties(parser PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(parser SYSTEM PUBLIC ${antlrsrc_SOURCE_DIR}/lib/cpp)
 target_include_directories(parser PRIVATE . ${CMAKE_GENERATED_SOURCE_DIR} PUBLIC . SYSTEM PUBLIC ${CMAKE_GENERATED_SOURCE_DIR})
 target_link_libraries(parser PRIVATE LibXml2::LibXml2 antlr)
