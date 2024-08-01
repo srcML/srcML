@@ -4997,21 +4997,13 @@ variable_identifier_array_grammar_sub[bool& iscomplex] { CompleteElement element
 
   Handles the contents of a variables array index.
 */
-variable_identifier_array_grammar_sub_contents {
-        bool found_expr = false;
-        bool is_expr = false;
-        int prev_look_ahead = LA(1);
-        int num_loops = 0;
-        int max_loops = 50;
-
-        ENTRY_DEBUG
-} :
+variable_identifier_array_grammar_sub_contents { bool found_expr = false; bool is_expr = false; ENTRY_DEBUG } :
         { !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_OBJECTIVE_C) }?
         complete_expression |
 
         { inLanguage(LANGUAGE_CSHARP) || inLanguage(LANGUAGE_OBJECTIVE_C) }?
         (options { greedy = true; } :
-            { LA(1) != RBRACKET && num_loops < max_loops }?
+            { LA(1) != RBRACKET }?
             (
                 { LA(1) == COMMA /* stop warning */ }?
                 {
@@ -5027,10 +5019,6 @@ variable_identifier_array_grammar_sub_contents {
                 complete_expression
                 {
                     found_expr = true;
-
-                    if (prev_look_ahead == LA(1)) {
-                        num_loops += 1;
-                    }
                 }
             )
 
