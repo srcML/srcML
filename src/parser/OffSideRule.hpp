@@ -29,8 +29,8 @@ private:
     antlr::TokenStream& input;
     std::deque<antlr::RefToken> buffer;
 
-    int prevStartCol = -1;
-    int currentStartCol = -1;
+    int prevColStart = 1;
+    int currentColStart = 1;
     int numIndents = 0;
 
     bool skippedColSet = false;

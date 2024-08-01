@@ -23,9 +23,13 @@
 antlr::RefToken OffSideRule::nextToken() {
     if (buffer.empty()) {
         const auto& token = input.nextToken();
-        bool isBlankLine = (token->getType() == srcMLParser::EOL && token->getColumn() == 1);
 
-        // [INDENT] A colon (':') token could indicate a block
+        if (debugInfo) std::cerr << "line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
+
+        // Set the initial indentation level
+        // @TODO: Assume the starting indentation level was 1 and the starting current level is also 1 
+
+        // [INDENT] A colon (':') token could indicate start of a block
         if (token->getType() == srcMLParser::COLON) {
             const auto& nextToken = input.nextToken();
             buffer.emplace_back(nextToken);
@@ -47,51 +51,163 @@ antlr::RefToken OffSideRule::nextToken() {
             return token;
         }
 
-        // [DEDENT] At a blank line, potentially generate DEDENT tokens
-        if (isBlankLine && numIndents > 0) {
-            // Create an indentColumn variable that records the starting column value at each non-blank line
-            //      If it is whitespace, record the column value of the next non-whitespace token
-            // At a blank line, compare that value and LA(1) column value
-        }
+        // [DEDENT] A newline ('\n') token could indicate the end of a block
+        if (token->getType() == srcMLParser::EOL && token->getColumn() > 1 && numIndents > 0) {
+            int blankLines = 0;
 
-        // [DEDENT] At EOF, generate DEDENT tokens equal to the number of INDENT tokens
-        //          Triggers if the file has a blank line at the end of the file
-        if (token->getType() == srcMLParser::EOL && numIndents > 0) {
-            const auto& nextToken = input.nextToken();
-            buffer.emplace_back(nextToken);
+            while (true) {
+                const auto& nextToken = input.nextToken();
 
-            if (nextToken->getType() == srcMLParser::EOF_) {
-                auto dedentToken = srcMLToken::factory();
-                dedentToken->setType(srcMLParser::DEDENT);
-                dedentToken->setText("</block>");
+                // The next line starts with indentation, so record where the next token would start
+                if (nextToken->getType() == srcMLParser::WS) {
+                    buffer.emplace_back(nextToken);
+                    prevColStart = currentColStart;
+                    currentColStart = nextToken->getText().length() + 1;  // e.g., 4 spaces starting at column 1, text starting at column 5
 
-                for (int i = 0; i < numIndents; i++) {
-                    buffer.emplace_back(dedentToken);
+                    if (currentColStart < prevColStart) {
+                        auto dedentToken = srcMLToken::factory();
+                        dedentToken->setType(srcMLParser::DEDENT);
+                        dedentToken->setText("</block>");
+                        dedentToken->setColumn(1);
+
+                        buffer.emplace_back(dedentToken);
+                        numIndents--;
+                    }
+
+                    while (blankLines > 0) {
+                        auto blankLine = srcMLToken::factory();
+                        blankLine->setType(srcMLParser::EOL);
+                        blankLine->setText("\n");
+                        blankLine->setColumn(1);
+
+                        buffer.emplace_back(blankLine);
+                        blankLines--;
+                    }
+
+                    return token;
                 }
 
-                numIndents = 0;
-                return token;
+                // The next line is a blank line, so look for the next non-blank-line token
+                else if (nextToken->getType() == srcMLParser::EOL && nextToken->getColumn() == 1) {
+                    //buffer.emplace_back(nextToken);
+                    blankLines++;
+                    continue;
+                }
+
+                // The next token is the end of the file, so generate DEDENT tokens equal to the remaining INDENT tokens
+                else if (nextToken->getType() == srcMLParser::EOF_) {
+                    buffer.emplace_back(nextToken);
+
+                    auto dedentToken = srcMLToken::factory();
+                    dedentToken->setType(srcMLParser::DEDENT);
+                    dedentToken->setText("</block>");
+
+                    for (int i = 0; i < numIndents; i++) {
+                        buffer.emplace_back(dedentToken);
+                    }
+
+                    numIndents = 0;
+                    return token;
+                }
+
+                // The next token starts at column 1
+                else {
+                    buffer.emplace_back(nextToken);
+                    prevColStart = currentColStart;
+                    currentColStart = 1;
+
+                    while (blankLines > 0) {
+                        auto blankLine = srcMLToken::factory();
+                        blankLine->setType(srcMLParser::EOL);
+                        blankLine->setText("\n");
+                        blankLine->setColumn(1);
+
+                        buffer.emplace_back(blankLine);
+                        blankLines--;
+                    }
+
+                    if (currentColStart < prevColStart) {
+                        auto dedentToken = srcMLToken::factory();
+                        dedentToken->setType(srcMLParser::DEDENT);
+                        dedentToken->setText("</block>");
+                        dedentToken->setColumn(1);
+
+                        buffer.emplace_back(dedentToken);
+                        numIndents--;
+                    }
+
+                    return token;
+                }
             }
         }
 
-        // [DEDENT] At EOF, generate DEDENT tokens equal to the number of INDENT tokens
-        //          Triggers if the file does NOT have a blank line at the end of the file
-        if (token->getType() == srcMLParser::EOF_ && numIndents > 0) {
-            buffer.emplace_back(token);
 
-            auto dedentToken = srcMLToken::factory();
-            dedentToken->setType(srcMLParser::DEDENT);
-            dedentToken->setText("</block>");
+/* ... */
 
-            for (int i = 0; i < numIndents - 1; i++) {
-                buffer.emplace_back(dedentToken);
-            }
+        // // [DEDENT] At the end of a line, potentially generate DEDENT tokens
+        // if (token->getType() == srcMLParser::EOL && numIndents > 0) {
+        //     const auto& nextToken = input.nextToken();
+        //     buffer.emplace_back(nextToken);
 
-            numIndents = 0;
-            return dedentToken;
-        }
+        //     if (nextToken->getColumn() == 1) {
+        //         prevColStart = currentColStart;
+        //         currentColStart = 1;
 
-        if (debugInfo) std::cerr << "line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
+        //         // Record the column value after the spaces
+        //         if (token->getType() == srcMLParser::WS) {
+        //             currentColStart = token->getText().length();
+        //         }
+
+        //         if (currentColStart < prevColStart) {
+        //             auto dedentToken = srcMLToken::factory();
+        //             dedentToken->setType(srcMLParser::DEDENT);
+        //             dedentToken->setText("</block>");
+        //             dedentToken->setColumn(1);
+
+        //             buffer.emplace_back(dedentToken);
+        //             numIndents--;
+        //         }
+        //     }
+
+        //     return token;
+        // }
+
+        // // [DEDENT] At EOF, generate DEDENT tokens equal to the number of INDENT tokens
+        // //          Triggers if the file has a blank line at the end of the file
+        // if (token->getType() == srcMLParser::EOL && numIndents > 0) {
+        //     const auto& nextToken = input.nextToken();
+        //     buffer.emplace_back(nextToken);
+
+        //     if (nextToken->getType() == srcMLParser::EOF_) {
+        //         auto dedentToken = srcMLToken::factory();
+        //         dedentToken->setType(srcMLParser::DEDENT);
+        //         dedentToken->setText("</block>");
+
+        //         for (int i = 0; i < numIndents; i++) {
+        //             buffer.emplace_back(dedentToken);
+        //         }
+
+        //         numIndents = 0;
+        //         return token;
+        //     }
+        // }
+
+        // // [DEDENT] At EOF, generate DEDENT tokens equal to the number of INDENT tokens
+        // //          Triggers if the file does NOT have a blank line at the end of the file
+        // if (token->getType() == srcMLParser::EOF_ && numIndents > 0) {
+        //     buffer.emplace_back(token);
+
+        //     auto dedentToken = srcMLToken::factory();
+        //     dedentToken->setType(srcMLParser::DEDENT);
+        //     dedentToken->setText("</block>");
+
+        //     for (int i = 0; i < numIndents - 1; i++) {
+        //         buffer.emplace_back(dedentToken);
+        //     }
+
+        //     numIndents = 0;
+        //     return dedentToken;
+        // }
 
         return token;
     }
@@ -99,6 +215,9 @@ antlr::RefToken OffSideRule::nextToken() {
         auto token = srcMLToken::factory();
         token->setType(buffer.back()->getType());
         token->setText(buffer.back()->getText());
+        token->setColumn(buffer.back()->getColumn());
+        token->setLine(buffer.back()->getLine());
+        token->setFilename(buffer.back()->getFilename());
 
         if (debugInfo) std::cerr << "*** line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
 
