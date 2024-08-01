@@ -169,7 +169,7 @@ COMMENT_TEXT {
 
     '\042' /* '\"' */
         { dquote_count = 1; }
-        (options { greedy = true; } : { prevLA != '\\' }? '\042' { ++dquote_count; })*
+        (options { greedy = true; } : { prevLA != '\\' || noescape }? '\042' { ++dquote_count; })*
     {
         if ((noescape && (dquote_count % 2 == 1)) ||
             (!noescape && (prevLA != '\\') && (mode == STRING_END))) {
