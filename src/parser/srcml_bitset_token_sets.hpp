@@ -154,15 +154,4 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::DOXYGEN_COMMENT_START
 )
 
-token_set(srcMLParser, no_skip_element_token_set,
-    srcMLParser::SCONTENT,
-    srcMLParser::SPUBLIC_ACCESS,
-    srcMLParser::SPUBLIC_ACCESS_DEFAULT,
-    srcMLParser::SPRIVATE_ACCESS,
-    srcMLParser::SPRIVATE_ACCESS_DEFAULT,
-    srcMLParser::SPROTECTED_ACCESS,
-    srcMLParser::SPROTECTED_ACCESS_DEFAULT,
-    srcMLParser::STHEN
-)
-
 #endif
