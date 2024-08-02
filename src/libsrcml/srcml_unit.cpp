@@ -1320,7 +1320,17 @@ int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const
     if (unit == nullptr || name == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, uri))
+    // dynamically add unseen namespaces DOES NOT SEEM TO BE NEEDED
+    srcml_unit_register_namespace(unit, prefix, uri);
+
+    // CPP namespace enables option
+    if (uri && uri == SRCML_CPP_NS_URI) {
+        unit->archive->options |= SRCML_OPTION_CPP;
+        unit->archive->options |= SRCML_OPTION_CPP_DECLARED;
+    }
+
+    // uri must be blank or it is added to every tag even if already declared
+    if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, nullptr))
         return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;
