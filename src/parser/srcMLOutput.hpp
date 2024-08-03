@@ -172,6 +172,9 @@ private:
     // namespaces declared and used
     Namespaces namespaces;
 
+    // archive namespaces
+    Namespaces archiveNamespaces;
+
     // attributes added
     Attributes attributes;
 
