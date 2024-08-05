@@ -7,7 +7,7 @@
 # CMake files for libsrcml library
 
 # Separate project driver for testing libsrcml outside of build
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28)
 project(srcML-Test-libsrcml)
 enable_testing()
 

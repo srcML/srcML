@@ -6,13 +6,20 @@
 #
 # CPack configuration for all installers
 
-# Copy preset file to build directory
-configure_file(${CMAKE_SOURCE_DIR}/CMakePresets.json ${CMAKE_BINARY_DIR} COPYONLY)
-
-# Copy user preset file to the build directory if it exists
-if(EXISTS ${CMAKE_SOURCE_DIR}/CMakeUserPresets.json)
-    configure_file(${CMAKE_SOURCE_DIR}/CMakeUserPresets.json ${CMAKE_BINARY_DIR} COPYONLY)
+# The CMake variable CPACK_OUTPUT_FILE_PREFIX defines where the installers are placed.
+# Choose in this order:
+# 1. The preset or user defined CPACK_OUTPUT_FILE_PREFIX
+# 2. The external directory "/Builds" if the file /.dockerenv exists and "/Builds" exists
+# 3. The subdirectory "dist"
+if(NOT DEFINED CPACK_OUTPUT_FILE_PREFIX)
+    set(CPACK_OUTPUT_FILE_PREFIX "/Builds")
+    if(NOT EXISTS "/.dockerenv" OR NOT EXISTS ${CPACK_OUTPUT_FILE_PREFIX})
+        set(CPACK_OUTPUT_FILE_PREFIX "dist")
+    endif()
 endif()
+# If the directory is relative, assume in the build directory
+cmake_path(ABSOLUTE_PATH CPACK_OUTPUT_FILE_PREFIX BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
+message(STATUS "Installers will be written to: ${CPACK_OUTPUT_FILE_PREFIX}")
 
 # especially for archives
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")

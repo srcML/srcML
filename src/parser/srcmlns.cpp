@@ -24,7 +24,7 @@ void addNamespace(Namespaces& namespaces, std::string_view uri, std::string_view
         ituri->prefix = prefix;
     } else {
         // add new namespace
-        namespaces.emplace_back(prefix, uri, NS_REGISTERED);
+        namespaces.emplace_back(prefix, uri, NS_REGISTERED | NS_USED);
     }
 }
 

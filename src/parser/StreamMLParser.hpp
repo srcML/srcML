@@ -22,6 +22,7 @@
 
 #include <srcMLToken.hpp>
 #include <srcMLParser.hpp>
+#include <Position.hpp>
 
 /**
  * StreamMLParser
@@ -195,12 +196,6 @@ private:
 
         // push a new start token
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            ends.emplace(ntoken);
-        }
 
         pushToken(ntoken);
     }
@@ -209,12 +204,6 @@ private:
 
         // push a new start token
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            ends.emplace(ntoken);
-        }
 
         pushSkipToken(ntoken);
     }
@@ -223,24 +212,6 @@ private:
 
         // push a new start token
         auto ntoken = antlr::RefToken(StartTokenFactory(token));
-        ntoken->setLine(LT(1)->getLine());
-        ntoken->setColumn(LT(1)->getColumn());
-
-        // save the start position of a full type for any following previous types
-        if (token == srcMLParser::STYPE) {
-            lasttypestartline = LT(1)->getLine();
-            lasttypestartcolumn = LT(1)->getColumn();
-        }
-
-        // previous type get start positions from previous, well type
-        if (token == srcMLParser::STYPEPREV) {
-            ntoken->setLine(lasttypestartline);
-            ntoken->setColumn(lasttypestartcolumn);
-        }
-
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            ends.emplace(ntoken);
-        }
 
         pushTokenFlush(ntoken);
     }
@@ -256,42 +227,12 @@ private:
 
         // push a new end token
         pushToken(antlr::RefToken(EndTokenFactory(token)));
-
-        // end position info is needed from the matching last end token
-        // that was enqueued
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
-
-            qetoken->endline = lastline;
-            qetoken->endcolumn = lastcolumn;
-
-            if (token == srcMLParser::STYPE) {
-                lasttypeendline = lastline;
-                lasttypeendcolumn = lastcolumn;
-            }
-
-            if (token == srcMLParser::STYPEPREV) {
-                qetoken->endline = lasttypeendline;
-                qetoken->endcolumn = lasttypeendcolumn;
-            }
-
-            ends.pop();
-        }
     }
 
     inline void pushESkipToken(int token) {
 
         // push a new end token
         pushSkipToken(antlr::RefToken(EndTokenFactory(token)));
-
-        // end position info is needed from the matching last end token
-        // that was enqueued
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            srcMLToken* qetoken = static_cast<srcMLToken*>(&(*std::move(ends.top())));
-            qetoken->endline = slastline;
-            qetoken->endcolumn = slastcolumn;
-            ends.pop();
-        }
      }
 
     /**
@@ -306,10 +247,6 @@ private:
 
         // rest of consume process
         srcMLParser::consume();
-
-        // record for end position of start elements
-        lastline = LT(1)->getLine();
-        lastcolumn = LT(1)->getColumn() - 1;
 
         // consume any skipped tokens
         while (consumeSkippedToken())
@@ -367,12 +304,8 @@ private:
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     srcMLParser::consume();
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                 } else {
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINE_DOXYGEN_COMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
@@ -395,8 +328,6 @@ private:
                 pushSSkipToken(srcMLParser::SCOMMENT);
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
@@ -407,8 +338,6 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
@@ -419,8 +348,6 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SDOXYGEN_COMMENT);
 
                 break;
@@ -431,8 +358,6 @@ private:
 
                 pushSkipToken();
                 srcMLParser::consume();
-                slastcolumn = LT(1)->getColumn() - 1;
-                slastline = LT(1)->getLine();
                 pushESkipToken(srcMLParser::SJAVADOC_COMMENT);
 
                 break;
@@ -464,12 +389,8 @@ private:
                 if (srcMLParser::LT(1)->getText().back() != '\n') {
                     pushSkipToken();
                     srcMLParser::consume();
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                 } else {
-                    slastcolumn = LT(1)->getColumn() - 1;
-                    slastline = LT(1)->getLine();
                     pushESkipToken(srcMLParser::SLINECOMMENT);
                     pushSkipToken();
                     srcMLParser::consume();
@@ -628,8 +549,6 @@ private:
     inline void completeSkip() {
 
         if (!open_comments.empty()) {
-            slastcolumn = LT(1)->getColumn() - 1;
-            slastline = LT(1)->getLine();
             pushESkipToken(open_comments.top());
             open_comments.pop();
         }
@@ -660,21 +579,6 @@ private:
 
         while (paused)
             fillTokenBuffer();
-
-        // to calculate end position, need to buffer until end token in reached
-        // to prevent infinite loops, consume is called if no progress is made on the
-        // current token, e.g., double max const();
-        if (isoption(options, SRCML_PARSER_OPTION_POSITION)) {
-            auto curline = LT(1)->getLine();
-            auto curcolumn = LT(1)->getColumn();
-            while (ends.size() > 1) {
-                fillTokenBuffer();
-                if (LT(1)->getLine() == curline && LT(1)->getColumn() == curcolumn)
-                    consume();
-                curline = LT(1)->getLine();
-                curcolumn = LT(1)->getColumn();
-            }
-        }
 
         // pop and send back the top token
         const antlr::RefToken& tok = std::move(tb.front());
@@ -857,20 +761,6 @@ private:
 
 private:
 
-    // record position of text elements
-    int lastline = 0;
-    int lastcolumn = 0;
-
-    // record position for comment elements
-    int slastline = 0;
-    int slastcolumn = 0;
-
-    // record position for <type prev=""/>
-    int lasttypeendline = 0;
-    int lasttypeendcolumn = 0;
-    int lasttypestartline = 0;
-    int lasttypestartcolumn = 0;
-
     /** parser options */
     OPTION_TYPE & options;
 
@@ -899,7 +789,7 @@ private:
     bool paused = false;
 
     /** open position elements */
-    std::stack<antlr::RefToken> ends;
+    // std::stack<antlr::RefToken> ends;
 
     /** open comments */
     std::stack<int> open_comments;
