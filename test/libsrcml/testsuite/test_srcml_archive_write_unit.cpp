@@ -155,7 +155,6 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_a_single);
-
         free(s);
     }
 

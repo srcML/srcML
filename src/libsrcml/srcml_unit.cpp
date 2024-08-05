@@ -1320,7 +1320,15 @@ int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const
     if (unit == nullptr || name == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
-    if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, uri))
+    // register the namespace if it does not exist on the archive since it may be new
+    if (uri) {
+        auto it = findNSURI(unit->archive->namespaces, uri);
+        if (it == unit->archive->namespaces.end() || it->prefix != std::string_view(prefix)) {
+            srcml_unit_register_namespace(unit, prefix, uri);
+        }
+    }
+
+    if (unit->unit_translator == nullptr || !unit->unit_translator->add_start_element(prefix, name, 0))
         return SRCML_STATUS_INVALID_INPUT;
 
     return SRCML_STATUS_OK;

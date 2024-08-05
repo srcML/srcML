@@ -95,6 +95,9 @@ void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
     // merge in the other namespaces
     namespaces += otherns;
+
+    if (depth == 0)
+        archiveNamespaces = namespaces;
 }
 
 /**
@@ -322,6 +325,9 @@ void srcMLOutput::outputNamespaces() {
 
             // must be required, must not be on the root, and must be used
             if ((ns.flags & NS_STANDARD) && !(ns.flags & NS_ROOT) && !(ns.flags & NS_REQUIRED) && (ns.flags & NS_USED)) {
+                srcMLTextWriterWriteNamespace(xout, ns);
+                continue;
+            } else if ((ns.flags & NS_REGISTERED) && (findNSURI(archiveNamespaces, ns.uri) == archiveNamespaces.end())) {
                 srcMLTextWriterWriteNamespace(xout, ns);
                 continue;
             }
