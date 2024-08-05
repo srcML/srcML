@@ -75,7 +75,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const Attributes& attributes,
                          const std::optional<std::pair<std::string, std::string>>& processing_instruction,
                          size_t ts)
-    : input(ints), output_buffer(output_buffer), unit_language(language),
+    : output_buffer(output_buffer), input(ints), unit_language(language),
       options(op), xml_encoding(xml_enc), attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
