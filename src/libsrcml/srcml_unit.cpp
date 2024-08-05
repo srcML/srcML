@@ -1323,7 +1323,7 @@ int srcml_write_start_element(struct srcml_unit* unit, const char* prefix, const
     // register the namespace if it does not exist on the archive since it may be new
     if (uri) {
         auto it = findNSURI(unit->archive->namespaces, uri);
-        if (it == unit->archive->namespaces.end()) {
+        if (it == unit->archive->namespaces.end() || it->prefix != std::string_view(prefix)) {
             srcml_unit_register_namespace(unit, prefix, uri);
         }
     }

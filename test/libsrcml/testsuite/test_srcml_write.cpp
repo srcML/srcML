@@ -815,6 +815,111 @@ int main(int, char* argv[]) {
         free(s);
     }
 
+    {
+        char* s = 0;
+        size_t size;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        srcml_write_start_unit(unit);
+        srcml_write_start_element(unit, "omp", "element", "http://www.srcML.org/srcML/omp");
+        srcml_write_end_element(unit);
+        srcml_write_end_unit(unit);
+        srcml_archive_write_unit(archive, unit);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:omp="http://www.srcML.org/srcML/omp" revision="1.0.0" language="C++"><omp:element/></unit>
+)";
+        dassert(std::string(s, size), srcml);
+        free(s);
+    }
+
+    {
+        char* s = 0;
+        size_t size;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_register_namespace(archive, "src", "http://www.srcML.org/srcML/src");
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        srcml_write_start_unit(unit);
+        srcml_write_start_element(unit, "", "element", "http://newlement.net");
+        srcml_write_end_element(unit);
+        srcml_write_end_unit(unit);
+        srcml_archive_write_unit(archive, unit);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<src:unit xmlns:src="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+<src:unit xmlns="http://newlement.net" revision="1.0.0" language="C++"><element/></src:unit>
+
+</src:unit>
+)";
+        dassert(std::string(s, size), srcml);
+        free(s);
+    }
+
+    {
+        char* s = 0;
+        size_t size;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_enable_solitary_unit(archive);
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_archive_register_namespace(archive, "sa", "http://www.srcML.org/sa1");
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        srcml_write_start_unit(unit);
+        srcml_write_start_element(unit, "sa1", "element", "http://www.srcML.org/sa1");
+        srcml_write_end_element(unit);
+        srcml_write_end_unit(unit);
+        srcml_archive_write_unit(archive, unit);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:sa1="http://www.srcML.org/sa1" revision="1.0.0" language="C++"><sa1:element/></unit>
+)";
+        dassert(std::string(s, size), srcml);
+        free(s);
+    }
+
+    {
+        char* s = 0;
+        size_t size;
+        srcml_archive* archive = srcml_archive_create();
+        srcml_archive_register_namespace(archive, "src", "http://www.srcML.org/srcML/src");
+        srcml_archive_write_open_memory(archive, &s, &size);
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
+        srcml_write_start_unit(unit);
+        srcml_write_start_element(unit, "", "element", "http://newlement.net");
+        srcml_write_end_element(unit);
+        srcml_write_end_unit(unit);
+        srcml_archive_write_unit(archive, unit);
+        srcml_unit_free(unit);
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+
+        std::string srcml = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<src:unit xmlns:src="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+<src:unit xmlns="http://newlement.net" revision="1.0.0" language="C++"><element/></src:unit>
+
+</src:unit>
+)";
+        dassert(std::string(s, size), srcml);
+        free(s);
+    }
+
     srcml_cleanup_globals();
 
     return 0;
