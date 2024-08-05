@@ -60,10 +60,14 @@ typedef SSIZE_T ssize_t;
     @{ */
 
 /**@{ @name Current Version */
+/** Number representing markup version */
+#define SRCML_VERSION_NUMBER 100000
+/** String containing markup version */
+#define SRCML_VERSION_STRING "1.0.0"
 /** Number representing libsrcml version */
-#define SRCML_VERSION_NUMBER 10100
+#define SRCML_LIBSRCML_VERSION_NUMBER 100100
 /** String containing libsrcml version */
-#define SRCML_VERSION_STRING "1.1.0"
+#define SRCML_LIBSRCML_VERSION_STRING "1.1.0"
 /**@}*/
 
 /**@{ @name Status */
@@ -154,16 +158,48 @@ struct srcml_unit;
 
 /**@{ @name Version */
 /**
- * The current version of the library
- * @return Version of libsrcml as a number
+ * The current version of the srcml markup
+ *
+ * @return Version of the srcml markup as a number
  */
 LIBSRCML_DECL int srcml_version_number();
 
 /**
- * The current version of the library
- * @return Version of libsrcml as a string
+ * The current version of the srcml markup
+ *
+ * @return Version of the srcml markup as a string
  */
 LIBSRCML_DECL const char* srcml_version_string();
+
+/**
+ * The current version of the srcml markup
+ *
+ * @param language Source code language
+ * @return Version of the srcml markup as a number
+ */
+LIBSRCML_DECL int srcml_markup_version_number(const char* language);
+
+/**
+ * The current version of the srcml markup
+ *
+ * @param language Source code language
+ * @return Version of the srcml markup as a string
+ */
+LIBSRCML_DECL const char* srcml_markup_version_string(const char* language);
+
+/**
+ * The current version of the library
+ *
+ * @return Version of libsrcml as a number
+ */
+LIBSRCML_DECL int srcml_libsrcml_version_number();
+
+/**
+ * The current version of the library
+ *
+ * @return Version of libsrcml as a string
+ */
+LIBSRCML_DECL const char* srcml_libsrcml_version_string();
 /**@}*/
 
 /**@{ @name Supported Languages */

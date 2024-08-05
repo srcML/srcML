@@ -89,23 +89,76 @@ void srcml_cleanup_globals() {
  ******************************************************************************/
 
 /**
- * srcml_version_string
+ * The current version of the srcml markup
  *
- * @returns Return version of libsrcml as string.
+ * @return Version of the srcml markup as a number
  */
-const char * srcml_version_string() {
+int srcml_version_number() {
+
+    return SRCML_VERSION_NUMBER;
+}
+
+/**
+ * The current version of the srcml markup
+ *
+ * @return Version of the srcml markup as a string
+ */
+LIBSRCML_DECL const char* srcml_version_string() {
 
     return SRCML_VERSION_STRING;
 }
 
 /**
- * srcml_version_number
+ * The current version of the srcml markup
  *
- * @returns Return version of libsrcml as number.
+ * @param language Source code language
+ * @return Version of the srcml markup as a number
  */
-int srcml_version_number() {
+int srcml_markup_version_number(const char* language) {
 
+    // if the language is not registered
+    int languageNumber = srcml_check_language(language);
+    if (!languageNumber)
+        return 0;
+
+    // assume (for now) that all languages have the same version
     return SRCML_VERSION_NUMBER;
+}
+
+/**
+ * The current version of the srcml markup
+ *
+ * @param language Source code language
+ * @return Version of the srcml markup as a string
+ */
+const char* srcml_markup_version_string(const char* language) {
+
+    // if the language is not registered
+    if (srcml_markup_version_number(language) == 0)
+        return "";
+
+    // assume (for now) that all languages have the same version
+    return SRCML_VERSION_STRING;
+}
+
+/**
+ * The current version of the library
+ *
+ * @return Version of libsrcml as a number
+ */
+int srcml_libsrcml_version_number() {
+
+    return SRCML_LIBSRCML_VERSION_NUMBER;
+}
+
+/**
+ * The current version of the library
+ *
+ * @return Version of libsrcml as a string
+ */
+const char* srcml_libsrcml_version_string() {
+
+    return SRCML_LIBSRCML_VERSION_STRING;
 }
 
 /******************************************************************************

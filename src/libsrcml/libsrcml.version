@@ -153,6 +153,10 @@ LIBSRCML_1.0 {
         srcml_unit_unparse_FILE;
         srcml_version_number;
         srcml_version_string;
+        srcml_markup_version_number;
+        srcml_markup_version_string;
+        srcml_libsrcml_version_number;
+        srcml_libsrcml_version_string;
         srcml_archive_write_open_fd;
         srcml_archive_write_open_filename;
         srcml_archive_write_open_io;
