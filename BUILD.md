@@ -1,53 +1,82 @@
 # Building srcML
 
-srcML is built using cmake, www.cmake.org (version 3.28 or above), and currently supports builds for
-macOS, Fedora, Ubuntu, OpenSUSE, and Windows Visual Studio.
+The srcML build uses cmake, www.cmake.org (version 3.28 or above), and supports
+builds for Ubuntu, Fedora, OpenSUSE, macOS, and Windows. The builds are "out-of-source builds" (builds outside the source directory) with no support for in-source builds.
 
-Out-of-source builds (builds outside the source directory) are required, and in-source builds are not supported.
+For proper configuration, use the cmake preset for your platform: `ci-ubuntu`, `ci-rpm`, `ci-macos`, and `ci-msvc`, as described below.
 
-For full configuration, a set of presets for each platform, including ci-ubuntu, ci-rpm, macOS, and ci-msvc, should be used.
+* [Linux](#linux)
+* [macOS](#macos)
+* [Windows](#windows)
+* [Internal Dependencies](#internal-dependencies)
+* [Options](#options)
+    * [Using Make](#using-cmake)
+    * [Custom build directory](#custom-build-directory)
+    * [Non-preset build](#non-preset-build)
 
-## Unix
+## Linux
 
-To generate a makefile in your build directory:
+srcML supports Linux builds for Ubuntu, Fedora, and OpenSUSE.
+
+### Dependencies
+
+To find what installed packages are needed, consult these Dockerfiles for
+each distribution:
+
+* [Ubuntu](./docker/ubuntu/Dockerfile)
+* [Fedora](./docker/fedora/Dockerfile)
+* [OpenSUSE](./docker/opensuse/Dockerfile)
+
+### Build
+
+To build on Ubuntu, from the source directory use the preset:
 
 ```console
-cmake <path_to_srcml> --preset <platform_preset>
+cmake --preset ci-ubuntu
 ```
 
-For Linux, assuming a sibling build directory:
+To build on Fedora or OpenSUSE, from the source directory use the preset:
 
 ```console
-cmake ../srcML --preset ci-linux
+cmake --preset ci-rpm
 ```
+
+This creates a sibling build directory, `../srcML-build`.
+
+The presets' default generator is [ninja](https://ninja-build.org). To use' make, ' see [Options/Using Make]().
 
 The following targets are supported with their usual meaning.
 
 ```console
-make
-make clean
-make test
-make install
+ninja
+ninja clean
+ninja install
 ```
 
-Client tests are enabled by default, while libsrcml and parser tests are turned off by default. These tests can be turned on/off via the cmake command.
+The workflow preset allows you to build, package, install the package, and test the client, the parser, and the libsrcml library of the installed package. On Ubuntu:
 
 ```console
-cmake . -DBUILD_CLIENT_TESTS=OFF -DBUILD_LIBSRCML_TESTS=ON -DBUILD_PARSER_TESTS=ON
+cmake --workflow --preset ci-ubuntu
 ```
 
-### macOS
+and on Fedora and OpenSUSE:
 
-The main packages required may be installed via brew:
+```console
+cmake --workflow --preset ci-rpm
+```
+
+## macOS
+
+External package dependencies are handled via [brew](https://brew.sh). Install brew first.
+
+### Dependencies
+
+It is assumed that g++ is installed via XCode or the XCode command line tools when you install brew.
+
+The other packages required may be installed via brew:
 
 ```console
 brew install cmake
-```
-
-Libarchive greater than 3.0.0 is required. For macOS previous to Catalina (19.*.*), libarchive.a 3.3.* must be statically included. Use brew to install a more recent version:
-
-```console
-brew install libarchive
 ```
 
 To generate srcML documentation:
@@ -62,33 +91,41 @@ Additional packages that may not needed but are recommended (for timing, etc.):
 brew install coreutils gnu-sed gnu-time
 ```
 
-#### Linux
+On recent macOS versions (Catalina and later), the system-installed libarchive library is sufficient. The cmake configuration downloads the matching include files (`archive.h` and `archive-entry.h`) for the system-installed library. However, for previous versions of macOS, libarchive.a 3.3.* must be statically linked.
 
-Linux builds for Ubuntu, Fedora, and OpenSUSE are supported.
+### Build
 
-To find what is needed, it is recommended to consult these dockerfiles for the particular distribution:
+To build on macOS, from the source directory use the preset:
 
-* [Ubuntu](./docker/ubuntu/Dockerfile)
-* [Fedora](./docker/fedora/Dockerfile)
-* [OpenSUSE](./docker/opensuse/Dockerfile)
+```console
+cmake --preset ci-ubuntu
+```
 
-Commands to install what is needed can be adapted from these.
+This creates a sibling build directory, `../srcML-build`.
 
-## Windows Using MSVC
+## Windows
 
-Necessary tools include:
+Windows is configured for a build on MSVC. Visual Studio 2017 or later is required.
+
+### Dependencies
+
+Necessary installed tools include:
 
 * [Java JRE/JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [CMake](http://www.cmake.org)
 * [Visual Studio 2017 or later](https://www.visualstudio.com/downloads/)
 
-Building in Windows requires MSVC. Dependencies are handled via [vcpkg](vcpkg.io), see the [vcpkg installation directions](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd). As with the other platforms, srcml should use an out-of-source build.
+Package dependencies are handled via [vcpkg](vcpkg.io); see the [vcpkg installation directions](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd).
 
-First, generate the build files in your target build directory. Using the preset sets up the use of vcpkg:
+### Build
+
+Generate the build files. Using the preset sets up the use of `vcpkg`:
 
 ```console
-cmake [path to srcML source directory] --preset ci-msvc
+cmake --preset ci-msvc
 ```
+
+By default, the created build directory is in the subdirectory `build` of the source directory.
 
 Second, build. Doing so via cmake means you do not have to know the build program name or location:
 
@@ -96,4 +133,58 @@ Second, build. Doing so via cmake means you do not have to know the build progra
 cmake --build . --config release
 ```
 
-The directory `bin` in the build folder contains the srcML executable along with all other dependencies.
+The directory `bin` in the build folder contains the srcML executable.
+
+## Internal Dependencies
+
+srcML has a set of internal dependencies. These are handled automatically and do not require any external package installation:
+
+* CLI11 - Used in the client. Include file downloaded during configuration.
+* ANTLR - To generate the parser. Source code downloaded during configuration.
+
+## Options
+
+### Using Make
+
+To use `make` instead of `ninja`, explicitly specify the generator when using the preset:
+
+```console
+cmake --preset ci-ubuntu -G "Unix Makefiles"
+```
+
+Replace `ninja` with `make` in the instructions above.
+
+### Custom build directory
+
+CMake presets must specify the build directory and are meant to be issued from the source directory. The defaults for the above platforms are in a sibling directory, `../srcML-build`, or a subdirectory, `build`.
+
+To use a custom build directory, create the build directory. Then, use the option `-B` to specify the build directory. For example, on Ubuntu with a source directory of `~/srcML` and a custom build directory `~/Build`:
+
+```console
+cmake ~/srcML --preset ci-ubuntu -B ~/Build
+```
+
+### Non-Preset Build
+
+The cmake files are self-sufficient, and you can build without any presets. However, not using the presets may result in compiler warnings, non-optimized libraries, and improperly configured installation packages.
+
+On Linux and macOS in your created build directory, include the path to your source directory:
+
+```console
+cmake /path/to/srcML
+```
+
+Now you can build using `make`.
+
+The Windows build requires vcpkg:
+
+```console
+export VCPKG_ROOT=/path/to/vcpkg
+cmake /path/to/srcML ~/srcML -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
+```
+
+In your build directory, perform the build via cmake so you don't have to specify the build tool:
+
+```console
+cmake --build . --config release
+```
