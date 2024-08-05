@@ -8,11 +8,12 @@ For proper configuration, use the cmake preset for your platform: `ci-ubuntu`, `
 * [Linux](#linux)
 * [macOS](#macos)
 * [Windows](#windows)
+* [Workflow Presets](#workflow-presets)
 * [Internal Dependencies](#internal-dependencies)
 * [Options](#options)
-    * [Using Make](#using-cmake)
-    * [Custom build directory](#custom-build-directory)
-    * [Non-preset build](#non-preset-build)
+	* [Using Make](#using-cmake)
+	* [Custom build directory](#custom-build-directory)
+	* [Non-preset build](#non-preset-build)
 
 ## Linux
 
@@ -43,7 +44,7 @@ cmake --preset ci-rpm
 
 This creates a sibling build directory, `../srcML-build`.
 
-The presets' default generator is [ninja](https://ninja-build.org). To use' make, ' see [Options/Using Make]().
+The presets' default generator is [ninja](https://ninja-build.org). To use `make`, see [Options/Using Make]().
 
 The following targets are supported with their usual meaning.
 
@@ -87,7 +88,7 @@ brew install man2html doxygen
 
 Additional packages that may not needed but are recommended (for timing, etc.):
 
-```
+```console
 brew install coreutils gnu-sed gnu-time
 ```
 
@@ -102,6 +103,12 @@ cmake --preset ci-ubuntu
 ```
 
 This creates a sibling build directory, `../srcML-build`.
+
+The workflow preset allows you to build, package, install the package, and test the client, the parser, and the libsrcml library of the installed package. On macOS:
+
+```console
+cmake --workflow --preset ci-macos
+```
 
 ## Windows
 
@@ -134,6 +141,28 @@ cmake --build . --config release
 ```
 
 The directory `bin` in the build folder contains the srcML executable.
+
+The workflow preset allows you to build, package, install the package, and test the client, the parser, and the libsrcml library of the installed package. On Windows:
+
+```console
+cmake --workflow --preset ci-msvc
+```
+
+## Workflow Presets
+
+The previous discussions included how to run the workflow presets. This is a complete workflow that in one command:
+
+* Configures CMake
+* Builds
+* Create packages
+* Install packages
+* Tests the client
+* Tests libsrcml
+* Tests the client
+
+All tests include a log file. For more information on these files, see the package and test directories.
+
+One limitation of a workflow preset is that, unlike a configure preset, it does not allow you to specify (using the `-B` option) a build directory.
 
 ## Internal Dependencies
 
@@ -188,3 +217,6 @@ In your build directory, perform the build via cmake so you don't have to specif
 ```console
 cmake --build . --config release
 ```
+
+
+
