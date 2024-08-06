@@ -1,3 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!--
+    @file keyword2mkeyword.xsl
+
+    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+
+    Converts try/catch/finally/throw keywords to @try/@catch/@finally/@throw keywords
+-->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:src="http://www.srcML.org/srcML/src"
@@ -7,12 +16,6 @@
     extension-element-prefixes="str"
     exclude-result-prefixes="src"
     version="1.0">
-
-<!--
-    keyword2mkeyword.xsl
-
-    Converts try/catch/finally/throw keywords to @try/@catch/@finally/@throw keywords
--->
 
 <xsl:import href="copy.xsl"/>
 

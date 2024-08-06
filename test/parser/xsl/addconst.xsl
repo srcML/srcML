@@ -1,3 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!--
+    @file addconst.xsl
+
+    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+
+    Adds const specifier to parameters
+-->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:src="http://www.srcML.org/srcML/src"
@@ -9,12 +18,6 @@
     extension-element-prefixes="str exsl func"
     exclude-result-prefixes="src"
     version="1.0">
-
-<!--
-    addconst.xsl
-
-    Adds const specifier to parameters
--->
 
 <xsl:import href="copy.xsl"/>
 

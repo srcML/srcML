@@ -1,3 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!--
+    @file interface2implementation.xsl
+
+    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+
+    Converts srcML Objective-C class interface to class implementation
+-->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:src="http://www.srcML.org/srcML/src"
@@ -9,12 +18,6 @@
     extension-element-prefixes="str exsl func"
     exclude-result-prefixes="src cpp"
     version="1.0">
-
-<!--
-    interface2implementation.xsl
-
-    Converts srcML Objective-C class interface to class implementation
--->
 
 <xsl:import href="copy.xsl"/>
 

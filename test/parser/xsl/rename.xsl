@@ -1,3 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!--
+    @file rename.xsl
+
+    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+
+    Rename a default variable NAME to a given passed in name.
+-->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:src="http://www.srcML.org/srcML/src"
@@ -7,12 +16,6 @@
     extension-element-prefixes="str"
     exclude-result-prefixes="src"
     version="1.0">
-
-<!--
-    rename.xsl
-
-    Rename a default variable NAME to a given passed in name.
--->
 
 <xsl:import href="copy.xsl"/>
 
