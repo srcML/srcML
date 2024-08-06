@@ -2,7 +2,7 @@
 <!--
     @file identity.xsl
 
-    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
 
     Copies from input to output
 -->

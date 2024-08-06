@@ -2,7 +2,7 @@
 <!--
     @file if2blockif.xsl
 
-    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
 
     Converts srcML if statement test cases to if statement test cases with blocks around the then and else statements.
 -->

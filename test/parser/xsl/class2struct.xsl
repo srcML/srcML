@@ -2,7 +2,7 @@
 <!--
     @file class2struct.xsl
 
-    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
 
     Converts srcML class statement test cases to struct statement test cases
 -->

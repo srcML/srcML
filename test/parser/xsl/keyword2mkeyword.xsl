@@ -2,7 +2,7 @@
 <!--
     @file keyword2mkeyword.xsl
 
-    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
 
     Converts try/catch/finally/throw keywords to @try/@catch/@finally/@throw keywords
 -->

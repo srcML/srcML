@@ -2,7 +2,7 @@
 <!--
     @file struct2union.xsl
 
-    @copyright Copyright (C) 2019-2014 srcML, LLC. (www.srcML.org)
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
 
     Converts srcML struct statement test cases to union statement test cases
 -->
