@@ -93,7 +93,7 @@ int main(int, char* argv[]) {
     const std::string srcml_full_python = R"(<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <s:unit xmlns:s="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(">
 
-<s:unit revision=")" SRCML_VERSION_STRING R"(" language="Python" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
+<s:unit revision=")" SRCML_VERSION_STRING R"(" language="Java" filename="project" version="1"><s:expr_stmt><s:expr><s:name>b</s:name></s:expr>;</s:expr_stmt>
 </s:unit>
 
 </s:unit>
@@ -646,7 +646,7 @@ int main(int, char* argv[]) {
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
         srcml_append_transform_xslt_filename(iarchive, "setlanguage.xsl");
-        srcml_append_transform_param(iarchive, "language", "\"Python\"");
+        srcml_append_transform_param(iarchive, "language", "\"Java\"");
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
@@ -800,7 +800,7 @@ int main(int, char* argv[]) {
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
         srcml_append_transform_xslt_memory(iarchive, setlanguage.c_str(), setlanguage.size());
-        srcml_append_transform_param(iarchive, "language", "\"Python\"");
+        srcml_append_transform_param(iarchive, "language", "\"Java\"");
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
@@ -831,7 +831,7 @@ int main(int, char* argv[]) {
         srcml_archive* iarchive = srcml_archive_create();
         srcml_archive_read_open_memory(iarchive, srcml_full.c_str(), srcml_full.size());
         srcml_append_transform_xslt_memory(iarchive, setlanguage.c_str(), setlanguage.size());
-        srcml_append_transform_stringparam(iarchive, "language", "Python");
+        srcml_append_transform_stringparam(iarchive, "language", "Java");
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
@@ -994,7 +994,7 @@ int main(int, char* argv[]) {
         FILE* f = fopen("setlanguage.xsl", "r");
         srcml_append_transform_xslt_FILE(iarchive, f);
         fclose(f);
-        srcml_append_transform_param(iarchive, "language", "\"Python\"");
+        srcml_append_transform_param(iarchive, "language", "\"Java\"");
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
 
@@ -1161,7 +1161,7 @@ int main(int, char* argv[]) {
         int fd = open("setlanguage.xsl", O_RDONLY, 0);
         srcml_append_transform_xslt_fd(iarchive, fd);
         close(fd);
-        srcml_append_transform_param(iarchive, "language", "\"Python\"");
+        srcml_append_transform_param(iarchive, "language", "\"Java\"");
 
         srcml_archive* oarchive = srcml_archive_clone(iarchive);
         srcml_archive_write_open_memory(oarchive, &s, &size);
