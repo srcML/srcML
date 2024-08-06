@@ -48,6 +48,7 @@ int main(int, char* argv[]) {
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
 
         dassert(srcml_unit_get_revision(unit), std::string(SRCML_VERSION_STRING));
 
@@ -56,6 +57,7 @@ int main(int, char* argv[]) {
 
     {
         srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++");
 
         dassert(srcml_unit_get_revision(unit), std::string(SRCML_VERSION_STRING));
 
