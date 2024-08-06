@@ -65,6 +65,9 @@ int srcml_unit_set_language(struct srcml_unit* unit, const char* language) {
     else
         unit->language = decltype(unit->language)();
 
+    // revision is based on language
+    unit->revision = srcml_markup_version_string(unit->language->data());
+
     return SRCML_STATUS_OK;
 }
 
@@ -730,6 +733,9 @@ static int srcml_unit_parse_internal(struct srcml_unit* unit, const char* filena
         return SRCML_STATUS_UNSET_LANGUAGE;
 
     unit->derived_language = lang;
+
+    // since language is changed/set, must reset revision
+    unit->revision = srcml_markup_version_string(Language(lang).getLanguageString());
 
     const char* src_encoding = optional_to_c_str(unit->encoding, optional_to_c_str(unit->archive->src_encoding));
 
