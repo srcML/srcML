@@ -2,7 +2,7 @@
 /**
  * @file srcml_types.hpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
  */
 
 #ifndef INCLUDED_SRCML_TYPES_HPP

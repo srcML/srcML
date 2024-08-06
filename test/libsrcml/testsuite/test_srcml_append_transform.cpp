@@ -2,7 +2,7 @@
 /**
  * @file test_srcml_append_transform.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
  *
  *
  * Test cases for srcml_append_transform_*()

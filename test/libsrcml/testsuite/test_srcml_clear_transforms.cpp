@@ -2,7 +2,7 @@
 /**
  * @file test_srcml_clear_transforms.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2022 srcML, LLC. (www.srcML.org)
  *
  *
  * Test cases for srcml_clear_transforms()

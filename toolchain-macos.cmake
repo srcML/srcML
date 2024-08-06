@@ -2,7 +2,7 @@
 ##
 # @file toolchain-macos.cmake
 #
-# @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2023-2024 srcML, LLC. (www.srcML.org)
 #
 # MSVC-specific tool configuration
 

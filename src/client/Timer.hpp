@@ -2,7 +2,7 @@
 /**
  * @file Timer.hpp
  *
- * @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2014-2022 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */

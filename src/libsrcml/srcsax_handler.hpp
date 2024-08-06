@@ -2,7 +2,7 @@
 /**
  * @file srcsax_handler.hpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2022 srcML, LLC. (www.srcML.org)
  */
 
 #ifndef INCLUDED_SRCSAX_HANDLER_HPP

@@ -2,7 +2,7 @@
 /**
  * @file cppCallbackAdapter.hpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2022 srcML, LLC. (www.srcML.org)
  */
 
 /**
