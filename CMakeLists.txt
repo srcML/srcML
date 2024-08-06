@@ -25,7 +25,7 @@ endif()
 
 # Set libsrcml version from src/libsrcml/srcml.h
 # Extract this before project() because manually setting major, minor, and patch leads to bugs
-file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER REGEX "SRCML_VERSION_STRING")
+file(STRINGS "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h" SRCML_HEADER REGEX "SRCML_LIBSRCML_VERSION_STRING")
 string(REGEX MATCH "\"([0-9.]+)\"" _ "${SRCML_HEADER}")
 
 project(srcML VERSION "${CMAKE_MATCH_1}" HOMEPAGE_URL "https://www.srcML.org")
