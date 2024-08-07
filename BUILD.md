@@ -123,7 +123,7 @@ Necessary installed tools include:
 * [CMake](http://www.cmake.org)
 * [Visual Studio 2017 or later](https://www.visualstudio.com/downloads/)
 
-Package dependencies are handled via [vcpkg](vcpkg.io); see the [vcpkg installation directions](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd).
+Package dependencies are handled via [vcpkg][vcpkg.io]; see the [vcpkg installation directions](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd).
 
 ### Build
 
