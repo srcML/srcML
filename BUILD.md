@@ -45,7 +45,7 @@ cmake --preset ci-rpm
 
 This creates a sibling build directory, `../srcML-build`.
 
-The presets' default generator is [ninja](https://ninja-build.org). To use `make`, see [Options/Using Make]().
+The presets' default generator is [ninja](https://ninja-build.org). To use `make`, see [Using Make](#using-make).
 
 The following targets are supported with their usual meaning.
 
