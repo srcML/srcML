@@ -12,7 +12,7 @@ For proper configuration, use the cmake preset for your platform: `ci-ubuntu`, `
 * [Workflow Presets](#workflow-presets)
 * [Internal Dependencies](#internal-dependencies)
 * [Options](#options)
-	* [Using Make](#using-cmake)
+	* [Using Make](#using-make)
 	* [Custom build directory](#custom-build-directory)
 	* [Non-preset build](#non-preset-build)
 
