@@ -15,9 +15,8 @@ endif()
 list(APPEND CPACK_GENERATOR "productbuild;TGZ;TBZ2")
 list(REMOVE_DUPLICATES CPACK_GENERATOR)
 
-# System name based on macOS and version, then used in package name
-execute_process(COMMAND /usr/bin/sw_vers -productVersion OUTPUT_VARIABLE OS_NUMERIC OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(CPACK_SYSTEM_NAME "macOS-${OS_NUMERIC}")
+# System name based on macOS, then used in package name
+set(CPACK_SYSTEM_NAME "macOS")
 
 # Archive package filenames
 set(BASE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
