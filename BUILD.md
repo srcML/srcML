@@ -1,7 +1,8 @@
 # Building srcML
 
 The srcML build uses cmake, www.cmake.org (version 3.28 or above), and supports
-builds for Ubuntu, Fedora, OpenSUSE, macOS, and Windows. The builds are "out-of-source builds" (builds outside the source directory) with no support for in-source builds.
+builds for Ubuntu, Fedora, OpenSUSE, macOS, and Windows. The builds are "out-of-source builds"
+(builds outside the source directory) with no support for in-source builds.
 
 For proper configuration, use the cmake preset for your platform: `ci-ubuntu`, `ci-rpm`, `ci-macos`, and `ci-msvc`, as described below.
 
