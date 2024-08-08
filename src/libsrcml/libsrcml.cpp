@@ -2,7 +2,7 @@
 /**
  * @file libsrcml.cpp
  *
- * @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  * Implementation of srcml simple API (global archive) functions from the namespace srcml_*
 */

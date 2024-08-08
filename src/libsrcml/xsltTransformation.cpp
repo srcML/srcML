@@ -2,7 +2,7 @@
 /**
  * @file xsltTransformation.cpp
  *
- * @copyright Copyright (C) 2008-2022 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2008-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  */

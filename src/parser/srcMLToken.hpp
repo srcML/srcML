@@ -2,7 +2,7 @@
 /**
  * @file srcMLToken.hpp
  *
- * @copyright Copyright (C) 2004-2022 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2004-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *

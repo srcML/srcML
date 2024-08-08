@@ -2,7 +2,7 @@
 /**
  * @file OpenFileLimiter.hpp
  *
- * @copyright Copyright (C) 2019-2022 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */

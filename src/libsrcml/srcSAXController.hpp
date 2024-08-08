@@ -2,7 +2,7 @@
 /**
  * @file srcSAXController.hpp
  *
- * @copyright Copyright (C) 2013-2022 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  */
 
 #ifndef INCLUDED_SRCSAX_CONTROLLER_HPP

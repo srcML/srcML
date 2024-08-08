@@ -2,7 +2,7 @@
 /*!
  * @file OperatorLexer.g
  *
- * @copyright Copyright (C) 2004-2023 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2004-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
  */

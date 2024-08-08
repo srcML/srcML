@@ -2,7 +2,7 @@
 /**
  * @file unit_utilities.hpp
  *
- * @copyright Copyright (C) 2018-2022 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2018-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */

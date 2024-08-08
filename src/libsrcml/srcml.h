@@ -2,7 +2,7 @@
 /**
  * @file srcml.h
  *
- * @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
