@@ -6,15 +6,22 @@ builds for Ubuntu, Fedora, OpenSUSE, macOS, and Windows. The builds are "out-of-
 
 For proper configuration, use the cmake preset for your platform: `ci-ubuntu`, `ci-rpm`, `ci-macos`, and `ci-msvc`, as described below.
 
-* [Linux](#linux)
-* [macOS](#macos)
-* [Windows](#windows)
-* [Workflow Presets](#workflow-presets)
-* [Internal Dependencies](#internal-dependencies)
-* [Options](#options)
-	* [Using Make](#using-make)
-	* [Custom Build Directory](#custom-build-directory)
-	* [Non-Preset Build](#non-preset-build)
+- [Building srcML](#building-srcml)
+	- [Linux](#linux)
+		- [Dependencies](#dependencies)
+		- [Build](#build)
+	- [macOS](#macos)
+		- [Dependencies](#dependencies-1)
+		- [Build](#build-1)
+	- [Windows](#windows)
+		- [Dependencies](#dependencies-2)
+		- [Build](#build-2)
+	- [Workflow Presets](#workflow-presets)
+	- [Internal Dependencies](#internal-dependencies)
+	- [Options](#options)
+		- [Using Make](#using-make)
+		- [Custom Build Directory](#custom-build-directory)
+		- [Non-Preset Build](#non-preset-build)
 
 ## Linux
 
@@ -22,12 +29,23 @@ srcML supports Linux builds for Ubuntu, Fedora, and OpenSUSE.
 
 ### Dependencies
 
-To find what installed packages are needed, consult these Dockerfiles for
-each distribution:
+To find what installed packages are needed, run the command or consult
+the Dockerfile that matches the appropriate distribution:
 
-* [Ubuntu](./docker/ubuntu/Dockerfile)
-* [Fedora](./docker/fedora/Dockerfile)
-* [OpenSUSE](./docker/opensuse/Dockerfile)
+* Ubuntu ([Dockerfile](./docker/ubuntu/Dockerfile)):
+```console
+apt-get update && apt-get upgrade --no-install-recommends -y g++ git libarchive-dev libcurl4-openssl-dev libxml2-dev make ninja-build
+```
+
+* Fedora ([Dockerfile](./docker/fedora/Dockerfile)):
+```console
+dnf install -y gcc-c++ git libarchive-devel libcurl-devel libxml2-devel libxslt-devel make ninja-build openssl-devel
+```
+
+* OpenSUSE ([Dockerfile](./docker/opensuse/Dockerfile)):
+```console
+zypper --non-interactive install --no-recommends gcc-c++ git libarchive-devel libcurl-devel libxml2-devel libxslt-devel make ninja
+```
 
 ### Build
 
