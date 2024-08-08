@@ -13,8 +13,8 @@ For proper configuration, use the cmake preset for your platform: `ci-ubuntu`, `
 * [Internal Dependencies](#internal-dependencies)
 * [Options](#options)
 	* [Using Make](#using-make)
-	* [Custom build directory](#custom-build-directory)
-	* [Non-preset build](#non-preset-build)
+	* [Custom Build Directory](#custom-build-directory)
+	* [Non-Preset Build](#non-preset-build)
 
 ## Linux
 
@@ -47,7 +47,7 @@ This creates a sibling build directory, `../srcML-build`.
 
 The presets' default generator is [ninja](https://ninja-build.org). To use `make`, see [Using Make](#using-make).
 
-The following targets are supported with their usual meaning.
+The following targets are supported with their usual meaning:
 
 ```console
 ninja
@@ -184,7 +184,7 @@ cmake --preset ci-ubuntu -G "Unix Makefiles"
 
 Replace `ninja` with `make` in the instructions above.
 
-### Custom build directory
+### Custom Build Directory
 
 CMake presets must specify the build directory and are meant to be issued from the source directory. The defaults for the above platforms are in a sibling directory, `../srcML-build`, or a subdirectory, `build`.
 
