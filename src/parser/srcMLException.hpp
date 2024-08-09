@@ -2,7 +2,7 @@
 /**
  * @file srcMLException.hpp
  *
- * @copyright Copyright (C) 2004-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2004-2024 srcML, LLC. (www.srcML.org)
  *
  * Changes segmentation errors to an thrown exception.
  */

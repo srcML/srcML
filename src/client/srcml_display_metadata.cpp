@@ -2,7 +2,7 @@
 /**
  * @file srcml_display_info.cpp
  *
- * @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2014-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */

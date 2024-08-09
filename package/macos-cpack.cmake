@@ -2,7 +2,7 @@
 #
 # @file macos.cmake
 #
-# @copyright Copyright (C) 2019-2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
 #
 # CPack configuration for macOS installers
 
