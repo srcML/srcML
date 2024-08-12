@@ -88,7 +88,7 @@ const Namespaces starting_namespaces = {
     Namespace(SRCML_SRC_NS_DEFAULT_PREFIX,     SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED),
 };
 
-void addNamespace(Namespaces& namespaces, std::string_view uri, std::string_view prefix);
+void addNamespace(Namespaces& namespaces, std::string_view uri, std::string_view prefix, bool used = false);
 
 struct Attribute {
     Attribute(std::string_view uri, std::string_view prefix, std::string_view name, std::string_view value)
