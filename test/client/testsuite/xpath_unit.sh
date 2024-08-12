@@ -40,6 +40,10 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+define oneline_a <<- 'STDOUT'
+	a
+	STDOUT
+
 xmlcheck "$output1"
 xmlcheck "$output2"
 xmlcheck "$output_empty"
@@ -51,7 +55,7 @@ srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml
 check "$output1"
 
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml --output-src
-check "a"
+check "$oneline_a"
 
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" < sub/a.cpp.xml
 check "$output1"
@@ -69,7 +73,7 @@ srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:nam
 check "$output1"
 
 srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml --output-src
-check "a"
+check "$oneline_a"
 
 srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:name" < sub/a.cpp.xml
 check "$output1"
