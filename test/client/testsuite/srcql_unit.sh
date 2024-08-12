@@ -1,4 +1,9 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# @file srcql_unit.sh
+#
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 
 # test framework
 source $(dirname "$0")/framework_test.sh
@@ -35,15 +40,15 @@ define srcml <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-define oneline_a <<- 'STDOUT'
-	a
-	STDOUT
-
 xmlcheck "$output1"
 xmlcheck "$output2"
 xmlcheck "$output_empty"
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
+
+define oneline_a <<- 'STDOUT'
+	a
+	STDOUT
 
 # /src:unit/src:expr_stmt/src:expr/src:name
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml

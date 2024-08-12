@@ -127,6 +127,9 @@ check "$eabsrcml"
 # Note that BSD echo (macOS) supports the -e escape, but does not have it listed
 # on the man page
 
+define newline <<- 'STDOUT'
+	STDOUT
+
 # escaped \a
 printf "\aa;\a" | srcml -l C++ | srcml
 check "\aa;\a"
