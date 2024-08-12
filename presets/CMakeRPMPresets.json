@@ -21,7 +21,7 @@
       "name": "ci-rpm",
       "displayName": "RPM Release",
       "description": "Default build options for RPM release",
-      "inherits": ["ci-base", "ci-docker", "ci-rpm-only", "ci-gcc", "ci-sibling-build"]
+      "inherits": ["ci-base", "ci-rpm-only", "ci-gcc", "ci-sibling-build"]
     }
   ],
   "buildPresets" : [
