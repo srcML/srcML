@@ -138,6 +138,7 @@ int src_input_text(ParseQueue& queue,
                             lastNull = true;
 
                         srcml_archive_disable_solitary_unit(srcml_arch);
+                        srcml_archive_enable_hash(srcml_arch);
 
                         goto end;
                     }
@@ -193,6 +194,7 @@ int src_input_text(ParseQueue& queue,
                             lastNull = true;
 
                         srcml_archive_disable_solitary_unit(srcml_arch);
+                        srcml_archive_enable_hash(srcml_arch);
 
                         goto end;
                     }

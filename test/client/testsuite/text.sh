@@ -135,6 +135,9 @@ define multiplesrcml <<- 'STDOUT'
 srcml --text="a;" --text="b;" -l C++
 check "$multiplesrcml"
 
+srcml --text="a;\0b;" -l C++
+check "$multiplesrcml"
+
 # escaped newline
 define ansrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
