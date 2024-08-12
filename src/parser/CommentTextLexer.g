@@ -2,7 +2,7 @@
 /*!
  * @file CommentTextLexer.g
  *
- * @copyright Copyright (C) 2008-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2008-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
  *
@@ -169,7 +169,7 @@ COMMENT_TEXT {
 
     '\042' /* '\"' */
         { dquote_count = 1; }
-        (options { greedy = true; } : { prevLA != '\\' }? '\042' { ++dquote_count; })*
+        (options { greedy = true; } : { prevLA != '\\' || noescape }? '\042' { ++dquote_count; })*
     {
         if ((noescape && (dquote_count % 2 == 1)) ||
             (!noescape && (prevLA != '\\') && (mode == STRING_END))) {

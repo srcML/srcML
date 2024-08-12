@@ -2,7 +2,7 @@
 /**
  * @file srcml_translator.cpp
  *
- * @copyright Copyright (C) 2003-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2003-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -341,7 +341,7 @@ bool srcml_translator::add_start_element(const char* prefix, const char* name, c
     //     used_uri = uri;
     // }
 
-    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST prefix, BAD_CAST name, BAD_CAST used_uri) != -1;
+    return xmlTextWriterStartElementNS(out.getWriter(), BAD_CAST (prefix && *prefix != '\0' ? prefix : 0), BAD_CAST name, BAD_CAST used_uri) != -1;
 }
 
 /**

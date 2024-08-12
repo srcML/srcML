@@ -2,7 +2,7 @@
 ##
 # @file CMakeLists.txt
 #
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 #
 # CMake files for the srcML client
 
@@ -11,18 +11,14 @@
 # endif()
 
 # Configure libarchive on macOS
-if(APPLE AND NOT DEFINED VCPKG_TARGET_TRIPLET)
-    set(APPLE_NON_VCPKG ON)
-endif()
-if(APPLE_NON_VCPKG)
-    include(macos-libarchive.cmake)
-endif()
+include(macos-libarchive.cmake)
 
 find_package(LibArchive 3 REQUIRED)
 find_package(CURL REQUIRED)
 find_package(Threads REQUIRED)
 
 # rpath needs help on macos
+# Should be in a preset, but needed for all builds
 if(APPLE)
     # Use rpath for the install directory
     set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -61,7 +57,7 @@ target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL:
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # PreCompiled Headers configuration of the client
-if (SRCML_CLIENT_PCH)
+if(SRCML_CLIENT_PCH)
     target_precompile_headers(srcml PRIVATE "${SRCML_CLIENT_PCH}")
 endif()
 

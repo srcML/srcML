@@ -11,13 +11,6 @@
       }
     },
     {
-      "name": "ci-docker",
-      "hidden": true,
-      "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
-      }
-    },
-    {
       "name": "ci-sibling-build",
       "description": "Sibling build",
       "hidden": true,
@@ -117,8 +110,7 @@
       "name": "ci-base",
       "hidden": true,
       "configurations": [ "Release" ],
-      "generators": [ "TGZ", "TBZ2" ],
-      "packageDirectory": "dist"
+      "generators": [ "TGZ", "TBZ2" ]
     }
   ]
 }

@@ -2,10 +2,8 @@
 ##
 # @file toolchain-gcc.cmake
 #
-# @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2023-2024 srcML, LLC. (www.srcML.org)
 #
 # MSVC-specific tool configuration
 
 set(CMAKE_OPTIMIZE_DEPENDENCIES ON)
-
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)

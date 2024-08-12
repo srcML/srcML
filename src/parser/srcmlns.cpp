@@ -2,7 +2,7 @@
 /**
  * @file srcmlns.cpp
  *
- * @copyright Copyright (C) 2005-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2005-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  */
@@ -10,7 +10,7 @@
 #include <srcmlns.hpp>
 #include <algorithm>
 
-void addNamespace(Namespaces& namespaces, std::string_view uri, std::string_view prefix) {
+void addNamespace(Namespaces& namespaces, std::string_view uri, std::string_view prefix, bool used) {
 
     // lookup by uri, if it already exists, update the prefix. If it doesn't exist, add it
     // prefix must be unique
@@ -24,7 +24,7 @@ void addNamespace(Namespaces& namespaces, std::string_view uri, std::string_view
         ituri->prefix = prefix;
     } else {
         // add new namespace
-        namespaces.emplace_back(prefix, uri, NS_REGISTERED);
+        namespaces.emplace_back(prefix, uri, used ? NS_REGISTERED | NS_USED : NS_REGISTERED);
     }
 }
 

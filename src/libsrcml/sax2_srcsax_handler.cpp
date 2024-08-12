@@ -2,7 +2,7 @@
 /**
  * @file sax2_srcsax_handler.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  */
 
 #include <sax2_srcsax_handler.hpp>

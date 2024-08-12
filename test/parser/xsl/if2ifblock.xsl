@@ -1,3 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!--
+    @file if2blockif.xsl
+
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
+
+    Converts srcML if statement test cases to if statement test cases with blocks around the then and else statements.
+-->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:src="http://www.srcML.org/srcML/src"
@@ -9,12 +18,6 @@
     extension-element-prefixes="str exsl func"
     exclude-result-prefixes="src"
     version="1.0">
-
-<!--
-    if2blockif.xsl
-
-    Converts srcML if statement test cases to if statement test cases with blocks around the then and else statements.
--->
 
 <xsl:import href="copy.xsl"/>
 

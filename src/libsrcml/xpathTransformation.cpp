@@ -1,8 +1,8 @@
- // SPDX-License-Identifier: GPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-only
 /**
  * @file xpathTransformation.cpp
  *
- * @copyright Copyright (C) 2008-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2008-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  */

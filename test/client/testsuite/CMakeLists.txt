@@ -2,7 +2,7 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2014-2024 srcML, LLC. (www.srcML.org)
 # 
 # CMake files for client tests
 
