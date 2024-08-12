@@ -2,7 +2,7 @@
 /**
  * @file test_srcml_append_transform.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  *
  * Test cases for srcml_append_transform_*()
@@ -159,6 +159,137 @@ int main(int, char* argv[]) {
 
     {
         dassert(srcml_append_transform_xpath_element(0, "//src:unit", "sup", "http://srcML.org/Supplement", "contain"), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    /*
+      srcml_append_transform_srcql
+    */
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql(archive, "$T $V;"), SRCML_STATUS_OK);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql(archive, "$T $V;"), SRCML_STATUS_OK);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql(archive, 0), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        dassert(srcml_append_transform_srcql(0, "$T $V;"), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    /*
+      srcml_append_transform_srcql_attribute
+    */
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_attribute(archive, "$T $V;", "sup", "http://srcML.org/Supplement", "type", "supplement"), SRCML_STATUS_OK);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_attribute(archive, "$T $V;", "sup", "http://srcML.org/Supplement", "type", "supplement"), SRCML_STATUS_OK);
+
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_attribute(archive, "$T $V;", "sup", "http://srcML.org/Supplement", 0, "supplement"), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_attribute(archive, 0, "sup", "http://srcML.org/Supplement", "type", "supplement"), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        dassert(srcml_append_transform_srcql_attribute(0, "$T $V;", "sup", "http://srcML.org/Supplement", "type", "supplement"), SRCML_STATUS_INVALID_ARGUMENT);
+    }
+
+    /*
+      srcml_append_transform_srcql_element
+    */
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_element(archive, "$T $V;", "sup", "http://srcML.org/Supplement", "contain"), SRCML_STATUS_OK);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_element(archive, "$T $V;", "sup", "http://srcML.org/Supplement", "contain"), SRCML_STATUS_OK);
+        dassert(srcml_append_transform_srcql_attribute(archive, "$T $V;", "sup", "http://srcML.org/Supplement", "type", "supplement"), SRCML_STATUS_OK);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_element(archive, "$T $V;", "sup", "http://srcML.org/Supplement", "contain"), SRCML_STATUS_OK);
+
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_element(archive, "$T $V;", "sup", "http://srcML.org/Supplement", 0), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_append_transform_srcql_element(archive, 0, "sup", "http://srcML.org/Supplement", "contain"), SRCML_STATUS_INVALID_ARGUMENT);
+
+        srcml_archive_close(archive);
+        srcml_archive_free(archive);
+    }
+
+    {
+        dassert(srcml_append_transform_srcql_element(0, "$T $V;", "sup", "http://srcML.org/Supplement", "contain"), SRCML_STATUS_INVALID_ARGUMENT);
     }
 
     /*

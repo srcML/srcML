@@ -2,11 +2,11 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2014-2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2014-2024 srcML, LLC. (www.srcML.org)
 # 
 # CMake files for libsrcml examples
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28)
 
 project(srcML-Examples-libsrcml)
 

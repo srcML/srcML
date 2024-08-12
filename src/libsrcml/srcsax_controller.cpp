@@ -2,7 +2,7 @@
 /**
  * @file srcsax_controller.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  */
 
 #include <srcsax.hpp>
@@ -116,7 +116,7 @@ int srcsax_parse(srcsax_context* context) {
 
     if (status != 0 && context->srcsax_error) {
 
-        xmlErrorPtr ep = xmlCtxtGetLastError(context->libxml2_context);
+        auto ep = xmlCtxtGetLastError(context->libxml2_context);
 
         auto str_length = std::string_view(ep->message).size();
         ep->message[str_length - 1] = '\0';

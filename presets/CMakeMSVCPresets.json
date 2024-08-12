@@ -1,0 +1,153 @@
+{
+  "version": 8,
+  "include": [
+    "CMakeBasePresets.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "ci-msvc",
+      "displayName": "MSVC",
+      "description": "Default build options for MSVC",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "toolchainFile": "toolchain-msvc.cmake",
+      // "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_C_COMPILER": "cl",
+        // /Wall
+        // /D_CRT_SECURE_NO_WARNINGS  # disable strcpy() warnings
+        // /D_CRT_NONSTDC_NO_WARNINGS # disable read() warnings
+        // /wd4068 # unknown pragma
+        // # /wd4101 # unreferenced local variable
+        // # /wd4519 # unmarked inlining notification warning
+        // /wd4514 # removed inline function not called (in one context)
+        // # /wd4668 # preprocessor symbol not defined but used in an #if
+        // /wd4710 # unmarked inlining notification warning
+        // /wd4820 # byte padding
+        // /wd5039 # pointer or reference to potentially throwing function passed to 'extern "C"' function under -EHc
+        // /wd4711 # selected for automatic inline expansion
+        // /wd4706 # assigment within conditional expression
+        // /wd4625 # copy constructor was implicitly defined as deleted
+        // /wd4626 # assignment operator was implicitly defined as deleted
+        // /wd5026 # move constructor was implicitly defined as deleted
+        // /wd5027 # move assignment operator was implicitly defined as deleted
+        // /wd4668 # is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
+        // /wd4868 # compiler may not enforce left-to-right evaluation order in braced initializer list
+        // /wd4371 # layout of class may have changed from a previous version of the compiler due to better packing of member
+        // /wd4623 # default constructor was implicitly defined as deleted
+        // /wd5045 # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
+        "CMAKE_CXX_FLAGS": "/Wall /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4068 /wd4514 /wd4710 /wd4820 /wd5039 /wd4711 /wd4706 /wd4625 /wd4626 /wd5026 /wd5027 /wd4668 /wd4868 /wd4371 /wd4623 /wd5045 ",
+        // With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
+        // /wd4355 # 'this' used in base member initializer list
+        // /wd4866 # compiler may not enforce left-to-right evaluation order for call to 'operator<<'
+        // /wd5204 # 'Concurrency::details::_DefaultPPLTaskScheduler': class has virtual functions, but its trivial destructor is not virtual; instances of objects derived from this class may not be destructed correctly
+        // /wd5264 # 'int const `void __cdecl srcml_display_metadata(srcml_request_t const &,std::vector<srcml_input_src,std::allocator<srcml_input_src> > const &,srcml_input_src const &)'::`2'::display_commands': 'const' variable is not used
+        // /wd4577 # 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
+        "SRCML_GLOBAL_COMPILE_OPTIONS": "/wd4355;/wd4866;/wd5204;/wd5264;/wd4577",
+        "SRCML_GLOBAL_LINK_OPTIONS": "",
+        // /wd4242 # 'argument': conversion from 'T' to '_Elem', possible loss of data
+        // /wd4244 # 'argument': conversion from '<type1>' to '<type2>', possible loss of data
+        // /wd4267 # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+        // /wd4355 # this': used in base member initializer list
+        // /wd4365 # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
+        //         # conversion from 'int' to 'unsigned int',
+        // /wd4477 # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
+        // /wd4530 # C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+        // /wd4577 # 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
+        "SRCML_ANTLR_DISABLED_WARNINGS": "/wd4242;/wd4244;/wd4267;/wd4355;/wd4365;/wd4477;/wd4530;/wd4577",
+        // /wd4267 # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+        // /wd4365 # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
+        //         # conversion from 'int' to 'unsigned int',
+        // /wd4459 # declaration of 'context' hides global declaration
+        // /wd4530 # C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
+        // /wd4577 # 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
+        // /wd4701 # potentially uninitialized local variable '...' used
+        // /wd5262 # implicit fall-through occurs here; are you missing a break statement? Use [[fallthrough]] when a break statement is intentionally omitted between cases
+        // /wd5264 # 'int const `char const * __cdecl `anonymous namespace'::positoa(int)'::`2'::SIZE': 'const' variable is not used
+        "SRCML_PARSER_DISABLED_WARNINGS": "/wd4267;/wd4365;/wd4459;/wd4530;/wd4577;/wd4701;/wd5262;/wd5264",
+        "SRCML_LIBSRCML_COMPILE_FLAGS": "/Zi",
+        "SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF",
+        "SRCML_LIBSRCML_STATIC_LINK_FLAGS_RELEASE": "/LTCG:OFF",
+        // wd4355 # this': used in base member initializer list
+        // wd5204 # class has virtual functions, but its trivial destructor is not virtual
+        "SRCML_CLIENT_COMPILE_FLAGS": "/wd4355;/wd5204",
+        "SRCML_CLIENT_LINK_FLAGS": ""
+      }
+    }
+  ],
+  "buildPresets" : [
+    {
+      "name": "ci-msvc-only",
+      "displayName": "Ubuntu only",
+      "description": "Restrict to Ubuntu",
+      "hidden": true,
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "configurePreset": "ci-msvc"
+    },
+    {
+      "name": "ci-msvc",
+      "inherits": ["ci-msvc-only"],
+      "configuration": "Release"
+    },
+    {
+      "name": "ci-clean-install-msvc3",
+      "inherits": ["ci-msvc-only", "ci-clean-install"]
+    },
+    {
+      "name": "ci-install-package-msvc",
+      "inherits": ["ci-install-package", "ci-msvc-only"]
+    },
+    {
+      "name": "ci-test-client-msvc",
+      "inherits": ["ci-test-client", "ci-msvc-only"]
+    },
+    {
+      "name": "ci-test-libsrcml-msvc",
+      "inherits": ["ci-test-libsrcml", "ci-msvc-only"]
+    },
+    {
+      "name": "ci-test-parser-msvc",
+      "inherits": ["ci-test-parser", "ci-msvc-only"]
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "ci-msvc-only",
+      "hidden": true,
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "configurePreset": "ci-msvc"
+    },
+    {
+      "name": "ci-msvc",
+      "generators": [ "WIX", "INNOSETUP", "NuGet", "ZIP" ],
+      "inherits": ["ci-msvc-only", "ci-base"]
+    },
+    {
+      "name": "ci-msvc-wix",
+      "generators": [ "WIX", "ZIP" ],
+      "inherits": ["ci-msvc-only", "ci-base"]
+    },
+    {
+      "name": "ci-msvc-inno",
+      "generators": [ "INNOSETUP", "ZIP" ],
+      "inherits": ["ci-msvc-only", "ci-base"]
+    },
+    {
+      "name": "ci-msvc-nuget",
+      "generators": [ "NuGet", "ZIP" ],
+      "inherits": ["ci-msvc-only", "ci-base"]
+    }
+  ],
+  "testPresets": [
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-msvc",
+      "steps": [
+        { "type": "configure", "name": "ci-msvc" },
+        { "type": "build",     "name": "ci-msvc" },
+        { "type": "package",   "name": "ci-msvc" }
+      ]
+    }
+  ]
+}

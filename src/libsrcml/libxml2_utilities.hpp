@@ -2,7 +2,7 @@
 /**
  * @file libxml2_utilities.hpp
  *
- * @copyright Copyright (C) 2018-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2018-2022 srcML, LLC. (www.srcML.org)
  */
 
 #ifndef INCLUDED_LIBXML2_UTILITIES_HPP

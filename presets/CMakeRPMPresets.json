@@ -1,0 +1,99 @@
+{
+  "version": 8,
+  "include": [
+    "CMakeBasePresets.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "ci-rpm-only",
+      "displayName": "RPM only",
+      "description": "Restrict to RPM",
+      "hidden": true,
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+          { "type": "inList", "string": "$env{WORKFLOW}", "list": ["rpm", ""] }
+        ]
+      }
+    },
+    {
+      "name": "ci-rpm",
+      "displayName": "RPM Release",
+      "description": "Default build options for RPM release",
+      "inherits": ["ci-base", "ci-docker", "ci-rpm-only", "ci-gcc", "ci-sibling-build"]
+    }
+  ],
+  "buildPresets" : [
+    {
+      "name": "ci-rpm-only",
+      "displayName": "RPM only",
+      "description": "Restrict to RPM",
+      "hidden": true,
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+          { "type": "inList", "string": "$env{WORKFLOW}", "list": ["rpm", ""] }
+        ]
+      },
+      "configurePreset": "ci-rpm"
+    },
+    {
+      "name": "ci-rpm",
+      "inherits": ["ci-rpm-only"],
+      "configuration": "Release"
+    },
+    {
+      "name": "ci-clean-install-rpm",
+      "inherits": ["ci-clean-install", "ci-rpm-only"]
+    },
+    {
+      "name": "ci-install-package-rpm",
+      "inherits": ["ci-install-package", "ci-rpm-only"]
+    },
+    {
+      "name": "ci-test-client-rpm",
+      "inherits": ["ci-test-client", "ci-rpm-only"]
+    },
+    {
+      "name": "ci-test-libsrcml-rpm",
+      "inherits": ["ci-test-libsrcml", "ci-rpm-only"]
+    },
+    {
+      "name": "ci-test-parser-rpm",
+      "inherits": ["ci-test-parser", "ci-rpm-only"]
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "ci-rpm",
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+          { "type": "inList", "string": "$env{WORKFLOW}", "list": ["rpm", ""] }
+        ]
+      },
+      "inherits": ["ci-base"],
+      "configurePreset": "ci-rpm",
+      "generators": [ "RPM", "TGZ", "TBZ2" ]
+    }
+  ],
+  "testPresets": [
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-rpm",
+      "steps": [
+        { "type": "configure", "name": "ci-rpm" },
+        { "type": "build",     "name": "ci-rpm" },
+        { "type": "package",   "name": "ci-rpm" },
+        { "type": "build",     "name": "ci-install-package-rpm" },
+        { "type": "build",     "name": "ci-test-client-rpm" },
+        { "type": "build",     "name": "ci-test-libsrcml-rpm" },
+        { "type": "build",     "name": "ci-test-parser-rpm" }
+      ]
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 /**
  * @file src_input_text.cpp
  *
- * @copyright Copyright (C) 2015-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2015-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */
@@ -138,6 +138,7 @@ int src_input_text(ParseQueue& queue,
                             lastNull = true;
 
                         srcml_archive_disable_solitary_unit(srcml_arch);
+                        srcml_archive_enable_hash(srcml_arch);
 
                         goto end;
                     }
@@ -193,6 +194,7 @@ int src_input_text(ParseQueue& queue,
                             lastNull = true;
 
                         srcml_archive_disable_solitary_unit(srcml_arch);
+                        srcml_archive_enable_hash(srcml_arch);
 
                         goto end;
                     }

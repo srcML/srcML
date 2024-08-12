@@ -1,0 +1,62 @@
+volumes:
+  dist: # Installers
+
+x-base: &BASE
+  image: srcml/utility
+  profiles: [utility]
+
+x-utilities: &UTILITIES
+  <<: *BASE
+  volumes:
+    - dist:/dist
+
+services:
+
+  # Base utility image
+  utility:
+    <<: *UTILITIES
+    build:
+      context: docker/utility/
+      platforms:
+        - "linux/amd64"
+        - "linux/arm64"
+
+  # List the installers
+  ls:
+    <<: *UTILITIES
+    command: sh -c 'ls -lh /dist'
+
+  # Tar the installers, .deb and .rpm, into a single tar file, srcML.tar.gz to download via Docker Desktop
+  tar:
+    <<: *UTILITIES
+    command: sh -c 'tar --exclude=srcML.tar.gz -czf /dist/srcML.tar.gz -C /dist .; ls -lh /dist/srcML.tar.gz'
+
+  # Remove all installers
+  clean:
+    <<: *UTILITIES
+    command: sh -c 'rm -fr /dist/*; ls -lh /dist'
+
+  # Short results of client tests
+  client:
+    <<: *UTILITIES
+    command: sh -c 'grep "out of" /dist/*-client.log'
+
+  # Short results of parser tests
+  parser:
+    <<: *UTILITIES
+    command: sh -c 'grep "Counts:" /dist/*-parser.log'
+
+  upload:
+    <<: *BASE
+    volumes:
+      - .:/Source
+      - dist:/dist
+      - ~/.config/gh:/root/.config/gh
+      # Do not change this hard-coded Docker path. Redirects to SSH_AUTH_SOCK
+      # as set when the Docker Desktop is started
+      # Start Docker Desktop from command line after SSH_AUTH_SOCK is set correctly
+      - /run/host-services/ssh-auth.sock:/run/host-services/ssh-auth.sock
+    working_dir: /Source
+    environment:
+      - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+    command: /bin/sh

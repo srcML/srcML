@@ -2,7 +2,7 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 # 
 # CMake files for the client manpage
 
@@ -95,6 +95,7 @@ set(OUTPUT_SRC_FLAG_LONG "output-src")
 set(OUTPUT_SRC_FLAG_SHORT "S")
 set(TO_DIR_FLAG_LONG "to-dir")
 set(XPATH_OPTION_LONG "xpath")
+set(SRCQL_OPTION_LONG "srcql")
 set(ATTRIBUTE_LONG "attribute")
 set(ELEMENT_LONG "element")
 set(XSLT_LONG "xslt")

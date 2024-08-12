@@ -1,7 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-only
 /**
  * @file srcml.h
  *
- * @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  * The srcML Toolkit is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1233,6 +1234,49 @@ LIBSRCML_DECL int srcml_append_transform_relaxng_FILE(struct srcml_archive* arch
  * @return Status error code on failure
  */
 LIBSRCML_DECL int srcml_append_transform_relaxng_fd(struct srcml_archive* archive, int relaxng_fd);
+
+/**
+ * Append the srcQL query to the list of transformations/queries
+ * @param archive A srcml_archive
+ * @param srcql_string A srcQL query
+ * @note Currently, there is no way to specify context to the expression.
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
+ */
+LIBSRCML_DECL int srcml_append_transform_srcql(struct srcml_archive* archive, const char* srcql_string);
+
+/**
+ * Append the srcQL query to the list of transformations/queries.
+ * Instead of outputting the results in a separate unit tag, output the complete
+ * archive marking the XPath results with a user provided attribute
+ * @param archive A srcml_archive
+ * @param srcql_string A srcQL query
+ * @param prefix Attribute prefix
+ * @param namespace_uri Attribute namespace
+ * @param attr_name Attribute name
+ * @param attr_value Attribute value
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
+ */
+LIBSRCML_DECL int srcml_append_transform_srcql_attribute(struct srcml_archive* archive, const char* srcql_string,
+                                                            const char* prefix, const char* namespace_uri,
+                                                            const char* attr_name, const char* attr_value);
+
+/**
+ * Append the srcQL query to the list of transformations/queries.
+ * Instead of outputting the results in a separate unit tag, output the complete
+ * archive marking the XPath results with a user provided element.
+ * @param archive A srcml_archive
+ * @param srcql_string A srcQL query
+ * @param prefix Element prefix
+ * @param namespace_uri Element namespace
+ * @param element Element name
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure
+ */
+LIBSRCML_DECL int srcml_append_transform_srcql_element(struct srcml_archive* archive, const char* srcql_string,
+                                                            const char* prefix, const char* namespace_uri,
+                                                            const char* element);
 
 /**
  * Append an XSLT parameter to the last transformation

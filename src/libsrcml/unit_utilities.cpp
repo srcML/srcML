@@ -2,7 +2,7 @@
 /**
  * @file unit_utilities.cpp
  *
- * @copyright Copyright (C) 2018-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2018-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */
@@ -67,8 +67,9 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
         bool inmode = mode.top() == COMMON || (revision == 0 && mode.top() == DELETE) || (revision == 1 && mode.top() == INSERT);
 
         // output previous non-tag text
-        if (inmode)
+        if (inmode) {
             news.append(lastp, static_cast<size_t>(p - lastp));
+        }
 
         auto sp = p;
 
@@ -84,19 +85,29 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
                 mode.push(DELETE);
             } else if (strncmp(tstart, "insert", 6) == 0) {
                 mode.push(INSERT);
-            } else {
+            } else if (strncmp(tstart, "ws", 2) != 0) {
                 mode.push(COMMON);
             }
+
         }
         else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX.data(), DIFF_PREFIX.size()) == 0) {
-            mode.pop();
+            if(strncmp(sp + 2 + DIFF_PREFIX.size(), "ws", 2) != 0) {
+                mode.pop();
+            }
         }
         else {
-            if (inmode && !text_only)
+            if (inmode && !text_only) {
                 news.append(sp, static_cast<size_t>(p - sp));
+            }
         }
 
         lastp = p;
+    }
+
+    bool inmode = mode.top() == COMMON || (revision == 0 && mode.top() == DELETE) || (revision == 1 && mode.top() == INSERT);
+    size_t remaining_size = size - (lastp - srcml);
+    if (inmode && remaining_size > 0) {
+        news.append(lastp, remaining_size);
     }
 
     return news;

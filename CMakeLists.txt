@@ -2,7 +2,7 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2013-2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 # 
 # The master CMake project file for srcML
 
@@ -10,7 +10,7 @@ if(DEFINED ENV{VCPKG_ROOT} OR DEFINED CMAKE_TOOLCHAIN_FILE)
     set(VCPKG_BUILD_TYPE "release")
 endif()
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28)
 
 # If performed here, before project(), then this prefix becomes part of the CMAKE_SYSTEM_PREFIX_PATH
 # and then the installed version of srcML can be found by the tests without building srcml.
@@ -43,13 +43,18 @@ endif()
 # Determine distribution
 # Does not work for all distributions, but does work for supported Linux distributions
 if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
-    file(STRINGS /etc/os-release DISTRO REGEX "^NAME=")
+    cmake_host_system_information(RESULT DISTRO QUERY DISTRIB_NAME)
 endif()
 
 # Fedora and CentOS do not put /usr/local/{bin,lib64} on the default search paths
 # So change installation to /usr
 if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
     set(CMAKE_INSTALL_PREFIX /usr)
+endif()
+
+# Link the stdc++fs library if on gcc 7.5.0
+if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
+    link_libraries(stdc++fs)
 endif()
 
 # used as defaults for installation and packaging
