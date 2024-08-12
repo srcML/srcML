@@ -5,6 +5,7 @@
       "name": "ci-base",
       "hidden": true,
       "cacheVariables": {
+        "SRCML_TEST_TIMEOUT": "10",
         "BUILD_LIBSRCML_TESTS": "ON",
         "BUILD_PARSER_TESTS": "ON"
       }
