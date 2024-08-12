@@ -2,7 +2,7 @@
 /**
  * @file srcml_bitset_token_sets.hpp
  *
- * @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2014-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
  */

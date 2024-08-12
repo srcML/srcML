@@ -2,7 +2,7 @@
 /**
  * @file test_srcml_global_access.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  *
  * Test cases for srcml_set_*() and srcml_get_*()
