@@ -132,7 +132,6 @@ See `srcml --help` for more information.
         pipeline.push_back(srcml_display_metadata);
     }
 
-
     // step srcml->src
     if (request_create_src(srcml_request)) {
 
