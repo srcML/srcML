@@ -191,7 +191,7 @@ void create_src(const srcml_request_t& srcml_request,
             ++count;
         }
 
-        if (count > 1 && !option(SRCML_COMMAND_NULL)) {
+        if ((count > 2 || !srcml_request.transformations.empty()) && !option(SRCML_COMMAND_NULL)) {
             if (lastchar != '\n' && write(1, "\n", 1) == -1) {
                 SRCMLstatus(ERROR_MSG, "Unable to write to stdout");
                 exit(1);
