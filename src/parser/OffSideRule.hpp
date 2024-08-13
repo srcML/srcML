@@ -25,14 +25,9 @@ public:
 
     antlr::RefToken nextToken();
 
-    // Refer to `srcMLParserTokenTypes.hpp` for all supported values.
-    void setBlockStartToken(int token) {
-        blockStartToken = token;
-    }
+    void setBlockStartToken(int token);
 
-    int getBlockStartToken() {
-        return blockStartToken;
-    }
+    int getBlockStartToken() const;
 
 private:
     antlr::TokenStream& input;
@@ -45,7 +40,7 @@ private:
     int numIndents = 0;
 
     bool skippedColSet = false;
-    bool debugInfo = false;
+    bool debugInfo = true;
 };
 
 #endif
