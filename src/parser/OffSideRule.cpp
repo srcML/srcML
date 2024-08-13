@@ -37,13 +37,13 @@ antlr::RefToken OffSideRule::nextToken() {
             if (debugInfo) std::cerr << "** SETTING COL VALUES **\n";
         }
 
-        // [INDENT] A colon (':') token could indicate start of a block
-        if (token->getType() == srcMLParser::COLON) {
+        // [INDENT] The token matches the token used to indicate the start of a block
+        if (token->getType() == blockStartToken) {
             const auto& nextToken = input.nextToken();
             buffer.emplace_back(nextToken);
 
-            // Generate an INDENT token because the colon is followed by a newline
-            // Note: Colons could be part of a comment, a slicing operator, etc.
+            // Generate an INDENT token because the block start token is followed by a newline
+            // Note: The block start token could be used for other purposes
             if (nextToken->getType() == srcMLParser::EOL) {
                 auto indentToken = srcMLToken::factory();
                 indentToken->setType(srcMLParser::INDENT);
@@ -51,7 +51,7 @@ antlr::RefToken OffSideRule::nextToken() {
                 indentToken->setLine(token->getLine());
                 indentToken->setColumn(token->getColumn());
 
-                // <block> must start BEFORE the colon
+                // <block> must occur BEFORE the block start token
                 buffer.emplace_back(token);
                 numIndents++;
 

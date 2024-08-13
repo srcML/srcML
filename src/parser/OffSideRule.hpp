@@ -25,10 +25,20 @@ public:
 
     antlr::RefToken nextToken();
 
+    // Refer to `srcMLParserTokenTypes.hpp` for all supported values.
+    void setBlockStartToken(int token) {
+        blockStartToken = token;
+    }
+
+    int getBlockStartToken() {
+        return blockStartToken;
+    }
+
 private:
     antlr::TokenStream& input;
     std::deque<antlr::RefToken> buffer;
 
+    int blockStartToken = -1;
     int prevColStart = 1;
     int currentColStart = 1;
     int numIndents = 0;

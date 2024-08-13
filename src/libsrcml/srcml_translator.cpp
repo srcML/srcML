@@ -142,6 +142,7 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
         // intermediate token stage
         OffSideRule offside(selector);
+        offside.setBlockStartToken(srcMLParser::COLON);
 
         // base stream parser srcML connected to lexical analyzer
         StreamMLParser parser(offside, getLanguage(), options);
