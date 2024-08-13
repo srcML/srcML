@@ -37,6 +37,7 @@ public:
 private:
     antlr::TokenStream& input;
     std::deque<antlr::RefToken> buffer;
+    std::deque<antlr::RefToken> blankLineBuffer;
 
     int blockStartToken = -1;
     int prevColStart = 1;
