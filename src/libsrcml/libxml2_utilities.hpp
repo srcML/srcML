@@ -20,6 +20,7 @@
 // usage: std::unique<xmlDoc> p(xmlReadMemory);
 // Call p.get() for original pointer
 // Will deallocate automatically at end of std::unique_ptr lifetime
+#define LIBXML2_DEFAULT_DELETE
 namespace std {
     template<>
     struct default_delete<xmlDoc> {
