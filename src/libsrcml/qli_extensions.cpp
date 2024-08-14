@@ -31,10 +31,12 @@ namespace std {
     struct default_delete<xmlChar> {
         void operator()(xmlChar* s) { xmlFree(s); }
     };
+#ifndef LIBXML2_DEFAULT_DELETE
     template<>
     struct default_delete<xmlNodeSet> {
         void operator()(xmlNodeSet* nodes) { xmlXPathFreeNodeSet(nodes); }
     };
+#endif
 }
 
 namespace {
