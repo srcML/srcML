@@ -124,6 +124,8 @@ COMMENT_TEXT {
     // record the previous character
     int prevLA = 0;
     int prevprevLA = 0;
+
+    int lastColumn = 0;
 } :
 
     /*
@@ -143,7 +145,20 @@ COMMENT_TEXT {
         // will only occur the first time this rule matches, and then will exit
         { $setType(CONTROL_CHAR); } |
 
-    '\011' /* '\t' */ |
+    // horizontal tab
+    { lastColumn = getColumn(); } '\011' /* '\t' */ {
+
+        // expand tab if option says to
+        if (isoption(options, SRCML_PARSER_OPTION_EXPAND_TABS)) {
+
+            // remove the tab character
+            text.pop_back();
+
+            // add the new columns to the end
+            static const std::string_view spaces = "        ";
+            text.append(spaces.substr(0, getColumn() - lastColumn));
+        }
+    } |
 
     '\012' /* '\n' */ { 
 
