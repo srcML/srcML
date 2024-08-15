@@ -2,7 +2,7 @@
 /**
  * @file WriteQueue.cpp
  *
- * @copyright Copyright (C) 2017-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2017-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */
@@ -68,7 +68,7 @@ void WriteQueue::process() {
         }
 
         // move the request off the queue
-        std::shared_ptr<ParseRequest> value(std::move(q.top()));
+        std::shared_ptr<ParseRequest> value(q.top());
         q.pop();
 
         // done accessing the queue

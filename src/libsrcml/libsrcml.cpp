@@ -2,7 +2,7 @@
 /**
  * @file libsrcml.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  * Implementation of srcml simple API (global archive) functions from the namespace srcml_*
 */
@@ -404,6 +404,63 @@ int srcml_register_file_extension(const char* extension, const char* language) {
 int srcml_register_namespace(const char* prefix, const char* ns) {
 
     return srcml_archive_register_namespace(&global_archive, prefix, ns);
+}
+
+/**
+ * Add the attribute to the archive
+ * @param archive A srcml_archive
+ * @param uri An XML namespace uri of the attribute
+ * @param name The attribute name
+ * @param value The attribute value
+ * @return SRCML_STATUS_OK on success
+ * @return Status error code on failure.
+ */
+int srcml_add_attribute(const char* prefix, const char* name, const char* value) {
+
+    return srcml_archive_add_attribute(&global_archive, prefix, name, value);
+}
+
+/**
+ * Number of custom attributes
+ * @param archive A srcml_archive
+ * @return The number of attributes or 0 if archive is NULL
+ */
+size_t srcml_get_attribute_size() {
+
+    return srcml_archive_get_attribute_size(&global_archive);
+}
+
+/**
+ * Prefix of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The prefix for the given position, or NULL
+ */
+const char* srcml_get_attribute_prefix(size_t pos) {
+
+    return srcml_archive_get_attribute_prefix(&global_archive, pos);
+}
+
+/**
+ * Name of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The name for the given position, or NULL
+ */
+const char* srcml_get_attribute_name(size_t pos) {
+
+    return srcml_archive_get_attribute_name(&global_archive, pos);
+}
+
+/**
+ * Value of the custom attribute at position pos
+ * @param archive A srcml_archive
+ * @param pos The attribute position
+ * @return The value for the given position, or NULL
+ */
+const char* srcml_get_attribute_value(size_t pos) {
+
+    return srcml_archive_get_attribute_value(&global_archive, pos);
 }
 
 /**

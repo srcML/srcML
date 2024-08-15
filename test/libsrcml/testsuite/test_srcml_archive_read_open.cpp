@@ -2,7 +2,7 @@
 /**
  * @file test_srcml_archive_read_open.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  *
  * Test cases for srcml_archive_read_open_*
@@ -285,16 +285,13 @@ int main(int, char* argv[]) {
 
         dassert(srcml_archive_get_namespace_prefix(archive, 0), std::string("s"));
         dassert(srcml_archive_get_options(archive), 0);
-
         srcml_archive_close(archive);
         srcml_archive_free(archive);
-        close(fd);
     }
 
     {
         srcml_archive* archive = srcml_archive_create();
         dassert(srcml_archive_read_open_fd(archive, -1), SRCML_STATUS_INVALID_ARGUMENT);
-
         srcml_archive_free(archive);
     }
 

@@ -1,3 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!--
+    @file copy.xsl
+
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
+
+    Straightforward copy
+-->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:src="http://www.srcML.org/srcML/src"
@@ -9,12 +18,6 @@
     extension-element-prefixes="str exsl func"
     exclude-result-prefixes="src cpp"
     version="1.0">
-
-<!--
-    copy.xsl
-
-    Straightforward copy
--->
 
 <xsl:output method="xml" omit-xml-declaration="no" version="1.0" encoding="UTF-8" standalone="yes"/>
 

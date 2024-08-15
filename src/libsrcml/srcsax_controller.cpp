@@ -2,7 +2,7 @@
 /**
  * @file srcsax_controller.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  */
 
 #include <srcsax.hpp>
@@ -46,9 +46,6 @@ srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlPar
 
     const char* encoding = nullptr;
 
-    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
-    initGenericErrorDefaultFunc(&error_handler);
-
     srcsax_context* context = nullptr;
     try {
         context = new srcsax_context();
@@ -63,6 +60,9 @@ srcsax_context* srcsax_create_context_parser_input_buffer(std::unique_ptr<xmlPar
         delete context;
         return 0;
     }
+
+    xmlGenericErrorFunc error_handler = (xmlGenericErrorFunc) libxml_error;
+    xmlSetGenericErrorFunc(libxml2_context, error_handler);
 
     context->libxml2_context = libxml2_context;
 
@@ -116,7 +116,7 @@ int srcsax_parse(srcsax_context* context) {
 
     if (status != 0 && context->srcsax_error) {
 
-        xmlErrorPtr ep = xmlCtxtGetLastError(context->libxml2_context);
+        auto ep = xmlCtxtGetLastError(context->libxml2_context);
 
         auto str_length = std::string_view(ep->message).size();
         ep->message[str_length - 1] = '\0';

@@ -341,10 +341,13 @@ xmlcheck() {
 
     set -e
 
-    if [ "${1:0:1}" != "<" ]; then
-        xmllint --noout ${1}
-    else
-        echo "${1}" | xmllint --noout /dev/stdin
+    if command -v xmllint &> /dev/null; then
+
+        if [ "${1:0:1}" != "<" ]; then
+            xmllint --noout ${1}
+        else
+            echo "${1}" | xmllint --noout /dev/stdin
+        fi;
     fi;
 
     set +e

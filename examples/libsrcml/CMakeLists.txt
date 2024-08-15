@@ -2,11 +2,11 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2014-2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2014-2024 srcML, LLC. (www.srcML.org)
 # 
 # CMake files for libsrcml examples
 
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28)
 
 project(srcML-Examples-libsrcml)
 
@@ -83,7 +83,9 @@ foreach(EXAMPLE IN ITEMS ${EXAMPLES})
     file(APPEND "${EXAMPLE_ROOT}/CMakeLists.txt"
         "# Example ${EXAMPLE_NAME}\n"
         "add_executable(${EXAMPLE_NAME} ${EXAMPLE_NAME}/${EXAMPLE_NAME}.cpp)\n"
-        "target_link_libraries(${EXAMPLE_NAME} PRIVATE srcML::LibsrcML)\n\n")
+        "target_link_libraries(${EXAMPLE_NAME} PRIVATE srcML::LibsrcML)\n"
+        "add_custom_target(run_${EXAMPLE_NAME} COMMAND $<TARGET_FILE:${EXAMPLE_NAME}> DEPENDS ${EXAMPLE_NAME} USES_TERMINAL)\n"
+        "add_dependencies(run run_${EXAMPLE_NAME})\n\n")
 
 endforeach()
 

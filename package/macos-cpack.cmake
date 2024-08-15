@@ -2,7 +2,7 @@
 #
 # @file macos.cmake
 #
-# @copyright Copyright (C) 2019-2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
 #
 # CPack configuration for macOS installers
 
@@ -15,12 +15,22 @@ endif()
 list(APPEND CPACK_GENERATOR "productbuild;TGZ;TBZ2")
 list(REMOVE_DUPLICATES CPACK_GENERATOR)
 
-# System name based on macOS and version, then used in package name
-execute_process(COMMAND /usr/bin/sw_vers -productVersion OUTPUT_VARIABLE OS_NUMERIC OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(CPACK_SYSTEM_NAME "macOS-${OS_NUMERIC}")
+# System name based on macOS, then used in package name
+set(CPACK_SYSTEM_NAME "macOS")
 
 # Archive package filenames
-set(CPACK_ARCHIVE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
+set(BASE_SRCML_FILE_NAME "${CPACK_COMPONENT_SRCML_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
+set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
+
+# Targets for installing generated packages
+add_custom_target(install_package
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
+    COMMAND installer -pkg ${BASE_SRCML_FILE_NAME}.pkg -target CurrentUserHomeDirectory
+)
+add_custom_target(install_archive
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND apt-get install -y ./${CPACK_ARCHIVE_SRCML_FILE_NAME}.tgz
+)
 
 # Set for discovery of custom template CPack.distribution.dist.in
 # * Removes readme
@@ -54,3 +64,6 @@ configure_file(${CMAKE_SOURCE_DIR}/package/background.png ${CPACK_PRODUCTBUILD_R
 
 # Conclusion
 configure_file(${CMAKE_SOURCE_DIR}/package/installed.html ${CPACK_PRODUCTBUILD_RESOURCES_DIR}/installed.html COPYONLY)
+
+# Targets for workflow testing
+add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCML_FILE_NAME})

@@ -1,4 +1,9 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# @file files_from_invalid.sh
+#
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 
 # test framework
 source $(dirname "$0")/framework_test.sh
@@ -28,7 +33,7 @@ check empty-remote.xml "$empty_srcml"
 
 # file list of non-existent files
 define open_error <<- 'STDERR'
-	srcml: Unable to open file nonexistent1.txt
+	srcml: Extension not supported nonexistent1.txt
 	STDERR
 
 createfile nonexistent_files.txt "nonexistent1.txt"

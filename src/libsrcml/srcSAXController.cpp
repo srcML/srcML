@@ -2,7 +2,7 @@
 /**
  * @file srcSAXController.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  */
 
 #include <srcSAXController.hpp>
@@ -69,7 +69,7 @@ void srcSAXController::parse(srcSAXHandler * handler) {
 
     if (status != 0) {
 
-        xmlErrorPtr ep = xmlCtxtGetLastError(context->libxml2_context);
+        auto ep = xmlCtxtGetLastError(context->libxml2_context);
         SAXError error = { std::string(ep->message), ep->code };
 
         throw error;

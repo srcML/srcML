@@ -2,7 +2,7 @@
 /*!
  * @file OperatorLexer.g
  *
- * @copyright Copyright (C) 2004-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2004-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
  */
@@ -131,7 +131,7 @@ OPERATORS options { testLiterals = true; } {
     '>' (('>' '=') => '>' '=')? ('=')? |
 
     // <, << (C/C++), <=, <<< (CUDA)
-    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) | inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
+    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
 
     // match these as individual operators only
     ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 

@@ -2,17 +2,17 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 # 
 # CMake files for libsrcml library
 
 # Separate project driver for testing libsrcml outside of build
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.28)
 project(srcML-Test-libsrcml)
 enable_testing()
 
 if(SRCML_TEST_INSTALLED OR NOT TARGET srcML::LibsrcML)
-    find_package(libsrcml REQUIRED ${SRCML_TEST_INSTALLED})
+    find_package(srcML REQUIRED)
 endif()
 
 include_directories(.)
