@@ -133,6 +133,7 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
         // pure block comment lexer
         CommentTextLexer textlexer(lexer.getInputState());
         textlexer.setSelector(&selector);
+        textlexer.setTabsize((int)tabsize);
 
         // switching between lexers
         selector.addInputStream(&lexer, "main");
