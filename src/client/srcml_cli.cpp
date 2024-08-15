@@ -343,7 +343,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("CREATING SRCML");
 
     // markup options
-    app.add_flag_callback("--position",        [&]() { *srcml_request.markup_options |= SRCML_OPTION_POSITION; },
+    app.add_flag_callback("--position",    [&]() { *srcml_request.markup_options |= SRCML_OPTION_POSITION; },
         "Include start and end attributes with line/column of each element")
         ->group("MARKUP OPTIONS");
 
@@ -355,6 +355,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("MARKUP OPTIONS")
         ->check(CLI::Range(1, 8))
         ->each([&](std::string){ *srcml_request.markup_options |= SRCML_OPTION_POSITION; });
+
+    // expand tabs
+    app.add_flag_callback("--expand-tabs", [&]() { *srcml_request.markup_options |= SRCML_OPTION_EXPAND_TABS; },
+        "Convert input tabs into spaces based on the tab stop")
+        ->group("MARKUP OPTIONS");
 
     app.add_flag_callback("--cpp",              [&]() { *srcml_request.markup_options |= SRCML_OPTION_CPP; },
         "Enable preprocessor parsing and markup (default for C/C++/C#)")
