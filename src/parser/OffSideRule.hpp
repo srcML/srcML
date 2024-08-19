@@ -40,7 +40,7 @@ private:
     int numIndents = 0;
 
     bool skippedColSet = false;
-    bool debugInfo = true;
+    bool debugInfo = false;
 };
 
 #endif

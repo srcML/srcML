@@ -14,6 +14,8 @@
 /**
  * An abstract method for getting the next token.
  *
+ * Note: The current implementation uses C++ logic (e.g., LCURLY and RCURLY). This will be altered later.
+ * 
  * Whenever a `blockStartToken` is found, an INDENT token is generated. Whenever the next line starts with
  * less indentation that the previous line, a DEDENT token is generated (ignores blank lines).
  * 
@@ -40,26 +42,10 @@ antlr::RefToken OffSideRule::nextToken() {
 
         // [INDENT] The token matches the token used to indicate the start of a block
         if (token->getType() == blockStartToken) {
-            const auto& nextToken = input.nextToken();
-            buffer.emplace_back(nextToken);
+            token->setType(srcMLParser::LCURLY);
+            numIndents++;
 
-            // Generate an INDENT token because the block start token is followed by a newline
-            // Note: The block start token could be used for other purposes
-            if (nextToken->getType() == srcMLParser::EOL) {
-                auto indentToken = srcMLToken::factory();
-                indentToken->setType(srcMLParser::INDENT);
-                indentToken->setText("<block>");
-                indentToken->setLine(token->getLine());
-                indentToken->setColumn(token->getColumn());
-
-                // <block> must occur BEFORE the block start token
-                buffer.emplace_back(token);
-                numIndents++;
-
-                if (debugInfo) std::cerr << "[I] line: '" << indentToken->getLine() << "', col: '" << indentToken->getColumn() << "', text: '" << indentToken->getText() << "', type: '" << indentToken->getType() << "', indents: '" << numIndents << "'\n";
-
-                return indentToken;
-            }
+            if (debugInfo) std::cerr << "[I] line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
 
             return token;
         }
@@ -69,8 +55,7 @@ antlr::RefToken OffSideRule::nextToken() {
             buffer.emplace_back(token);
 
             auto dedentToken = srcMLToken::factory();
-            dedentToken->setType(srcMLParser::DEDENT);
-            dedentToken->setText("</block>");
+            dedentToken->setType(srcMLParser::RCURLY);
             dedentToken->setColumn(token->getColumn());
             dedentToken->setLine(token->getLine());
 
@@ -109,9 +94,8 @@ antlr::RefToken OffSideRule::nextToken() {
 
                     if (currentColStart < prevColStart) {
                         auto dedentToken = srcMLToken::factory();
-                        dedentToken->setType(srcMLParser::DEDENT);
-                        dedentToken->setText("</block>");
-                        dedentToken->setColumn(0);
+                        dedentToken->setType(srcMLParser::RCURLY);
+                        dedentToken->setColumn(1);
                         dedentToken->setLine(token->getLine() + 1);
 
                         buffer.emplace_back(dedentToken);
@@ -131,13 +115,12 @@ antlr::RefToken OffSideRule::nextToken() {
                 else if (nextToken->getType() == srcMLParser::EOF_) {
                     buffer.emplace_back(nextToken);
 
-                    auto dedentToken = srcMLToken::factory();
-                    dedentToken->setType(srcMLParser::DEDENT);
-                    dedentToken->setText("</block>");
-                    dedentToken->setColumn(0);
-                    dedentToken->setLine(nextToken->getLine());
-
                     for (int i = 0; i < numIndents; i++) {
+                        auto dedentToken = srcMLToken::factory();
+                        dedentToken->setType(srcMLParser::RCURLY);
+                        dedentToken->setLine(nextToken->getLine());
+                        dedentToken->setColumn(numIndents - i);
+
                         buffer.emplace_back(dedentToken);
                     }
 
@@ -163,16 +146,16 @@ antlr::RefToken OffSideRule::nextToken() {
                     }
 
                     if (currentColStart < prevColStart) {
-                        while (numIndents > 0) {
+                        for (int i = 0; i < numIndents; i++) {
                             auto dedentToken = srcMLToken::factory();
-                            dedentToken->setType(srcMLParser::DEDENT);
-                            dedentToken->setText("</block>");
-                            dedentToken->setColumn(0);
-                            dedentToken->setLine(token->getLine() + 1);
+                            dedentToken->setType(srcMLParser::RCURLY);
+                            dedentToken->setLine(nextToken->getLine());
+                            dedentToken->setColumn(numIndents - i);
 
                             buffer.emplace_back(dedentToken);
-                            numIndents--;
                         }
+
+                        numIndents = 0;
                     }
 
                     return token;
