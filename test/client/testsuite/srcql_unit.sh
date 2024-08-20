@@ -1,4 +1,9 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# @file srcql_unit.sh
+#
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 
 # test framework
 source $(dirname "$0")/framework_test.sh
@@ -41,12 +46,16 @@ xmlcheck "$output_empty"
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
 
+define oneline_a <<- 'STDOUT'
+	a
+	STDOUT
+
 # /src:unit/src:expr_stmt/src:expr/src:name
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml
 check "$output1"
 
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml --output-src
-check "a"
+check "$oneline_a"
 
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" < sub/a.cpp.xml
 check "$output1"
@@ -64,7 +73,7 @@ srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:nam
 check "$output1"
 
 srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml --output-src
-check "a"
+check "$oneline_a"
 
 srcml --xpath="/src:unit/src:expr_stmt" --xpath="/src:expr_stmt/src:expr/src:name" < sub/a.cpp.xml
 check "$output1"

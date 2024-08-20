@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pos="http://www.srcML.org/srcML/position" revision="1.0.0" pos:tabs="8" url="position_tab8">
+
+<unit revision="1.0.0" language="C++" hash="157fa147b7aa11b51821b984c49c08730aa74844"><decl_stmt pos:start="1:1" pos:end="1:15"><decl pos:start="1:1" pos:end="1:10"><type pos:start="1:1" pos:end="1:3"><name pos:start="1:1" pos:end="1:3">int</name></type>	<name pos:start="1:9" pos:end="1:10">m1</name></decl>, <decl pos:start="1:13" pos:end="1:14"><type ref="prev" pos:start="1:1" pos:end="1:3"/><name pos:start="1:13" pos:end="1:14">m2</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

@@ -2,7 +2,7 @@
 /**
  * @file srcMLOutput.cpp
  *
- * @copyright Copyright (C) 2003-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2003-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML Toolkit.
  *
@@ -75,7 +75,7 @@ srcMLOutput::srcMLOutput(TokenStream* ints,
                          const Attributes& attributes,
                          const std::optional<std::pair<std::string, std::string>>& processing_instruction,
                          size_t ts)
-    : input(ints), output_buffer(output_buffer), unit_language(language),
+    : output_buffer(output_buffer), input(ints), unit_language(language),
       options(op), xml_encoding(xml_enc), attributes(attributes), processing_instruction(processing_instruction),
       tabsize(ts)
 {
@@ -95,6 +95,9 @@ void srcMLOutput::initNamespaces(const Namespaces& otherns) {
 
     // merge in the other namespaces
     namespaces += otherns;
+
+    if (depth == 0)
+        archiveNamespaces = namespaces;
 }
 
 /**
@@ -116,7 +119,7 @@ void srcMLOutput::close() {
 
     if (xout) {
 
-        if (didwrite)
+        if (startedOutput)
             xmlTextWriterEndDocument(xout);
         xmlFreeTextWriter(xout);
         xout = 0;
@@ -170,29 +173,86 @@ void srcMLOutput::consume(const char* language, const char* revision, const char
     unit_hash = hash;
     unit_encoding = encoding;
 
+    Position currentPosition;
+
     while (1) {
         const antlr::RefToken& token = input->nextToken();
-        if (token->getType() == antlr::Token::EOF_TYPE)
-            break;
 
-        outputToken(token);
+        if (!isoption(options, SRCML_PARSER_OPTION_POSITION)) {
+
+            if (token->getType() == antlr::Token::EOF_TYPE)
+                break;
+
+            outputToken(token);
+
+        } else {
+
+            if (token->getType() == antlr::Token::EOF_TYPE) {
+
+                while (!tokenQueue.empty()) {
+                    outputToken(tokenQueue.front());
+                    tokenQueue.pop_front();
+                }
+
+                break;
+            }
+
+            // text token
+            auto search = process.find(token->getType());
+            if (!(search != process.end() && search->second.name)) {
+
+                // update the text position
+                currentPosition.append(token->getText(), tabsize);
+
+                // save the text
+                tokenQueue.push_back(token);
+
+            // start token but not empty
+            } else if (isstart(token) && !isempty(token)) {
+
+                // set the start line/column
+                token->setLine(currentPosition.line);
+                token->setColumn(currentPosition.column + 1);
+
+                // save open start elements
+                startElementStack.push(token);
+
+                // save the start element
+                tokenQueue.push_back(token);
+
+            // start token but empty
+            } else if (isstart(token) && isempty(token)) {
+
+                // save the empty element
+                tokenQueue.push_back(token);
+
+            // end token
+            } else if (isend(token)) {
+
+                // most recent start token that will match the current end token
+                auto matchingStartElement = startElementStack.top();
+                startElementStack.pop();
+
+                // set the end line/column
+                srcMLToken* qetoken = static_cast<srcMLToken*>(&(*matchingStartElement));
+                qetoken->endline = currentPosition.line;
+                qetoken->endcolumn = currentPosition.column;
+
+                // save the end token
+                tokenQueue.push_back(token);
+
+                // if there are no open elements, then we are at the root
+                // and can output all elements in the queue
+                if (startElementStack.empty()) {
+
+                    while (!tokenQueue.empty()) {
+                        outputToken(tokenQueue.front());
+                        tokenQueue.pop_front();
+                    }
+                }
+            }
+        }
     }
-}
-
-/**
- * consume_next
- *
- * Consume/get and output the next token.
- *
- * @returns the time of consumed token
- */
-int srcMLOutput::consume_next() {
-
-    const antlr::RefToken& token = input->nextToken();
-
-    outputToken(token);
-
-    return token->getType();
 }
 
 /**
@@ -216,7 +276,7 @@ void srcMLOutput::outputProcessingInstruction() {
 
     if (depth == 0 && processing_instruction) {
 
-        didwrite = true;
+        startedOutput = true;
 
         xmlTextWriterStartPI(xout, BAD_CAST processing_instruction->first.data());
         xmlTextWriterWriteString(xout, BAD_CAST processing_instruction->second.data());
@@ -267,6 +327,9 @@ void srcMLOutput::outputNamespaces() {
             if ((ns.flags & NS_STANDARD) && !(ns.flags & NS_ROOT) && !(ns.flags & NS_REQUIRED) && (ns.flags & NS_USED)) {
                 srcMLTextWriterWriteNamespace(xout, ns);
                 continue;
+            } else if ((ns.flags & NS_REGISTERED) && (findNSURI(archiveNamespaces, ns.uri) == archiveNamespaces.end())) {
+                srcMLTextWriterWriteNamespace(xout, ns);
+                continue;
             }
         }
     }
@@ -299,12 +362,11 @@ void srcMLOutput::startUnit(const char* language, const char* revision,
         encoding = "UTF-8";
     }
 
-    didwrite = true;
+    startedOutput = true;
 
     // start of main tag
     std::string_view unitprefix = namespaces[SRC].prefix;
     xmlTextWriterStartElementNS(xout, BAD_CAST (!unitprefix.empty() ? unitprefix.data() : 0), BAD_CAST "unit", 0);
-    ++openelementcount;
 
     // output namespaces for root and nested units
     if (isoption(options, SRCML_OPTION_NAMESPACE_DECL)) {
@@ -508,13 +570,13 @@ void srcMLOutput::addPosition(const antlr::RefToken& token) {
     thread_local const std::string endAttribute   = " " + prefix + (!prefix.empty() ? ":" : "") + "end=\"";
 
     // highly optimized as this is output for every start tag
-
     // position start attribute, e.g. pos:start="1:4"
     xmlOutputBufferWrite(output_buffer, (int) startAttribute.size(), startAttribute.data());
     xmlOutputBufferWriteString(output_buffer, positoa(token->getLine()));
     xmlOutputBufferWrite(output_buffer, 1, ":");
     xmlOutputBufferWriteString(output_buffer, positoa(token->getColumn()));
     xmlOutputBufferWrite(output_buffer, 1, "\"");
+    xmlOutputBufferFlush(output_buffer);
 
     // position end attribute, e.g. pos:end="2:1"
     xmlOutputBufferWrite(output_buffer, (int) endAttribute.size(), endAttribute.data());
@@ -546,7 +608,6 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
             prefix = 0;
 
         xmlTextWriterStartElementNS(xout, BAD_CAST prefix, BAD_CAST name, 0);
-        ++openelementcount;
 
         if (attr_name1)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name1, BAD_CAST attr_value1);
@@ -554,14 +615,32 @@ void srcMLOutput::processToken(const antlr::RefToken& token, const char* name, c
         if (attr_name2)
             xmlTextWriterWriteAttribute(xout, BAD_CAST attr_name2, BAD_CAST attr_value2);
 
-        // if position attributes for non-empty start elements
-        if (isposition && !isempty(token))
-            addPosition(token);
+        if (isposition) {
+
+            // save start and end positions for any future previous type
+            if (token->getType() == srcMLParserTokenTypes::STYPE) {
+                lastTypeStartPosition = Position(token->getLine(), token->getColumn());
+                srcMLToken* qetoken = static_cast<srcMLToken*>(&(*token));
+                lastTypeEndPosition = Position(qetoken->endline, qetoken->endcolumn);
+            }
+
+            // previous type get start and end positions from previous, well type
+            if (token->getType() == srcMLParserTokenTypes::STYPEPREV) {
+                token->setLine(lastTypeStartPosition.line);
+                token->setColumn(lastTypeStartPosition.column);
+                srcMLToken* qetoken = static_cast<srcMLToken*>(&(*token));
+                qetoken->endline = lastTypeEndPosition.line;
+                qetoken->endcolumn = lastTypeEndPosition.column;
+            }
+
+            // if position attributes for non-empty start elements
+            if (!isempty(token) || token->getType() == srcMLParserTokenTypes::STYPEPREV)
+                addPosition(token);
+        }
     }
 
     if (!isstart(token) || isempty(token)) {
 
-        --openelementcount;
         xmlTextWriterEndElement(xout);
     }
 }

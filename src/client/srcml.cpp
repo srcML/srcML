@@ -2,7 +2,7 @@
 /**
  * @file srcml.cpp
  *
- * @copyright Copyright (C) 2014-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2014-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */
@@ -131,7 +131,6 @@ See `srcml --help` for more information.
 
         pipeline.push_back(srcml_display_metadata);
     }
-
 
     // step srcml->src
     if (request_create_src(srcml_request)) {

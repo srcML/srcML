@@ -2,7 +2,7 @@
 /**
  * @file qli_extensions.cpp
  *
- * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2023-2024 srcML, LLC. (www.srcML.org)
  */
 
 #include "qli_extensions.hpp"
@@ -31,11 +31,13 @@ namespace std {
     struct default_delete<xmlChar> {
         void operator()(xmlChar* s) { xmlFree(s); }
     };
+#ifndef LIBXML2_DEFAULT_DELETE
     template<>
     struct default_delete<xmlNodeSet> {
         void operator()(xmlNodeSet* nodes) { xmlXPathFreeNodeSet(nodes); }
     };
-};
+#endif
+}
 
 namespace {
     // remove leading and trailing whitespace
@@ -82,7 +84,7 @@ namespace {
         get_node_text(top_node, s, true);
         return s;
     }
-};
+}
 
 void add_element(xmlXPathParserContext* ctxt, int nargs) {
 

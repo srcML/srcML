@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pos="http://www.srcML.org/srcML/position" revision="1.0.0" url="position_private" pos:tabs="8">
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="7b4b198f991bd37118a6ebbf5805a09f5314ca98"><class pos:start="1:1" pos:end="3:2">class <name pos:start="1:7" pos:end="1:7">C</name> <block pos:start="1:9" pos:end="3:1">{<private pos:start="1:10" pos:end="3:0">private:
+    <decl_stmt pos:start="2:5" pos:end="2:10"><decl pos:start="2:5" pos:end="2:9"><type pos:start="2:5" pos:end="2:7"><name pos:start="2:5" pos:end="2:7">int</name></type> <name pos:start="2:9" pos:end="2:9">n</name></decl>;</decl_stmt>
+</private>}</block>;</class>
+</unit>
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="96ac01c6952fc2b593f889131dd2ac2ede2ef146"><class pos:start="1:1" pos:end="2:16">class <name pos:start="1:7" pos:end="1:7">C</name> <block pos:start="1:9" pos:end="2:15">{<private pos:start="1:10" pos:end="2:14">private:
+    <decl_stmt pos:start="2:5" pos:end="2:10"><decl pos:start="2:5" pos:end="2:9"><type pos:start="2:5" pos:end="2:7"><name pos:start="2:5" pos:end="2:7">int</name></type> <name pos:start="2:9" pos:end="2:9">n</name></decl>;</decl_stmt>    </private>}</block>;</class>
+</unit>
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="3db9015da6bb6d7a3355a2454d1673c66035863d"><class pos:start="1:1" pos:end="3:3">class <name pos:start="1:7" pos:end="1:7">C</name> <block pos:start="1:9" pos:end="3:2">{<private pos:start="1:10" pos:end="3:1">private:
+    <decl_stmt pos:start="2:5" pos:end="2:10"><decl pos:start="2:5" pos:end="2:9"><type pos:start="2:5" pos:end="2:7"><name pos:start="2:5" pos:end="2:7">int</name></type> <name pos:start="2:9" pos:end="2:9">n</name></decl>;</decl_stmt>
+ </private>}</block>;</class>
+</unit>
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="626fbf77d9e9dc29e55962182494fcb06f042e18"><class pos:start="1:1" pos:end="2:12">class <name pos:start="1:7" pos:end="1:7">C</name> <block pos:start="1:9" pos:end="2:11">{<private pos:start="1:10" pos:end="2:10">private:
+    <decl_stmt pos:start="2:5" pos:end="2:10"><decl pos:start="2:5" pos:end="2:9"><type pos:start="2:5" pos:end="2:7"><name pos:start="2:5" pos:end="2:7">int</name></type> <name pos:start="2:9" pos:end="2:9">n</name></decl>;</decl_stmt></private>}</block>;</class>
+</unit>
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="f97f992d585859acf5feeb0b09ef7a2df38966a5"><class pos:start="1:1" pos:end="4:2">class <name pos:start="1:7" pos:end="1:7">C</name> <block pos:start="1:9" pos:end="4:1">{<private pos:start="1:10" pos:end="4:0">private:
+    <decl_stmt pos:start="2:5" pos:end="2:10"><decl pos:start="2:5" pos:end="2:9"><type pos:start="2:5" pos:end="2:7"><name pos:start="2:5" pos:end="2:7">int</name></type> <name pos:start="2:9" pos:end="2:9">n</name></decl>;</decl_stmt>
+
+</private>}</block>;</class>
+</unit>
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="94e0b170619c20d8f93b4f67b7af05c7f40d1bc1"><class pos:start="1:1" pos:end="4:15">class <name pos:start="1:7" pos:end="1:7">C</name> <block pos:start="1:9" pos:end="4:14">{<private pos:start="1:10" pos:end="4:13">private:
+    <decl_stmt pos:start="2:5" pos:end="2:10"><decl pos:start="2:5" pos:end="2:9"><type pos:start="2:5" pos:end="2:7"><name pos:start="2:5" pos:end="2:7">int</name></type> <name pos:start="2:9" pos:end="2:9">n</name></decl>;</decl_stmt>
+
+<comment type="block" pos:start="4:1" pos:end="4:13">/* comment */</comment></private>}</block>;</class>
+</unit>
+
+<unit revision="1.0.0" language="C++" pos:tabs="8" hash="64b397b6839f31a9c8b4a997877448ecc7095ea2"><class pos:start="1:1" pos:end="2:26">class <name pos:start="1:7" pos:end="1:7">C</name> <block pos:start="1:9" pos:end="2:25">{<private pos:start="1:10" pos:end="2:24">private:
+    <decl_stmt pos:start="2:5" pos:end="2:10"><decl pos:start="2:5" pos:end="2:9"><type pos:start="2:5" pos:end="2:7"><name pos:start="2:5" pos:end="2:7">int</name></type> <name pos:start="2:9" pos:end="2:9">n</name></decl>;</decl_stmt> <comment type="block" pos:start="2:12" pos:end="2:24">/* comment */</comment></private>}</block>;</class>
+</unit>
+
+</unit>

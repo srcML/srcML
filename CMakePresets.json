@@ -1,267 +1,34 @@
 {
-  "version": 6,
+  "version": 8,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 24,
+    "minor": 28,
     "patch": 0
   },
+  "include": [
+    "presets/CMakeBasePresets.json",
+    "presets/CMakeUbuntuPresets.json",
+    "presets/CMakeRPMPresets.json",
+    "presets/CMakeMacOSPresets.json",
+    "presets/CMakeMSVCPresets.json"
+  ],
   "configurePresets": [
     {
-      "name": "ubuntu-release",
-      "displayName": "Ubuntu Release",
-      "description": "Default build options for Ubuntu release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["gcc-release"]
-    },
-    {
-      "name": "rpm-release",
-      "displayName": "GCC Release",
-      "description": "Default build options for GCC release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["gcc-release"]
-    },
-    {
-      "name": "macos-release",
-      "inherits": ["clang-release"],
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "displayName": "macOS Release",
-      "description": "Default build options for macOS release",
-      "cacheVariables": {
-        // "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
-        // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
-        "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
-        "CMAKE_BUILD_TYPE": "Release",
-        // Build for both x86 and arm64
-        "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
-        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15"
-      }
-    },
-    {
-      "name": "msvc",
-      "displayName": "MSVC",
-      "description": "Default build options for MSVC",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
-      "toolchainFile": "toolchain-msvc.cmake",
-      "binaryDir": "${sourceDir}/build",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "cl",
-        "CMAKE_C_COMPILER": "cl",
-        // /Wall
-        // /D_CRT_SECURE_NO_WARNINGS  # disable strcpy() warnings
-        // /D_CRT_NONSTDC_NO_WARNINGS # disable read() warnings
-        // /wd4068 # unknown pragma
-        // # /wd4101 # unreferenced local variable
-        // # /wd4519 # unmarked inlining notification warning
-        // /wd4514 # removed inline function not called (in one context)
-        // # /wd4668 # preprocessor symbol not defined but used in an #if
-        // /wd4710 # unmarked inlining notification warning
-        // /wd4820 # byte padding
-        // /wd5039 # pointer or reference to potentially throwing function passed to 'extern "C"' function under -EHc
-        // /wd4711 # selected for automatic inline expansion
-        // /wd4706 # assigment within conditional expression
-        // /wd4625 # copy constructor was implicitly defined as deleted
-        // /wd4626 # assignment operator was implicitly defined as deleted
-        // /wd5026 # move constructor was implicitly defined as deleted
-        // /wd5027 # move assignment operator was implicitly defined as deleted
-        // /wd4668 # is not defined as a preprocessor macro, replacing with '0' for '#if/#elif'
-        // /wd4868 # compiler may not enforce left-to-right evaluation order in braced initializer list
-        // /wd4371 # layout of class may have changed from a previous version of the compiler due to better packing of member
-        // /wd4623 # default constructor was implicitly defined as deleted
-        // /wd5045 # Compiler will insert Spectre mitigation for memory load if /Qspectre switch specified
-        "CMAKE_CXX_FLAGS": "/Wall /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4068 /wd4514 /wd4710 /wd4820 /wd5039 /wd4711 /wd4706 /wd4625 /wd4626 /wd5026 /wd5027 /wd4668 /wd4868 /wd4371 /wd4623 /wd5045 ",
-        // With MSVC, interprocedural optimization leads to a 10x static library, with only a slight reduction in size for the dynamic library
-        // /wd4355 # 'this' used in base member initializer list
-        // /wd4866 # compiler may not enforce left-to-right evaluation order for call to 'operator<<'
-        // /wd5204 # 'Concurrency::details::_DefaultPPLTaskScheduler': class has virtual functions, but its trivial destructor is not virtual; instances of objects derived from this class may not be destructed correctly
-        // /wd5264 # 'int const `void __cdecl srcml_display_metadata(srcml_request_t const &,std::vector<srcml_input_src,std::allocator<srcml_input_src> > const &,srcml_input_src const &)'::`2'::display_commands': 'const' variable is not used
-        // /wd4577 # 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
-        "SRCML_GLOBAL_COMPILE_OPTIONS": "/wd4355;/wd4866;/wd5204;/wd5264;/wd4577",
-        "SRCML_GLOBAL_LINK_OPTIONS": "",
-        // /wd4242 # 'argument': conversion from 'T' to '_Elem', possible loss of data
-        // /wd4244 # 'argument': conversion from '<type1>' to '<type2>', possible loss of data
-        // /wd4267 # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-        // /wd4355 # this': used in base member initializer list
-        // /wd4365 # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
-        //         # conversion from 'int' to 'unsigned int',
-        // /wd4477 # 'sprintf' : format string '%u' requires an argument of type 'unsigned int', but variadic argument 1 has type 'size_t'
-        // /wd4530 # C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
-        // /wd4577 # 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
-        "SRCML_ANTLR_DISABLED_WARNINGS": "/wd4242;/wd4244;/wd4267;/wd4355;/wd4365;/wd4477;/wd4530;/wd4577",
-        // /wd4267 # 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
-        // /wd4365 # 'argument': conversion from 'size_t' to 'const __int64', signed/unsigned mismatch
-        //         # conversion from 'int' to 'unsigned int',
-        // /wd4459 # declaration of 'context' hides global declaration
-        // /wd4530 # C++ exception handler used, but unwind semantics are not enabled. Specify /EHsc
-        // /wd4577 # 'noexcept' used with no exception handling mode specified; termination on exception is not guaranteed. Specify /EHsc
-        // /wd4701 # potentially uninitialized local variable '...' used
-        // /wd5262 # implicit fall-through occurs here; are you missing a break statement? Use [[fallthrough]] when a break statement is intentionally omitted between cases
-        // /wd5264 # 'int const `char const * __cdecl `anonymous namespace'::positoa(int)'::`2'::SIZE': 'const' variable is not used
-        "SRCML_PARSER_DISABLED_WARNINGS": "/wd4267;/wd4365;/wd4459;/wd4530;/wd4577;/wd4701;/wd5262;/wd5264",
-        "SRCML_LIBSRCML_COMPILE_FLAGS": "/Zi",
-        "SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF",
-        "SRCML_LIBSRCML_STATIC_LINK_FLAGS_RELEASE": "/LTCG:OFF",
-        // wd4355 # this': used in base member initializer list
-        // wd5204 # class has virtual functions, but its trivial destructor is not virtual
-        "SRCML_CLIENT_COMPILE_FLAGS": "/wd4355;/wd5204",
-        "SRCML_CLIENT_LINK_FLAGS": ""
-      }
-    },
-    {
-      "name": "ccache",
-      "hidden": true,
-      "description": "ccache setup",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER_LAUNCHER": "ON"
-      }
-    },
-    {
-      "name": "linux",
-      "description": "Default build options for Linux",
-      "hidden": true,
-      "generator": "Ninja",
-      "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "-Wall -Wextra -pedantic",
-        // "CMAKE_INTERPROCEDURAL_OPTIMIZATION": "ON",
-        "SRCML_ANTLR_DISABLED_WARNINGS": "-Wno-format;-Wno-misleading-indentation;-Wno-deprecated-declarations",
-        "SRCML_PARSER_DISABLED_WARNINGS": "-Wno-unused-but-set-variable"
-      }
-    },
-    {
-      "name": "pch",
-      "description": "Use PCH",
-      "hidden": true,
-      "cacheVariables": {
-        // Determined via clang-trace
-        "SRCML_CLIENT_PCH": "<srcml_cli.hpp>;<srcml_input_src.hpp>;<srcml_pipe.hpp>;<ParseQueue.hpp>;<src_input_libarchive.hpp>;<SRCMLStatus.hpp>;<WriteQueue.hpp>;<ParseRequest.hpp>;<TraceLog.hpp>;<curl/curl.h>",
-        "SRCML_LIBSRCML_PCH": "<srcmlns.hpp>;<srcml_types.hpp>;<srcml_sax2_utilities.hpp>;<srcml_translator.hpp>;<srcml_sax2_reader.hpp>",
-        "SRCML_PARSER_PCH": "<srcMLParser.hpp> <CommentTextLexer.hpp> <ModeStack.hpp> <Language.hpp> <UTF8CharBuffer.hpp>"
-      }
-    },
-    {
-      "name": "gcc",
-      "inherits": ["linux"],
-      "displayName": "GCC",
-      "description": "Default build options for GCC",
-      "toolchainFile": "toolchain-gcc.cmake",
-      "cacheVariables": {
-        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,--version-script=${sourceDir}/src/libsrcml/libsrcml.version"
-      }
-    },
-    {
-      "name": "gcc-release",
-      "inherits": ["gcc"],
-      "displayName": "GCC Release",
-      "description": "Default build options for GCC release",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "clang",
-      "inherits": ["linux"],
-      "displayName": "Clang",
-      "description": "Default build options for Clang",
-      "cacheVariables": {
-        "SRCML_LIBSRCML_LINK_FLAGS": "-Wl,-exported_symbols_list ${sourceDir}/src/libsrcml/export_list"
-      }
-    },
-    {
-      "name": "clang-trace",
-      "inherits": ["clang"],
+      "name": "ci-clang-trace",
       "displayName": "Clang Trace",
+      "hidden": true,
       "description": "Default build options for Clang trace",
       "cacheVariables": {
-        "CMAKE_C_FLAGS": "-ftime-trace",
-        "CMAKE_CXX_FLAGS": "-ftime-trace"
+        "CMAKE_C_FLAGS_INIT": "-ftime-trace",
+        "CMAKE_CXX_FLAGS_INIT": "-ftime-trace"
       }
     },
     {
-      "name": "macos-universal",
-      "displayName": "macOS Universal Binary",
-      "description": "Universal binary for macOS",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "name": "ci-clang-ccache",
+      "inherits": ["ci-clang", "ci-ccache"],
       "hidden": true,
-      "cacheVariables": {
-        // Build for both x86 and arm64
-        "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64"
-      }
-    },
-    {
-      "name": "clang-release",
-      "inherits": ["clang"],
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "displayName": "Clang Release",
-      "description": "Default build options for Clang release",
-      "cacheVariables": {
-        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
-        // Making the exported_symbols_list an empty file reduces size of executable, as strip does not work
-        "SRCML_CLIENT_LINK_FLAGS": "-exported_symbols_list /dev/null",
-        "CMAKE_BUILD_TYPE": "Release",
-        "SRCML_GLOBAL_COMPILE_OPTIONS": "-flto",
-        "SRCML_GLOBAL_LINK_OPTIONS": "-flto;-dead_strip"
-      }
-    },
-    {
-      "name": "clang-release-ccache",
-      "inherits": ["clang-release", "ccache"],
       "displayName": "Clang Release ccache",
       "description": "Default build options for Clang release with ccache"
-    },
-    {
-      "name": "vcpkg",
-      "hidden": true,
-      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-    },
-    {
-      "name": "macos-vcpkg",
-      "inherits": ["clang-release", "vcpkg"],
-      "cacheVariables": {
-        // "PKG_CONFIG_EXECUTABLE": "/usr/bin/true"
-      }
-    }
-  ],
-  "packagePresets": [
-    {
-      "name": "rpm",
-      "configurePreset": "rpm-release",
-      "generators": [ "RPM", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ]
-    },
-    {
-      "name": "deb",
-      "configurePreset": "ubuntu-release",
-      "generators": [ "DEB", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ]
-    },
-    {
-      "name": "macos",
-      "configurePreset": "macos-release",
-      "generators": [ "productbuild", "TGZ", "TBZ2" ],
-      "configurations": [ "Release" ]
-    },
-    {
-      "name": "msvc",
-      "configurePreset": "msvc",
-      "generators": [ "WIX", "INNOSETUP", "NuGet", "ZIP" ],
-      "configurations": [ "Release" ]
-    },
-    {
-      "name": "msvc-wix",
-      "configurePreset": "msvc",
-      "generators": [ "WIX", "ZIP" ],
-      "configurations": [ "Release" ]
-    },
-    {
-      "name": "msvc-inno",
-      "configurePreset": "msvc",
-      "generators": [ "INNOSETUP", "ZIP" ],
-      "configurations": [ "Release" ]
-    },
-    {
-      "name": "msvc-nuget",
-      "configurePreset": "msvc",
-      "generators": [ "NuGet", "ZIP" ],
-      "configurations": [ "Release" ]
     }
   ]
 }

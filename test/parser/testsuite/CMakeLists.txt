@@ -2,7 +2,7 @@
 ##
 # @file CMakeLists.txt
 # 
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 # 
 # CMake files for the parser tests
 
@@ -139,8 +139,6 @@ foreach(GEN IN ITEMS ${SUITE})
 
         list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C#")
-
-    elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_NOP")
 

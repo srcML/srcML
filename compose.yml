@@ -1,0 +1,215 @@
+volumes:
+  ccache: # Optional ccache
+  data: # Input data
+  dist: # Installers
+
+x-configuration: &CONFIGURATION
+  volumes:
+    - .:/srcML:ro
+    - ccache:/ccache
+    - data:/Data:ro
+    - dist:/Builds
+  working_dir: /srcML
+  command: bash -c "${COMPOSE_COMMAND-cmake --workflow --preset ci-$$WORKFLOW}"
+
+x-platforms: &BUILD_PLATFORMS
+  platforms:
+    - "linux/amd64"
+    - "linux/arm64"
+
+x-utilities: &UTILITIES
+  image: srcml/utility
+  profiles: [utility]
+  volumes:
+    - dist:/dist
+
+services:
+
+  ubuntu_24.04:
+    image: srcml/ubuntu:24.04
+    platform: ${PLATFORM}
+    profiles: [ubuntu, package, latest]
+    build:
+      context: docker/ubuntu/
+      args:
+        TAG: "24.04"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=ubuntu
+    <<: *CONFIGURATION
+
+  ubuntu_23.10:
+    image: srcml/ubuntu:23.10
+    platform: ${PLATFORM}
+    profiles: [ubuntu, package]
+    build:
+      context: docker/ubuntu/
+      args:
+        TAG: "23.10"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=ubuntu
+    <<: *CONFIGURATION
+
+  ubuntu_22.04:
+    image: srcml/ubuntu:22.04
+    platform: ${PLATFORM}
+    profiles: [ubuntu, package]
+    build:
+      context: docker/ubuntu/
+      args:
+        TAG: "22.04"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=ubuntu
+    <<: *CONFIGURATION
+
+  ubuntu_20.04:
+    image: srcml/ubuntu:20.04
+    platform: ${PLATFORM}
+    profiles: [ubuntu, package, oldest]
+    build:
+      context: docker/ubuntu/
+      args:
+        TAG: "20.04"
+        CMAKE_BINARY: "ON"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=ubuntu
+    <<: *CONFIGURATION
+
+  fedora_41:
+    image: srcml/fedora:41
+    platform: ${PLATFORM}
+    profiles: [fedora, package, latest]
+    build:
+      context: docker/fedora/
+      args:
+        TAG: "41"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  fedora_40:
+    image: srcml/fedora:40
+    platform: ${PLATFORM}
+    profiles: [fedora, package]
+    build:
+      context: docker/fedora/
+      args:
+        TAG: "40"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  fedora_39:
+    image: srcml/fedora:39
+    platform: ${PLATFORM}
+    profiles: [fedora, package]
+    build:
+      context: docker/fedora/
+      args:
+        TAG: "39"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  fedora_38:
+    image: srcml/fedora:38
+    platform: ${PLATFORM}
+    profiles: [fedora, package, oldest]
+    build:
+      context: docker/fedora/
+      args:
+        TAG: "38"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  opensuse_15:
+    image: srcml/opensuse:15
+    platform: ${PLATFORM}
+    profiles: [opensuse, package]
+    build:
+      context: docker/opensuse/
+      args:
+        OPENSUSE: "leap"
+        TAG: "15"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  opensuse_15.5:
+    image: srcml/opensuse:15.5
+    platform: ${PLATFORM}
+    profiles: [opensuse, package, latest]
+    build:
+      context: docker/opensuse/
+      args:
+        OPENSUSE: "leap"
+        TAG: "15.5"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  opensuse_15.4:
+    image: srcml/opensuse:15.4
+    platform: ${PLATFORM}
+    profiles: [opensuse, package]
+    build:
+      context: docker/opensuse/
+      args:
+        OPENSUSE: "leap"
+        TAG: "15.4"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  opensuse_15.3:
+    image: srcml/opensuse:15.3
+    platform: ${PLATFORM}
+    profiles: [opensuse, package]
+    build:
+      context: docker/opensuse/
+      args:
+        OPENSUSE: "leap"
+        TAG: "15.3"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  opensuse_15.2:
+    image: srcml/opensuse:15.2
+    platform: ${PLATFORM}
+    profiles: [opensuse, package, oldest]
+    build:
+      context: docker/opensuse/
+      args:
+        OPENSUSE: "leap"
+        TAG: "15.2"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
+  opensuse_tumbleweed:
+    image: srcml/opensuse:tumbleweed
+    platform: ${PLATFORM}
+    profiles: [opensuse, package]
+    build:
+      context: docker/opensuse/
+      args:
+        OPENSUSE: "tumbleweed"
+        TAG: "latest"
+      <<: *BUILD_PLATFORMS
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION

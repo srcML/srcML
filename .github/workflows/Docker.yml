@@ -1,0 +1,28 @@
+---
+name: Docker
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup macOS
+        shell: bash
+        run: |
+          brew install docker
+          open /Applications/Docker.app
+          while ! docker system info > /dev/null 2>&1; do sleep 1; done
+          brew install docker-compose
+          docker --version
+          docker-compose --version
+
+      - name: Setup macOS
+        shell: bash
+        run: |
+          docker compose build ubuntu_24.04

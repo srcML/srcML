@@ -2,7 +2,7 @@
 /**
  * @file CPUCount.hpp
  *
- * @copyright Copyright (C) 2021 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2021-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */

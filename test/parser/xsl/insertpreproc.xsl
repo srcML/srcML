@@ -1,3 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!--
+    @file insertpreproc.xsl
+
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
+
+    Inserts preprocessor statements at every opportunity
+-->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:src="http://www.srcML.org/srcML/src"
@@ -5,12 +14,6 @@
     xmlns:cpp="http://www.srcML.org/srcML/cpp"
     exclude-result-prefixes="src"
     version="1.0">
-
-<!--
-    insertpreproc.xsl
-
-    Inserts preprocessor statements at every opportunity
--->
 
 <xsl:import href="copy.xsl"/>
 

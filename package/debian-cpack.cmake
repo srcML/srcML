@@ -2,7 +2,7 @@
 #
 # @file debian.cmake
 #
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 #
 # CPack configuration for Debian installers
 
@@ -54,6 +54,8 @@ set(CPACK_DEBIAN_DEVLIBS_FILE_NAME "${BASE_DEVLIBS_FILE_NAME}.deb")
 set(CPACK_ARCHIVE_SRCML_FILE_NAME "${BASE_SRCML_FILE_NAME}")
 set(CPACK_ARCHIVE_DEVLIBS_FILE_NAME "${BASE_DEVLIBS_FILE_NAME}")
 
+set(ENV{BASE_SRCML_FILE_NAME} "${BASE_SRCML_FILE_NAME}")
+
 # Package types
 # Current CPack defaults
 # Note: unclear whether CPACK_DEBIAN_PACKAGE_SECTION is default for components
@@ -92,9 +94,26 @@ set(CPACK_DEBIAN_DEVLIBS_PACKAGE_DEPENDS "${CPACK_PACKAGE_NAME} (>= ${PROJECT_VE
 
 # Recommended packages
 # Shared between client and dev packages
-set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "libxslt, zip, unzip, cpio, tar, man")
+set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "zip, unzip, cpio, tar, man")
 
 # Trigger required for library installed in client to initiate ldconfig
 set(TRIGGERS_FILE "${CMAKE_CURRENT_BINARY_DIR}/triggers")
 file(WRITE "${TRIGGERS_FILE}" "activate-noawait ldconfig\n")
 set(CPACK_DEBIAN_SRCML_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE}")
+
+# Targets for workflow testing
+add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCML_FILE_NAME})
+
+# Targets for installing generated packages
+add_custom_target(install_package
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND apt-get install -y ./${CPACK_DEBIAN_SRCML_FILE_NAME}
+)
+add_custom_target(install_targz
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.gz -C /usr
+)
+add_custom_target(install_tarbz2
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCML_FILE_NAME}.tar.bz2 -C /usr
+)

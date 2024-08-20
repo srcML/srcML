@@ -2,17 +2,24 @@
 #
 # @file package.cmake
 #
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 #
 # CPack configuration for all installers
 
-# Copy preset file to build directory
-configure_file(${CMAKE_SOURCE_DIR}/CMakePresets.json ${CMAKE_BINARY_DIR} COPYONLY)
-
-# Copy user preset file to the build directory if it exists
-if(EXISTS ${CMAKE_SOURCE_DIR}/CMakeUserPresets.json)
-    configure_file(${CMAKE_SOURCE_DIR}/CMakeUserPresets.json ${CMAKE_BINARY_DIR} COPYONLY)
+# The CMake variable CPACK_OUTPUT_FILE_PREFIX defines where the installers are placed.
+# Choose in this order:
+# 1. The preset or user defined CPACK_OUTPUT_FILE_PREFIX
+# 2. The external directory "/Builds" if the file /.dockerenv exists and "/Builds" exists
+# 3. The subdirectory "dist"
+if(NOT DEFINED CPACK_OUTPUT_FILE_PREFIX)
+    set(CPACK_OUTPUT_FILE_PREFIX "/Builds")
+    if(NOT EXISTS "/.dockerenv" OR NOT EXISTS ${CPACK_OUTPUT_FILE_PREFIX})
+        set(CPACK_OUTPUT_FILE_PREFIX "dist")
+    endif()
 endif()
+# If the directory is relative, assume in the build directory
+cmake_path(ABSOLUTE_PATH CPACK_OUTPUT_FILE_PREFIX BASE_DIRECTORY "${CMAKE_BINARY_DIR}" NORMALIZE)
+message(STATUS "Installers will be written to: ${CPACK_OUTPUT_FILE_PREFIX}")
 
 # especially for archives
 set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
@@ -51,9 +58,6 @@ set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
 # strip executables
 set(CPACK_STRIP_FILES ON)
 
-# output directory
-set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
-
 # Generate user and development tar.gz's
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
@@ -65,13 +69,13 @@ cpack_add_install_type(CLIENT DISPLAY_NAME "srcml cli")
 cpack_add_install_type(DEVELOPER DISPLAY_NAME "development")
 
 cpack_add_component(SRCML
-                    DISPLAY_NAME "srcml client"
+                    DISPLAY_NAME "srcml"
                     DESCRIPTION "srcml cli program with required libraries"
                     REQUIRED
                     INSTALL_TYPES CLIENT DEVELOPER)
 
 cpack_add_component(DEVLIBS
-                    DISPLAY_NAME "libsrcml development"
+                    DISPLAY_NAME "libsrcml"
                     DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
                     INSTALL_TYPES DEVELOPER)
 
@@ -79,9 +83,33 @@ cpack_add_component(DEVLIBS
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
-# Generators are defined in the *.cpack files
+# Test targets for workflows
+set(SRCML_TEST_TIMEOUT 5 CACHE STRING "ctest timeout in seconds")
+function(add_workflow_test_targets binary_dir output_directory package_file_name)
+
+    # Target for test_client
+    add_custom_target(test_client
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcml --timeout ${SRCML_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-client.log || true
+    )
+
+    # Target for test_libsrcml
+    add_custom_target(test_libsrcml
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_CTEST_COMMAND} -R ^libsrcml --timeout ${SRCML_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-libsrcml.log || true
+    )
+
+    # Target for test_parser
+    add_custom_target(test_parser
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${output_directory}/${package_file_name}-parser.log
+        DEPENDS gen_parser_tests
+    )
+endfunction()
+
+# Generators are defined in the *-cpack.cmake files
 set(CPACK_GENERATOR)
-file(GLOB INSTALLERS "*.cpack")
+file(GLOB INSTALLERS "*-cpack.cmake")
 foreach(INSTALLER IN ITEMS ${INSTALLERS})
     include(${INSTALLER})
 endforeach()

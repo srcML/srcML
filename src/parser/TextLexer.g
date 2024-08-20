@@ -2,7 +2,7 @@
 /*!
  * @file TextLexer.g
  *
- * @copyright Copyright (C) 2002-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2002-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcML translator.
  *

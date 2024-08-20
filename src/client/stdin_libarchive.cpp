@@ -2,7 +2,7 @@
 /**
  * @file stdin_libarchive.cpp
  *
- * @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2023-2024 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */
@@ -37,7 +37,7 @@ namespace {
         return buffer.substr(0, "<src:unit"sv.size()) == "<src:unit"sv ||
                buffer.substr(0, "<unit"sv.size()) == "<unit"sv;
     }
-};
+}
 
 void open_stdin_libarchive(srcml_input_src& input_source) {
 

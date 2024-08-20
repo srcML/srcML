@@ -2,7 +2,7 @@
 /**
  * @file libarchive_utilities.hpp
  *
- * @copyright Copyright (C) 2018-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2018-2024 srcML, LLC. (www.srcML.org)
  */
 
 #ifndef INCLUDED_LIBARCHIVE_UTILITIES_HPP
