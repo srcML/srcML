@@ -140,8 +140,6 @@ foreach(GEN IN ITEMS ${SUITE})
         list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "C#")
 
-    elseif(CATEGORY STREQUAL "LANGUAGE_CXX_GEN")
-
     elseif(CATEGORY STREQUAL "LANGUAGE_NOP")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_C_FAMILY")
