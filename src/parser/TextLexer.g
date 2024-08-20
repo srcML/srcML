@@ -185,7 +185,7 @@ WS { int lastColumn = 0; } : (
             // remove the tab character
             text.pop_back();
 
-            // add the new columns to the end
+            // append the spaces
             static const std::string_view spaces = "        ";
             text.append(spaces.substr(0, getColumn() - lastColumn));
         }
