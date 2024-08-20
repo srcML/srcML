@@ -16,6 +16,8 @@
 #include <algorithm>
 #include <memory>
 
+#include <iostream>
+
 // std::unique_ptr deleter functions for libxml2
 // usage: std::unique<xmlDoc> p(xmlReadMemory);
 // Call p.get() for original pointer

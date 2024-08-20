@@ -92,6 +92,19 @@ bool UnificationTable::does_element_match_variable(std::string_view variable_ide
     return true;
 }
 
+bool UnificationTable::is_element_in_bucket(std::string_view variable_identifier, int order, std::string_view t, uintptr_t address) const {
+    std::string token(t);
+    const auto bucketVar = bucket.find(variable_identifier);
+    for (int i = size_of_variable_bucket(variable_identifier); i > 0; --i) {
+        for (const auto& element : bucketVar->second.find(i)->second) {
+            if (token == element.token && address == element.address) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 void UnificationTable::empty_buckets() {
 
     for (auto& variable : bucket) {
@@ -102,7 +115,6 @@ void UnificationTable::empty_buckets() {
 }
 
 void UnificationTable::empty_bucket(std::string_view variable_identifier) {
-
     const auto it = bucket.find(variable_identifier);
     if (it == bucket.end()) {
         return;
@@ -111,6 +123,30 @@ void UnificationTable::empty_bucket(std::string_view variable_identifier) {
     for (auto& orderFirst : it->second) {
         orderFirst.second.clear();
     }
+}
+
+void UnificationTable::add_regex_rule(std::string_view variable_identifier, std::string_view regex_string) {
+    std::string identifier = std::string(variable_identifier);
+    std::string rule(regex_string);
+    if (regex_rules.find(identifier) == regex_rules.end()) {
+        regex_rules.insert(std::make_pair(identifier, std::set<std::string>()));
+    }
+    auto& regex_list = regex_rules.find(identifier)->second;
+    regex_list.insert(rule);
+}
+
+bool UnificationTable::check_regex(std::string_view variable_identifier, std::string_view t) {
+    std::string identifier(variable_identifier);
+    std::string token(t);
+    if (regex_rules.find(identifier) == regex_rules.end()) {
+        return true;
+    }
+    for (const auto& rule : regex_rules.find(identifier)->second) {
+        if (!std::regex_match(token,std::regex(rule))) {
+            return false;
+        }
+    }
+    return true;
 }
 
 std::ostream& operator<<(std::ostream& out, const UnificationTable& storage) {
