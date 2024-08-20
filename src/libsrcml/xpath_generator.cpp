@@ -65,7 +65,6 @@ void change_adds_to_matches(XPathNode* node) {
 void add_inner_specifier(XPathNode* node, int scope_count) {
     std::string node_text = node->get_text();
     if(node_text.find("qli:add-element",0) != std::string::npos) {
-        //std::cout << node_text << " -> ";
         int start = node_text.find("qli:add-element",0);
         int start_quote = node_text.find("\"",start);
         int end_quote = node_text.find("\"",start_quote+1);
@@ -86,11 +85,9 @@ void number_add_calls(XPathNode* node, int group, std::map<std::string,int>* cou
         count = new std::map<std::string,int>();
     }
 
-    //std::cout << "#" << group << ' ' << node->to_string() << std::endl;
 
     std::string node_text = node->get_text();
     if(node_text.find("qli:add-element",0) != std::string::npos) {
-        //std::cout << node_text << " -> ";
         int start = node_text.find("qli:add-element",0);
         int start_quote = node_text.find("\"",start);
         int end_quote = node_text.find("\"",start_quote+1);
@@ -102,10 +99,8 @@ void number_add_calls(XPathNode* node, int group, std::map<std::string,int>* cou
         node_text.replace(end_quote+2,1,std::to_string((*count)[identifier]));
         node_text.insert(end_quote,"_"+std::to_string(group));
         node->set_text(node_text);
-        //std::cout << node_text << std::endl;
     }
     else if(node_text.find("qli:match-element",0) != std::string::npos) {
-        //std::cout << node_text << " -> ";
         int start = node_text.find("qli:match-element",0);
         int start_quote = node_text.find("\"",start);
         int end_quote = node_text.find("\"",start_quote+1);
@@ -117,7 +112,6 @@ void number_add_calls(XPathNode* node, int group, std::map<std::string,int>* cou
         node_text.replace(end_quote+2,1,std::to_string((*count)[identifier]));
         node_text.insert(end_quote,"_"+std::to_string(group));
         node->set_text(node_text);
-        //std::cout << node_text << std::endl;
     }
     else if(node_text.find("qli:regex-match",0) != std::string::npos) {
         XPathNode* id_child = node->get_children()[0];
@@ -160,7 +154,7 @@ XPathNode* XPathGenerator::get_xpath_from_argument(std::string src_query) {
     char* s = 0;
     size_t size = -1;
     if(srcml_archive_write_open_memory(holder, &s, &size) != SRCML_STATUS_OK) {
-        std::cout << "srcML Error" << std::endl; return 0;
+        std::cerr << "srcML Error" << std::endl;
         return NULL;
     }
     srcml_unit* converter = srcml_unit_create(holder);
@@ -195,14 +189,9 @@ XPathNode* XPathGenerator::get_xpath_from_argument(std::string src_query) {
 
     get_variables(srcml_root);
     XPathNode* xpath_root = new XPathNode();
-    // std::cout << "\nConverting: " << src_query << std::endl;
     convert_traverse(srcml_root, xpath_root);
-    // std::cout << "Structure: " << xpath_root->to_string() << std::endl;
     organize_add_calls(xpath_root);
-    // std::cout << "Add Calls: " << xpath_root->to_string() << std::endl;
     // add_bucket_clears(xpath_root);
-    // std::cout << "Clears: " << xpath_root->to_string() << std::endl;
-    // std::cout << std::endl;
     return xpath_root;
 }
 
@@ -211,11 +200,8 @@ std::string XPathGenerator::convert() {
     std::vector<XPathNode*> source_exprs;
 
     std::vector<std::string> tokens = split(src_query, " ");
-    // int a_1 = 0;
-    // for(auto a_2 : tokens) { std::cout << a_1++ << ": " << a_2 << std::endl; }
-    // std::cout << std::endl; a_1 = 0;
     /*****
-    Loop through each token within the provides srcQL query.
+    Loop through each token within the provided srcQL query.
 
     Each operation and source code expresion is parsed out and saved to the respective
     vector.
@@ -389,7 +375,7 @@ std::string XPathGenerator::convert() {
             if (token == "WHERE") { is_where_clause = true; }
             else if (token != "END") { operations.push_back(token); }
             source_exprs.push_back(node);
-            // std::cout << (a_1++) << ": " << build_expr << "\n" << (a_1++) << ": " << token << std::endl;
+
             // Reset strings
             expr_type = "";
             build_expr = "";
@@ -408,11 +394,6 @@ std::string XPathGenerator::convert() {
             else { build_expr += " " + token; }
         }
     }
-
-    // std::cout << std::endl;
-    // for(auto op : operations) { std::cout << "op:" << op << std::endl; }
-    // for(auto arg : source_exprs) { std::cout << "arg:" << arg->to_string() << std::endl; }
-    // std::cout << "---------------------" << std::endl;
 
 
     XPathNode* top_copy = new XPathNode(*source_exprs[0]);
@@ -779,12 +760,10 @@ void XPathGenerator::add_bucket_clears(XPathNode* x_node,int group = 0) {
 void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) {
     int child_num = 0;
     for(xmlNode* node = top_xml_node; node != NULL; node = node->next) {
-        std::cout << get_full_name(node) << "|" << get_text(node) << "|" << child_num << "|" <<  (node->parent ? get_full_name(node->parent) : "N/A") << std::endl;
         if(node->type == XML_ELEMENT_NODE && get_full_name(node) != "src:comment") { 
             x_node->set_type(x_node->get_parent() ? PREDICATE : ANY);
             // If not a variable node
             if(!is_variable_node(node)) {
-                std::cout << "\tNot Variable Node" << std::endl;
                 // Special check for converting expr_stmt patterns to include decl_stmt
                 if(get_full_name(node) == "src:expr_stmt" && get_full_name(node->children) == "src:expr" && xmlChildElementCount(node->children) == 1 && get_full_name(node->children->children) == "src:name") {
 
@@ -813,14 +792,11 @@ void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) 
                 }
                 // Special check for unenforcing order on type specifiers
                 else if(get_full_name(node) == "src:specifier" && child_num != 0) {
-                    std::cout << "\tIn here? " << get_full_name(node->parent) << std::endl;
                     child_num = 0;
                     XPathNode* loop_node = x_node->get_parent();
                     while(loop_node->get_text().find("following-sibling") != std::string::npos) {
-                        std::cout << "\t{" << loop_node->get_text() << std::endl;
                         loop_node = loop_node->get_parent();
                     }
-                    std::cout << "\t{Final " << loop_node->get_text() << std::endl;
                     loop_node->get_parent()->add_child(x_node);
                     loop_node->pop_child_end();
                     x_node->set_text(get_full_name(node));
@@ -888,7 +864,6 @@ void XPathGenerator::convert_traverse(xmlNode* top_xml_node, XPathNode* x_node) 
         // ONLY DO IF NEXT CHILD IS A VALID ELEMENT,
         // AND CURRENT XPATHNODE IS USED
         if(node->next && node->next->type == XML_ELEMENT_NODE && x_node->get_text() != "") {
-            std::cout << "\tNew item |" << get_full_name(node) << "|" << get_text(node) << std::endl;
             XPathNode* next_node = new XPathNode();
             // If node is a specifier, need special tree rules
             if(x_node->get_text() == "src:specifier") {

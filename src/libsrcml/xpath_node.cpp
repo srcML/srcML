@@ -1,7 +1,6 @@
 #include "xpath_node.hpp"
 
 XPathNode::XPathNode(const XPathNode& orig) {
-    //std::cout << "Copying!" << std::endl;
     text = orig.text;
     type = orig.type;
     for(auto child : orig.children) {
@@ -54,7 +53,6 @@ std::ostream& operator<<(std::ostream& out, const XPathNode& node) {
 }
 
 std::string XPathNode::to_string(std::string_view rtn_view) {
-    //std::cout << "IN" << text << "|" << this << std::endl;
     std::string rtn(rtn_view);
     if(type == PREDICATE)        { rtn += '['  ; }
     else if(type == PARENTHESES) { rtn += '('  ; }
