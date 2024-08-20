@@ -1,3 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!--
+    @file synthesize2dynamic.xsl
+
+    @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcML.org)
+
+    Convert @synthesize to @dynamic.
+-->
+
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:src="http://www.srcML.org/srcML/src"
@@ -7,12 +16,6 @@
     extension-element-prefixes="str"
     exclude-result-prefixes="src cpp"
     version="1.0">
-
-<!--
-    synthesize2dynamic.xsl
-
-    Convert @synthesize to @dynamic.
--->
 
 <xsl:import href="copy.xsl"/>
 

@@ -2,7 +2,7 @@
 /**
  * @file srcml_direct_srcml2src.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  * Example program of the use of the libsrcml C API.
  *

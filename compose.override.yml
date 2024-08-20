@@ -39,7 +39,7 @@ services:
   # Short results of client tests
   client:
     <<: *UTILITIES
-    command: sh -c 'grep "Counts:" /dist/*-parser.log'
+    command: sh -c 'grep "out of" /dist/*-client.log'
 
   # Short results of parser tests
   parser:

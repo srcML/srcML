@@ -2,7 +2,7 @@
 ##
 # @file macos-libarchive.cmake
 # 
-# @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2023-2024 srcML, LLC. (www.srcML.org)
 # 
 # libarchive configuration of macOS for the srcML client
 

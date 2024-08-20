@@ -2,7 +2,7 @@
 /**
  * @file srcml_reader_handler.hpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  */
 
 #ifndef INCLUDED_SRCML_READER_HANDLER_HPP

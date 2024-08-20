@@ -2,7 +2,7 @@
 /**
  * @file test_srcml_archive_write_unit.cpp
  *
- * @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
  *
  *
  * Test cases for srcml_archive_write_unit()
@@ -155,7 +155,6 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
 
         dassert(std::string(s, size), srcml_a_single);
-
         free(s);
     }
 

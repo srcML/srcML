@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" url="position_block-content">
+
+<unit revision="1.0.0" language="C++" hash="7b4be3f8609b72080abdd507b169c30616d675c2"><function><type><name>int</name></type> <name>get</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="C++" hash="f55727718f4ebbd9e82d5ccb8367f7261a632bdf"><function><type><name>int</name></type> <name>get</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return>    </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="C++" hash="1ef37cc307cabd4f1f079fd2a42a8d90d9aa80ab"><function><type><name>int</name></type> <name>get</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return>
+ </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="C++" hash="e8d1bc3c08b81cb7c45083fd30cd347e777be407"><function><type><name>int</name></type> <name>get</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return></block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="C++" hash="1427631ee0da65cdf7021adb9aceaadc1d698983"><function><type><name>int</name></type> <name>get</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return>
+
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="C++" hash="6f9fccc358afe1e4bb75964d5e3c6411b2dc3c73"><function><type><name>int</name></type> <name>get</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return>
+
+<comment type="block">/* comment */</comment></block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="C++" hash="b515d2ce892e976ea1d263f74b80913a8073339e"><function><type><name>int</name></type> <name>get</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal></expr>;</return> <comment type="block">/* comment */</comment></block_content>}</block></function>
+</unit>
+
+</unit>

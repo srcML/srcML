@@ -5,15 +5,9 @@
       "name": "ci-base",
       "hidden": true,
       "cacheVariables": {
+        "SRCML_TEST_TIMEOUT": "10",
         "BUILD_LIBSRCML_TESTS": "ON",
         "BUILD_PARSER_TESTS": "ON"
-      }
-    },
-    {
-      "name": "ci-docker",
-      "hidden": true,
-      "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "/Builds"
       }
     },
     {
@@ -116,8 +110,7 @@
       "name": "ci-base",
       "hidden": true,
       "configurations": [ "Release" ],
-      "generators": [ "TGZ", "TBZ2" ],
-      "packageDirectory": "dist"
+      "generators": [ "TGZ", "TBZ2" ]
     }
   ]
 }

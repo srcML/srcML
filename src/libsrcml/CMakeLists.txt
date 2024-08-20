@@ -2,7 +2,7 @@
 ##
 # @file CMakeLists.txt
 #
-# @copyright Copyright (C) 2013-2019 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 #
 # CMake files for the library libsrcml
 
@@ -14,6 +14,7 @@ find_package(Threads REQUIRED)
 # libsrcml library
 file(GLOB LIBSRCML_SOURCE *.cpp)
 add_library(libsrcml OBJECT ${LIBSRCML_SOURCE})
+set_target_properties(libsrcml PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(libsrcml
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -74,8 +75,8 @@ target_link_libraries(libsrcml_static PRIVATE LibXml2::LibXml2 Iconv::Iconv LibX
 
 # Building shared library for srcML
 add_library(libsrcml_shared SHARED)
+set_target_properties(libsrcml_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
 set_target_properties(libsrcml_shared PROPERTIES
-    POSITION_INDEPENDENT_CODE ON
 
     # All of these are not needed on Unix, but are needed on Windows
     ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin

@@ -1,4 +1,9 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# @file null_separated_stdin.sh
+#
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 
 # test framework
 source $(dirname "$0")/framework_test.sh
@@ -126,6 +131,9 @@ check "$eabsrcml"
 # so tests are compared to output of echo
 # Note that BSD echo (macOS) supports the -e escape, but does not have it listed
 # on the man page
+
+define newline <<- 'STDOUT'
+	STDOUT
 
 # escaped \a
 printf "\aa;\a" | srcml -l C++ | srcml

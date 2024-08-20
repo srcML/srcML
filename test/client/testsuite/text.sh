@@ -1,4 +1,9 @@
 #!/bin/bash
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# @file text.sh
+#
+# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
 
 # test framework
 source $(dirname "$0")/framework_test.sh
@@ -128,6 +133,9 @@ define multiplesrcml <<- 'STDOUT'
 	STDOUT
 
 srcml --text="a;" --text="b;" -l C++
+check "$multiplesrcml"
+
+srcml --text="a;\0b;" -l C++
 check "$multiplesrcml"
 
 # escaped newline

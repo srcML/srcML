@@ -2,7 +2,7 @@
 /*
   test_srcml_apply_transforms.cpp
 
-  Copyright (C) 2013-2019 srcML (www.srcML.org)
+  @copyright Copyright (C) 2013-2019 srcML (www.srcML.org)
 
   Test cases for srcml_apply_transforms()
 */
