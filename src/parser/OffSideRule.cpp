@@ -13,8 +13,6 @@
 
 /**
  * An abstract method for getting the next token.
- *
- * Note: The current implementation uses C++ logic (e.g., LCURLY and RCURLY). This will be altered later.
  * 
  * Whenever a `blockStartToken` is found, an INDENT token is generated. Whenever the next line starts with
  * less indentation that the previous line, a DEDENT token is generated (ignores blank lines).
@@ -42,11 +40,37 @@ antlr::RefToken OffSideRule::nextToken() {
 
         // [INDENT] The token matches the token used to indicate the start of a block
         if (token->getType() == blockStartToken) {
-            token->setType(srcMLParser::LCURLY);
-            numIndents++;
+            const auto& nextToken = input.nextToken();
 
-            if (debugInfo) std::cerr << "[I] line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
+            // Check if LA(1) == EOL; valid indentation
+            if (nextToken->getType() == srcMLParser::EOL && nextToken->getColumn() > 1) {
+                token->setType(srcMLParser::INDENT);
+                buffer.emplace_back(nextToken);
+                numIndents++;
 
+                if (debugInfo) std::cerr << "[I] line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
+
+                return token;
+            }
+
+            // Check if LA(1) == WS; could be valid indentation
+            if (nextToken->getType() == srcMLParser::WS) {
+                const auto& extraToken = input.nextToken();
+                buffer.emplace_back(extraToken);
+
+                // Check if LA(2) == EOL; valid indentation
+                if (extraToken->getType() == srcMLParser::EOL && extraToken->getColumn() > 1) {
+                    token->setType(srcMLParser::INDENT);
+                    buffer.emplace_back(nextToken);
+                    numIndents++;
+
+                    if (debugInfo) std::cerr << "[I] line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
+
+                    return token;
+                }
+            }
+
+            buffer.emplace_back(nextToken);
             return token;
         }
 
@@ -55,7 +79,7 @@ antlr::RefToken OffSideRule::nextToken() {
             buffer.emplace_back(token);
 
             auto dedentToken = srcMLToken::factory();
-            dedentToken->setType(srcMLParser::RCURLY);
+            dedentToken->setType(srcMLParser::DEDENT);
             dedentToken->setColumn(token->getColumn());
             dedentToken->setLine(token->getLine());
 
@@ -94,7 +118,7 @@ antlr::RefToken OffSideRule::nextToken() {
 
                     if (currentColStart < prevColStart) {
                         auto dedentToken = srcMLToken::factory();
-                        dedentToken->setType(srcMLParser::RCURLY);
+                        dedentToken->setType(srcMLParser::DEDENT);
                         dedentToken->setColumn(1);
                         dedentToken->setLine(token->getLine() + 1);
 
@@ -117,7 +141,7 @@ antlr::RefToken OffSideRule::nextToken() {
 
                     for (int i = 0; i < numIndents; i++) {
                         auto dedentToken = srcMLToken::factory();
-                        dedentToken->setType(srcMLParser::RCURLY);
+                        dedentToken->setType(srcMLParser::DEDENT);
                         dedentToken->setLine(nextToken->getLine());
                         dedentToken->setColumn(numIndents - i);
 
@@ -148,7 +172,7 @@ antlr::RefToken OffSideRule::nextToken() {
                     if (currentColStart < prevColStart) {
                         for (int i = 0; i < numIndents; i++) {
                             auto dedentToken = srcMLToken::factory();
-                            dedentToken->setType(srcMLParser::RCURLY);
+                            dedentToken->setType(srcMLParser::DEDENT);
                             dedentToken->setLine(nextToken->getLine());
                             dedentToken->setColumn(numIndents - i);
 

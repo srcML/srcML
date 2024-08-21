@@ -695,8 +695,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY },
 
         // Offside
-        { "<block>"      , INDENT            , LANGUAGE_ALL },
-        { "</block>"     , DEDENT            , LANGUAGE_ALL },
+        { ""             , INDENT            , LANGUAGE_CXX | LANGUAGE_C },
+        { ""             , DEDENT            , LANGUAGE_CXX | LANGUAGE_C },
 
    };
 
