@@ -20,7 +20,7 @@ define result <<- 'STDOUT'
 	</unit>
 
 	</unit>
-  STDOUT
+STDOUT
 
 xmlcheck "$result"
 
@@ -32,15 +32,15 @@ createfile b.cpp "b;
 srcml a.cpp b.cpp --xmlns:pre=foo.com -o archive.xml
 
 # from the files
-srcml archive.xml --xpath="//src:name" --attribute="pre:attr=value"
+srcml archive.xml --xpath="//src:name" --xmlns:pre=foo.com --attribute="pre:attr=value"
 check "$result"
 
-srcml --xpath="//src:name" archive.xml --attribute="pre:attr=value"
+srcml --xpath="//src:name" archive.xml --xmlns:pre=foo.com --attribute="pre:attr=value"
 check "$result"
 
 # output to a file
-srcml archive.xml --xpath="//src:name" --attribute="pre:attr=value" -o result.xml
+srcml archive.xml --xpath="//src:name" --xmlns:pre=foo.com --attribute="pre:attr=value" -o result.xml
 check result.xml "$result"
 
-srcml --xpath="//src:name" archive.xml --attribute="pre:attr=value" -o result.xml
+srcml --xpath="//src:name" archive.xml --xmlns:pre=foo.com --attribute="pre:attr=value" -o result.xml
 check result.xml "$result"
