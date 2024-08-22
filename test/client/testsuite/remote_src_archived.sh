@@ -17,7 +17,7 @@ define srcml_with_url <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 # archive/compression mix
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.cpio --url="test"
@@ -55,9 +55,13 @@ check "$srcml_with_url"
 
 # empty direct remote source input with various compressions
 define empty_srcml_with_url <<- 'STDOUT'
-       <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-       <unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="test" filename="test"/>
-       STDOUT
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" url="test">
+
+	<unit revision="1.0.0" language="C++" filename="empty.cpp" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
+
+	</unit>
+STDOUT
 
 # archive/compressed mix
 srcml https://github.com/srcML/test-data/raw/master/empty/empty.cpp.cpio --url="test"
