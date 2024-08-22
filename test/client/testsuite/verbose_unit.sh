@@ -12,14 +12,14 @@ source $(dirname "$0")/framework_test.sh
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
-  STDOUT
+STDOUT
 
 define output <<- 'STDERR'
 	XML encoding:  UTF-8
-	    1 sub/a.cpp	C++	1
+	    1 C++      1 sub/a.cpp
 
-	Translated: 1	Skipped: 0	Error: 0	Total: 1
-  STDERR
+	Source Files: 1	Other Files: 0	Errors: 0	Total Files: 1
+STDERR
 
 xmlcheck "$fsrcml"
 createfile sub/a.cpp "a;"
@@ -42,14 +42,14 @@ check sub/c.cpp.xml "$fsrcml" "$output"
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
-  STDOUT
+STDOUT
 
 define output <<- 'STDERR'
 	XML encoding:  UTF-8
-	    1 	C++	1
+	    1 C++      1
 
-	Translated: 1	Skipped: 0	Error: 0	Total: 1
-  STDERR
+	Source Files: 1	Other Files: 0	Errors: 0	Total Files: 1
+STDERR
 
 xmlcheck "$srcml"
 
