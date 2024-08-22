@@ -23,24 +23,34 @@ language_extension_registry::language_extension_registry() : registered_language
     { "c",    Language::LANGUAGE_C },
     { "h",    Language::LANGUAGE_C },
     { "i",    Language::LANGUAGE_C },
+    { "cu",   Language::LANGUAGE_C },
     { "cpp",  Language::LANGUAGE_CXX },
     { "CPP",  Language::LANGUAGE_CXX },
+    { "cppm", Language::LANGUAGE_CXX },
     { "cp",   Language::LANGUAGE_CXX },
     { "hpp",  Language::LANGUAGE_CXX },
+    { "mpp",  Language::LANGUAGE_CXX },
     { "cxx",  Language::LANGUAGE_CXX },
     { "hxx",  Language::LANGUAGE_CXX },
+    { "ixx",  Language::LANGUAGE_CXX },
     { "cc",   Language::LANGUAGE_CXX },
+    { "ccm",  Language::LANGUAGE_CXX },
     { "hh",   Language::LANGUAGE_CXX },
+    { "hm",   Language::LANGUAGE_CXX },
     { "c++",  Language::LANGUAGE_CXX },
+    { "c++m", Language::LANGUAGE_CXX },
     { "h++",  Language::LANGUAGE_CXX },
     { "C",    Language::LANGUAGE_CXX },
     { "H",    Language::LANGUAGE_CXX },
     { "tcc",  Language::LANGUAGE_CXX },
+    { "txx",  Language::LANGUAGE_CXX },
     { "ii",   Language::LANGUAGE_CXX },
     { "java", Language::LANGUAGE_JAVA },
     { "aj",   Language::LANGUAGE_JAVA },
     { "cs",   Language::LANGUAGE_CSHARP },
-    /* { "m",    Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C } */ }), use_cpp_for_c(false)
+    /* { "m",    Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C }, */
+    /* { "M",    Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C }, */
+    /* { "mm",   Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C }  */ }), use_cpp_for_c(false)
     {}
 
 /**
@@ -160,20 +170,28 @@ void language_extension_registry::register_standard_file_extensions() {
     register_user_ext("c",    Language::LANGUAGE_C);
     register_user_ext("h",    Language::LANGUAGE_C);
     register_user_ext("i",    Language::LANGUAGE_C);
+    register_user_ext("cu",   Language::LANGUAGE_C);
 
     register_user_ext("cpp",  Language::LANGUAGE_CXX);
     register_user_ext("CPP",  Language::LANGUAGE_CXX);
+    register_user_ext("cppm", Language::LANGUAGE_CXX);
     register_user_ext("cp",   Language::LANGUAGE_CXX);
     register_user_ext("hpp",  Language::LANGUAGE_CXX);
+    register_user_ext("mpp",  Language::LANGUAGE_CXX);
     register_user_ext("cxx",  Language::LANGUAGE_CXX);
     register_user_ext("hxx",  Language::LANGUAGE_CXX);
+    register_user_ext("ixx",  Language::LANGUAGE_CXX);
     register_user_ext("cc",   Language::LANGUAGE_CXX);
+    register_user_ext("ccm",  Language::LANGUAGE_CXX);
     register_user_ext("hh",   Language::LANGUAGE_CXX);
+    register_user_ext("hm",   Language::LANGUAGE_CXX);
     register_user_ext("c++",  Language::LANGUAGE_CXX);
+    register_user_ext("c++m", Language::LANGUAGE_CXX);
     register_user_ext("h++",  Language::LANGUAGE_CXX);
     register_user_ext("C",    Language::LANGUAGE_CXX);
     register_user_ext("H",    Language::LANGUAGE_CXX);
     register_user_ext("tcc",  Language::LANGUAGE_CXX);
+    register_user_ext("txx",  Language::LANGUAGE_CXX);
     register_user_ext("ii",   Language::LANGUAGE_CXX);
 
     register_user_ext("java", Language::LANGUAGE_JAVA);
