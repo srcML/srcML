@@ -13,27 +13,28 @@ define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" directory="sub" filename="a.cpp" timestamp="Sun Jan 11 18:39:22 2015"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-  STDOUT
+STDOUT
 
 xmlcheck "$input"
 createfile sub/a.cpp.xml "$input"
 message "timestamp provided"
 
 srcml --show-timestamp sub/a.cpp.xml
-check "Sun Jan 11 18:39:22 2015"
+check "Sun Jan 11 18:39:22 2015\n"
 
 srcml --show-timestamp < sub/a.cpp.xml
-check "Sun Jan 11 18:39:22 2015"
+check "Sun Jan 11 18:39:22 2015\n"
 
 define none <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" directory="sub" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-  STDOUT
+STDOUT
 
 xmlcheck "$none"
 createfile sub/a.cpp.xml "$none"
-message "timestamp missing"
+
+# timestamp missing
 
 srcml --show-timestamp sub/a.cpp.xml
 check
