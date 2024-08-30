@@ -50,6 +50,7 @@ antlr::RefToken OffSideRule::nextToken() {
 
                 if (debugInfo) std::cerr << "[I] line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
 
+                newIndent = true;
                 return token;
             }
 
@@ -66,12 +67,33 @@ antlr::RefToken OffSideRule::nextToken() {
 
                     if (debugInfo) std::cerr << "[I] line: '" << token->getLine() << "', col: '" << token->getColumn() << "', text: '" << token->getText() << "', type: '" << token->getType() << "', indents: '" << numIndents << "'\n";
 
+                    newIndent = true;
                     return token;
                 }
             }
 
             buffer.emplace_back(nextToken);
             return token;
+        }
+
+        // [DEDENT] Blocks with improper indentation need to be handled differently
+        // Content after a block with no indentation will end the block before the new content begins
+        if (newIndent) {
+            newIndent = false;
+
+            if (prevColStart == currentColStart && token->getType() != srcMLParser::EOL) {
+                auto dedentToken = srcMLToken::factory();
+                dedentToken->setType(srcMLParser::DEDENT);
+                dedentToken->setColumn(1);
+                dedentToken->setLine(token->getLine());
+
+                buffer.emplace_back(token);
+                numIndents--;
+
+                if (debugInfo) std::cerr << "[D] line: '" << dedentToken->getLine() << "', col: '" << dedentToken->getColumn() << "', text: '" << dedentToken->getText() << "', type: '" << dedentToken->getType() << "', indents: '" << numIndents << "'\n";
+
+                return dedentToken;
+            }
         }
 
         // [DEDENT] Files that do not end with a newline need to be handled differently

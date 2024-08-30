@@ -41,6 +41,7 @@ private:
 
     bool skippedColSet = false;
     bool debugInfo = false;
+    bool newIndent = false;
 };
 
 #endif

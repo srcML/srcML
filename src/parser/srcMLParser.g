@@ -4726,7 +4726,6 @@ indent[bool content = true] { ENTRY_DEBUG } :
         set_bool[skip_ternary, false]
 
         {
-            // alter the modes set in lcurly_base
             setMode(MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_LIST);
         }
 ;
