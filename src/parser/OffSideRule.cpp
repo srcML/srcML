@@ -42,8 +42,8 @@ antlr::RefToken OffSideRule::nextToken() {
         if (token->getType() == blockStartToken) {
             const auto& nextToken = input.nextToken();
 
-            // Check if LA(1) == EOL; valid indentation
-            if (nextToken->getType() == srcMLParser::EOL && nextToken->getColumn() > 1) {
+            // Check if LA(1) == EOL or EOF_; valid indentation
+            if ((nextToken->getType() == srcMLParser::EOL || nextToken->getType() == srcMLParser::EOF_) && nextToken->getColumn() > 1) {
                 token->setType(srcMLParser::INDENT);
                 buffer.emplace_back(nextToken);
                 numIndents++;
@@ -59,8 +59,8 @@ antlr::RefToken OffSideRule::nextToken() {
                 const auto& extraToken = input.nextToken();
                 buffer.emplace_back(extraToken);
 
-                // Check if LA(2) == EOL; valid indentation
-                if (extraToken->getType() == srcMLParser::EOL && extraToken->getColumn() > 1) {
+                // Check if LA(2) == EOL or EOF_; valid indentation
+                if ((extraToken->getType() == srcMLParser::EOL || extraToken->getType() == srcMLParser::EOF_) && extraToken->getColumn() > 1) {
                     token->setType(srcMLParser::INDENT);
                     buffer.emplace_back(nextToken);
                     numIndents++;
