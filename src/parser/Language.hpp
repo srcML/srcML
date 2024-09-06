@@ -47,6 +47,9 @@ namespace LanguageName {
     /** String constant for Objective-C language */
     const char* const LANGUAGE_OBJECTIVE_C = "Objective-C";
 
+    /** String constant for JavaScript language */
+    const char* const LANGUAGE_JAVASCRIPT = "JavaScript";
+
 }
 
 /**
@@ -96,6 +99,9 @@ public:
 
         /** Object-Oriented languages i.e. C++/C#/Java */
         LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
+
+        /** JavaScript language */
+        LANGUAGE_JAVASCRIPT = LANGUAGE_C_FAMILY,
 
         /** All languages */
         LANGUAGE_ALL = ~0
