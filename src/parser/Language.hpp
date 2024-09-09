@@ -88,8 +88,11 @@ public:
         /** Objective-C language */
         LANGUAGE_OBJECTIVE_C = 16,
 
+        /** JavaScript language */
+        LANGUAGE_JAVASCRIPT = 32,
+
         /** C++ family i.e. C++/C#  */
-        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
+        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP | LANGUAGE_JAVASCRIPT,
 
         /** C family i.e. C/C++/C# */
         LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY | LANGUAGE_OBJECTIVE_C,
@@ -99,9 +102,6 @@ public:
 
         /** Object-Oriented languages i.e. C++/C#/Java */
         LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
-
-        /** JavaScript language */
-        LANGUAGE_JAVASCRIPT = LANGUAGE_C_FAMILY,
 
         /** All languages */
         LANGUAGE_ALL = ~0
