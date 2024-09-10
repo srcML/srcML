@@ -133,11 +133,8 @@ header "post_include_hpp" {
 
 using namespace ::std::literals::string_view_literals;
 
-// Commented-out code
-// #define DEBUG_PARSER
-
 // Macros to introduce trace statements
-#ifdef DEBUG_PARSER
+#ifdef SRCML_DEBUG_PARSER
 class RuleTrace {
 public:
     RuleTrace(int guessing, int token, int rd, std::string text, const char* fun, int line) :
@@ -684,6 +681,14 @@ tokens {
     SLINE_DOXYGEN_COMMENT;
     SJAVADOC_COMMENT;
     SDOXYGEN_COMMENT;
+
+    // JavaScript
+    SWITH_STATEMENT;
+    SDEBUGGER_STATEMENT;
+    SEXPORT_STATEMENT;
+    SFUNCTION_STATEMENT;
+    SIMPORT_STATEMENT;
+    SYIELD_STATEMENT;
 }
 
 /*
@@ -715,6 +720,7 @@ public:
     int current_column = -1;
     int current_line = -1;
     int nxt_token = -1;
+    TokenPosition prevTokenPosition;
     int last_consumed = -1;
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
@@ -735,6 +741,7 @@ public:
     static const antlr::BitSet decl_specifier_tokens_set;
     static const antlr::BitSet identifier_list_tokens_set;
     static const antlr::BitSet whitespace_token_set;
+    static const antlr::BitSet duplex_keyword_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -773,6 +780,50 @@ public:
             last_consumed = LA(1);
 
         LLkParser::consume();
+    }
+
+    struct Rule {
+        // Token for start element
+        int elementToken = 0;
+
+        // Mode not in
+        srcMLState::MODE_TYPE notInMode = 0;
+
+        // Mode to start before issuing
+        srcMLState::MODE_TYPE startingMode = 0;
+
+        // Mode following keyword
+        srcMLState::MODE_TYPE followingMode = 0;
+
+        void (srcMLParser::*pre)() = nullptr;
+
+        void (srcMLParser::*post)() = nullptr;
+    };
+
+    bool processRule(const Rule& rule) {
+        if (rule.notInMode != 0 && inMode(rule.notInMode))
+            return false;
+
+        if (inMode(MODE_EXPRESSION))
+            endMode(MODE_EXPRESSION);
+
+        if (rule.pre)
+            (*this.*(rule.pre))();
+
+        if (rule.startingMode != 0)
+            startNewMode(rule.startingMode);
+
+        startElement(rule.elementToken);
+
+        if (rule.followingMode != 0)
+            startNewMode(rule.followingMode);
+
+        consume();
+
+        if (rule.post)
+            (*this.*(rule.post))();
+
+        return true;
     }
 }
 
@@ -950,6 +1001,245 @@ catch[...] {
 }
 
 /*
+  start_javascript
+
+  Invokes a table-based approach to detecting and handling tokens.
+
+  Whitespace tokens are handled elsewhere and are automagically included
+  in the output stream.
+
+  Order of evaluation is important.
+*/
+start_javascript[] {
+        ++start_count;
+
+        const int CHECKED_LCURLY = 490;
+        const int UNCHECKED_LCURLY = 491;
+        const int DEFAULT_COLON = 492;
+        const int ELSE_IF = 493;
+        const int STATIC_LCURLY = 494;
+        const int CATCH_LPAREN = 496;
+
+        // A duplex keyword is a pair of adjacent keywords
+        static const std::array<int, 500 * 500> duplexKeywords = [this](){
+            std::array<int, 500 * 500> temp_array;
+
+            temp_array[CHECKED + (LCURLY << 8)] = CHECKED_LCURLY;
+            temp_array[UNCHECKED + (LCURLY << 8)] = UNCHECKED_LCURLY;
+            temp_array[DEFAULT + (COLON << 8)] = DEFAULT_COLON;
+            temp_array[ELSE + (IF << 8)] = ELSE_IF;
+            temp_array[STATIC + (LCURLY << 8)] = STATIC_LCURLY;
+            temp_array[CATCH + (LPAREN << 8)] = CATCH_LPAREN;
+
+            return temp_array;
+        }();
+
+        // JavaScript rules adhere to the following form:
+        // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
+        static const std::array<Rule, 500> javascript_rules = [this](){
+            std::array<Rule, 500> temp_array;
+
+            /* GENERIC STATEMENTS */
+            temp_array[BREAK]                 = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+            temp_array[CASE]                  = { SCASE, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+            temp_array[CLASS]                 = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT | MODE_VARIABLE_NAME, /* &srcMLParser::specifier */ nullptr, nullptr };
+            temp_array[CONTINUE]              = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+            //temp_array[DECLARATION_STATEMENT] = { SDECLARATION_STATEMENT, 0, MODE_STATEMENT, MODE_LCURLY | MODE_LBRACKET | MODE_NAME | MODE_EXPECT, &srcMLParser::specifier, nullptr };
+            temp_array[DO]                    = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
+            // /*do not uncomment*/ temp_array[EXPRESSION_STATEMENT]  = { 0, 0, 0, 0, nullptr, nullptr };
+            temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, /*MODE_SPECIFIER |*/ MODE_CONTROL | MODE_EXPECT, nullptr, nullptr };
+            //temp_array[IF_STATEMENT]          = { SIF_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_IF | MODE_EXPECT, nullptr, nullptr };
+            temp_array[RETURN]                = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
+            temp_array[SWITCH]                = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+            temp_array[THROW]                 = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+            temp_array[TRY]                   = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
+            temp_array[WHILE]                 = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+
+            /* JAVASCRIPT-SPECIFIC STATEMENTS */
+            temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_DEBUGGER]           = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+            temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_FINALLY]            = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, /*&srcMLParser::specifier*/ nullptr, nullptr };
+            temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
+            temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
+
+            /* DUPLEX KEYWORDS */
+            temp_array[CATCH_LPAREN]          = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+            temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };
+            //temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+            temp_array[STATIC_LCURLY]         = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
+
+            return temp_array;
+        }();
+
+        // ** Start C++ Logic ** //
+
+        // static const std::array<Rule, 500> rules = [this](){
+        //     std::array<Rule, 500> temp_array;
+
+        //     temp_array[WHILE]               = { SWHILE_STATEMENT,         MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
+        //     temp_array[RETURN]              = { SRETURN_STATEMENT,        0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_EXPRESSION | MODE_EXPECT };
+        //     temp_array[FOR]                 = { SFOR_STATEMENT,           0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT };
+        //     temp_array[BREAK]               = { SBREAK_STATEMENT,         0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+        //     temp_array[CONTINUE]            = { SCONTINUE_STATEMENT,      0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+        //     temp_array[GOTO]                = { SGOTO_STATEMENT,          0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
+        //     // temp_array[IMPORT]              = { SIMPORT, MODE_VARIABLE_NAME, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
+        //     temp_array[PACKAGE]             = { SPACKAGE,                 0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
+        //     temp_array[FOREVER]             = { SFOREVER_STATEMENT,       0, MODE_STATEMENT | MODE_NEST, 0 };
+        //     temp_array[SWITCH]              = { SSWITCH,                  0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
+        //     temp_array[TYPEDEF]             = { STYPEDEF,                 0, MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME | MODE_ONLY_END_TERMINATE, MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE };
+        //     temp_array[STATIC_ASSERT]       = { SSTATIC_ASSERT_STATEMENT, 0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST };
+        //     temp_array[ASSERT]              = { SASSERT_STATEMENT,        0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, 0 };
+        //     temp_array[UNSAFE]              = { SUNSAFE_STATEMENT,        0, MODE_STATEMENT | MODE_NEST, 0 };
+        //     temp_array[FRIEND]              = { SFRIEND,                  0, MODE_STATEMENT | MODE_NEST | MODE_FRIEND, 0 };
+        //     temp_array[DO]                  = { SDO_STATEMENT,            0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
+        //     temp_array[FOREACH]             = { SFOREACH_STATEMENT,       0, MODE_STATEMENT | MODE_NEST, MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA };
+        //     temp_array[DYNAMIC]             = { SDYNAMIC,                 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_implementation_inner };
+        //     temp_array[SYNTHESIZE]          = { SSYNTHESIZE,              0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_implementation_inner };
+        //     temp_array[PROPERTY]            = { SPROPERTY,                0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_declaration_post };
+        //     temp_array[COMPATIBILITY_ALIAS] = { SCOMPATIBILITY_ALIAS,     0, MODE_STATEMENT| MODE_VARIABLE_NAME, 0 };
+        //     temp_array[ATCLASS]             = { SCLASS_DECLARATION,       0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_LIST, 0, nullptr, &srcMLParser::atclass_name };
+        //     // temp_array[USING]               = { SUSING_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0, nullptr, &srcMLParser::for_like_statement_post };
+
+        //     temp_array[GUARD]               = { SIF,                      0, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION };
+        //     temp_array[CHECKED_LCURLY]      = { SCHECKED_STATEMENT,       0, MODE_STATEMENT | MODE_NEST, 0};
+        //     temp_array[UNCHECKED_LCURLY]    = { SUNCHECKED_STATEMENT,     0, MODE_STATEMENT | MODE_NEST, 0};
+        //     temp_array[DEFAULT_COLON]       = { SDEFAULT,                 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT };
+
+        //     return temp_array;
+        // }();
+
+        // static const std::array<Rule, 500> rules2 = [this](){
+        //     std::array<Rule, 500> temp_array(rules);
+
+        //     temp_array[FOREACH] =  { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_EXPECT | MODE_CONTROL };
+
+        //     return temp_array;
+        // }();
+
+        // const auto& currentRules = inLanguage(LANGUAGE_CSHARP) ? rules2 : rules;
+
+        // ** End C++ Test Logic ** //
+
+        if (inMode(MODE_NEST | MODE_STATEMENT)) {
+            auto token = LA(1);
+            if (duplex_keyword_set.member((unsigned int) LA(1))) {
+                const auto lookup = duplexKeywords[token + (next_token() << 8)];
+                if (lookup)
+                    token = lookup;
+            }
+            const auto& rule = currentRules[token];
+            if (rule.elementToken && processRule(rule)) {
+                return;
+            }
+        }
+
+        ENTRY_DEBUG_START
+        ENTRY_DEBUG
+} :
+        {
+            std::cerr << "Inside start_javascript[]\n";
+            std::cerr << "token: '" << LA(1) << "'\n";
+
+            switch (LA(1)) {
+            // misc.
+            case EOF_: eof(); break;
+            case EOL_BACKSLASH: line_continuation(); break;
+            case EOL: match(EOL); break;
+            case COMMA: comma(); break;
+            case TERMINATE: terminate(); break;
+
+            case RCURLY:
+                if (!inTransparentMode(MODE_INTERNAL_END_CURLY)) {
+                    block_end();
+                }
+                break;
+
+            case LCURLY:
+                if (
+                    (
+                        (
+                            inTransparentMode(MODE_CONDITION)
+                            || (
+                                !inMode(MODE_EXPRESSION)
+                                && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)
+                            )
+                        )
+                        && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
+                        && (
+                            !inLanguage(LANGUAGE_CXX)
+                            || !inTransparentMode(MODE_INIT | MODE_EXPECT)
+                        )
+                    )
+                    || inTransparentMode(MODE_ANONYMOUS)
+                ) {
+                    lcurly();
+                }
+                break;
+
+            // generic statements
+            case BREAK: processRule(javascript_rules[BREAK]); break;
+            case CASE: processRule(javascript_rules[CASE]); break;
+            case CLASS: processRule(javascript_rules[CLASS]); break;
+            case CONTINUE: processRule(javascript_rules[CONTINUE]); break;
+            case DO: processRule(javascript_rules[DO]); break;
+            case FOR: processRule(javascript_rules[FOR]); break;
+            case RETURN: processRule(javascript_rules[RETURN]); break;
+            case SWITCH: processRule(javascript_rules[SWITCH]); break;
+            case THROW: processRule(javascript_rules[THROW]); break;
+            case TRY: processRule(javascript_rules[TRY]); break;
+            case WHILE: processRule(javascript_rules[WHILE]); break;
+
+            // JavaScript-specific statements
+            case JS_CONSTRUCTOR: processRule(javascript_rules[JS_CONSTRUCTOR]); break;
+            case JS_DEBUGGER: processRule(javascript_rules[JS_DEBUGGER]); break;
+            case JS_EXPORT: processRule(javascript_rules[JS_EXPORT]); break;
+            case JS_FINALLY: processRule(javascript_rules[JS_FINALLY]); break;
+            case JS_FUNCTION: processRule(javascript_rules[JS_FUNCTION]); break;
+            case JS_IMPORT: processRule(javascript_rules[JS_IMPORT]); break;
+            case JS_WITH: processRule(javascript_rules[JS_WITH]); break;
+            case JS_YIELD: processRule(javascript_rules[JS_YIELD]); break;
+
+            // duplex keywords
+            case CATCH:
+                if (next_token() == LPAREN) {
+                    processRule(javascript_rules[CATCH_LPAREN]);
+                    consume();  // second consume for lparen
+                }
+                break;
+
+            case DEFAULT:
+                if (next_token() == COLON) {
+                    processRule(javascript_rules[DEFAULT_COLON]);
+                    consume();  // second consume for colon
+                }
+                break;
+
+            case STATIC:
+                if (next_token() == LCURLY) {
+                    processRule(javascript_rules[STATIC_LCURLY]);
+                    consume();  // second consume for lcurly
+                }
+                break;
+            }
+        }
+;
+exception
+catch[...] {
+        CATCH_DEBUG
+        std::cerr << "error\n";
+
+        // need to consume the token. If we got here because
+        // of an error with EOF token, then call EOF directly
+        if (LA(1) == 1)
+            eof();
+        else
+            consume();
+}
+
+/*
   keyword_statements
 
   Statements that begin with a unique keyword.
@@ -996,7 +1286,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         // C/C++ assembly block
         asm_declaration |
 
-        // Objective-C - kewywords only detected for Objective-C
+        // Objective-C - keywords only detected for Objective-C
         objective_c_class | protocol | objective_c_class_end | property_declaration | synthesize_statement | dynamic_statement |
 
         autoreleasepool_block | compatibility_alias | class_directive |
@@ -2262,7 +2552,15 @@ property_declaration[] { int type_count = 0; int secondtoken = 0; int after_toke
         }
 
         PROPERTY
+        property_declaration_post
+;
 
+/*
+  property_declaration_post
+
+  Handles the final portion of an Objective-C property declaration.
+*/
+property_declaration_post[] { int type_count = 0;  int secondtoken = 0; int after_token = 0; STMT_TYPE stmt_type = NONE; ENTRY_DEBUG } :
         (property_attribute_list)*
 
         { pattern_check(stmt_type, secondtoken, type_count, after_token) }?
@@ -2766,14 +3064,12 @@ for_statement[] { ENTRY_DEBUG } :
 
             // start the for statement
             startElement(SFOR_STATEMENT);
-        }
 
-        FOR
-
-        {
             // statement with nested statement after the control group
             startNewMode(MODE_EXPECT | MODE_CONTROL);
         }
+
+        FOR
 ;
 
 /*
@@ -2788,17 +3084,11 @@ foreach_statement[] { ENTRY_DEBUG } :
 
             // start the foreach statement
             startElement(SFOREACH_STATEMENT);
+
+            startNewMode(inLanguage(LANGUAGE_CSHARP) ? MODE_EXPECT | MODE_CONTROL : MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
         }
 
         FOREACH
-
-        {
-            // statement with nested statement after the control group
-            if (inLanguage(LANGUAGE_CSHARP))
-                startNewMode(MODE_EXPECT | MODE_CONTROL);
-            else
-                startNewMode(MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA);
-        }
 ;
 
 /*
@@ -3316,7 +3606,6 @@ static_assert_statement[] { ENTRY_DEBUG } :
         }
 
         STATIC_ASSERT
-        call_argument_list
 ;
 
 /*
@@ -3406,10 +3695,12 @@ yield_break_statement[] { ENTRY_DEBUG } :
 break_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
+            startNewMode(MODE_STATEMENT);
 
             // start the break statement
             startElement(SBREAK_STATEMENT);
+
+            startNewMode(MODE_VARIABLE_NAME | MODE_EXPECT);
         }
 
         BREAK
@@ -3423,10 +3714,12 @@ break_statement[] { ENTRY_DEBUG } :
 continue_statement[] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
+            startNewMode(MODE_STATEMENT);
 
             // start the continue statement
             startElement(SCONTINUE_STATEMENT);
+
+            startNewMode(MODE_VARIABLE_NAME | MODE_EXPECT);
         }
 
         CONTINUE
@@ -3440,10 +3733,12 @@ continue_statement[] { ENTRY_DEBUG } :
 goto_statement[] { ENTRY_DEBUG } :
         {
             // statement with an expected label name; the label name is a subset of variable names
-            startNewMode(MODE_STATEMENT | MODE_VARIABLE_NAME);
+            startNewMode(MODE_STATEMENT);
 
             // start the goto statement
             startElement(SGOTO_STATEMENT);
+
+            startNewMode(MODE_VARIABLE_NAME | MODE_EXPECT);
         }
 
         GOTO
@@ -3753,6 +4048,15 @@ class_directive[] { ENTRY_DEBUG } :
         }
 
         ATCLASS
+        atclass_name
+;
+
+/*
+  atclass_name
+
+  Handles an Objective-C "@class" name.
+*/
+atclass_name[] { ENTRY_DEBUG }:
         (identifier | COMMA)*
 ;
 
@@ -9341,7 +9645,7 @@ default_call[] { ENTRY_DEBUG } :
 checked_call[] { ENTRY_DEBUG } :
         {
             // start a new mode that will end after the argument list
-            startNewMode(MODE_ARGUMENT | MODE_LIST);
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
 
             // start the checked statement
             startElement(SCHECKED_STATEMENT);
@@ -9792,7 +10096,7 @@ try_statement_with_resource[] { ENTRY_DEBUG } :
         }
 
         TRY
-        for_like_statement_post 
+        for_like_statement_post
 ;
 
 /*
@@ -9843,12 +10147,15 @@ using_namespace_statement[] { ENTRY_DEBUG } :
   Handles a using statement.  Used in using_namespace_statement.
 */
 using_statement[] { ENTRY_DEBUG } :
-        // typically, doing something like this does not work in antlr because it looks for something like EOF instead of nothing
-        // however, it seems to work in this case, possibly because it is used with tokens required afterward
-        for_like_statement_pre[SUSING_STATEMENT]
+        {
+            // treat using block as a nested block statement
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            // start of the using statement
+            startElement(SUSING_STATEMENT);
+        }
 
         USING
-
         for_like_statement_post
 ;
 
@@ -9874,18 +10181,20 @@ for_like_statement_post[] { ENTRY_DEBUG } :
             startNewMode(MODE_TOP | MODE_LIST | MODE_EXPECT | MODE_INTERNAL_END_PAREN);
 
             startElement(SFOR_LIKE_CONTROL);
+
+            startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
         }
 
         LPAREN
 
         {
-            startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
+            // startNewMode(MODE_FOR_LIKE_LIST | MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_INTERNAL_END_PAREN | MODE_LIST);
             
             // Commented-out code
             // startElement(SCONTROL_INITIALIZATION);
         }
 
-        for_like_list_item
+        // for_like_list_item
 ;
 
 /*
@@ -9985,7 +10294,7 @@ autoreleasepool_block[] { ENTRY_DEBUG } :
 catch_statement[] { ENTRY_DEBUG } :
         {
             // treat catch block as a nested block statement
-            startNewMode(MODE_STATEMENT | MODE_NEST);
+            startNewMode(MODE_STATEMENT | MODE_NEST | MODE_PARAMETER | MODE_EXPECT);
 
             // start of the catch statement
             startElement(SCATCH_BLOCK);
@@ -10233,7 +10542,7 @@ generic_selection_complete_expression[] {
                         ++count_paren;
                 }
                 expression_process
-                (call[call_count] | keyword_calls)
+                (call[call_count] /* | keyword_calls */)
                 complete_arguments |
 
                 expression

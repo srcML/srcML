@@ -313,6 +313,18 @@ tokens {
     OMP_OMP;
 
     ASSIGNMENT; // +=, -=, etc.
+
+    GUARD;
+
+    // JavaScript
+    JS_CONSTRUCTOR;
+    JS_DEBUGGER;
+    JS_EXPORT;
+    JS_FINALLY;
+    JS_FUNCTION;
+    JS_IMPORT;
+    JS_WITH;
+    JS_YIELD;
 }
 
 {
@@ -688,8 +700,17 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "class"        , CXX_CLASS         , LANGUAGE_CXX },
 
         // OpenMp
-        { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY }, 
+        { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY },
 
+        // JavaScript
+        { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
+        { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
+        { "export"       , JS_EXPORT         , LANGUAGE_JAVASCRIPT },
+        { "finally"      , JS_FINALLY        , LANGUAGE_JAVASCRIPT },
+        { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT },
+        { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
+        { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
+        { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
    };
 
     // fill up the literals for the language that we are parsing

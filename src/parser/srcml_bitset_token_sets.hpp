@@ -37,7 +37,8 @@ token_set(srcMLParser, keyword_token_set,
     srcMLParser::ELSE, srcMLParser::TRY, srcMLParser::FINALLY, srcMLParser::FOREACH, srcMLParser::FIXED, srcMLParser::IF,
     srcMLParser::UNCHECKED, srcMLParser::BREAK, srcMLParser::CONTINUE, srcMLParser::TEMPLATE, srcMLParser::USING,
     srcMLParser::THROW, srcMLParser::ASSERT, srcMLParser::MACRO_CASE, srcMLParser::FOREVER, srcMLParser::STATIC_ASSERT,
-    srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY
+    srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY, srcMLParser::JS_CONSTRUCTOR, srcMLParser::JS_DEBUGGER, srcMLParser::JS_EXPORT,
+    srcMLParser::JS_FUNCTION, srcMLParser::JS_IMPORT, srcMLParser::JS_WITH
 )
 
 token_set(srcMLParser, macro_call_token_set,
@@ -152,6 +153,12 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::COMMENT_TEXT,
     srcMLParser::JAVADOC_COMMENT_START,
     srcMLParser::DOXYGEN_COMMENT_START
+)
+
+token_set(srcMLParser, duplex_keyword_set,
+    srcMLParser::CHECKED,
+    srcMLParser::UNCHECKED,
+    srcMLParser::DEFAULT
 )
 
 #endif

@@ -309,4 +309,12 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     //
     { TOKEN::SEMPTY,                      { "empty_stmt",        SRC,      0,         0,     0,      0 }},
+
+    // JavaScript
+    { TOKEN::SWITH_STATEMENT,             { "with",              SRC,      0,         0,     0,      0 }},
+    { TOKEN::SDEBUGGER_STATEMENT,         { "debugger",          SRC,      0,         0,     0,      0 }},
+    { TOKEN::SEXPORT_STATEMENT,           { "export",            SRC,      0,         0,     0,      0 }},
+    { TOKEN::SFUNCTION_STATEMENT,         { "function",          SRC,      0,         0,     0,      0 }},
+    { TOKEN::SIMPORT_STATEMENT,           { "import",            SRC,      0,         0,     0,      0 }},
+    { TOKEN::SYIELD_STATEMENT,            { "yield",             SRC,      0,         0,     0,      0 }},
 };
