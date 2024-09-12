@@ -317,4 +317,5 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SFUNCTION_STATEMENT,         { "function",          SRC,      0,         0,     0,      0 }},
     { TOKEN::SIMPORT_STATEMENT,           { "import",            SRC,      0,         0,     0,      0 }},
     { TOKEN::SYIELD_STATEMENT,            { "yield",             SRC,      0,         0,     0,      0 }},
+    { TOKEN::SCASE_STATEMENT,             { "case",              SRC,      0,         0,     0,      0 }},
 };

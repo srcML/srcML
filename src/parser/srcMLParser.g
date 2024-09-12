@@ -689,6 +689,7 @@ tokens {
     SFUNCTION_STATEMENT;
     SIMPORT_STATEMENT;
     SYIELD_STATEMENT;
+    SCASE_STATEMENT;
 }
 
 /*
@@ -1018,7 +1019,6 @@ start_javascript[] {
         const int DEFAULT_COLON = 492;
         const int ELSE_IF = 493;
         const int STATIC_LCURLY = 494;
-        const int CATCH_LPAREN = 496;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
@@ -1029,7 +1029,6 @@ start_javascript[] {
             temp_array[DEFAULT + (COLON << 8)] = DEFAULT_COLON;
             temp_array[ELSE + (IF << 8)] = ELSE_IF;
             temp_array[STATIC + (LCURLY << 8)] = STATIC_LCURLY;
-            temp_array[CATCH + (LPAREN << 8)] = CATCH_LPAREN;
 
             return temp_array;
         }();
@@ -1041,8 +1040,9 @@ start_javascript[] {
 
             /* GENERIC STATEMENTS */
             temp_array[BREAK]                 = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
-            temp_array[CASE]                  = { SCASE, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-            temp_array[CLASS]                 = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT | MODE_VARIABLE_NAME, /* &srcMLParser::specifier */ nullptr, nullptr };
+            temp_array[CASE]                  = { SCASE_STATEMENT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+            temp_array[CATCH]                 = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
+            temp_array[CLASS]                 = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, /* &srcMLParser::specifier */ nullptr, nullptr };
             temp_array[CONTINUE]              = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
             //temp_array[DECLARATION_STATEMENT] = { SDECLARATION_STATEMENT, 0, MODE_STATEMENT, MODE_LCURLY | MODE_LBRACKET | MODE_NAME | MODE_EXPECT, &srcMLParser::specifier, nullptr };
             temp_array[DO]                    = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
@@ -1052,21 +1052,20 @@ start_javascript[] {
             temp_array[RETURN]                = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
             temp_array[SWITCH]                = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
             temp_array[THROW]                 = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-            temp_array[TRY]                   = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
+            temp_array[TRY]                   = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_TOP | MODE_TRY_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
             temp_array[WHILE]                 = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
             /* JAVASCRIPT-SPECIFIC STATEMENTS */
             temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_DEBUGGER]           = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPECT, nullptr, nullptr };
-            temp_array[JS_FINALLY]            = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_FINALLY]            = { SFINALLY_BLOCK, 0, MODE_TOP | MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, /*&srcMLParser::specifier*/ nullptr, nullptr };
             temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
-            temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
 
             /* DUPLEX KEYWORDS */
-            temp_array[CATCH_LPAREN]          = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };
             //temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
             temp_array[STATIC_LCURLY]         = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
@@ -1123,14 +1122,14 @@ start_javascript[] {
 
         // ** End C++ Test Logic ** //
 
-        if (inMode(MODE_NEST | MODE_STATEMENT)) {
+        if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
             if (duplex_keyword_set.member((unsigned int) LA(1))) {
                 const auto lookup = duplexKeywords[token + (next_token() << 8)];
                 if (lookup)
                     token = lookup;
             }
-            const auto& rule = currentRules[token];
+            const auto& rule = javascript_rules[token];
             if (rule.elementToken && processRule(rule)) {
                 return;
             }
@@ -1139,97 +1138,12 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
-        {
-            std::cerr << "Inside start_javascript[]\n";
-            std::cerr << "token: '" << LA(1) << "'\n";
-
-            switch (LA(1)) {
-            // misc.
-            case EOF_: eof(); break;
-            case EOL_BACKSLASH: line_continuation(); break;
-            case EOL: match(EOL); break;
-            case COMMA: comma(); break;
-            case TERMINATE: terminate(); break;
-
-            case RCURLY:
-                if (!inTransparentMode(MODE_INTERNAL_END_CURLY)) {
-                    block_end();
-                }
-                break;
-
-            case LCURLY:
-                if (
-                    (
-                        (
-                            inTransparentMode(MODE_CONDITION)
-                            || (
-                                !inMode(MODE_EXPRESSION)
-                                && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)
-                            )
-                        )
-                        && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-                        && (
-                            !inLanguage(LANGUAGE_CXX)
-                            || !inTransparentMode(MODE_INIT | MODE_EXPECT)
-                        )
-                    )
-                    || inTransparentMode(MODE_ANONYMOUS)
-                ) {
-                    lcurly();
-                }
-                break;
-
-            // generic statements
-            case BREAK: processRule(javascript_rules[BREAK]); break;
-            case CASE: processRule(javascript_rules[CASE]); break;
-            case CLASS: processRule(javascript_rules[CLASS]); break;
-            case CONTINUE: processRule(javascript_rules[CONTINUE]); break;
-            case DO: processRule(javascript_rules[DO]); break;
-            case FOR: processRule(javascript_rules[FOR]); break;
-            case RETURN: processRule(javascript_rules[RETURN]); break;
-            case SWITCH: processRule(javascript_rules[SWITCH]); break;
-            case THROW: processRule(javascript_rules[THROW]); break;
-            case TRY: processRule(javascript_rules[TRY]); break;
-            case WHILE: processRule(javascript_rules[WHILE]); break;
-
-            // JavaScript-specific statements
-            case JS_CONSTRUCTOR: processRule(javascript_rules[JS_CONSTRUCTOR]); break;
-            case JS_DEBUGGER: processRule(javascript_rules[JS_DEBUGGER]); break;
-            case JS_EXPORT: processRule(javascript_rules[JS_EXPORT]); break;
-            case JS_FINALLY: processRule(javascript_rules[JS_FINALLY]); break;
-            case JS_FUNCTION: processRule(javascript_rules[JS_FUNCTION]); break;
-            case JS_IMPORT: processRule(javascript_rules[JS_IMPORT]); break;
-            case JS_WITH: processRule(javascript_rules[JS_WITH]); break;
-            case JS_YIELD: processRule(javascript_rules[JS_YIELD]); break;
-
-            // duplex keywords
-            case CATCH:
-                if (next_token() == LPAREN) {
-                    processRule(javascript_rules[CATCH_LPAREN]);
-                    consume();  // second consume for lparen
-                }
-                break;
-
-            case DEFAULT:
-                if (next_token() == COLON) {
-                    processRule(javascript_rules[DEFAULT_COLON]);
-                    consume();  // second consume for colon
-                }
-                break;
-
-            case STATIC:
-                if (next_token() == LCURLY) {
-                    processRule(javascript_rules[STATIC_LCURLY]);
-                    consume();  // second consume for lcurly
-                }
-                break;
-            }
-        }
+        // invoke start to handle non-statement tokens
+        start
 ;
 exception
 catch[...] {
         CATCH_DEBUG
-        std::cerr << "error\n";
 
         // need to consume the token. If we got here because
         // of an error with EOF token, then call EOF directly
@@ -3030,6 +2944,20 @@ do_statement[] { ENTRY_DEBUG } :
             if (LA(1) != LCURLY) {
                 startNoSkipElement(SPSEUDO_BLOCK);
 
+                startNoSkipElement(SCONTENT);
+            }
+        }
+;
+
+/*
+  pseudoblock
+
+  Handles constructs that resemble a block of source code but are not a true block.
+*/
+pseudoblock[] { ENTRY_DEBUG } :
+        {
+            if (LA(1) != LCURLY) {
+                startNoSkipElement(SPSEUDO_BLOCK);
                 startNoSkipElement(SCONTENT);
             }
         }
