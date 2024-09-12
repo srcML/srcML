@@ -8167,7 +8167,7 @@ compound_name_inner[bool index] { CompleteElement element(this); TokenPosition t
             { inLanguage(LANGUAGE_C) }?
             compound_name_c[iscompound] |
 
-            { inLanguage(LANGUAGE_CXX) }?
+            { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_JAVASCRIPT) }?
             compound_name_cpp[iscompound] |
 
             macro_type_name_call
