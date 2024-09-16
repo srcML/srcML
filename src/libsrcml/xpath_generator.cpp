@@ -1,5 +1,6 @@
 #include "xpath_generator.hpp"
 #include <srcml.h>
+#include <cassert>
 #include <algorithm>
 #include <map>
 #include <memory>
@@ -212,6 +213,7 @@ std::string XPathGenerator::convert() {
     std::string expr_type = "";
     std::string build_expr = "";
     bool is_where_clause = false;
+    bool is_with_op = false;
     int inner_id = 0;
     for (size_t i = 0; i < tokens.size(); ++i) {
         std::string token = tokens[i];
@@ -226,6 +228,7 @@ std::string XPathGenerator::convert() {
                  token == "FOLLOWED"   ||
                  token == "WITHIN"     ||
                  token == "WHERE"      ||
+                 token == "WITH"       ||
                  token == "FROM"       ||
                  token == "UNION"      ||
                  token == "INTERSECT"  ||
@@ -240,8 +243,8 @@ std::string XPathGenerator::convert() {
 
             XPathNode* node;
 
-            // If this is a where clause, do different steps
-            if(!is_where_clause) {
+            // If this is a where clause or with operator, do different steps
+            if(!is_where_clause && !is_with_op) {
                 // Then determine expr type if not set
                 if (expr_type == "") {
                     // XPATH
@@ -274,7 +277,26 @@ std::string XPathGenerator::convert() {
                     node = new XPathNode(build_expr);
                 }
             }
-            else {
+
+            else if(is_with_op) {
+                size_t attribute_pos = build_expr.find_first_of("=");
+                if(attribute_pos != std::string::npos) {
+                    std::string attribute = build_expr.substr(0,attribute_pos);
+                    attribute = attribute.substr(attribute.find_first_not_of(" "),attribute.find_last_not_of(" ") - attribute.find_first_not_of(" ") + 1);
+
+                    std::string value = build_expr.substr(attribute_pos+1,build_expr.size() - attribute_pos);
+                    value = value.substr(value.find_first_not_of(" "),value.find_last_not_of(" ") - value.find_first_not_of(" ") + 1);
+                    // std::cout << attribute << ":" << value << std::endl;
+                    node = new XPathNode("@"+attribute+"=\""+value+"\"");
+                }
+                else {
+                    build_expr = build_expr.substr(build_expr.find_first_not_of(" "),build_expr.find_last_not_of(" ") - build_expr.find_first_not_of(" ") + 1);
+                    node = new XPathNode("@"+build_expr);
+                }
+                is_with_op = false;
+            }
+
+            else if(is_where_clause) {
                 // Need to check what kind of where clause
                 // NOT([source_expr])
                 if(build_expr.find("NOT",0) == 0) {
@@ -372,6 +394,7 @@ std::string XPathGenerator::convert() {
                 is_where_clause = false;
             }
             // Add node and operation to vectors
+            if (token == "WITH") { is_with_op = true; }
             if (token == "WHERE") { is_where_clause = true; }
             else if (token != "END") { operations.push_back(token); }
             source_exprs.push_back(node);
@@ -398,13 +421,15 @@ std::string XPathGenerator::convert() {
 
     XPathNode* top_copy = new XPathNode(*source_exprs[0]);
 
-    if(operations.size() != source_exprs.size()-1) { return "ASSERT ERROR: OPS and ARGS COUNT OFF"; }
+    assert(operations.size() == source_exprs.size()-1);
+    // if(operations.size() != source_exprs.size()-1) { return "ASSERT ERROR: OPS and ARGS COUNT OFF"; }
 
-    /* WHERE NOT check
-     *     x WHERE not(y)
-     *     x[not(self::y)]
-     */
+    // WHERE NOT and WHERE COUNT
     for(size_t i = 0; i < operations.size(); ++i) {
+       /* WHERE NOT check
+        *      x WHERE not(y)
+        *      x[not(self::y)]
+        */
         if(operations[i] == "WHERE-NOT") {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
@@ -420,14 +445,25 @@ std::string XPathGenerator::convert() {
             source_exprs.erase(source_exprs.begin()+i+1);
             --i;
         }
-    }
+       /* WHERE COUNT check
+        *     x WHERE not(y)
+        *     x[not(self::y)]
+        */
+        else if(operations[i] == "WHERE-COUNT") {
+            XPathNode* lhs = source_exprs[i];
+            XPathNode* rhs = source_exprs[i+1];
+            rhs->set_type(PREDICATE);
+            lhs->add_child(rhs);
+            operations.erase(operations.begin()+i);
+            source_exprs.erase(source_exprs.begin()+i+1);
+            --i;
+        }
 
-    /* WHERE COUNT check
-     *     x WHERE not(y)
-     *     x[not(self::y)]
-     */
-    for(size_t i = 0; i < operations.size(); ++i) {
-        if(operations[i] == "WHERE-COUNT") {
+       /* WITH check
+        *    x WITH atr = value
+        *    x[@atr=value]
+        */
+        else if(operations[i] == "WITH") {
             XPathNode* lhs = source_exprs[i];
             XPathNode* rhs = source_exprs[i+1];
             rhs->set_type(PREDICATE);
@@ -437,6 +473,19 @@ std::string XPathGenerator::convert() {
             --i;
         }
     }
+
+    
+    // for(size_t i = 0; i < operations.size(); ++i) {
+    //     if(operations[i] == "WHERE-COUNT") {
+    //         XPathNode* lhs = source_exprs[i];
+    //         XPathNode* rhs = source_exprs[i+1];
+    //         rhs->set_type(PREDICATE);
+    //         lhs->add_child(rhs);
+    //         operations.erase(operations.begin()+i);
+    //         source_exprs.erase(source_exprs.begin()+i+1);
+    //         --i;
+    //     }
+    // }
 
     /* WITHIN Check
      *     x WITHIN y
