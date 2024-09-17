@@ -1121,6 +1121,10 @@ start_javascript[] {
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         string_literal |
 
+        // looking for the "extends" keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        extends_js |
+
         // invoke start to handle non-statement tokens
         start
 ;
@@ -14636,5 +14640,25 @@ from_js[] { ENTRY_DEBUG } :
 
             if (in_statement)
                 startNewMode(MODE_STATEMENT);
+        }
+;
+
+/*
+  extends_js
+
+  Handles a JavaScript "extends" expression.
+*/
+extends_js[] { ENTRY_DEBUG } :
+        (
+            (options { greedy = true; } :
+                super_list_java
+
+                (extends_list | implements_list)
+                (options { greedy = true; } : extends_list | implements_list)*
+            )
+        )*
+
+        {
+            endMode();
         }
 ;
