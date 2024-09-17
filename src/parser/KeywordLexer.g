@@ -320,9 +320,11 @@ tokens {
     JS_CONSTRUCTOR;
     JS_DEBUGGER;
     JS_EXPORT;
-    JS_FINALLY;
+    JS_FROM;
     JS_FUNCTION;
+    JS_GET;
     JS_IMPORT;
+    JS_SET;
     JS_WITH;
     JS_YIELD;
 }
@@ -706,9 +708,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
         { "export"       , JS_EXPORT         , LANGUAGE_JAVASCRIPT },
-        { "finally"      , JS_FINALLY        , LANGUAGE_JAVASCRIPT },
+        { "finally"      , FINALLY           , LANGUAGE_JAVASCRIPT },
+        { "from"         , JS_FROM           , LANGUAGE_JAVASCRIPT },
         { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT },
+        { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT },
         { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
+        { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
         { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
    };

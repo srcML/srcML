@@ -38,7 +38,8 @@ token_set(srcMLParser, keyword_token_set,
     srcMLParser::UNCHECKED, srcMLParser::BREAK, srcMLParser::CONTINUE, srcMLParser::TEMPLATE, srcMLParser::USING,
     srcMLParser::THROW, srcMLParser::ASSERT, srcMLParser::MACRO_CASE, srcMLParser::FOREVER, srcMLParser::STATIC_ASSERT,
     srcMLParser::CXX_CATCH, srcMLParser::CXX_TRY, srcMLParser::JS_CONSTRUCTOR, srcMLParser::JS_DEBUGGER, srcMLParser::JS_EXPORT,
-    srcMLParser::JS_FINALLY, srcMLParser::JS_FUNCTION, srcMLParser::JS_IMPORT, srcMLParser::JS_WITH, srcMLParser::JS_YIELD
+    srcMLParser::JS_FROM, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_IMPORT, srcMLParser::JS_SET, srcMLParser::JS_WITH,
+    srcMLParser::JS_YIELD
 )
 
 token_set(srcMLParser, macro_call_token_set,
@@ -156,9 +157,11 @@ token_set(srcMLParser, whitespace_token_set,
 )
 
 token_set(srcMLParser, duplex_keyword_set,
-    srcMLParser::CHECKED,
-    srcMLParser::UNCHECKED,
-    srcMLParser::DEFAULT
+    srcMLParser::DEFAULT,
+    srcMLParser::ELSE,
+    srcMLParser::JS_FUNCTION,
+    srcMLParser::JS_YIELD,
+    srcMLParser::STATIC
 )
 
 #endif

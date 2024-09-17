@@ -683,13 +683,19 @@ tokens {
     SDOXYGEN_COMMENT;
 
     // JavaScript
-    SWITH_STATEMENT;
+    SCONSTRUCTOR_STATEMENT;
     SDEBUGGER_STATEMENT;
+    SELSE_IF;
     SEXPORT_STATEMENT;
     SFUNCTION_STATEMENT;
+    SFUNCTION_GENERATOR_STATEMENT;
+    SFUNCTION_GET_STATEMENT;
+    SFUNCTION_SET_STATEMENT;
     SIMPORT_STATEMENT;
+    SNAME_LIST;
+    SWITH_STATEMENT;
     SYIELD_STATEMENT;
-    SCASE_STATEMENT;
+    SYIELD_GENERATOR_STATEMENT;
 }
 
 /*
@@ -1014,20 +1020,20 @@ catch[...] {
 start_javascript[] {
         ++start_count;
 
-        const int CHECKED_LCURLY = 490;
-        const int UNCHECKED_LCURLY = 491;
-        const int DEFAULT_COLON = 492;
-        const int ELSE_IF = 493;
-        const int STATIC_LCURLY = 494;
+        const int DEFAULT_COLON = 600;
+        const int ELSE_IF = 601;
+        const int JS_FUNCTION_MULTOPS = 602;
+        const int JS_YIELD_MULTOPS = 603;
+        const int STATIC_LCURLY = 604;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
             std::array<int, 500 * 500> temp_array;
 
-            temp_array[CHECKED + (LCURLY << 8)] = CHECKED_LCURLY;
-            temp_array[UNCHECKED + (LCURLY << 8)] = UNCHECKED_LCURLY;
             temp_array[DEFAULT + (COLON << 8)] = DEFAULT_COLON;
             temp_array[ELSE + (IF << 8)] = ELSE_IF;
+            temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
+            temp_array[JS_YIELD + (MULTOPS << 8)] = JS_YIELD_MULTOPS;
             temp_array[STATIC + (LCURLY << 8)] = STATIC_LCURLY;
 
             return temp_array;
@@ -1040,87 +1046,44 @@ start_javascript[] {
 
             /* GENERIC STATEMENTS */
             temp_array[BREAK]                 = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
-            temp_array[CASE]                  = { SCASE_STATEMENT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+            temp_array[CASE]                  = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
             temp_array[CATCH]                 = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
-            temp_array[CLASS]                 = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, /* &srcMLParser::specifier */ nullptr, nullptr };
+            temp_array[CLASS]                 = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, nullptr };
             temp_array[CONTINUE]              = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
             //temp_array[DECLARATION_STATEMENT] = { SDECLARATION_STATEMENT, 0, MODE_STATEMENT, MODE_LCURLY | MODE_LBRACKET | MODE_NAME | MODE_EXPECT, &srcMLParser::specifier, nullptr };
-            temp_array[DO]                    = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
+            temp_array[DO]                    = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
+            temp_array[ELSE]                  = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_js, &srcMLParser::pseudoblock };
             // /*do not uncomment*/ temp_array[EXPRESSION_STATEMENT]  = { 0, 0, 0, 0, nullptr, nullptr };
-            temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, /*MODE_SPECIFIER |*/ MODE_CONTROL | MODE_EXPECT, nullptr, nullptr };
-            //temp_array[IF_STATEMENT]          = { SIF_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_IF | MODE_EXPECT, nullptr, nullptr };
-            temp_array[RETURN]                = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
+            temp_array[FINALLY]               = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
+            temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT, nullptr, nullptr };
+            temp_array[IF]                    = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_EXPECT | MODE_CONTROL | MODE_CONDITION, &srcMLParser::if_statement_js, nullptr };
+            temp_array[RETURN]                = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
             temp_array[SWITCH]                = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
             temp_array[THROW]                 = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-            temp_array[TRY]                   = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_TOP | MODE_TRY_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
+            temp_array[TRY]                   = { STRY_BLOCK, 0, MODE_STATEMENT, MODE_STATEMENT | MODE_NEST | MODE_TRY, nullptr, &srcMLParser::pseudoblock };
             temp_array[WHILE]                 = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
             /* JAVASCRIPT-SPECIFIC STATEMENTS */
-            temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
             temp_array[JS_DEBUGGER]           = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
-            temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPECT, nullptr, nullptr };
-            temp_array[JS_FINALLY]            = { SFINALLY_BLOCK, 0, MODE_TOP | MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
-            temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, /*&srcMLParser::specifier*/ nullptr, nullptr };
-            temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
+            //temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_TOP | MODE_STATEMENT, 0, nullptr, nullptr };
+            temp_array[JS_FROM]               = { SFROM, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::from_js };
+            temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_GET]                = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
+            temp_array[JS_SET]                = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
-            temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
+            temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
             /* DUPLEX KEYWORDS */
-            temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };
-            //temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
-            temp_array[STATIC_LCURLY]         = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };
+            temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, &srcMLParser::consume };  // extra consume() for `:`
+            temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
+            temp_array[JS_FUNCTION_MULTOPS]   = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
+            temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
+            temp_array[STATIC_LCURLY]         = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a `static` specifier from a `static` block
 
             return temp_array;
         }();
-
-        // ** Start C++ Logic ** //
-
-        // static const std::array<Rule, 500> rules = [this](){
-        //     std::array<Rule, 500> temp_array;
-
-        //     temp_array[WHILE]               = { SWHILE_STATEMENT,         MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
-        //     temp_array[RETURN]              = { SRETURN_STATEMENT,        0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_EXPRESSION | MODE_EXPECT };
-        //     temp_array[FOR]                 = { SFOR_STATEMENT,           0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT };
-        //     temp_array[BREAK]               = { SBREAK_STATEMENT,         0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
-        //     temp_array[CONTINUE]            = { SCONTINUE_STATEMENT,      0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
-        //     temp_array[GOTO]                = { SGOTO_STATEMENT,          0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_EXPECT };
-        //     // temp_array[IMPORT]              = { SIMPORT, MODE_VARIABLE_NAME, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
-        //     temp_array[PACKAGE]             = { SPACKAGE,                 0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_EXPECT, 0 };
-        //     temp_array[FOREVER]             = { SFOREVER_STATEMENT,       0, MODE_STATEMENT | MODE_NEST, 0 };
-        //     temp_array[SWITCH]              = { SSWITCH,                  0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT };
-        //     temp_array[TYPEDEF]             = { STYPEDEF,                 0, MODE_STATEMENT | MODE_EXPECT | MODE_VARIABLE_NAME | MODE_ONLY_END_TERMINATE, MODE_STATEMENT | MODE_NEST | MODE_TYPEDEF | MODE_END_AT_BLOCK_NO_TERMINATE };
-        //     temp_array[STATIC_ASSERT]       = { SSTATIC_ASSERT_STATEMENT, 0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST };
-        //     temp_array[ASSERT]              = { SASSERT_STATEMENT,        0, MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT, 0 };
-        //     temp_array[UNSAFE]              = { SUNSAFE_STATEMENT,        0, MODE_STATEMENT | MODE_NEST, 0 };
-        //     temp_array[FRIEND]              = { SFRIEND,                  0, MODE_STATEMENT | MODE_NEST | MODE_FRIEND, 0 };
-        //     temp_array[DO]                  = { SDO_STATEMENT,            0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
-        //     temp_array[FOREACH]             = { SFOREACH_STATEMENT,       0, MODE_STATEMENT | MODE_NEST, MODE_EXPECT | MODE_CONTROL | MODE_END_AT_COMMA };
-        //     temp_array[DYNAMIC]             = { SDYNAMIC,                 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_implementation_inner };
-        //     temp_array[SYNTHESIZE]          = { SSYNTHESIZE,              0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_implementation_inner };
-        //     temp_array[PROPERTY]            = { SPROPERTY,                0, MODE_STATEMENT, 0, nullptr, &srcMLParser::property_declaration_post };
-        //     temp_array[COMPATIBILITY_ALIAS] = { SCOMPATIBILITY_ALIAS,     0, MODE_STATEMENT| MODE_VARIABLE_NAME, 0 };
-        //     temp_array[ATCLASS]             = { SCLASS_DECLARATION,       0, MODE_STATEMENT | MODE_VARIABLE_NAME | MODE_LIST, 0, nullptr, &srcMLParser::atclass_name };
-        //     // temp_array[USING]               = { SUSING_STATEMENT,  0, MODE_STATEMENT | MODE_NEST, 0, nullptr, &srcMLParser::for_like_statement_post };
-
-        //     temp_array[GUARD]               = { SIF,                      0, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION, MODE_NEST | MODE_STATEMENT | MODE_IF_STATEMENT | MODE_EXPECT | MODE_EXPRESSION };
-        //     temp_array[CHECKED_LCURLY]      = { SCHECKED_STATEMENT,       0, MODE_STATEMENT | MODE_NEST, 0};
-        //     temp_array[UNCHECKED_LCURLY]    = { SUNCHECKED_STATEMENT,     0, MODE_STATEMENT | MODE_NEST, 0};
-        //     temp_array[DEFAULT_COLON]       = { SDEFAULT,                 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT };
-
-        //     return temp_array;
-        // }();
-
-        // static const std::array<Rule, 500> rules2 = [this](){
-        //     std::array<Rule, 500> temp_array(rules);
-
-        //     temp_array[FOREACH] =  { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_EXPECT | MODE_CONTROL };
-
-        //     return temp_array;
-        // }();
-
-        // const auto& currentRules = inLanguage(LANGUAGE_CSHARP) ? rules2 : rules;
-
-        // ** End C++ Test Logic ** //
 
         if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
@@ -1138,6 +1101,26 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
+        // looking for lparen
+        { inMode(MODE_PARAMETER_LIST_JS) }?
+        parameter_list_js |
+
+        // looking for rparen
+        { inTransparentMode(MODE_PARAMETER_LIST_JS) }?
+        rparen_parameter_list |
+
+        // looking for lcurly
+        { inMode(MODE_NAME_LIST_JS) }?
+        name_list_js |
+
+        // looking for rcurly
+        { inTransparentMode(MODE_NAME_LIST_JS) }?
+        rcurly_name_list |
+
+        // looking for the start of a string
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        string_literal |
+
         // invoke start to handle non-statement tokens
         start
 ;
@@ -14540,4 +14523,118 @@ omp_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (~(RPAREN | COMMA))*
+;
+
+/*
+  parameter_list_js
+
+  Handles a JavaScript parameter list.
+*/
+parameter_list_js[] { ENTRY_DEBUG } :
+        {
+            // list of parameters
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+
+            // start the parameter list
+            startElement(SPARAMETER_LIST);
+        }
+
+        LPAREN
+;
+
+/*
+  rparen_parameter_list
+
+  Handles a right parenthesis for JavaScript parameter lists.
+*/
+rparen_parameter_list[] { ENTRY_DEBUG } :
+        {
+            if (inMode(MODE_PARAMETER))
+                endMode(MODE_PARAMETER);
+        }
+
+        RPAREN
+
+        {
+            bool in_statement = inTransparentMode(MODE_STATEMENT);
+
+            endMode(MODE_PARAMETER_LIST_JS);
+
+            if (in_statement)
+                startNewMode(MODE_STATEMENT);
+        }
+;
+
+/*
+  name_list_js
+
+  Handles a JavaScript name list.
+*/
+name_list_js[] { ENTRY_DEBUG } :
+        {
+            // list of names
+            startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPECT);
+
+            // start the name list
+            startElement(SNAME_LIST);
+        }
+
+        LCURLY
+;
+
+/*
+  rcurly_name_list
+
+  Handles a right curly brace for JavaScript name lists.
+*/
+rcurly_name_list[] { ENTRY_DEBUG } :
+        RCURLY
+
+        {
+            bool in_statement = inTransparentMode(MODE_STATEMENT);
+
+            endMode(MODE_NAME_LIST_JS);
+
+            if (in_statement)
+                startNewMode(MODE_STATEMENT);
+        }
+;
+
+/*
+  if_statement_js
+
+  Handles a JavaScript "if" statement.  Wraps the entire "if...else" statement in an if statement tag.
+  Wraps lone "if", "else", or "else if" blocks in an if statement tag to match existing functionality.
+*/
+if_statement_js[] { ENTRY_DEBUG } :
+        {
+            // catchup for isolated else
+            if (!inMode(MODE_IF_STATEMENT)) {
+                // statement with nested statement; detection of else
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
+
+                // start if sequence container
+                startElement(SIF_STATEMENT);
+
+                ++ifcount;
+            }
+        }
+;
+
+/*
+  from_js
+
+  Handles a JavaScript "from" expression.
+*/
+from_js[] { ENTRY_DEBUG } :
+        literals
+
+        {
+            bool in_statement = inTransparentMode(MODE_STATEMENT);
+
+            endMode(SFROM);
+
+            if (in_statement)
+                startNewMode(MODE_STATEMENT);
+        }
 ;

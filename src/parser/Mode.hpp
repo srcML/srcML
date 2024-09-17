@@ -256,10 +256,12 @@ const static srcMLState::MODE_TYPE MODE_IF_STATEMENT;
 
 const static srcMLState::MODE_TYPE MODE_NO_BLOCK_CONTENT;
 
-const static srcMLState::MODE_TYPE MODE_TRY_STATEMENT;
-
 const static srcMLState::MODE_TYPE MODE_PSEUDOBLOCK;
 
 const static srcMLState::MODE_TYPE MODE_ARGUMENT_JS;
+
+const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS;
+
+const static srcMLState::MODE_TYPE MODE_NAME_LIST_JS;
 
 #endif
