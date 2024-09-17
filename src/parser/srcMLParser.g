@@ -14537,7 +14537,8 @@ omp_argument[] { CompleteElement element(this); ENTRY_DEBUG } :
 parameter_list_js[] { ENTRY_DEBUG } :
         {
             // list of parameters
-            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            if (next_token() != RPAREN)
+                startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
 
             // start the parameter list
             startElement(SPARAMETER_LIST);
