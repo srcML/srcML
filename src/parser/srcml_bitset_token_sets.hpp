@@ -161,7 +161,7 @@ token_set(srcMLParser, duplex_keyword_set,
     srcMLParser::ELSE,
     srcMLParser::JS_FUNCTION,
     srcMLParser::JS_YIELD,
-    srcMLParser::STATIC
+    srcMLParser::JS_STATIC
 )
 
 #endif

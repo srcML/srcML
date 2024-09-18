@@ -1028,7 +1028,7 @@ start_javascript[] {
         const int ELSE_IF = 601;
         const int JS_FUNCTION_MULTOPS = 602;
         const int JS_YIELD_MULTOPS = 603;
-        const int STATIC_LCURLY = 604;
+        const int JS_STATIC_LCURLY = 604;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
@@ -1038,7 +1038,7 @@ start_javascript[] {
             temp_array[ELSE + (IF << 8)] = ELSE_IF;
             temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
             temp_array[JS_YIELD + (MULTOPS << 8)] = JS_YIELD_MULTOPS;
-            temp_array[STATIC + (LCURLY << 8)] = STATIC_LCURLY;
+            temp_array[JS_STATIC + (LCURLY << 8)] = JS_STATIC_LCURLY;
 
             return temp_array;
         }();
@@ -1087,7 +1087,7 @@ start_javascript[] {
             temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
             temp_array[JS_FUNCTION_MULTOPS]   = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
             temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
-            temp_array[STATIC_LCURLY]         = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a `static` specifier from a `static` block
+            temp_array[JS_STATIC_LCURLY]      = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a `static` specifier from a `static` block
 
             return temp_array;
         }();
