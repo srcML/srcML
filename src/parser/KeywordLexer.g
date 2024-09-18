@@ -317,6 +317,7 @@ tokens {
     GUARD;
 
     // JavaScript
+    JS_CONST;
     JS_CONSTRUCTOR;
     JS_DEBUGGER;
     JS_EXPORT;
@@ -324,7 +325,10 @@ tokens {
     JS_FUNCTION;
     JS_GET;
     JS_IMPORT;
+    JS_LET;
     JS_SET;
+    JS_STATIC;
+    JS_VAR;
     JS_WITH;
     JS_YIELD;
 }
@@ -705,6 +709,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY },
 
         // JavaScript
+        { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
         { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
         { "export"       , JS_EXPORT         , LANGUAGE_JAVASCRIPT },
@@ -714,7 +719,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT },
         { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT },
         { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
+        { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT },
         { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
+        { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT },
+        { "var"          , JS_VAR            , LANGUAGE_JAVASCRIPT },
         { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
    };

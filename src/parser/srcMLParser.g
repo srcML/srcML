@@ -685,6 +685,10 @@ tokens {
     // JavaScript
     SCONSTRUCTOR_STATEMENT;
     SDEBUGGER_STATEMENT;
+    SDECLARATION_CONST;
+    SDECLARATION_LET;
+    SDECLARATION_STATIC;
+    SDECLARATION_VAR;
     SELSE_IF;
     SEXPORT_STATEMENT;
     SFUNCTION_STATEMENT;
@@ -1050,7 +1054,6 @@ start_javascript[] {
             temp_array[CATCH]                 = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[CLASS]                 = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, nullptr };
             temp_array[CONTINUE]              = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
-            //temp_array[DECLARATION_STATEMENT] = { SDECLARATION_STATEMENT, 0, MODE_STATEMENT, MODE_LCURLY | MODE_LBRACKET | MODE_NAME | MODE_EXPECT, &srcMLParser::specifier, nullptr };
             temp_array[DO]                    = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
             temp_array[ELSE]                  = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_js, &srcMLParser::pseudoblock };
             // /*do not uncomment*/ temp_array[EXPRESSION_STATEMENT]  = { 0, 0, 0, 0, nullptr, nullptr };
@@ -1064,6 +1067,7 @@ start_javascript[] {
             temp_array[WHILE]                 = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
             /* JAVASCRIPT-SPECIFIC STATEMENTS */
+            temp_array[JS_CONST]              = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
             temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
             temp_array[JS_DEBUGGER]           = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             //temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_TOP | MODE_STATEMENT, 0, nullptr, nullptr };
@@ -1071,7 +1075,10 @@ start_javascript[] {
             temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_GET]                = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
+            temp_array[JS_LET]                = { SDECLARATION_LET, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
             temp_array[JS_SET]                = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+            temp_array[JS_STATIC]             = { SDECLARATION_STATIC, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_VAR]                = { SDECLARATION_VAR, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
             temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
@@ -4901,6 +4908,10 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
                 else
                     control_condition_action();
             }
+
+            // ensure JavaScript declarations end before terminate token
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_DECLARATION_JS))
+                endDownToMode(MODE_DECLARATION_STATEMENT);
         }
 
         terminate_pre
@@ -14622,6 +14633,21 @@ if_statement_js[] { ENTRY_DEBUG } :
                 startElement(SIF_STATEMENT);
 
                 ++ifcount;
+            }
+        }
+;
+
+/*
+  declaration_statement_js
+
+  Handles a JavaScript declaration statement.
+*/
+declaration_statement_js[] { ENTRY_DEBUG } :
+        {
+            if (!inMode(MODE_DECLARATION_STATEMENT)) {
+                startNewMode(MODE_STATEMENT | MODE_DECL | MODE_DECLARATION_STATEMENT);
+
+                startElement(SDECLARATION_STATEMENT);
             }
         }
 ;
