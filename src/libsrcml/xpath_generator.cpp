@@ -78,7 +78,7 @@ void add_inner_specifier(XPathNode* node, int scope_count) {
     }
 }
 
-// Takes the raw XPath string and orders all add-element calls with the correct #
+// Takes the raw XPath string and orders all add-element calls with the correct number
 void number_add_calls(XPathNode* node, int group, std::map<std::string,int>* count = nullptr) {
     bool clean = false;
     if(count == 0) {
@@ -106,11 +106,12 @@ void number_add_calls(XPathNode* node, int group, std::map<std::string,int>* cou
         int start_quote = node_text.find("\"",start);
         int end_quote = node_text.find("\"",start_quote+1);
         std::string identifier = node_text.substr(start_quote+1, end_quote-start_quote-1);
-        if(count->find(identifier) == count->end()) {
-            (*count)[identifier] = 0;
-        }
-        ++((*count)[identifier]);
-        node_text.replace(end_quote+2,1,std::to_string((*count)[identifier]));
+        // if(count->find(identifier) == count->end()) {
+        //     (*count)[identifier] = 0;
+        // }
+        // ++((*count)[identifier]);
+        // node_text.replace(end_quote+2,1,std::to_string((*count)[identifier]));
+        node_text.replace(end_quote+1,2,"");
         node_text.insert(end_quote,"_"+std::to_string(group));
         node->set_text(node_text);
     }
@@ -286,7 +287,6 @@ std::string XPathGenerator::convert() {
 
                     std::string value = build_expr.substr(attribute_pos+1,build_expr.size() - attribute_pos);
                     value = value.substr(value.find_first_not_of(" "),value.find_last_not_of(" ") - value.find_first_not_of(" ") + 1);
-                    // std::cout << attribute << ":" << value << std::endl;
                     node = new XPathNode("@"+attribute+"=\""+value+"\"");
                 }
                 else {
@@ -419,12 +419,24 @@ std::string XPathGenerator::convert() {
     }
 
 
-    XPathNode* top_copy = new XPathNode(*source_exprs[0]);
 
     assert(operations.size() == source_exprs.size()-1);
     // if(operations.size() != source_exprs.size()-1) { return "ASSERT ERROR: OPS and ARGS COUNT OFF"; }
 
-    // WHERE NOT and WHERE COUNT
+    // std::vector<std::pair<XPathNode*,int>> top_copy;
+    // top_copy.push_back(new XPathNode(*source_exprs[0]));
+    // for(int i = 0; i < operations.size(); ++i) {
+    //     if(operations[i] == "FROM" ||
+    //        operations[i] == "UNION" ||
+    //        operations[i] == "INTERSECT" ||
+    //        operations[i] == "DIFFERENCE" ||) {
+    //         top_copy.push_back(std::make_pair(new XPathNode(*source_exprs[i+1]),i));
+    //     }
+    // }
+
+    // XPathNode* top_copy = new XPathNode(*source_exprs[0]);
+
+    // WHERE NOT and WHERE COUNT and WITH
     for(size_t i = 0; i < operations.size(); ++i) {
        /* WHERE NOT check
         *      x WHERE not(y)
@@ -517,6 +529,7 @@ std::string XPathGenerator::convert() {
      *     x CONTAINS y FOLLOWED BY z
      *     x[.//y[qli:intersect(./following::z,./ancestor::x//descendant::z)]][.//z]
      */
+
     for(int i = operations.size()-1; i >= 0; --i) {
         if(operations[i] == "FOLLOWED") {
             XPathNode* rhs = source_exprs[i+1]; // y
@@ -555,7 +568,21 @@ std::string XPathGenerator::convert() {
             right_arg_end->add_child(rhs_copy);
 
             // Right Argument X part
-            XPathNode* add_top = new XPathNode(*top_copy);
+            //XPathNode* add_top = new XPathNode(*top_copy);
+            XPathNode* add_top;
+            for(int j = i; j >= 0; --j) {
+                if(operations[j] == "FROM" ||
+                   operations[j] == "UNION" ||
+                   operations[j] == "INTERSECT" ||
+                   operations[j] == "DIFFERENCE") {
+                    add_top = new XPathNode(*source_exprs[j+1]);
+                    break;
+                }
+                if(j == 0) {
+                    add_top = new XPathNode(*source_exprs[0]);
+                }
+            }
+
             if(add_top->get_type() == PARENTHESES) {
                 auto terms = split(add_top->get_text(),"|");
                 add_top->set_text(std::string("./ancestor::"+split(terms[0],"//")[0]+"|./ancestor::"+split(terms[1],"//")[0]));
