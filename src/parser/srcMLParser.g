@@ -683,6 +683,7 @@ tokens {
     SDOXYGEN_COMMENT;
 
     // JavaScript
+    SALIAS;
     SCONSTRUCTOR_STATEMENT;
     SDEBUGGER_STATEMENT;
     SDECLARATION_CONST;
@@ -828,6 +829,9 @@ public:
 
         if (rule.followingMode != 0)
             startNewMode(rule.followingMode);
+
+        if (inMode(MODE_EXPORT_SPECIFIER_JS))
+            export_sp();
 
         consume();
 
@@ -1029,6 +1033,13 @@ start_javascript[] {
         const int JS_FUNCTION_MULTOPS = 602;
         const int JS_YIELD_MULTOPS = 603;
         const int JS_STATIC_LCURLY = 604;
+        const int JS_EXPORT_JS_FUNCTION = 605;
+        const int JS_EXPORT_CLASS = 606;
+        const int JS_EXPORT_JS_LET = 607;
+        const int JS_EXPORT_JS_VAR = 608;
+        const int JS_EXPORT_JS_CONST = 609;
+        const int JS_EXPORT_JS_STATIC = 610;
+        const int JS_EXPORT_LCURLY = 611;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
@@ -1039,6 +1050,13 @@ start_javascript[] {
             temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
             temp_array[JS_YIELD + (MULTOPS << 8)] = JS_YIELD_MULTOPS;
             temp_array[JS_STATIC + (LCURLY << 8)] = JS_STATIC_LCURLY;
+            temp_array[JS_EXPORT + (JS_FUNCTION << 8)] = JS_EXPORT_JS_FUNCTION;
+            temp_array[JS_EXPORT + (CLASS << 8)] = JS_EXPORT_CLASS;
+            temp_array[JS_EXPORT + (JS_LET << 8)] = JS_EXPORT_JS_LET;
+            temp_array[JS_EXPORT + (JS_VAR << 8)] = JS_EXPORT_JS_VAR;
+            temp_array[JS_EXPORT + (JS_CONST << 8)] = JS_EXPORT_JS_CONST;
+            temp_array[JS_EXPORT + (JS_STATIC << 8)] = JS_EXPORT_JS_STATIC;
+            temp_array[JS_EXPORT + (LCURLY << 8)] = JS_EXPORT_LCURLY;
 
             return temp_array;
         }();
@@ -1066,25 +1084,34 @@ start_javascript[] {
             temp_array[TRY]                   = { STRY_BLOCK, 0, MODE_STATEMENT, MODE_STATEMENT | MODE_NEST | MODE_TRY, nullptr, &srcMLParser::pseudoblock };
             temp_array[WHILE]                 = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
-            /* JAVASCRIPT-SPECIFIC STATEMENTS */
-            temp_array[JS_CONST]              = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
+            /* JAVASCRIPT STATEMENTS */
             temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
             temp_array[JS_DEBUGGER]           = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
-            //temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_TOP | MODE_STATEMENT, 0, nullptr, nullptr };
+            temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_FROM]               = { SFROM, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::from_js };
             temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_GET]                = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
-            temp_array[JS_LET]                = { SDECLARATION_LET, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
             temp_array[JS_SET]                = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
-            temp_array[JS_STATIC]             = { SDECLARATION_STATIC, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
-            temp_array[JS_VAR]                = { SDECLARATION_VAR, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
             temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+
+            /* JAVASCRIPT DECLARATIONS */
+            temp_array[JS_CONST]              = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_LET]                = { SDECLARATION_LET, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_STATIC]             = { SDECLARATION_STATIC, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_VAR]                = { SDECLARATION_VAR, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
 
             /* DUPLEX KEYWORDS */
             temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // differentiates a `default` specifier from a `default` clause
             temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
+            temp_array[JS_EXPORT_CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
+            temp_array[JS_EXPORT_JS_CONST]    = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_EXPORT_JS_FUNCTION] = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
+            temp_array[JS_EXPORT_JS_LET]      = { SDECLARATION_LET, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_EXPORT_JS_STATIC]   = { SDECLARATION_STATIC, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_EXPORT_JS_VAR]      = { SDECLARATION_VAR, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_EXPORT_LCURLY]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, MODE_NAME_LIST_JS, nullptr, nullptr };  // treats `export` as a statement
             temp_array[JS_FUNCTION_MULTOPS]   = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
             temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
             temp_array[JS_STATIC_LCURLY]      = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a `static` specifier from a `static` block
@@ -1131,6 +1158,8 @@ start_javascript[] {
         // looking for the "extends" keyword
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         extends_js |
+
+        alias_js |
 
         // invoke start to handle non-statement tokens
         start
@@ -14653,6 +14682,20 @@ declaration_statement_js[] { ENTRY_DEBUG } :
 ;
 
 /*
+  alias_js
+
+  Handles a JavaScript "as" expression.
+*/
+alias_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SALIAS);
+        }
+
+        JS_ALIAS
+        compound_name
+;
+
+/*
   from_js
 
   Handles a JavaScript "from" expression.
@@ -14688,4 +14731,17 @@ extends_js[] { ENTRY_DEBUG } :
         {
             endMode();
         }
+;
+
+/*
+  export_sp
+
+  Handles an "export" specifier on certain JavaScript statements such as a function or class.
+*/
+export_sp[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        JS_EXPORT
 ;

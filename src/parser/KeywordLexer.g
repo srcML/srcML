@@ -317,6 +317,7 @@ tokens {
     GUARD;
 
     // JavaScript
+    JS_ALIAS;
     JS_CONST;
     JS_CONSTRUCTOR;
     JS_DEBUGGER;
@@ -709,6 +710,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "omp"          , OMP_OMP           , LANGUAGE_C_FAMILY },
 
         // JavaScript
+        { "as"           , JS_ALIAS          , LANGUAGE_JAVASCRIPT },
         { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
         { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
