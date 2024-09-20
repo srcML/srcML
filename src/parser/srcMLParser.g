@@ -1098,21 +1098,15 @@ start_javascript[] {
             temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
-            /* JAVASCRIPT DECLARATIONS */
-            temp_array[JS_CONST]              = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
-            temp_array[JS_LET]                = { SDECLARATION_LET, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
-            temp_array[JS_STATIC]             = { SDECLARATION_STATIC, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
-            temp_array[JS_VAR]                = { SDECLARATION_VAR, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::declaration_statement_js, nullptr };
-
             /* DUPLEX KEYWORDS */
             temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // differentiates a `default` specifier from a `default` clause
             temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
             temp_array[JS_EXPORT_CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
-            temp_array[JS_EXPORT_JS_CONST]    = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_EXPORT_JS_CONST]    = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };  // treats `export` as a specifier
             temp_array[JS_EXPORT_JS_FUNCTION] = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
-            temp_array[JS_EXPORT_JS_LET]      = { SDECLARATION_LET, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };
-            temp_array[JS_EXPORT_JS_STATIC]   = { SDECLARATION_STATIC, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };
-            temp_array[JS_EXPORT_JS_VAR]      = { SDECLARATION_VAR, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };
+            temp_array[JS_EXPORT_JS_LET]      = { SDECLARATION_LET, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };  // treats `export` as a specifier
+            temp_array[JS_EXPORT_JS_STATIC]   = { SDECLARATION_STATIC, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };  // treats `export` as a specifier
+            temp_array[JS_EXPORT_JS_VAR]      = { SDECLARATION_VAR, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };  // treats `export` as a specifier
             temp_array[JS_EXPORT_LCURLY]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, MODE_NAME_LIST_JS, nullptr, nullptr };  // treats `export` as a statement
             temp_array[JS_FUNCTION_MULTOPS]   = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
             temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
@@ -1164,6 +1158,8 @@ start_javascript[] {
         alias_js |
 
         range_in_js | range_of_js |
+
+        declaration_js |
 
         // invoke start to handle non-statement tokens
         start
@@ -14677,12 +14673,50 @@ if_statement_js[] { ENTRY_DEBUG } :
 */
 declaration_statement_js[] { ENTRY_DEBUG } :
         {
-            if (!inMode(MODE_DECLARATION_STATEMENT)) {
+            if (!inMode(MODE_DECLARATION_STATEMENT) && inMode(MODE_STATEMENT)) {
                 startNewMode(MODE_STATEMENT | MODE_DECL | MODE_DECLARATION_STATEMENT);
 
                 startElement(SDECLARATION_STATEMENT);
             }
         }
+;
+
+/*
+  declaration_js
+
+  Handles a Javascript declaration.  They start with "let", "var", "const", or "static".
+*/
+declaration_js[] { ENTRY_DEBUG } :
+        declaration_statement_js
+
+        {
+            startNewMode(MODE_STATEMENT | MODE_DECLARATION_JS);
+
+            switch (LA(1)) {
+                case JS_LET :
+                    startElement(SDECLARATION_LET);
+                    break;
+
+                case JS_VAR :
+                    startElement(SDECLARATION_VAR);
+                    break;
+
+                case JS_CONST :
+                    startElement(SDECLARATION_CONST);
+                    break;
+
+                case JS_STATIC :
+                    startElement(SDECLARATION_STATIC);
+                    break;
+
+                default :
+                    break;
+            }
+
+            startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT);
+        }
+
+        (JS_LET | JS_VAR | JS_CONST | JS_STATIC)
 ;
 
 /*
