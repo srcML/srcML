@@ -698,6 +698,8 @@ tokens {
     SFUNCTION_SET_STATEMENT;
     SIMPORT_STATEMENT;
     SNAME_LIST;
+    SRANGE_IN;
+    SRANGE_OF;
     SWITH_STATEMENT;
     SYIELD_STATEMENT;
     SYIELD_GENERATOR_STATEMENT;
@@ -1160,6 +1162,8 @@ start_javascript[] {
         extends_js |
 
         alias_js |
+
+        range_in_js | range_of_js |
 
         // invoke start to handle non-statement tokens
         start
@@ -14744,4 +14748,36 @@ export_sp[] { SingleElement element(this); ENTRY_DEBUG } :
         }
 
         JS_EXPORT
+;
+
+/*
+  range_in_js
+
+  Handles a JavaScript "in" expression using the range tag.
+*/
+range_in_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SRANGE_IN);
+        }
+
+        JS_RANGE_IN
+        expression
+;
+
+/*
+  range_of_js
+
+  Handles a JavaScript "of" expression using the range tag.
+*/
+range_of_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SRANGE_OF);
+        }
+
+        JS_RANGE_OF
+        expression
 ;

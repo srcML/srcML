@@ -327,6 +327,8 @@ tokens {
     JS_GET;
     JS_IMPORT;
     JS_LET;
+    JS_RANGE_IN;
+    JS_RANGE_OF;
     JS_SET;
     JS_STATIC;
     JS_VAR;
@@ -721,7 +723,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT },
         { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT },
         { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
+        { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
         { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT },
+        { "of"           , JS_RANGE_OF       , LANGUAGE_JAVASCRIPT },
         { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
         { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT },
         { "var"          , JS_VAR            , LANGUAGE_JAVASCRIPT },
