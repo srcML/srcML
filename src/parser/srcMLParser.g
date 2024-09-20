@@ -1090,7 +1090,6 @@ start_javascript[] {
             temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
             temp_array[JS_DEBUGGER]           = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
-            temp_array[JS_FROM]               = { SFROM, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::from_js };
             temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_GET]                = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
@@ -1156,6 +1155,8 @@ start_javascript[] {
         extends_js |
 
         alias_js |
+
+        from_js |
 
         range_in_js | range_of_js |
 
@@ -14738,17 +14739,13 @@ alias_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
   Handles a JavaScript "from" expression.
 */
-from_js[] { ENTRY_DEBUG } :
-        literals
-
+from_js[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            bool in_statement = inTransparentMode(MODE_STATEMENT);
-
-            endMode(SFROM);
-
-            if (in_statement)
-                startNewMode(MODE_STATEMENT);
+            startElement(SFROM);
         }
+
+        JS_FROM
+        literals
 ;
 
 /*
