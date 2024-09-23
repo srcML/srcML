@@ -186,7 +186,7 @@ void add_element(xmlXPathParserContext* ctxt, int nargs) {
 }
 
 void match_element(xmlXPathParserContext* ctxt, int nargs) {
-    if (nargs < 3 || nargs > 5) {
+    if (nargs < 2 || nargs > 4) {
         std::cerr << "Arg arity error" << std::endl;
         return;
     }
@@ -194,7 +194,7 @@ void match_element(xmlXPathParserContext* ctxt, int nargs) {
     // postfix
     std::string_view postfix;
     std::unique_ptr<xmlChar> ctxtPostfix;
-    if (nargs == 5) {
+    if (nargs == 4) {
         ctxtPostfix.reset(xmlXPathPopString(ctxt));
         postfix = (const char*)(ctxtPostfix.get());
     }
@@ -202,13 +202,13 @@ void match_element(xmlXPathParserContext* ctxt, int nargs) {
     // prefix
     std::string_view prefix;
     std::unique_ptr<xmlChar> ctxtPrefix;
-    if (nargs >= 4) {
+    if (nargs >= 3) {
         ctxtPrefix.reset(xmlXPathPopString(ctxt));
         prefix = (const char*)(ctxtPrefix.get());
     }
 
     // order ?
-    size_t number = (size_t) xmlXPathPopNumber(ctxt);
+    //size_t number = (size_t) xmlXPathPopNumber(ctxt);
 
     // bucket name
     std::unique_ptr<xmlChar> ctxtBucket(xmlXPathPopString(ctxt));
