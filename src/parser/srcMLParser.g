@@ -14691,7 +14691,11 @@ declaration_js[] { ENTRY_DEBUG } :
         declaration_statement_js
 
         {
-            startNewMode(MODE_STATEMENT | MODE_DECLARATION_JS);
+            startNewMode(MODE_DECLARATION_JS);
+
+            // If the current declaration is not a part of a declaration statement, enclose it in an <init> tag
+            if (!inPrevMode(MODE_DECLARATION_STATEMENT))
+                startElement(SCONTROL_INITIALIZATION);
 
             switch (LA(1)) {
                 case JS_LET :
