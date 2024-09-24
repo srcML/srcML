@@ -1132,6 +1132,10 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
+        // looking for rparen to end the current control expression
+        { inTransparentMode(MODE_CONTROL_INITIALIZATION) }?
+        rparen_control_js |
+
         // looking for lparen while expecting a parameter list
         { inMode(MODE_PARAMETER_LIST_JS) }?
         parameter_list_js |
@@ -14643,6 +14647,23 @@ rcurly_name_list[] { ENTRY_DEBUG } :
 ;
 
 /*
+  rparen_control_js
+
+  Ensures a JavaScript control tag closes cleanly.
+*/
+rparen_control_js[] { ENTRY_DEBUG } :
+        {
+            endDownToMode(MODE_CONTROL_INITIALIZATION);
+        }
+
+        RPAREN
+
+        {
+            endMode(MODE_CONTROL);
+        }
+;
+
+/*
   if_statement_js
 
   Handles a JavaScript "if" statement.  Wraps the entire "if...else" statement in an if statement tag.
@@ -14795,6 +14816,10 @@ range_in_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         JS_RANGE_IN
         expression
+
+        {
+            endDownToMode(MODE_INIT);
+        }
 ;
 
 /*
@@ -14811,6 +14836,10 @@ range_of_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         JS_RANGE_OF
         expression
+
+        {
+            endDownToMode(MODE_INIT);
+        }
 ;
 
 /*
