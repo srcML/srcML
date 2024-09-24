@@ -134,7 +134,7 @@ header "post_include_hpp" {
 using namespace ::std::literals::string_view_literals;
 
 // Commented-out code
-// #define DEBUG_PARSER
+//#define DEBUG_PARSER
 
 // Macros to introduce trace statements
 #ifdef DEBUG_PARSER
@@ -988,7 +988,7 @@ keyword_statements[] { ENTRY_DEBUG } :
         static_assert_statement |
 
         // Java - keyword only detected for Java
-        import_statement | package_statement | assert_statement | static_block |
+        import_statement | package_statement | assert_statement | static_block | 
 
         // C# - keyword only detected for C#
         checked_statement | unchecked_statement | lock_statement | fixed_statement | unsafe_statement | yield_statements |
@@ -3932,7 +3932,7 @@ class_definition[] { ENTRY_DEBUG } :
         class_preprocessing[SCLASS]
         class_preamble
 
-        (CLASS | CXX_CLASS)
+        (CLASS | CXX_CLASS | RECORD)
 
         class_post
         (class_header lcurly[false] | lcurly[false])
@@ -5476,6 +5476,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
                 || LA(1) == REFOPS
                 || LA(1) == RVALUEREF
                 || LA(1) == TERMINATE
+                || LA(1) == RECORD
             )
         )
             type = VARIABLE;
@@ -5683,6 +5684,7 @@ pattern_check_core[
         bool endbracket = false;
         bool modifieroperator = false;
         bool is_c_class_identifier = false;
+        bool is_record = false;
 
         is_qmark = false;
         int real_type_count = 0;
@@ -5906,6 +5908,9 @@ pattern_check_core[
                         CXX_CLASS
                         set_type[type, CLASS_DECL] |
 
+                        RECORD
+                        set_type[type, CLASS_DECL] set_bool[is_record, true] set_bool[sawcontextual, true] |
+
                         STRUCT
                         set_type[type, STRUCT_DECL] |
 
@@ -5985,6 +5990,7 @@ pattern_check_core[
                             || LA(1) == LCURLY
                             || lcurly
                         )
+                        || (is_record && type == CLASS_DECL)
                     ]
 
                     throw_exception[type != NONE]
@@ -6039,7 +6045,7 @@ pattern_check_core[
                             || LA(1) == COMMA
                             || LA(1) == LCURLY
                             || lcurly
-                        )
+                        ) || (sawcontextual && inLanguage(LANGUAGE_JAVA) && type == CLASS_DECL)
                     ]
 
                     throw_exception[type != NONE]
@@ -7755,6 +7761,9 @@ identifier_list[] { ENTRY_DEBUG } :
 
         // C
         CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |
+
+        // Java
+        RECORD | 
 
         // Commented-out code; Not sure why these are commented out
         /*

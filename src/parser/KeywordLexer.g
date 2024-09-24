@@ -236,6 +236,7 @@ tokens {
     STRICTFP;
     NULLLITERAL;
     ASSERT;
+    RECORD;
 
     // C# tokens
     FOREACH;
@@ -582,6 +583,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "null"          , NULLLITERAL   , LANGUAGE_JAVA },
         { "instanceof"    , OPERATORS     , LANGUAGE_JAVA },
         { "assert"        , ASSERT        , LANGUAGE_JAVA },
+        { "record"        , RECORD        , LANGUAGE_JAVA },
 
 
         // C# specific keywords
