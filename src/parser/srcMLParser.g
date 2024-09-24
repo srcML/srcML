@@ -6050,7 +6050,7 @@ pattern_check_core[
                             || LA(1) == COMMA
                             || LA(1) == LCURLY
                             || lcurly
-                        ) || (sawcontextual && inLanguage(LANGUAGE_JAVA) && type == CLASS_DECL)
+                        )
                     ]
 
                     throw_exception[type != NONE]
