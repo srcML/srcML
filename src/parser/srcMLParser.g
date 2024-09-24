@@ -703,6 +703,8 @@ tokens {
     SWITH_STATEMENT;
     SYIELD_STATEMENT;
     SYIELD_GENERATOR_STATEMENT;
+
+    SINIT;
 }
 
 /*
@@ -1153,6 +1155,10 @@ start_javascript[] {
         // looking for the "extends" keyword
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         extends_js |
+
+        // looking for "=" inside a parameter
+        { inMode(MODE_PARAMETER) }?
+        init_js |
 
         alias_js |
 
@@ -12380,7 +12386,10 @@ parameter_type_variable[int type_count, STMT_TYPE stmt_type] { bool output_type 
 parameter_type_count[int& type_count, bool output_type = true] {
         CompleteElement element(this);
         bool is_compound = false;
-        
+
+        if (inLanguage(LANGUAGE_JAVASCRIPT))
+            output_type = false;
+
         ENTRY_DEBUG
 } :
         {
@@ -14815,4 +14824,24 @@ range_of_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         JS_RANGE_OF
         expression
+;
+
+/*
+  init_js
+
+  Handles a JavaScript "init" expression.
+*/
+init_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SINIT);
+        }
+
+        EQUAL
+        expression
+
+        {
+            endDownToMode(MODE_INIT);
+        }
 ;

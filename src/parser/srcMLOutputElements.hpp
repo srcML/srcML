@@ -325,6 +325,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SFUNCTION_GET_STATEMENT,       { "function",          SRC, "type",       "get",     0,      0 }},
     { TOKEN::SFUNCTION_SET_STATEMENT,       { "function",          SRC, "type",       "set",     0,      0 }},
     { TOKEN::SIMPORT_STATEMENT,             { "import",            SRC,      0,           0,     0,      0 }},
+    { TOKEN::SINIT,                         { "init",              SRC,      0,           0,     0,      0 }},
     { TOKEN::SNAME_LIST,                    { "name_list",         SRC,      0,           0,     0,      0 }},
     { TOKEN::SRANGE_IN,                     { "range",             SRC,      0,           0,     0,      0 }},
     { TOKEN::SRANGE_OF,                     { "range",             SRC,      0,           0,     0,      0 }},
