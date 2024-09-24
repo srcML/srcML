@@ -1132,43 +1132,30 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
-        // looking for lparen
+        // looking for lparen while expecting a parameter list
         { inMode(MODE_PARAMETER_LIST_JS) }?
         parameter_list_js |
 
-        // looking for rparen
+        // looking for rparen to end the current parameter list
         { inTransparentMode(MODE_PARAMETER_LIST_JS) }?
         rparen_parameter_list |
 
-        // looking for lcurly
+        // looking for lcurly while expecting a name list
         { inMode(MODE_NAME_LIST_JS) }?
         name_list_js |
 
-        // looking for rcurly
+        // looking for rcurly to end the current name list
         { inTransparentMode(MODE_NAME_LIST_JS) }?
         rcurly_name_list |
 
-        // looking for the start of a string
-        { inLanguage(LANGUAGE_JAVASCRIPT) }?
-        string_literal |
-
-        // looking for the "extends" keyword
-        { inLanguage(LANGUAGE_JAVASCRIPT) }?
-        extends_js |
-
-        // looking for "=" inside a parameter
+        // looking for "=" inside a parameter to start an init tag
         { inMode(MODE_PARAMETER) }?
         init_js |
 
-        alias_js |
+        // looking for a keyword that does not belong to a statement
+        extends_js | alias_js | from_js | range_in_js | range_of_js | declaration_js |
 
-        from_js |
-
-        range_in_js | range_of_js |
-
-        declaration_js |
-
-        // invoke start to handle non-statement tokens
+        // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
         start
 ;
 exception
@@ -14771,10 +14758,10 @@ extends_js[] { ENTRY_DEBUG } :
             (options { greedy = true; } :
                 super_list_java
 
-                (extends_list | implements_list)
-                (options { greedy = true; } : extends_list | implements_list)*
+                extends_list
+                (options { greedy = true; } : extends_list)*
             )
-        )*
+        )
 
         {
             endMode();
