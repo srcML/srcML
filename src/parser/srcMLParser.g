@@ -4414,6 +4414,11 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
             generic_type_constraint
         )*
 
+        (options { greedy = true; } :
+            { inLanguage(LANGUAGE_JAVA_FAMILY) }?
+            parameter_list
+        )*
+
         (
             { inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (options { greedy = true; } :
