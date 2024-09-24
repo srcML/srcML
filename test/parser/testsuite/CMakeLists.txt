@@ -24,7 +24,7 @@ endforeach()
 set(TESTFILES)
 
 # convert from input language to input extension
-set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m")
+set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m" "JavaScript" "js")
 function(lang2ext LANG EXT)
     list(FIND LANGLIST "${LANG}" LANG_POS)
     math(EXPR EXT_POS "${LANG_POS} + 1")
@@ -112,13 +112,13 @@ foreach(GEN IN ITEMS ${SUITE})
 
         # base is C++, so these just get added
         list(APPEND TESTFILES "${URL}.cpp.xml")
-        setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
+        setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C" "JavaScript")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
 
         # explicitly generated
         list(APPEND TESTFILES "${URL}.cpp.xml")
-        setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
+        setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C" "JavaScript")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_CSHARP")
 
