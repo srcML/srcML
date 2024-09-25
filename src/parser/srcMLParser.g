@@ -11769,8 +11769,12 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
 */
 char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup)
-                startElement(SCHAR);
+            if (markup) {
+                if (inLanguage(LANGUAGE_JAVASCRIPT))
+                    startElement(SSTRING);
+                else
+                    startElement(SCHAR);
+            }
         }
 
         (CHAR_START CHAR_END)
