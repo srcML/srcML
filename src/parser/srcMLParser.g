@@ -1136,6 +1136,10 @@ start_javascript[] {
         { inTransparentMode(MODE_CONTROL_INITIALIZATION) }?
         rparen_control_js |
 
+        // looking for rparen to end the current argument list
+        { inTransparentMode(MODE_ARGUMENT | MODE_LIST) }?
+        rparen_argument_list_js |
+
         // looking for lparen while expecting a parameter list
         { inMode(MODE_PARAMETER_LIST_JS) }?
         parameter_list_js |
@@ -14664,6 +14668,23 @@ rparen_control_js[] { ENTRY_DEBUG } :
 
         {
             endMode(MODE_CONTROL);
+        }
+;
+
+/*
+  rparen_argument_list_js
+
+  Ensures a JavaScript argument list tag closes cleanly.
+*/
+rparen_argument_list_js[] { ENTRY_DEBUG } :
+        {
+            endDownToMode(MODE_LIST);
+        }
+
+        RPAREN
+
+        {
+            endMode(MODE_ARGUMENT_LIST);
         }
 ;
 
