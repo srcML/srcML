@@ -684,6 +684,7 @@ tokens {
 
     // JavaScript
     SALIAS;
+    SALIAS_COMPOUND_NAME;
     SCONSTRUCTOR_STATEMENT;
     SDEBUGGER_STATEMENT;
     SDECLARATION_CONST;
@@ -699,7 +700,6 @@ tokens {
     SIMPORT_STATEMENT;
     SINIT;
     SNAME_LIST;
-    SNAME_LIST_NAME;
     SRANGE_IN;
     SRANGE_OF;
     SWITH_STATEMENT;
@@ -1044,6 +1044,7 @@ start_javascript[] {
         const int JS_EXPORT_JS_CONST = 609;
         const int JS_EXPORT_JS_STATIC = 610;
         const int JS_EXPORT_LCURLY = 611;
+        const int JS_EXPORT_MULTOPS = 612;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
@@ -1061,6 +1062,7 @@ start_javascript[] {
             temp_array[JS_EXPORT + (JS_CONST << 8)] = JS_EXPORT_JS_CONST;
             temp_array[JS_EXPORT + (JS_STATIC << 8)] = JS_EXPORT_JS_STATIC;
             temp_array[JS_EXPORT + (LCURLY << 8)] = JS_EXPORT_LCURLY;
+            temp_array[JS_EXPORT + (MULTOPS << 8)] = JS_EXPORT_MULTOPS;
 
             return temp_array;
         }();
@@ -1109,6 +1111,7 @@ start_javascript[] {
             temp_array[JS_EXPORT_JS_STATIC]   = { SDECLARATION_STATIC, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };  // treats `export` as a specifier
             temp_array[JS_EXPORT_JS_VAR]      = { SDECLARATION_VAR, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };  // treats `export` as a specifier
             temp_array[JS_EXPORT_LCURLY]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, MODE_NAME_LIST_JS, nullptr, nullptr };  // treats `export` as a statement
+            temp_array[JS_EXPORT_MULTOPS]     = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::multops_as_name };  // treats `*` in `export *` as a name
             temp_array[JS_FUNCTION_MULTOPS]   = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
             temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
             temp_array[JS_STATIC_LCURLY]      = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a `static` specifier from a `static` block
@@ -5521,11 +5524,11 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
             }
 
             if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_NAME_LIST_JS)) {
-                startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_NAME_LIST_NAME_JS | MODE_LOCAL | MODE_END_AT_COMMA);
+                startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_ALIAS_COMPOUND_NAME_JS | MODE_LOCAL | MODE_END_AT_COMMA);
 
-                // SNAME_LIST_NAME encloses complex names in an extra name tag, which is not needed for simple names
+                // SALIAS_COMPOUND_NAME encloses a JavaScript name with its respective alias in an extra name tag
                 if (next_token() != COMMA && next_token() != RCURLY)
-                    startElement(SNAME_LIST_NAME);
+                    startElement(SALIAS_COMPOUND_NAME);
             }
         }
 ;
@@ -14644,11 +14647,11 @@ name_list_js[] { ENTRY_DEBUG } :
         LCURLY
 
         {
-            startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_NAME_LIST_NAME_JS | MODE_LOCAL | MODE_END_AT_COMMA);
+            startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_ALIAS_COMPOUND_NAME_JS | MODE_LOCAL | MODE_END_AT_COMMA);
 
-            // SNAME_LIST_NAME encloses complex names in an extra name tag, which is not needed for simple names
+            // SALIAS_COMPOUND_NAME encloses a JavaScript name with its respective alias in an extra name tag
             if (next_token() != COMMA && next_token() != RCURLY)
-                startElement(SNAME_LIST_NAME);
+                startElement(SALIAS_COMPOUND_NAME);
         }
 ;
 
@@ -14659,7 +14662,7 @@ name_list_js[] { ENTRY_DEBUG } :
 */
 rcurly_name_list[] { ENTRY_DEBUG } :
         {
-            endMode(MODE_NAME_LIST_NAME_JS);
+            endDownToMode(MODE_NAME_LIST_JS);
         }
 
         RCURLY
@@ -14798,6 +14801,17 @@ alias_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         JS_ALIAS
         compound_name
+
+        {
+            if (inMode(MODE_ALIAS_COMPOUND_NAME_JS)) {
+                bool in_statement = inTransparentMode(MODE_STATEMENT);
+
+                endMode(MODE_ALIAS_COMPOUND_NAME_JS);
+
+                if (in_statement)
+                    startNewMode(MODE_STATEMENT);
+            }
+        }
 ;
 
 /*
@@ -14845,6 +14859,25 @@ export_sp[] { SingleElement element(this); ENTRY_DEBUG } :
         }
 
         JS_EXPORT
+;
+
+/*
+  multops_as_name
+
+  Encloses the "*" in a JavaScript "export *" in a name tag.
+  Invokes compound name logic if the next token is an "alias."
+*/
+multops_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            if (next_token() == JS_ALIAS) {
+                startNewMode(MODE_ALIAS_COMPOUND_NAME_JS);
+                startElement(SALIAS_COMPOUND_NAME);
+            }
+
+            startElement(SNAME);
+        }
+
+        MULTOPS
 ;
 
 /*

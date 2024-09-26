@@ -312,6 +312,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     // JavaScript
     { TOKEN::SALIAS,                        { "alias",             SRC,      0,           0,     0,      0,}},
+    { TOKEN::SALIAS_COMPOUND_NAME,          { "compound_name",              SRC,      0,           0,     0,      0 }},
     { TOKEN::SCONSTRUCTOR_STATEMENT,        { "constructor",       SRC,      0,           0,     0,      0 }},
     { TOKEN::SDEBUGGER_STATEMENT,           { "debugger",          SRC,      0,           0,     0,      0 }},
     { TOKEN::SDECLARATION_CONST,            { "decl",              SRC, "type",     "const",     0,      0 }},
@@ -327,7 +328,6 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SIMPORT_STATEMENT,             { "import",            SRC,      0,           0,     0,      0 }},
     { TOKEN::SINIT,                         { "init",              SRC,      0,           0,     0,      0 }},
     { TOKEN::SNAME_LIST,                    { "name_list",         SRC,      0,           0,     0,      0 }},
-    { TOKEN::SNAME_LIST_NAME,               { "name",              SRC,      0,           0,     0,      0 }},
     { TOKEN::SRANGE_IN,                     { "range",             SRC,      0,           0,     0,      0 }},
     { TOKEN::SRANGE_OF,                     { "range",             SRC,      0,           0,     0,      0 }},
     { TOKEN::SWITH_STATEMENT,               { "with",              SRC,      0,           0,     0,      0 }},

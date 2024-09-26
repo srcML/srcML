@@ -264,7 +264,7 @@ const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS;
 
 const static srcMLState::MODE_TYPE MODE_NAME_LIST_JS;
 
-const static srcMLState::MODE_TYPE MODE_NAME_LIST_NAME_JS;
+const static srcMLState::MODE_TYPE MODE_ALIAS_COMPOUND_NAME_JS;
 
 const static srcMLState::MODE_TYPE MODE_DECLARATION_STATEMENT;
 
