@@ -697,14 +697,14 @@ tokens {
     SFUNCTION_GET_STATEMENT;
     SFUNCTION_SET_STATEMENT;
     SIMPORT_STATEMENT;
+    SINIT;
     SNAME_LIST;
+    SNAME_LIST_NAME;
     SRANGE_IN;
     SRANGE_OF;
     SWITH_STATEMENT;
     SYIELD_STATEMENT;
     SYIELD_GENERATOR_STATEMENT;
-
-    SINIT;
 }
 
 /*
@@ -5518,6 +5518,14 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
             if (inTransparentMode(MODE_CONTROL_CONDITION | MODE_END_AT_COMMA)) {
                 startNewMode(MODE_LIST | MODE_IN_INIT | MODE_EXPRESSION | MODE_EXPECT);
                 startNoSkipElement(SDECLARATION_RANGE);
+            }
+
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_NAME_LIST_JS)) {
+                startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_NAME_LIST_NAME_JS | MODE_LOCAL | MODE_END_AT_COMMA);
+
+                // SNAME_LIST_NAME encloses complex names in an extra name tag, which is not needed for simple names
+                if (next_token() != COMMA && next_token() != RCURLY)
+                    startElement(SNAME_LIST_NAME);
             }
         }
 ;
@@ -14627,13 +14635,21 @@ rparen_parameter_list[] { ENTRY_DEBUG } :
 name_list_js[] { ENTRY_DEBUG } :
         {
             // list of names
-            startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPECT);
+            //startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPECT);
 
             // start the name list
             startElement(SNAME_LIST);
         }
 
         LCURLY
+
+        {
+            startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_NAME_LIST_NAME_JS | MODE_LOCAL | MODE_END_AT_COMMA);
+
+            // SNAME_LIST_NAME encloses complex names in an extra name tag, which is not needed for simple names
+            if (next_token() != COMMA && next_token() != RCURLY)
+                startElement(SNAME_LIST_NAME);
+        }
 ;
 
 /*
@@ -14642,6 +14658,10 @@ name_list_js[] { ENTRY_DEBUG } :
   Handles a right curly brace for JavaScript name lists.
 */
 rcurly_name_list[] { ENTRY_DEBUG } :
+        {
+            endMode(MODE_NAME_LIST_NAME_JS);
+        }
+
         RCURLY
 
         {
