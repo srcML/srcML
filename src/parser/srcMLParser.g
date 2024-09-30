@@ -1082,7 +1082,7 @@ start_javascript[] {
             temp_array[ELSE]                  = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_js, &srcMLParser::pseudoblock };
             // /*do not uncomment*/ temp_array[EXPRESSION_STATEMENT]  = { 0, 0, 0, 0, nullptr, nullptr };
             temp_array[FINALLY]               = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
-            temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT, nullptr, nullptr };
+            temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT | MODE_FOR_LOOP_JS, nullptr, nullptr };
             temp_array[IF]                    = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_EXPECT | MODE_CONTROL | MODE_CONDITION, &srcMLParser::if_statement_js, nullptr };
             temp_array[RETURN]                = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
             temp_array[SWITCH]                = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
@@ -1135,8 +1135,8 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
-        // looking for rparen to end the current control expression
-        { inTransparentMode(MODE_CONTROL_INITIALIZATION) }?
+        // looking for rparen to end the current control expression ("for...in" or "for...of" only)
+        { inTransparentMode(MODE_FOR_LOOP_JS) && inTransparentMode(MODE_INIT) }?
         rparen_control_js |
 
         // looking for rparen to end the current argument list
@@ -3066,6 +3066,9 @@ control_group[] { ENTRY_DEBUG } :
         }
 
         LPAREN
+
+        { LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || LA(1) == JS_STATIC }?
+        control_initialization
 ;
 
 /*
@@ -3148,6 +3151,35 @@ control_initialization_action[] { ENTRY_DEBUG } :
                 startElement(SCONTROL_INITIALIZATION);
             } else {
                 startElement(SDECLARATION_STATEMENT);
+            }
+
+            switch (LA(1)) {
+                case JS_LET :
+                    startNewMode(MODE_DECLARATION_JS);
+                    startElement(SDECLARATION_LET);
+                    startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    break;
+
+                case JS_VAR :
+                    startNewMode(MODE_DECLARATION_JS);
+                    startElement(SDECLARATION_VAR);
+                    startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    break;
+
+                case JS_CONST :
+                    startNewMode(MODE_DECLARATION_JS);
+                    startElement(SDECLARATION_CONST);
+                    startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    break;
+
+                case JS_STATIC :
+                    startNewMode(MODE_DECLARATION_JS);
+                    startElement(SDECLARATION_STATIC);
+                    startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    break;
+
+                default :
+                    break;
             }
         }
 ;
@@ -4943,9 +4975,15 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
                     control_condition_action();
             }
 
-            // ensure JavaScript declarations end before terminate token
+            // ensure JavaScript declarations end before the terminate token in a declaration statement
             if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_DECLARATION_JS))
                 endDownToMode(MODE_DECLARATION_STATEMENT);
+
+            // ensure JavaScript declarations end before the terminate token in the "init" portion of a for-loop control
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_CONTROL_CONDITION)) {
+                endDownToMode(MODE_INIT);
+                endMode(MODE_DECLARATION_JS);
+            }
         }
 
         terminate_pre
@@ -14680,11 +14718,15 @@ rcurly_name_list[] { ENTRY_DEBUG } :
 /*
   rparen_control_js
 
-  Ensures a JavaScript control tag closes cleanly.
+  Ensures a JavaScript control tag closes cleanly in "for...in" and "for...of" statements.
 */
 rparen_control_js[] { ENTRY_DEBUG } :
         {
-            endDownToMode(MODE_CONTROL_INITIALIZATION);
+            if (inTransparentMode(MODE_FOR_LOOP_JS) && inTransparentMode(MODE_INIT)) {
+                endMode(MODE_DECLARATION_JS);
+                endMode(MODE_INIT);
+                endMode(MODE_CONTROL_INITIALIZATION);
+            }
         }
 
         RPAREN
