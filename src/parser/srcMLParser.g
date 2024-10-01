@@ -691,7 +691,6 @@ tokens {
     SDECLARATION_LET;
     SDECLARATION_STATIC;
     SDECLARATION_VAR;
-    SELSE_IF;
     SEXPORT_STATEMENT;
     SFUNCTION_STATEMENT;
     SFUNCTION_GENERATOR_STATEMENT;
@@ -1069,8 +1068,8 @@ start_javascript[] {
 
         // JavaScript rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, 500> javascript_rules = [this](){
-            std::array<Rule, 500> temp_array;
+        static const std::array<Rule, 700> javascript_rules = [this](){
+            std::array<Rule, 700> temp_array;
 
             /* GENERIC STATEMENTS */
             temp_array[BREAK]                 = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
@@ -1083,7 +1082,7 @@ start_javascript[] {
             // /*do not uncomment*/ temp_array[EXPRESSION_STATEMENT]  = { 0, 0, 0, 0, nullptr, nullptr };
             temp_array[FINALLY]               = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
             temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT | MODE_FOR_LOOP_JS, nullptr, nullptr };
-            temp_array[IF]                    = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_EXPECT | MODE_CONTROL | MODE_CONDITION, &srcMLParser::if_statement_js, nullptr };
+            temp_array[IF]                    = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, nullptr };
             temp_array[RETURN]                = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
             temp_array[SWITCH]                = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
             temp_array[THROW]                 = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
@@ -1103,7 +1102,7 @@ start_javascript[] {
 
             /* DUPLEX KEYWORDS */
             temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // differentiates a `default` specifier from a `default` clause
-            temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
+            temp_array[ELSE_IF]               = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
             temp_array[JS_EXPORT_CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
             temp_array[JS_EXPORT_JS_CONST]    = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };  // treats `export` as a specifier
             temp_array[JS_EXPORT_JS_FUNCTION] = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
