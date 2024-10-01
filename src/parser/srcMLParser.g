@@ -1031,24 +1031,26 @@ catch[...] {
 start_javascript[] {
         ++start_count;
 
-        const int DEFAULT_COLON = 600;
-        const int ELSE_IF = 601;
-        const int JS_FUNCTION_MULTOPS = 602;
-        const int JS_YIELD_MULTOPS = 603;
-        const int JS_STATIC_LCURLY = 604;
-        const int JS_EXPORT_JS_FUNCTION = 605;
-        const int JS_EXPORT_CLASS = 606;
-        const int JS_EXPORT_JS_LET = 607;
-        const int JS_EXPORT_JS_VAR = 608;
-        const int JS_EXPORT_JS_CONST = 609;
-        const int JS_EXPORT_JS_STATIC = 610;
-        const int JS_EXPORT_LCURLY = 611;
-        const int JS_EXPORT_MULTOPS = 612;
+        const int CATCH_LPAREN = 600;
+        const int DEFAULT_COLON = 601;
+        const int ELSE_IF = 602;
+        const int JS_FUNCTION_MULTOPS = 603;
+        const int JS_YIELD_MULTOPS = 604;
+        const int JS_STATIC_LCURLY = 605;
+        const int JS_EXPORT_JS_FUNCTION = 606;
+        const int JS_EXPORT_CLASS = 607;
+        const int JS_EXPORT_JS_LET = 608;
+        const int JS_EXPORT_JS_VAR = 609;
+        const int JS_EXPORT_JS_CONST = 610;
+        const int JS_EXPORT_JS_STATIC = 611;
+        const int JS_EXPORT_LCURLY = 612;
+        const int JS_EXPORT_MULTOPS = 613;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
             std::array<int, 500 * 500> temp_array;
 
+            temp_array[CATCH + (LPAREN << 8)] = CATCH_LPAREN;
             temp_array[DEFAULT + (COLON << 8)] = DEFAULT_COLON;
             temp_array[ELSE + (IF << 8)] = ELSE_IF;
             temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
@@ -1074,12 +1076,10 @@ start_javascript[] {
             /* GENERIC STATEMENTS */
             temp_array[BREAK]                 = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
             temp_array[CASE]                  = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-            temp_array[CATCH]                 = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[CLASS]                 = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, nullptr };
             temp_array[CONTINUE]              = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
             temp_array[DO]                    = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
             temp_array[ELSE]                  = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_js, &srcMLParser::pseudoblock };
-            // /*do not uncomment*/ temp_array[EXPRESSION_STATEMENT]  = { 0, 0, 0, 0, nullptr, nullptr };
             temp_array[FINALLY]               = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
             temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT | MODE_FOR_LOOP_JS, nullptr, nullptr };
             temp_array[IF]                    = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, nullptr };
@@ -1101,6 +1101,7 @@ start_javascript[] {
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
             /* DUPLEX KEYWORDS */
+            temp_array[CATCH_LPAREN]          = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_CATCH_JS, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `(`
             temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // differentiates a `default` specifier from a `default` clause
             temp_array[ELSE_IF]               = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
             temp_array[JS_EXPORT_CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
@@ -1157,6 +1158,10 @@ start_javascript[] {
         // looking for rcurly to end the current name list
         { inTransparentMode(MODE_NAME_LIST_JS) }?
         rcurly_name_list |
+
+        // looking to consume a rparen to continue the current catch statement
+        { inTransparentMode(MODE_CATCH_JS) }?
+        rparen_catch_js |
 
         // looking for "=" inside a parameter to start an init tag
         { inMode(MODE_PARAMETER) }?
@@ -14749,6 +14754,28 @@ rparen_argument_list_js[] { ENTRY_DEBUG } :
 
         {
             endMode(MODE_ARGUMENT_LIST);
+        }
+;
+
+/*
+  rparen_catch_js
+
+  Consumes a right parenthesis in a JavaScript "catch" statement.
+  In this case, the paired parentheses are not surrounded by any tag.
+*/
+rparen_catch_js[] { ENTRY_DEBUG }:
+        {
+            endDownToMode(MODE_EXPRESSION);
+            endMode(MODE_EXPRESSION);
+        }
+
+        RPAREN
+
+        {
+            bool in_statement = inTransparentMode(MODE_STATEMENT);
+
+            if (in_statement)
+                startNewMode(MODE_STATEMENT);
         }
 ;
 
