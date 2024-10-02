@@ -3071,8 +3071,10 @@ control_group[] { ENTRY_DEBUG } :
 
         LPAREN
 
-        { LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || LA(1) == JS_STATIC }?
-        control_initialization
+        {
+            if (LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || LA(1) == JS_STATIC)
+                control_initialization();
+        }
 ;
 
 /*
@@ -14679,9 +14681,6 @@ rparen_parameter_list[] { ENTRY_DEBUG } :
 */
 name_list_js[] { ENTRY_DEBUG } :
         {
-            // list of names
-            //startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPECT);
-
             // start the name list
             startElement(SNAME_LIST);
         }
