@@ -276,4 +276,6 @@ const static srcMLState::MODE_TYPE MODE_FOR_LOOP_JS;
 
 const static srcMLState::MODE_TYPE MODE_CATCH_JS;
 
+const static srcMLState::MODE_TYPE MODE_WITH_JS;
+
 #endif

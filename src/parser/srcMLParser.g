@@ -1045,6 +1045,7 @@ start_javascript[] {
         const int JS_EXPORT_JS_STATIC = 611;
         const int JS_EXPORT_LCURLY = 612;
         const int JS_EXPORT_MULTOPS = 613;
+        const int JS_WITH_LPAREN = 614;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
@@ -1064,6 +1065,7 @@ start_javascript[] {
             temp_array[JS_EXPORT + (JS_STATIC << 8)] = JS_EXPORT_JS_STATIC;
             temp_array[JS_EXPORT + (LCURLY << 8)] = JS_EXPORT_LCURLY;
             temp_array[JS_EXPORT + (MULTOPS << 8)] = JS_EXPORT_MULTOPS;
+            temp_array[JS_WITH + (LPAREN << 8)] = JS_WITH_LPAREN;
 
             return temp_array;
         }();
@@ -1097,7 +1099,6 @@ start_javascript[] {
             temp_array[JS_GET]                = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
             temp_array[JS_SET]                = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
-            temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
             /* DUPLEX KEYWORDS */
@@ -1115,6 +1116,7 @@ start_javascript[] {
             temp_array[JS_FUNCTION_MULTOPS]   = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
             temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
             temp_array[JS_STATIC_LCURLY]      = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a `static` specifier from a `static` block
+            temp_array[JS_WITH_LPAREN]        = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WITH_JS, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `(`
 
             return temp_array;
         }();
@@ -1162,6 +1164,10 @@ start_javascript[] {
         // looking to consume a rparen to continue the current catch statement
         { inTransparentMode(MODE_CATCH_JS) }?
         rparen_catch_js |
+
+        // looking to consume a rparen to continue the current with statement
+        { inTransparentMode(MODE_WITH_JS) }?
+        rparen_with_js |
 
         // looking for "=" inside a parameter to start an init tag
         { inMode(MODE_PARAMETER) }?
@@ -14762,7 +14768,29 @@ rparen_argument_list_js[] { ENTRY_DEBUG } :
   Consumes a right parenthesis in a JavaScript "catch" statement.
   In this case, the paired parentheses are not surrounded by any tag.
 */
-rparen_catch_js[] { ENTRY_DEBUG }:
+rparen_catch_js[] { ENTRY_DEBUG } :
+        {
+            endDownToMode(MODE_EXPRESSION);
+            endMode(MODE_EXPRESSION);
+        }
+
+        RPAREN
+
+        {
+            bool in_statement = inTransparentMode(MODE_STATEMENT);
+
+            if (in_statement)
+                startNewMode(MODE_STATEMENT);
+        }
+;
+
+/*
+  rparen_with_js
+
+  Consumes a right parenthesis in a JavaScript "with" statement.
+  In this case, the paired parentheses are not surrounded by any tag.
+*/
+rparen_with_js[] { ENTRY_DEBUG } :
         {
             endDownToMode(MODE_EXPRESSION);
             endMode(MODE_EXPRESSION);
