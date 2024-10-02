@@ -1102,7 +1102,7 @@ start_javascript[] {
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
             /* DUPLEX KEYWORDS */
-            temp_array[CATCH_LPAREN]          = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_CATCH_JS, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `(`
+            temp_array[CATCH_LPAREN]          = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_CATCH_JS, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `(`
             temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // differentiates a `default` specifier from a `default` clause
             temp_array[ELSE_IF]               = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
             temp_array[JS_EXPORT_CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
