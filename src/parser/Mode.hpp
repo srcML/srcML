@@ -272,4 +272,12 @@ const static srcMLState::MODE_TYPE MODE_DECLARATION_JS;
 
 const static srcMLState::MODE_TYPE MODE_EXPORT_SPECIFIER_JS;
 
+const static srcMLState::MODE_TYPE MODE_FOR_LOOP_JS;
+
+const static srcMLState::MODE_TYPE MODE_CATCH_JS;
+
+const static srcMLState::MODE_TYPE MODE_WITH_JS;
+
+const static srcMLState::MODE_TYPE MODE_IMPORT_JS;
+
 #endif

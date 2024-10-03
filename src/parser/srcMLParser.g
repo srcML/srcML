@@ -691,7 +691,6 @@ tokens {
     SDECLARATION_LET;
     SDECLARATION_STATIC;
     SDECLARATION_VAR;
-    SELSE_IF;
     SEXPORT_STATEMENT;
     SFUNCTION_STATEMENT;
     SFUNCTION_GENERATOR_STATEMENT;
@@ -743,6 +742,7 @@ public:
     size_t number_finishing_elements = 0;
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int>>> finish_elements_add;
     bool in_template_param = false;
+    int current_decl_type_js = 0;
     int start_count = 0;
 
     static const antlr::BitSet keyword_name_token_set;
@@ -1032,24 +1032,28 @@ catch[...] {
 start_javascript[] {
         ++start_count;
 
-        const int DEFAULT_COLON = 600;
-        const int ELSE_IF = 601;
-        const int JS_FUNCTION_MULTOPS = 602;
-        const int JS_YIELD_MULTOPS = 603;
-        const int JS_STATIC_LCURLY = 604;
-        const int JS_EXPORT_JS_FUNCTION = 605;
-        const int JS_EXPORT_CLASS = 606;
-        const int JS_EXPORT_JS_LET = 607;
-        const int JS_EXPORT_JS_VAR = 608;
-        const int JS_EXPORT_JS_CONST = 609;
-        const int JS_EXPORT_JS_STATIC = 610;
-        const int JS_EXPORT_LCURLY = 611;
-        const int JS_EXPORT_MULTOPS = 612;
+        const int CATCH_LPAREN = 600;
+        const int DEFAULT_COLON = 601;
+        const int ELSE_IF = 602;
+        const int JS_FUNCTION_MULTOPS = 603;
+        const int JS_YIELD_MULTOPS = 604;
+        const int JS_STATIC_LCURLY = 605;
+        const int JS_EXPORT_JS_FUNCTION = 606;
+        const int JS_EXPORT_CLASS = 607;
+        const int JS_EXPORT_JS_LET = 608;
+        const int JS_EXPORT_JS_VAR = 609;
+        const int JS_EXPORT_JS_CONST = 610;
+        const int JS_EXPORT_JS_STATIC = 611;
+        const int JS_EXPORT_LCURLY = 612;
+        const int JS_EXPORT_MULTOPS = 613;
+        const int JS_IMPORT_MULTOPS = 614;
+        const int JS_WITH_LPAREN = 615;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
             std::array<int, 500 * 500> temp_array;
 
+            temp_array[CATCH + (LPAREN << 8)] = CATCH_LPAREN;
             temp_array[DEFAULT + (COLON << 8)] = DEFAULT_COLON;
             temp_array[ELSE + (IF << 8)] = ELSE_IF;
             temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
@@ -1063,27 +1067,27 @@ start_javascript[] {
             temp_array[JS_EXPORT + (JS_STATIC << 8)] = JS_EXPORT_JS_STATIC;
             temp_array[JS_EXPORT + (LCURLY << 8)] = JS_EXPORT_LCURLY;
             temp_array[JS_EXPORT + (MULTOPS << 8)] = JS_EXPORT_MULTOPS;
+            temp_array[JS_IMPORT + (MULTOPS << 8)] = JS_IMPORT_MULTOPS;
+            temp_array[JS_WITH + (LPAREN << 8)] = JS_WITH_LPAREN;
 
             return temp_array;
         }();
 
         // JavaScript rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, 500> javascript_rules = [this](){
-            std::array<Rule, 500> temp_array;
+        static const std::array<Rule, 700> javascript_rules = [this](){
+            std::array<Rule, 700> temp_array;
 
             /* GENERIC STATEMENTS */
             temp_array[BREAK]                 = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
             temp_array[CASE]                  = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-            temp_array[CATCH]                 = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[CLASS]                 = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, nullptr };
             temp_array[CONTINUE]              = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
             temp_array[DO]                    = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
             temp_array[ELSE]                  = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_js, &srcMLParser::pseudoblock };
-            // /*do not uncomment*/ temp_array[EXPRESSION_STATEMENT]  = { 0, 0, 0, 0, nullptr, nullptr };
             temp_array[FINALLY]               = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
-            temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT, nullptr, nullptr };
-            temp_array[IF]                    = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_EXPECT | MODE_CONTROL | MODE_CONDITION, &srcMLParser::if_statement_js, nullptr };
+            temp_array[FOR]                   = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_CONTROL | MODE_EXPECT | MODE_FOR_LOOP_JS, nullptr, nullptr };
+            temp_array[IF]                    = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, nullptr };
             temp_array[RETURN]                = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
             temp_array[SWITCH]                = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
             temp_array[THROW]                 = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
@@ -1096,14 +1100,14 @@ start_javascript[] {
             temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_GET]                = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
-            temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
+            temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_IMPORT_JS, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
             temp_array[JS_SET]                = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
-            temp_array[JS_WITH]               = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST, nullptr, nullptr };
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
             /* DUPLEX KEYWORDS */
+            temp_array[CATCH_LPAREN]          = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_CATCH_JS, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `(`
             temp_array[DEFAULT_COLON]         = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_NEST | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // differentiates a `default` specifier from a `default` clause
-            temp_array[ELSE_IF]               = { SELSE_IF, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
+            temp_array[ELSE_IF]               = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_js, &srcMLParser::consume };  // extra consume() for `if`
             temp_array[JS_EXPORT_CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
             temp_array[JS_EXPORT_JS_CONST]    = { SDECLARATION_CONST, 0, MODE_STATEMENT | MODE_DECLARATION_JS, MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, &srcMLParser::declaration_statement_js, nullptr };  // treats `export` as a specifier
             temp_array[JS_EXPORT_JS_FUNCTION] = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_EXPORT_SPECIFIER_JS, nullptr, nullptr };  // treats `export` as a specifier
@@ -1113,8 +1117,10 @@ start_javascript[] {
             temp_array[JS_EXPORT_LCURLY]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, MODE_NAME_LIST_JS, nullptr, nullptr };  // treats `export` as a statement
             temp_array[JS_EXPORT_MULTOPS]     = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::multops_as_name };  // treats `*` in `export *` as a name
             temp_array[JS_FUNCTION_MULTOPS]   = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
-            temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
+            temp_array[JS_IMPORT_MULTOPS]     = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::multops_as_name };  // treats `*` in `import *` as a name
             temp_array[JS_STATIC_LCURLY]      = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a `static` specifier from a `static` block
+            temp_array[JS_WITH_LPAREN]        = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WITH_JS, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `(`
+            temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
 
             return temp_array;
         }();
@@ -1135,8 +1141,8 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
-        // looking for rparen to end the current control expression
-        { inTransparentMode(MODE_CONTROL_INITIALIZATION) }?
+        // looking for rparen to end the current control expression ("for...in" or "for...of" only)
+        { inTransparentMode(MODE_FOR_LOOP_JS) && inTransparentMode(MODE_INIT) }?
         rparen_control_js |
 
         // looking for rparen to end the current argument list
@@ -1152,16 +1158,36 @@ start_javascript[] {
         rparen_parameter_list |
 
         // looking for lcurly while expecting a name list
-        { inMode(MODE_NAME_LIST_JS) }?
+        { inMode(MODE_NAME_LIST_JS) || inTransparentMode(MODE_IMPORT_JS) }?
         name_list_js |
 
         // looking for rcurly to end the current name list
         { inTransparentMode(MODE_NAME_LIST_JS) }?
         rcurly_name_list |
 
+        // looking for the start of a string to ensure it is marked up in the current name list
+        { inTransparentMode(MODE_NAME_LIST_JS) }?
+        string_as_name_js |
+
+        // looking for "*" inside the current import statement
+        { inTransparentMode(MODE_IMPORT_JS) }?
+        multops_as_name |
+
+        // looking to consume a rparen to continue the current catch statement
+        { inTransparentMode(MODE_CATCH_JS) }?
+        rparen_catch_js |
+
+        // looking to consume a rparen to continue the current with statement
+        { inTransparentMode(MODE_WITH_JS) }?
+        rparen_with_js |
+
         // looking for "=" inside a parameter to start an init tag
         { inMode(MODE_PARAMETER) }?
         init_js |
+
+        // looking for "," to handle a declaration statement/control expression with multiple declarations
+        { inTransparentMode(MODE_DECLARATION_JS) }?
+        comma_declaration_js |
 
         // looking for a keyword that does not belong to a statement
         extends_js | alias_js | from_js | range_in_js | range_of_js | declaration_js |
@@ -3066,6 +3092,11 @@ control_group[] { ENTRY_DEBUG } :
         }
 
         LPAREN
+
+        {
+            if (LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || LA(1) == JS_STATIC)
+                control_initialization();
+        }
 ;
 
 /*
@@ -3148,6 +3179,39 @@ control_initialization_action[] { ENTRY_DEBUG } :
                 startElement(SCONTROL_INITIALIZATION);
             } else {
                 startElement(SDECLARATION_STATEMENT);
+            }
+
+            switch (LA(1)) {
+                case JS_LET :
+                    startNewMode(MODE_DECLARATION_JS);
+                    startElement(SDECLARATION_LET);
+                    startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    current_decl_type_js = JS_LET;
+                    break;
+
+                case JS_VAR :
+                    startNewMode(MODE_DECLARATION_JS);
+                    startElement(SDECLARATION_VAR);
+                    startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    current_decl_type_js = JS_VAR;
+                    break;
+
+                case JS_CONST :
+                    startNewMode(MODE_DECLARATION_JS);
+                    startElement(SDECLARATION_CONST);
+                    startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    current_decl_type_js = JS_CONST;
+                    break;
+
+                case JS_STATIC :
+                    startNewMode(MODE_DECLARATION_JS);
+                    startElement(SDECLARATION_STATIC);
+                    startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    current_decl_type_js = JS_STATIC;
+                    break;
+
+                default :
+                    break;
             }
         }
 ;
@@ -4943,9 +5007,15 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
                     control_condition_action();
             }
 
-            // ensure JavaScript declarations end before terminate token
+            // ensure JavaScript declarations end before the terminate token in a declaration statement
             if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_DECLARATION_JS))
                 endDownToMode(MODE_DECLARATION_STATEMENT);
+
+            // ensure JavaScript declarations end before the terminate token in the "init" portion of a for-loop control
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_CONTROL_CONDITION)) {
+                endDownToMode(MODE_INIT);
+                endMode(MODE_DECLARATION_JS);
+            }
         }
 
         terminate_pre
@@ -14637,8 +14707,9 @@ rparen_parameter_list[] { ENTRY_DEBUG } :
 */
 name_list_js[] { ENTRY_DEBUG } :
         {
-            // list of names
-            //startNewMode(MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPECT);
+            // possible if a name list start after a comma in an import statement
+            if (!inMode(MODE_NAME_LIST_JS))
+                startNewMode(MODE_NAME_LIST_JS);
 
             // start the name list
             startElement(SNAME_LIST);
@@ -14652,6 +14723,28 @@ name_list_js[] { ENTRY_DEBUG } :
             // SALIAS_COMPOUND_NAME encloses a JavaScript name with its respective alias in an extra name tag
             if (next_token() != COMMA && next_token() != RCURLY)
                 startElement(SALIAS_COMPOUND_NAME);
+        }
+;
+
+/*
+  string_as_name_js
+
+  Ensures string literals get marked up as such in JavaScript name lists.
+  JavaScript "import 'string'" statements should not be marked with a name tag.
+*/
+string_as_name_js[] { bool lone_string = next_token_two() == TERMINATE; ENTRY_DEBUG } :
+        {
+            if (!lone_string) {
+                startNewMode(MODE_VARIABLE_NAME);
+                startElement(SNAME);
+            }
+        }
+
+        literals
+
+        {
+            if (!lone_string)
+                endMode(MODE_VARIABLE_NAME);
         }
 ;
 
@@ -14680,11 +14773,15 @@ rcurly_name_list[] { ENTRY_DEBUG } :
 /*
   rparen_control_js
 
-  Ensures a JavaScript control tag closes cleanly.
+  Ensures a JavaScript control tag closes cleanly in "for...in" and "for...of" statements.
 */
 rparen_control_js[] { ENTRY_DEBUG } :
         {
-            endDownToMode(MODE_CONTROL_INITIALIZATION);
+            if (inTransparentMode(MODE_FOR_LOOP_JS) && inTransparentMode(MODE_INIT)) {
+                endMode(MODE_DECLARATION_JS);
+                endMode(MODE_INIT);
+                endMode(MODE_CONTROL_INITIALIZATION);
+            }
         }
 
         RPAREN
@@ -14708,6 +14805,50 @@ rparen_argument_list_js[] { ENTRY_DEBUG } :
 
         {
             endMode(MODE_ARGUMENT_LIST);
+        }
+;
+
+/*
+  rparen_catch_js
+
+  Consumes a right parenthesis in a JavaScript "catch" statement.
+  In this case, the paired parentheses are not surrounded by any tag.
+*/
+rparen_catch_js[] { ENTRY_DEBUG } :
+        {
+            endDownToMode(MODE_EXPRESSION);
+            endMode(MODE_EXPRESSION);
+        }
+
+        RPAREN
+
+        {
+            bool in_statement = inTransparentMode(MODE_STATEMENT);
+
+            if (in_statement)
+                startNewMode(MODE_STATEMENT);
+        }
+;
+
+/*
+  rparen_with_js
+
+  Consumes a right parenthesis in a JavaScript "with" statement.
+  In this case, the paired parentheses are not surrounded by any tag.
+*/
+rparen_with_js[] { ENTRY_DEBUG } :
+        {
+            endDownToMode(MODE_EXPRESSION);
+            endMode(MODE_EXPRESSION);
+        }
+
+        RPAREN
+
+        {
+            bool in_statement = inTransparentMode(MODE_STATEMENT);
+
+            if (in_statement)
+                startNewMode(MODE_STATEMENT);
         }
 ;
 
@@ -14765,18 +14906,22 @@ declaration_js[] { ENTRY_DEBUG } :
             switch (LA(1)) {
                 case JS_LET :
                     startElement(SDECLARATION_LET);
+                    current_decl_type_js = JS_LET;
                     break;
 
                 case JS_VAR :
                     startElement(SDECLARATION_VAR);
+                    current_decl_type_js = JS_VAR;
                     break;
 
                 case JS_CONST :
                     startElement(SDECLARATION_CONST);
+                    current_decl_type_js = JS_CONST;
                     break;
 
                 case JS_STATIC :
                     startElement(SDECLARATION_STATIC);
+                    current_decl_type_js = JS_STATIC;
                     break;
 
                 default :
@@ -14864,7 +15009,7 @@ export_sp[] { SingleElement element(this); ENTRY_DEBUG } :
 /*
   multops_as_name
 
-  Encloses the "*" in a JavaScript "export *" in a name tag.
+  Handles cases where "*" is a name in a JavaScript "export" or "import" statement.
   Invokes compound name logic if the next token is an "alias."
 */
 multops_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
@@ -14937,5 +15082,51 @@ init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         {
             endDownToMode(MODE_INIT);
+        }
+;
+
+/*
+  comma_declaration_js
+
+  Handles JavaScript declaration statements or control expressions with more than one declaration.
+*/
+comma_declaration_js[] { ENTRY_DEBUG } :
+        {
+            endDownToMode(MODE_DECLARATION_JS);
+            endMode(MODE_DECLARATION_JS);
+        }
+
+        COMMA
+
+        {
+            // declaration statement has an additional declaration
+            startNewMode(MODE_DECLARATION_JS);
+
+            switch (current_decl_type_js) {
+                case JS_LET :
+                    startElement(SDECLARATION_LET);
+                    current_decl_type_js = JS_LET;
+                    break;
+
+                case JS_VAR :
+                    startElement(SDECLARATION_VAR);
+                    current_decl_type_js = JS_VAR;
+                    break;
+
+                case JS_CONST :
+                    startElement(SDECLARATION_CONST);
+                    current_decl_type_js = JS_CONST;
+                    break;
+
+                case JS_STATIC :
+                    startElement(SDECLARATION_STATIC);
+                    current_decl_type_js = JS_STATIC;
+                    break;
+
+                default :
+                    break;
+            }
+
+            startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT);
         }
 ;
