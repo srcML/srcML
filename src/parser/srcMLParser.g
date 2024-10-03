@@ -1100,7 +1100,7 @@ start_javascript[] {
             temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_GET]                = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
-            temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
+            temp_array[JS_IMPORT]             = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_IMPORT_JS, MODE_VARIABLE_NAME | MODE_NAME_LIST_JS, nullptr, nullptr };
             temp_array[JS_SET]                = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[JS_YIELD]              = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
@@ -1158,7 +1158,7 @@ start_javascript[] {
         rparen_parameter_list |
 
         // looking for lcurly while expecting a name list
-        { inMode(MODE_NAME_LIST_JS) }?
+        { inMode(MODE_NAME_LIST_JS) || inTransparentMode(MODE_IMPORT_JS) }?
         name_list_js |
 
         // looking for rcurly to end the current name list
@@ -1167,7 +1167,11 @@ start_javascript[] {
 
         // looking for the start of a string to ensure it is marked up in the current name list
         { inTransparentMode(MODE_NAME_LIST_JS) }?
-        string_names_js |
+        string_as_name_js |
+
+        // looking for "*" inside the current import statement
+        { inTransparentMode(MODE_IMPORT_JS) }?
+        multops_as_name |
 
         // looking to consume a rparen to continue the current catch statement
         { inTransparentMode(MODE_CATCH_JS) }?
@@ -14703,6 +14707,10 @@ rparen_parameter_list[] { ENTRY_DEBUG } :
 */
 name_list_js[] { ENTRY_DEBUG } :
         {
+            // possible if a name list start after a comma in an import statement
+            if (!inMode(MODE_NAME_LIST_JS))
+                startNewMode(MODE_NAME_LIST_JS);
+
             // start the name list
             startElement(SNAME_LIST);
         }
@@ -14719,12 +14727,25 @@ name_list_js[] { ENTRY_DEBUG } :
 ;
 
 /*
-  string_names_js
+  string_as_name_js
 
   Ensures string literals get marked up as such in JavaScript name lists.
+  JavaScript "import 'string'" statements should not be marked with a name tag.
 */
-string_names_js[] { ENTRY_DEBUG } :
+string_as_name_js[] { bool lone_string = next_token_two() == TERMINATE; ENTRY_DEBUG } :
+        {
+            if (!lone_string) {
+                startNewMode(MODE_VARIABLE_NAME);
+                startElement(SNAME);
+            }
+        }
+
         literals
+
+        {
+            if (!lone_string)
+                endMode(MODE_VARIABLE_NAME);
+        }
 ;
 
 /*
@@ -14988,7 +15009,7 @@ export_sp[] { SingleElement element(this); ENTRY_DEBUG } :
 /*
   multops_as_name
 
-  Encloses the "*" in a JavaScript "export *" or "import *" in a name tag.
+  Handles cases where "*" is a name in a JavaScript "export" or "import" statement.
   Invokes compound name logic if the next token is an "alias."
 */
 multops_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
