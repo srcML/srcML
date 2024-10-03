@@ -742,6 +742,7 @@ public:
     size_t number_finishing_elements = 0;
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int>>> finish_elements_add;
     bool in_template_param = false;
+    int current_decl_type_js = 0;
     int start_count = 0;
 
     static const antlr::BitSet keyword_name_token_set;
@@ -1172,6 +1173,10 @@ start_javascript[] {
         // looking for "=" inside a parameter to start an init tag
         { inMode(MODE_PARAMETER) }?
         init_js |
+
+        // looking for "," to handle a declaration statement/control expression with multiple declarations
+        { inTransparentMode(MODE_DECLARATION_JS) }?
+        comma_declaration_js |
 
         // looking for a keyword that does not belong to a statement
         extends_js | alias_js | from_js | range_in_js | range_of_js | declaration_js |
@@ -3170,24 +3175,28 @@ control_initialization_action[] { ENTRY_DEBUG } :
                     startNewMode(MODE_DECLARATION_JS);
                     startElement(SDECLARATION_LET);
                     startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    current_decl_type_js = JS_LET;
                     break;
 
                 case JS_VAR :
                     startNewMode(MODE_DECLARATION_JS);
                     startElement(SDECLARATION_VAR);
                     startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    current_decl_type_js = JS_VAR;
                     break;
 
                 case JS_CONST :
                     startNewMode(MODE_DECLARATION_JS);
                     startElement(SDECLARATION_CONST);
                     startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    current_decl_type_js = JS_CONST;
                     break;
 
                 case JS_STATIC :
                     startNewMode(MODE_DECLARATION_JS);
                     startElement(SDECLARATION_STATIC);
                     startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT | MODE_STATEMENT);
+                    current_decl_type_js = JS_STATIC;
                     break;
 
                 default :
@@ -14860,18 +14869,22 @@ declaration_js[] { ENTRY_DEBUG } :
             switch (LA(1)) {
                 case JS_LET :
                     startElement(SDECLARATION_LET);
+                    current_decl_type_js = JS_LET;
                     break;
 
                 case JS_VAR :
                     startElement(SDECLARATION_VAR);
+                    current_decl_type_js = JS_VAR;
                     break;
 
                 case JS_CONST :
                     startElement(SDECLARATION_CONST);
+                    current_decl_type_js = JS_CONST;
                     break;
 
                 case JS_STATIC :
                     startElement(SDECLARATION_STATIC);
+                    current_decl_type_js = JS_STATIC;
                     break;
 
                 default :
@@ -15032,5 +15045,51 @@ init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         {
             endDownToMode(MODE_INIT);
+        }
+;
+
+/*
+  comma_declaration_js
+
+  Handles JavaScript declaration statements or control expressions with more than one declaration.
+*/
+comma_declaration_js[] { ENTRY_DEBUG } :
+        {
+            endDownToMode(MODE_DECLARATION_JS);
+            endMode(MODE_DECLARATION_JS);
+        }
+
+        COMMA
+
+        {
+            // declaration statement has an additional declaration
+            startNewMode(MODE_DECLARATION_JS);
+
+            switch (current_decl_type_js) {
+                case JS_LET :
+                    startElement(SDECLARATION_LET);
+                    current_decl_type_js = JS_LET;
+                    break;
+
+                case JS_VAR :
+                    startElement(SDECLARATION_VAR);
+                    current_decl_type_js = JS_VAR;
+                    break;
+
+                case JS_CONST :
+                    startElement(SDECLARATION_CONST);
+                    current_decl_type_js = JS_CONST;
+                    break;
+
+                case JS_STATIC :
+                    startElement(SDECLARATION_STATIC);
+                    current_decl_type_js = JS_STATIC;
+                    break;
+
+                default :
+                    break;
+            }
+
+            startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT);
         }
 ;
