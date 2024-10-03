@@ -1165,6 +1165,10 @@ start_javascript[] {
         { inTransparentMode(MODE_NAME_LIST_JS) }?
         rcurly_name_list |
 
+        // looking for the start of a string to ensure it is marked up in the current name list
+        { inTransparentMode(MODE_NAME_LIST_JS) }?
+        string_names_js |
+
         // looking to consume a rparen to continue the current catch statement
         { inTransparentMode(MODE_CATCH_JS) }?
         rparen_catch_js |
@@ -14715,6 +14719,15 @@ name_list_js[] { ENTRY_DEBUG } :
 ;
 
 /*
+  string_names_js
+
+  Ensures string literals get marked up as such in JavaScript name lists.
+*/
+string_names_js[] { ENTRY_DEBUG } :
+        literals
+;
+
+/*
   rcurly_name_list
 
   Handles a right curly brace for JavaScript name lists.
@@ -14975,7 +14988,7 @@ export_sp[] { SingleElement element(this); ENTRY_DEBUG } :
 /*
   multops_as_name
 
-  Encloses the "*" in a JavaScript "export *" in a name tag.
+  Encloses the "*" in a JavaScript "export *" or "import *" in a name tag.
   Invokes compound name logic if the next token is an "alias."
 */
 multops_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
