@@ -162,6 +162,7 @@ token_set(srcMLParser, duplex_keyword_set,
     srcMLParser::ELSE,
     srcMLParser::JS_EXPORT,
     srcMLParser::JS_FUNCTION,
+    srcMLParser::JS_IMPORT,
     srcMLParser::JS_STATIC,
     srcMLParser::JS_WITH,
     srcMLParser::JS_YIELD

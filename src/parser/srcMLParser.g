@@ -1046,7 +1046,8 @@ start_javascript[] {
         const int JS_EXPORT_JS_STATIC = 611;
         const int JS_EXPORT_LCURLY = 612;
         const int JS_EXPORT_MULTOPS = 613;
-        const int JS_WITH_LPAREN = 614;
+        const int JS_IMPORT_MULTOPS = 614;
+        const int JS_WITH_LPAREN = 615;
 
         // A duplex keyword is a pair of adjacent keywords
         static const std::array<int, 500 * 500> duplexKeywords = [this](){
@@ -1066,6 +1067,7 @@ start_javascript[] {
             temp_array[JS_EXPORT + (JS_STATIC << 8)] = JS_EXPORT_JS_STATIC;
             temp_array[JS_EXPORT + (LCURLY << 8)] = JS_EXPORT_LCURLY;
             temp_array[JS_EXPORT + (MULTOPS << 8)] = JS_EXPORT_MULTOPS;
+            temp_array[JS_IMPORT + (MULTOPS << 8)] = JS_IMPORT_MULTOPS;
             temp_array[JS_WITH + (LPAREN << 8)] = JS_WITH_LPAREN;
 
             return temp_array;
@@ -1115,9 +1117,10 @@ start_javascript[] {
             temp_array[JS_EXPORT_LCURLY]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, MODE_NAME_LIST_JS, nullptr, nullptr };  // treats `export` as a statement
             temp_array[JS_EXPORT_MULTOPS]     = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::multops_as_name };  // treats `*` in `export *` as a name
             temp_array[JS_FUNCTION_MULTOPS]   = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
-            temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
+            temp_array[JS_IMPORT_MULTOPS]     = { SIMPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::multops_as_name };  // treats `*` in `import *` as a name
             temp_array[JS_STATIC_LCURLY]      = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a `static` specifier from a `static` block
             temp_array[JS_WITH_LPAREN]        = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WITH_JS, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `(`
+            temp_array[JS_YIELD_MULTOPS]      = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for `*`
 
             return temp_array;
         }();
