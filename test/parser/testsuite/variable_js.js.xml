@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js"><decl_stmt><decl type="let">let <name>j</name></decl>;</decl_stmt>
-    <decl_stmt><decl type="let">let <name>x</name></decl><operator>,</operator> y<operator>,</operator> z;</decl_stmt>
-    <decl_stmt><decl type="var">var <name>k</name></decl>;</decl_stmt>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js"><comment type="line">//variable declaration</comment>
+    <decl_stmt><decl type="let">let <name>j</name></decl>;</decl_stmt>
+    <decl_stmt><decl type="let">let <name>x</name></decl>, <decl type="let"><name>y</name></decl>, <decl type="let"><name>z</name></decl>;</decl_stmt>
+    <decl_stmt><decl type="var">var <name>k</name> <init>= <expr><literal type="number">8.23</literal></expr></init></decl>;</decl_stmt>
     <decl_stmt><decl type="const">const <name>i</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="let">let <name>person</name> <init>= <expr><literal type="string">"Hege"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="let">let <name>person2</name><init>=<expr><literal type="string">"Hege2"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="var">var <name>car</name><init>=<expr><literal type="string">"volvo"</literal></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="var">var <name>car2</name><init>= <expr><literal type="string">"rav4"</literal></expr></init></decl>;</decl_stmt>
 
+    <comment type="line">//Assignment Operators</comment>
     <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">5</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name>y</name> <operator>=</operator> <literal type="number">6</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name>z</name> <operator>=</operator> <name>x</name> <operator>+</operator> <name>y</name></expr>;</expr_stmt>
@@ -13,9 +19,29 @@
     <expr_stmt><expr><operator>++</operator><name>x</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>y</name> <operator>=</operator> <name>x</name><operator>--</operator> <operator>+</operator> <name>z</name><operator>++</operator></expr>;</expr_stmt>
     <expr_stmt><expr><name>x</name> <operator>=</operator> <name>x</name><operator>--</operator> <operator>+</operator> <name>z</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>-=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>*=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>/=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>%=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>**=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>&amp;=</operator> <name>y</name></expr>;</expr_stmt>
 
-    <decl_stmt><decl type="let">let <name>person</name> <init>= <expr><literal type="string">"Hege"</literal></expr></init></decl>;</decl_stmt>
-    <decl_stmt><decl type="let">let <name>person2</name><init>=<expr><literal type="string">"Hege2"</literal></expr></init></decl>;</decl_stmt>
 
-    <decl_stmt><decl type="var">var <name>car</name><init>=<expr><literal type="string">"volvo"</literal></expr></init></decl>;</decl_stmt>
-    <decl_stmt><decl type="var">var <name>car2</name><init>= <expr><literal type="string">"rav4"</literal></expr></init></decl>;</decl_stmt></unit>
+    <comment type="line">//Shift Assignment Operators</comment>
+    <expr_stmt><expr><name>x</name> <operator>&lt;&lt;=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>x</name> <operator>&lt;&lt;</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>&gt;&gt;=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>x</name> <operator>&gt;&gt;</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>&gt;&gt;&gt;=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>x</name> <operator>&gt;&gt;&gt;</operator> <name>y</name></expr>;</expr_stmt>
+
+    <comment type="line">//Bitwise Assignment Operators</comment>
+    <expr_stmt><expr><name>x</name> <operator>&amp;=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>x</name> <operator>&amp;</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>^=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>x</name> <operator>^</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>|=</operator> <name>y</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>x</name> <operator>|</operator> <name>y</name></expr>;</expr_stmt>
+</unit>
