@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js">
-    <comment type="block">/*Function Declaration*/</comment>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js"><comment type="block">/*Function Declaration*/</comment>
     <function>function <name>functionName</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// function body</comment>
     </block_content>}</block></function>
@@ -14,18 +13,18 @@
         <comment type="line">// function body</comment>
         }</block></expr></init></decl>;</decl_stmt>
 
-    <decl_stmt><decl type="const">const <name>add</name> <init>= function<expr><operator>(</operator><name>a</name>, <name>b</name><operator>)</operator> <block>{
-        <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr></return></block></expr></init></decl>;</decl_stmt>
-    };
+    <decl_stmt><decl type="const">const <name>add</name> <init>=<expr>function<operator>(</operator><name>a</name><operator>,</operator> <name>b</name><operator>)</operator><block>{<block_content>
+                    <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</return>
+                </block_content>}</block></expr></init></decl>;</decl_stmt>
 
     <comment type="block">/*Arrow Function*/</comment>
-    <decl_stmt><decl type="const">const <name>functionName3</name> <init>= <expr><operator>(</operator><name>parameters</name><operator>)</operator> <operator>=</operator><operator>&gt;</operator> <block>{
+    <decl_stmt><decl type="const">const <name>functionName3</name> <init>= <expr><operator>(</operator><name>parameters</name><operator>)</operator> <operator>=&gt;</operator> <block>{
         <comment type="line">// function body</comment>
         }</block></expr></init></decl>;</decl_stmt>
 
-    <decl_stmt><decl type="const">const <name>multiply</name> <init>= <expr><operator>(</operator><name>a</name>, <name>b</name><operator>)</operator> <operator>=</operator><operator>&gt;</operator> <name>a</name> <operator>*</operator> <name>b</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="const">const <name>multiply</name> <init>= <expr><operator>(</operator><name>a</name></expr></init></decl>, <decl type="const"><name>b</name></decl></decl_stmt>) <expr_stmt><expr><operator>=</operator><operator>&gt;</operator> <name>a</name> <operator>*</operator> <name>b</name></expr>;</expr_stmt>
 
-    <decl_stmt><decl type="const">const <name>square</name> <init>= <expr><name>x</name> <operator>=</operator><operator>&gt;</operator> <name>x</name> <operator>*</operator> <name>x</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="const">const <name>square</name> <init>= <expr><name>x</name> <operator>=&gt;</operator> <name>x</name> <operator>*</operator> <name>x</name></expr></init></decl>;</decl_stmt>
 
     <comment type="block">/*Immediately Invoked Function Expression (IIFE)*/</comment>
     <expr_stmt><expr><operator>(</operator>function<operator>(</operator><name>parameters</name><operator>)</operator> <block>{
@@ -49,9 +48,9 @@
         }</block></expr></init></decl>;</decl_stmt>
 
     <decl_stmt><decl type="const">const <name>calculator</name> <init>= <expr><block>{
-        <expr><name>add</name><operator>:</operator> function<operator>(</operator><name>a</name>, <name>b</name><operator>)</operator> <block>{
-            <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr></return></block></expr></block></expr></init></decl>;</decl_stmt>
-    },
+        <expr><name>add</name><operator>:</operator> function<operator>(</operator><name>a</name></expr></block></expr></init></decl>, <decl type="const"><name>b</name></decl></decl_stmt>) <block>{<block_content>
+        <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</return>
+    </block_content>}</block><operator>,</operator>
     <expr_stmt><expr><call><name>subtract</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument>)</argument_list></call> <block>{ <comment type="line">// ES6 shorthand</comment>
         <return>return <expr><name>a</name> <operator>-</operator> <name>b</name></expr>;</return>
         }</block></expr></expr_stmt>
@@ -80,39 +79,39 @@
     </block_content>}</block></class>
 
     <comment type="block">/*Generator Functions*/</comment>
-    function<expr_stmt><expr><operator>*</operator> <call><name>generatorFunction</name><argument_list>(<argument><expr><name>parameters</name></expr></argument>)</argument_list></call> <block>{
-    <comment type="line">// function body</comment>
-    yield <expr><name>value</name></expr>;
-    }</block>
+    <function type="generator">function <operator>*</operator><name>generatorFunction</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <comment type="line">// function body</comment>
+        <yield>yield <expr><name>value</name></expr>;</yield>
+    </block_content>}</block></function>
 
-    function<operator>*</operator> <call><name>countUpTo</name><argument_list>(<argument><expr><name>max</name></expr></argument>)</argument_list></call> <block>{
-        <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">1</literal></expr></init></decl></init>; <init><expr><name>i</name> <operator>&lt;=</operator> <name>max</name></expr>;</init> <condition><expr><name>i</name><operator>++</operator></expr></condition>)</control> <block>{<block_content>
+    <function type="generator">function <operator>*</operator><name>countUpTo</name><parameter_list>(<parameter><decl><name>max</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;=</operator> <name>max</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator>)</expr> <block>{<block_content>
             <yield>yield <expr><name>i</name></expr>;</yield>
-            <expr_stmt/></block_content></block></for>}</block></expr></expr_stmt>
-    }
+        </block_content>}</block></incr>
+            }</control></for>
 
-    <comment type="block">/*Async Functions*/</comment>
-    async <function>function <name>functionName</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
-    <comment type="line">// function body</comment>
-</block_content>}</block></function>
+        <comment type="block">/*Async Functions*/</comment>
+        <macro><name>async</name></macro> <function>function <name>functionName</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <comment type="line">// function body</comment>
+    </block_content>}</block></function>
 
-    <macro><name>async</name></macro> <function>function <name>fetchData</name><parameter_list>(<parameter><decl><name>url</name></decl></parameter>)</parameter_list> <block>{<block_content>
-    <try>try <block>{<block_content>
-        <decl_stmt><decl type="const">const <name>response</name> <init>= <expr><name>await</name> <call><name>fetch</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
-        <decl_stmt><decl type="const">const <name>data</name> <init>= <expr><name>await</name> <call><name><name>response</name><operator>.</operator><name>json</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
-        <return>return <expr><name>data</name></expr>;</return>
-    </block_content>}</block> <catch>catch <argument_list>(<argument><expr><name>error</name></expr></argument>)</argument_list> <block>{<block_content>
-        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">'Error:'</literal></expr></argument>, <argument><expr><name>error</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-    </block_content>}</block></catch></try>
-</block_content>}</block></function>
+        <macro><name>async</name></macro> <function>function <name>fetchData</name><parameter_list>(<parameter><decl><name>url</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <try>try <block>{<block_content>
+            <decl_stmt><decl type="const">const <name>response</name> <init>= <expr><name>await</name> <call><name>fetch</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+            <decl_stmt><decl type="const">const <name>data</name> <init>= <expr><name>await</name> <call><name><name>response</name><operator>.</operator><name>json</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+            <return>return <expr><name>data</name></expr>;</return>
+        </block_content>}</block> <catch>catch (<name>error</name>) <block>{<block_content>
+            <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">'Error:'</literal></expr></argument>, <argument><expr><name>error</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        </block_content>}</block></catch></try>
+    </block_content>}</block></function>
 
-    <decl_stmt><decl type="const">const <name>fetchData2</name> <init>= <expr><call><name>async</name> <argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call> <operator>=</operator><operator>&gt;</operator> <block>{
-        <init><decl type="const">const <name>response</name> <init>= <expr><name>await</name> <call><name>fetch</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr></init></decl></init></block></expr></init></decl>;</decl_stmt>
-    <return>return <expr><call><name><name>response</name><operator>.</operator><name>json</name></name><argument_list>()</argument_list></call></expr>;</return>
-    };
+        <decl_stmt><decl type="const">const <name>fetchData2</name> <init>= <expr><call><name>async</name> <argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call> <operator>=</operator><operator>&gt;</operator> <block>{
+            <init><decl type="const">const <name>response</name> <init>= <expr><name>await</name> <call><name>fetch</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr></init></decl></init></block></expr></init></decl>;</decl_stmt>
+        <return>return <expr><call><name><name>response</name><operator>.</operator><name>json</name></name><argument_list>()</argument_list></call></expr>;</return>
+    </block_content>}</block></function><empty_stmt>;</empty_stmt>
 
     <comment type="block">/* Using the Function Constructor*/</comment>
-    <decl_stmt><decl type="const">const <name>sum</name> <init>= <expr><operator>new</operator> <call><name>Function</name><argument_list>(<argument><expr><literal type="string">'a'</literal></expr></argument>, <argument><expr><literal type="string">'b'</literal></expr></argument>, <argument><expr><literal type="string">'return a + b;'</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="const">const <name>sum</name> <init>= <expr><operator>new</operator> <call><name>Function</name><argument_list>(<argument><expr><literal type="string">'a'</literal></expr></argument></argument_list></call></expr></init></decl>, <decl type="const">'b'</decl>, <decl type="const">'return a + b;'</decl></decl_stmt>)<empty_stmt>;</empty_stmt>
 
     <comment type="block">/*Nested Functions*/</comment>
     <function>function <name>outerFunction</name><parameter_list>(<parameter><decl><name>outerVariable</name></decl></parameter>)</parameter_list> <block>{<block_content>
@@ -132,36 +131,6 @@
         <return>return <expr><call><name><name>numbers</name><operator>.</operator><name>reduce</name></name><argument_list>(<argument><expr><operator>(</operator><name>acc</name><operator>,</operator> <name>curr</name>) <operator>=</operator><operator>&gt;</operator> <name>acc</name> <operator>+</operator> <name>curr</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
     </block_content>}</block></function>
 
-    <comment type="block">/*Method Chaining*/</comment>
-    <class>class <name>Calculator</name> <block>{<block_content>
-        <constructor>constructor<parameter_list>(</parameter_list>)</constructor> <block>{<block_content>
-        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>value</name></name> <operator>=</operator> <literal type="number">0</literal></expr>;</expr_stmt>
-    </block_content>}</block>
-
-        <expr_stmt><expr><call><name>add</name><argument_list>(<argument><expr><name>num</name></expr></argument>)</argument_list></call> <block>{
-            <expr><name><name>this</name><operator>.</operator><name>value</name></name> <operator>+=</operator> <name>num</name></expr>;
-            <return>return <expr><name>this</name></expr>;</return>
-            }</block></expr></expr_stmt>
-
-        <expr_stmt><expr><call><name>subtract</name><argument_list>(<argument><expr><name>num</name></expr></argument>)</argument_list></call> <block>{
-            <expr><name><name>this</name><operator>.</operator><name>value</name></name> <operator>-=</operator> <name>num</name></expr>;
-            <return>return <expr><name>this</name></expr>;</return>
-            }</block></expr></expr_stmt>
-
-        <expr_stmt><expr><call><name>multiply</name><argument_list>(<argument><expr><name>num</name></expr></argument>)</argument_list></call> <block>{
-            <expr><name><name>this</name><operator>.</operator><name>value</name></name> <operator>*=</operator> <name>num</name></expr>;
-            <return>return <expr><name>this</name></expr>;</return>
-            }</block></expr></expr_stmt>
-
-        <expr_stmt><expr><call><name>getResult</name><argument_list>()</argument_list></call> <block>{
-            <return>return <expr><name><name>this</name><operator>.</operator><name>value</name></name></expr>;</return>
-            }</block></expr></expr_stmt>
-    </block_content>}</block></class>
-
-    <decl_stmt><decl type="const">const <name>calc</name> <init>= <expr><operator>new</operator> <call><name>Calculator</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
-    <decl_stmt><decl type="const">const <name>result</name> <init>= <expr><call><name><name>calc</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>subtract</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>multiply</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>getResult</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
-    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// Output: 9</comment>
-
     <comment type="block">/*Higher-Order Functions*/</comment>
     <function>function <name>higherOrderFunction</name><parameter_list>(<parameter><decl><name>callback</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <decl_stmt><decl type="const">const <name>result</name> <init>= <expr><call><name>callback</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
@@ -177,7 +146,7 @@
     <comment type="block">/*Callback Functions*/</comment>
     <function>function <name>fetchData3</name><parameter_list>(<parameter><decl><name>callback</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><call><name>setTimeout</name><argument_list>(<argument><expr><operator>(</operator>) <operator>=</operator><operator>&gt;</operator> <block>{
-            <init><decl type="const">const <name>data</name> <init>= <expr><block>{ <expr><name>id</name><operator>:</operator> <literal type="number">1</literal></expr>, <expr><name>name</name><operator>:</operator> <literal type="string">'Eve'</literal></expr> }</block></expr></init></decl></init>;
+            <init><decl type="const">const <name>data</name> <init>= <expr><block>{ <expr><name>id</name><operator>:</operator> <literal type="number">1</literal></expr></block></expr></init></decl></init>, <decl type="const"><name>name</name><range>: <expr><literal type="string">'Eve'</literal></expr> }</range></decl>;
             <expr><call><name>callback</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;
             }</block></expr></argument>, <argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
     </block_content>}</block></function>
@@ -187,5 +156,4 @@
     </block_content>}</block></function>
 
     <expr_stmt><expr><call><name>fetchData3</name><argument_list>(<argument><expr><name>displayData</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-
 </unit>
