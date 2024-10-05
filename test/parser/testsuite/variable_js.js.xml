@@ -28,7 +28,6 @@
     <expr_stmt><expr><name>x</name> <operator>**=</operator> <name>y</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>x</name> <operator>&amp;=</operator> <name>y</name></expr>;</expr_stmt>
 
-
     <comment type="line">//Shift Assignment Operators</comment>
     <expr_stmt><expr><name>x</name> <operator>&lt;&lt;=</operator> <name>y</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>x</name> <operator>=</operator> <name>x</name> <operator>&lt;&lt;</operator> <name>y</name></expr>;</expr_stmt>
