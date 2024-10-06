@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js"><comment type="line">//create object</comment>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="objects.js"><comment type="line">//create object</comment>
     <decl_stmt><decl type="const">const <name>car</name> <init>= <expr><block>{<expr><name>type</name><operator>:</operator><literal type="string">"Fiat"</literal></expr></block></expr></init></decl>, <decl type="const"><name>model</name><range>:<expr><literal type="string">"500"</literal></expr></range></decl>, <decl type="const"><name>color</name><range>:<expr><literal type="string">"white"</literal></expr></range></decl></decl_stmt>};
 
     <comment type="line">// Create an Object then Add Properties</comment>
@@ -10,16 +10,17 @@
     <expr_stmt><expr><name><name>person</name><operator>.</operator><name>eyeColor</name></name> <operator>=</operator> <literal type="string">"blue"</literal></expr>;</expr_stmt>
 
     <comment type="line">// Create an Object using new keyword then adding properties</comment>
-    <decl_stmt><decl type="const">const <name>person</name> <init>= <expr><operator>new</operator> <call><name>Object</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="const">const <name>person2</name> <init>= <expr><operator>new</operator> <call><name>Object</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
     <expr_stmt><expr><name><name>person</name><operator>.</operator><name>firstName</name></name> <operator>=</operator> <literal type="string">"John"</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name><name>person</name><operator>.</operator><name>lastName</name></name> <operator>=</operator> <literal type="string">"Doe"</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name><name>person</name><operator>.</operator><name>age</name></name> <operator>=</operator> <literal type="number">50</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name><name>person</name><operator>.</operator><name>eyeColor</name></name> <operator>=</operator> <literal type="string">"blue"</literal></expr>;</expr_stmt>
-    <decl_stmt><decl type="const">const <name>x</name> <init>= <expr><name>person</name></expr></init></decl>;</decl_stmt> <comment type="line">// Create a copy</comment>
+    <decl_stmt><decl type="const">const <name>x</name> <init>= <expr><name>person2</name></expr></init></decl>;</decl_stmt> <comment type="line">// Create a copy</comment>
     <expr_stmt><expr><name><name>x</name><operator>.</operator><name>age</name></name> <operator>=</operator> <literal type="number">10</literal></expr>;</expr_stmt> <comment type="line">// Change Age in both</comment>
 
+    <comment type="line">//@TODO what is the range tag, documentation shows it used for c++ bit fields but that's not really what's happening here</comment>
     <comment type="line">//object with member function</comment>
-    <decl_stmt><decl type="const">const <name>person</name> <init>= <expr><block>{
+    <decl_stmt><decl type="const">const <name>person3</name> <init>= <expr><block>{
         <expr><name>firstName</name><operator>:</operator> <literal type="string">"John"</literal></expr></block></expr></init></decl>,
         <decl type="const"><name>lastName</name> <range>: <expr><literal type="string">"Doe"</literal></expr></range></decl>,
         <decl type="const"><name>id</name>       <range>: <expr><literal type="number">5566</literal></expr></range></decl>,
