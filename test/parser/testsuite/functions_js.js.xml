@@ -22,7 +22,7 @@
         <comment type="line">// function body</comment>
         }</block></expr></init></decl>;</decl_stmt>
 
-    <decl_stmt><decl type="const">const <name>multiply</name> <init>= <expr><operator>(</operator><name>a</name></expr></init></decl>, <decl type="const"><name>b</name></decl></decl_stmt>) <expr_stmt><expr><operator>=</operator><operator>&gt;</operator> <name>a</name> <operator>*</operator> <name>b</name></expr>;</expr_stmt>
+    <decl_stmt><decl type="const">const <name>multiply</name> <init>= <expr><operator>(</operator><name>a</name></expr></init></decl>, <decl type="const"><name>b</name></decl></decl_stmt>) <expr_stmt><expr><operator>=&gt;</operator> <name>a</name> <operator>*</operator> <name>b</name></expr>;</expr_stmt>
 
     <decl_stmt><decl type="const">const <name>square</name> <init>= <expr><name>x</name> <operator>=&gt;</operator> <name>x</name> <operator>*</operator> <name>x</name></expr></init></decl>;</decl_stmt>
 
@@ -105,7 +105,7 @@
         </block_content>}</block></catch></try>
     </block_content>}</block></function>
 
-        <decl_stmt><decl type="const">const <name>fetchData2</name> <init>= <expr><call><name>async</name> <argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call> <operator>=</operator><operator>&gt;</operator> <block>{
+        <decl_stmt><decl type="const">const <name>fetchData2</name> <init>= <expr><call><name>async</name> <argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call> <operator>=&gt;</operator> <block>{
             <init><decl type="const">const <name>response</name> <init>= <expr><name>await</name> <call><name>fetch</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr></init></decl></init></block></expr></init></decl>;</decl_stmt>
         <return>return <expr><call><name><name>response</name><operator>.</operator><name>json</name></name><argument_list>()</argument_list></call></expr>;</return>
     </block_content>}</block></function><empty_stmt>;</empty_stmt>
@@ -128,7 +128,7 @@
     </block_content>}</block></function>
 
     <function>function <name>sum2</name><parameter_list>(<parameter><decl><modifier>...</modifier><name>numbers</name></decl></parameter>)</parameter_list> <block>{<block_content>
-        <return>return <expr><call><name><name>numbers</name><operator>.</operator><name>reduce</name></name><argument_list>(<argument><expr><operator>(</operator><name>acc</name><operator>,</operator> <name>curr</name>) <operator>=</operator><operator>&gt;</operator> <name>acc</name> <operator>+</operator> <name>curr</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
+        <return>return <expr><call><name><name>numbers</name><operator>.</operator><name>reduce</name></name><argument_list>(<argument><expr><operator>(</operator><name>acc</name><operator>,</operator> <name>curr</name>) <operator>=&gt;</operator> <name>acc</name> <operator>+</operator> <name>curr</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
     </block_content>}</block></function>
 
     <comment type="block">/*Higher-Order Functions*/</comment>
@@ -145,7 +145,7 @@
 
     <comment type="block">/*Callback Functions*/</comment>
     <function>function <name>fetchData3</name><parameter_list>(<parameter><decl><name>callback</name></decl></parameter>)</parameter_list> <block>{<block_content>
-        <expr_stmt><expr><call><name>setTimeout</name><argument_list>(<argument><expr><operator>(</operator>) <operator>=</operator><operator>&gt;</operator> <block>{
+        <expr_stmt><expr><call><name>setTimeout</name><argument_list>(<argument><expr><operator>(</operator>) <operator>=&gt;</operator> <block>{
             <init><decl type="const">const <name>data</name> <init>= <expr><block>{ <expr><name>id</name><operator>:</operator> <literal type="number">1</literal></expr></block></expr></init></decl></init>, <decl type="const"><name>name</name><range>: <expr><literal type="string">'Eve'</literal></expr> }</range></decl>;
             <expr><call><name>callback</name><argument_list>(<argument><expr><name>data</name></expr></argument>)</argument_list></call></expr>;
             }</block></expr></argument>, <argument><expr><literal type="number">1000</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
