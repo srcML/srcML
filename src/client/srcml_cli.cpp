@@ -116,6 +116,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     int textCounter = 0;
     for (auto& p : commandline) {
+
         if (p == "--text"sv || p.rfind("--text=", 0) == 0) {
 
             p.insert("--text"sv.size(), std::to_string(textCounter));
@@ -308,10 +309,14 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             srcml_request.input_sources.emplace_back(src_prefix_add_uri("filelist", value));
         });
 
-    app.add_option("--register-ext", srcml_request.language_ext,
+    app.add_option("--register-ext",
         "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
         ->type_name("EXT=LANG")
-        ->group("CREATING SRCML");
+        ->group("CREATING SRCML")
+        ->type_size(-1)
+        ->each([&](const std::string& value) {
+            srcml_request.language_ext.push_back(value);
+        });
 
     app.add_option("--src-encoding", srcml_request.src_encoding,
         "Set the input source-code encoding")->type_name("ENCODING")

@@ -15,7 +15,7 @@
 #include <vector>
 
 /** Declare type language_extension as string/int pair */
-typedef std::pair<std::string_view, int> language_extension;
+typedef std::pair<std::string, int> language_extension;
 
 /** access the extension from language_extension */
 #define get_extension(OBJ) (OBJ).first
