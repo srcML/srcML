@@ -382,7 +382,7 @@ int srcml_archive_enable_option(struct srcml_archive* archive, size_t option) {
         archive->options |= SRCML_OPTION_CPP_DECLARED;
     }
 
-    OPTION_TYPE modoption = option % (1<<7);
+    OPTION_TYPE modoption = option % (1<<8);
 
     archive->options |= modoption;
 
