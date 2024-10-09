@@ -16,7 +16,7 @@ define input <<- 'INPUT'
 	#if 0
 	break;
 	#endif
-	INPUT
+INPUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -26,7 +26,7 @@ define output <<- 'STDOUT'
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 
@@ -44,7 +44,7 @@ define output2 <<- 'STDOUT'
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 
