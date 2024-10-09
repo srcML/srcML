@@ -16,7 +16,7 @@ define input <<- 'INPUT'
 	#else
 	return;
 	#endif
-	INPUT
+INPUT
 
 define markup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -27,7 +27,7 @@ define markup_else <<- 'STDOUT'
 	<return>return;</return>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 	</unit>
-	STDOUT
+STDOUT
 
 define fmarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -38,7 +38,7 @@ define fmarkup_else <<- 'STDOUT'
 	<return>return;</return>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 	</unit>
-	STDOUT
+STDOUT
 
 define nomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -49,7 +49,7 @@ define nomarkup_else <<- 'STDOUT'
 	return;
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 	</unit>
-	STDOUT
+STDOUT
 
 define fnomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -60,7 +60,7 @@ define fnomarkup_else <<- 'STDOUT'
 	return;
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$markup_else"
 xmlcheck "$fmarkup_else"
