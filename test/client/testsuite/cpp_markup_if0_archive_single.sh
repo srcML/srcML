@@ -14,7 +14,7 @@ define input <<- 'INPUT'
 	#if 0
 	break;
 	#endif
-	INPUT
+INPUT
 
 define nomarkupif0 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -27,7 +27,7 @@ define nomarkupif0 <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define fnomarkupif0 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -40,7 +40,7 @@ define fnomarkupif0 <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define markupif0 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -53,7 +53,7 @@ define markupif0 <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define fmarkupif0 <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -66,7 +66,7 @@ define fmarkupif0 <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$nomarkupif0"
 xmlcheck "$fnomarkupif0"
