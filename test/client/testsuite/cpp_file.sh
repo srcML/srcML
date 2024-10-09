@@ -18,7 +18,7 @@ define input <<- 'INPUT'
 	#else
 	return;
 	#endif
-    INPUT
+INPUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -27,20 +27,19 @@ define output <<- 'STDOUT'
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 	<return>return;</return>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
-    </unit>
-	STDOUT
+	</unit>
+STDOUT
 xmlcheck "$output"
 
 define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Java" filename="sub/a.java">
-	<cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="Java" filename="sub/a.java"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
 	<break>break;</break>
 	<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
 	<return>return;</return>
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 	</unit>
-	STDOUT
+STDOUT
 xmlcheck "$foutput"
 
 createfile sub/a.java "$input"
@@ -70,28 +69,28 @@ createfile sub/a.java "$input"
 #srcml -cpp -l Java -o sub/a.java.xml <<< "$input"
 #check sub/a.java.xml "$output"
 
-echo "$input" | srcml -l Java --cpp
+echo -n "$input" | srcml -l Java --cpp
 check "$output"
 
-echo "$input" | srcml --cpp -l Java
+echo -n "$input" | srcml --cpp -l Java
 check "$output"
 
-echo "$input" | srcml -l Java --cpp -o sub/a.java.xml
+echo -n "$input" | srcml -l Java --cpp -o sub/a.java.xml
 check sub/a.java.xml "$output"
 
-echo "$input" | srcml -l Java -o sub/a.java.xml --cpp
+echo -n "$input" | srcml -l Java -o sub/a.java.xml --cpp
 check sub/a.java.xml "$output"
 
-echo "$input" | srcml --cpp -l Java -o sub/a.java.xml
+echo -n "$input" | srcml --cpp -l Java -o sub/a.java.xml
 check sub/a.java.xml "$output"
 
-echo "$input" | srcml --cpp -o sub/a.java.xml -l Java
+echo -n "$input" | srcml --cpp -o sub/a.java.xml -l Java
 check sub/a.java.xml "$output"
 
-echo "$input" | srcml -o sub/a.java.xml -l Java --cpp
+echo -n "$input" | srcml -o sub/a.java.xml -l Java --cpp
 check sub/a.java.xml "$output"
 
-echo "$input" | srcml -o sub/a.java.xml --cpp -l Java
+echo -n "$input" | srcml -o sub/a.java.xml --cpp -l Java
 check sub/a.java.xml "$output"
 
 # from file - options after input
