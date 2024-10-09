@@ -11,7 +11,7 @@ source $(dirname "$0")/framework_test.sh
 # files from an archived file list
 define error <<- 'STDOUT'
 	srcml: filelist requires a non-archived file format
-	STDOUT
+STDOUT
 
 createfile archive/a.cpp "a;"
 createfile list.txt "archive/a.cpp"
@@ -20,7 +20,7 @@ createfile list.txt "archive/a.cpp"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.cpio"/>
-	STDOUT
+STDOUT
 
 echo list.txt | tr " " "\n" | cpio --quiet -o > list.txt.cpio
 
@@ -34,7 +34,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.cpio.bz2"/>
-	STDOUT
+STDOUT
 
 bzip2 -c list.txt.cpio > list.txt.cpio.bz2
 
@@ -48,7 +48,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.cpio.gz"/>
-	STDOUT
+STDOUT
 
 gzip -c list.txt.cpio > list.txt.cpio.gz
 
@@ -62,7 +62,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.tar"/>
-	STDOUT
+STDOUT
 
 tar -cf list.txt.tar list.txt
 
@@ -76,7 +76,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.tar.bz2"/>
-	STDOUT
+STDOUT
 
 tar -cjf list.txt.tar.bz2 list.txt
 
@@ -90,7 +90,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.tar.gz"/>
-	STDOUT
+STDOUT
 
 tar -czf list.txt.tar.gz list.txt
 
@@ -104,7 +104,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.tbz2"/>
-	STDOUT
+STDOUT
 
 tar -cjf list.txt.tbz2 list.txt
 
@@ -118,7 +118,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.tgz"/>
-	STDOUT
+STDOUT
 
 tar -czf list.txt.tgz list.txt
 
@@ -132,7 +132,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.zip"/>
-	STDOUT
+STDOUT
 
 zip --quiet list.txt.zip list.txt
 
@@ -146,7 +146,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.zip.bz2"/>
-	STDOUT
+STDOUT
 
 bzip2 -c list.txt.zip > list.txt.zip.bz2
 
@@ -160,7 +160,7 @@ check archive/list.xml "$archive_output" "$error"
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="list.txt.zip.gz"/>
-	STDOUT
+STDOUT
 
 gzip -c list.txt.zip > list.txt.zip.gz
 
