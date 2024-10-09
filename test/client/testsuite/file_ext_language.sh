@@ -15,7 +15,7 @@ source $(dirname "$0")/framework_test.sh
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" filename="emptysrc/empty.c"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.c ""
 
@@ -25,7 +25,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" filename="emptysrc/empty.h"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.h ""
 
@@ -35,7 +35,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" filename="emptysrc/empty.c"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.c.gz ""
 
@@ -45,7 +45,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" filename="emptysrc/empty.h"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.h.gz ""
 
@@ -56,7 +56,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.cpp"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.cpp ""
 
@@ -66,7 +66,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.cc"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.cc ""
 
@@ -76,7 +76,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.cxx"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.cxx ""
 
@@ -86,7 +86,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.c++"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.c++ ""
 
@@ -96,7 +96,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.hpp"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.hpp ""
 
@@ -106,7 +106,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.hh"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.hh ""
 
@@ -116,7 +116,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.hxx"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.hxx ""
 
@@ -126,7 +126,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.h++"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.h++ ""
 
@@ -136,7 +136,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.tcc"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.tcc ""
 
@@ -146,7 +146,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.cpp"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.cpp.gz ""
 
@@ -156,7 +156,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.cc"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.cc.gz ""
 
@@ -166,7 +166,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.cxx"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.cxx.gz ""
 
@@ -176,7 +176,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.c++"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.c++.gz ""
 
@@ -186,7 +186,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.hpp"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.hpp.gz ""
 
@@ -196,7 +196,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.hh"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.hh.gz ""
 
@@ -206,7 +206,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.hxx"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.hxx.gz ""
 
@@ -216,7 +216,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.h++"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.h++.gz ""
 
@@ -226,7 +226,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="emptysrc/empty.tcc"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.tcc.gz ""
 
@@ -236,7 +236,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java" filename="emptysrc/empty.java"/>
-	STDOUT
+STDOUT
 
 # check java file extension
 createfile emptysrc/empty.java ""
@@ -247,7 +247,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java" filename="emptysrc/empty.java"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.java.gz ""
 
@@ -257,7 +257,7 @@ check "$checkvar"
 define checkvar <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java" filename="emptysrc/empty.aj"/>
-	STDOUT
+STDOUT
 
 createfile emptysrc/empty.aj.gz ""
 
