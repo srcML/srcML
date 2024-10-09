@@ -26,7 +26,7 @@ define output <<- 'STDOUT'
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 
@@ -53,7 +53,7 @@ define output2 <<- 'STDOUT'
 	<expr_stmt><expr><name>q</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output2"
 
@@ -71,7 +71,7 @@ define output3 <<- 'STDOUT'
 	<expr_stmt><expr><name>c</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output3"
 
