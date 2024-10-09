@@ -20,7 +20,7 @@ define nestedfile <<- 'STDOUT'
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$nestedfile"
 
