@@ -11261,7 +11261,10 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             CSPEC | MSPEC |
 
             // Apple
-            BLOCKOP
+            BLOCKOP |
+
+            // JavaScript
+            JS_INSTANCE_OF | JS_TYPEOF | JS_VOID
         )
 ;
 
