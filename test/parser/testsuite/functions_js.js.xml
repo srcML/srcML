@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js"><comment type="block">/*Function Declaration*/</comment>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js" url="function_types">
+    <unit language="JavaScript">
+    <comment type="block">/*Function Declaration*/</comment>
     <function>function <name>functionName</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// function body</comment>
     </block_content>}</block></function>
@@ -7,7 +9,9 @@
     <function>function <name>greet</name><parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <return>return <expr><operator>`</operator><name>Hello</name></expr><operator>,</operator> $<block>{<block_content><expr><name>name</name></expr></block_content>}</block></return><expr_stmt><expr><operator>!</operator><operator>`</operator></expr>;</expr_stmt>
     </block_content>}</block></function>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Function Expression*/</comment>
     <decl_stmt><decl type="const">const <name>functionName2</name> <init>= function<expr><operator>(</operator><name>parameters</name><operator>)</operator> <block>{
         <comment type="line">// function body</comment>
@@ -16,7 +20,9 @@
     <decl_stmt><decl type="const">const <name>add</name> <init>=<expr>function<operator>(</operator><name>a</name><operator>,</operator> <name>b</name><operator>)</operator><block>{<block_content>
                     <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</return>
                 </block_content>}</block></expr></init></decl>;</decl_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Arrow Function*/</comment>
     <decl_stmt><decl type="const">const <name>functionName3</name> <init>= <expr><operator>(</operator><name>parameters</name><operator>)</operator> <operator>=&gt;</operator> <block>{
         <comment type="line">// function body</comment>
@@ -25,7 +31,9 @@
     <decl_stmt><decl type="const">const <name>multiply</name> <init>= <expr><operator>(</operator><name>a</name></expr></init></decl>, <decl type="const"><name>b</name></decl></decl_stmt>) <expr_stmt><expr><operator>=&gt;</operator> <name>a</name> <operator>*</operator> <name>b</name></expr>;</expr_stmt>
 
     <decl_stmt><decl type="const">const <name>square</name> <init>= <expr><name>x</name> <operator>=&gt;</operator> <name>x</name> <operator>*</operator> <name>x</name></expr></init></decl>;</decl_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Immediately Invoked Function Expression (IIFE)*/</comment>
     <expr_stmt><expr><operator>(</operator>function<operator>(</operator><name>parameters</name><operator>)</operator> <block>{
         <comment type="line">// function body</comment>
@@ -39,7 +47,9 @@
     <expr_stmt><expr><operator>(</operator>function<operator>(</operator><name>name</name><operator>)</operator> <block>{
         <expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><operator>`</operator><name>Hello</name></expr></argument>, <argument><expr><name>$</name><block>{<expr><name>name</name></expr>}</block><operator>!</operator><operator>`</operator></expr></argument>)</argument_list></call></expr>;
         }</block><operator>)</operator><operator>(</operator><literal type="string">'Bob'</literal><operator>)</operator></expr>;</expr_stmt> <comment type="line">// Output: Hello, Bob!</comment>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Methods in Objects*/</comment>
     <decl_stmt><decl type="const">const <name>objectName</name> <init>= <expr><block>{
         <expr><name>methodName</name><operator>:</operator> function<operator>(</operator><name>parameters</name><operator>)</operator> <block>{
@@ -55,7 +65,9 @@
         <return>return <expr><name>a</name> <operator>-</operator> <name>b</name></expr>;</return>
         }</block></expr></expr_stmt>
     };
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Class Methods*/</comment>
     <class>class <name>ClassName</name> <block>{<block_content>
         <constructor>constructor<parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
@@ -77,19 +89,23 @@
             <return>return <expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>*</operator> <name><name>this</name><operator>.</operator><name>height</name></name></expr>;</return>
             }</block></expr></expr_stmt>
     </block_content>}</block></class>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Generator Functions*/</comment>
     <function type="generator">function <operator>*</operator><name>generatorFunction</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// function body</comment>
         <yield>yield <expr><name>value</name></expr>;</yield>
     </block_content>}</block></function>
 
-    <function type="generator">function <operator>*</operator><name>countUpTo</name><parameter_list>(<parameter><decl><name>max</name></decl></parameter>)</parameter_list> <block>{<block_content>
-        <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;=</operator> <name>max</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator>)</expr> <block>{<block_content>
-            <yield>yield <expr><name>i</name></expr>;</yield>
-        </block_content>}</block></incr>
-            }</control></for>
+    <function type="generator">function* <name>countUpTo</name><parameter_list>(<parameter><decl><name>max</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;=</operator> <name>max</name></expr>;</condition> <incr><expr><name>i</name><operator>++</operator>)</expr> <block>{<block_content>
+        <yield>yield <expr><name>i</name></expr>;</yield>
+    </block_content>}</block></incr>
+    }</control></for></block_content></block></function>
+    </unit>
 
+    <unit language="JavaScript">
         <comment type="block">/*Async Functions*/</comment>
         <macro><name>async</name></macro> <function>function <name>functionName</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// function body</comment>
@@ -104,12 +120,9 @@
             <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">'Error:'</literal></expr></argument>, <argument><expr><name>error</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
         </block_content>}</block></catch></try>
     </block_content>}</block></function>
+    </unit>
 
-        <decl_stmt><decl type="const">const <name>fetchData2</name> <init>= <expr><call><name>async</name> <argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call> <operator>=&gt;</operator> <block>{
-            <init><decl type="const">const <name>response</name> <init>= <expr><name>await</name> <call><name>fetch</name><argument_list>(<argument><expr><name>url</name></expr></argument>)</argument_list></call></expr></init></decl></init></block></expr></init></decl>;</decl_stmt>
-        <return>return <expr><call><name><name>response</name><operator>.</operator><name>json</name></name><argument_list>()</argument_list></call></expr>;</return>
-    </block_content>}</block></function><empty_stmt>;</empty_stmt>
-
+    <unit language="JavaScript">
     <comment type="block">/* Using the Function Constructor*/</comment>
     <decl_stmt><decl type="const">const <name>sum</name> <init>= <expr><operator>new</operator> <call><name>Function</name><argument_list>(<argument><expr><literal type="string">'a'</literal></expr></argument></argument_list></call></expr></init></decl>, <decl type="const">'b'</decl>, <decl type="const">'return a + b;'</decl></decl_stmt>)<empty_stmt>;</empty_stmt>
 
@@ -121,7 +134,9 @@
         </block_content>}</block></function>
         <return>return <expr><name>innerFunction</name></expr>;</return>
     </block_content>}</block></function>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Default Parameters and Rest Parameters*/</comment>
     <function>function <name>greet</name><parameter_list>(<parameter><decl><name>name</name> <init>= <expr><literal type="string">'Guest'</literal></expr></init></decl></parameter>)</parameter_list> <block>{<block_content>
         <return>return <expr><operator>`</operator><name>Hello</name></expr><operator>,</operator> $<block>{<block_content><expr><name>name</name></expr></block_content>}</block></return><expr_stmt><expr><operator>!</operator><operator>`</operator></expr>;</expr_stmt>
@@ -130,7 +145,9 @@
     <function>function <name>sum2</name><parameter_list>(<parameter><decl><modifier>...</modifier><name>numbers</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <return>return <expr><call><name><name>numbers</name><operator>.</operator><name>reduce</name></name><argument_list>(<argument><expr><operator>(</operator><name>acc</name><operator>,</operator> <name>curr</name>) <operator>=&gt;</operator> <name>acc</name> <operator>+</operator> <name>curr</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return>
     </block_content>}</block></function>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Higher-Order Functions*/</comment>
     <function>function <name>higherOrderFunction</name><parameter_list>(<parameter><decl><name>callback</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <decl_stmt><decl type="const">const <name>result</name> <init>= <expr><call><name>callback</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
@@ -142,7 +159,9 @@
     </block_content>}</block></function>
 
     <expr_stmt><expr><call><name>higherOrderFunction</name><argument_list>(<argument><expr><name>square2</name></expr></argument>)</argument_list></call></expr>;</expr_stmt> <comment type="line">// Output: 25</comment>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="block">/*Callback Functions*/</comment>
     <function>function <name>fetchData3</name><parameter_list>(<parameter><decl><name>callback</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><call><name>setTimeout</name><argument_list>(<argument><expr><operator>(</operator>) <operator>=&gt;</operator> <block>{
@@ -156,4 +175,6 @@
     </block_content>}</block></function>
 
     <expr_stmt><expr><call><name>fetchData3</name><argument_list>(<argument><expr><name>displayData</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    </unit>
+
 </unit>
