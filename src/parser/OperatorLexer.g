@@ -117,22 +117,28 @@ OPERATORS options { testLiterals = true; } {
     )? |
 
     '+' ('+' | '=')? |
-    '-' ('-' | '=' | '>' ('*')? )?  |
-    '*' ('=')? |
+    '-' ('-' | '=' | '>' ('*')? )? |
+
+    // *, *=, ** (JavaScript), **= (JavaScript)
+    '*' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '*')? ('=')? |
+
     '%' ('=')? |
     '^' ('=')? |
     '|' ('|')? ('=')? |
-    '`' |
-    '!' ('=')? |
+
+    // !, !=, !== (JavaScript)
+    '!' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')?)? |
+
     ':' (':')? |
 
-    '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>')? |
+    // =, ==, =>, === (JavaScript)
+    '=' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? | { (inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#')) || inLanguage(LANGUAGE_JAVASCRIPT) }? '>')? |
 
     // &, &&, &&=, &=
     '&' ('&')? ('=')? |
 
-    // >, >>=, >=, not >>
-    '>' (('>' '=') => '>' '=')? ('=')? |
+    // >, >>=, >=, >>> (JavaScript), >>>= (JavaScript), not >>
+    '>' (('>' '=') => '>' '=')? ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '>')* ('=')? |
 
     // <, << (C/C++), <=, <<< (CUDA)
     '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) }? '<' | '=')? )? |
@@ -169,7 +175,9 @@ OPERATORS options { testLiterals = true; } {
         }
         STRING_START )? |
 
-    '?' ('?')* | // part of ternary
+    // ?, ??, etc. (part of ternary); ?. (JavaScript), ??= (JavaScript)
+    '?' ('?')* ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '.')? ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? |
+
     '~'  | // has to be separate if part of name
 
     '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |

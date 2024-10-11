@@ -47,12 +47,16 @@ int main(int, char* argv[]) {
         dassert(srcml_check_language("Objective-C"), 17);
     }
 
+    {
+        dassert(srcml_check_language("JavaScript"), 32);
+    }
+
     /*
       srcml_get_language_list_size
     */
 
     {
-        dassert(srcml_get_language_list_size(), 5);
+        dassert(srcml_get_language_list_size(), 6);
     }
 
     /*
@@ -76,11 +80,15 @@ int main(int, char* argv[]) {
     }
 
     {
-        dassert(srcml_get_language_list(4), std::string("Objective-C"));
+        dassert(srcml_get_language_list(4), std::string("JavaScript"));
     }
 
     {
-        dassert(srcml_get_language_list(5), 0);
+        dassert(srcml_get_language_list(5), std::string("Objective-C"));
+    }
+
+    {
+        dassert(srcml_get_language_list(6), 0);
     }
 
     /*

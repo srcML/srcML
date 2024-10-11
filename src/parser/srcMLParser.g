@@ -11261,7 +11261,10 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             CSPEC | MSPEC |
 
             // Apple
-            BLOCKOP
+            BLOCKOP |
+
+            // JavaScript
+            JS_INSTANCE_OF | JS_TYPEOF | JS_VOID
         )
 ;
 
@@ -11832,7 +11835,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
   Handles various rules for literals.
 */
 literals[] { ENTRY_DEBUG } :
-        string_literal | char_literal | literal | boolean | null_literal | complex_literal | nil_literal
+        string_literal | char_literal | backtick_literal | literal | boolean | null_literal | complex_literal | nil_literal
 ;
 
 /*
@@ -11863,6 +11866,20 @@ char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG
         }
 
         (CHAR_START CHAR_END)
+;
+
+/*
+  backtick_literal
+
+  In JavaScript, backticks denote strings.
+*/
+backtick_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (markup)
+                startElement(SSTRING);
+        }
+
+        (BACKTICK_START BACKTICK_END)
 ;
 
 /*

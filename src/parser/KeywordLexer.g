@@ -326,12 +326,15 @@ tokens {
     JS_FUNCTION;
     JS_GET;
     JS_IMPORT;
+    JS_INSTANCE_OF;
     JS_LET;
     JS_RANGE_IN;
     JS_RANGE_OF;
     JS_SET;
     JS_STATIC;
+    JS_TYPEOF;
     JS_VAR;
+    JS_VOID;
     JS_WITH;
     JS_YIELD;
 }
@@ -724,12 +727,15 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT },
         { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
         { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
+        { "instanceof"   , JS_INSTANCE_OF    , LANGUAGE_JAVASCRIPT },
         { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT },
         { "null"         , NULLLITERAL       , LANGUAGE_JAVASCRIPT },
         { "of"           , JS_RANGE_OF       , LANGUAGE_JAVASCRIPT },
         { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
         { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT },
+        { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT },
         { "var"          , JS_VAR            , LANGUAGE_JAVASCRIPT },
+        { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },
         { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
    };
