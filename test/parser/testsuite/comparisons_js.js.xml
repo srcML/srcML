@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="comparisons.js"><comment type="line">// =======================</comment>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="comparisons.js" url="comparisons">
+
+    <unit language="JavaScript">
+    <comment type="line">// =======================</comment>
     <comment type="line">// Equality Operators Tests</comment>
     <comment type="line">// =======================</comment>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Loose Equality (==)</comment>
     <expr_stmt><expr><literal type="number">5</literal> <operator>==</operator> <literal type="string">'5'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">0</literal> <operator>==</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
@@ -10,7 +15,9 @@
     <expr_stmt><expr><literal type="string">''</literal> <operator>==</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">' \t\r\n '</literal> <operator>==</operator> <literal type="number">0</literal></expr>;</expr_stmt>
     <expr_stmt><expr><index>[<expr><literal type="number">1</literal></expr><operator>,</operator><literal type="number">2</literal>]</index><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call> <operator>==</operator> <literal type="string">'1,2'</literal></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Strict Equality (===)</comment>
     <expr_stmt><expr><literal type="number">5</literal> <operator>===</operator> <literal type="string">'5'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">0</literal> <operator>===</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
@@ -18,14 +25,18 @@
     <expr_stmt><expr><literal type="string">''</literal> <operator>===</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'hello'</literal> <operator>===</operator> <literal type="string">'hello'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><index>[<expr><literal type="number">1</literal></expr><operator>,</operator><literal type="number">2</literal>]</index> <operator>===</operator> <index>[<expr><literal type="number">1</literal></expr><operator>,</operator><literal type="number">2</literal>]</index></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Loose Inequality (!=)</comment>
     <expr_stmt><expr><literal type="number">5</literal> <operator>!=</operator> <literal type="string">'5'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">0</literal> <operator>!=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="null">null</literal> <operator>!=</operator> <name>undefined</name></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">''</literal> <operator>!=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
     <expr_stmt><expr><index>[<expr><literal type="number">1</literal></expr><operator>,</operator><literal type="number">2</literal>]</index><operator>.</operator><call><name>toString</name><argument_list>()</argument_list></call> <operator>!=</operator> <literal type="string">'1,2'</literal></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Strict Inequality (!==)</comment>
     <expr_stmt><expr><literal type="number">5</literal> <operator>!==</operator> <literal type="string">'5'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">0</literal> <operator>!==</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
@@ -33,46 +44,62 @@
     <expr_stmt><expr><literal type="string">''</literal> <operator>!==</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'hello'</literal> <operator>!==</operator> <literal type="string">'hello'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><index>[<expr><literal type="number">1</literal></expr><operator>,</operator><literal type="number">2</literal>]</index> <operator>!==</operator> <index>[<expr><literal type="number">1</literal></expr><operator>,</operator><literal type="number">2</literal>]</index></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// ==========================</comment>
     <comment type="line">// Relational Operators Tests</comment>
     <comment type="line">// ==========================</comment>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Less Than (&lt;)</comment>
     <expr_stmt><expr><literal type="number">3</literal> <operator>&lt;</operator> <literal type="number">5</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'apple'</literal> <operator>&lt;</operator> <literal type="string">'banana'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'2'</literal> <operator>&lt;</operator> <literal type="string">'12'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="boolean">true</literal> <operator>&lt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Less Than or Equal To (&lt;=)</comment>
     <expr_stmt><expr><literal type="number">5</literal> <operator>&lt;=</operator> <literal type="number">5</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">4</literal> <operator>&lt;=</operator> <literal type="number">5</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'apple'</literal> <operator>&lt;=</operator> <literal type="string">'banana'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'2'</literal> <operator>&lt;=</operator> <literal type="string">'12'</literal></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Greater Than (&gt;)</comment>
     <expr_stmt><expr><literal type="number">5</literal> <operator>&gt;</operator> <literal type="number">3</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'banana'</literal> <operator>&gt;</operator> <literal type="string">'apple'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'12'</literal> <operator>&gt;</operator> <literal type="string">'2'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="boolean">false</literal> <operator>&gt;</operator> <operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Greater Than or Equal To (&gt;=)</comment>
     <expr_stmt><expr><literal type="number">5</literal> <operator>&gt;=</operator> <literal type="number">5</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">6</literal> <operator>&gt;=</operator> <literal type="number">5</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'banana'</literal> <operator>&gt;=</operator> <literal type="string">'apple'</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'12'</literal> <operator>&gt;=</operator> <literal type="string">'2'</literal></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// =======================</comment>
     <comment type="line">// Other Operators Tests</comment>
     <comment type="line">// =======================</comment>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// 'in' Operator</comment>
     <expr_stmt><expr><literal type="string">'a'</literal> <range>in <expr><block>{<expr><name>a</name><operator>:</operator><literal type="number">1</literal></expr>, <expr><name>b</name><operator>:</operator><literal type="number">2</literal></expr>}</block></expr></range></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'c'</literal> <range>in <expr><block>{<expr><name>a</name><operator>:</operator><literal type="number">1</literal></expr>, <expr><name>b</name><operator>:</operator><literal type="number">2</literal></expr>}</block></expr></range></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'toString'</literal> <range>in <expr><block>{<expr><name>a</name><operator>:</operator><literal type="number">1</literal></expr>, <expr><name>b</name><operator>:</operator><literal type="number">2</literal></expr>}</block></expr></range></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">0</literal> <range>in <expr><index>[<expr><literal type="number">10</literal></expr><operator>,</operator> <literal type="number">20</literal><operator>,</operator> <literal type="number">30</literal>]</index></expr></range></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">3</literal> <range>in <expr><index>[<expr><literal type="number">10</literal></expr><operator>,</operator> <literal type="number">20</literal><operator>,</operator> <literal type="number">30</literal>]</index></expr></range></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// 'instanceof' Operator</comment>
     <expr_stmt><expr><operator>new</operator> <call><name>Date</name><argument_list>()</argument_list></call> <name>instanceof</name> <name>Date</name></expr>;</expr_stmt>
     <expr_stmt><expr><operator>new</operator> <call><name>Date</name><argument_list>()</argument_list></call> <name>instanceof</name> <name>Object</name></expr>;</expr_stmt>
@@ -82,28 +109,38 @@
     <expr_stmt><expr><operator>(</operator><operator>/</operator><name>regex</name><operator>/</operator><operator>)</operator> <name>instanceof</name> <name>Object</name></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="number">5</literal> <name>instanceof</name> <name>Number</name></expr>;</expr_stmt>
     <expr_stmt><expr><operator>new</operator> <call><name>Number</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call> <name>instanceof</name> <name>Number</name></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// ==========================</comment>
     <comment type="line">// Edge Cases and Special Types</comment>
     <comment type="line">// ==========================</comment>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// @TODO Nan, Infinity, and undefined are global properties in javascript should they be marked differently</comment>
     <comment type="line">// Comparing NaN</comment>
     <expr_stmt><expr><name>NaN</name> <operator>==</operator> <name>NaN</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>NaN</name> <operator>===</operator> <name>NaN</name></expr>;</expr_stmt>
     <expr_stmt><expr><call><name>isNaN</name><argument_list>(<argument><expr><name>NaN</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Comparing Infinity</comment>
     <expr_stmt><expr><name>Infinity</name> <operator>&gt;</operator> <literal type="number">1000</literal></expr>;</expr_stmt>
     <expr_stmt><expr><operator>-</operator><name>Infinity</name> <operator>&lt;</operator> <operator>-</operator><literal type="number">1000</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name>Infinity</name> <operator>===</operator> <name>Infinity</name></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Comparing with undefined and null</comment>
     <expr_stmt><expr><name>undefined</name> <operator>&lt;</operator> <literal type="null">null</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name>undefined</name> <operator>&gt;</operator> <literal type="null">null</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name>undefined</name> <operator>==</operator> <literal type="null">null</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name>undefined</name> <operator>===</operator> <literal type="null">null</literal></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Comparing different types</comment>
     <expr_stmt><expr><literal type="string">'5'</literal> <operator>&gt;</operator> <literal type="number">3</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="string">'5'</literal> <operator>&lt;</operator> <literal type="number">3</literal></expr>;</expr_stmt>
@@ -112,7 +149,9 @@
     <expr_stmt><expr><literal type="boolean">true</literal> <operator>&gt;</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="boolean">true</literal> <operator>==</operator> <literal type="number">1</literal></expr>;</expr_stmt>
     <expr_stmt><expr><literal type="boolean">true</literal> <operator>===</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Comparing Objects</comment>
     <decl_stmt><decl type="const">const <name>obj1</name> <init>= <expr><block>{ <expr><name>x</name><operator>:</operator> <literal type="number">1</literal></expr> }</block></expr></init></decl>;</decl_stmt>
     <decl_stmt><decl type="const">const <name>obj2</name> <init>= <expr><block>{ <expr><name>x</name><operator>:</operator> <literal type="number">1</literal></expr> }</block></expr></init></decl>;</decl_stmt>
@@ -121,7 +160,9 @@
     <expr_stmt><expr><name>obj1</name> <operator>===</operator> <name>obj2</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>obj1</name> <operator>==</operator> <name>obj3</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>obj1</name> <operator>===</operator> <name>obj3</name></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Comparing Functions</comment>
     <function>function <name>func1</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
     <function>function <name>func2</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
@@ -130,7 +171,9 @@
     <expr_stmt><expr><name>func1</name> <operator>===</operator> <name>func2</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>func1</name> <operator>==</operator> <name>func3</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>func1</name> <operator>===</operator> <name>func3</name></expr>;</expr_stmt>
+    </unit>
 
+    <unit language="JavaScript">
     <comment type="line">// Comparing Symbols</comment>
     <decl_stmt><decl type="const">const <name>sym1</name> <init>= <expr><call><name>Symbol</name><argument_list>(<argument><expr><literal type="string">'foo'</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
     <decl_stmt><decl type="const">const <name>sym2</name> <init>= <expr><call><name>Symbol</name><argument_list>(<argument><expr><literal type="string">'foo'</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
@@ -139,4 +182,6 @@
     <expr_stmt><expr><name>sym1</name> <operator>===</operator> <name>sym2</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>sym1</name> <operator>==</operator> <name>sym3</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>sym1</name> <operator>===</operator> <name>sym3</name></expr>;</expr_stmt>
+    </unit>
+
 </unit>
