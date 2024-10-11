@@ -44,6 +44,7 @@ tokens {
     DOXYGEN_COMMENT_START;
     LINE_DOXYGEN_COMMENT_START;
     CHAR_START;
+    BACKTICK_START;
     MACRO_NAME;
     COMPLEX_NUMBER;
 }
@@ -99,6 +100,20 @@ CHAR_START :
 
     // character literal or single quoted string
     '\'' { $setType(CHAR_START); changetotextlexer(CHAR_END); }
+;
+
+BACKTICK_START :
+    { startline = false; }
+
+    // backtick is a string literal in JavaScript and an operator otherwise
+    '`' {
+        if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+            $setType(BACKTICK_START); changetotextlexer(BACKTICK_END);
+        }
+        else {
+            $setType(OPERATORS);
+        }
+    }
 ;
 
 CONSTANTS :
