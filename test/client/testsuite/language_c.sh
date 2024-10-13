@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define fsrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" filename="sub/a.cpp"/>
-	STDOUT
+STDOUT
 
 xmlcheck "$fsrcml"
 createfile sub/a.cpp ""

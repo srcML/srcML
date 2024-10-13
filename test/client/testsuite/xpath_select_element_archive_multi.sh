@@ -38,7 +38,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 createfile sub/archive.cpp.xml "$srcml"
@@ -63,7 +63,7 @@ define output <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="a.cpp" item="7"><name>handle</name></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 
@@ -95,7 +95,7 @@ define output <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="a.cpp" item="1"><name>int</name></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 
@@ -134,7 +134,7 @@ define output <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="a.cpp" item="2">void</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 
@@ -172,7 +172,7 @@ define output <<- 'STDOUT'
 	 */</comment></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 

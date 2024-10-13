@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 
@@ -23,13 +23,13 @@ check "$srcml"
 define asrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
-	STDOUT
+STDOUT
 
 # input with ?
 define srcml_question <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$asrcml"
 
@@ -44,7 +44,7 @@ define ansrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$ansrcml"
 
@@ -58,7 +58,7 @@ define absrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$absrcml"
 
@@ -71,7 +71,7 @@ define absrcml <<- 'STDOUT'
 	<unit revision="1.0.0" language="C++" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 printf "a;\0b;" | srcml -l "C++"
 check "$absrcml"
@@ -87,7 +87,7 @@ define abesrcml <<- 'STDOUT'
 	<unit revision="1.0.0" language="C++" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
 
 	</unit>
-	STDOUT
+STDOUT
 
 printf "a;\0b;\0" | srcml -l C++
 check "$abesrcml"
@@ -105,7 +105,7 @@ define abeesrcml <<- 'STDOUT'
 	<unit revision="1.0.0" language="C++" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
 
 	</unit>
-	STDOUT
+STDOUT
 
 printf "a;\0b;\0\0" | srcml -l C++
 check "$abeesrcml"
@@ -121,7 +121,7 @@ define eabsrcml <<- 'STDOUT'
 	<unit revision="1.0.0" language="C++" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 printf "\0a;\0b;" | srcml -l C++
 check "$eabsrcml"
@@ -133,7 +133,7 @@ check "$eabsrcml"
 # on the man page
 
 define newline <<- 'STDOUT'
-	STDOUT
+STDOUT
 
 # escaped \a
 printf "\aa;\a" | srcml -l C++ | srcml

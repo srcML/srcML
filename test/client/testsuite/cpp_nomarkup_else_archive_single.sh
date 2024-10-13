@@ -31,7 +31,7 @@ define markup_else <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define fmarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -46,7 +46,7 @@ define fmarkup_else <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define nomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -61,7 +61,7 @@ define nomarkup_else <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define fnomarkup_else <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -76,7 +76,7 @@ define fnomarkup_else <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$markup_else"
 xmlcheck "$fmarkup_else"

@@ -12,26 +12,26 @@ source $(dirname "$0")/framework_test.sh
 define src <<- 'STDOUT'
 
 	a;
-	STDOUT
+STDOUT
 
 define empty_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDOUT
+STDOUT
 
 define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="archive/a.cpp">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -42,7 +42,7 @@ define archive_output <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$archive_output"
 xmlcheck "$foutput"

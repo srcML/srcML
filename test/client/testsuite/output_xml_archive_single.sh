@@ -20,7 +20,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"

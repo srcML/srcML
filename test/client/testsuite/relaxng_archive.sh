@@ -31,7 +31,7 @@ define schema <<- 'STDOUT'
 	  </define>
 
 	</grammar>
-	STDOUT
+STDOUT
 
 # test on archive of many
 define srcml <<- 'STDOUT'
@@ -63,7 +63,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$schema"
 xmlcheck "$srcml"
@@ -112,7 +112,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 # apply to archive of one unit
 createfile sub/archive_single.xml "$srcml"

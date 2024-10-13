@@ -16,7 +16,7 @@ define output <<- 'STDOUT'
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define nestedfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -29,7 +29,7 @@ define nestedfile <<- 'STDOUT'
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define nestedfilesrc <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -42,7 +42,7 @@ define nestedfilesrc <<- 'STDOUT'
 	<src:expr_stmt><src:expr><src:name>b</src:name></src:expr>;</src:expr_stmt></src:unit>
 
 	</src:unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 xmlcheck "$nestedfile"

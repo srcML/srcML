@@ -19,7 +19,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 xmlcheck "$srcml"
 
 define output <<- 'STDOUT'
@@ -28,7 +28,7 @@ define output <<- 'STDOUT'
 	    2  C++     1 520b48acbdb61e411641fd94359a82686d5591eb b.cpp
 	units: 2
 	LOC: 2
-	STDOUT
+STDOUT
 
 createfile sub/a.cpp.xml "$srcml"
 

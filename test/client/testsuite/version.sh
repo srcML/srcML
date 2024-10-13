@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define output <<- 'STDOUT'
 	srcml REVISION
 	libsrcml REVISION
-	STDOUT
+STDOUT
 
 srcml -V | head -n 2
 check "$output"

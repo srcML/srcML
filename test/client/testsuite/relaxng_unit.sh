@@ -31,7 +31,7 @@ define srcml <<- 'STDOUT'
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 	</block_content>}</block></function>
 	</unit>
-	STDOUT
+STDOUT
 
 define schema <<- 'STDOUT'
 	<grammar xmlns="http://relaxng.org/ns/structure/1.0">
@@ -56,7 +56,7 @@ define schema <<- 'STDOUT'
 	  </define>
 
 	</grammar>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 xmlcheck "$schema"

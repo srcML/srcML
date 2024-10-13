@@ -17,7 +17,7 @@ define archive_single <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 # test on archive of > 1 unit
 define archive_multi <<- 'STDOUT'
@@ -31,18 +31,18 @@ define archive_multi <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$archive_single"
 xmlcheck "$archive_multi"
 
 define archive_single_output <<- 'STDOUT'
 	1
-	STDOUT
+STDOUT
 
 define archive_multi_output <<- 'STDOUT'
 	2
-	STDOUT
+STDOUT
 
 createfile sub/archive_single.cpp.xml "$archive_single"
 createfile sub/archive_multi.cpp.xml "$archive_multi"
@@ -72,11 +72,11 @@ check "$archive_multi_output"
 # test count on empty archive
 define empty <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src"/>
-	STDOUT
+STDOUT
 
 define empty_output <<- 'STDOUT'
 	0
-	STDOUT
+STDOUT
 
 xmlcheck "$empty"
 createfile sub/emptyarchive.xml "$empty"

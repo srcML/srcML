@@ -13,7 +13,7 @@ define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" directory="sub" filename="a.cpp" hash="1a2c5d67e6f651ae10b7673c53e8c502c97316d6"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$input"
 createfile sub/a.cpp.xml "$input"
@@ -31,7 +31,7 @@ define none <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C" directory="sub" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 # test hash on archive of one unit
 define archive <<- 'STDOUT'
@@ -43,13 +43,13 @@ define archive <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 # test hash on empty archive
 define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDOUT
+STDOUT
 
 xmlcheck "$none"
 xmlcheck "$archive"

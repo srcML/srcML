@@ -20,7 +20,7 @@ define nestedfile <<- 'STDOUT'
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$nestedfile"
 
@@ -39,7 +39,7 @@ check sub/both.xml "$nestedfile"
 define empty_srcml_with_url <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDOUT
+STDOUT
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.txt.bz2
 check "$empty_srcml_with_url"

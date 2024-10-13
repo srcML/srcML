@@ -12,22 +12,22 @@ source $(dirname "$0")/framework_test.sh
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><cpp:define>#<cpp:directive>define</cpp:directive></cpp:define></unit>
-	STDOUT
+STDOUT
 
 define outputnocpp <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++"><cpp:define>#<cpp:directive>define</cpp:directive></cpp:define></unit>
-	STDOUT
+STDOUT
 
 define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"><cpp:define>#<cpp:directive>define</cpp:directive></cpp:define></unit>
-	STDOUT
+STDOUT
 
 define foutputnocpp <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="sub/a.cpp"><cpp:define>#<cpp:directive>define</cpp:directive></cpp:define></unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 xmlcheck "$foutput"

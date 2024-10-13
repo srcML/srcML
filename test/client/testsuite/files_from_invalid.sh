@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define empty_srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDOUT
+STDOUT
 xmlcheck "$empty_srcml"
 
 # empty file input
@@ -47,7 +47,7 @@ check_exit 1 "$open_error"
 # file list references itself
 define open_error <<- 'STDOUT'
 	srcml: Extension not supported loop.txt
-	STDOUT
+STDOUT
 
 createfile loop.txt "loop.txt"
 
@@ -66,7 +66,7 @@ define empty_archive <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="empty.cpp" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
 
 	</unit>
-	STDOUT
+STDOUT
 
 createfile empty.cpp ""
 createfile filelist.txt "empty.cpp"
@@ -87,7 +87,7 @@ check files-from-empty-cpp.xml "$empty_archive"
 define empty_srcml_with_url <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="test"/>
-	STDOUT
+STDOUT
 
 echo empty.txt | tr " " "\n" | cpio --quiet -o > empty.txt.cpio
 bzip2 -c empty.txt.cpio > empty.txt.cpio.bz2

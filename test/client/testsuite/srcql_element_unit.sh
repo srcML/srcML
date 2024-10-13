@@ -13,14 +13,14 @@ define resultstdin <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pre="foo.com" revision="REVISION" language="C++"><expr_stmt><expr><pre:element><name>a</name></pre:element></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 # test setting the attribute on xpath query results
 define result <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pre="foo.com" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><pre:element><name>a</name></pre:element></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$result"
 createfile sub/a.cpp "a;

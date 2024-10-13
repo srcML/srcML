@@ -15,7 +15,7 @@ source $(dirname "$0")/framework_test.sh
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="sub" filename="a.cpp" version="1.0"/>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
@@ -30,7 +30,7 @@ define values <<- 'STDOUT'
 	filename="a.cpp"
 	language="C++"
 	version="1.0"
-	STDOUT
+STDOUT
 
 index=-1
 

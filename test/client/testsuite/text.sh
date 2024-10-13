@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
-	STDOUT
+STDOUT
 
 # requires a GNU echo, for macOS, gecho
 if [[ "$(/bin/echo --version)" == "--version" ]]; then
@@ -68,13 +68,13 @@ check_exit 1
 define asrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
-	STDOUT
+STDOUT
 
 # input with ?
 define srcml_question <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$asrcml"
 
@@ -130,7 +130,7 @@ define multiplesrcml <<- 'STDOUT'
 	<unit revision="1.0.0" language="C++" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 srcml --text="a;" --text="b;" -l C++
 check "$multiplesrcml"
@@ -143,7 +143,7 @@ define ansrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$ansrcml"
 

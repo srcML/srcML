@@ -19,7 +19,7 @@ fi
 
 define srca <<- 'STDOUT'
 	a;
-	STDOUT
+STDOUT
 
 # input from a valid remote srcML archive multiple units
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/archive-multi.xml

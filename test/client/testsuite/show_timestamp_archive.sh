@@ -18,7 +18,7 @@ define archive <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$archive"
 createfile sub/archive.cpp.xml "$archive"
@@ -39,7 +39,7 @@ define empty <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$empty"
 createfile sub/archive.cpp.xml "$empty"

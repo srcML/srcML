@@ -31,7 +31,7 @@ define srcml <<- 'STDOUT'
 	<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
 	</block_content>}</block></function>
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 createfile sub/unit.cpp.xml "$srcml"
@@ -44,7 +44,7 @@ define output <<- 'STDOUT'
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1">filename="a.cpp"</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 
@@ -80,7 +80,7 @@ define output <<- 'STDOUT'
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C++" filename="a.cpp" item="1">format="doxygen"</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output"
 

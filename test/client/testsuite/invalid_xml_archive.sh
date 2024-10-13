@@ -45,20 +45,20 @@ define illformed_archive_single <<- 'INPUT'
 define info_archive <<- 'STDOUT'
 	xmlns="http://www.srcML.org/srcML/src"
 	encoding="UTF-8"
-	STDOUT
+STDOUT
 
 define output <<- 'STDOUT'
 
 	a;
-	STDOUT
+STDOUT
 
 define units3 <<- 'STDOUT'
 	3
-	STDOUT
+STDOUT
 
 define units1 <<- 'STDOUT'
 	1
-	STDOUT
+STDOUT
 
 define xml_archive_error <<- 'STDERR'
 	srcml: 17:1 Extra content at the end of the document

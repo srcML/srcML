@@ -18,7 +18,7 @@ define foosrcml <<- 'STDOUT'
 	<bar:unit revision="REVISION" language="C++" filename="sub/b.cpp" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><bar:expr_stmt><bar:expr><bar:name>b</bar:name></bar:expr>;</bar:expr_stmt></bar:unit>
 
 	</bar:unit>
-	STDOUT
+STDOUT
 
 # this and the other xmlcheck are failing, causing the test to fail.
 xmlcheck "$foosrcml"
@@ -98,7 +98,7 @@ define fooprefixsrcml <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="sub/b.cpp" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$fooprefixsrcml"
 

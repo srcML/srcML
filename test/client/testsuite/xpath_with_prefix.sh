@@ -23,12 +23,12 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define xpathempty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:foo="http://www.cs.uakron.edu/~collard/foo" xmlns:bar="http://www.cs.uakron.edu/~collard/bar" revision="REVISION"/>
-	STDOUT
+STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -43,7 +43,7 @@ define output <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 xmlcheck "$xpathempty"

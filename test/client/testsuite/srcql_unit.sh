@@ -17,7 +17,7 @@ define output1 <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="a.cpp" item="1"><name>a</name></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 #	<unit revision="REVISION" language="C++" filename="a.cpp" item="1" location="/src:expr_stmt[1]/src:expr[1]/src:name[1]"><name>a</name></unit>
 define output2 <<- 'STDOUT'
@@ -27,18 +27,18 @@ define output2 <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="a.cpp" item="1"><name>a</name></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define output_empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION"/>
-	STDOUT
+STDOUT
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$output1"
 xmlcheck "$output2"
@@ -48,7 +48,7 @@ createfile sub/a.cpp.xml "$srcml"
 
 define oneline_a <<- 'STDOUT'
 	a
-	STDOUT
+STDOUT
 
 # /src:unit/src:expr_stmt/src:expr/src:name
 srcml --xpath="/src:unit/src:expr_stmt/src:expr/src:name" sub/a.cpp.xml
@@ -130,7 +130,7 @@ define oneresult <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="a.cpp" item="1">a</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 srcml --xpath="//src:name[1]/text()" < sub/a.cpp.xml
 check "$oneresult"
@@ -145,7 +145,7 @@ define ompsrcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="REVISION" language="C">
 	<cpp:pragma>#<cpp:directive>pragma</cpp:directive> <omp:directive>omp <omp:name>parallel</omp:name></omp:directive></cpp:pragma>
 	</unit>
-	STDOUT
+STDOUT
 
 define xpathout <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -156,7 +156,7 @@ define xpathout <<- 'STDOUT'
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:omp="http://www.srcML.org/srcML/openmp" revision="REVISION" language="C" item="2"><omp:name>parallel</omp:name></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define xpathoutcpp <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -167,7 +167,7 @@ define xpathoutcpp <<- 'STDOUT'
 	<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="REVISION" language="C" item="2"><cpp:directive>pragma</cpp:directive></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 createfile ompsrcml.xml "$ompsrcml"
 

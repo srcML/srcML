@@ -13,7 +13,7 @@ define srcml_with_url <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="test" filename="test"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 # compression only
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/source/a.cpp.bz2 --url="test" --filename="test"
@@ -32,7 +32,7 @@ check "$srcml_with_url"
 define empty_srcml_with_url <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="test" filename="test"/>
-	STDOUT
+STDOUT
 
 # compressed
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.bz2 --url="test" --filename="test"

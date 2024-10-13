@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define input <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" url="bar" filename="foo" version="1.2"/>
-	STDOUT
+STDOUT
 
 # test on archive
 define archive <<- 'STDOUT'

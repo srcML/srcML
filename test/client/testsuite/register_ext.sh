@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define fxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java" filename="sub/a.cpp"/>
-	STDOUT
+STDOUT
 
 xmlcheck "$fxmlfile"
 createfile sub/a.cpp ""
@@ -33,7 +33,7 @@ check sub/a.cpp.xml "$fxmlfile"
 define fsxmlfile <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="a.cpp"/>
-	STDOUT
+STDOUT
 
 xmlcheck "$fsxmlfile"
 createfile sub/a.xml "$fsxmlfile"

@@ -12,14 +12,14 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 define output <<- 'STDOUT'
 	XML encoding: UTF-8
 	    1  C++     1  a.cpp
 	units: 1
 	LOC: 1
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"

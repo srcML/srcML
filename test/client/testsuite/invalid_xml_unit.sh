@@ -14,7 +14,7 @@ define info_single <<- 'STDOUT'
 	xmlns:cpp="http://www.srcML.org/srcML/cpp"
 	encoding="UTF-8"
 	language="C++"
-	STDOUT
+STDOUT
 
 define illformed <<- 'INPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>

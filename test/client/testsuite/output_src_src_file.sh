@@ -10,13 +10,13 @@ source $(dirname "$0")/framework_test.sh
 
 define src <<- 'STDOUT'
 	a;
-	STDOUT
+STDOUT
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 # src --> srcml : input single source file
 xmlcheck "$srcml"

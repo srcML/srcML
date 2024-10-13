@@ -10,16 +10,16 @@ source $(dirname "$0")/framework_test.sh
 
 define srca <<- 'STDOUT'
 	a;
-	STDOUT
+STDOUT
 
 define srcb <<- 'STDOUT'
 	b;
-	STDOUT
+STDOUT
 
 define srcab <<- 'STDOUT'
 	a;
 	b;
-	STDOUT
+STDOUT
 
 # multi archive
 define srcml <<- 'STDOUT'
@@ -33,7 +33,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 # src --> srcml : input srcml single file
 xmlcheck "$srcml"
@@ -146,7 +146,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 # srcml --> src : input srcml single file
 xmlcheck "$srcml"

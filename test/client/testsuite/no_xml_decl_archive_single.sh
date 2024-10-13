@@ -15,7 +15,7 @@ define srcml <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define fsrcml <<- 'STDOUT'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
@@ -23,7 +23,7 @@ define fsrcml <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="sub/a.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 xmlcheck "$fsrcml"

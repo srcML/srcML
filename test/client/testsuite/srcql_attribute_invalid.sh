@@ -20,7 +20,7 @@ define result <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$result"
 createfile a.cpp "a;
@@ -53,7 +53,7 @@ define result <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$result"
 createfile a.cpp "a;

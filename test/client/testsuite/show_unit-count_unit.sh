@@ -13,13 +13,13 @@ define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDOUT
+STDOUT
 
 # test on empty unit
 define empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" language="C++" revision="REVISION"/>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 xmlcheck "$empty"
@@ -27,11 +27,11 @@ xmlcheck "$empty"
 # test on src that creates single unit
 define src <<- 'STDOUT'
 	a;
-	STDOUT
+STDOUT
 
 define output <<- 'STDOUT'
 	1
-	STDOUT
+STDOUT
 
 createfile sub/a.cpp.xml "$srcml"
 createfile sub/a.cpp "$src"

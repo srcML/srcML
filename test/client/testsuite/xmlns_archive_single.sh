@@ -16,7 +16,7 @@ define foosrcml <<- 'STDOUT'
 	<bar:unit revision="REVISION" language="C++" filename="sub/a.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><bar:expr_stmt><bar:expr><bar:name>a</bar:name></bar:expr>;</bar:expr_stmt></bar:unit>
 
 	</bar:unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$foosrcml"
 createfile sub/a.cpp "a;"
@@ -92,7 +92,7 @@ define fooprefixsrcml <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="sub/a.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$fooprefixsrcml"
 

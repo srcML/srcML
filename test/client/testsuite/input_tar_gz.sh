@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define src <<- 'STDOUT'
 
 	a;
-	STDOUT
+STDOUT
 
 define foutput <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -23,7 +23,7 @@ define foutput <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -34,7 +34,7 @@ define output <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define archive_output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -45,7 +45,7 @@ define archive_output <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$archive_output"
 xmlcheck "$foutput"

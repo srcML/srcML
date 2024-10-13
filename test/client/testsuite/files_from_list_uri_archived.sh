@@ -15,7 +15,7 @@ define empty_srcml_archive <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="empty.cpp" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
 
 	</unit>
-	STDOUT
+STDOUT
 
 createfile "list-empty-cpio-bz2.txt" "https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.cpp.cpio.bz2"
 srcml --files-from list-empty-cpio-bz2.txt --url="test"

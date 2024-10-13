@@ -22,7 +22,7 @@ define identity_xslt <<- 'STDOUT'
 	  </xsl:copy>
 	 </xsl:template>
 	</xsl:stylesheet>
-	STDOUT
+STDOUT
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -33,7 +33,7 @@ define srcml <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"

@@ -17,11 +17,11 @@ define srcml_nested <<- 'STDOUT'
 	</unit>
 
 	</unit>
-	STDOUT
+STDOUT
 
 define output <<- 'STDOUT'
 	b.cpp
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml_nested"
 createfile sub/a.cpp.xml "$srcml_nested"

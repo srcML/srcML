@@ -19,7 +19,7 @@ define fsrcml <<- 'STDOUT'
 	<unit revision="REVISION" language="C++" filename="sub/b.cpp" pos:tabs="4" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$fsrcml"
 createfile sub/a.cpp ""

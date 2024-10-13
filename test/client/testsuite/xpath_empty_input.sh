@@ -11,7 +11,7 @@ source $(dirname "$0")/framework_test.sh
 # test
 define xpath_error <<- 'STDOUT'
 	Error Parsing: Start tag expected, '<' not found
-	STDOUT
+STDOUT
 
 define xpath_empty <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -20,7 +20,7 @@ define xpath_empty <<- 'STDOUT'
 	<unit revision="REVISION" language="C++"/>
 
 	</unit>
-	STDOUT
+STDOUT
 
 xmlcheck "$xpath_empty"
 createfile sub/a.cpp.xml ""

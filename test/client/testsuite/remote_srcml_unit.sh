@@ -10,7 +10,7 @@ source $(dirname "$0")/framework_test.sh
 
 define srca <<- 'STDOUT'
 	a;
-	STDOUT
+STDOUT
 
 # input from a valid remote srcml file
 srcml https://raw.githubusercontent.com/srcML/test-data/1.0.0/srcml/unit.xml
