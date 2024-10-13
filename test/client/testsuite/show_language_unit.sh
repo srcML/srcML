@@ -96,7 +96,7 @@ check "Java\n"
 define empty <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="" directory="" filename="" version=""/>
-	STDIN
+STDIN
 
 xmlcheck "$empty"
 createfile sub/a.cpp.xml "$empty"

@@ -21,7 +21,7 @@ define nestedfile <<- 'STDIN'
 	</unit>
 
 	</unit>
-	STDIN
+STDIN
 
 # test invalid_input
 echo "a;" | srcml -l C++ --strip

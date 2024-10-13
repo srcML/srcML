@@ -60,7 +60,7 @@ define none <<- 'STDIN'
 	</unit>
 
 	</unit>
-	STDIN
+STDIN
 
 xmlcheck "$none"
 createfile sub/archive.cpp.xml "$none"

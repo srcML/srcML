@@ -48,7 +48,7 @@ check "1.0\n"
 define empty <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="" directory="" filename="" version=""/>
-	STDIN
+STDIN
 
 # test on archive of one unit with an empty version
 define emptyarchive <<- 'STDOUT'
@@ -84,7 +84,7 @@ check "\n"
 define noneempty <<- 'STDIN'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp"/>
-	STDIN
+STDIN
 
 # test on archive of one unit with no version
 define none <<- 'STDIN'
@@ -96,7 +96,7 @@ define none <<- 'STDIN'
 	</unit>
 
 	</unit>
-	STDIN
+STDIN
 
 xmlcheck "$noneempty"
 xmlcheck "$none"

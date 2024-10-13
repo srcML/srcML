@@ -18,7 +18,7 @@ define input <<- 'STDIN'
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++">
 	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 	</unit>
-	STDIN
+STDIN
 
 xmlcheck "$input"
 
