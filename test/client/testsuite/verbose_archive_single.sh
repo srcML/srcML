@@ -25,7 +25,7 @@ define foutput <<- 'STDERR'
 	    1 C++      1 a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8 sub/a.cpp
 
 	Source Files: 1	Other Files: 0	Errors: 0	Total Files: 1
-	STDERR
+STDERR
 
 xmlcheck "$fsrcml"
 
@@ -57,7 +57,7 @@ define output <<- 'STDERR'
 	    1 C++      1 a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8
 
 	Source Files: 1	Other Files: 0	Errors: 0	Total Files: 1
-	STDERR
+STDERR
 
 xmlcheck "$srcml"
 

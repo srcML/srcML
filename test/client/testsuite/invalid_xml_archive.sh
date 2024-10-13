@@ -62,7 +62,7 @@ STDOUT
 
 define xml_archive_error <<- 'STDERR'
 	srcml: 17:1 Extra content at the end of the document
-	STDERR
+STDERR
 
 createfile xml_error/illformedarchive_multi.xml "$illformed_archive_mulit"
 createfile xml_error/illformedarchive_single.xml "$illformed_archive_single"

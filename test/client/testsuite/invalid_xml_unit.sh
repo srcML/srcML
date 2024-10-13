@@ -28,7 +28,7 @@ createfile xml_error/illformed.xml "$illformed"
 define xml_error <<- 'STDERR'
 	Error Parsing: expected '>'
 
-	STDERR
+STDERR
 
 # @TODO Why isn't the exit status non-0?
 srcml xml_error/illformed.xml
