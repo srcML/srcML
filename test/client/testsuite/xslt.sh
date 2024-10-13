@@ -12,7 +12,7 @@ source $(dirname "$0")/framework_test.sh
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
-	STDOUT
+STDOUT
 
 define copyxslt <<- 'STDOUT'
 	<xsl:stylesheet
@@ -32,7 +32,7 @@ define copyxslt <<- 'STDOUT'
 	<xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
 
 	</xsl:stylesheet>
-	STDOUT
+STDOUT
 
 define setlanguage <<- 'STDOUT'
 	<xsl:stylesheet
@@ -57,17 +57,17 @@ define setlanguage <<- 'STDOUT'
 	<xsl:template match="@*|node()"><xsl:copy><xsl:apply-templates select="@*|node()"/></xsl:copy></xsl:template>
 
 	</xsl:stylesheet>
-	STDOUT
+STDOUT
 
 define srcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"/>
-	STDOUT
+STDOUT
 
 define srcmljava <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="Java"/>
-	STDOUT
+STDOUT
 
 xmlcheck "$srcml"
 createfile sub/a.cpp.xml "$srcml"
