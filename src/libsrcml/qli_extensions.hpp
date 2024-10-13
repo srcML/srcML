@@ -12,13 +12,15 @@
 #include <libxml/xpathInternals.h>
 
 // Searching Functions
-void add_element(xmlXPathParserContext* context, int nargs);
+void add_element(xmlXPathParserContext* ctxt, int nargs);
 
-void match_element(xmlXPathParserContext* context, int nargs);
+void match_element(xmlXPathParserContext* ctxt, int nargs);
 
-void clear_elements(xmlXPathParserContext* context, int nargs);
+void clear_elements(xmlXPathParserContext* ctxt, int nargs);
 
-void is_valid_element(xmlXPathParserContext* context, int nargs);
+void is_valid_element(xmlXPathParserContext* ctxt, int nargs);
+
+void compare_tree_heights(xmlXPathParserContext* ctxt, int nargs);
 
 // WHERE clause functions
 

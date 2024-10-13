@@ -84,6 +84,21 @@ namespace {
         get_node_text(top_node, s, true);
         return s;
     }
+
+    int get_tree_depth(xmlNode* node) {
+        xmlNode* loop = node;
+        int height = 0;
+        while(loop != NULL) {
+            const std::string_view nodeName((char*) loop->name);
+            if(nodeName == "unit"sv) {
+                break;
+            }
+            ++height;
+            loop = loop->parent;
+        }
+        if(loop == NULL) { return -1; }
+        return height;
+    }
 }
 
 void add_element(xmlXPathParserContext* ctxt, int nargs) {
@@ -327,6 +342,51 @@ void is_valid_element(xmlXPathParserContext* ctxt, int nargs) {
 
     // return whether element is valid
     xmlXPathReturnBoolean(ctxt, !invalidElement);
+}
+
+void compare_tree_heights(xmlXPathParserContext* ctxt, int nargs) {
+    if(nargs != 3) {
+        std::cerr << "Arg arity error" << std::endl;
+        return;
+    }
+
+    int compare = xmlXPathPopNumber(ctxt);
+
+    std::cout << "----------------------------" << std::endl;
+
+    // RHS - the comparison set
+    std::unique_ptr<xmlNodeSet> search_set(xmlXPathPopNodeSet(ctxt));
+    if(search_set.get() == NULL && xmlXPathCheckError(ctxt) == false) {
+        search_set = std::unique_ptr<xmlNodeSet>(xmlXPathNodeSetCreate(NULL));
+    }
+
+
+
+    // LHS - the target node
+    std::unique_ptr<xmlNodeSet> target_set(xmlXPathPopNodeSet(ctxt));
+    if(target_set.get() == NULL && xmlXPathCheckError(ctxt) == false) {
+        target_set = std::unique_ptr<xmlNodeSet>(xmlXPathNodeSetCreate(NULL));
+    }
+    xmlNode* target_node = target_set.get()->nodeTab[0];
+
+    int target_height = get_tree_depth(target_node);
+    std::cout << "Target: " << target_node << " | " << target_height << "," << get_node_text(target_node) << std::endl;
+
+    // Loop through comparison set - return if correct comparison is present.
+    std::cout << "#" << search_set.get()->nodeNr << std::endl;
+    for(int i = 0; i < search_set.get()->nodeNr; ++i) {
+        xmlNode* node = search_set.get()->nodeTab[i];
+        if(node == target_node) { std::cout << "\tSkipping " << target_node << std::endl; continue; }
+
+        int height = get_tree_depth(node);
+        std::cout << "Node " << i << ": " << node <<  " | " << height << "," << get_node_text(node) << std::endl;
+
+        // < and > are reversed - higher number means lower in tree
+        if(compare == 0 && target_height == height) { xmlXPathReturnBoolean(ctxt, true); return; }
+        else if(compare == -1 && target_height > height) { xmlXPathReturnBoolean(ctxt, true); return; }
+        else if(compare == 1 && target_height < height) { xmlXPathReturnBoolean(ctxt, true); return; }
+    }
+    xmlXPathReturnBoolean(ctxt, false);
 }
 
 void regex_match(xmlXPathParserContext* ctxt, int nargs) {
