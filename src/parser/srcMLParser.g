@@ -15058,7 +15058,8 @@ range_in_js[] { SingleElement element(this); ENTRY_DEBUG } :
         expression
 
         {
-            endDownToMode(MODE_INIT);
+            if (inTransparentMode(MODE_FOR_LOOP_JS))
+                endDownToMode(MODE_INIT);
         }
 ;
 
