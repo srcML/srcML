@@ -424,6 +424,32 @@ private:
 
                 break;
 
+            case srcMLParser::HASHBANG_COMMENT_START:
+
+                pushSSkipToken(srcMLParser::SHASHBANG_COMMENT);
+                pushSkipToken();
+                srcMLParser::consume();
+
+                open_comments.push(srcMLParser::SHASHBANG_COMMENT);
+
+                break;
+
+            case srcMLParser::HASHBANG_COMMENT_END:
+
+                open_comments.pop();
+
+                if (srcMLParser::LT(1)->getText().back() != '\n') {
+                    pushSkipToken();
+                    srcMLParser::consume();
+                    pushESkipToken(srcMLParser::SHASHBANG_COMMENT);
+                } else {
+                    pushESkipToken(srcMLParser::SHASHBANG_COMMENT);
+                    pushSkipToken();
+                    srcMLParser::consume();
+                }
+
+                break;
+
             default:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
