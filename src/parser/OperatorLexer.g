@@ -98,24 +98,6 @@ tokens {
 OPERATORS options { testLiterals = true; } {
     int start = LA(1);
 } : (
-    // names can start with a # in JavaScript
-    '#' (
-        { inLanguage(LANGUAGE_JAVASCRIPT) }?
-            NAME { $setType(NAME); }
-        |
-        { !inLanguage(LANGUAGE_JAVASCRIPT) }? {
-            if (startline) {
-                $setType(PREPROC); 
-
-                // record that we are on a preprocessor line,
-                // primarily so that unterminated strings in
-                // a preprocessor line will end at the right spot
-                onpreprocline = true; 
-                //firstpreprocline = true;
-            }
-        }
-    )? |
-
     '+' ('+' | '=')? |
     '-' ('-' | '=' | '>' ('*')? )? |
 

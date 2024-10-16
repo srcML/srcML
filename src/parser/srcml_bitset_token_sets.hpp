@@ -153,7 +153,9 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::LINE_DOXYGEN_COMMENT_END,
     srcMLParser::COMMENT_TEXT,
     srcMLParser::JAVADOC_COMMENT_START,
-    srcMLParser::DOXYGEN_COMMENT_START
+    srcMLParser::DOXYGEN_COMMENT_START,
+    srcMLParser::HASHBANG_COMMENT_START,
+    srcMLParser::HASHBANG_COMMENT_END
 )
 
 token_set(srcMLParser, duplex_keyword_set,

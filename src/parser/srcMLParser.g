@@ -696,6 +696,7 @@ tokens {
     SFUNCTION_GENERATOR_STATEMENT;
     SFUNCTION_GET_STATEMENT;
     SFUNCTION_SET_STATEMENT;
+    SHASHBANG_COMMENT;
     SIMPORT_STATEMENT;
     SINIT;
     SNAME_LIST;
@@ -15058,7 +15059,8 @@ range_in_js[] { SingleElement element(this); ENTRY_DEBUG } :
         expression
 
         {
-            endDownToMode(MODE_INIT);
+            if (inTransparentMode(MODE_FOR_LOOP_JS))
+                endDownToMode(MODE_INIT);
         }
 ;
 

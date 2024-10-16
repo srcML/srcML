@@ -47,6 +47,7 @@ tokens {
     BACKTICK_START;
     MACRO_NAME;
     COMPLEX_NUMBER;
+    HASHBANG_COMMENT_START;
 }
 
 {
@@ -184,6 +185,34 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; } : '/'
             onpreprocline = false;
         }
     }
+;
+
+// Hashbang comments (JavaScript)
+HASHBANG_COMMENT_START :
+    {
+        if (!inLanguage(LANGUAGE_JAVASCRIPT) && startline) {
+            $setType(PREPROC);
+
+            // record that we are on a preprocessor line,
+            // primarily so that unterminated strings in
+            // a preprocessor line will end at the right spot
+            onpreprocline = true;
+            //firstpreprocline = true;
+        }
+    }
+
+    '#' (
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) != '!' }?
+            NAME { $setType(NAME); }
+    )?
+
+    ('!'
+        {
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END);
+            }
+        }
+    )?
 ;
 
 // whitespace (except for newline)
