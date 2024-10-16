@@ -5012,7 +5012,7 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
             }
 
             // ensure JavaScript declarations end before the terminate token in a declaration statement
-            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_DECLARATION_JS))
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_DECLARATION_JS) && !inTransparentMode(MODE_LAMBDA_JS))
                 endDownToMode(MODE_DECLARATION_STATEMENT);
 
             // ensure JavaScript declarations end before the terminate token in the "init" portion of a for-loop control
