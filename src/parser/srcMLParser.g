@@ -12918,6 +12918,7 @@ template_extends_java[] { CompleteElement element(this); bool is_compound = fals
         }
 
         EXTENDS
+        (annotation)*
         compound_name_java[is_compound]
 ;
 
