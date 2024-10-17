@@ -12933,6 +12933,7 @@ template_super_java[] { CompleteElement element(this); bool is_compound = false;
         }
 
         SUPER
+        (annotation)*
         compound_name_java[is_compound]
 ;
 
