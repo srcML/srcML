@@ -282,4 +282,8 @@ const static srcMLState::MODE_TYPE MODE_IMPORT_JS;
 
 const static srcMLState::MODE_TYPE MODE_LAMBDA_JS;
 
+const static srcMLState::MODE_TYPE MODE_CONSTRUCTOR_JS;
+
+const static srcMLState::MODE_TYPE MODE_CLASS_EXPR_JS;
+
 #endif

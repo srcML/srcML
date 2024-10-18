@@ -1098,7 +1098,7 @@ start_javascript[] {
             temp_array[WHILE]                 = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
             /* JAVASCRIPT STATEMENTS */
-            temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
+            temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_PARAMETER | MODE_LIST | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
             temp_array[JS_DEBUGGER]           = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
@@ -1188,7 +1188,7 @@ start_javascript[] {
         { inMode(MODE_PARAMETER) }?
         init_js |
 
-        // looking for "," to handle a declaration statement/control expression with multiple declarations/lambda
+        // looking for "," to handle comma-separated declarations (or declarations in parameters)
         { inTransparentMode(MODE_DECLARATION_JS) }?
         comma_declaration_js |
 
@@ -5012,7 +5012,14 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
             }
 
             // ensure JavaScript declarations end before the terminate token in a declaration statement
-            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_DECLARATION_JS) && !inTransparentMode(MODE_LAMBDA_JS))
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && inTransparentMode(MODE_DECLARATION_JS)
+                && (
+                    !inTransparentMode(MODE_LAMBDA_JS)
+                    && !inTransparentMode(MODE_CLASS_EXPR_JS)
+                )
+            )
                 endDownToMode(MODE_DECLARATION_STATEMENT);
 
             // ensure JavaScript declarations end before the terminate token in the "init" portion of a for-loop control
@@ -11643,6 +11650,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         lambda_js |
 
+        // classes that appear inside an expression
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        class_expression_js |
+
         {
             !skip_ternary
             && !inMode(MODE_TERNARY_CONDITION)
@@ -15116,11 +15127,20 @@ init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 /*
   comma_declaration_js
 
-  Handles comma-separated JavaScript declarations and parameters (in lambdas).
+  Handles comma-separated JavaScript declarations and declarations inside parameters.
 */
 comma_declaration_js[] {
-        bool has_multiple_decls = (inTransparentMode(MODE_DECLARATION_STATEMENT) && !inTransparentMode(MODE_LAMBDA_JS)) || inTransparentMode(MODE_FOR_LOOP_JS);
-        bool has_multiple_params = inTransparentMode(MODE_DECLARATION_STATEMENT) && inTransparentMode(MODE_LAMBDA_JS) && !inTransparentMode(MODE_FOR_LOOP_JS);
+        // comma-separated paramaters appear in lambdas and constructors
+        bool has_multiple_params = (
+            inTransparentMode(MODE_DECLARATION_STATEMENT)
+            && (
+                inTransparentMode(MODE_LAMBDA_JS)
+                || inTransparentMode(MODE_CONSTRUCTOR_JS)
+            )
+            && !inTransparentMode(MODE_FOR_LOOP_JS)
+        );
+
+        bool has_multiple_decls = !has_multiple_params;
 
         ENTRY_DEBUG
 } :
@@ -15216,4 +15236,19 @@ lambda_js[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_PARAMETER_LIST_JS | MODE_EXPECT);
         }
+;
+
+/*
+  class_expression_js
+
+  Handles JavaScript class expressions.  Not used directly, but can be called by expression_part.
+*/
+class_expression_js[] { ENTRY_DEBUG } :
+        {
+            startElement(SCLASS);
+
+            startNewMode(MODE_NEST | MODE_CLASS_EXPR_JS);
+        }
+
+        CLASS
 ;
