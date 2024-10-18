@@ -176,7 +176,7 @@ enum STMT_TYPE {
 };
 
 enum CALL_TYPE {
-    NOCALL, CALL, MACRO
+    NOCALL, CALL, MACRO, METHOD
 };
 
 // position in output stream
@@ -1431,6 +1431,17 @@ pattern_statements[] {
             )
         }?
         macro_call |
+
+        // JavaScript class expression method
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inTransparentMode(MODE_CLASS_EXPR_JS)
+            && (
+                perform_call_check(type, isempty, call_count, secondtoken)
+                && type == METHOD
+            )
+        }?
+        class_expression_method_js |
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
         enum_short_variable_declaration |
@@ -2747,6 +2758,9 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         if (type == CALL && postnametoken == 1)
             type = NOCALL;
 
+        if (inTransparentMode(MODE_CLASS_EXPR_JS) && postcalltoken == LCURLY)
+            type = METHOD;
+
         inputState->guessing--;
         rewind(start);
 
@@ -2793,8 +2807,14 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
             // record token after argument list to differentiate between call and macro
             markend[postcalltoken] |
 
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
             LPAREN
             set_int[call_count, 1]
+            markend_js[postcalltoken] |
+
+            LPAREN
+            set_int[call_count, 1]
+            markend[postcalltoken]
         )
 ;
 
@@ -2932,6 +2952,20 @@ ternary_check[] { ENTRY_DEBUG } :
 */
 markend[int& token] {
         token = LA(1);
+} :;
+
+/*
+  markend_js
+
+  Records the current token, even in guessing mode.  Invoked in call_check if the language is JavaScript.
+  Contains extra logic to help identify if a call should be a function in JavaScript class expressions.
+*/
+markend_js[int& token] {
+        token = LA(1);
+
+        // what looks like a call could be a JavaScript class expression method
+        if (inTransparentMode(MODE_CLASS_EXPR_JS) && LA(1) == RPAREN)
+            token = next_token();
 } :;
 
 /* Keyword Statements */
@@ -15251,4 +15285,28 @@ class_expression_js[] { ENTRY_DEBUG } :
         }
 
         CLASS
+
+        {
+            startNewMode(MODE_VARIABLE_NAME);
+        }
+;
+
+/*
+  class_expression_method_js
+
+  Handles JavaScript class expression methods differently from calls.
+  Not used directly, but can be called by pattern_statements.
+*/
+class_expression_method_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            startElement(SFUNCTION_STATEMENT);
+        }
+
+        compound_name
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
 ;
