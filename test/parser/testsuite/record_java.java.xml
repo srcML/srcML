@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="record" filename="record_java">
+
+<unit language="Java">
+<class>record <name>Rectangle</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>length</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>width</name></decl></parameter>)</parameter_list> <block>{ }</block></class>
+</unit>
+
+<unit language="Java">
+<class>record <name>Rectangle</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>length</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>width</name></decl></parameter>)</parameter_list> <block>{
+    <constructor><specifier>public</specifier> <name>Rectangle</name><parameter_list>(<parameter><decl><type><name>double</name></type> <name>length</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name>length</name> <operator>&lt;=</operator> <literal type="number">0</literal> <operator>||</operator> <name>width</name> <operator>&lt;=</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+        </block_content>}</block></if></if_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>length</name></name> <operator>=</operator> <name>length</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr>;</expr_stmt>
+    </block_content>}</block></constructor>
+}</block></class></unit>
+
+</unit>
+
+
