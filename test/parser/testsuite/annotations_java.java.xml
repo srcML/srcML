@@ -86,4 +86,17 @@ class <name>Person</name> <super_list><implements>implements <super><name>Serial
 <annotation>@<name>Entity</name></annotation>
 </unit>
 
+<unit language="Java">
+<class>class <name><name>Abstract</name><parameter_list>&lt;<parameter><name>E</name> <extends>extends <annotation>@<name>Nullable</name></annotation> <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{
+}</block></class>
+</unit>
+
+<unit language="Java">
+<enum>enum <name>NoRecurse</name> <super_list><implements>implements <super><name><name>Feature</name><argument_list type="generic">&lt;<argument><annotation>@<name>Nullable</name></annotation> <name>Void</name></argument>&gt;</argument_list></name></super></implements></super_list> <block>{
+}</block></enum></unit>
+
+<unit language="Java">
+<function><type><specifier>public</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name><name>Feature</name><argument_list type="generic">&lt;<argument><name>?</name> <super>super <annotation>@<name>Nullable</name></annotation> <name>Void</name></super></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>getImpliedFeatures</name><parameter_list>()</parameter_list> <block>{<block_content>
+</block_content>}</block></function></unit>
+
 </unit>
