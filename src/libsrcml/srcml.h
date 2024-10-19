@@ -118,6 +118,8 @@ const unsigned int SRCML_OPTION_CPP_TEXT_ELSE     = 1<<4;
 const unsigned int SRCML_OPTION_CPP_MARKUP_IF0    = 1<<5;
 /** Encode the original source encoding as an attribute */
 const unsigned int SRCML_OPTION_STORE_ENCODING    = 1<<6;
+/** Expand tabs to spaces on input */
+const unsigned int SRCML_OPTION_EXPAND_TABS       = 1<<7;
 /**@}*/
 
 /**@{ @name Source Output EOL Options */

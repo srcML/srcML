@@ -4504,7 +4504,7 @@ lcurly[bool content = true] { ENTRY_DEBUG } :
                 content = false;
 
             // special end for conditions
-            if (inTransparentMode(MODE_CONDITION) && !inMode(MODE_ANONYMOUS)) {
+            if (inTransparentMode(MODE_CONDITION) && !inMode(MODE_ANONYMOUS) && !inMode(MODE_CLASS)) {
                 endDownToMode(MODE_CONDITION);
                 endMode(MODE_CONDITION);
             }
@@ -12932,6 +12932,7 @@ template_extends_java[] { CompleteElement element(this); bool is_compound = fals
         }
 
         EXTENDS
+        (annotation)*
         compound_name_java[is_compound]
 ;
 
@@ -12946,6 +12947,7 @@ template_super_java[] { CompleteElement element(this); bool is_compound = false;
         }
 
         SUPER
+        (annotation)*
         compound_name_java[is_compound]
 ;
 

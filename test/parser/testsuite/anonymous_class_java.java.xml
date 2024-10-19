@@ -77,4 +77,10 @@
 }</block></class> 
 </unit>
 
+<unit language="Java">
+<if_stmt><if>if <condition>(<expr><operator>new</operator> <class><super><name>TypeCapture</name></super><argument_list>()</argument_list> <block>{}</block></class></expr>)</condition> <block>{<block_content>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+
 </unit>
