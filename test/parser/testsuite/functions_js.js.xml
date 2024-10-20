@@ -7,19 +7,21 @@
     </block_content>}</block></function>
 
     <function>function <name>greet</name><parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
-        <return>return <expr><operator>`</operator><name>Hello</name></expr><operator>,</operator> $<block>{<block_content><expr><name>name</name></expr></block_content>}</block></return><expr_stmt><expr><operator>!</operator><operator>`</operator></expr>;</expr_stmt>
+        <return>return <expr><literal type="string">`Hello, ${name}!`</literal></expr>;</return>
     </block_content>}</block></function>
     </unit>
 
     <unit language="JavaScript">
-    <comment type="block">/*Function Expression*/</comment>
-    <decl_stmt><decl type="const">const <name>functionName2</name> <init>= function<expr><operator>(</operator><name>parameters</name><operator>)</operator> <block>{
-        <comment type="line">// function body</comment>
-        }</block></expr></init></decl>;</decl_stmt>
+        <comment type="block">/*Function Expression*/</comment>
+        <decl_stmt><decl type="const">const <name>functionName2</name> <init>= <expr><lambda>function<parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
+            <comment type="line">// function body</comment>
+        </block_content>}</block></lambda></expr></init></decl>;</decl_stmt>
+    </unit>
 
-    <decl_stmt><decl type="const">const <name>add</name> <init>=<expr>function<operator>(</operator><name>a</name><operator>,</operator> <name>b</name><operator>)</operator><block>{<block_content>
-                    <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</return>
-                </block_content>}</block></expr></init></decl>;</decl_stmt>
+    <unit language="JavaScript">
+        <decl_stmt><decl type="const">const <name>add</name> <init>= <expr><lambda>function<parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <block>{<block_content>
+            <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</return>
+        </block_content>}</block></lambda></expr></init></decl>;</decl_stmt>
     </unit>
 
     <unit language="JavaScript">
@@ -34,66 +36,29 @@
     </unit>
 
     <unit language="JavaScript">
-    <comment type="block">/*Immediately Invoked Function Expression (IIFE)*/</comment>
-    <expr_stmt><expr><operator>(</operator>function<operator>(</operator><name>parameters</name><operator>)</operator> <block>{
-        <comment type="line">// function body</comment>
-        }</block><operator>)</operator><operator>(</operator><name>arguments</name><operator>)</operator></expr>;</expr_stmt>
-
-    <expr_stmt><expr><operator>(</operator>function<operator>(</operator><operator>)</operator> <block>{
-        <init><decl type="const">const <name>message</name> <init>= <expr><literal type="string">'This is an IIFE'</literal></expr></init></decl></init>;
-        <expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;
-        }</block><operator>)</operator><operator>(</operator><operator>)</operator></expr>;</expr_stmt> <comment type="line">// Output: This is an IIFE</comment>
-
-    <expr_stmt><expr><operator>(</operator>function<operator>(</operator><name>name</name><operator>)</operator> <block>{
-        <expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><operator>`</operator><name>Hello</name></expr></argument>, <argument><expr><name>$</name><block>{<expr><name>name</name></expr>}</block><operator>!</operator><operator>`</operator></expr></argument>)</argument_list></call></expr>;
-        }</block><operator>)</operator><operator>(</operator><literal type="string">'Bob'</literal><operator>)</operator></expr>;</expr_stmt> <comment type="line">// Output: Hello, Bob!</comment>
+        <comment type="block">/*Immediately Invoked Function Expression (IIFE)*/</comment>
+        <expr_stmt><expr><operator>(</operator><lambda>function<parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
+            <comment type="line">// function body</comment>
+        </block_content>}</block></lambda></expr></expr_stmt>)<expr_stmt><expr><operator>(</operator><name>arguments</name><operator>)</operator></expr>;</expr_stmt>
     </unit>
 
     <unit language="JavaScript">
-    <comment type="block">/*Methods in Objects*/</comment>
-    <decl_stmt><decl type="const">const <name>objectName</name> <init>= <expr><block>{
-        <expr><name>methodName</name><operator>:</operator> function<operator>(</operator><name>parameters</name><operator>)</operator> <block>{
-            <comment type="line">// method body</comment>
-            }</block></expr>
-        }</block></expr></init></decl>;</decl_stmt>
-
-    <decl_stmt><decl type="const">const <name>calculator</name> <init>= <expr><block>{
-        <expr><name>add</name><operator>:</operator> function<operator>(</operator><name>a</name></expr></block></expr></init></decl>, <decl type="const"><name>b</name></decl></decl_stmt>) <block>{<block_content>
-        <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</return>
-    </block_content>}</block><operator>,</operator>
-    <expr_stmt><expr><call><name>subtract</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument>)</argument_list></call> <block>{ <comment type="line">// ES6 shorthand</comment>
-        <return>return <expr><name>a</name> <operator>-</operator> <name>b</name></expr>;</return>
-        }</block></expr></expr_stmt>
-    };
+        <expr_stmt><expr><operator>(</operator><lambda>function<parameter_list>()</parameter_list> <block>{<block_content>
+            <decl_stmt><decl type="const">const <name>message</name> <init>= <expr><literal type="string">'This is an IIFE'</literal></expr></init></decl>;</decl_stmt>
+            <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>message</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        </block_content>}</block></lambda></expr></expr_stmt>)<expr_stmt><expr><operator>(</operator><operator>)</operator></expr>;</expr_stmt> <comment type="line">// Output: This is an IIFE</comment>
     </unit>
 
     <unit language="JavaScript">
-    <comment type="block">/*Class Methods*/</comment>
-    <class>class <name>ClassName</name> <block>{<block_content>
-        <constructor>constructor<parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
-            <comment type="line">// initialization</comment>
-        </block_content>}</block></constructor>
+        <expr_stmt><expr><operator>(</operator><lambda>function<parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
+            <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Hello, ${name}!`</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        </block_content>}</block></lambda></expr></expr_stmt>)<expr_stmt><expr><operator>(</operator><literal type="string">'Bob'</literal><operator>)</operator></expr>;</expr_stmt> <comment type="line">// Output: Hello, Bob!</comment>
 
-        <expr_stmt><expr><call><name>methodName</name><argument_list>(<argument><expr><name>parameters</name></expr></argument>)</argument_list></call> <block>{
-            <comment type="line">// method body</comment>
-            }</block></expr></expr_stmt>
-    </block_content>}</block></class>
-
-    <class>class <name>Rectangle</name> <block>{<block_content>
-        <constructor>constructor<parameter_list>(<parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>height</name></decl></parameter>)</parameter_list> <block>{<block_content>
-            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr>;</expr_stmt>
-            <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr>;</expr_stmt>
-        </block_content>}</block></constructor>
-
-        <expr_stmt><expr><call><name>area</name><argument_list>()</argument_list></call> <block>{
-            <return>return <expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>*</operator> <name><name>this</name><operator>.</operator><name>height</name></name></expr>;</return>
-            }</block></expr></expr_stmt>
-    </block_content>}</block></class>
     </unit>
 
     <unit language="JavaScript">
     <comment type="block">/*Generator Functions*/</comment>
-    <function type="generator">function <operator>*</operator><name>generatorFunction</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <function type="generator">function* <name>generatorFunction</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// function body</comment>
         <yield>yield <expr><name>value</name></expr>;</yield>
     </block_content>}</block></function>
@@ -127,19 +92,19 @@
     <decl_stmt><decl type="const">const <name>sum</name> <init>= <expr><operator>new</operator> <call><name>Function</name><argument_list>(<argument><expr><literal type="string">'a'</literal></expr></argument></argument_list></call></expr></init></decl>, <decl type="const">'b'</decl>, <decl type="const">'return a + b;'</decl></decl_stmt>)<empty_stmt>;</empty_stmt>
 
     <comment type="block">/*Nested Functions*/</comment>
-    <function>function <name>outerFunction</name><parameter_list>(<parameter><decl><name>outerVariable</name></decl></parameter>)</parameter_list> <block>{<block_content>
-        <function>function <name>innerFunction</name><parameter_list>(<parameter><decl><name>innerVariable</name></decl></parameter>)</parameter_list> <block>{<block_content>
-            <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><operator>`</operator><name>Outer</name> <name>Variable</name><operator>:</operator> <name>$</name><block>{<expr><name>outerVariable</name></expr>}</block><operator>`</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-            <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><operator>`</operator><name>Inner</name> <name>Variable</name><operator>:</operator> <name>$</name><block>{<expr><name>innerVariable</name></expr>}</block><operator>`</operator></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <function>function <name>outerFunction</name><parameter_list>(<parameter><decl><name>outerVariable</name></decl></parameter>)</parameter_list> <block>{<block_content>
+            <function>function <name>innerFunction</name><parameter_list>(<parameter><decl><name>innerVariable</name></decl></parameter>)</parameter_list> <block>{<block_content>
+                <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Outer Variable: ${outerVariable}`</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+                <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Inner Variable: ${innerVariable}`</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+            </block_content>}</block></function>
+            <return>return <expr><name>innerFunction</name></expr>;</return>
         </block_content>}</block></function>
-        <return>return <expr><name>innerFunction</name></expr>;</return>
-    </block_content>}</block></function>
     </unit>
 
     <unit language="JavaScript">
     <comment type="block">/*Default Parameters and Rest Parameters*/</comment>
     <function>function <name>greet</name><parameter_list>(<parameter><decl><name>name</name> <init>= <expr><literal type="string">'Guest'</literal></expr></init></decl></parameter>)</parameter_list> <block>{<block_content>
-        <return>return <expr><operator>`</operator><name>Hello</name></expr><operator>,</operator> $<block>{<block_content><expr><name>name</name></expr></block_content>}</block></return><expr_stmt><expr><operator>!</operator><operator>`</operator></expr>;</expr_stmt>
+        <return>return <expr><literal type="string">`Hello, ${name}!`</literal></expr>;</return>
     </block_content>}</block></function>
 
     <function>function <name>sum2</name><parameter_list>(<parameter><decl><modifier>...</modifier><name>numbers</name></decl></parameter>)</parameter_list> <block>{<block_content>
