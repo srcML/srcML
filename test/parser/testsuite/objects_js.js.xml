@@ -75,8 +75,8 @@
             <decl type="const"><name>id</name>       <range>: <expr><literal type="number">5566</literal></expr></range></decl>,
             <decl type="const"><name>fullName</name> <range>: <expr><lambda>function<parameter_list>()</parameter_list> <block>{<block_content>
                 <return>return <expr><name><name>this</name><operator>.</operator><name>firstName</name></name> <operator>+</operator> <literal type="string">" "</literal> <operator>+</operator> <name><name>this</name><operator>.</operator><name>lastName</name></name></expr>;</return>
-            </block_content>}</block></lambda></expr></range></decl></decl_stmt>
-        };</block></expr></init></decl>
+            </block_content>}</block></lambda></expr></range></decl>
+        };</block></expr></init></decl></decl_stmt>
     </unit>
 
     <unit language="JavaScript">
