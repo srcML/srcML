@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js"><comment type="line">//variable declaration</comment>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" filename="script.js">
+
     <unit language="JavaScript">
+        <comment type="line">//variable declaration</comment>
         <decl_stmt><decl type="let">let <name>j</name></decl>;</decl_stmt>
     </unit>
 
