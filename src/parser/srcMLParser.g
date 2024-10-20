@@ -176,7 +176,7 @@ enum STMT_TYPE {
 };
 
 enum CALL_TYPE {
-    NOCALL, CALL, MACRO
+    NOCALL, CALL, MACRO, METHOD
 };
 
 // position in output stream
@@ -699,6 +699,8 @@ tokens {
     SHASHBANG_COMMENT;
     SIMPORT_STATEMENT;
     SINIT;
+    SLAMBDA_JS;
+    SLAMBDA_GENERATOR_JS;
     SNAME_LIST;
     SRANGE_IN;
     SRANGE_OF;
@@ -1096,7 +1098,7 @@ start_javascript[] {
             temp_array[WHILE]                 = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
             /* JAVASCRIPT STATEMENTS */
-            temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER | MODE_LIST | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
+            temp_array[JS_CONSTRUCTOR]        = { SCONSTRUCTOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_PARAMETER | MODE_LIST | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
             temp_array[JS_DEBUGGER]           = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_EXPORT]             = { SEXPORT_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
             temp_array[JS_FUNCTION]           = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
@@ -1186,7 +1188,7 @@ start_javascript[] {
         { inMode(MODE_PARAMETER) }?
         init_js |
 
-        // looking for "," to handle a declaration statement/control expression with multiple declarations
+        // looking for "," to handle comma-separated declarations (or declarations in parameters)
         { inTransparentMode(MODE_DECLARATION_JS) }?
         comma_declaration_js |
 
@@ -1429,6 +1431,17 @@ pattern_statements[] {
             )
         }?
         macro_call |
+
+        // JavaScript class expression method
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inTransparentMode(MODE_CLASS_EXPR_JS)
+            && (
+                perform_call_check(type, isempty, call_count, secondtoken)
+                && type == METHOD
+            )
+        }?
+        class_expression_method_js |
 
         { inMode(MODE_ENUM) && inMode(MODE_LIST) }?
         enum_short_variable_declaration |
@@ -2745,6 +2758,9 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         if (type == CALL && postnametoken == 1)
             type = NOCALL;
 
+        if (inTransparentMode(MODE_CLASS_EXPR_JS) && postcalltoken == LCURLY)
+            type = METHOD;
+
         inputState->guessing--;
         rewind(start);
 
@@ -2791,8 +2807,14 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
             // record token after argument list to differentiate between call and macro
             markend[postcalltoken] |
 
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
             LPAREN
             set_int[call_count, 1]
+            markend_js[postcalltoken] |
+
+            LPAREN
+            set_int[call_count, 1]
+            markend[postcalltoken]
         )
 ;
 
@@ -2930,6 +2952,20 @@ ternary_check[] { ENTRY_DEBUG } :
 */
 markend[int& token] {
         token = LA(1);
+} :;
+
+/*
+  markend_js
+
+  Records the current token, even in guessing mode.  Invoked in call_check if the language is JavaScript.
+  Contains extra logic to help identify if a call should be a function in JavaScript class expressions.
+*/
+markend_js[int& token] {
+        token = LA(1);
+
+        // what looks like a call could be a JavaScript class expression method
+        if (inTransparentMode(MODE_CLASS_EXPR_JS) && LA(1) == RPAREN)
+            token = next_token();
 } :;
 
 /* Keyword Statements */
@@ -4919,7 +4955,8 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
 
             // end all the statements this statement is nested in
             // special case when ending then of if statement: end down to either a block or top section, or to an if, whichever is reached first
-            endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
+            // special case for JavaScript lambdas: end down to a declaration
+            endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS | MODE_DECLARATION_JS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
             bool anonymous_class = (inMode(MODE_CLASS) || inMode(MODE_ENUM)) && inMode(MODE_END_AT_BLOCK);
@@ -5009,7 +5046,14 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
             }
 
             // ensure JavaScript declarations end before the terminate token in a declaration statement
-            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_DECLARATION_JS))
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && inTransparentMode(MODE_DECLARATION_JS)
+                && (
+                    !inTransparentMode(MODE_LAMBDA_JS)
+                    && !inTransparentMode(MODE_CLASS_EXPR_JS)
+                )
+            )
                 endDownToMode(MODE_DECLARATION_STATEMENT);
 
             // ensure JavaScript declarations end before the terminate token in the "init" portion of a for-loop control
@@ -11636,6 +11680,14 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // functions that appear inside an expression
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        lambda_js |
+
+        // classes that appear inside an expression
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        class_expression_js |
+
         {
             !skip_ternary
             && !inMode(MODE_TERNARY_CONDITION)
@@ -14702,8 +14754,10 @@ parameter_list_js[] { ENTRY_DEBUG } :
 */
 rparen_parameter_list[] { ENTRY_DEBUG } :
         {
-            if (inMode(MODE_PARAMETER))
+            if (inTransparentMode(MODE_PARAMETER)) {
+                endDownToMode(MODE_PARAMETER);
                 endMode(MODE_PARAMETER);
+            }
         }
 
         RPAREN
@@ -15107,39 +15161,85 @@ init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 /*
   comma_declaration_js
 
-  Handles JavaScript declaration statements or control expressions with more than one declaration.
+  Handles comma-separated JavaScript declarations and declarations inside parameters.
 */
-comma_declaration_js[] { ENTRY_DEBUG } :
+comma_declaration_js[] {
+        // comma-separated paramaters appear in lambdas and constructors
+        bool has_multiple_params = (
+            inTransparentMode(MODE_DECLARATION_STATEMENT)
+            && (
+                inTransparentMode(MODE_LAMBDA_JS)
+                || inTransparentMode(MODE_CONSTRUCTOR_JS)
+            )
+            && !inTransparentMode(MODE_FOR_LOOP_JS)
+        );
+
+        bool has_multiple_decls = !has_multiple_params;
+
+        ENTRY_DEBUG
+} :
         {
-            endDownToMode(MODE_DECLARATION_JS);
-            endMode(MODE_DECLARATION_JS);
+            // For JavaScript declaration statements or control expressions with
+            // more than one declaration, end down to the first declaration.
+            if (has_multiple_decls) {
+                endDownToMode(MODE_DECLARATION_JS);
+                endMode(MODE_DECLARATION_JS);
+            }
+
+            // For JavaScript parameter lists (in lambdas) that contain
+            // declarations, end down to the first parameter.
+            if (has_multiple_params) {
+                endDownToMode(MODE_PARAMETER);
+                endMode(MODE_PARAMETER);
+            }
         }
 
         COMMA
 
         {
+            if (has_multiple_params) {
+                startNewMode(MODE_PARAMETER);
+                startElement(SPARAMETER);
+            }
+
             // declaration statement has an additional declaration
             startNewMode(MODE_DECLARATION_JS);
 
             switch (current_decl_type_js) {
                 case JS_LET :
-                    startElement(SDECLARATION_LET);
-                    current_decl_type_js = JS_LET;
+                    if (has_multiple_decls) {
+                        startElement(SDECLARATION_LET);
+                        current_decl_type_js = JS_LET;
+                    }
+                    if (has_multiple_params)
+                        startElement(SDECLARATION);
                     break;
 
                 case JS_VAR :
-                    startElement(SDECLARATION_VAR);
-                    current_decl_type_js = JS_VAR;
+                    if (has_multiple_decls) {
+                        startElement(SDECLARATION_VAR);
+                        current_decl_type_js = JS_VAR;
+                    }
+                    if (has_multiple_params)
+                        startElement(SDECLARATION);
                     break;
 
                 case JS_CONST :
-                    startElement(SDECLARATION_CONST);
-                    current_decl_type_js = JS_CONST;
+                    if (has_multiple_decls) {
+                        startElement(SDECLARATION_CONST);
+                        current_decl_type_js = JS_CONST;
+                    }
+                    if (has_multiple_params)
+                        startElement(SDECLARATION);
                     break;
 
                 case JS_STATIC :
-                    startElement(SDECLARATION_STATIC);
-                    current_decl_type_js = JS_STATIC;
+                    if (has_multiple_decls) {
+                        startElement(SDECLARATION_STATIC);
+                        current_decl_type_js = JS_STATIC;
+                    }
+                    if (has_multiple_params)
+                        startElement(SDECLARATION);
                     break;
 
                 default :
@@ -15147,5 +15247,66 @@ comma_declaration_js[] { ENTRY_DEBUG } :
             }
 
             startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT);
+        }
+;
+
+/*
+  lambda_js
+
+  Handles JavaScript lambdas.  Not used directly, but can be called by expression_part.
+*/
+lambda_js[] { ENTRY_DEBUG } :
+        {
+            if (next_token() == MULTOPS)
+                startElement(SLAMBDA_GENERATOR_JS);
+            else
+                startElement(SLAMBDA_JS);
+
+            startNewMode(MODE_NEST | MODE_LAMBDA_JS);
+        }
+
+        JS_FUNCTION
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS | MODE_EXPECT);
+        }
+;
+
+/*
+  class_expression_js
+
+  Handles JavaScript class expressions.  Not used directly, but can be called by expression_part.
+*/
+class_expression_js[] { ENTRY_DEBUG } :
+        {
+            startElement(SCLASS);
+
+            startNewMode(MODE_NEST | MODE_CLASS_EXPR_JS);
+        }
+
+        CLASS
+
+        {
+            startNewMode(MODE_VARIABLE_NAME);
+        }
+;
+
+/*
+  class_expression_method_js
+
+  Handles JavaScript class expression methods differently from calls.
+  Not used directly, but can be called by pattern_statements.
+*/
+class_expression_method_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+
+            startElement(SFUNCTION_STATEMENT);
+        }
+
+        compound_name
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
         }
 ;
