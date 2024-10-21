@@ -685,6 +685,7 @@ tokens {
     // JavaScript
     SALIAS;
     SALIAS_COMPOUND_NAME;
+    SARRAY;
     SCONSTRUCTOR_STATEMENT;
     SDEBUGGER_STATEMENT;
     SDECLARATION_CONST;
@@ -11680,6 +11681,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // looking for `]` to start a JavaScript array
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        array_js |
+
         // functions that appear inside an expression
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         lambda_js |
@@ -15248,6 +15253,23 @@ comma_declaration_js[] {
 
             startNewMode(MODE_INIT | MODE_VARIABLE_NAME | MODE_EXPECT);
         }
+;
+
+/*
+  array_js
+
+  Handles JavaScript arrays.  Not used directly, but can be called by expression_part.
+*/
+array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
+
+            startElement(SARRAY);
+        }
+
+        LBRACKET
+        complete_expression
+        RBRACKET
 ;
 
 /*

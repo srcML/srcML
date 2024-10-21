@@ -313,6 +313,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     // JavaScript
     { TOKEN::SALIAS,                        { "alias",             SRC,      0,           0,     0,      0,}},
     { TOKEN::SALIAS_COMPOUND_NAME,          { "name",              SRC,      0,           0,     0,      0 }},
+    { TOKEN::SARRAY,                        { "array",             SRC,      0,           0,     0,      0 }},
     { TOKEN::SCONSTRUCTOR_STATEMENT,        { "constructor",       SRC,      0,           0,     0,      0 }},
     { TOKEN::SDEBUGGER_STATEMENT,           { "debugger",          SRC,      0,           0,     0,      0 }},
     { TOKEN::SDECLARATION_CONST,            { "decl",              SRC, "type",     "const",     0,      0 }},
