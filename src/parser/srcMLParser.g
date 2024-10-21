@@ -11681,7 +11681,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
-        // looking for `]` to start a JavaScript array
+        // looking for `[` to start a JavaScript array
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         array_js |
 
