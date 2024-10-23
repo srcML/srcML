@@ -319,6 +319,7 @@ tokens {
     // JavaScript
     JS_ALIAS;
     JS_ARROW;
+    JS_AWAIT;
     JS_CONST;
     JS_CONSTRUCTOR;
     JS_DEBUGGER;
@@ -719,6 +720,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // JavaScript
         { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
         { "as"           , JS_ALIAS          , LANGUAGE_JAVASCRIPT },
+        { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
         { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
         { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
