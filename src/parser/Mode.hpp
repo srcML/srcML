@@ -286,4 +286,10 @@ const static srcMLState::MODE_TYPE MODE_CONSTRUCTOR_JS;
 
 const static srcMLState::MODE_TYPE MODE_CLASS_EXPR_JS;
 
+const static srcMLState::MODE_TYPE MODE_LAMBDA_ARROW_JS;
+
+const static srcMLState::MODE_TYPE MODE_ARROW_OP_JS;
+
+const static srcMLState::MODE_TYPE MODE_ARROW_BLOCK_JS;
+
 #endif

@@ -329,6 +329,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SIMPORT_STATEMENT,             { "import",            SRC,      0,           0,     0,      0 }},
     { TOKEN::SINIT,                         { "init",              SRC,      0,           0,     0,      0 }},
     { TOKEN::SLAMBDA_JS,                    { "lambda",            SRC,      0,           0,     0,      0 }},
+    { TOKEN::SLAMBDA_ARROW_JS,              { "lambda",            SRC, "type",     "arrow",     0,      0 }},
     { TOKEN::SLAMBDA_GENERATOR_JS,          { "lambda",            SRC, "type", "generator",     0,      0 }},
     { TOKEN::SNAME_LIST,                    { "name_list",         SRC,      0,           0,     0,      0 }},
     { TOKEN::SRANGE_IN,                     { "range",             SRC,      0,           0,     0,      0 }},

@@ -701,6 +701,7 @@ tokens {
     SIMPORT_STATEMENT;
     SINIT;
     SLAMBDA_JS;
+    SLAMBDA_ARROW_JS;
     SLAMBDA_GENERATOR_JS;
     SNAME_LIST;
     SRANGE_IN;
@@ -1142,6 +1143,14 @@ start_javascript[] {
             }
         }
 
+        // special case for a name (no paren) to start an arrow lambda tag
+        if (LA(1) == NAME && next_token() == JS_ARROW)
+            arrow_js(true);
+
+        // special case for a parameter list to start an arrow lambda tag
+        if (LA(1) == LPAREN)
+            parameter_list_arrow_js();
+
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
@@ -1193,8 +1202,8 @@ start_javascript[] {
         { inTransparentMode(MODE_DECLARATION_JS) }?
         comma_declaration_js |
 
-        // looking for a keyword that does not belong to a statement
-        extends_js | alias_js | from_js | range_in_js | range_of_js | declaration_js |
+        // looking for a keyword or operator that does not belong to a statement
+        extends_js | alias_js | from_js | range_in_js | range_of_js | declaration_js | arrow_js[false] |
 
         // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
         start
@@ -4956,8 +4965,8 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
 
             // end all the statements this statement is nested in
             // special case when ending then of if statement: end down to either a block or top section, or to an if, whichever is reached first
-            // special case for JavaScript lambdas: end down to a declaration
-            endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS | MODE_DECLARATION_JS);
+            // special case for JavaScript lambdas: end down to a declaration, or to the end of an arrow lambda block
+            endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS | MODE_DECLARATION_JS | MODE_LAMBDA_ARROW_JS);
 
             bool endstatement = inMode(MODE_END_AT_BLOCK);
             bool anonymous_class = (inMode(MODE_CLASS) || inMode(MODE_ENUM)) && inMode(MODE_END_AT_BLOCK);
@@ -5045,6 +5054,14 @@ terminate[] { ENTRY_DEBUG resumeStream(); } :
                 else
                     control_condition_action();
             }
+
+            // ensure JavaScript arrow lambdas end before the terminate token
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && inTransparentMode(MODE_LAMBDA_ARROW_JS)
+                && !inTransparentMode(MODE_ARROW_BLOCK_JS)
+            )
+                endDownToMode(MODE_LAMBDA_ARROW_JS);
 
             // ensure JavaScript declarations end before the terminate token in a declaration statement
             if (
@@ -11847,6 +11864,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
                 startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
                 startElement(SBLOCK);
+
+                // differentiate start of arrow lambda block from the start of a typical block
+                if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_LAMBDA_ARROW_JS))
+                    startNewMode(MODE_ARROW_BLOCK_JS);
             }
 
             LCURLY
@@ -15164,6 +15185,120 @@ init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  arrow_js
+
+  Handles specific arrow (`=>`) cases in JavaScript.
+  If the arrow is alone or the case is unhandled, mark it as an operator.
+  Otherwise, mark the entire expression as an arrow lambda.
+*/
+arrow_js[bool is_lambda = true] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            if (is_lambda) {
+                // enclose lambda in expression statement if not in a declaration statement
+                if (!inTransparentMode(MODE_DECLARATION_STATEMENT)) {
+                    startNewMode(MODE_STATEMENT);
+                    startElement(SEXPRESSION_STATEMENT);
+                }
+
+                startNewMode(MODE_EXPRESSION);
+                startElement(SEXPRESSION);
+            }
+
+            startNewMode(MODE_LAMBDA_ARROW_JS);
+
+            // enclose name in parameter
+            if (is_lambda) {
+                startElement(SLAMBDA_ARROW_JS);
+
+                startNewMode(MODE_PARAMETER);
+                startElement(SPARAMETER);
+
+                startNewMode(MODE_DECL);
+                startElement(SDECLARATION);
+
+                compound_name();
+
+                endMode(MODE_DECL);
+                endMode(MODE_PARAMETER);
+            }
+
+            startNewMode(MODE_ARROW_OP_JS);
+            startElement(SOPERATOR);
+        }
+
+        JS_ARROW
+
+        {
+            endMode(MODE_ARROW_OP_JS);
+
+            bool in_expression = inTransparentMode(MODE_EXPRESSION);
+
+            if (!is_lambda)
+                endMode(MODE_LAMBDA_ARROW_JS);
+
+            if (in_expression)
+                startNewMode(MODE_EXPRESSION);
+        }
+;
+
+/*
+  perform_arrow_lambda_check
+
+  Checks to see if an arrow (`=>`) follows a parameter list.
+*/
+perform_arrow_lambda_check[] returns [bool islambda] {
+        islambda = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            int token = LA(1);
+
+            while (true) {
+                consume();
+                token = LA(1);
+
+                if (token == RPAREN || token == TERMINATE || token == 1 /* EOF */)
+                    break;
+            }
+
+            if (next_token() == JS_ARROW)
+                islambda = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  parameter_list_arrow_js
+
+  Handles a JavaScript parameter list followed by an arrow (`=>`).
+*/
+parameter_list_arrow_js[] { bool is_valid = perform_arrow_lambda_check(); ENTRY_DEBUG } :
+        {
+            if (is_valid) {
+                // enclose lambda in expression statement if not in a declaration statement
+                if (!inTransparentMode(MODE_DECLARATION_STATEMENT)) {
+                    startNewMode(MODE_STATEMENT);
+                    startElement(SEXPRESSION_STATEMENT);
+                }
+
+                startNewMode(MODE_EXPRESSION);
+                startElement(SEXPRESSION);
+
+                startNewMode(MODE_LAMBDA_ARROW_JS);
+                startElement(SLAMBDA_ARROW_JS);
+
+                startNewMode(MODE_PARAMETER_LIST_JS);
+            }
+        }
+;
+
+/*
   comma_declaration_js
 
   Handles comma-separated JavaScript declarations and declarations inside parameters.
@@ -15175,6 +15310,7 @@ comma_declaration_js[] {
             && (
                 inTransparentMode(MODE_LAMBDA_JS)
                 || inTransparentMode(MODE_CONSTRUCTOR_JS)
+                || inTransparentMode(MODE_LAMBDA_ARROW_JS)
             )
             && !inTransparentMode(MODE_FOR_LOOP_JS)
         );
