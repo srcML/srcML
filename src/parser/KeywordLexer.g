@@ -322,6 +322,7 @@ tokens {
     JS_CONST;
     JS_CONSTRUCTOR;
     JS_DEBUGGER;
+    JS_DELETE;
     JS_EXPORT;
     JS_FROM;
     JS_FUNCTION;
@@ -721,6 +722,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
         { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
+        { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
         { "export"       , JS_EXPORT         , LANGUAGE_JAVASCRIPT },
         { "extends"      , EXTENDS           , LANGUAGE_JAVASCRIPT },
         { "finally"      , FINALLY           , LANGUAGE_JAVASCRIPT },

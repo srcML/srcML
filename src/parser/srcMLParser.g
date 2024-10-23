@@ -11327,7 +11327,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             BLOCKOP |
 
             // JavaScript
-            JS_INSTANCE_OF | JS_TYPEOF | JS_VOID
+            JS_DELETE | JS_INSTANCE_OF | JS_TYPEOF | JS_VOID
         )
 ;
 
