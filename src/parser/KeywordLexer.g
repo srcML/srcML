@@ -237,6 +237,8 @@ tokens {
     NULLLITERAL;
     ASSERT;
     RECORD;
+    NON;
+    PERMITS;
 
     // C# tokens
     FOREACH;
@@ -584,6 +586,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "instanceof"    , OPERATORS     , LANGUAGE_JAVA },
         { "assert"        , ASSERT        , LANGUAGE_JAVA },
         { "record"        , RECORD        , LANGUAGE_JAVA },
+        { "sealed"        , SEALED        , LANGUAGE_JAVA },
+        { "non"           , NON           , LANGUAGE_JAVA },
+        { "permits"       , PERMITS       , LANGUAGE_JAVA },
 
 
         // C# specific keywords

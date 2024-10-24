@@ -3915,6 +3915,8 @@ class_preamble[] { ENTRY_DEBUG } :
         (
             specifier |
 
+            {inLanguage(LANGUAGE_JAVA)}? non_sealed_specifier |
+
             { LA(1) != TEMPLATE || next_token() != TEMPOPS }?
             template_specifier |
 
@@ -4399,8 +4401,11 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == FINAL }?
-            specifier
+            { LA(1) == FINAL 
+                || inLanguage(LANGUAGE_JAVA) && LA(1) == SEALED }?
+            specifier |
+            {inLanguage(LANGUAGE_JAVA) && LA(1) == NON}?
+            non_sealed_specifier
         )*
 
         (
@@ -5805,7 +5810,10 @@ pattern_check_core[
                         ATREQUIRED | ATOPTIONAL |
 
                         { inLanguage(LANGUAGE_JAVA) }?
-                        default_specifier
+                        default_specifier |
+
+                        { inLanguage(LANGUAGE_JAVA) }?
+                        non_sealed_specifier
                     )
 
                     set_int[specifier_count, specifier_count + 1]
@@ -7768,7 +7776,7 @@ identifier_list[] { ENTRY_DEBUG } :
         CRESTRICT | MUTABLE | CXX_TRY | CXX_CATCH |
 
         // Java
-        RECORD | 
+        RECORD | SEALED | PERMITS | NON |
 
         // Commented-out code; Not sure why these are commented out
         /*
@@ -8360,7 +8368,7 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
   Used to mark specifiers.
 */
 specifier[] { ENTRY_DEBUG } :
-        single_keyword_specifier | alignas_specifier | macro_specifier_call | atomic
+        single_keyword_specifier | alignas_specifier | macro_specifier_call
 ;
 
 /*
@@ -8486,6 +8494,14 @@ this_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
         }
 
         THIS
+;
+
+non_sealed_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        NON MSPEC SEALED
 ;
 
 /*
