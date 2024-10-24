@@ -593,6 +593,7 @@ tokens {
 
     // Java elements
     SIMPLEMENTS;
+    SPERMITS;
     SEXTENDS;
     SIMPORT;
     SPACKAGE;
@@ -4424,7 +4425,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
             parameter_list
         )*
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_JAVA_FAMILY) }?
             (options { greedy = true; } :
                 super_list_java
@@ -4433,8 +4434,8 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
                     insuper = true;
                 }
 
-                (extends_list | implements_list)
-                (options { greedy = true; } : extends_list | implements_list)*
+                (extends_list | implements_list | permits_list)
+                (options { greedy = true; } : extends_list | implements_list | permits_list)*
             )
         )*
 
@@ -11747,6 +11748,23 @@ implements_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         IMPLEMENTS
         super_list
 ;
+
+/*
+  permits_list
+*/
+permits_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // end all elements at the end of the rule automatically
+            startNewMode(MODE_LOCAL);
+
+            // start the permits statement
+            startElement(SPERMITS);
+        }
+
+        PERMITS
+        super_list
+;
+
 
 /*
   super_list

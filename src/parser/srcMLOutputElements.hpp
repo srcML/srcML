@@ -219,6 +219,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     // Java elements
     { TOKEN::SEXTENDS,                    { "extends",           SRC,      0,         0,     0,      0 }},
     { TOKEN::SIMPLEMENTS,                 { "implements",        SRC,      0,         0,     0,      0 }},
+    { TOKEN::SPERMITS,                    { "permits",           SRC,      0,         0,     0,      0 }},
     { TOKEN::SIMPORT,                     { "import",            SRC,      0,         0,     0,      0 }},
     { TOKEN::SPACKAGE,                    { "package",           SRC,      0,         0,     0,      0 }},
     { TOKEN::SASSERT_STATEMENT,           { "assert",            SRC,      0,         0,     0,      0 }},
