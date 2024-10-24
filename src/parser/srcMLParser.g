@@ -8369,7 +8369,7 @@ function_equal_specifier[] { LightweightElement element(this); ENTRY_DEBUG } :
   Used to mark specifiers.
 */
 specifier[] { ENTRY_DEBUG } :
-        single_keyword_specifier | alignas_specifier | macro_specifier_call
+        single_keyword_specifier | alignas_specifier | macro_specifier_call | atomic
 ;
 
 /*
