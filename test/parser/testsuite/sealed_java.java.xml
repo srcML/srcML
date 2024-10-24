@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" language="Java" url="sealed" filename="sealed_java">
+
+<unit language="Java">
+<class><specifier>public</specifier> <specifier>sealed</specifier> class <name>Shape</name> <block>{
+}</block></class>
+</unit>
+
+<unit language="Java">
+<class><specifier>public</specifier> <specifier>sealed</specifier> class <name>Shape</name>
+    <super_list><permits>permits <super><name>Circle</name></super></permits></super_list> <block>{
+}</block></class>
+</unit>
+
+<unit language="Java">
+<class><specifier>public</specifier> <specifier>sealed</specifier> class <name>Shape</name>
+    <super_list><permits>permits <super><name>Circle</name></super>, <super><name>Square</name></super>, <super><name>Rectangle</name></super></permits></super_list> <block>{
+}</block></class>
+</unit>
+
+<unit language="Java">
+<class><specifier>public</specifier> <specifier>non-sealed</specifier> class <name>Shape</name> <block>{
+}</block></class>
+</unit>
+
+</unit>
