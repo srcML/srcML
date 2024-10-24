@@ -23,4 +23,15 @@
 }</block></class>
 </unit>
 
+<unit language="Java">
+<class><specifier>sealed</specifier> <specifier>public</specifier> class <name>Shape</name> <block>{
+}</block></class>
+</unit>
+
+<unit language="Java">
+<class><specifier>non-sealed</specifier> <specifier>public</specifier> class <name>Shape</name> <block>{
+}</block></class>
+</unit>
+
+
 </unit>
