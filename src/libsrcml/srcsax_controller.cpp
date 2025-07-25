@@ -129,7 +129,7 @@ int srcsax_parse(srcsax_context* context) {
 
     if (status != 0 && context->srcsax_error) {
 
-        xmlErrorPtr ep = xmlCtxtGetLastError(context->libxml2_context);
+        const xmlError* ep = xmlCtxtGetLastError(context->libxml2_context);
 
         auto str_length = strlen(ep->message);
         ep->message[str_length - 1] = '\0';
