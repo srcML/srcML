@@ -190,7 +190,7 @@ enum STMT_TYPE {
 };
 
 enum CALL_TYPE {
-    NOCALL, CALL, MACRO
+    NOCALL, CALL, MACRO, COMMAND
 };
 
 // position in output stream
@@ -725,6 +725,9 @@ tokens {
     SWITH_STATEMENT;
     SYIELD_STATEMENT;
     SYIELD_FROM_STATEMENT;
+
+    // CMake
+    SCOMMAND;
 }
 
 /*
@@ -1361,9 +1364,17 @@ start_cmake[] {
             }
         }
 
+        CALL_TYPE type = NOCALL;
+        int command_count = 0;
+        bool isempty = false;
+
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
+        // CMake commands follow a similar syntax to calls
+        { type == COMMAND || (perform_call_check(type, isempty, command_count, -1) && type == COMMAND) }?
+        command_cmake[command_count] |
+
         // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
         start
 ;
@@ -2846,7 +2857,10 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
             call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
 
             // call syntax succeeded
-            type = CALL;
+            if (inLanguage(LANGUAGE_CMAKE))
+                type = COMMAND;
+            else
+                type = CALL;
 
             // call syntax succeeded, however post-call token is not legitimate
             if (
@@ -11053,9 +11067,7 @@ expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG 
         expression_statement_process
 
         {
-            // force expression statements in CMake
-            if (!inLanguage(LANGUAGE_CMAKE))
-                pauseStream();
+            pauseStream();
         }
 
         expression[type, call_count]
@@ -17915,4 +17927,79 @@ while_statement_end_cmake[] { ENTRY_DEBUG } :
 
             endDownToMode(MODE_WHILE_LOOP_CMAKE);
         }
+;
+
+/*
+  command_cmake
+
+  Handles a command in CMake, which follow a similar syntax to calls.
+*/
+command_cmake[int command_count = 1] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            do {
+                startNewMode(MODE_STATEMENT | MODE_ARGUMENT | MODE_LIST | MODE_COMMAND_CMAKE);
+
+                startElement(SCOMMAND);
+            } while (--command_count > 0);
+        }
+
+        function_identifier
+        cmake_argument_list
+;
+
+/*
+  cmake_argument_list
+
+  Handles a CMake argument list.
+*/
+cmake_argument_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // list of arguments
+            startNewMode(MODE_ARGUMENT_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
+
+            // start the argument list
+            startElement(SARGUMENT_LIST);
+        }
+
+        LPAREN
+
+        (options { greedy = true; } :
+            // ensure the closing paren is not included in the argument
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            // semicolons can separate arguments
+            {
+                if (!inMode(MODE_ARGUMENT_LIST))
+                    endDownToMode(MODE_ARGUMENT_LIST);
+            }
+            TERMINATE |
+
+            {
+                if (!inMode(MODE_ARGUMENT_LIST))
+                    endDownToMode(MODE_ARGUMENT_LIST);
+            }
+            cmake_argument
+        )*
+
+        rparen[false]
+;
+
+/*
+  cmake_argument
+
+  Handles a CMake argument.
+*/
+cmake_argument[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            // argument with nested expression
+            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+
+            // start the argument
+            startElement(SARGUMENT);
+        }
+
+        expression
 ;
