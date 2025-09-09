@@ -46,6 +46,7 @@ tokens {
     DQUOTE_DOCSTRING_START;
     CHAR_START;
     SQUOTE_DOCSTRING_START;
+    BRACKET_ARGUMENT_START;
     MACRO_NAME;
     COMPLEX_NUMBER;
     HASHBANG_COMMENT_START;
@@ -120,6 +121,20 @@ CHAR_START :
         else {
             $setType(CHAR_START); changetotextlexer(CHAR_END);
         }
+    }
+;
+
+BRACKET_ARGUMENT_START :
+    { startline = false; }
+
+    '[' {
+        // bracket arguments are only valid in CMake
+        // (e.g., '[[...]]', '[=[...]=]', '[==[...]==]', etc.)
+        if (inLanguage(LANGUAGE_CMAKE) && (LA(1) == '[' || LA(1) == '='))
+            changetotextlexer(BRACKET_ARGUMENT_END);
+        // otherwise, treat '[' as a normal left bracket
+        else
+            $setType(LBRACKET);
     }
 ;
 

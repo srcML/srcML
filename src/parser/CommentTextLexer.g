@@ -75,6 +75,7 @@ tokens {
     PY_SIMPLE_DQUOTE_STRING_END;
     PY_SQUOTE_STRING_START;
     PY_SIMPLE_SQUOTE_STRING_END;
+    BRACKET_ARGUMENT_END;
 }
 
 {
@@ -202,7 +203,7 @@ COMMENT_TEXT {
 
             ;
 
-        } else if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || mode == HASHBANG_COMMENT_END || mode == HASHTAG_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+        } else if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || mode == HASHBANG_COMMENT_END || mode == HASHTAG_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END || mode == BRACKET_ARGUMENT_END) && (onpreprocline /* || rawstring */))) {
           $setType(mode);
           selector->pop();
         }
@@ -427,7 +428,14 @@ COMMENT_TEXT {
         }
     } |
 
-    ']'..'\377') {
+    ']' {
+        // detect the end of a CMake bracket argument (ends with '=]' or ']]')
+        if (mode == BRACKET_ARGUMENT_END && (prevLA == '=' || prevLA == ']')) {
+            $setType(mode); selector->pop();
+        }
+    } |
+
+    '^'..'\377') {
 
         // not the first character anymore
         first = false;
@@ -446,7 +454,7 @@ COMMENT_TEXT {
 
         } else if (_ttype == COMMENT_TEXT &&
             ((LA(1) == '\n' && mode != RAW_STRING_END) || LA(1) == EOF_CHAR) &&
-            ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline || mode == RAW_STRING_END))
+            ((((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END || mode == BRACKET_ARGUMENT_END) && (onpreprocline || mode == RAW_STRING_END))
              || mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || mode == HASHBANG_COMMENT_END || mode == HASHTAG_COMMENT_END)) {
 
             $setType(mode);

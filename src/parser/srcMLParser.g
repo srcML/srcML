@@ -12426,6 +12426,9 @@ rparen_expression[] { bool end_control_incr = false; ENTRY_DEBUG } :
   Handles various rules for literals.
 */
 literals[] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_CMAKE) }?
+        bracket_argument_cmake |
+
         { inLanguage(LANGUAGE_PYTHON) }?
         dquote_literal_py |
 
@@ -12434,6 +12437,21 @@ literals[] { ENTRY_DEBUG } :
 
         string_literal | char_literal | literal | boolean | null_literal |
         complex_literal | nil_literal | none_literal | ellipsis_literal
+;
+
+/*
+  bracket_argument_cmake
+
+  Handles bracket arguments in CMake, which are treated like strings.
+  These include: '[[...]]', '[=[...]=]', '[==[...]==]', etc.
+*/
+bracket_argument_cmake[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (markup)
+                startElement(SSTRING);
+        }
+
+        (BRACKET_ARGUMENT_START BRACKET_ARGUMENT_END)
 ;
 
 /*
