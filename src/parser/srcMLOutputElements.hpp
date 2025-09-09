@@ -342,4 +342,5 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     // CMake
     { TOKEN::SCOMMAND,                      { "command",           SRC,      0,           0,        0,                   0 }},
+    { TOKEN::SOPTION,                       { "option",            SRC,      0,           0,        0,                   0 }},
 };
