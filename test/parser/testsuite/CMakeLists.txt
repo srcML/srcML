@@ -24,7 +24,7 @@ endforeach()
 set(TESTFILES)
 
 # convert from input language to input extension
-set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m" "Python" "py")
+set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m" "Python" "py" "OpenQASM" "qasm")
 function(lang2ext LANG EXT)
     list(FIND LANGLIST "${LANG}" LANG_POS)
     math(EXPR EXT_POS "${LANG_POS} + 1")

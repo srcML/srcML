@@ -1135,6 +1135,16 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }?
         pattern_statements |
 
+        // openqasm type stuff - forces types to be analyzed
+        { inLanguage(LANGUAGE_OPENQASM) }?
+        (
+            qasm_type_set
+            {
+                startNewMode(MODE_NEST | MODE_STATEMENT);
+            }
+            pattern_statements
+        ) |
+
         // in the middle of a statement
         statement_part
 ;
@@ -1338,22 +1348,30 @@ start_openqasm[] {
 
             /* GENERIC STATEMENTS */
             temp_array[BREAK]              = { SBREAK_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+            temp_array[CASE]               = { SCASE, 0, MODE_STATEMENT | MODE_NEST | MODE_CASE_QASM, MODE_EXPRESSION | MODE_LIST | MODE_EXPECT, nullptr, nullptr };
             temp_array[CONTINUE]           = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+            temp_array[DEFAULT]            = { SDEFAULT, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
             temp_array[ELSE]               = { SELSE, 0, MODE_STATEMENT | MODE_NEST, 0, &srcMLParser::if_statement_start, nullptr };
             temp_array[FOR]                = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_FOR_LOOP_QASM, MODE_CONTROL | MODE_EXPECT | MODE_FOR_CONTROL_QASM, nullptr, nullptr };
             temp_array[IF]                 = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start, nullptr };
             temp_array[RETURN]             = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+            temp_array[SWITCH]             = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr};
             temp_array[WHILE]              = { SWHILE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
             /* OPENQASM STATEMENTS */
             temp_array[QASM_BARRIER]       = { SBARRIER_STATEMENT, 0, MODE_STATEMENT, MODE_QUANTUM_ARGUMENT_LIST_QASM | MODE_EXPECT, nullptr, nullptr };
+            temp_array[QASM_BOX]           = { SBOX_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_BOX_QASM, nullptr, nullptr };
             temp_array[QASM_CALIBRATION]   = { SCALIBRATION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
+            temp_array[QASM_DEFCAL]        = { SGATE_DEFCAL_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_DEFCAL_QASM, MODE_GATE_CLASSICAL_PARAMETER_LIST_QASM | MODE_GATE_QUANTUM_PARAMETER_LIST_QASM | MODE_EXPECT, nullptr, &srcMLParser::compound_name };
             temp_array[QASM_DEFCALGRAMMAR] = { SDEFCALGRAMMAR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
+            temp_array[QASM_DELAY]         = { SDELAY_STATEMENT, 0, MODE_STATEMENT, MODE_DELAY_QASM, nullptr, nullptr };
             temp_array[QASM_END]           = { SEND_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+            temp_array[QASM_EXTERN]        = { SEXTERN, 0, MODE_STATEMENT | MODE_EXTERN_QASM, 0, nullptr };
             temp_array[QASM_FUNCTION]      = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FUNCTION_PARAMETER | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
             temp_array[QASM_GATE]          = { SGATE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_GATE_CLASSICAL_PARAMETER_LIST_QASM | MODE_GATE_QUANTUM_PARAMETER_LIST_QASM | MODE_EXPECT, nullptr, &srcMLParser::compound_name };
             temp_array[QASM_INCLUDE]       = { SINCLUDE_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
             temp_array[QASM_MEASURE]       = { SMEASURE_STATEMENT, 0, MODE_STATEMENT | MODE_MEASURE_QASM, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+            temp_array[QASM_NOP]           = { SNOP_STATEMENT, 0, MODE_STATEMENT, MODE_QUANTUM_ARGUMENT_LIST_QASM | MODE_EXPECT, nullptr, nullptr };
             temp_array[QASM_PRAGMA]        = { SPRAGMA_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
             temp_array[QASM_RESET]         = { SRESET_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
             temp_array[QASM_VERSION]       = { SVERSION_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION, nullptr, nullptr };
@@ -1401,6 +1419,12 @@ start_openqasm[] {
 
 
 
+        // { inTransparentMode(MODE_FUNCTION_CALL) }?
+        // qasm_call |
+
+
+        { inMode(MODE_BOX_QASM) || inMode(MODE_DELAY_QASM) }?
+        qasm_box_index |
 
         { inTransparentMode(MODE_MEASURE_QASM) }?
         measure_result_qasm |
@@ -1416,6 +1440,13 @@ start_openqasm[] {
         // Quantum arguments
         { inMode(MODE_QUANTUM_ARGUMENT_LIST_QASM) }?
         openqasm_quantum_argument_list |
+
+        { inTransparentMode(MODE_EXTERN_QASM) }? // extern decl
+        qasm_extern_decl |
+
+        { inTransparentMode(MODE_EXTERN_QASM) }? // extern function_decl
+        qasm_extern_function_decl |
+
 
         // Get the type of a function when -> is encountered
         function_type_qasm |
@@ -5066,6 +5097,7 @@ lcurly[bool content = true] { ENTRY_DEBUG } :
                 endMode();
             }
 
+            // OpenQASM
             if(inLanguage(LANGUAGE_OPENQASM) && inTransparentMode(MODE_FUNCTION_TYPE_QASM)) {
                 endDownToMode(MODE_FUNCTION_TYPE_QASM);
                 endMode(MODE_FUNCTION_TYPE_QASM);
@@ -5078,6 +5110,10 @@ lcurly[bool content = true] { ENTRY_DEBUG } :
 
             if(inLanguage(LANGUAGE_OPENQASM) && inTransparentMode(MODE_FOR_LOOP_QASM)) {
                 endDownToMode(MODE_FOR_LOOP_QASM);
+            }
+
+            if(inLanguage(LANGUAGE_OPENQASM) && inTransparentMode(MODE_CASE_QASM)) {
+                endDownToMode(MODE_CASE_QASM);
             }
         }
 
@@ -5601,7 +5637,7 @@ statement_part[] {
         keyword_statements |
 
         // If in OpenQASM for loop, { means end the control and start block, not expression block.
-        { inMode(MODE_EXPRESSION) && inTransparentMode(MODE_FOR_LOOP_QASM) }?
+        { inMode(MODE_EXPRESSION) && (inTransparentMode(MODE_FOR_LOOP_QASM) || inTransparentMode(MODE_CASE_QASM)) }?
         lcurly |
 
         // already in an expression
@@ -5791,10 +5827,12 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
             // OpenQASM stuff
             if (
                 inLanguage(LANGUAGE_OPENQASM)
-                && inTransparentMode(MODE_GATE_PARAMETER_QASM)
+                && (inTransparentMode(MODE_GATE_PARAMETER_QASM) ||
+                    inTransparentMode(MODE_QUANTUM_ARGUMENT_QASM))
             ) {
                 endDownToMode(MODE_GATE_PARAMETER_QASM);
                 endMode(MODE_GATE_PARAMETER_QASM);
+                markup_comma = false;
             }
 
             // comma ends the current condition in a Python assert
@@ -8546,7 +8584,7 @@ identifier_list[] { ENTRY_DEBUG } :
         PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE |
 
         // OpenQASM
-        qasm_type_set
+        qasm_type_set | QASM_MEASURE
 ;
 
 /*
@@ -9187,7 +9225,11 @@ single_keyword_specifier[] { SingleElement element(this); ENTRY_DEBUG } :
             CONST |
 
             // Apple
-            BLOCK | WEAK | STRONG
+            BLOCK | WEAK | STRONG |
+
+            // OpenQASM
+            { inLanguage(LANGUAGE_OPENQASM) }?
+            (QASM_CONST | QASM_INPUT | QASM_MUTABLE | QASM_OUTPUT | QASM_READONLY)
         )
 ;
 
@@ -9516,13 +9558,20 @@ annotation[] { CompleteElement element(this); ENTRY_DEBUG } :
 */
 call[int call_count = 1] { ENTRY_DEBUG } :
         {
-            do {
-                // start a new mode that will end after the argument list
-                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+            if (!inLanguage(LANGUAGE_OPENQASM)) {
+                do {
+                    // start a new mode that will end after the argument list
+                    startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
 
-                // start the function call element
+                    // start the function call element
+                    startElement(SFUNCTION_CALL);
+                } while (--call_count > 0);
+            }
+            else {
+                startNewMode(MODE_FUNCTION_CALL);
                 startElement(SFUNCTION_CALL);
-            } while (--call_count > 0);
+                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST);
+            }
         }
 
         (
@@ -9532,6 +9581,14 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_PYTHON) }?
             compound_name
             call_argument_list |
+
+            // { inLanguage(LANGUAGE_OPENQASM) }?
+            // function_identifier
+            // call_argument_list |
+            // // { 
+            // //     if (LA(1) != ';')
+            // //         openqasm_quantum_argument_list();
+            // // }
 
             function_identifier
             call_argument_list
@@ -9552,8 +9609,9 @@ call_argument_list[] { ENTRY_DEBUG } :
             startElement(SARGUMENT_LIST);
 
             // lparen starts a call
-            if (inLanguage(LANGUAGE_PYTHON))
+            if (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_OPENQASM))
                 lparen_types_py.emplace_back('c');  // call LPAREN
+
         }
 
         (
@@ -11150,18 +11208,25 @@ expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG 
   variable_declaration_statement
 */
 variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
+        { inLanguage(LANGUAGE_OPENQASM) && !types_openqasm_token_set.member(LA(1)) }?
         {
-            startNewMode(MODE_STATEMENT);
-
-            if (!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL)) {
-                // start the declaration statement
-                startElement(SDECLARATION_STATEMENT);
-
-                pauseStream();
-            }
+            std::cout << "???" << next_token() << std::endl;
         }
+        qasm_call |
 
-        variable_declaration[type_count]
+        (
+            {
+                startNewMode(MODE_STATEMENT);
+
+                if (!inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_CLASS | MODE_INNER_DECL)) {
+                    // start the declaration statement
+                    startElement(SDECLARATION_STATEMENT);
+
+                    pauseStream();
+                }
+            }
+            variable_declaration[type_count]
+        )
 ;
 
 /*
@@ -11779,13 +11844,26 @@ sole_destop[] { LightweightElement element(this); ENTRY_DEBUG } :
 
   Used to mark up a right parenthesis.
 */
-rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
+rparen_operator[bool markup = true, bool wascall = false] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (markup && !inMode(MODE_END_ONLY_AT_RPAREN))
                 startElement(SOPERATOR);
         }
 
         RPAREN
+
+        {
+            if (
+               inLanguage(LANGUAGE_OPENQASM)
+               && wascall
+               && LA(1) == NAME
+               ) {
+                std::cout << "!!!" << LA(1) << "|" << TERMINATE << ":" << RPAREN << std::endl;
+                endDownToMode(MODE_FUNCTION_CALL);
+                //endMode(MODE_ARGUMENT_LIST);
+                openqasm_quantum_argument_list();
+            }
+        }
 ;
 
 /*
@@ -11800,7 +11878,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
         ENTRY_DEBUG
 } :
         {
-            if (inLanguage(LANGUAGE_PYTHON)) {
+            if (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_OPENQASM)) {
                 switch (lparen_types_py.back()) {
                     // found Python rparen that ends a call
                     case 'c':
@@ -11839,7 +11917,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                 setMode(MODE_END_CONTROL);
         }
 
-        rparen_operator[markup]
+        rparen_operator[markup,wascall]
 
         {
             if (isempty) {
@@ -17911,6 +17989,9 @@ openqasm_gate_classical_parameter_list[] { CompleteElement element(this); ENTRY_
             }
             comma |
 
+            { inTransparentMode(MODE_DEFCAL_QASM) }?
+            complete_parameter |
+
             complete_openqasm_gate_parameter
         )*
 
@@ -17966,12 +18047,15 @@ complete_openqasm_gate_parameter[] { ENTRY_DEBUG; } :
 
             startNewMode(MODE_VARIABLE_NAME | MODE_EXPECT);
 
+            startElement(SDECLARATION);
+
         }
 
         (
             compound_name
         )
 ;
+
 
 complete_openqasm_quantum_argument[] { ENTRY_DEBUG; } :
         {
@@ -17993,7 +18077,16 @@ function_type_qasm[] { ENTRY_DEBUG } :
 
             startElement(STYPE);
 
-            startNewMode(MODE_VARIABLE_NAME);
+            // startNewMode(MODE_VARIABLE_NAME);
+
+            // startElement(SNAME);
+        }
+
+        compound_name
+
+        {
+            endDownToMode(MODE_FUNCTION_TYPE_QASM);
+            endMode(MODE_FUNCTION_TYPE_QASM);
         }
 ;
 
@@ -18064,4 +18157,86 @@ qasm_type_set[] { ENTRY_DEBUG } :
         QASM_COMPLEX_TYPE | QASM_DURATION_TYPE | QASM_ARRAY_TYPE |
         QASM_STRETCH_TYPE | QASM_WAVEFORM_TYPE | QASM_PORT_TYPE |
         QASM_FRAME_TYPE
+;
+
+qasm_box_index[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_STMT_INDEX_QASM);
+
+            startElement(SINDEX);
+        }
+
+        LBRACKET
+
+        variable_identifier_array_grammar_sub_contents
+
+        {
+            endDownToMode(MODE_STMT_INDEX_QASM);
+        }
+
+        RBRACKET
+
+        {
+            endElement(SINDEX);
+
+            if (inTransparentMode(MODE_DELAY_QASM)) {
+                startNewMode(MODE_QUANTUM_ARGUMENT_LIST_QASM | MODE_EXPECT);
+            }
+        }
+;
+
+qasm_extern_decl[] { ENTRY_DEBUG } :
+        qasm_decl
+;
+
+qasm_extern_function_decl[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_FUNCTION_DECL_QASM);
+
+            startElement(SFUNCTION_DECLARATION);
+        }
+
+        compound_name
+
+        parameter_list
+
+        function_type_qasm
+
+;
+
+qasm_call[] { ENTRY_DEBUG } :
+    {
+        startNewMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
+        startElement(SEXPRESSION_STATEMENT);
+
+        startNewMode(MODE_QUANTUM_CALL_EXPR_QASM);
+        startElement(SEXPRESSION);
+
+        startNewMode(MODE_QUANTUM_CALL_QASM);
+        startElement(SFUNCTION_CALL);
+    }
+
+    compound_name
+
+    {
+        startNewMode(MODE_QUANTUM_ARGUMENT_LIST_QASM);
+    }
+
+    openqasm_quantum_argument_list
+
+    {
+        endDownToMode(MODE_QUANTUM_CALL_QASM);
+        endMode(MODE_QUANTUM_CALL_QASM);
+        
+        endDownToMode(MODE_QUANTUM_CALL_EXPR_QASM);
+        endMode(MODE_QUANTUM_CALL_EXPR_QASM);
+        
+    }
+
+    TERMINATE
+
+    {
+        endDownToMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
+        endMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
+    }
 ;

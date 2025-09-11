@@ -390,6 +390,12 @@ tokens {
     QASM_WAVEFORM_TYPE;
     QASM_PORT_TYPE;
     QASM_FRAME_TYPE;
+
+    QASM_CONST;
+    QASM_INPUT;
+    QASM_MUTABLE;
+    QASM_OUTPUT;
+    QASM_READONLY;
 }
 
 {
@@ -862,6 +868,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "pragma"       , QASM_PRAGMA        , LANGUAGE_OPENQASM },
         { "reset"        , QASM_RESET         , LANGUAGE_OPENQASM },
         { "->"           , QASM_ARROW         , LANGUAGE_OPENQASM },
+
         { "qubit"        , QASM_QUBIT_TYPE    , LANGUAGE_OPENQASM },
         { "qreg"         , QASM_QREG_TYPE     , LANGUAGE_OPENQASM },
         { "int"          , QASM_INT_TYPE      , LANGUAGE_OPENQASM },
@@ -878,6 +885,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "waveform"     , QASM_WAVEFORM_TYPE , LANGUAGE_OPENQASM },
         { "port"         , QASM_PORT_TYPE     , LANGUAGE_OPENQASM },
         { "frame"        , QASM_FRAME_TYPE    , LANGUAGE_OPENQASM },
+        
+        { "const"        , QASM_CONST         , LANGUAGE_OPENQASM },
+        { "input"        , QASM_INPUT         , LANGUAGE_OPENQASM },
+        { "mutable"      , QASM_MUTABLE       , LANGUAGE_OPENQASM },
+        { "output"       , QASM_OUTPUT        , LANGUAGE_OPENQASM },
+        { "readonly"     , QASM_READONLY      , LANGUAGE_OPENQASM },
    };
 
     // fill up the literals for the language that we are parsing

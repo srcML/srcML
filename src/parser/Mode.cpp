@@ -139,4 +139,15 @@ const srcMLState::MODE_TYPE ModeStack::MODE_FOR_LOOP_QASM                      (
 const srcMLState::MODE_TYPE ModeStack::MODE_FOR_CONTROL_QASM                   (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_DECL_QASM                          (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_DECL_TYPE_QASM                     (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_CASE_QASM                          (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_BOX_QASM                           (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DELAY_QASM                         (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_STMT_INDEX_QASM                    (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_SPECIFIER_QASM                     (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DEFCAL_QASM                        (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXTERN_QASM                        (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_DECL_QASM                 (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_CALL_QASM                  (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_CALL_EXPR_QASM             (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_CALL_EXPR_STMT_QASM        (bit(__COUNTER__));
 

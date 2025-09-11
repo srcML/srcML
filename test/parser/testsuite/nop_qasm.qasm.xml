@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="abstract" filename="nop_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<nop>nop;</nop>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<nop>nop <argument_list type="quantum"><argument><expr><name>a</name></expr></argument></argument_list>;</nop>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<nop>nop <argument_list type="quantum"><argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument></argument_list>;</nop>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<nop>nop <argument_list type="quantum"><argument><expr><name>a</name></expr></argument>,<argument><expr><name>b</name></expr></argument>,<argument><expr><name>c</name></expr></argument></argument_list>;</nop>
+</unit>
+
+</unit>

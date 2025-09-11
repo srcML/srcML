@@ -349,4 +349,26 @@ const static srcMLState::MODE_TYPE MODE_DECL_QASM;
 
 const static srcMLState::MODE_TYPE MODE_DECL_TYPE_QASM;
 
+const static srcMLState::MODE_TYPE MODE_CASE_QASM;
+
+const static srcMLState::MODE_TYPE MODE_BOX_QASM;
+
+const static srcMLState::MODE_TYPE MODE_DELAY_QASM;
+
+const static srcMLState::MODE_TYPE MODE_STMT_INDEX_QASM;
+
+const static srcMLState::MODE_TYPE MODE_SPECIFIER_QASM;
+
+const static srcMLState::MODE_TYPE MODE_DEFCAL_QASM;
+
+const static srcMLState::MODE_TYPE MODE_EXTERN_QASM;
+
+const static srcMLState::MODE_TYPE MODE_FUNCTION_DECL_QASM;
+
+const static srcMLState::MODE_TYPE MODE_QUANTUM_CALL_QASM;
+
+const static srcMLState::MODE_TYPE MODE_QUANTUM_CALL_EXPR_QASM;
+
+const static srcMLState::MODE_TYPE MODE_QUANTUM_CALL_EXPR_STMT_QASM;
+
 #endif

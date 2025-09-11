@@ -301,6 +301,8 @@ LANGUAGE_PYTHON while_py
 LANGUAGE_PYTHON with_py
 LANGUAGE_PYTHON yield_py
 
+LANGUAGE_OPENQASM nop_qasm
+
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl
 LANGUAGE_TRANSFORM struct_cpp.cpp.xml class_cpp.cpp.xml struct class2struct.xsl
