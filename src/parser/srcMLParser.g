@@ -1135,7 +1135,7 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         { inMode(MODE_NEST | MODE_STATEMENT) && !inMode(MODE_FUNCTION_TAIL) }?
         pattern_statements |
 
-        // openqasm type stuff - forces types to be analyzed
+        // openqasm types - forces types to be analyzed
         { inLanguage(LANGUAGE_OPENQASM) }?
         (
             qasm_type_set
@@ -1400,12 +1400,29 @@ start_openqasm[] {
 
             control_initialization_qasm();
         }
+
+
         
 
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 }:
 
+        // modified gate call (inv @ cx a, b;)
+        { LA(1) == NAME && 
+            (
+                LA(2) == QASM_MODIFIER || 
+                LA(3) == QASM_MODIFIER || 
+                LA(4) == QASM_MODIFIER || 
+                LA(5) == QASM_MODIFIER || 
+                LA(6) == QASM_MODIFIER || 
+                LA(7) == QASM_MODIFIER || 
+                LA(8) == QASM_MODIFIER || 
+                LA(9) == QASM_MODIFIER || 
+                LA(10) == QASM_MODIFIER
+            )
+        }?
+        qasm_modifier_call |
 
 
         { inMode(MODE_DECL_QASM) }?
@@ -1416,11 +1433,6 @@ start_openqasm[] {
         // range-based "in" only occurs in for-loops
         { inTransparentMode(MODE_FOR_CONTROL_QASM) }?
         range_in_qasm |
-
-
-
-        // { inTransparentMode(MODE_FUNCTION_CALL) }?
-        // qasm_call |
 
 
         { inMode(MODE_BOX_QASM) || inMode(MODE_DELAY_QASM) }?
@@ -9609,7 +9621,7 @@ call_argument_list[] { ENTRY_DEBUG } :
             startElement(SARGUMENT_LIST);
 
             // lparen starts a call
-            if (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_OPENQASM))
+            if (inLanguage(LANGUAGE_PYTHON) || (inLanguage(LANGUAGE_OPENQASM) && !inTransparentMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM)))
                 lparen_types_py.emplace_back('c');  // call LPAREN
 
         }
@@ -18039,6 +18051,26 @@ openqasm_quantum_argument_list[] { ENTRY_DEBUG; } :
         )*
 ;
 
+openqasm_argument_list[] { ENTRY_DEBUG; } :
+        {
+            assertMode(MODE_ARGUMENT_LIST_QASM);
+
+            startNewMode(MODE_QUANTUM_ARGUMENT_QASM | MODE_LIST | MODE_EXPECT);
+
+            startElement(SARGUMENT_LIST);
+        }
+
+        (
+            {
+                if(!inMode(MODE_QUANTUM_ARGUMENT_QASM | MODE_LIST | MODE_EXPECT))
+                    endMode();
+            }
+            comma |
+
+            complete_openqasm_quantum_argument
+        )*
+;
+
 complete_openqasm_gate_parameter[] { ENTRY_DEBUG; } :
         {
             startNewMode(MODE_GATE_PARAMETER_QASM);
@@ -18239,4 +18271,134 @@ qasm_call[] { ENTRY_DEBUG } :
         endDownToMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
         endMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
     }
+;
+
+qasm_modifier_call[] { ENTRY_DEBUG } :
+    {
+        startNewMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
+        startElement(SEXPRESSION_STATEMENT);
+
+        startNewMode(MODE_QUANTUM_CALL_EXPR_QASM);
+        startElement(SEXPRESSION);
+
+        startNewMode(MODE_QUANTUM_CALL_QASM);
+        startElement(SFUNCTION_CALL);
+    }
+    
+
+    {
+        std::cout << 1 << std::endl;
+        while ( LA(2) == QASM_MODIFIER || 
+                LA(3) == QASM_MODIFIER || 
+                LA(4) == QASM_MODIFIER || 
+                LA(5) == QASM_MODIFIER || 
+                LA(6) == QASM_MODIFIER || 
+                LA(7) == QASM_MODIFIER || 
+                LA(8) == QASM_MODIFIER || 
+                LA(9) == QASM_MODIFIER || 
+                LA(10) == QASM_MODIFIER) {
+            std::cout << 2 << std::endl;
+            startNewMode(MODE_MODIFIER_QASM);
+            startElement(SMODIFIER);
+            startElement(SEXPRESSION);
+
+            expression();
+
+            if (LA(1) == RPAREN) {
+                rparen();
+            }
+
+            endDownToMode(MODE_MODIFIER_QASM);
+
+            qasm_modifier();
+
+            endMode(MODE_MODIFIER_QASM);
+            std::cout << 3 << std::endl;
+        }
+    }
+
+    {
+        std::cout << 4 << std::endl;
+    }
+
+    compound_name
+
+    {
+        std::cout << 5 << std::endl;
+        std::cout << "\t" << next_token() << ":" << LPAREN << std::endl;
+    }
+
+    // {
+    //     if (LA(1) == LPAREN) {
+    //         // startNewMode(MODE_ARGUMENT_LIST_QASM);
+    //         // //openqasm_argument_list();
+    //         // endDownToMode(MODE_ARGUMENT_LIST_QASM);
+    //         // endMode(MODE_ARGUMENT_LIST_QASM);
+    //     }
+    // }
+    {
+        if (LA(1) == LPAREN) {
+            
+            startNewMode(MODE_ARGUMENT_LIST_QASM);
+            startElement(SARGUMENT_LIST);
+
+            qasm_lparen();
+
+            while (LA(1) != RPAREN) {
+                std::cout << "TOP!" << std::endl;
+                startNewMode(MODE_ARGUMENT_QASM);
+                startElement(SARGUMENT);
+
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                //startElement(SEXPRESSION);
+
+                expression();
+
+                endDownToMode(MODE_ARGUMENT_QASM);
+                endMode(MODE_ARGUMENT_QASM);
+
+                if(LA(1) == COMMA) {
+                    comma();
+                }
+            }
+            rparen(false);
+            endDownToMode(MODE_ARGUMENT_LIST_QASM);
+            endMode(MODE_ARGUMENT_LIST_QASM);
+        }
+
+    }
+
+
+    {
+        std::cout << 6 << std::endl;
+        startNewMode(MODE_QUANTUM_ARGUMENT_LIST_QASM);
+    }
+    openqasm_quantum_argument_list
+
+
+    {
+        std::cout << 7 << std::endl;
+        endDownToMode(MODE_QUANTUM_CALL_QASM);
+        endMode(MODE_QUANTUM_CALL_QASM);
+        
+        endDownToMode(MODE_QUANTUM_CALL_EXPR_QASM);
+        endMode(MODE_QUANTUM_CALL_EXPR_QASM);
+        
+    }
+
+    TERMINATE
+
+    {
+        std::cout << 8 << std::endl;
+        endDownToMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
+        endMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
+    }
+;
+
+qasm_modifier[] { ENTRY_DEBUG } :
+    QASM_MODIFIER
+;
+
+qasm_lparen[] { ENTRY_DEBUG } :
+    LPAREN
 ;

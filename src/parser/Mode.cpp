@@ -133,6 +133,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_GATE_CLASSICAL_PARAMETER_LIST_QASM (
 const srcMLState::MODE_TYPE ModeStack::MODE_GATE_PARAMETER_QASM                (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_TYPE_QASM                 (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_ARGUMENT_LIST_QASM         (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_ARGUMENT_LIST_QASM                 (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_ARGUMENT_QASM              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_MEASURE_QASM                       (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FOR_LOOP_QASM                      (bit(__COUNTER__));
@@ -150,4 +151,6 @@ const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_DECL_QASM                 (
 const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_CALL_QASM                  (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_CALL_EXPR_QASM             (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_CALL_EXPR_STMT_QASM        (bit(__COUNTER__));
-
+const srcMLState::MODE_TYPE ModeStack::MODE_MODIFIER_QASM                      (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_ARGUMENT_QASM                      (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_B_QASM                             (bit(__COUNTER__));
