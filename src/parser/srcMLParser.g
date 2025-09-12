@@ -805,6 +805,7 @@ public:
     static const antlr::BitSet comment_py_token_set;
     static const antlr::BitSet multiline_literals_py_token_set;
     static const antlr::BitSet types_openqasm_token_set;
+    static const antlr::BitSet annotatables_openqasm_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -896,12 +897,17 @@ public:
 
     void handleAttributes() {
         // handle Python decorators
-        if (LA(1) == PY_ATSIGN) {
+        //if (LA(1) == PY_ATSIGN) {
             // handle multiple pre-keyword decorators in a row
             while (LA(1) == PY_ATSIGN) {
                 attribute_py();
             }
-        }
+        //}
+        //else if (LA(1) == QASM_MODIFIER) {
+            while (LA(1) == QASM_MODIFIER) {
+                attribute_qasm();
+            }
+        //}
     }
 
     void handleSpecifiers() {
@@ -1383,6 +1389,17 @@ start_openqasm[] {
         if (lparen_types_py.empty())
             lparen_types_py.emplace_back('*');
 
+        if (LA(1) == QASM_MODIFIER && !inMode(MODE_EXPRESSION)) {
+            int post_attribute_token = perform_post_attribute_check_qasm();
+
+            if (post_attribute_token != -1) {
+                const auto& rule = openqasm_rules[post_attribute_token];
+                if (rule.elementToken && processRule(rule)) {
+                    return;
+                }
+            }
+        }
+
         // invoke the table to handle keywords and duplex keywords
         if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
@@ -1409,19 +1426,7 @@ start_openqasm[] {
 }:
 
         // modified gate call (inv @ cx a, b;)
-        { LA(1) == NAME && 
-            (
-                LA(2) == QASM_MODIFIER || 
-                LA(3) == QASM_MODIFIER || 
-                LA(4) == QASM_MODIFIER || 
-                LA(5) == QASM_MODIFIER || 
-                LA(6) == QASM_MODIFIER || 
-                LA(7) == QASM_MODIFIER || 
-                LA(8) == QASM_MODIFIER || 
-                LA(9) == QASM_MODIFIER || 
-                LA(10) == QASM_MODIFIER
-            )
-        }?
+        { LA(1) == NAME && perform_modified_gate_call_check_qasm() }?
         qasm_modifier_call |
 
 
@@ -6722,7 +6727,8 @@ pattern_check_core[
                     { !inLanguage(LANGUAGE_CSHARP) || LA(1) != ASYNC }?
                     set_bool[operatorname, false]
                     set_bool[sawdcolon, LA(2) == DCOLON]
-                    compound_name set_bool[foundpure]
+                    (compound_name | qubits_literal_qasm) set_bool[foundpure]
+
                     set_bool[isoperator, isoperator || (inLanguage(LANGUAGE_CXX_FAMILY) && operatorname)]
                     set_bool[operatorname, false] |
 
@@ -11221,9 +11227,6 @@ expression_statement[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_DEBUG 
 */
 variable_declaration_statement[int type_count] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_OPENQASM) && !types_openqasm_token_set.member(LA(1)) }?
-        {
-            std::cout << "???" << next_token() << std::endl;
-        }
         qasm_call |
 
         (
@@ -11868,11 +11871,9 @@ rparen_operator[bool markup = true, bool wascall = false] { LightweightElement e
             if (
                inLanguage(LANGUAGE_OPENQASM)
                && wascall
-               && LA(1) == NAME
+               && (LA(1) == NAME || LA(1) == QUBITS)
                ) {
-                std::cout << "!!!" << LA(1) << "|" << TERMINATE << ":" << RPAREN << std::endl;
                 endDownToMode(MODE_FUNCTION_CALL);
-                //endMode(MODE_ARGUMENT_LIST);
                 openqasm_quantum_argument_list();
             }
         }
@@ -12561,6 +12562,10 @@ rparen_expression[] { bool end_control_incr = false; ENTRY_DEBUG } :
   Handles various rules for literals.
 */
 literals[] { ENTRY_DEBUG } :
+
+        { inLanguage(LANGUAGE_OPENQASM) }?
+        qubits_literal_qasm |
+
         { inLanguage(LANGUAGE_PYTHON) }?
         dquote_literal_py |
 
@@ -12570,6 +12575,7 @@ literals[] { ENTRY_DEBUG } :
         string_literal | char_literal | literal | boolean | null_literal |
         complex_literal | nil_literal | none_literal | ellipsis_literal
 ;
+
 
 /*
   dquote_literal_py
@@ -18287,55 +18293,35 @@ qasm_modifier_call[] { ENTRY_DEBUG } :
     
 
     {
-        std::cout << 1 << std::endl;
-        while ( LA(2) == QASM_MODIFIER || 
-                LA(3) == QASM_MODIFIER || 
-                LA(4) == QASM_MODIFIER || 
-                LA(5) == QASM_MODIFIER || 
-                LA(6) == QASM_MODIFIER || 
-                LA(7) == QASM_MODIFIER || 
-                LA(8) == QASM_MODIFIER || 
-                LA(9) == QASM_MODIFIER || 
-                LA(10) == QASM_MODIFIER) {
-            std::cout << 2 << std::endl;
+        while ( perform_modified_gate_call_check_qasm() ) {
             startNewMode(MODE_MODIFIER_QASM);
             startElement(SMODIFIER);
-            startElement(SEXPRESSION);
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
-            expression();
-
+        {
+            while(true) {
+                if (LA(1) == QASM_MODIFIER || LA(1) == TERMINATE) {
+                    break;
+                }
+                else {
+                    expression();
+                }
+            }
             if (LA(1) == RPAREN) {
                 rparen();
             }
+        }
 
             endDownToMode(MODE_MODIFIER_QASM);
 
             qasm_modifier();
 
             endMode(MODE_MODIFIER_QASM);
-            std::cout << 3 << std::endl;
         }
-    }
-
-    {
-        std::cout << 4 << std::endl;
     }
 
     compound_name
 
-    {
-        std::cout << 5 << std::endl;
-        std::cout << "\t" << next_token() << ":" << LPAREN << std::endl;
-    }
-
-    // {
-    //     if (LA(1) == LPAREN) {
-    //         // startNewMode(MODE_ARGUMENT_LIST_QASM);
-    //         // //openqasm_argument_list();
-    //         // endDownToMode(MODE_ARGUMENT_LIST_QASM);
-    //         // endMode(MODE_ARGUMENT_LIST_QASM);
-    //     }
-    // }
     {
         if (LA(1) == LPAREN) {
             
@@ -18345,23 +18331,29 @@ qasm_modifier_call[] { ENTRY_DEBUG } :
             qasm_lparen();
 
             while (LA(1) != RPAREN) {
-                std::cout << "TOP!" << std::endl;
-                startNewMode(MODE_ARGUMENT_QASM);
-                startElement(SARGUMENT);
-
-                startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-                //startElement(SEXPRESSION);
-
-                expression();
-
-                endDownToMode(MODE_ARGUMENT_QASM);
-                endMode(MODE_ARGUMENT_QASM);
-
-                if(LA(1) == COMMA) {
-                    comma();
+                while(true) {
+                    if (LA(1) == RPAREN || LA(1) == TERMINATE) {
+                        break;
+                    }
+                    else if(LA(1) == COMMA) {
+                        consume();
+                    }
+                    else {
+                        argument();
+                        endDownToMode(MODE_ARGUMENT);
+                        endMode(MODE_ARGUMENT);
+                    }
+                    
                 }
+
+                // endDownToMode(MODE_ARGUMENT_QASM);
+                // endMode(MODE_ARGUMENT_QASM);
+
+                
             }
-            rparen(false);
+            if (LA(1) == RPAREN) {
+                consume();
+            }
             endDownToMode(MODE_ARGUMENT_LIST_QASM);
             endMode(MODE_ARGUMENT_LIST_QASM);
         }
@@ -18370,14 +18362,12 @@ qasm_modifier_call[] { ENTRY_DEBUG } :
 
 
     {
-        std::cout << 6 << std::endl;
         startNewMode(MODE_QUANTUM_ARGUMENT_LIST_QASM);
     }
     openqasm_quantum_argument_list
 
 
     {
-        std::cout << 7 << std::endl;
         endDownToMode(MODE_QUANTUM_CALL_QASM);
         endMode(MODE_QUANTUM_CALL_QASM);
         
@@ -18389,7 +18379,6 @@ qasm_modifier_call[] { ENTRY_DEBUG } :
     TERMINATE
 
     {
-        std::cout << 8 << std::endl;
         endDownToMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
         endMode(MODE_QUANTUM_CALL_EXPR_STMT_QASM);
     }
@@ -18401,4 +18390,109 @@ qasm_modifier[] { ENTRY_DEBUG } :
 
 qasm_lparen[] { ENTRY_DEBUG } :
     LPAREN
+;
+
+
+perform_modified_gate_call_check_qasm returns [bool is_modifier] {
+    is_modifier = false;
+    int start = mark();
+    inputState->guessing++;
+
+    try {
+        while (true) {
+            if (LA(1) == QASM_MODIFIER) {
+                is_modifier = true;
+                break;
+            }
+            else if (LA(1) == TERMINATE || LA(1) == 1) {
+                break;
+            }
+            else {
+                consume();
+            }
+        }
+    }
+    catch (...) {}
+
+    inputState->guessing--;
+    rewind(start);
+
+    ENTRY_DEBUG 
+} :;
+
+
+perform_post_attribute_check_qasm[] returns [int keyword] {
+        keyword = -1;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                consume();
+
+                if (annotatables_openqasm_token_set.member((unsigned int)LA(1)) || LA(1) == TERMINATE || LA(1) == 1)
+                    break;
+            }
+
+            if (
+                annotatables_openqasm_token_set.member((unsigned int)LA(1))
+            )
+                keyword = LA(1);
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+attribute_qasm[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECORATOR_PY);
+
+            startElement(SATTRIBUTE);
+        }
+
+        QASM_MODIFIER
+
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+
+        (
+
+            // decorators can have arguments
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            { !annotatables_openqasm_token_set.member((unsigned int)LA(1)) }?
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECORATOR_PY)) {
+                endDownToMode(MODE_DECORATOR_PY);
+                endMode(MODE_DECORATOR_PY);
+            }
+        }
+;
+
+
+qubits_literal_qasm[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SQUBIT);
+        }
+
+
+        QUBITS
+
+        {
+
+        }
 ;

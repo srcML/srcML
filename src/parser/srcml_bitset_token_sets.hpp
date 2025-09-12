@@ -236,4 +236,34 @@ token_set(srcMLParser, types_openqasm_token_set,
     srcMLParser::QASM_PORT_TYPE, srcMLParser::QASM_FRAME_TYPE
 )
 
+token_set(srcMLParser, annotatables_openqasm_token_set,
+    srcMLParser::QASM_QUBIT_TYPE, srcMLParser::QASM_QREG_TYPE,
+    srcMLParser::QASM_INT_TYPE, srcMLParser::QASM_UNIT_TYPE,
+    srcMLParser::QASM_FLOAT_TYPE, srcMLParser::QASM_BIT_TYPE,
+    srcMLParser::QASM_CREG_TYPE, srcMLParser::QASM_BOOL_TYPE,
+    srcMLParser::QASM_ANGLE_TYPE, srcMLParser::QASM_COMPLEX_TYPE,
+    srcMLParser::QASM_DURATION_TYPE, srcMLParser::QASM_ARRAY_TYPE,
+    srcMLParser::QASM_STRETCH_TYPE, srcMLParser::QASM_WAVEFORM_TYPE,
+    srcMLParser::QASM_PORT_TYPE, srcMLParser::QASM_FRAME_TYPE,
+    srcMLParser::QASM_CONST,
+    srcMLParser::QASM_INPUT,
+    srcMLParser::QASM_MUTABLE,
+    srcMLParser::QASM_OUTPUT,
+    srcMLParser::QASM_READONLY,
+    srcMLParser::QASM_BARRIER,
+    srcMLParser::QASM_BOX,
+    srcMLParser::QASM_CALIBRATION,
+    srcMLParser::QASM_DEFCAL,
+    srcMLParser::QASM_DEFCALGRAMMAR,
+    srcMLParser::QASM_DELAY,
+    srcMLParser::QASM_END,
+    srcMLParser::QASM_EXTERN,
+    srcMLParser::QASM_FUNCTION,
+    srcMLParser::QASM_GATE,
+    srcMLParser::QASM_MEASURE,
+    srcMLParser::QASM_NOP,
+    srcMLParser::QASM_RESET
+
+)
+
 #endif

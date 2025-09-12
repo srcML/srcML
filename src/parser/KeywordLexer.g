@@ -374,6 +374,7 @@ tokens {
 
     QASM_ARROW;
     QASM_MODIFIER;
+    //QASM_QUBIT_LITERAL;
 
     QASM_QUBIT_TYPE;
     QASM_QREG_TYPE;
@@ -871,6 +872,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         { "->"           , QASM_ARROW         , LANGUAGE_OPENQASM },
         { "@"            , QASM_MODIFIER      , LANGUAGE_OPENQASM },
+        //{ "$"            , QASM_QUBIT_LITERAL , LANGUAGE_OPENQASM },
 
         { "qubit"        , QASM_QUBIT_TYPE    , LANGUAGE_OPENQASM },
         { "qreg"         , QASM_QREG_TYPE     , LANGUAGE_OPENQASM },

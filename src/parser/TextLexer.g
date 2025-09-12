@@ -123,6 +123,8 @@ CHAR_START :
     }
 ;
 
+
+
 CONSTANTS :
     { startline = false; }
     ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
@@ -143,10 +145,31 @@ CONSTANTS :
     }
 ;
 
+
+protected
+QUBITS :
+    { startline = false; }
+    ('$')
+    (options { greedy = true; } : '0'..'9')*
+;
+
 NAME options { testLiterals = true; } :
     { startline = false; }
-    ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
-    ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
+    (
+        //{!inLanguage(LANGUAGE_OPENQASM)}? '$' { setType(QUBITS); }
+        {!inLanguage(LANGUAGE_OPENQASM)}? (
+            ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+            ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
+        ) |
+        (
+            { LA(1) == '$'}? ( { $setType(QUBITS); } QUBITS) |
+            (
+                ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' )
+                ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' )*)
+            )
+        )
+    )
+    
     (
         { text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv }?
         { $setType(STRING_START); } STRING_START |
