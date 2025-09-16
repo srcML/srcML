@@ -332,6 +332,8 @@ const static srcMLState::MODE_TYPE MODE_WHILE_LOOP_CMAKE;
 
 const static srcMLState::MODE_TYPE MODE_COMMAND_CMAKE;
 
+const static srcMLState::MODE_TYPE MODE_FOREACH_CMAKE;
+
 const static srcMLState::MODE_TYPE MODE_OPTION_CMAKE;
 
 #endif

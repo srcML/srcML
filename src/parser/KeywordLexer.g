@@ -353,8 +353,10 @@ tokens {
     PY_YIELD;
 
     // CMake
+    CMAKE_ENDFOREACH;
     CMAKE_ELSEIF;
     CMAKE_ENDWHILE;
+    CMAKE_FOREACH;
     CMAKE_OPTIONS;
 }
 
@@ -1925,8 +1927,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "XOR",                    OPERATORS, LANGUAGE_CMAKE },
 
         // CMake
+        { "endforeach"   , CMAKE_ENDFOREACH  , LANGUAGE_CMAKE },
         { "elseif"       , CMAKE_ELSEIF      , LANGUAGE_CMAKE },
         { "endwhile"     , CMAKE_ENDWHILE    , LANGUAGE_CMAKE },
+        { "foreach"      , CMAKE_FOREACH     , LANGUAGE_CMAKE },
    };
 
     // fill up the literals for the language that we are parsing

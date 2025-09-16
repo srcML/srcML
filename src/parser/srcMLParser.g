@@ -965,8 +965,10 @@ public:
         temp_array[WHILE]    = { SWHILE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WHILE_LOOP_CMAKE, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         /* CMAKE STATEMENTS */
-        temp_array[CMAKE_ELSEIF]   = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
-        temp_array[CMAKE_ENDWHILE] = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::while_statement_end_cmake, &srcMLParser::cmake_paren_pair_end_statement };
+        temp_array[CMAKE_ENDFOREACH] = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::foreach_statement_end_cmake, &srcMLParser::cmake_paren_pair_end_statement };
+        temp_array[CMAKE_ELSEIF]     = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
+        temp_array[CMAKE_ENDWHILE]   = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::while_statement_end_cmake, &srcMLParser::cmake_paren_pair_end_statement };
+        temp_array[CMAKE_FOREACH]    = { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_FOREACH_CMAKE, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         return temp_array;
     }
@@ -11777,11 +11779,11 @@ rparen[bool markup = true, bool end_control_incr = false] {
 
         {
             if (isempty) {
-                // special handling for the end of a condition in an if or while statement (CMake)
+                // special handling for the end of a condition in a foreach/if/while statement (CMake)
                 if (
                     inLanguage(LANGUAGE_CMAKE)
                     && inMode(MODE_CONDITION)
-                    && (inPrevMode(MODE_IF) || inPrevMode(MODE_WHILE_LOOP_CMAKE))
+                    && (inPrevMode(MODE_FOREACH_CMAKE) || inPrevMode(MODE_IF) || inPrevMode(MODE_WHILE_LOOP_CMAKE))
                 ) {
                     // end the condition
                     endMode(MODE_CONDITION);
@@ -17889,7 +17891,7 @@ cmake_paren_pair_end_statement[] { ENTRY_DEBUG }:
                 endMode(MODE_PAREN_ENDS_STATEMENT_CMAKE);
             }
 
-            if (inMode(MODE_IF_STATEMENT) || inMode(MODE_WHILE_LOOP_CMAKE))
+            if (inMode(MODE_IF_STATEMENT) || inMode(MODE_WHILE_LOOP_CMAKE) || inMode(MODE_FOREACH_CMAKE))
                 endMode();
         }
 ;
@@ -17947,6 +17949,20 @@ while_statement_end_cmake[] { ENTRY_DEBUG } :
             flushSkip();
 
             endDownToMode(MODE_WHILE_LOOP_CMAKE);
+        }
+;
+
+/*
+  foreach_statement_end_cmake
+
+  Helper rule to end a foreach loop in CMake.
+*/
+foreach_statement_end_cmake[] { ENTRY_DEBUG } :
+        {
+            // flush any whitespace tokens since sections should end at the last possible place
+            flushSkip();
+
+            endDownToMode(MODE_FOREACH_CMAKE);
         }
 ;
 
