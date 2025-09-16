@@ -727,6 +727,7 @@ tokens {
     SYIELD_FROM_STATEMENT;
 
     // CMake
+    SBRACKET_ARGUMENT;
     SCOMMAND;
     SOPTION;
 }
@@ -12449,7 +12450,7 @@ literals[] { ENTRY_DEBUG } :
 bracket_argument_cmake[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (markup)
-                startElement(SSTRING);
+                startElement(SBRACKET_ARGUMENT);
         }
 
         (BRACKET_ARGUMENT_START BRACKET_ARGUMENT_END)

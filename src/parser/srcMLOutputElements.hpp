@@ -341,6 +341,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SYIELD_FROM_STATEMENT,         { "yield",             SRC, "type",      "from",        0,                   0 }},
 
     // CMake
+    { TOKEN::SBRACKET_ARGUMENT,             { "literal",           SRC, "type",    "string", "format",               "lua" }},
     { TOKEN::SCOMMAND,                      { "command",           SRC,      0,           0,        0,                   0 }},
     { TOKEN::SOPTION,                       { "option",            SRC,      0,           0,        0,                   0 }},
 };
