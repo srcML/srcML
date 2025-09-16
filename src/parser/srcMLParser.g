@@ -18006,10 +18006,8 @@ cmake_argument_list[] { CompleteElement element(this); ENTRY_DEBUG } :
             cmake_argument |
 
             {
-                if (inTransparentMode(MODE_OPTION_CMAKE) && !inMode(MODE_OPTION_CMAKE)) {
-                    endDownToMode(MODE_OPTION_CMAKE);
-                    endMode(MODE_OPTION_CMAKE);
-                }
+                if (!inMode(MODE_ARGUMENT_LIST))
+                    endDownToMode(MODE_ARGUMENT_LIST);
             }
             cmake_option
         )*
