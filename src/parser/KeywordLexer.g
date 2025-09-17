@@ -357,7 +357,11 @@ tokens {
     CMAKE_ELSEIF;
     CMAKE_ENDWHILE;
     CMAKE_FOREACH;
+    CMAKE_IN;
+    CMAKE_ITEMS;
+    CMAKE_LISTS;
     CMAKE_OPTIONS;
+    CMAKE_RANGE;
 }
 
 {
@@ -1402,7 +1406,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "ISPC",                                               CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "IS_PREFIX",                                          CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "IS_RELATIVE",                                        CMAKE_OPTIONS, LANGUAGE_CMAKE },
-        { "ITEMS",                                              CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "JOB_POOL",                                           CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "JOB_POOLS",                                          CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "JOB_SERVER_AWARE",                                   CMAKE_OPTIONS, LANGUAGE_CMAKE },
@@ -1442,7 +1445,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "LINK_PRIVATE",                                       CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "LINK_PUBLIC",                                        CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "LIST",                                               CMAKE_OPTIONS, LANGUAGE_CMAKE },
-        { "LISTS",                                              CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "LIST_DIRECTORIES",                                   CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "LIST_ONLY",                                          CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "LOCALE",                                             CMAKE_OPTIONS, LANGUAGE_CMAKE },
@@ -1688,7 +1690,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "QUIET",                                              CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "RANDOM",                                             CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "RANDOM_SEED",                                        CMAKE_OPTIONS, LANGUAGE_CMAKE },
-        { "RANGE",                                              CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "RANGE_END",                                          CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "RANGE_START",                                        CMAKE_OPTIONS, LANGUAGE_CMAKE },
         { "READ",                                               CMAKE_OPTIONS, LANGUAGE_CMAKE },
@@ -1931,6 +1932,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "elseif"       , CMAKE_ELSEIF      , LANGUAGE_CMAKE },
         { "endwhile"     , CMAKE_ENDWHILE    , LANGUAGE_CMAKE },
         { "foreach"      , CMAKE_FOREACH     , LANGUAGE_CMAKE },
+        { "IN"           , CMAKE_IN          , LANGUAGE_CMAKE },
+        { "ITEMS"        , CMAKE_ITEMS       , LANGUAGE_CMAKE },
+        { "LISTS"        , CMAKE_LISTS       , LANGUAGE_CMAKE },
+        { "RANGE"        , CMAKE_RANGE       , LANGUAGE_CMAKE },
    };
 
     // fill up the literals for the language that we are parsing

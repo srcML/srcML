@@ -730,6 +730,12 @@ tokens {
     SBRACKET_ARGUMENT;
     SCOMMAND;
     SOPTION;
+    SRANGE_IN_CMAKE;
+    SRANGE_IN_ITEMS_CMAKE;
+    SRANGE_IN_ITEMS_LISTS_CMAKE;
+    SRANGE_IN_LISTS_CMAKE;
+    SRANGE_IN_LISTS_ITEMS_CMAKE;
+    SRANGE_KEYWORD;
 }
 
 /*
@@ -18123,11 +18129,19 @@ cmake_control[] { ENTRY_DEBUG } :
         LPAREN
 
         (
-            // condition with only a single expression (no range)
+            // control with only a single expression (no range)
             { next_token() == RPAREN }?
             cmake_expression |
 
-            // condition with a single expression and a range
+            // control using the RANGE keyword (lone)
+            { next_token() == CMAKE_RANGE }?
+            (cmake_expression cmake_range_keyword) |
+
+            // control using the IN keyword (lone or with ITEMS and/or LISTS)
+            { next_token() == CMAKE_IN }?
+            (cmake_expression cmake_range_in) |
+
+            // control with a single expression and a range
             (cmake_expression cmake_range)
         )
 
@@ -18139,7 +18153,7 @@ cmake_control[] { ENTRY_DEBUG } :
         RPAREN
 
         {
-            // end the condition
+            // end the control
             if (inMode(MODE_CONTROL))
                 endMode(MODE_CONTROL);
 
@@ -18155,7 +18169,7 @@ cmake_control[] { ENTRY_DEBUG } :
 /*
   cmake_range
 
-  Helper rule to handle ranges that appear in CMake conditions.
+  Handles ranges that appear in CMake controls.
 */
 cmake_range[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -18165,7 +18179,7 @@ cmake_range[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            // ensure the closing paren is not included in the condition
+            // ensure the closing paren is not included in the control
             { LA(1) == RPAREN }?
             {
                 break;
@@ -18174,6 +18188,108 @@ cmake_range[] { CompleteElement element(this); ENTRY_DEBUG } :
             cmake_expression
         )*
 ;
+
+/*
+  cmake_range_keyword
+
+  Handles ranges that appear in CMake controls via the "RANGE" keyword.
+*/
+cmake_range_keyword[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_RANGED_FOR);
+
+            startElement(SRANGE_KEYWORD);
+        }
+
+        CMAKE_RANGE
+
+        (options { greedy = true; } :
+            // ensure the closing paren is not included in the control
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            cmake_expression
+        )*
+;
+
+/*
+  cmake_range_in
+
+  Handles ranges that appear in CMake controls via the "IN" keyword.
+  Alternatives include "IN ITEMS", "IN LISTS", "IN ITEMS..LISTS", and "IN LISTS..ITEMS".
+*/
+cmake_range_in[] { CompleteElement element(this); std::string type = perform_range_type_check_cmake(); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_RANGED_FOR);
+
+            if (type == "INITEMSLISTS")
+                startElement(SRANGE_IN_ITEMS_LISTS_CMAKE);
+            else if (type == "INLISTSITEMS")
+                startElement(SRANGE_IN_LISTS_ITEMS_CMAKE);
+            else if (type == "INITEMS")
+                startElement(SRANGE_IN_ITEMS_CMAKE);
+            else if (type == "INLISTS")
+                startElement(SRANGE_IN_LISTS_CMAKE);
+            else
+                startElement(SRANGE_IN_CMAKE);
+        }
+
+        (
+            { type == "INITEMS" || type == "INITEMSLISTS" }?
+            (CMAKE_IN CMAKE_ITEMS) |
+
+            { type == "INLISTS" || type == "INLISTSITEMS" }?
+            (CMAKE_IN CMAKE_LISTS) |
+
+            CMAKE_IN
+        )
+
+        (options { greedy = true; } :
+            // ensure the closing paren is not included in the control
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            CMAKE_ITEMS | CMAKE_LISTS |
+
+            cmake_expression
+        )*
+;
+
+/*
+  perform_range_type_check_cmake
+
+  Determines if a CMake range uses "IN", "ITEMS", "LISTS", or some combination of the three.
+*/
+perform_range_type_check_cmake returns [std::string type] {
+        type = "IN";
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                if (LA(1) == CMAKE_ITEMS)
+                    type += "ITEMS";
+
+                if (LA(1) == CMAKE_LISTS)
+                    type += "LISTS";
+
+                if (LA(1) == RPAREN || LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
 
 /*
   cmake_expression
