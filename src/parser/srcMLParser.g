@@ -968,7 +968,7 @@ public:
         temp_array[CMAKE_ENDFOREACH] = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::foreach_statement_end_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CMAKE_ELSEIF]     = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
         temp_array[CMAKE_ENDWHILE]   = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::while_statement_end_cmake, &srcMLParser::cmake_paren_pair_end_statement };
-        temp_array[CMAKE_FOREACH]    = { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_FOREACH_CMAKE, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[CMAKE_FOREACH]    = { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_FOREACH_CMAKE, 0, nullptr, &srcMLParser::cmake_control };
 
         return temp_array;
     }
@@ -11779,11 +11779,11 @@ rparen[bool markup = true, bool end_control_incr = false] {
 
         {
             if (isempty) {
-                // special handling for the end of a condition in a foreach/if/while statement (CMake)
+                // special handling for the end of a condition in a if/while statement (CMake)
                 if (
                     inLanguage(LANGUAGE_CMAKE)
                     && inMode(MODE_CONDITION)
-                    && (inPrevMode(MODE_FOREACH_CMAKE) || inPrevMode(MODE_IF) || inPrevMode(MODE_WHILE_LOOP_CMAKE))
+                    && (inPrevMode(MODE_IF) || inPrevMode(MODE_WHILE_LOOP_CMAKE))
                 ) {
                     // end the condition
                     endMode(MODE_CONDITION);
@@ -17989,7 +17989,7 @@ command_cmake[int command_count = 1] { CompleteElement element(this); ENTRY_DEBU
 
   Handles a CMake argument list.
 */
-cmake_argument_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+cmake_argument_list[] { ENTRY_DEBUG } :
         {
             // list of arguments
             startNewMode(MODE_ARGUMENT_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
@@ -18029,7 +18029,18 @@ cmake_argument_list[] { CompleteElement element(this); ENTRY_DEBUG } :
             cmake_option
         )*
 
-        rparen[false]
+        {
+            if (inTransparentMode(MODE_ARGUMENT_LIST))
+                endDownToMode(MODE_ARGUMENT_LIST);
+        }
+
+        RPAREN
+
+        {
+            // end the argument list
+            if (inMode(MODE_ARGUMENT_LIST))
+                endMode(MODE_ARGUMENT_LIST);
+        }
 ;
 
 /*
@@ -18040,13 +18051,13 @@ cmake_argument_list[] { CompleteElement element(this); ENTRY_DEBUG } :
 cmake_argument[] { SingleElement element(this); ENTRY_DEBUG } :
         {
             // argument with nested expression
-            startNewMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT);
+            startNewMode(MODE_ARGUMENT | MODE_EXPECT);
 
             // start the argument
             startElement(SARGUMENT);
         }
 
-        expression
+        cmake_expression
 ;
 
 /*
@@ -18095,4 +18106,86 @@ cmake_option[] { CompleteElement element(this); ENTRY_DEBUG } :
             }
             cmake_argument
         )*
+;
+
+/*
+  cmake_control
+
+  Handles a control in CMake.  Used in foreach statements.
+*/
+cmake_control[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_CONTROL | MODE_EXPECT);
+
+            startElement(SCONTROL);
+        }
+
+        LPAREN
+
+        (
+            // condition with only a single expression (no range)
+            { next_token() == RPAREN }?
+            cmake_expression |
+
+            // condition with a single expression and a range
+            (cmake_expression cmake_range)
+        )
+
+        {
+            if (inTransparentMode(MODE_CONTROL))
+                endDownToMode(MODE_CONTROL);
+        }
+
+        RPAREN
+
+        {
+            // end the condition
+            if (inMode(MODE_CONTROL))
+                endMode(MODE_CONTROL);
+
+            // start the block
+            startNewMode(MODE_BLOCK);
+            startNoSkipElement(SBLOCK);
+
+            // allow statements to appear in the block
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+        }
+;
+
+/*
+  cmake_range
+
+  Helper rule to handle ranges that appear in CMake conditions.
+*/
+cmake_range[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_RANGED_FOR);
+
+            startElement(SRANGE_IN);
+        }
+
+        (options { greedy = true; } :
+            // ensure the closing paren is not included in the condition
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            cmake_expression
+        )*
+;
+
+/*
+  cmake_expression
+
+  Matches an expression in CMake.
+*/
+cmake_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            startElement(SEXPRESSION);
+        }
+
+        ({ LA(1) != TEMPOPS && LA(1) != DESTOP }? general_operators | literals | compound_name)
 ;
