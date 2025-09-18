@@ -354,12 +354,16 @@ tokens {
 
     // CMake
     CMAKE_ENDFOREACH;
+    CMAKE_ENDFUNCTION;
     CMAKE_ELSEIF;
+    CMAKE_ENDMACRO;
     CMAKE_ENDWHILE;
     CMAKE_FOREACH;
+    CMAKE_FUNCTION;
     CMAKE_IN;
     CMAKE_ITEMS;
     CMAKE_LISTS;
+    CMAKE_MACRO;
     CMAKE_OPTIONS;
     CMAKE_RANGE;
 }
@@ -1929,12 +1933,16 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         // CMake
         { "endforeach"   , CMAKE_ENDFOREACH  , LANGUAGE_CMAKE },
+        { "endfunction"  , CMAKE_ENDFUNCTION , LANGUAGE_CMAKE },
         { "elseif"       , CMAKE_ELSEIF      , LANGUAGE_CMAKE },
+        { "endmacro"     , CMAKE_ENDMACRO    , LANGUAGE_CMAKE },
         { "endwhile"     , CMAKE_ENDWHILE    , LANGUAGE_CMAKE },
         { "foreach"      , CMAKE_FOREACH     , LANGUAGE_CMAKE },
+        { "function"     , CMAKE_FUNCTION    , LANGUAGE_CMAKE },
         { "IN"           , CMAKE_IN          , LANGUAGE_CMAKE },
         { "ITEMS"        , CMAKE_ITEMS       , LANGUAGE_CMAKE },
         { "LISTS"        , CMAKE_LISTS       , LANGUAGE_CMAKE },
+        { "macro"        , CMAKE_MACRO       , LANGUAGE_CMAKE },
         { "RANGE"        , CMAKE_RANGE       , LANGUAGE_CMAKE },
    };
 

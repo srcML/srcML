@@ -130,6 +130,9 @@ const srcMLState::MODE_TYPE ModeStack::MODE_SET_PY                     (bit(__CO
 // CMake modes
 const srcMLState::MODE_TYPE ModeStack::MODE_PAREN_ENDS_STATEMENT_CMAKE (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_WHILE_LOOP_CMAKE           (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_ENDTOKEN_CMAKE             (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_CMAKE             (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_COMMAND_CMAKE              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FOREACH_CMAKE              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_OPTION_CMAKE               (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_MACRO_CMAKE                (bit(__COUNTER__));

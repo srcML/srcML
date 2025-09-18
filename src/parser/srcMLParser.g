@@ -729,6 +729,7 @@ tokens {
     // CMake
     SBRACKET_ARGUMENT;
     SCOMMAND;
+    SMACRO_DEFINITION;
     SOPTION;
     SRANGE_IN_CMAKE;
     SRANGE_IN_ITEMS_CMAKE;
@@ -965,16 +966,20 @@ public:
         temp_array[BREAK]    = { SBREAK_STATEMENT, 0, MODE_STATEMENT | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CONTINUE] = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST, 0, &srcMLParser::if_statement_start_cmake, &srcMLParser::cmake_paren_pair_begin_statement };
-        temp_array[ENDIF]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::if_statement_end_cmake, &srcMLParser::cmake_paren_pair_end_statement };
+        temp_array[ENDIF]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[IF]       = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
         temp_array[RETURN]   = { SRETURN_STATEMENT, 0, MODE_STATEMENT | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
-        temp_array[WHILE]    = { SWHILE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WHILE_LOOP_CMAKE, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[WHILE]    = { SWHILE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_WHILE_LOOP_CMAKE, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         /* CMAKE STATEMENTS */
-        temp_array[CMAKE_ENDFOREACH] = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::foreach_statement_end_cmake, &srcMLParser::cmake_paren_pair_end_statement };
-        temp_array[CMAKE_ELSEIF]     = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
-        temp_array[CMAKE_ENDWHILE]   = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::while_statement_end_cmake, &srcMLParser::cmake_paren_pair_end_statement };
-        temp_array[CMAKE_FOREACH]    = { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_FOREACH_CMAKE, 0, nullptr, &srcMLParser::cmake_control };
+        temp_array[CMAKE_ENDFOREACH]  = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
+        temp_array[CMAKE_ENDFUNCTION] = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
+        temp_array[CMAKE_ELSEIF]      = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
+        temp_array[CMAKE_ENDMACRO]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
+        temp_array[CMAKE_ENDWHILE]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
+        temp_array[CMAKE_FOREACH]     = { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_FOREACH_CMAKE, 0, nullptr, &srcMLParser::cmake_control };
+        temp_array[CMAKE_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_FUNCTION_CMAKE, 0, nullptr, &srcMLParser::cmake_parameter_list };
+        temp_array[CMAKE_MACRO]       = { SMACRO_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_MACRO_CMAKE, 0, nullptr, &srcMLParser::cmake_parameter_list };
 
         return temp_array;
     }
@@ -17897,8 +17902,8 @@ cmake_paren_pair_end_statement[] { ENTRY_DEBUG }:
                 endMode(MODE_PAREN_ENDS_STATEMENT_CMAKE);
             }
 
-            if (inMode(MODE_IF_STATEMENT) || inMode(MODE_WHILE_LOOP_CMAKE) || inMode(MODE_FOREACH_CMAKE))
-                endMode();
+            if (inMode(MODE_ENDTOKEN_CMAKE))
+                endMode(MODE_ENDTOKEN_CMAKE);
         }
 ;
 
@@ -17910,7 +17915,7 @@ cmake_paren_pair_end_statement[] { ENTRY_DEBUG }:
 */
 if_statement_start_cmake[] { ENTRY_DEBUG } :
         {
-            // assumes this was called from the triplex keyword table, so "else" is really "else()"
+            // assumes this was called from the keyword table, so "else" is really "else()"
             if ((LA(1) == ELSE || LA(1) == CMAKE_ELSEIF) && inTransparentMode(MODE_IF_STATEMENT)) {
                 // flush any whitespace tokens since sections should end at the last possible place
                 flushSkip();
@@ -17920,7 +17925,7 @@ if_statement_start_cmake[] { ENTRY_DEBUG } :
 
             if (!inMode(MODE_IF_STATEMENT)) {
                 // statement with nested statement; detection of else
-                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_IF_STATEMENT);
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_IF | MODE_IF_STATEMENT);
 
                 // start if sequence container
                 startElement(SIF_STATEMENT);
@@ -17931,44 +17936,17 @@ if_statement_start_cmake[] { ENTRY_DEBUG } :
 ;
 
 /*
-  if_statement_end_cmake
+  end_down_to_end_token_cmake
 
-  Helper rule to end an if/else if/else statement in CMake.
+  Helper rule to end down to certain statements in CMake.
+  Ensures the whitespace is processed correctly for proper output.
 */
-if_statement_end_cmake[] { ENTRY_DEBUG } :
+end_down_to_end_token_cmake[] { ENTRY_DEBUG } :
         {
             // flush any whitespace tokens since sections should end at the last possible place
             flushSkip();
 
-            endDownToMode(MODE_IF_STATEMENT);
-        }
-;
-
-/*
-  while_statement_end_cmake
-
-  Helper rule to end a while loop in CMake.
-*/
-while_statement_end_cmake[] { ENTRY_DEBUG } :
-        {
-            // flush any whitespace tokens since sections should end at the last possible place
-            flushSkip();
-
-            endDownToMode(MODE_WHILE_LOOP_CMAKE);
-        }
-;
-
-/*
-  foreach_statement_end_cmake
-
-  Helper rule to end a foreach loop in CMake.
-*/
-foreach_statement_end_cmake[] { ENTRY_DEBUG } :
-        {
-            // flush any whitespace tokens since sections should end at the last possible place
-            flushSkip();
-
-            endDownToMode(MODE_FOREACH_CMAKE);
+            endDownToMode(MODE_ENDTOKEN_CMAKE);
         }
 ;
 
@@ -18061,6 +18039,54 @@ cmake_argument[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // start the argument
             startElement(SARGUMENT);
+        }
+
+        cmake_expression
+;
+
+/*
+  cmake_parameter_list
+
+  Handles a parameter list in CMake.  Used for functions and macros.
+*/
+cmake_parameter_list[] { ENTRY_DEBUG } :
+        LPAREN
+        compound_name
+
+        (options { greedy = true; } :
+            // ensure the closing paren is not included in the parameter list
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            cmake_parameter
+        )*
+
+        RPAREN
+
+        {
+            if (inMode(MODE_FUNCTION_CMAKE) || inMode(MODE_MACRO_CMAKE)) {
+                // start the block
+                startNewMode(MODE_BLOCK);
+                startNoSkipElement(SBLOCK);
+
+                // allow statements to appear in the block
+                startNewMode(MODE_STATEMENT | MODE_NEST);
+            }
+        }
+;
+
+/*
+  cmake_parameter
+
+  Handles a parameter in CMake.
+*/
+cmake_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_PARAMETER);
+
+            startElement(SPARAMETER);
         }
 
         cmake_expression
