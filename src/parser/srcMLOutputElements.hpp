@@ -342,6 +342,8 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     // CMake
     { TOKEN::SBRACKET_ARGUMENT,             { "literal",           SRC, "type",          "string", "format",         "lua" }},
+    { TOKEN::SBOOLEAN_VALUE_TRUE,           { "literal",           SRC, "type",         "boolean",  "value",        "true" }},
+    { TOKEN::SBOOLEAN_VALUE_FALSE,          { "literal",           SRC, "type",         "boolean",  "value",       "false" }},
     { TOKEN::SCOMMAND,                      { "command",           SRC,      0,                 0,        0,             0 }},
     { TOKEN::SMACRO_DEFINITION,             { "macro_defn",        SRC,      0,                 0,        0,             0 }},
     { TOKEN::SOPTION,                       { "option",            SRC,      0,                 0,        0,             0 }},

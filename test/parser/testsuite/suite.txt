@@ -302,6 +302,7 @@ LANGUAGE_PYTHON with_py
 LANGUAGE_PYTHON yield_py
 
 # CMake
+LANGUAGE_CMAKE boolean_cmake
 LANGUAGE_CMAKE break_cmake
 LANGUAGE_CMAKE command_cmake
 LANGUAGE_CMAKE continue_cmake

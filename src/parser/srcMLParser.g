@@ -728,6 +728,8 @@ tokens {
 
     // CMake
     SBRACKET_ARGUMENT;
+    SBOOLEAN_VALUE_TRUE;
+    SBOOLEAN_VALUE_FALSE;
     SCOMMAND;
     SMACRO_DEFINITION;
     SOPTION;
@@ -12672,7 +12674,12 @@ literal[bool markup = true] { LightweightElement element(this); TokenPosition tp
 */
 boolean[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SBOOLEAN);
+            if (inLanguage(LANGUAGE_CMAKE) && LA(1) == LITERAL_TRUE)
+                startElement(SBOOLEAN_VALUE_TRUE);
+            else if (inLanguage(LANGUAGE_CMAKE) && LA(1) == LITERAL_FALSE)
+                startElement(SBOOLEAN_VALUE_FALSE);
+            else
+                startElement(SBOOLEAN);
         }
 
         (LITERAL_TRUE | LITERAL_FALSE)
