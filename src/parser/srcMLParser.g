@@ -17991,12 +17991,13 @@ cmake_argument_list[] { ENTRY_DEBUG } :
                 break;
             } |
 
-            // semicolons can separate arguments
+            // ensure options are marked properly (and not as names)
+            { inTransparentMode(MODE_COMMAND_CMAKE) }?
             {
                 if (!inMode(MODE_ARGUMENT_LIST))
                     endDownToMode(MODE_ARGUMENT_LIST);
             }
-            TERMINATE |
+            cmake_option |
 
             // arguments in options are handled in cmake_option
             { !inTransparentMode(MODE_OPTION_CMAKE) }?
@@ -18006,11 +18007,12 @@ cmake_argument_list[] { ENTRY_DEBUG } :
             }
             cmake_argument |
 
+            // semicolons can separate arguments
             {
                 if (!inMode(MODE_ARGUMENT_LIST))
                     endDownToMode(MODE_ARGUMENT_LIST);
             }
-            cmake_option
+            TERMINATE
         )*
 
         {
@@ -18120,6 +18122,7 @@ cmake_option[] { CompleteElement element(this); ENTRY_DEBUG } :
             } |
 
             // ensure the current option does not include a new option
+            { inTransparentMode(MODE_COMMAND_CMAKE) }?
             {
                 break;
             }
@@ -18138,6 +18141,21 @@ cmake_option[] { CompleteElement element(this); ENTRY_DEBUG } :
             }
             cmake_argument
         )*
+;
+
+/*
+  cmake_option_as_name
+
+  Treats a CMake option as a name.  Not used directly, but called by cmake_expression.
+*/
+cmake_option_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+            {
+                startNewMode(MODE_VARIABLE_NAME);
+
+                startElement(SNAME);
+            }
+
+            CMAKE_OPTIONS
 ;
 
 /*
@@ -18329,5 +18347,14 @@ cmake_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SEXPRESSION);
         }
 
-        ({ LA(1) != TEMPOPS && LA(1) != DESTOP }? general_operators | literals | compound_name)
+        (
+            { LA(1) != TEMPOPS && LA(1) != DESTOP }?
+            general_operators |
+
+            // treat the option as a name if not expecting it
+            { !inTransparentMode(MODE_COMMAND_CMAKE) }?
+            cmake_option_as_name |
+
+            literals | compound_name
+        )
 ;
