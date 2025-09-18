@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="while">
+
+<unit revision="1.0.0" language="CMake">
+<while>while<condition>(<expr><name>${i}</name> <operator>GREATER</operator> <literal type="number">2</literal></expr>)</condition><block>
+    <command><name>set</name><argument_list>(<argument><expr><name>module_install_rpath</name></expr></argument> <argument><expr><literal type="string">"${module_install_rpath}/.."</literal></expr></argument>)</argument_list></command>
+    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>i</name></expr></argument> <argument><expr><literal type="string">"${i} - 1"</literal></expr></argument></option>)</argument_list></command>
+</block>endwhile()</while>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<while>while<condition>(<expr><operator>(</operator><name>MaxNumNodes</name> <operator>GREATER</operator> <name>${nodes}</name><operator>)</operator> <operator>OR</operator> <operator>(</operator><name>MaxNumNodes</name> <operator>EQUAL</operator> <name>${nodes}</name><operator>)</operator></expr>)</condition><block>
+    <command><name>set</name><argument_list>(<argument><expr><name>NumNodes</name></expr></argument> <argument><expr><literal type="string">"${NumNodes} ${nodes}"</literal></expr></argument>)</argument_list></command>
+    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>index</name></expr></argument> <argument><expr><literal type="string">"${index}+1"</literal></expr></argument></option>)</argument_list></command>
+    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>nodes</name></expr></argument> <argument><expr><literal type="string">"1 &lt;&lt; ${index}"</literal></expr></argument></option>)</argument_list></command>
+</block>endwhile()</while>
+</unit>
+
+</unit>

@@ -24,7 +24,7 @@ endforeach()
 set(TESTFILES)
 
 # convert from input language to input extension
-set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m" "Python" "py")
+set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m" "Python" "py" "CMake" "cmake")
 function(lang2ext LANG EXT)
     list(FIND LANGLIST "${LANG}" LANG_POS)
     math(EXPR EXT_POS "${LANG_POS} + 1")
@@ -112,7 +112,7 @@ foreach(GEN IN ITEMS ${SUITE})
 
         # base is C++, so these just get added
         list(APPEND TESTFILES "${URL}.cpp.xml")
-        setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C" "Python")
+        setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_ALL_GEN")
 
@@ -120,9 +120,9 @@ foreach(GEN IN ITEMS ${SUITE})
         list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
 
-    elseif(CATEGORY STREQUAL "LANGUAGE_ALL_NO_PYTHON")
+    elseif(CATEGORY STREQUAL "LANGUAGE_ALL_ORIGINAL")
 
-        # explicitly generated
+        # explicitly generated; only includes the original set of srcML languages
         list(APPEND TESTFILES "${URL}.cpp.xml")
         setlanguage("C++" "${URL}" "Java" "C#" "Objective-C" "C")
 
@@ -171,6 +171,10 @@ foreach(GEN IN ITEMS ${SUITE})
 
         list(APPEND TESTFILES "${URL}.py.xml")
 
+    elseif(CATEGORY STREQUAL "LANGUAGE_CMAKE")
+
+        list(APPEND TESTFILES "${URL}.cmake.xml")
+
     elseif(CATEGORY STREQUAL "LANGUAGE_JAVA_GEN")
 
     elseif(CATEGORY STREQUAL "LANGUAGE_OBJECTIVE_C")
@@ -217,9 +221,9 @@ foreach(GENURL IN ITEMS ${TESTFILES})
     # Generate "formfeed" "comment" "block" "struct" "ifthenelse"
     foreach(VARIATION IN ITEMS "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
         # preproc and struct do not work with Java
-        # skip generating any of these tests for Python
+        # skip generating any of these tests for Python and CMake
         if((LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc")) OR
-           (LANGEXT STREQUAL "cs" AND VARIATION STREQUAL "struct") OR (LANGEXT STREQUAL "py"))
+           (LANGEXT STREQUAL "cs" AND VARIATION STREQUAL "struct") OR (LANGEXT STREQUAL "py") OR (LANGEXT STREQUAL "cmake"))
             continue()
         endif()
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="return">
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if <condition>(<expr><operator>NOT</operator> <operator>TARGET</operator> <name>gtest_main</name></expr>)</condition><block>
+    <return>return()</return>
+</block></if>endif()</if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<function>function(<name>add_test</name> <parameter><expr><name>name</name></expr></parameter>)<block>
+    <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <name>name</name> <operator>STREQUAL</operator> <literal type="string">"NAME"</literal></expr>)</condition><block>
+        <command><name>_add_test</name><argument_list>(<argument><expr><name>${VALGRIND_EXECUTABLE}</name></expr></argument> <argument><expr><name>${VALGRIND_ARGS}</name></expr></argument> <argument><expr><name>${ARGV}</name></expr></argument>)</argument_list></command>
+        <return>return()</return>
+    </block></if>endif()</if_stmt>
+</block>endfunction()</function>
+</unit>
+
+</unit>

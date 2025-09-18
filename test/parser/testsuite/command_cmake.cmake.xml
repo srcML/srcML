@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="continue">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_minimum_required</name><argument_list>(<option><name>VERSION</name> <argument><expr><literal type="number">3.28</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<option><name>CMAKE_CXX_STANDARD</name> <argument><expr><literal type="number">17</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REGEX</name></option> <option><name>REPLACE</name> <argument><expr><literal type="string">"^0+"</literal></expr></argument> <argument><expr><literal type="string">""</literal></expr></argument> <argument><expr><name>CVF_VERSION_MAJOR</name></expr></argument> <argument><expr><literal type="string">"${CVF_VERSION_MAJOR}"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>get_filename_component</name><argument_list>(<argument><expr><name>_source_path</name></expr></argument> <argument><expr><literal type="string">"${_source}"</literal></expr></argument> <option><name>PATH</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CPP_SOURCES</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><name>${CMAKE_CURRENT_SOURCE_DIR}</name></expr></argument> <argument><expr><name>${LIBRARY_NAME}/*.cpp</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>CODE</name> <argument><expr><literal type="string" format="lua">[[
+    file(GET_RUNTIME_DEPENDENCIES)
+]]</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>message</name><argument_list>(<option><name>FATAL_ERROR</name> <argument><expr><literal type="string" format="lua">[=[
+    Source and build directories cannot be the same.
+]=]</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>GIT_VERSION_STRING</name></expr></argument> <argument><expr><literal type="string" format="lua">[==[2.39.2]==]</literal></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

@@ -161,7 +161,11 @@ CONSTANTS :
 NAME options { testLiterals = true; } :
     { startline = false; }
     ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
-    ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$' | { inLanguage(LANGUAGE_CMAKE)}? '{' | { inLanguage(LANGUAGE_CMAKE)}? '}')*)
+    (
+        (options { greedy = true; } :
+            '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$' | { inLanguage(LANGUAGE_CMAKE) }? ('/' | '*' | '.' | '{' | '}')
+        )*
+    )
     (
         { text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv }?
         { $setType(STRING_START); } STRING_START |

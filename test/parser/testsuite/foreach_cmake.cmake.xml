@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="foreach">
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range><expr><name>arg1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range><expr><name>arg1</name></expr> <expr><name>arg2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="range">RANGE</range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="range">RANGE <expr><name>total</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="range">RANGE <expr><name>start</name></expr> <expr><name>stop</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in">IN</range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in lists">IN LISTS</range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in lists">IN LISTS <expr><name>list1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in lists">IN LISTS <expr><name>list1</name></expr> <expr><name>list2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in items">IN ITEMS</range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in items">IN ITEMS <expr><name>item1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in items">IN ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in lists items">IN LISTS <expr><name>list1</name></expr> ITEMS <expr><name>item1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in lists items">IN LISTS <expr><name>list1</name></expr> <expr><name>list2</name></expr> ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in items lists">IN ITEMS <expr><name>item1</name></expr> LISTS <expr><name>list1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in items lists">IN ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr> LISTS <expr><name>list1</name></expr> <expr><name>list2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach<control>(<expr><name>flag_var</name></expr> <range><expr><name>CMAKE_C_FLAGS</name></expr> <expr><name>CMAKE_CXX_FLAGS</name></expr></range>)</control><block>
+    <foreach>foreach<control>(<expr><name>config_name</name></expr> <range><expr><literal type="string">""</literal></expr> <expr><name>DEBUG</name></expr> <expr><name>RELEASE</name></expr> <expr><name>MINSIZE</name></expr> <expr><name>DEBINFO</name></expr></range>)</control><block>
+        <command><name>set</name><argument_list>(<argument><expr><name>var_name</name></expr></argument> <argument><expr><literal type="string">"${flag_var}"</literal></expr></argument>)</argument_list></command>
+        <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <literal type="string">"${config_name}"</literal> <operator>STREQUAL</operator> <literal type="string">""</literal></expr>)</condition><block>
+            <command><name>set</name><argument_list>(<argument><expr><name>var_name</name></expr></argument> <argument><expr><literal type="string">"${var_name}_${config_name}"</literal></expr></argument>)</argument_list></command>
+        </block></if>endif()</if_stmt>
+        <command><name>string</name><argument_list>(<option><name>REPLACE</name> <argument><expr><literal type="string">"/MD"</literal></expr></argument> <argument><expr><literal type="string">"${LIB_RT_OPTION}"</literal></expr></argument> <argument><expr><name>${var_name}</name></expr></argument> <argument><expr><literal type="string">"${${var_name}}"</literal></expr></argument></option>)</argument_list></command>
+    </block>endforeach()</foreach>
+</block>endforeach()</foreach>
+</unit>
+
+</unit>
