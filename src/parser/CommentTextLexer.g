@@ -76,6 +76,7 @@ tokens {
     PY_SQUOTE_STRING_START;
     PY_SIMPLE_SQUOTE_STRING_END;
     BRACKET_ARGUMENT_END;
+    CMAKE_BLOCK_COMMENT_END;
 }
 
 {
@@ -429,8 +430,8 @@ COMMENT_TEXT {
     } |
 
     ']' {
-        // detect the end of a CMake bracket argument (ends with '=]' or ']]')
-        if (mode == BRACKET_ARGUMENT_END && (prevLA == '=' || prevLA == ']')) {
+        // detect the end of a CMake bracket argument or block comment (both end with '=]' or ']]')
+        if ((mode == BRACKET_ARGUMENT_END || mode == CMAKE_BLOCK_COMMENT_END) && (prevLA == '=' || prevLA == ']')) {
             $setType(mode); selector->pop();
         }
     } |

@@ -98,8 +98,11 @@ tokens {
 OPERATORS options { testLiterals = true; } {
     int start = LA(1);
 } : (
-    // # (C++/Python/CMake), #! (Python/CMake)
+    // # (C++/Python/CMake), #! (Python/CMake), #[[...]], #[=[...]=], #[==[...]==], etc. (CMake)
     '#' (
+        { inLanguage(LANGUAGE_CMAKE) && LA(1) == '[' && (LA(2) == '[' || LA(2) == '=') }?
+            { $setType(CMAKE_BLOCK_COMMENT_START); changetotextlexer(CMAKE_BLOCK_COMMENT_END); } |
+
         { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_CMAKE)) && LA(1) == '!' }?
             { $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END); } |
 

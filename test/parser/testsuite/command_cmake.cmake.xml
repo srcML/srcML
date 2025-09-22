@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="continue">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="command">
 
 <unit revision="1.0.0" language="CMake">
 <command><name>cmake_minimum_required</name><argument_list>(<option><name>VERSION</name> <argument><expr><literal type="number">3.28</literal></expr></argument></option>)</argument_list></command>
@@ -22,19 +22,19 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>install</name><argument_list>(<option><name>CODE</name> <argument><expr><literal type="string" format="lua">[[
+<command><name>install</name><argument_list>(<option><name>CODE</name> <argument><expr><literal type="string" format="bracket">[[
     file(GET_RUNTIME_DEPENDENCIES)
 ]]</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>message</name><argument_list>(<option><name>FATAL_ERROR</name> <argument><expr><literal type="string" format="lua">[=[
+<command><name>message</name><argument_list>(<option><name>FATAL_ERROR</name> <argument><expr><literal type="string" format="bracket">[=[
     Source and build directories cannot be the same.
 ]=]</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>GIT_VERSION_STRING</name></expr></argument> <argument><expr><literal type="string" format="lua">[==[2.39.2]==]</literal></expr></argument>)</argument_list></command>
+<command><name>set</name><argument_list>(<argument><expr><name>GIT_VERSION_STRING</name></expr></argument> <argument><expr><literal type="string" format="bracket">[==[2.39.2]==]</literal></expr></argument>)</argument_list></command>
 </unit>
 
 </unit>
