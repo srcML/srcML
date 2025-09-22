@@ -260,6 +260,9 @@ const static srcMLState::MODE_TYPE MODE_NO_BLOCK_CONTENT;
 /** mode for c-attribute processing */
 const static srcMLState::MODE_TYPE MODE_INCLUDE_ATTRIBUTE;
 
+/** mode for C# property processing */
+const static srcMLState::MODE_TYPE MODE_PROPERTY_STATEMENT;
+
 // Python modes
 const static srcMLState::MODE_TYPE MODE_EXCLUDE_NO_PAREN_TUPLES_PY;
 
