@@ -733,6 +733,7 @@ tokens {
     SCOMMAND;
     SMACRO_DEFINITION;
     SOPTION;
+    SPROPAGATE;
     SRANGE_IN_CMAKE;
     SRANGE_IN_ITEMS_CMAKE;
     SRANGE_IN_ITEMS_LISTS_CMAKE;
@@ -17900,8 +17901,13 @@ cmake_paren_pair_begin_statement[] { ENTRY_DEBUG }:
 
   Consumes parentheses that occur after a CMake keyword, then ends the statement (e.g., "break()").
 */
-cmake_paren_pair_end_statement[] { ENTRY_DEBUG }:
-        paren_pair
+cmake_paren_pair_end_statement[] { ENTRY_DEBUG } :
+        (
+            { next_token() == CMAKE_PROPAGATE }?
+            cmake_propagate_paren_pair |
+
+            paren_pair
+        )
 
         {
             if (inTransparentMode(MODE_PAREN_ENDS_STATEMENT_CMAKE)) {
@@ -17912,6 +17918,42 @@ cmake_paren_pair_end_statement[] { ENTRY_DEBUG }:
             if (inMode(MODE_ENDTOKEN_CMAKE))
                 endMode(MODE_ENDTOKEN_CMAKE);
         }
+;
+
+/*
+  cmake_propagate_paren_pair
+
+  Handles support for CMake propogates.
+*/
+cmake_propagate_paren_pair[] { ENTRY_DEBUG } :
+        LPAREN
+
+        {
+            startNewMode(MODE_PROPAGATE_CMAKE);
+
+            startElement(SPROPAGATE);
+        }
+
+        CMAKE_PROPAGATE
+
+        (options { greedy = true; } :
+            // ensure the closing paren is not included in the propagate
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            cmake_expression
+        )*
+
+        {
+            if (inTransparentMode(MODE_PROPAGATE_CMAKE)) {
+                endDownToMode(MODE_PROPAGATE_CMAKE);
+                endMode(MODE_PROPAGATE_CMAKE);
+            }
+        }
+
+        RPAREN
 ;
 
 /*

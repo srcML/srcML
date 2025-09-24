@@ -347,6 +347,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SCOMMAND,                      { "command",           SRC,      0,                 0,        0,             0 }},
     { TOKEN::SMACRO_DEFINITION,             { "macro_defn",        SRC,      0,                 0,        0,             0 }},
     { TOKEN::SOPTION,                       { "option",            SRC,      0,                 0,        0,             0 }},
+    { TOKEN::SPROPAGATE,                    { "propagate",         SRC,      0,                 0,        0,             0 }},
     { TOKEN::SRANGE_IN_CMAKE,               { "range",             SRC, "type",              "in",        0,             0 }},
     { TOKEN::SRANGE_IN_ITEMS_CMAKE,         { "range",             SRC, "type",        "in items",        0,             0 }},
     { TOKEN::SRANGE_IN_ITEMS_LISTS_CMAKE,   { "range",             SRC, "type",  "in items lists",        0,             0 }},

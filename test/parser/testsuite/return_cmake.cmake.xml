@@ -16,4 +16,16 @@
 </block>endfunction()</function>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<return>return(<propagate>PROPAGATE</propagate>)</return>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<return>return(<propagate>PROPAGATE <expr><name>${result_var1}</name></expr></propagate>)</return>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<return>return(<propagate>PROPAGATE <expr><name>${result_var1}</name></expr> <expr><name>${result_var2}</name></expr></propagate>)</return>
+</unit>
+
 </unit>

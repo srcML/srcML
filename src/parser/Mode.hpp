@@ -330,6 +330,8 @@ const static srcMLState::MODE_TYPE MODE_PAREN_ENDS_STATEMENT_CMAKE;
 
 const static srcMLState::MODE_TYPE MODE_WHILE_LOOP_CMAKE;
 
+const static srcMLState::MODE_TYPE MODE_PROPAGATE_CMAKE;
+
 const static srcMLState::MODE_TYPE MODE_ENDTOKEN_CMAKE;
 
 const static srcMLState::MODE_TYPE MODE_FUNCTION_CMAKE;

@@ -365,6 +365,7 @@ tokens {
     CMAKE_LISTS;
     CMAKE_MACRO;
     CMAKE_OPTIONS;
+    CMAKE_PROPAGATE;
     CMAKE_RANGE;
 }
 
@@ -1974,6 +1975,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "ITEMS"        , CMAKE_ITEMS       , LANGUAGE_CMAKE },
         { "LISTS"        , CMAKE_LISTS       , LANGUAGE_CMAKE },
         { "macro"        , CMAKE_MACRO       , LANGUAGE_CMAKE },
+        { "PROPAGATE"    , CMAKE_PROPAGATE   , LANGUAGE_CMAKE },
         { "RANGE"        , CMAKE_RANGE       , LANGUAGE_CMAKE },
    };
 
