@@ -353,6 +353,8 @@ tokens {
     PY_YIELD;
 
     // CMake
+    CMAKE_BLOCK;
+    CMAKE_ENDBLOCK;
     CMAKE_ENDFOREACH;
     CMAKE_ENDFUNCTION;
     CMAKE_ELSEIF;
@@ -365,8 +367,11 @@ tokens {
     CMAKE_LISTS;
     CMAKE_MACRO;
     CMAKE_OPTIONS;
+    CMAKE_POLICIES;
     CMAKE_PROPAGATE;
     CMAKE_RANGE;
+    CMAKE_SCOPE_FOR;
+    CMAKE_VARIABLES;
 }
 
 {
@@ -893,6 +898,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "notfound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
 
         // CMake
+        { "block"        , CMAKE_BLOCK       , LANGUAGE_CMAKE },
+        { "endblock"     , CMAKE_ENDBLOCK    , LANGUAGE_CMAKE },
         { "endforeach"   , CMAKE_ENDFOREACH  , LANGUAGE_CMAKE },
         { "endfunction"  , CMAKE_ENDFUNCTION , LANGUAGE_CMAKE },
         { "elseif"       , CMAKE_ELSEIF      , LANGUAGE_CMAKE },
@@ -904,8 +911,11 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "ITEMS"        , CMAKE_ITEMS       , LANGUAGE_CMAKE },
         { "LISTS"        , CMAKE_LISTS       , LANGUAGE_CMAKE },
         { "macro"        , CMAKE_MACRO       , LANGUAGE_CMAKE },
+        { "POLICIES"     , CMAKE_POLICIES    , LANGUAGE_CMAKE },
         { "PROPAGATE"    , CMAKE_PROPAGATE   , LANGUAGE_CMAKE },
         { "RANGE"        , CMAKE_RANGE       , LANGUAGE_CMAKE },
+        { "SCOPE_FOR"    , CMAKE_SCOPE_FOR   , LANGUAGE_CMAKE },
+        { "VARIABLES"    , CMAKE_VARIABLES   , LANGUAGE_CMAKE },
    };
 
     // fill up the literals for the language that we are parsing

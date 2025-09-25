@@ -727,6 +727,7 @@ tokens {
     SYIELD_FROM_STATEMENT;
 
     // CMake
+    SBLOCK_STATEMENT;
     SBRACKET_ARGUMENT;
     SBOOLEAN_VALUE_TRUE;
     SBOOLEAN_VALUE_FALSE;
@@ -741,6 +742,10 @@ tokens {
     SRANGE_IN_LISTS_CMAKE;
     SRANGE_IN_LISTS_ITEMS_CMAKE;
     SRANGE_KEYWORD;
+    SSCOPE_POLICIES;
+    SSCOPE_POLICIES_VARIABLES;
+    SSCOPE_VARIABLES;
+    SSCOPE_VARIABLES_POLICIES;
 }
 
 /*
@@ -977,6 +982,8 @@ public:
         temp_array[WHILE]    = { SWHILE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_WHILE_LOOP_CMAKE, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         /* CMAKE STATEMENTS */
+        temp_array[CMAKE_BLOCK]       = { SBLOCK_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_BLOCK_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_block_statement };
+        temp_array[CMAKE_ENDBLOCK]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CMAKE_ENDFOREACH]  = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CMAKE_ENDFUNCTION] = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CMAKE_ELSEIF]      = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
@@ -17913,14 +17920,11 @@ cmake_paren_pair_end_statement[] { ENTRY_DEBUG } :
                 break;
             } |
 
-            { next_token() == CMAKE_PROPAGATE }?
-            cmake_propagate_paren_pair |
-
             // include statements can have an option
             { inTransparentMode(MODE_INCLUDE_CMAKE) }?
             cmake_option |
 
-            cmake_expression
+            cmake_propagate | cmake_expression
         )*
 
         {
@@ -17940,13 +17944,11 @@ cmake_paren_pair_end_statement[] { ENTRY_DEBUG } :
 ;
 
 /*
-  cmake_propagate_paren_pair
+  cmake_propagate
 
   Handles support for CMake propogates.
 */
-cmake_propagate_paren_pair[] { ENTRY_DEBUG } :
-        LPAREN
-
+cmake_propagate[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_PROPAGATE_CMAKE);
 
@@ -17971,8 +17973,6 @@ cmake_propagate_paren_pair[] { ENTRY_DEBUG } :
                 endMode(MODE_PROPAGATE_CMAKE);
             }
         }
-
-        RPAREN
 ;
 
 /*
@@ -18402,6 +18402,66 @@ perform_range_type_check_cmake returns [std::string type] {
 
         ENTRY_DEBUG
 } :;
+
+/*
+  cmake_block_statement
+
+  Handles the parenthesis contents in a "block()" statement in CMake.
+*/
+cmake_block_statement[] { ENTRY_DEBUG } :
+        LPAREN
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            cmake_scope | cmake_propagate | cmake_expression
+        )*
+
+        {
+            if (inTransparentMode(MODE_BLOCK_STATEMENT_CMAKE))
+                endDownToMode(MODE_BLOCK_STATEMENT_CMAKE);
+        }
+
+        RPAREN
+
+        {
+            // start the block (like in other languages)
+            startNewMode(MODE_BLOCK);
+            startNoSkipElement(SBLOCK);
+
+            // allow statements to appear in the block
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+        }
+;
+
+/*
+  cmake_scope
+
+  Handles the scope of a block statement in CMake.
+*/
+cmake_scope[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            // SCOPE_FOR POLICIES VARIABLES
+            if (next_token() == CMAKE_POLICIES && next_token_two() == CMAKE_VARIABLES)
+                startElement(SSCOPE_POLICIES_VARIABLES);
+            // SCOPE_FOR VARIABLES POLICIES
+            else if (next_token() == CMAKE_VARIABLES && next_token_two() == CMAKE_POLICIES)
+                startElement(SSCOPE_VARIABLES_POLICIES);
+            // SCOPE_FOR POLICIES
+            else if (next_token() == CMAKE_POLICIES)
+                startElement(SSCOPE_POLICIES);
+            // SCOPE_FOR VARIABLES
+            else
+                startElement(SSCOPE_VARIABLES);
+        }
+
+        (CMAKE_SCOPE_FOR (CMAKE_POLICIES | CMAKE_VARIABLES)*)
+;
 
 /*
   cmake_expression
