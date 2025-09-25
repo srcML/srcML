@@ -731,6 +731,7 @@ tokens {
     SBOOLEAN_VALUE_TRUE;
     SBOOLEAN_VALUE_FALSE;
     SCOMMAND;
+    SINCLUDE_CMAKE;
     SMACRO_DEFINITION;
     SOPTION;
     SPROPAGATE;
@@ -971,6 +972,7 @@ public:
         temp_array[ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST, 0, &srcMLParser::if_statement_start_cmake, &srcMLParser::cmake_paren_pair_begin_statement };
         temp_array[ENDIF]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[IF]       = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
+        temp_array[INCLUDE]  = { SINCLUDE_CMAKE, 0, MODE_STATEMENT | MODE_INCLUDE_CMAKE | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[RETURN]   = { SRETURN_STATEMENT, 0, MODE_STATEMENT | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[WHILE]    = { SWHILE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_WHILE_LOOP_CMAKE, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
@@ -17900,20 +17902,37 @@ cmake_paren_pair_begin_statement[] { ENTRY_DEBUG }:
   cmake_paren_pair_end_statement
 
   Consumes parentheses that occur after a CMake keyword, then ends the statement (e.g., "break()").
+  Handles any propagate, option, or expression that can occur inside the parenthesis pair.
 */
 cmake_paren_pair_end_statement[] { ENTRY_DEBUG } :
-        (
+        LPAREN
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
             { next_token() == CMAKE_PROPAGATE }?
             cmake_propagate_paren_pair |
 
-            paren_pair
-        )
+            // include statements can have an option
+            { inTransparentMode(MODE_INCLUDE_CMAKE) }?
+            cmake_option |
+
+            cmake_expression
+        )*
 
         {
-            if (inTransparentMode(MODE_PAREN_ENDS_STATEMENT_CMAKE)) {
+            if (inTransparentMode(MODE_PAREN_ENDS_STATEMENT_CMAKE))
                 endDownToMode(MODE_PAREN_ENDS_STATEMENT_CMAKE);
+        }
+
+        RPAREN
+
+        {
+            if (inMode(MODE_PAREN_ENDS_STATEMENT_CMAKE))
                 endMode(MODE_PAREN_ENDS_STATEMENT_CMAKE);
-            }
 
             if (inMode(MODE_ENDTOKEN_CMAKE))
                 endMode(MODE_ENDTOKEN_CMAKE);

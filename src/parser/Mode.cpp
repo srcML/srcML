@@ -135,5 +135,6 @@ const srcMLState::MODE_TYPE ModeStack::MODE_ENDTOKEN_CMAKE             (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_CMAKE             (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_COMMAND_CMAKE              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FOREACH_CMAKE              (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_INCLUDE_CMAKE              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_OPTION_CMAKE               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_MACRO_CMAKE                (bit(__COUNTER__));
