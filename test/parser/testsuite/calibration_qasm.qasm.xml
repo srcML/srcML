@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="calibration" filename="calibration_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<calibration>cal <block>{<block_content/>}</block></calibration>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<calibration>cal <block>{<block_content>
+   <decl_stmt><decl><type><name>float</name></type> <name>new_freq</name> <init>= <expr><literal type="number">5.2e9</literal></expr></init></decl>;</decl_stmt>
+   <extern>extern <decl><type><name>port</name></type> <name>d0</name></decl>;</extern>
+   <decl_stmt><decl><type><name>frame</name></type> <name>d0f</name> <init>= <expr><call><name>newframe</name><argument_list>(<argument><expr><name>d0</name></expr></argument>, <argument><expr><name>freq</name></expr></argument>, <argument><expr><literal type="number">0.0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+</block_content>}</block></calibration>
+</unit>
+
+</unit>

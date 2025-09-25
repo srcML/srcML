@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="call" filename="call_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><name>g1</name> <argument_list type="quantum"><argument><expr><name>q1</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><name>g2</name> <argument_list type="quantum"><argument><expr><name>q1</name></expr></argument>, <argument><expr><name>q2</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><name>g3</name> <argument_list type="quantum"><argument><expr><name>q1</name></expr></argument>, <argument><expr><name>q2</name></expr></argument>, <argument><expr><name>q3</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><name>g4</name> <argument_list type="quantum"><argument><expr><name><name>qr0</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name>qr1</name></expr></argument>, <argument><expr><name><name>qr2</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name>qr3</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><name>fsim</name><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument>)</argument_list> <argument_list type="quantum"><argument><expr><name><name>q</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name>a</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><modifier><expr><name>negctrl</name></expr> @</modifier> <name>x</name> <argument_list type="quantum"><argument><expr><name>q1</name></expr></argument>, <argument><expr><name>q2</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><modifier><expr><name>ctrl</name></expr> @</modifier> <name>rz</name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list> <argument_list type="quantum"><argument><expr><name>q1</name></expr></argument>, <argument><expr><name>q2</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><modifier><expr><call><name>ctrl</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr> @</modifier> <name>x</name> <argument_list type="quantum"><argument><expr><name><name>a</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>a</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr></argument>, <argument><expr><name>f</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><modifier><expr><name>negctrl</name></expr> @</modifier> <modifier><expr><call><name>ctrl</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr> @</modifier> <modifier><expr><name>negctrl</name></expr> @</modifier> <name>x</name> <argument_list type="quantum"><argument><expr><name><name>a</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>b</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>a</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>a</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></argument>, <argument><expr><name>f</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="include" filename="include_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<include>include <literal type="string">"stdgates.inc"</literal>;</include>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<include>include <literal type="string">"foo.qasm"</literal>;</include>
+</unit>
+
+</unit>

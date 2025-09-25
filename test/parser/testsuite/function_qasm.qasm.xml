@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="function" filename="function_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<function>def <name>fn</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <comment type="line">// ...</comment>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<function>def <name>f</name><parameter_list>(<parameter><decl><type><name><name>int</name><index>[<expr><literal type="number">8</literal></expr>]</index></name></type> <name>a</name></decl></parameter>)</parameter_list> -&gt; <type><name><name>int</name><index>[<expr><literal type="number">8</literal></expr>]</index></name></type> <block>{<block_content>
+    <return>return <expr><name>a</name></expr>;</return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<function>def <name>specified_sub</name><parameter_list>(<parameter><decl><type><specifier>readonly</specifier> <name><name>array</name><index>[<expr><name><name>int</name><index>[<expr><literal type="number">8</literal></expr>]</index></name></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">10</literal></expr>]</index></name></type> <name>arr_arg</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<function>def <name>mut_subroutine</name><parameter_list>(<parameter><decl><type><specifier>mutable</specifier> <name><name>array</name><index>[<expr><name><name>int</name><index>[<expr><literal type="number">8</literal></expr>]</index></name></expr>, <expr><operator>#</operator><name>dim</name> <operator>=</operator> <literal type="number">1</literal></expr>]</index></name></type> <name>arr_arg</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+</unit>

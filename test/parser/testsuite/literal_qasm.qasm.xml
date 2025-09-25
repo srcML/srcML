@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="literal" filename="literal_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><name>b</name> <operator>=</operator> <literal type="boolean">false</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><name>c</name> <operator>=</operator> <literal type="number">10</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><name>d</name> <operator>=</operator> <operator>-</operator><literal type="number">10</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><name>e</name> <operator>=</operator> <literal type="complex">2.5 + 3.5im</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><name>f</name> <operator>=</operator> <operator>(</operator><literal type="number">3.1</literal> <operator>*</operator> <literal type="complex">5.5 im</literal><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>i1</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>i2</name> <init>= <expr><literal type="number">0xff</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>i3</name> <init>= <expr><literal type="number">0xffff_ffff</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>i4</name> <init>= <expr><literal type="number">0XBEEF</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>i5</name> <init>= <expr><literal type="number">0o73</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>i6</name> <init>= <expr><literal type="number">0b1101</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>i7</name> <init>= <expr><literal type="number">0B0110_1001</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>i8</name> <init>= <expr><literal type="number">1_000_000</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>float</name></type> <name>f1</name> <init>= <expr><literal type="number">1.0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>float</name></type> <name>f2</name> <init>= <expr><literal type="number">.1</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>float</name></type> <name>f3</name> <init>= <expr><literal type="number">0.</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>float</name></type> <name>f4</name> <init>= <expr><literal type="number">2e10</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>float</name></type> <name>f5</name> <init>= <expr><literal type="number">2e+1</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>float</name></type> <name>f6</name> <init>= <expr><literal type="number">2.0E-1</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name><name>bit</name><index>[<expr><literal type="number">8</literal></expr>]</index></name></type> <name>b1</name> <init>= <expr><literal type="string">"00010001"</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name><name>bit</name><index>[<expr><literal type="number">8</literal></expr>]</index></name></type> <name>b2</name> <init>= <expr><literal type="string">"0001_0001"</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>duration</name></type> <name>one_sec</name> <init>= <expr><literal type="number">1000ms</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>duration</name></type> <name>thousand_cycles</name> <init>= <expr><literal type="number">1000dt</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+
+
+</unit>

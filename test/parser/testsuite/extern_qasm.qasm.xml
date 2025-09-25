@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="extern" filename="extern_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<extern>extern <function_decl><name>parity</name><parameter_list>(<parameter><decl><type><name><name>bit</name><index>[<expr><name>n</name></expr>]</index></name></type></decl></parameter>)</parameter_list> -&gt; <type><name>bit</name></type></function_decl>;</extern>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<extern>extern <decl><type><name>port</name></type> <name>d0</name></decl>;</extern>
+</unit>
+
+</unit>

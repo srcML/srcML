@@ -376,6 +376,13 @@ const static srcMLState::MODE_TYPE MODE_QUANTUM_CALL_EXPR_STMT_QASM;
 const static srcMLState::MODE_TYPE MODE_MODIFIER_QASM;
 
 const static srcMLState::MODE_TYPE MODE_ARGUMENT_QASM;
+
+const static srcMLState::MODE_TYPE MODE_SWITCH_QASM;
+
+const static srcMLState::MODE_TYPE MODE_INIT_QASM;
+
+const static srcMLState::MODE_TYPE MODE_PRAGMA_QASM;
+
 const static srcMLState::MODE_TYPE MODE_B_QASM;
 
 #endif

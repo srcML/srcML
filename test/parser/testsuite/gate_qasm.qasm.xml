@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="gate" filename="gate_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate>gate <name>h</name> <parameter_list type="quantum"><parameter><decl><name>q</name></decl></parameter></parameter_list> <block>{<block_content>
+   <expr_stmt><expr><call><name>U</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list> <argument_list type="quantum"><argument><expr><name>q</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+   <expr_stmt><expr><call><name>gphase</name> <argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></gate>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate>gate <name>cphase</name><parameter_list>(<parameter><decl><name>t</name></decl></parameter>)</parameter_list> <parameter_list type="quantum"><parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter></parameter_list>
+<block>{<block_content>
+  <expr_stmt><expr><call><name>U</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>t</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list> <argument_list type="quantum"><argument><expr><name>a</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>CX</name> <argument_list type="quantum"><argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>U</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><operator>-</operator><name>t</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>CX</name> <argument_list type="quantum"><argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>U</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><name>t</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></gate>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate>gate <name>cH</name> <parameter_list type="quantum"><parameter><decl><name>a</name></decl></parameter>,<parameter><decl><name>b</name></decl></parameter></parameter_list> <block>{<block_content>
+<expr_stmt><expr><call><name>h</name> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>sdg</name> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>cx</name> <argument_list type="quantum"><argument><expr><name>a</name></expr></argument>,<argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>h</name> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>t</name> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>cx</name> <argument_list type="quantum"><argument><expr><name>a</name></expr></argument>,<argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>t</name> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>h</name> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>s</name> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>x</name> <argument_list type="quantum"><argument><expr><name>b</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>s</name> <argument_list type="quantum"><argument><expr><name>a</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+ </block_content>}</block></gate>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate type="defcal">defcal <name>h</name> <parameter_list type="quantum"><parameter><decl><literal type="qubit">$0</literal></decl></parameter></parameter_list> <block>{<block_content>
+    <comment type="line">// ...</comment>
+</block_content>}</block></gate>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate type="defcal">defcal <name>measure</name> <parameter_list type="quantum"><parameter><decl><literal type="qubit">$0</literal></decl></parameter></parameter_list> -&gt; <type><name>bit</name></type> <block>{<block_content> </block_content>}</block></gate>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate type="defcal">defcal <name>measure_iq</name> <parameter_list type="quantum"><parameter><decl><name>q</name></decl></parameter></parameter_list> -&gt; <type><name><name>complex</name><index>[<expr><name><name>float</name><index>[<expr><literal type="number">32</literal></expr>]</index></name></expr>]</index></name></type> <block>{<block_content> </block_content>}</block></gate>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate type="defcal">defcal <name>rx</name><parameter_list>(<parameter><decl><name>pi</name></decl></parameter>)</parameter_list> <parameter_list type="quantum"><parameter><decl><literal type="qubit">$0</literal></decl></parameter></parameter_list> <block>{<block_content> </block_content>}</block></gate>
+</unit>
+
+</unit>

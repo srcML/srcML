@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="pragma" filename="pragma_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<pragma>pragma <name>a</name></pragma>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<pragma>pragma <name>a</name> <name>b</name></pragma>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<pragma>pragma <literal type="string">"a"</literal></pragma>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<pragma>pragma <name><name>qiskit</name><operator>.</operator><name>simulator</name></name> <name>noise</name> <name>model</name> <literal type="string">"qpu1.noise"</literal></pragma>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<pragma>pragma <name><name>ibm</name><operator>.</operator><name>user</name></name> <name>alice</name> <name>account</name> <literal type="number">12345678</literal></pragma>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<pragma>pragma <name><name>ibm</name><operator>.</operator><name>max_temp</name></name> <name>qpu</name> <literal type="number">0.4</literal></pragma>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<pragma>pragma <name>a</name> <name>b</name> <name>c</name></pragma>
+<decl_stmt><decl><type><name><name>qubit</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></type> <name>q</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<pragma>pragma <literal type="string">"a"</literal> <literal type="string">"b"</literal> <literal type="string">"c"</literal></pragma>
+<decl_stmt><decl><type><name><name>qubit</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></type> <name>q</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

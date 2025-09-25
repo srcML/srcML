@@ -392,6 +392,7 @@ tokens {
     QASM_WAVEFORM_TYPE;
     QASM_PORT_TYPE;
     QASM_FRAME_TYPE;
+    QASM_LET_TYPE;
 
     QASM_CONST;
     QASM_INPUT;
@@ -870,6 +871,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "pragma"       , QASM_PRAGMA        , LANGUAGE_OPENQASM },
         { "reset"        , QASM_RESET         , LANGUAGE_OPENQASM },
 
+        { "true"         , LITERAL_TRUE       , LANGUAGE_OPENQASM },
+        { "false"        , LITERAL_FALSE      , LANGUAGE_OPENQASM },
+
         { "->"           , QASM_ARROW         , LANGUAGE_OPENQASM },
         { "@"            , QASM_MODIFIER      , LANGUAGE_OPENQASM },
         //{ "$"            , QASM_QUBIT_LITERAL , LANGUAGE_OPENQASM },
@@ -890,6 +894,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "waveform"     , QASM_WAVEFORM_TYPE , LANGUAGE_OPENQASM },
         { "port"         , QASM_PORT_TYPE     , LANGUAGE_OPENQASM },
         { "frame"        , QASM_FRAME_TYPE    , LANGUAGE_OPENQASM },
+        { "let"          , QASM_LET_TYPE      , LANGUAGE_OPENQASM },
         
         { "const"        , QASM_CONST         , LANGUAGE_OPENQASM },
         { "input"        , QASM_INPUT         , LANGUAGE_OPENQASM },

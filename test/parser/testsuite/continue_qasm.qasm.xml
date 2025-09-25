@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="continue" filename="continue_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<continue>continue;</continue>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<while>while <condition>(<expr><name>a</name></expr>)</condition> <block>{<block_content>
+    <continue>continue;</continue>
+</block_content>}</block></while>
+</unit>
+
+</unit>

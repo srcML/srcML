@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="delay" filename="delay_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<delay>delay<index>[<expr><name>g</name></expr>]</index>;</delay>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<delay>delay<index>[<expr><literal type="number">2</literal><operator>*</operator><name>g</name></expr>]</index>;</delay>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<delay>delay<index>[<expr><literal type="number">200dt</literal></expr>]</index> <argument_list type="quantum"><argument><expr><name><name>q</name><index>[<expr><literal type="number">0</literal><operator>:</operator><literal type="number">3</literal></expr>]</index></name></expr></argument></argument_list>;</delay>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<delay>delay<index>[<expr><name>middle_stretch</name></expr>]</index> <argument_list type="quantum"><argument><expr><literal type="qubit">$0</literal></expr></argument></argument_list>;</delay>
+</unit>
+
+</unit>

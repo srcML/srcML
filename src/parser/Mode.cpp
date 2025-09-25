@@ -153,4 +153,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_CALL_EXPR_QASM             (
 const srcMLState::MODE_TYPE ModeStack::MODE_QUANTUM_CALL_EXPR_STMT_QASM        (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_MODIFIER_QASM                      (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_ARGUMENT_QASM                      (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_SWITCH_QASM                        (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_INIT_QASM                          (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_PRAGMA_QASM                        (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_B_QASM                             (bit(__COUNTER__));

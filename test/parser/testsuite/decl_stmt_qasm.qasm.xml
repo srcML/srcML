@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="decl_stmt" filename="decl_stmt_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>qubit</name></type> <name>q</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>qubit</name><index>[<expr><literal type="number">20</literal></expr>]</index></name></type> <name>qubit_array</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>qreg</name></type> <name>q</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>qreg</name></type> <name><name>q_a</name><index>[<expr><literal type="number">3</literal></expr>]</index></name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>int</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>int</name><index>[<expr><literal type="number">32</literal></expr>]</index></name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>float</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>float</name><index>[<expr><literal type="number">32</literal></expr>]</index></name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>bit</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>bit</name><index>[<expr><literal type="number">3</literal></expr>]</index></name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>creg</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>creg</name></type> <name><name>b</name><index>[<expr><literal type="number">3</literal></expr>]</index></name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>bool</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>bool</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></type> <name>b</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>bool</name></type> <name>t</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>bool</name></type> <name>f</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>uint</name></type> <name>runtime_u</name> <init>= <expr><literal type="number">2</literal></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>const</specifier> <name>unit</name></type> <name>SIZE</name> <init>= <expr><literal type="number">4</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>angle</name></type> <name>my_machine_angle</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>angle</name><index>[<expr><literal type="number">20</literal></expr>]</index></name></type> <name>my_angle</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><specifier>const</specifier> <name><name>bit</name><index>[<expr><name>SIZE</name> <operator>-</operator> <literal type="number">1</literal></expr>]</index></name></type> <name>b2</name> <init>= <expr><name><name>u1</name><index>[<expr><literal type="number">0</literal><operator>:</operator><literal type="number">3</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>duration</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>duration</name><index>[<expr><literal type="number">10</literal></expr>]</index></name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>stretch</name></type> <name>a</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>stretch</name><index>[<expr><literal type="number">10</literal></expr>]</index></name></type> <name>b</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>frame</name></type> <name>d0f</name> <init>= <expr><call><name>newframe</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>waveform</name></type> <name>xp</name> <init>= <expr><call><name>gaussian</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>let</name></type> <name>myreq</name> <init>= <expr><name><name>q</name><index>[<expr><literal type="number">1</literal><operator>:</operator><literal type="number">4</literal></expr>]</index></name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name>port</name></type> <name>d0</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name><name>complex</name><index>[<expr><name><name>float</name><index>[<expr><literal type="number">64</literal></expr>]</index></name></expr>]</index></name></type> <name>c</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><name><name>array</name><index>[<expr><name><name>int</name><index>[<expr><literal type="number">32</literal></expr>]</index></name></expr>, <expr><literal type="number">5</literal></expr>]</index></name></type> <name>arr</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>array</name><index>[<expr><name><name>int</name><index>[<expr><literal type="number">32</literal></expr>]</index></name></expr>, <expr><literal type="number">5</literal></expr>]</index></name></type> <name>myArray</name> <init>= <expr><block>{<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>, <expr><literal type="number">4</literal></expr>}</block></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name><name>array</name><index>[<expr><name><name>float</name><index>[<expr><literal type="number">32</literal></expr>]</index></name></expr>, <expr><literal type="number">3</literal></expr>, <expr><literal type="number">2</literal></expr>]</index></name></type> <name>multiDim</name> <init>= <expr><block>{<expr><block>{<expr><literal type="number">1.1</literal></expr>, <expr><literal type="number">1.2</literal></expr>}</block></expr>, <expr><block>{<expr><literal type="number">2.1</literal></expr>, <expr><literal type="number">2.2</literal></expr>}</block></expr>, <expr><block>{<expr><literal type="number">3.1</literal></expr>, <expr><literal type="number">3.2</literal></expr>}</block></expr>}</block></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><type><specifier>input</specifier> <name>int</name></type> <name>basis</name></decl>;</decl_stmt>
+<decl_stmt><decl><type><specifier>output</specifier> <name>bit</name></type> <name>result</name></decl>;</decl_stmt>
+</unit>
+
+</unit>

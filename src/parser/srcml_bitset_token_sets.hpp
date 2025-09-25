@@ -233,7 +233,8 @@ token_set(srcMLParser, types_openqasm_token_set,
     srcMLParser::QASM_ANGLE_TYPE, srcMLParser::QASM_COMPLEX_TYPE,
     srcMLParser::QASM_DURATION_TYPE, srcMLParser::QASM_ARRAY_TYPE,
     srcMLParser::QASM_STRETCH_TYPE, srcMLParser::QASM_WAVEFORM_TYPE,
-    srcMLParser::QASM_PORT_TYPE, srcMLParser::QASM_FRAME_TYPE
+    srcMLParser::QASM_PORT_TYPE, srcMLParser::QASM_FRAME_TYPE,
+    srcMLParser::QASM_LET_TYPE
 )
 
 token_set(srcMLParser, annotatables_openqasm_token_set,
@@ -245,6 +246,7 @@ token_set(srcMLParser, annotatables_openqasm_token_set,
     srcMLParser::QASM_DURATION_TYPE, srcMLParser::QASM_ARRAY_TYPE,
     srcMLParser::QASM_STRETCH_TYPE, srcMLParser::QASM_WAVEFORM_TYPE,
     srcMLParser::QASM_PORT_TYPE, srcMLParser::QASM_FRAME_TYPE,
+    srcMLParser::QASM_LET_TYPE,
     srcMLParser::QASM_CONST,
     srcMLParser::QASM_INPUT,
     srcMLParser::QASM_MUTABLE,

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="block" filename="block_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<block>{<block_content>
+    <decl_stmt><decl><type><name>int</name></type> <name>ii</name> <init>= <expr><literal type="number">100</literal></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><name>ii</name> <operator>*=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+</block_content>}</block>
+</unit>
+
+</unit>

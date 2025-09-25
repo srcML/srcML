@@ -301,7 +301,35 @@ LANGUAGE_PYTHON while_py
 LANGUAGE_PYTHON with_py
 LANGUAGE_PYTHON yield_py
 
+# OpenQASM
+LANGUAGE_OPENQASM attribute_qasm
+LANGUAGE_OPENQASM barrier_qasm
+LANGUAGE_OPENQASM block_qasm
+LANGUAGE_OPENQASM box_qasm
+LANGUAGE_OPENQASM break_qasm
+LANGUAGE_OPENQASM calibration_qasm
+LANGUAGE_OPENQASM call_qasm
+LANGUAGE_OPENQASM comment_qasm
+LANGUAGE_OPENQASM continue_qasm
+LANGUAGE_OPENQASM decl_stmt_qasm
+LANGUAGE_OPENQASM defcalgrammar_qasm
+LANGUAGE_OPENQASM end_qasm
+LANGUAGE_OPENQASM expression_qasm
+LANGUAGE_OPENQASM extern_qasm
+LANGUAGE_OPENQASM for_qasm
+LANGUAGE_OPENQASM function_qasm
+LAMGUAGE_OPENQASM gate_qasm
+LANGUAGE_OPENQASM if_qasm
+LANGUAGE_OPENQASM include_qasm
+LANGUAGE_OPENQASM literal_qasm
+LANGUAGE_OPENQASM measure_qasm
 LANGUAGE_OPENQASM nop_qasm
+LANGUAGE_OPENQASM operator_qasm
+LANGUAGE_OPENQASM pragma_qasm
+LANGUAGE_OPENQASM reset_qasm
+LANGUAGE_OPENQASM switch_qasm
+LANGUAGE_OPENQASM version_qasm
+LANGUAGE_OPENQASM while_qasm
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

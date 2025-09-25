@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="expression" filename="expression_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><name>int</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><name><name>int</name><index>[<expr><literal type="number">16</literal></expr>]</index></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><name><name>angle</name><index>[<expr><literal type="number">32</literal></expr>]</index></name><operator>(</operator><name><name>bit</name><index>[<expr><literal type="number">32</literal></expr>]</index></name><operator>(</operator><name><name>uint</name><index>[<expr><literal type="number">32</literal></expr>]</index></name><operator>(</operator><name>a</name><operator>)</operator><operator>)</operator><operator>)</operator> <operator>!=</operator> <name><name>angle</name><index>[<expr><literal type="number">32</literal></expr>]</index></name><operator>(</operator><name>a</name><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><name><name>two</name><index>[<expr><block>{<expr><literal type="number">0</literal></expr>, <expr><literal type="number">3</literal></expr>, <expr><literal type="number">5</literal></expr>}</block></expr>]</index></name></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<expr_stmt><expr><call><name>durationof</name><argument_list>(<argument><expr><block>{<expr_stmt><expr><call><name>x</name> <argument_list type="quantum"><argument><expr><literal type="qubit">$3</literal></expr></argument></argument_list></call></expr>;</expr_stmt>}</block></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

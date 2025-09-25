@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="for" filename="for_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<for>for <control><init><decl><type><name><name>int</name><index>[<expr><literal type="number">32</literal></expr>]</index></name></type> <name>i</name></decl></init> <range>in <expr><block>{<expr><literal type="number">1</literal></expr>, <expr><literal type="number">5</literal></expr>, <expr><literal type="number">10</literal></expr>}</block></expr></range></control> <block>{<block_content>
+    <expr_stmt><expr><name>b</name> <operator>+=</operator> <name>i</name></expr>;</expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<for>for <control><init><decl><type><name><name>float</name><index>[<expr><literal type="number">64</literal></expr>]</index></name></type> <name>f</name></decl></init> <range>in <expr><name>my_floats</name></expr></range></control> <block>{<block_content>
+    <comment type="line">// do something with 'f'</comment>
+</block_content>}</block></for>
+</unit>
+
+</unit>

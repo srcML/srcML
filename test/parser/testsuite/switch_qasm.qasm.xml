@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="switch" filename="switch_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<switch>switch <condition>(<expr><name>i</name></expr>)</condition> <block>{<block_content>
+<case>case <expr><literal type="number">1</literal></expr>, <expr><literal type="number">3</literal></expr>, <expr><literal type="number">5</literal></expr> <block>{<block_content>
+  <comment type="line">// OpenQASM3 statement(s)</comment>
+</block_content>}</block></case>
+<case>case <expr><literal type="number">2</literal></expr>, <expr><literal type="number">4</literal></expr>, <expr><literal type="number">6</literal></expr> <block>{<block_content>
+  <comment type="line">// OpenQASM3 statement(s)</comment>
+</block_content>}</block></case>
+<case>case <expr><operator>-</operator><literal type="number">1</literal></expr> <block>{<block_content>
+  <comment type="line">// OpenQASM3 statement(s)</comment>
+</block_content>}</block></case>
+<default>default <block>{<block_content>
+  <comment type="line">// OpenQASM3 statement(s)</comment>
+</block_content>}</block></default>
+</block_content>}</block></switch>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<switch>switch <condition>(<expr><name>i</name></expr>)</condition> <block>{<block_content>
+  <case>case <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">5</literal></expr>, <expr><literal type="number">12</literal></expr> <block>{<block_content>
+  </block_content>}</block></case>
+  <case>case <expr><literal type="number">3</literal></expr> <block>{<block_content>
+    <switch>switch <condition>(<expr><name>j</name></expr>)</condition> <block>{<block_content>
+      <case>case <expr><literal type="number">10</literal></expr>, <expr><literal type="number">15</literal></expr>, <expr><literal type="number">20</literal></expr> <block>{<block_content>
+        <expr_stmt><expr><call><name>h</name> <argument_list type="quantum"><argument><expr><name>q</name></expr></argument></argument_list></call></expr>;</expr_stmt>
+      </block_content>}</block></case>
+    </block_content>}</block></switch>
+  </block_content>}</block></case>
+</block_content>}</block></switch>
+</unit>
+
+</unit>

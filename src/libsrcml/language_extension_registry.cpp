@@ -45,6 +45,7 @@ language_extension_registry::language_extension_registry() : registered_language
     { "pyw",  Language::LANGUAGE_PYTHON },
     { "pyz",  Language::LANGUAGE_PYTHON },
     { "qasm", Language::LANGUAGE_OPENQASM },
+    { "inc",  Language::LANGUAGE_OPENQASM },
     /* { "m",    Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C } */ }), use_cpp_for_c(false)
     {}
 
@@ -192,6 +193,7 @@ void language_extension_registry::register_standard_file_extensions() {
     register_user_ext("pyz",  Language::LANGUAGE_PYTHON);
 
     register_user_ext("qasm", Language::LANGUAGE_OPENQASM);
+    register_user_ext("inc",  Language::LANGUAGE_OPENQASM);
 }
 
 /**

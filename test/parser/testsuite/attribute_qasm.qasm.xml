@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="OpenQASM" url="attribute" filename="attribute_qasm">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<decl_stmt><decl><attribute>@<expr><name>bind</name> <name><name>IOPORT</name><index>[<expr><literal type="number">3</literal><operator>:</operator><literal type="number">2</literal></expr>]</index></name></expr></attribute>
+<type><specifier>input</specifier> <name><name>bit</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></type> <name>control_flags</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate><attribute>@<expr><name><name>openqasm</name><operator>.</operator><name>reversible</name></name></expr></attribute>
+gate <name>multiply</name> <parameter_list type="quantum"><parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>, <parameter><decl><name>x</name></decl></parameter></parameter_list> <block>{<block_content>
+   <expr_stmt><expr><name>x</name> <operator>=</operator> <name>a</name> <operator>*</operator> <name>b</name></expr>;</expr_stmt>
+</block_content>}</block></gate>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<box><attribute>@<expr><name><name>openqasm</name><operator>.</operator><name>noswap</name></name></expr></attribute>
+box <block>{<block_content>
+   <expr_stmt><expr><call><name>rx</name><argument_list>(<argument><expr><name>pi</name></expr></argument>)</argument_list> <argument_list type="quantum"><argument><expr><name><name>q</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument></argument_list></call></expr>;</expr_stmt>
+   <expr_stmt><expr><call><name>cnot</name> <argument_list type="quantum"><argument><expr><name><name>q</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>, <argument><expr><name><name>q</name><index>[<expr><literal type="number">3</literal></expr>]</index></name></expr></argument></argument_list></call></expr>;</expr_stmt>
+</block_content>}</block></box>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="OpenQASM">
+<gate type="defcal"><attribute>@<expr><name><name>openqasm</name><operator>.</operator><name>crosstalk</name></name></expr></attribute>
+<attribute>@<expr><name><name>openqasm</name><operator>.</operator><name>noise</name></name> <name>profile</name> <literal type="string">"gate_noise.qnf"</literal></expr></attribute>
+defcal <name>noisy_gate</name> <parameter_list type="quantum"><parameter><decl><literal type="qubit">$0</literal></decl></parameter> <parameter><decl><literal type="qubit">$1</literal></decl></parameter></parameter_list> <block>{<block_content> </block_content>}</block></gate>
+</unit>
+
+</unit>
