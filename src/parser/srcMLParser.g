@@ -192,7 +192,7 @@ enum STMT_TYPE {
 };
 
 enum CALL_TYPE {
-    NOCALL, CALL, MACRO, COMMAND
+    NOCALL, CALL, MACRO
 };
 
 // position in output stream
@@ -1444,13 +1444,10 @@ start_cmake[] {
         static const std::array<Rule, CMAKE_RULES_SIZE> cmake_rules = getCMakeRules<CMAKE_RULES_SIZE>();
 
         // invoke the table to handle keywords (if the next token is a left parenthesis)
-        if (inMode(MODE_STATEMENT)) {
+        if (LA(1) != NAME && inMode(MODE_STATEMENT)) {
             auto token = LA(1);
-            if (token == NAME) {
-                init_command_cmake();
-                return;
-            }
-            else if (next_token() == LPAREN) {
+
+            if (next_token() == LPAREN) {
                 const auto& rule = cmake_rules[token];
                 if (rule.elementToken && processRule(rule)) {
                     return;
@@ -1465,9 +1462,9 @@ start_cmake[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
-        // CMake commands follow a similar syntax to calls
-        { type == COMMAND || (perform_call_check(type, isempty, command_count, -1) && type == COMMAND) }?
-        generic_command_cmake[command_count] |
+        // mark up built-in and generic CMake commands
+        { inMode(MODE_STATEMENT) }?
+        init_command_cmake |
 
         // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
         start
@@ -2951,10 +2948,7 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
             call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
 
             // call syntax succeeded
-            if (inLanguage(LANGUAGE_CMAKE))
-                type = COMMAND;
-            else
-                type = CALL;
+            type = CALL;
 
             // call syntax succeeded, however post-call token is not legitimate
             if (
@@ -18088,6 +18082,7 @@ end_down_to_end_token_cmake[] { ENTRY_DEBUG } :
   generic_command_cmake
 
   Handles a command in CMake, which follow a similar syntax to calls.
+  Not used directly, but called by init_command_cmake.
 */
 generic_command_cmake[int command_count = 1] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -18231,7 +18226,7 @@ cmake_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 /*
   cmake_option
 
-  Handles a CMake option.  The full list of options is in available in the keyword lexer.
+  Handles a CMake option.
 */
 cmake_option[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
@@ -18553,156 +18548,165 @@ cmake_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 ;
 
-init_command_cmake[] { ENTRY_DEBUG } :
-    {
-        CMakeOptionsSet& data = CMakeOptionsSet::getInstance();
-        if (data.checkCommand(LT(1)->getText())) {
-            builtin_command_cmake();
-        }
-        else {
-            generic_command_cmake();
-        }
-    }
+/*
+  init_command_cmake
+
+  Differentiates a built-in CMake command from a "generic" CMake command.
+  Built-in commands have special markup (including options).
+*/
+init_command_cmake[] { CMakeOptionsSet& data = CMakeOptionsSet::getInstance(); ENTRY_DEBUG } :
+        { data.checkCommand(LT(1)->getText()) }?
+        builtin_command_cmake |
+
+        generic_command_cmake
 ;
 
+/*
+  builtin_command_cmake
 
-builtin_command_cmake[] { CompleteElement element(this); 
-                          CMakeOptionsSet& data = CMakeOptionsSet::getInstance(); 
-                          std::string command_name = "";
-                          ENTRY_DEBUG } :
-    {
-        // start command tag
-        startNewMode(MODE_STATEMENT | MODE_ARGUMENT | MODE_LIST | MODE_COMMAND_CMAKE);
-        startElement(SCOMMAND);
+  Handles a built-in command in CMake.
+*/
+builtin_command_cmake[] {
+        CompleteElement element(this); 
+        CMakeOptionsSet& data = CMakeOptionsSet::getInstance(); 
+        std::string command_name = "";
 
-        // Save what command this is
-        command_name = LT(1)->getText();
-    }
+        ENTRY_DEBUG
+} :
+        {
+            // start the command
+            startNewMode(MODE_STATEMENT | MODE_ARGUMENT | MODE_LIST | MODE_COMMAND_CMAKE);
 
-    function_identifier
+            startElement(SCOMMAND);
 
-    {
-        startNewMode(MODE_ARGUMENT_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
-        // start the argument list
-        startElement(SARGUMENT_LIST);
-    }
+            // save the name of the current command
+            command_name = LT(1)->getText();
+        }
 
-    LPAREN
+        function_identifier
 
-    {
-        // identify which command-structure this is
-        std::string command_type = LT(1)->getText();
+        {
+            // start the argument list
+            startNewMode(MODE_ARGUMENT_LIST | MODE_INTERNAL_END_PAREN | MODE_END_ONLY_AT_RPAREN);
 
-        // get the vector of command structure
-        std::vector<std::string> values = data.getCommandVector(command_name, command_type);
+            startElement(SARGUMENT_LIST);
+        }
 
-        size_t value_position = 0;
+        LPAREN
 
-        // Processes everything until the RPAREN
-        while (LA(1) != RPAREN && LA(1) != 1) {
-            // First, gather all possible options in the current target set
-            std::vector<std::string> possible_options;
-            if (value_position < values.size()) {
-                possible_options = split(values[value_position],':');
-            }
-            std::string current_token = LT(1)->getText();
+        {
+            // identify which command-structure this is
+            std::string command_type = LT(1)->getText();
 
-            // Check if current token is an option or not
-            bool isOption = false;
-            std::string option;
-            for(size_t i = 0; i < possible_options.size(); ++i) {
-                option = possible_options[i];
-                if (split(option,'|')[0] == current_token) {
-                    isOption = true;
-                    break;
-                }
-            }
+            // get the vector of command structure
+            std::vector<std::string> values = data.getCommandVector(command_name, command_type);
 
+            size_t value_position = 0;
 
-            if (!isOption) {
-                cmake_argument();
-            }
-            else {
-                int num_of_values = std::stoi(split(option,'|')[1]);
+            while (LA(1) != RPAREN && LA(1) != 1) {
+                // first, gather all possible options in the current target set
+                std::vector<std::string> possible_options;
 
-                // process option
-                startNewMode(MODE_OPTION_CMAKE);
-                startElement(SOPTION);
+                if (value_position < values.size())
+                    possible_options = split(values[value_position],':');
 
-                startNewMode(MODE_VARIABLE_NAME);
-                startElement(SNAME);
+                std::string current_token = LT(1)->getText();
 
-                consume();
-
-                endMode(MODE_VARIABLE_NAME);
-
-                if (num_of_values >= 0) {
-                    for (int i = 0; i < num_of_values; ++i) {
-                        cmake_argument();
+                // check if current token is an option or not
+                bool isOption = false;
+                std::string option;
+                for (size_t i = 0; i < possible_options.size(); ++i) {
+                    option = possible_options[i];
+                    if (split(option,'|')[0] == current_token) {
+                        isOption = true;
+                        break;
                     }
                 }
+
+
+                if (!isOption)
+                    cmake_argument();
                 else {
-                    while(true) {
-                        std::string next_value = LT(1)->getText();
+                    int num_of_values = std::stoi(split(option,'|')[1]);
 
-                        if (next_value == ")") {
-                            break;
+                    // start the option
+                    startNewMode(MODE_OPTION_CMAKE);
+                    startElement(SOPTION);
+
+                    // start the option name
+                    startNewMode(MODE_VARIABLE_NAME);
+                    startElement(SNAME);
+
+                    consume();
+
+                    endMode(MODE_VARIABLE_NAME);
+
+                    if (num_of_values >= 0) {
+                        for (int i = 0; i < num_of_values; ++i) {
+                            cmake_argument();
                         }
-                        
-                        bool isAnOption = false;
+                    }
+                    else {
+                        while(true) {
+                            std::string next_value = LT(1)->getText();
 
-                        // first, check if value is an option in current set
-                        for (auto next_option : possible_options) {
-                            if (split(next_option,'|')[0] == next_value) {
-                                isAnOption = true;
+                            if (next_value == ")")
                                 break;
-                            }
-                        }
+                            
+                            bool isAnOption = false;
 
-                        // then, check if there is a next set
-                        if (value_position < values.size() - 1) {
-                            // If there is, get that set and then check if value is an option in it
-                            std::vector<std::string> next_possible_options = split(values[value_position+1],':');
-                            for (auto next_option : next_possible_options) {
+                            // first, check if value is an option in current set
+                            for (auto next_option : possible_options) {
                                 if (split(next_option,'|')[0] == next_value) {
                                     isAnOption = true;
                                     break;
                                 }
                             }
-                        }
 
-                        // Finally, if it's an option, leave
-                        if (isAnOption) {
+                            // then, check if there is a next set
+                            if (value_position < values.size() - 1) {
+                                // If there is, get that set and then check if value is an option in it
+                                std::vector<std::string> next_possible_options = split(values[value_position+1],':');
+                                for (auto next_option : next_possible_options) {
+                                    if (split(next_option,'|')[0] == next_value) {
+                                        isAnOption = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // finally, if it's an option, leave
+                            if (isAnOption)
+                                break;
+
+                            cmake_argument();
+                        }
+                    }
+
+                    endDownToMode(MODE_OPTION_CMAKE);
+                    endMode(MODE_OPTION_CMAKE);
+
+                    std::string next_value = LT(1)->getText();
+                    bool done_with_option_set = true;
+                    for (auto next_option : possible_options) {
+                        if (split(next_option,'|')[0] == next_value) {
+                            done_with_option_set = false;
                             break;
                         }
-                        cmake_argument();
                     }
-                }
 
-                endDownToMode(MODE_OPTION_CMAKE);
-                endMode(MODE_OPTION_CMAKE);
-
-                std::string next_value = LT(1)->getText();
-                bool done_with_option_set = true;
-                for (auto next_option : possible_options) {
-                    if (split(next_option,'|')[0] == next_value) {
-                        done_with_option_set = false;
-                        break;
-                    }
-                }
-                if (done_with_option_set) {
-                    ++value_position;
+                    if (done_with_option_set)
+                        ++value_position;
                 }
             }
+
+            endDownToMode(MODE_ARGUMENT_LIST);
         }
 
-        endDownToMode(MODE_ARGUMENT_LIST);
-    }
+        RPAREN
 
-    RPAREN
-
-    {
-        endDownToMode(MODE_COMMAND_CMAKE);
-        endMode(MODE_COMMAND_CMAKE);
-    }
+        {
+            endDownToMode(MODE_COMMAND_CMAKE);
+            endMode(MODE_COMMAND_CMAKE);
+        }
 ;
