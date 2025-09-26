@@ -244,7 +244,15 @@ public:
     }
 
     std::vector<std::string> getCommandVector(std::string command_name, std::string command_type) {
-        return data[command_name][command_type];
+        if (data[command_name].find(command_type) != data[command_name].end()) {
+            return data[command_name][command_type];
+        }
+        else if (data[command_name].find("_") != data[command_name].end()) {
+            return data[command_name]["_"];
+        }
+        else {
+            return std::vector<std::string>();
+        }
     }
 
 
@@ -267,7 +275,9 @@ private:
                 std::string command_type = split(command_type_option,'|')[0];
                 data[command_name].insert(std::make_pair(command_type,std::vector<std::string>()));
                 for (size_t i = 1; i < values.size(); ++i) {
-                    data[command_name][command_type].push_back(values[i]);
+                    if (values[i] != "_") {
+                        data[command_name][command_type].push_back(values[i]);
+                    }
                 }
             }
         }
