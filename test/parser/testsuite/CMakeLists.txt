@@ -18,7 +18,8 @@ foreach(PATH IN ITEMS ${PARSE_TESTS})
     # Set newline at LF since these are srcML files and srcML uses LF (as does XML)
     # Do not use file(COPY) as it changes the line endings
     # Do not use COPYFILE_ONLY as it changes the line endings
-    configure_file(${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} NEWLINE_STYLE LF)
+    # Use @ONLY so srcML CMake parser tests keep variables intact (e.g., ${A})
+    configure_file(${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} @ONLY NEWLINE_STYLE LF)
 endforeach()
 
 set(TESTFILES)
