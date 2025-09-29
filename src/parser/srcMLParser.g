@@ -244,7 +244,15 @@ public:
     }
 
     std::vector<std::string> getCommandVector(std::string command_name, std::string command_type) {
-        return data[command_name][command_type];
+        if (data[command_name].find(command_type) != data[command_name].end()) {
+            return data[command_name][command_type];
+        }
+        else if (data[command_name].find("_") != data[command_name].end()) {
+            return data[command_name]["_"];
+        }
+        else {
+            return std::vector<std::string>();
+        }
     }
 
 
@@ -262,10 +270,15 @@ private:
             if (data.find(command_name) != data.end()) {
                 data.insert(std::make_pair(command_name,std::unordered_map<std::string,std::vector<std::string>>()));
             }
-            std::string command_type = split(values[1],'|')[0];
-            data[command_name].insert(std::make_pair(command_type,std::vector<std::string>()));
-            for (size_t i = 1; i < values.size(); ++i) {
-                data[command_name][command_type].push_back(values[i]);
+
+            for (std::string command_type_option : split(values[1],':')) {
+                std::string command_type = split(command_type_option,'|')[0];
+                data[command_name].insert(std::make_pair(command_type,std::vector<std::string>()));
+                for (size_t i = 1; i < values.size(); ++i) {
+                    if (values[i] != "_") {
+                        data[command_name][command_type].push_back(values[i]);
+                    }
+                }
             }
         }
 
