@@ -115,6 +115,7 @@ header "pre_include_cpp" {
 
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
+#include "OptionsConfig.h"
 #include <string>
 #include <string_view>
 #include <deque>
@@ -125,6 +126,7 @@ header "post_include_hpp" {
 #include <srcml_options.hpp>
 #include <cstdlib>
 #include <fstream>
+#include <filesystem>
 #include <unordered_map>
 #undef CONST
 #undef VOID
@@ -258,10 +260,15 @@ public:
 
 private:
     CMakeOptionsSet() {
-        std::ifstream in("cmake_options.csv");
-        if (!in.is_open()) {
+        std::ifstream in;
+
+        if (std::filesystem::exists(CMAKE_OPTIONS_FILE_INSTALL))
+            in.open(CMAKE_OPTIONS_FILE_INSTALL);
+        else
+            in.open(CMAKE_OPTIONS_FILE_BUILD);
+
+        if (!in.is_open())
             std::cerr << "Could not locate the CMake Options file" << std::endl;
-        }
 
         std::string line;
         while (std::getline(in, line)) {
