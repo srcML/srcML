@@ -826,8 +826,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
 
         // CMake options
-        //#include "CMakeOptionsList.txt"
-        { "___"          , CMAKE_OPTIONS     , LANGUAGE_CMAKE  },
+        { "___"          , CMAKE_OPTIONS     , LANGUAGE_CMAKE },
 
         // CMake operators
         { "AND",                    OPERATORS, LANGUAGE_CMAKE },
