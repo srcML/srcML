@@ -306,6 +306,7 @@ LANGUAGE_CMAKE boolean_cmake
 LANGUAGE_CMAKE break_cmake
 LANGUAGE_CMAKE comment_cmake
 LANGUAGE_CMAKE continue_cmake
+LANGUAGE_CMAKE delimiter_cmake
 LANGUAGE_CMAKE foreach_cmake
 LANGUAGE_CMAKE function_cmake
 LANGUAGE_CMAKE if_cmake

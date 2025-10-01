@@ -898,6 +898,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "notfound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
 
         // CMake
+        { ";"            , WS                , LANGUAGE_CMAKE },
         { "block"        , CMAKE_BLOCK       , LANGUAGE_CMAKE },
         { "endblock"     , CMAKE_ENDBLOCK    , LANGUAGE_CMAKE },
         { "endforeach"   , CMAKE_ENDFOREACH  , LANGUAGE_CMAKE },

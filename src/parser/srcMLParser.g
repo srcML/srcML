@@ -18154,14 +18154,7 @@ cmake_argument_list[] { ENTRY_DEBUG } :
                 if (!inMode(MODE_ARGUMENT_LIST))
                     endDownToMode(MODE_ARGUMENT_LIST);
             }
-            cmake_argument |
-
-            // semicolons can separate arguments
-            {
-                if (!inMode(MODE_ARGUMENT_LIST))
-                    endDownToMode(MODE_ARGUMENT_LIST);
-            }
-            TERMINATE
+            cmake_argument
         )*
 
         {
@@ -18276,13 +18269,6 @@ cmake_option[] { CompleteElement element(this); ENTRY_DEBUG } :
                 break;
             }
             CMAKE_OPTIONS |
-
-            // semicolons can separate arguments
-            {
-                if (!inMode(MODE_OPTION_CMAKE))
-                    endDownToMode(MODE_OPTION_CMAKE);
-            }
-            TERMINATE |
 
             {
                 if (!inMode(MODE_OPTION_CMAKE))
