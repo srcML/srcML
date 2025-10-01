@@ -18,7 +18,15 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="range">RANGE</range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="range">RANGE <expr><name>total</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="range">RANGE <expr><name>total</name></expr></range>)</control><block/>endforeach()</foreach>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -26,7 +34,15 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="range">RANGE <expr><name>start</name></expr> <expr><name>stop</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in">IN</range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in">IN</range>)</control><block/>endforeach()</foreach>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -34,7 +50,15 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in lists">IN LISTS</range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in lists">IN LISTS <expr><name>list1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in lists">IN LISTS <expr><name>list1</name></expr></range>)</control><block/>endforeach()</foreach>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -42,7 +66,15 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in lists">IN LISTS <expr><name>list1</name></expr> <expr><name>list2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in items">IN ITEMS</range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in items">IN ITEMS</range>)</control><block/>endforeach()</foreach>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -50,7 +82,15 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in items">IN ITEMS <expr><name>item1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in items">IN ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in items">IN ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr></range>)</control><block/>endforeach()</foreach>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -58,7 +98,15 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in lists items">IN LISTS <expr><name>list1</name></expr> ITEMS <expr><name>item1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in lists items">IN LISTS <expr><name>list1</name></expr> <expr><name>list2</name></expr> ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in lists items">IN LISTS <expr><name>list1</name></expr> <expr><name>list2</name></expr> ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr></range>)</control><block/>endforeach()</foreach>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -66,7 +114,15 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in items lists">IN ITEMS <expr><name>item1</name></expr> LISTS <expr><name>list1</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <foreach>foreach <control>(<expr><name>loop_var</name></expr> <range type="in items lists">IN ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr> LISTS <expr><name>list1</name></expr> <expr><name>list2</name></expr></range>)</control><block/>endforeach()</foreach>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach <control>(<expr><name>release_lib</name></expr> <expr><name>debug_lib</name></expr> <range type="in items lists">IN ITEMS <expr><name>item1</name></expr> <expr><name>item2</name></expr> LISTS <expr><name>list1</name></expr> <expr><name>list2</name></expr></range>)</control><block/>endforeach()</foreach>
 </unit>
 
 <unit revision="1.0.0" language="CMake">

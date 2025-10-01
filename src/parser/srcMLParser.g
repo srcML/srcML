@@ -18298,7 +18298,7 @@ cmake_option_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
 
   Handles a control in CMake.  Used in foreach statements.
 */
-cmake_control[] { ENTRY_DEBUG } :
+cmake_control[] { bool has_type = perform_overview_range_type_check_cmake(); size_t num_expressions = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_CONTROL | MODE_EXPECT);
 
@@ -18307,22 +18307,27 @@ cmake_control[] { ENTRY_DEBUG } :
 
         LPAREN
 
-        (
-            // control with only a single expression (no range)
-            { next_token() == RPAREN }?
-            cmake_expression |
+        (options { greedy = true; } :
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            // control with a range that does not use the RANGE keyword
+            { !has_type && num_expressions != 0 }?
+            cmake_range |
 
             // control using the RANGE keyword (lone)
-            { next_token() == CMAKE_RANGE }?
-            (cmake_expression cmake_range_keyword) |
+            cmake_range_keyword |
 
             // control using the IN keyword (lone or with ITEMS and/or LISTS)
-            { next_token() == CMAKE_IN }?
-            (cmake_expression cmake_range_in) |
+            cmake_range_in |
 
-            // control with a single expression and a range
-            (cmake_expression cmake_range)
-        )
+            cmake_expression
+            {
+                ++num_expressions;
+            }
+        )*
 
         {
             if (inTransparentMode(MODE_CONTROL))
@@ -18344,6 +18349,37 @@ cmake_control[] { ENTRY_DEBUG } :
             startNewMode(MODE_STATEMENT | MODE_NEST);
         }
 ;
+
+/*
+  perform_overview_range_type_check_cmake
+
+  Determines if a CMake range contains "IN", "ITEMS", "LISTS", or "RANGE".
+*/
+perform_overview_range_type_check_cmake returns [bool has_type] {
+        has_type = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                if (LA(1) == CMAKE_IN || LA(1) == CMAKE_ITEMS || LA(1) == CMAKE_LISTS || LA(1) == CMAKE_RANGE) {
+                    has_type = true;
+                    break;
+                }
+
+                if (LA(1) == RPAREN || LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
 
 /*
   cmake_range
