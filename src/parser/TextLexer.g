@@ -197,6 +197,17 @@ NAME options { testLiterals = true; } :
 
 // Single-line comments (no EOL)
 LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; } : '/' 
+    // '/W*' and '/w*' are compiler flags (CMake only)
+    (
+        { inLanguage(LANGUAGE_CMAKE) && (LA(1) == 'W' || LA(1) == 'w') }?
+        ('W' | 'w')
+        {
+            $setType(CMAKE_COMPILER_FLAG);
+            mode = 0;
+        }
+        (options { greedy = true; } : ~(' ' | '\t' | '\n' | ';' | ')'))*
+    )?
+
     ('/' 
         {
             // '//' is an operator in Python

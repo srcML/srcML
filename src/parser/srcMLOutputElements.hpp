@@ -346,6 +346,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SBOOLEAN_VALUE_TRUE,           { "literal",           SRC, "type",            "boolean",  "value",        "true" }},
     { TOKEN::SBOOLEAN_VALUE_FALSE,          { "literal",           SRC, "type",            "boolean",  "value",       "false" }},
     { TOKEN::SCOMMAND,                      { "command",           SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SCOMPILER_FLAG_CMAKE,          { "flag",              SRC,      0,                    0,        0,             0 }},
     { TOKEN::SINCLUDE_CMAKE,                { "include",           SRC,      0,                    0,        0,             0 }},
     { TOKEN::SMACRO_DEFINITION,             { "macro_defn",        SRC,      0,                    0,        0,             0 }},
     { TOKEN::SOPTION,                       { "option",            SRC,      0,                    0,        0,             0 }},

@@ -814,6 +814,7 @@ tokens {
     SBOOLEAN_VALUE_TRUE;
     SBOOLEAN_VALUE_FALSE;
     SCOMMAND;
+    SCOMPILER_FLAG_CMAKE;
     SINCLUDE_CMAKE;
     SMACRO_DEFINITION;
     SOPTION;
@@ -18567,6 +18568,21 @@ cmake_scope[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  cmake_compiler_flag
+
+  Handles a compiler flag in CMake.  Supports "-", "--", and "/W*".
+*/
+cmake_compiler_flag[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCOMPILER_FLAG_CMAKE);
+        }
+
+        CMAKE_COMPILER_FLAG
+;
+
+/*
   cmake_expression
 
   Matches an expression in CMake.
@@ -18586,7 +18602,7 @@ cmake_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             { !inTransparentMode(MODE_COMMAND_CMAKE) }?
             cmake_option_as_name |
 
-            literals | compound_name
+            cmake_compiler_flag | literals | compound_name
         )
 ;
 

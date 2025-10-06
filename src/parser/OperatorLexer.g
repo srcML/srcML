@@ -122,7 +122,21 @@ OPERATORS options { testLiterals = true; } {
     )? |
 
     '+' ('+' | '=')? |
-    '-' ('-' | '=' | '>' ('*')? )? |
+
+    // Compiler flags can begin with '-' or '--' (CMake)
+    '-' (
+        { inLanguage(LANGUAGE_CMAKE) && LA(1) == '-' }?
+          '-' { inLanguage(LANGUAGE_CMAKE) }? (({ $setType(CMAKE_COMPILER_FLAG); } ~(' ' | '\t' | '\n' | ';' | ')'))*)
+        |
+        { inLanguage(LANGUAGE_CMAKE) }?
+          { $setType(CMAKE_COMPILER_FLAG); } (~(' ' | '\t' | '\n' | ';' | ')'))*
+        |
+          '-'
+        |
+          '='
+        |
+          '>' ('*')?
+    )? |
 
     // *, *=, ** (Python), **= (Python)
     '*' ({ inLanguage(LANGUAGE_PYTHON) }? '*')? ('=')? |

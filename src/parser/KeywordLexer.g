@@ -354,6 +354,7 @@ tokens {
 
     // CMake
     CMAKE_BLOCK;
+    CMAKE_COMPILER_FLAG;
     CMAKE_ENDBLOCK;
     CMAKE_ENDFOREACH;
     CMAKE_ENDFUNCTION;
@@ -825,8 +826,11 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "with"         , PY_WITH           , LANGUAGE_PYTHON },
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
 
-        // CMake options
-        { "___"          , CMAKE_OPTIONS     , LANGUAGE_CMAKE },
+        // CMake options; placeholder value to be replaced later
+        { "_-_-_"          , CMAKE_OPTIONS       , LANGUAGE_CMAKE },
+
+        // CMake strings; placeholder value to be replaced later
+        { "_-_-_-_"        , CMAKE_COMPILER_FLAG , LANGUAGE_CMAKE },
 
         // CMake operators
         { "AND",                    OPERATORS, LANGUAGE_CMAKE },
