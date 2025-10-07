@@ -9,8 +9,8 @@
 
 <unit revision="1.0.0" language="CMake">
 <function>function(<name>add_test</name> <parameter><expr><name>name</name></expr></parameter>)<block>
-    <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <name>name</name> <operator>STREQUAL</operator> <literal type="string">"NAME"</literal></expr>)</condition><block>
-        <command><name>_add_test</name><argument_list>(<argument><expr><name>${VALGRIND_EXECUTABLE}</name></expr></argument> <argument><expr><name>${VALGRIND_ARGS}</name></expr></argument> <argument><expr><name>${ARGV}</name></expr></argument>)</argument_list></command>
+    <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <name>name</name> <operator>STREQUAL</operator> <string>"NAME"</string></expr>)</condition><block>
+        <command><name>_add_test</name><argument_list>(<argument><expr><string>${<name>VALGRIND_EXECUTABLE</name>}</string></expr></argument> <argument><expr><string>${<name>VALGRIND_ARGS</name>}</string></expr></argument> <argument><expr><string>${<name>ARGV</name>}</string></expr></argument>)</argument_list></command>
         <return>return()</return>
     </block></if>endif()</if_stmt>
 </block>endfunction()</function>
@@ -21,11 +21,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<return>return(<propagate>PROPAGATE <expr><name>${result_var1}</name></expr></propagate>)</return>
+<return>return(<propagate>PROPAGATE <expr><string>${<name>result_var1</name>}</string></expr></propagate>)</return>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<return>return(<propagate>PROPAGATE <expr><name>${result_var1}</name></expr> <expr><name>${result_var2}</name></expr></propagate>)</return>
+<return>return(<propagate>PROPAGATE <expr><string>${<name>result_var1</name>}</string></expr> <expr><string>${<name>result_var2</name>}</string></expr></propagate>)</return>
 </unit>
 
 </unit>

@@ -127,12 +127,12 @@
 
 <unit revision="1.0.0" language="CMake">
 <foreach>foreach<control>(<expr><name>flag_var</name></expr> <range><expr><name>CMAKE_C_FLAGS</name></expr> <expr><name>CMAKE_CXX_FLAGS</name></expr></range>)</control><block>
-    <foreach>foreach<control>(<expr><name>config_name</name></expr> <range><expr><literal type="string">""</literal></expr> <expr><name>DEBUG</name></expr> <expr><name>RELEASE</name></expr> <expr><name>MINSIZE</name></expr> <expr><name>DEBINFO</name></expr></range>)</control><block>
-        <command><name>set</name><argument_list>(<argument><expr><name>var_name</name></expr></argument> <argument><expr><literal type="string">"${flag_var}"</literal></expr></argument>)</argument_list></command>
-        <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <literal type="string">"${config_name}"</literal> <operator>STREQUAL</operator> <literal type="string">""</literal></expr>)</condition><block>
-            <command><name>set</name><argument_list>(<argument><expr><name>var_name</name></expr></argument> <argument><expr><literal type="string">"${var_name}_${config_name}"</literal></expr></argument>)</argument_list></command>
+    <foreach>foreach<control>(<expr><name>config_name</name></expr> <range><expr><string>""</string></expr> <expr><name>DEBUG</name></expr> <expr><name>RELEASE</name></expr> <expr><name>MINSIZE</name></expr> <expr><name>DEBINFO</name></expr></range>)</control><block>
+        <command><name>set</name><argument_list>(<argument><expr><name>var_name</name></expr></argument> <argument><expr><string>"${<name>flag_var</name>}"</string></expr></argument>)</argument_list></command>
+        <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <string>"${<name>config_name</name>}"</string> <operator>STREQUAL</operator> <string>""</string></expr>)</condition><block>
+            <command><name>set</name><argument_list>(<argument><expr><name>var_name</name></expr></argument> <argument><expr><string>"${<name>var_name</name>}_${<name>config_name</name>}"</string></expr></argument>)</argument_list></command>
         </block></if>endif()</if_stmt>
-        <command><name>string</name><argument_list>(<option><name>REPLACE</name> <argument><expr><literal type="string">"/MD"</literal></expr></argument> <argument><expr><literal type="string">"${LIB_RT_OPTION}"</literal></expr></argument> <argument><expr><name>${var_name}</name></expr></argument> <argument><expr><literal type="string">"${${var_name}}"</literal></expr></argument></option>)</argument_list></command>
+        <command><name>string</name><argument_list>(<option><name>REPLACE</name> <argument><expr><string>"/MD"</string></expr></argument> <argument><expr><string>"${<name>LIB_RT_OPTION</name>}"</string></expr></argument> <argument><expr><string>${<name>var_name</name>}</string></expr></argument> <argument><expr><string>"${${<name>var_name</name>}}"</string></expr></argument></option>)</argument_list></command>
     </block>endforeach()</foreach>
 </block>endforeach()</foreach>
 </unit>

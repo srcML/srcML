@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="include">
 
 <unit revision="1.0.0" language="CMake">
-<include>include(<expr><literal type="string">"cmake/platform.cmake"</literal></expr>)</include>
+<include>include(<expr><string>"cmake/platform.cmake"</string></expr>)</include>
 </unit>
 
 <unit revision="1.0.0" language="CMake">

@@ -6,26 +6,26 @@
     <command><name>set</name><argument_list>(<argument><expr><name>OPENMP_STANDALONE_BUILD</name></expr></argument> <argument><expr><literal type="boolean" value="true">TRUE</literal></expr></argument>)</argument_list></command>
     <command><name>set</name><argument_list>(<argument><expr><name>LIBOMP_ENABLE_SHARED</name></expr></argument> <argument><expr><literal type="boolean" value="true">TRUE</literal></expr></argument>)</argument_list></command>
     <command><name>set</name><argument_list>(<option><name>CMAKE_BUILD_TYPE</name> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
-    <command><name>set</name><argument_list>(<argument><expr><name>OPENMP_ENABLE_LIBOMPTARGET</name></expr></argument> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument> <option><name>CACHE</name></option> <option><name>BOOL</name> <argument><expr><literal type="string">"LLVM OpenMP"</literal></expr></argument></option>)</argument_list></command>
-    <command><name>add_subdirectory</name><argument_list>(<argument><expr><name>${CMAKE_CURRENT_SOURCE_DIR}</name></expr></argument><argument><expr><operator>/</operator></expr></argument><argument><expr><literal type="number">3rdparty</literal></expr></argument><argument><expr><operator>/</operator></expr></argument><argument><expr><name>openmp</name></expr></argument>)</argument_list></command>
+    <command><name>set</name><argument_list>(<argument><expr><name>OPENMP_ENABLE_LIBOMPTARGET</name></expr></argument> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument> <option><name>CACHE</name></option> <option><name>BOOL</name> <argument><expr><string>"LLVM OpenMP"</string></expr></argument></option>)</argument_list></command>
+    <command><name>add_subdirectory</name><argument_list>(<argument><expr><string>${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</string></expr></argument><argument><expr><operator>/</operator></expr></argument><argument><expr><literal type="number">3rdparty</literal></expr></argument><argument><expr><operator>/</operator></expr></argument><argument><expr><name>openmp</name></expr></argument>)</argument_list></command>
 </block>endfunction()</function>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <function>function(<name>target_link_boost_test</name> <parameter><expr><name>target</name></expr></parameter>)<block>
-    <command><name>target_link_libraries</name><argument_list>(<argument><expr><name>${target}</name></expr></argument> <option><name>PRIVATE</name> <argument><expr><name><name>Boost</name><operator>::</operator><name>unit_test_framework</name></name></expr></argument></option>)</argument_list></command>
-    <command><name>target_link_libraries</name><argument_list>(<argument><expr><name>${target}</name></expr></argument> <option><name>PRIVATE</name> <argument><expr><name><name>Boost</name><operator>::</operator><name>program_options</name></name></expr></argument></option>)</argument_list></command>
+    <command><name>target_link_libraries</name><argument_list>(<argument><expr><string>${<name>target</name>}</string></expr></argument> <option><name>PRIVATE</name> <argument><expr><name><name>Boost</name><operator>::</operator><name>unit_test_framework</name></name></expr></argument></option>)</argument_list></command>
+    <command><name>target_link_libraries</name><argument_list>(<argument><expr><string>${<name>target</name>}</string></expr></argument> <option><name>PRIVATE</name> <argument><expr><name><name>Boost</name><operator>::</operator><name>program_options</name></name></expr></argument></option>)</argument_list></command>
 </block>endfunction()</function>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <function>function(<name>install_conf</name> <parameter><expr><name>src</name></expr></parameter> <parameter><expr><name>dest</name></expr></parameter>)<block>
-  <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <operator>IS_ABSOLUTE</operator> <literal type="string">"${src}"</literal></expr>)</condition><block>
-    <command><name>set</name><argument_list>(<argument><expr><name>src</name></expr></argument> <argument><expr><literal type="string">"${CMAKE_CURRENT_SOURCE_DIR}/${src}"</literal></expr></argument>)</argument_list></command>
+  <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <operator>IS_ABSOLUTE</operator> <string>"${<name>src</name>}"</string></expr>)</condition><block>
+    <command><name>set</name><argument_list>(<argument><expr><name>src</name></expr></argument> <argument><expr><string>"${<name>CMAKE_CURRENT_SOURCE_DIR</name>}/${<name>src</name>}"</string></expr></argument>)</argument_list></command>
   </block></if>endif()</if_stmt>
-  <command><name>get_filename_component</name><argument_list>(<argument><expr><name>src_name</name></expr></argument> <argument><expr><literal type="string">"${src}"</literal></expr></argument> <option><name>NAME</name></option>)</argument_list></command>
-  <if_stmt><if>if <condition>(<expr><operator>NOT</operator> <operator>IS_ABSOLUTE</operator> <literal type="string">"${dest}"</literal></expr>)</condition><block>
-    <command><name>set</name><argument_list>(<argument><expr><name>dest</name></expr></argument> <argument><expr><literal type="string">"${CMAKE_INSTALL_PREFIX}/${dest}"</literal></expr></argument>)</argument_list></command>
+  <command><name>get_filename_component</name><argument_list>(<argument><expr><name>src_name</name></expr></argument> <argument><expr><string>"${<name>src</name>}"</string></expr></argument> <option><name>NAME</name></option>)</argument_list></command>
+  <if_stmt><if>if <condition>(<expr><operator>NOT</operator> <operator>IS_ABSOLUTE</operator> <string>"${<name>dest</name>}"</string></expr>)</condition><block>
+    <command><name>set</name><argument_list>(<argument><expr><name>dest</name></expr></argument> <argument><expr><string>"${<name>CMAKE_INSTALL_PREFIX</name>}/${<name>dest</name>}"</string></expr></argument>)</argument_list></command>
   </block></if>endif()</if_stmt>
 </block>endfunction()</function>
 </unit>
