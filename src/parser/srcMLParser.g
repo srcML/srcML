@@ -18644,8 +18644,22 @@ cmake_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             startElement(SEXPRESSION);
 
-            // must call string logic here
-            if (LA(1) == NAME || LA(1) == CMAKE_RCURLY) {
+            // invoke string logic for applicable names
+            if (LA(1) == NAME) {
+                std::string name_text = LT(1)->getText();
+                size_t dollar_position = name_text.find('$');
+                size_t lcurly_position = name_text.find('{');
+
+                if (dollar_position != std::string::npos && lcurly_position != std::string::npos)
+                    cmake_string();
+                else
+                    compound_name();
+
+                return;
+            }
+
+            // invoke string logic for right curly braces
+            if (LA(1) == CMAKE_RCURLY) {
                 cmake_string();
                 return;
             }
