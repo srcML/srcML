@@ -371,6 +371,7 @@ tokens {
     CMAKE_POLICIES;
     CMAKE_PROPAGATE;
     CMAKE_RANGE;
+    CMAKE_RCURLY;
     CMAKE_SCOPE_FOR;
     CMAKE_VARIABLES;
 }
@@ -903,6 +904,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         // CMake
         { ";"            , WS                , LANGUAGE_CMAKE },
+        { "}"            , CMAKE_RCURLY      , LANGUAGE_CMAKE },
         { "block"        , CMAKE_BLOCK       , LANGUAGE_CMAKE },
         { "endblock"     , CMAKE_ENDBLOCK    , LANGUAGE_CMAKE },
         { "endforeach"   , CMAKE_ENDFOREACH  , LANGUAGE_CMAKE },

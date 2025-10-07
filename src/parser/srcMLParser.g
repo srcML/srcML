@@ -829,6 +829,7 @@ tokens {
     SSCOPE_POLICIES_VARIABLES;
     SSCOPE_VARIABLES;
     SSCOPE_VARIABLES_POLICIES;
+    SSTRING_CMAKE;
 }
 
 /*
@@ -18583,6 +18584,56 @@ cmake_compiler_flag[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  cmake_string
+
+  Handles strings (NOT string literals) in CMake.
+  Marks inner names with a name tag (e.g., `COMPONENT` in `${COMPONENT}`).
+*/
+cmake_string[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start the string
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING_CMAKE);
+
+            char last_char_of_name = '\000';
+            bool end_string = false;
+
+            while (!end_string && (LA(1) == NAME || LA(1) == CMAKE_RCURLY)) {
+                std::string name_text = LT(1)->getText();
+                size_t dollar_position = name_text.find('$');
+                size_t lcurly_position = name_text.find('{');
+                size_t rcurly_position = name_text.find('}');
+
+                if (
+                    last_char_of_name == '{'
+                    && dollar_position == std::string::npos
+                    && lcurly_position == std::string::npos
+                    && rcurly_position == std::string::npos
+                ) {
+                    // found inner name in a string
+                    startNewMode(MODE_VARIABLE_NAME);
+                    startElement(SNAME);
+
+                    consume();
+
+                    endMode(MODE_VARIABLE_NAME);
+                }
+                else {
+                    // "} " or "};" will end the string
+                    if (LA(1) == CMAKE_RCURLY && LA(2) == WS)
+                        end_string = true;
+
+                    consume();
+                }
+
+                // record the last character in the current name
+                if (!name_text.empty())
+                    last_char_of_name = name_text.back();
+            }
+        }
+;
+
+/*
   cmake_expression
 
   Matches an expression in CMake.
@@ -18592,6 +18643,12 @@ cmake_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
 
             startElement(SEXPRESSION);
+
+            // must call string logic here
+            if (LA(1) == NAME || LA(1) == CMAKE_RCURLY) {
+                cmake_string();
+                return;
+            }
         }
 
         (
@@ -18602,7 +18659,11 @@ cmake_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             { !inTransparentMode(MODE_COMMAND_CMAKE) }?
             cmake_option_as_name |
 
-            cmake_compiler_flag | literals | compound_name
+            cmake_compiler_flag | literals |
+
+            // duplication required for ANTLR to allow these tokens to enter
+            // the expression; the actual logic is handled in cmake_string
+            NAME | CMAKE_RCURLY
         )
 ;
 

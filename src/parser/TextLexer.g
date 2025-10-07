@@ -159,15 +159,24 @@ CONSTANTS :
     }
 ;
 
-NAME options { testLiterals = true; } :
+NAME options { testLiterals = true; } { int firstChar = LA(1); } :
     { startline = false; }
     ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
     (
         (options { greedy = true; } :
-            '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$' |
+            // Name starts with '$' + '{' (CMake)
+            { inLanguage(LANGUAGE_CMAKE) && firstChar == '$' && LA(1) == '{' }?
+            '{' { $setType(NAME); break; } |
 
+            // Name includes '$' + '{' at some point (CMake)
+            { inLanguage(LANGUAGE_CMAKE) && LA(1) == '$' && LA(2) == '{' }?
+            '$' '{' { $setType(NAME); break; } |
+
+            // Other special characters that are valid in a name (CMake)
             { inLanguage(LANGUAGE_CMAKE) }?
-                ('\\' ~('\000') | '/' | '*' | '.' | '+' | '-' | '{' | '}')
+            ('\\' ~('\000') | '/' | '*' | '.' | '+' | '-' | '{') |
+
+            '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$'
         )*
     )
     (

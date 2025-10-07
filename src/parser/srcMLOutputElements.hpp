@@ -361,4 +361,5 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SSCOPE_POLICIES_VARIABLES,     { "scope",             SRC, "type", "policies variables",        0,             0 }},
     { TOKEN::SSCOPE_VARIABLES,              { "scope",             SRC, "type",          "variables",        0,             0 }},
     { TOKEN::SSCOPE_VARIABLES_POLICIES,     { "scope",             SRC, "type", "variables policies",        0,             0 }},
+    { TOKEN::SSTRING_CMAKE,                 { "string",            SRC,      0,                    0,        0,             0 }},
 };
