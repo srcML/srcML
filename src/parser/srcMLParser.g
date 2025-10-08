@@ -725,6 +725,9 @@ tokens {
     SWITH_STATEMENT;
     SYIELD_STATEMENT;
     SYIELD_FROM_STATEMENT;
+
+    // JavaScript
+    SUNDEFINED_JS;
 }
 
 /*
@@ -12408,14 +12411,41 @@ rparen_expression[] { bool end_control_incr = false; ENTRY_DEBUG } :
   Handles various rules for literals.
 */
 literals[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_PYTHON) }?
-        dquote_literal_py |
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        (backtick_literal_js | undefined_literal_js) |
 
         { inLanguage(LANGUAGE_PYTHON) }?
-        squote_literal_py |
+        (dquote_literal_py | squote_literal_py) |
 
         string_literal | char_literal | literal | boolean | null_literal |
         complex_literal | nil_literal | none_literal | ellipsis_literal
+;
+
+/*
+  backtick_literal_js
+
+  Treats backticks (e.g., `...`) as a string literal in JavaScript.
+*/
+backtick_literal_js[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            if (markup)
+                startElement(SSTRING);
+        }
+
+        (BACKTICK_START BACKTICK_END)
+;
+
+/*
+  undefined_literal_js
+
+  Handles an "undefined" literal in JavaScript.
+*/
+undefined_literal_js[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SUNDEFINED_JS);
+        }
+
+        JS_UNDEFINED
 ;
 
 /*
@@ -12499,8 +12529,12 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
 */
 char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            if (markup)
-                startElement(SCHAR);
+            if (markup) {
+                if (inLanguage(LANGUAGE_JAVASCRIPT))
+                    startElement(SSTRING);
+                else
+                    startElement(SCHAR);
+            }
         }
 
         (CHAR_START CHAR_END)
@@ -12514,7 +12548,7 @@ null_literal[] { LightweightElement element(this); ENTRY_DEBUG } :
             startElement(SNULL);
         }
 
-        (NULLPTR | NULLLITERAL)
+        (NULLPTR | NULLLITERAL | JS_NULL)
 ;
 
 /*

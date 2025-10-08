@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="literal">
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1.1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">.1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1.</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">0.0</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">1.1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">.1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">1.</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">6_000_000</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">6_0_0_0</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="string">"j"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="string">'j'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="string">`j`</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="string">"js"</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="string">'js'</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="string">`js`</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">0b10101</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">0b111</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">0o350</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">0o777</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">0xA8</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">0xFF</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="boolean">true</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="boolean">false</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="null">null</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="undefined">undefined</literal></expr></expr_stmt>
+</unit>
+
+</unit>

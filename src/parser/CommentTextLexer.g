@@ -63,6 +63,7 @@ tokens {
     DQUOTE_DOCSTRING_END;
     DQUOTE_DOXYGEN_END;
     CHAR_END;
+    BACKTICK_END;
     SQUOTE_DOCSTRING_END;
     SQUOTE_DOXYGEN_END;
     CONTROL_CHAR;
@@ -427,7 +428,16 @@ COMMENT_TEXT {
         }
     } |
 
-    ']'..'\377') {
+    ']'..'_' |
+
+    '`' {
+        if (prevLA != '\\' && mode == BACKTICK_END) {
+            $setType(mode);
+            selector->pop();
+        }
+    } |
+
+    'a'..'\377') {
 
         // not the first character anymore
         first = false;

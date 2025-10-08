@@ -351,6 +351,10 @@ tokens {
     PY_TYPE;
     PY_WITH;
     PY_YIELD;
+
+    // JavaScript
+    JS_NULL;
+    JS_UNDEFINED;
 }
 
 {
@@ -803,6 +807,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "type"         , PY_TYPE           , LANGUAGE_PYTHON },
         { "with"         , PY_WITH           , LANGUAGE_PYTHON },
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
+
+        // JavaScript
+        { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },
+        { "undefined"    , JS_UNDEFINED      , LANGUAGE_JAVASCRIPT },
    };
 
     // fill up the literals for the language that we are parsing

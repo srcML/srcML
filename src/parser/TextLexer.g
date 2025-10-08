@@ -45,6 +45,7 @@ tokens {
     LINE_DOXYGEN_COMMENT_START;
     DQUOTE_DOCSTRING_START;
     CHAR_START;
+    BACKTICK_START;
     SQUOTE_DOCSTRING_START;
     MACRO_NAME;
     COMPLEX_NUMBER;
@@ -119,6 +120,20 @@ CHAR_START :
             changetotextlexer(PY_SIMPLE_SQUOTE_STRING_END);
         else {
             $setType(CHAR_START); changetotextlexer(CHAR_END);
+        }
+    }
+;
+
+BACKTICK_START :
+    { startline = false; }
+
+    // backtick begins a string literal in JavaScript; otherwise, it is an operator
+    '`' {
+        if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+            $setType(BACKTICK_START); changetotextlexer(BACKTICK_END);
+        }
+        else {
+            $setType(OPERATORS);
         }
     }
 ;
