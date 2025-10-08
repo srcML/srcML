@@ -17,5 +17,26 @@
 <comment type="hashbang">#!/usr/bin/env node</comment>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/**/</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/*
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/*
+a
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/*
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[]\;',./~_+{}|:"&lt;&gt;?
+*/</comment>
+</unit>
+
 </unit>
 
