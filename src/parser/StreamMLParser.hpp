@@ -197,6 +197,10 @@ private:
                 srcMLParser::start_python();
                 break;
 
+            case LANGUAGE_JAVASCRIPT:
+                srcMLParser::start_javascript();
+                break;
+
             default:
                 srcMLParser::start();
             }

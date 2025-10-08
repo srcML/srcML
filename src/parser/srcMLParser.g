@@ -945,6 +945,20 @@ public:
 
         return temp_array;
     }
+
+    template <size_t SIZE>
+    constexpr const std::array<Rule, SIZE> getJavaScriptRules() {
+        std::array<Rule, SIZE> temp_array;
+
+        /* GENERIC STATEMENTS */
+        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+        temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+
+        /* JAVASCRIPT STATEMENTS */
+        /* ... */
+
+        return temp_array;
+    }
 }
 
 /*
@@ -1289,6 +1303,61 @@ start_python[] {
         // looking for a keyword or operator that does not belong to a statement
         alias_py | function_annotation_py |
 
+        // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
+        start
+;
+exception
+catch[...] {
+        CATCH_DEBUG
+
+        // need to consume the token. If we got here because
+        // of an error with EOF token, then call EOF directly
+        if (LA(1) == 1)
+            eof();
+        else
+            consume();
+}
+
+/*
+  start_javascript
+
+  Invokes a table-based approach to detecting and handling tokens.
+
+  Whitespace tokens are handled elsewhere and are automagically included
+  in the output stream.
+
+  Order of evaluation is important.
+*/
+start_javascript[] {
+        ++start_count;
+
+        /*
+          May need to increase these constants in the future as more tokens are added
+        */
+
+        // The number of tokens is the next highest "hundred" in `srcMLParserTokenTypes.txt` in the build directory
+        const size_t DUPLEX_RULES_SIZE = 700;
+
+        // The JavaScript rule size must be 200 greater than the duplex rule size
+        // If there are ever more than 100 duplex keywords, this has to change
+        const size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
+
+        // JavaScript rules adhere to the following form:
+        // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
+        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>();
+
+        // invoke the table to handle keywords
+        if (inMode(MODE_STATEMENT)) {
+            auto token = LA(1);
+            const auto& rule = javascript_rules[token];
+            if (rule.elementToken && processRule(rule)) {
+                return;
+            }
+        }
+
+        ENTRY_DEBUG_START
+        ENTRY_DEBUG
+} :
         // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
         start
 ;
@@ -8581,6 +8650,9 @@ compound_name_inner[bool index] {
             { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_PYTHON) }?
             compound_name_cpp[iscompound] |
 
+            { inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
+            compound_name_keyword[iscompound] |
+
             macro_type_name_call
         )
         (options { greedy = true; } :
@@ -8614,6 +8686,34 @@ compound_name_inner[bool index] {
 */
 multops_star[] { ENTRY_DEBUG } :
         (options { greedy = true; } : multops)*
+;
+
+/*
+  compound_name_keyword
+
+  Handles a compound name for keyword-based languages (e.g., JavaScript).
+*/
+compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
+        generic_argument_list | simple_name_optional_template
+
+        (options { greedy = true; } :
+            (
+                period
+
+                {
+                    iscompound = true;
+                }
+
+                (
+                    keyword_name |
+
+                    simple_name_optional_template |
+
+                    { next_token() == TERMINATE }?
+                    multop_name
+                )
+            )
+        )*
 ;
 
 /*

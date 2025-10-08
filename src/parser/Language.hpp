@@ -49,6 +49,9 @@ namespace LanguageName {
 
     /** String constant for Python language */
     const char* const LANGUAGE_PYTHON = "Python";
+
+    /** String constant for JavaScript language */
+    const char* const LANGUAGE_JAVASCRIPT = "JavaScript";
 }
 
 /**
@@ -90,6 +93,9 @@ public:
         /** Python language */
         LANGUAGE_PYTHON = 32,
 
+        /** JavaScript language */
+        LANGUAGE_JAVASCRIPT = 64,
+
         /** C++ family i.e. C++/C#  */
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP | LANGUAGE_PYTHON,
 
@@ -98,6 +104,9 @@ public:
 
         /** Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA,
+
+        /** Keyword-based language family i.e. JavaScript */
+        LANGUAGE_KEYWORD_FAMILY = LANGUAGE_JAVASCRIPT,
 
         /** Object-Oriented languages i.e. C++/C#/Java */
         LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,

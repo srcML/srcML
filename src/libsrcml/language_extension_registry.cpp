@@ -44,6 +44,9 @@ language_extension_registry::language_extension_registry() : registered_language
     { "pyi",  Language::LANGUAGE_PYTHON },
     { "pyw",  Language::LANGUAGE_PYTHON },
     { "pyz",  Language::LANGUAGE_PYTHON },
+    { "js",   Language::LANGUAGE_JAVASCRIPT },
+    { "cjs",  Language::LANGUAGE_JAVASCRIPT },
+    { "mjs",  Language::LANGUAGE_JAVASCRIPT },
     /* { "m",    Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C } */ }), use_cpp_for_c(false)
     {}
 
@@ -189,6 +192,10 @@ void language_extension_registry::register_standard_file_extensions() {
     register_user_ext("pyi",  Language::LANGUAGE_PYTHON);
     register_user_ext("pyw",  Language::LANGUAGE_PYTHON);
     register_user_ext("pyz",  Language::LANGUAGE_PYTHON);
+
+    register_user_ext("js",   Language::LANGUAGE_JAVASCRIPT);
+    register_user_ext("cjs",  Language::LANGUAGE_JAVASCRIPT);
+    register_user_ext("mjs",  Language::LANGUAGE_JAVASCRIPT);
 }
 
 /**
