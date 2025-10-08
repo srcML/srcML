@@ -97,7 +97,7 @@ public:
         LANGUAGE_JAVASCRIPT = 64,
 
         /** C++ family i.e. C++/C#  */
-        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP | LANGUAGE_PYTHON,
+        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
 
         /** C family i.e. C/C++/C# */
         LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY | LANGUAGE_OBJECTIVE_C,
@@ -105,11 +105,11 @@ public:
         /** Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA,
 
-        /** Keyword-based language family i.e. JavaScript */
-        LANGUAGE_KEYWORD_FAMILY = LANGUAGE_JAVASCRIPT,
+        /** Keyword-based language family i.e. Python/JavaScript */
+        LANGUAGE_KEYWORD_FAMILY = LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT,
 
-        /** Object-Oriented languages i.e. C++/C#/Java */
-        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
+        /** Object-Oriented languages i.e. C++/C#/Java/Python/JavaScript */
+        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY | LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT,
 
         /** All languages */
         LANGUAGE_ALL = ~0

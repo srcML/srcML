@@ -1590,7 +1590,7 @@ pattern_statements[] {
 
         // call
         {
-            !inLanguage(LANGUAGE_PYTHON)
+            !inLanguage(LANGUAGE_KEYWORD_FAMILY)
             && isoption(parser_options, SRCML_PARSER_OPTION_CPP)
             && (
                 inMode(MODE_ACCESS_REGION)
@@ -3010,10 +3010,10 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
             { next_token_check(LCURLY, LPAREN) }?
             lambda_anonymous |
 
-            { !inLanguage(LANGUAGE_PYTHON) }?
+            { !inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
             (LBRACKET (~RBRACKET)* RBRACKET (LPAREN | LCURLY)) => lambda_expression_full_cpp |
 
-            { !inLanguage(LANGUAGE_PYTHON) }?
+            { !inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
             (block_lambda_expression_full) => block_lambda_expression_full |
 
             { inLanguage(LANGUAGE_OBJECTIVE_C) }?
@@ -8646,8 +8646,7 @@ compound_name_inner[bool index] {
             { inLanguage(LANGUAGE_C) }?
             compound_name_c[iscompound] |
 
-            // Python uses the same C++ logic for names
-            { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_PYTHON) }?
+            { inLanguage(LANGUAGE_CXX) }?
             compound_name_cpp[iscompound] |
 
             { inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
@@ -8691,7 +8690,7 @@ multops_star[] { ENTRY_DEBUG } :
 /*
   compound_name_keyword
 
-  Handles a compound name for keyword-based languages (e.g., JavaScript).
+  Handles a compound name for keyword-based languages (e.g., Python and JavaScript).
 */
 compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
         generic_argument_list | simple_name_optional_template
@@ -12221,7 +12220,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             LCURLY
         ) => lambda_expression_cpp |
 
-        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_PYTHON) }?
+        { inLanguage(LANGUAGE_C_FAMILY) && !inLanguage(LANGUAGE_CSHARP) && !inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
         (block_lambda_expression_full) => block_lambda_expression |
 
         { inLanguage(LANGUAGE_JAVA) }?
@@ -13153,7 +13152,7 @@ parameter_type_count[int& type_count, bool output_type = true] {
         CompleteElement element(this);
         bool is_compound = false;
 
-        if (inLanguage(LANGUAGE_PYTHON))
+        if (inLanguage(LANGUAGE_KEYWORD_FAMILY))
             output_type = false;
 
         ENTRY_DEBUG
