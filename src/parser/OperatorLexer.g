@@ -98,12 +98,12 @@ tokens {
 OPERATORS options { testLiterals = true; } {
     int start = LA(1);
 } : (
-    // # (C++ or Python), #! (Python)
+    // # (C++/Python/JavaScript), #! (Python/JavaScript)
     '#' (
-        { (inLanguage(LANGUAGE_PYTHON)) && LA(1) == '!' }?
+        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) == '!' }?
             { $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END); } |
 
-        { inLanguage(LANGUAGE_PYTHON) && LA(1) != '!' }?
+        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) != '!' }?
             { $setType(HASHTAG_COMMENT_START); changetotextlexer(HASHTAG_COMMENT_END); } |
 
         { startline }?
