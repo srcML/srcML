@@ -304,6 +304,7 @@ LANGUAGE_PYTHON yield_py
 # JavaScript
 LANGUAGE_JAVASCRIPT comment_js
 LANGUAGE_JAVASCRIPT literal_js
+LANGUAGE_JAVASCRIPT operator_js
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

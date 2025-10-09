@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="operator">
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>-</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>*</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>/</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>%</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>**</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>+</operator><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&amp;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>|</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>^</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>~</operator><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;&lt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;&gt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>++</operator><name>a</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name><operator>++</operator></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>--</operator><name>a</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name><operator>--</operator></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>==</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>!=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>===</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>!==</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&amp;&amp;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>||</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>??</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="null">null</literal> <operator>??</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="undefined">undefined</literal> <operator>??</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>!</operator><literal type="boolean">true</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>b</name> <init>= <expr><literal type="number">2</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>c</name> <init>= <expr><literal type="number">3</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="static">static <name>d</name> <init>= <expr><literal type="number">4</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>**=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;&gt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&amp;&amp;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>||=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>??=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name><name>a</name><operator>.</operator><name>b</name></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name><operator>?.</operator><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name></expr><operator>,</operator> <expr><name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>copy</name> <init>= <expr><array>[<expr><operator>...</operator><name>a</name></expr>]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>product</name> <init>= <expr><lambda type="arrow"><parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <name>a</name> <operator>*</operator> <name>b</name></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>delete</operator> <name>a</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>a</name> <init>= <expr><operator>typeof</operator> <literal type="null">null</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>b</name> <init>= <expr><operator>void</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="string">"str"</literal> <operator>in</operator> <name>obj</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>d</name> <init>= <expr><operator>new</operator> <call><name>FunctionName</name><argument_list>(<argument><expr><literal type="string">'a'</literal></expr></argument>, <argument><expr><literal type="string">'b'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>e</name> <init>= <expr><operator>(</operator><name>d</name> <operator>instanceof</operator> <name>FunctionName</name><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>f</name> <init>= <expr><operator>await</operator> <call><name>functionCall</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

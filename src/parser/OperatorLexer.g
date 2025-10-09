@@ -121,27 +121,27 @@ OPERATORS options { testLiterals = true; } {
     '+' ('+' | '=')? |
     '-' ('-' | '=' | '>' ('*')? )? |
 
-    // *, *=, ** (Python), **= (Python)
-    '*' ({ inLanguage(LANGUAGE_PYTHON) }? '*')? ('=')? |
+    // *, *=, ** (Python/JavaScript), **= (Python/JavaScript)
+    '*' ({ inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) }? '*')? ('=')? |
 
     '%' ('=')? |
     '^' ('=')? |
     '|' ('|')? ('=')? |
 
-    // !, !=
-    '!' ('=')? |
+    // !, !=, !== (JavaScript)
+    '!' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')?)? |
 
     // :, := (Python), ::
     ':' ({ inLanguage(LANGUAGE_PYTHON) }? '=')? (':')? |
 
-    // =, ==, =>
-    '=' ('=' | { inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#') }? '>')? |
+    // =, ==, => (C#/JavaScript), === (JavaScript)
+    '=' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? | { (inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#')) || inLanguage(LANGUAGE_JAVASCRIPT) }? '>')? |
 
     // &, &&, &&=, &=
     '&' ('&')? ('=')? |
 
-    // >, >>=, >=, not >>
-    '>' (('>' '=') => '>' '=')? ('=')? |
+    // >, >>=, >=, >>> (JavaScript), >>>= (JavaScript), not >>
+    '>' (('>' '=') => '>' '=' | { inLanguage(LANGUAGE_JAVASCRIPT) }? ('>' '>' '=') => '>' '>' '=')? ('=')? |
 
     // <, << (C/C++), <=, <<< (CUDA), <> (Python)
     '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) }? '<' | '=')? | { inLanguage(LANGUAGE_PYTHON) }? '>' )? |
@@ -181,11 +181,13 @@ OPERATORS options { testLiterals = true; } {
         }
         STRING_START )? |
 
-    '?' ('?')* | // part of ternary
+    // ?, ??, etc. (part of ternary); ?. (JavaScript), ??= (JavaScript)
+    '?' ('?')* ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '.')? ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? |
 
     '~' | // has to be separate if part of name
 
     '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |
+    
 
     '\\' ({ inLanguage(LANGUAGE_PYTHON) }? EOL { $setType(EOL_BACKSLASH); } | (EOL { $setType(EOL_BACKSLASH); })*)
     )

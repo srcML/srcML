@@ -353,8 +353,16 @@ tokens {
     PY_YIELD;
 
     // JavaScript
+    JS_ARROW;
+    JS_AWAIT;
+    JS_DELETE;
+    JS_INSTANCEOF;
     JS_NULL;
+    JS_RANGE_IN;
+    JS_TYPEOF;
     JS_UNDEFINED;
+    JS_VOID;
+    QMARK_PERIOD;
 }
 
 {
@@ -809,8 +817,16 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
 
         // JavaScript
+        { "<="           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
+        { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
+        { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
+        { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
+        { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
+        { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT },
         { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },
+        { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT },
         { "undefined"    , JS_UNDEFINED      , LANGUAGE_JAVASCRIPT },
+        { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },
    };
 
     // fill up the literals for the language that we are parsing

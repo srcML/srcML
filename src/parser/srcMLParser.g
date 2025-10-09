@@ -8700,7 +8700,7 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             (
-                period
+                ({ inLanguage(LANGUAGE_JAVASCRIPT) }? qmark_period | period)
 
                 {
                     iscompound = true;
@@ -11684,7 +11684,10 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             // Python
             { next_token() == PY_NOT }? PY_IS PY_NOT | { next_token() == PY_IN }? PY_NOT PY_IN |
-            EXPONENTIATION | PY_AND | PY_ATSIGN | PY_AWAIT | PY_COLON | PY_IN | PY_IS | PY_NOT | PY_OR
+            EXPONENTIATION | PY_AND | PY_ATSIGN | PY_AWAIT | PY_COLON | PY_IN | PY_IS | PY_NOT | PY_OR |
+
+            // JavaScript
+            JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID
         )
 ;
 
@@ -11966,6 +11969,19 @@ period[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         PERIOD
+;
+
+/*
+  qmark_period
+
+  Handles the optional chaining operator ("?.") in JavaScript.
+*/
+qmark_period[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SOPERATOR);
+        }
+
+        QMARK_PERIOD
 ;
 
 /*
