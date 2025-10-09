@@ -967,8 +967,10 @@ public:
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         /* JAVASCRIPT STATEMENTS */
         temp_array[JS_CONSTRUCTOR] = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_PARAMETER_LIST_JS, nullptr, nullptr };
@@ -17930,6 +17932,20 @@ control_tuple_no_paren_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
             if (inTransparentMode(MODE_TUPLE_NO_PAREN_PY)) {
                 endDownToMode(MODE_TUPLE_NO_PAREN_PY);
                 endMode(MODE_TUPLE_NO_PAREN_PY);
+            }
+        }
+;
+
+/*
+  pseudoblock
+
+  Handles constructs that resemble a block of source code but are not a true block.
+*/
+pseudoblock[] { ENTRY_DEBUG } :
+        {
+            if (LA(1) != LCURLY) {
+                startNoSkipElement(SPSEUDO_BLOCK);
+                startNoSkipElement(SCONTENT);
             }
         }
 ;
