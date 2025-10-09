@@ -325,4 +325,9 @@ const static srcMLState::MODE_TYPE MODE_FROM_PY;
 
 const static srcMLState::MODE_TYPE MODE_SET_PY;
 
+// JavaScript modes
+const static srcMLState::MODE_TYPE MODE_SUPER_LIST_JS;
+
+const static srcMLState::MODE_TYPE MODE_EXTENDS_JS;
+
 #endif

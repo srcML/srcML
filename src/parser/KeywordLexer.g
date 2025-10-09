@@ -357,6 +357,7 @@ tokens {
     JS_AWAIT;
     JS_DEBUGGER;
     JS_DELETE;
+    JS_EXTENDS;
     JS_INSTANCEOF;
     JS_NULL;
     JS_RANGE_IN;
@@ -824,6 +825,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
         { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
+        { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT },
         { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
         { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT },
         { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },

@@ -768,6 +768,7 @@ public:
     size_t number_finishing_elements = 0;
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int>>> finish_elements_add;
     std::deque<char> lparen_types_py;
+    std::deque<char> lparen_types_js;
     bool in_template_param = false;
     int start_count = 0;
 
@@ -964,6 +965,7 @@ public:
 
         /* GENERIC STATEMENTS */
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
@@ -1371,6 +1373,10 @@ start_javascript[] {
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
         static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(JS_YIELD_MULTOPS);
 
+        // ensure the lparen deque never starts empty by adding a dummy entry
+        if (lparen_types_js.empty())
+            lparen_types_js.emplace_back('*');
+
         // invoke the table to handle keywords
         if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
@@ -1390,6 +1396,9 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
+        // looking for a keyword or operator that does not belong to a statement
+        extends_js |
+
         // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
         start
 ;
@@ -9523,6 +9532,10 @@ call_argument_list[] { ENTRY_DEBUG } :
             // lparen starts a call
             if (inLanguage(LANGUAGE_PYTHON))
                 lparen_types_py.emplace_back('c');  // call LPAREN
+
+            // lparen starts a call
+            if (inLanguage(LANGUAGE_JAVASCRIPT))
+                lparen_types_js.emplace_back('c');  // call LPAREN
         }
 
         (
@@ -11772,7 +11785,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
         ENTRY_DEBUG
 } :
         {
-            if (inLanguage(LANGUAGE_PYTHON)) {
+            if (inLanguage(LANGUAGE_PYTHON) && !lparen_types_py.empty()) {
                 switch (lparen_types_py.back()) {
                     // found Python rparen that ends a call
                     case 'c':
@@ -11789,6 +11802,10 @@ rparen[bool markup = true, bool end_control_incr = false] {
                         break;
                 }
             }
+
+            // found JavaScript rparen that ends a call
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && !lparen_types_js.empty() && lparen_types_js.back() == 'c')
+                lparen_types_js.pop_back();
 
             if (isempty) {
                 // additional right parentheses indicates end of non-list modes
@@ -17896,4 +17913,65 @@ control_tuple_no_paren_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
                 endMode(MODE_TUPLE_NO_PAREN_PY);
             }
         }
+;
+
+/*
+  extends_js
+
+  Handles an "extends" expression in JavaScript.
+*/
+extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_SUPER_LIST_JS);
+            startElement(SDERIVATION_LIST);
+
+            startNewMode(MODE_EXTENDS_JS);
+            startElement(SEXTENDS);
+        }
+
+        JS_EXTENDS
+        super_list_js
+;
+
+/*
+  super_list_js
+
+  Handles a super list in JavaScript differently from other languages (e.g., Java).
+*/
+super_list_js[] { ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            // ensure the super list ends before the start of the class block
+            { inTransparentMode(MODE_CLASS) && LA(1) == LCURLY }?
+            {
+                break;
+            } |
+
+            super_js
+        )*
+;
+
+/*
+  super_js
+
+  Handles the elements of a super list in JavaScript differently from other languages (e.g., Java).
+*/
+super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SDERIVATION);
+        }
+
+        (options { greedy = true; } :
+            // ensure the super ends before the start of the class block
+            { inTransparentMode(MODE_CLASS) && LA(1) == LCURLY }?
+            {
+                break;
+            } |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression
+        )*
 ;
