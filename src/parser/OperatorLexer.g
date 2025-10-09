@@ -106,6 +106,10 @@ OPERATORS options { testLiterals = true; } {
         { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) != '!' }?
             { $setType(HASHTAG_COMMENT_START); changetotextlexer(HASHTAG_COMMENT_END); } |
 
+        // Names can include '#' (JavaScript)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) != '!' }?
+            NAME { $setType(NAME); } |
+
         { startline }?
             {
                 $setType(PREPROC);

@@ -359,9 +359,12 @@ tokens {
     JS_DEBUGGER;
     JS_DELETE;
     JS_EXTENDS;
+    JS_FUNCTION;
+    JS_GET;
     JS_INSTANCEOF;
     JS_NULL;
     JS_RANGE_IN;
+    JS_SET;
     JS_TYPEOF;
     JS_UNDEFINED;
     JS_VOID;
@@ -828,9 +831,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
         { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
         { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT },
+        { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT },
+        { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT },
         { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
         { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT },
         { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },
+        { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
         { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT },
         { "undefined"    , JS_UNDEFINED      , LANGUAGE_JAVASCRIPT },
         { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },

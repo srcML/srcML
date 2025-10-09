@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="function">
+
+<!-- Regular functions ("function") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>empty</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>calcRectArea</name><parameter_list>(<parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>height</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>calcRectArea</name><parameter_list>(<parameter><decl><name>width</name><init>=<expr><literal type="number">0</literal></expr></init></decl></parameter>, <parameter><decl><name>height</name><init>=<expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>printExamples</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>, <parameter><decl><modifier>...</modifier><name>manyMoreArgs</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>, <argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"b"</literal></expr></argument>, <argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"manyMoreArgs"</literal></expr></argument>, <argument><expr><name>manyMoreArgs</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></function>
+</unit>
+
+<!-- Generator functions ("function*") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>emptyGenerator</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>anotherGenerator</name><parameter_list>(<parameter><decl><name>i</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">2</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">3</literal></expr></yield>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>generator</name><parameter_list>(<parameter><decl><name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list> <block>{<block_content>
+    <yield>yield <expr><name>i</name></expr></yield>
+    <yield type="generator">yield* <expr><call><name>anotherGenerator</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">10</literal></expr></yield>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>extraGenerator</name><parameter_list>(<parameter><decl><name>i</name></decl></parameter>, <parameter><decl><modifier>...</modifier><name>manyMoreArgs</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">2</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">3</literal></expr></yield>
+</block_content>}</block></function>
+</unit>
+
+<!-- Getters ("get") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithGet</name> <block>{<block_content>
+    <expr_stmt><expr><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></expr></expr_stmt>
+
+    <function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
+    </block_content>}</block></function>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithGet</name> <block>{<block_content>
+    <expr_stmt><expr><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></expr></expr_stmt>
+
+    <function type="get">get <name>msg</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
+    </block_content>}</block></function>
+</block_content>}</block></class>
+</unit>
+
+<!-- Setters ("set") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithSet</name> <block>{<block_content>
+    <expr_stmt><expr><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></expr></expr_stmt>
+
+    <function type="set">set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <init>= <expr><literal type="string">`hello ${x}`</literal></expr></init></expr></expr_stmt>
+    </block_content>}</block></function>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithSet</name> <block>{<block_content>
+    <expr_stmt><expr><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></expr></expr_stmt>
+
+    <function type="set">set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <init>= <expr><literal type="string">`hello ${x}`</literal></expr></init></expr></expr_stmt>
+    </block_content>}</block></function>
+</block_content>}</block></class>
+</unit>
+
+</unit>

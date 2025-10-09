@@ -321,7 +321,6 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SDOXYGEN_PY,                   { "literal",           SRC, "type",    "string", "format",           "doxygen" }},
     { TOKEN::SELLIPSIS,                     { "literal",           SRC, "type",  "ellipsis",        0,                   0 }},
     { TOKEN::SEXEC_PYTHON2,                 { "exec",              SRC,      0,           0,        0,                   0 }},
-    { TOKEN::SFUNCTION_STATEMENT,           { "function",          SRC,      0,           0,        0,                   0 }},
     { TOKEN::SGLOBAL,                       { "global",            SRC,      0,           0,        0,                   0 }},
     { TOKEN::SHASHBANG_COMMENT,             { "comment",           SRC, "type",  "hashbang",        0,                   0 }},
     { TOKEN::SHASHTAG_COMMENT,              { "comment",           SRC, "type",      "line",        0,                   0 }},
@@ -342,6 +341,9 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     // JavaScript
     { TOKEN::SDEBUGGER_STATEMENT,           { "debugger",          SRC,      0,           0,        0,                   0 }},
+    { TOKEN::SFUNCTION_GENERATOR_STATEMENT, { "function",          SRC, "type", "generator",        0,                   0 }},
+    { TOKEN::SFUNCTION_GET_STATEMENT,       { "function",          SRC, "type", "get",              0,                   0 }},
+    { TOKEN::SFUNCTION_SET_STATEMENT,       { "function",          SRC, "type", "set",              0,                   0 }},
     { TOKEN::SUNDEFINED_JS,                 { "literal",           SRC, "type", "undefined",        0,                   0 }},
     { TOKEN::SYIELD_GENERATOR_STATEMENT,    { "yield",             SRC, "type", "generator",        0,                   0 }},
 };

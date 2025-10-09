@@ -707,7 +707,6 @@ tokens {
     SDOXYGEN_PY;
     SELLIPSIS;
     SEXEC_PYTHON2;
-    SFUNCTION_STATEMENT;
     SGLOBAL;
     SHASHBANG_COMMENT;
     SHASHTAG_COMMENT;
@@ -728,6 +727,9 @@ tokens {
 
     // JavaScript
     SDEBUGGER_STATEMENT;
+    SFUNCTION_GENERATOR_STATEMENT;
+    SFUNCTION_GET_STATEMENT;
+    SFUNCTION_SET_STATEMENT;
     SUNDEFINED_JS;
     SYIELD_GENERATOR_STATEMENT;
 }
@@ -934,7 +936,7 @@ public:
         temp_array[PY_DELETE]   = { SDELETE, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
         temp_array[PY_ELIF]     = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start, nullptr };
         temp_array[PY_EXCEPT]   = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_EXCEPT_PY, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[PY_FUNCTION] = { SFUNCTION_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_PY | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[PY_FUNCTION] = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_PY | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[PY_GLOBAL]   = { SGLOBAL, 0, MODE_STATEMENT, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
         temp_array[PY_IMPORT]   = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_EXCLUDE_NO_PAREN_TUPLES_PY, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
         temp_array[PY_MATCH]    = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
@@ -953,14 +955,15 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(const size_t JS_YIELD_MULTOPS) {
+    constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(const size_t JS_YIELD_MULTOPS, const size_t JS_FUNCTION_MULTOPS) {
         std::array<int, SIZE * SIZE> temp_array{};
+        temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
         temp_array[JS_YIELD + (MULTOPS << 8)] = JS_YIELD_MULTOPS;
         return temp_array;
     }
 
     template <size_t SIZE>
-    constexpr const std::array<Rule, SIZE> getJavaScriptRules(const size_t JS_YIELD_MULTOPS) {
+    constexpr const std::array<Rule, SIZE> getJavaScriptRules(const size_t JS_YIELD_MULTOPS, const size_t JS_FUNCTION_MULTOPS) {
         std::array<Rule, SIZE> temp_array;
 
         /* GENERIC STATEMENTS */
@@ -975,10 +978,14 @@ public:
         /* JAVASCRIPT STATEMENTS */
         temp_array[JS_CONSTRUCTOR] = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_PARAMETER_LIST_JS, nullptr, nullptr };
         temp_array[JS_DEBUGGER]    = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+        temp_array[JS_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_GET]         = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_SET]         = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* DUPLEX KEYWORDS */
-        temp_array[JS_YIELD_MULTOPS] = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
+        temp_array[JS_YIELD_MULTOPS]    = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
+        temp_array[JS_FUNCTION_MULTOPS] = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume for '*'
 
         return temp_array;
     }
@@ -1364,17 +1371,18 @@ start_javascript[] {
         // The duplex keyword values must start at a value 100 greater than the duplex rule size directly above
         // Increment each new duplex keyword token by an additional one (except the first)
         const int JS_YIELD_MULTOPS = DUPLEX_RULES_SIZE + 100;
+        const int JS_FUNCTION_MULTOPS = DUPLEX_RULES_SIZE + 101;
 
         // The JavaScript rule size must be 200 greater than the duplex rule size
         // If there are ever more than 100 duplex keywords, this has to change
         const size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
 
         // A duplex keyword is a pair of adjacent keywords
-        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(JS_YIELD_MULTOPS);
+        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(JS_YIELD_MULTOPS, JS_FUNCTION_MULTOPS);
 
         // JavaScript rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(JS_YIELD_MULTOPS);
+        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(JS_YIELD_MULTOPS, JS_FUNCTION_MULTOPS);
 
         // ensure the lparen deque never starts empty by adding a dummy entry
         if (lparen_types_js.empty())
