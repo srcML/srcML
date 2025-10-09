@@ -341,5 +341,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SYIELD_FROM_STATEMENT,         { "yield",             SRC, "type",      "from",        0,                   0 }},
 
     // JavaScript
+    { TOKEN::SDEBUGGER_STATEMENT,           { "debugger",          SRC,      0,           0,        0,                   0 }},
     { TOKEN::SUNDEFINED_JS,                 { "literal",           SRC, "type", "undefined",        0,                   0 }},
+    { TOKEN::SYIELD_GENERATOR_STATEMENT,    { "yield",             SRC, "type", "generator",        0,                   0 }},
 };

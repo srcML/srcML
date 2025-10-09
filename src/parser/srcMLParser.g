@@ -727,7 +727,9 @@ tokens {
     SYIELD_FROM_STATEMENT;
 
     // JavaScript
+    SDEBUGGER_STATEMENT;
     SUNDEFINED_JS;
+    SYIELD_GENERATOR_STATEMENT;
 }
 
 /*
@@ -900,7 +902,7 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<int, SIZE * SIZE> getDuplexKeywords(const size_t PY_EXCEPT_MULTOPS, const size_t PY_YIELD_PY_FROM) {
+    constexpr const std::array<int, SIZE * SIZE> getPythonDuplexKeywords(const size_t PY_EXCEPT_MULTOPS, const size_t PY_YIELD_PY_FROM) {
         std::array<int, SIZE * SIZE> temp_array{};
         temp_array[PY_EXCEPT + (MULTOPS << 8)] = PY_EXCEPT_MULTOPS;
         temp_array[PY_YIELD + (PY_FROM << 8)] = PY_YIELD_PY_FROM;
@@ -950,15 +952,28 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<Rule, SIZE> getJavaScriptRules() {
+    constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(const size_t JS_YIELD_MULTOPS) {
+        std::array<int, SIZE * SIZE> temp_array{};
+        temp_array[JS_YIELD + (MULTOPS << 8)] = JS_YIELD_MULTOPS;
+        return temp_array;
+    }
+
+    template <size_t SIZE>
+    constexpr const std::array<Rule, SIZE> getJavaScriptRules(const size_t JS_YIELD_MULTOPS) {
         std::array<Rule, SIZE> temp_array;
 
         /* GENERIC STATEMENTS */
-        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
-        temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* JAVASCRIPT STATEMENTS */
-        /* ... */
+        temp_array[JS_DEBUGGER] = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+        temp_array[JS_YIELD]    = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+
+        /* DUPLEX KEYWORDS */
+        temp_array[JS_YIELD_MULTOPS] = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
 
         return temp_array;
     }
@@ -1177,7 +1192,7 @@ start_python[] {
         const size_t PYTHON_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
 
         // A duplex keyword is a pair of adjacent keywords
-        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getDuplexKeywords<DUPLEX_RULES_SIZE>(PY_EXCEPT_MULTOPS, PY_YIELD_PY_FROM);
+        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getPythonDuplexKeywords<DUPLEX_RULES_SIZE>(PY_EXCEPT_MULTOPS, PY_YIELD_PY_FROM);
 
         // Python rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
@@ -1341,17 +1356,31 @@ start_javascript[] {
         // The number of tokens is the next highest "hundred" in `srcMLParserTokenTypes.txt` in the build directory
         const size_t DUPLEX_RULES_SIZE = 700;
 
+        // The duplex keyword values must start at a value 100 greater than the duplex rule size directly above
+        // Increment each new duplex keyword token by an additional one (except the first)
+        const int JS_YIELD_MULTOPS = DUPLEX_RULES_SIZE + 100;
+
         // The JavaScript rule size must be 200 greater than the duplex rule size
         // If there are ever more than 100 duplex keywords, this has to change
         const size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
 
+        // A duplex keyword is a pair of adjacent keywords
+        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(JS_YIELD_MULTOPS);
+
         // JavaScript rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>();
+        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(JS_YIELD_MULTOPS);
 
         // invoke the table to handle keywords
         if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
+
+            if (duplex_keyword_set.member((unsigned int) LA(1))) {
+                const auto lookup = duplexKeywords[token + (next_token() << 8)];
+                if (lookup)
+                    token = lookup;
+            }
+
             const auto& rule = javascript_rules[token];
             if (rule.elementToken && processRule(rule)) {
                 return;

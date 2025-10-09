@@ -172,7 +172,10 @@ token_set(srcMLParser, whitespace_token_set,
 token_set(srcMLParser, duplex_keyword_set,
     // Python
     srcMLParser::PY_EXCEPT,
-    srcMLParser::PY_YIELD
+    srcMLParser::PY_YIELD,
+
+    // JavaScript
+    srcMLParser::JS_YIELD
 )
 
 token_set(srcMLParser, keyword_name_token_set_py,

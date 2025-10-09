@@ -302,9 +302,15 @@ LANGUAGE_PYTHON with_py
 LANGUAGE_PYTHON yield_py
 
 # JavaScript
+LANGUAGE_JAVASCRIPT break_js
 LANGUAGE_JAVASCRIPT comment_js
+LANGUAGE_JAVASCRIPT continue_js
+LANGUAGE_JAVASCRIPT debugger_js
 LANGUAGE_JAVASCRIPT literal_js
 LANGUAGE_JAVASCRIPT operator_js
+LANGUAGE_JAVASCRIPT return_js
+LANGUAGE_JAVASCRIPT throw_js
+LANGUAGE_JAVASCRIPT yield_js
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

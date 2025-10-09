@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="yield">
+
+<unit revision="1.0.0" language="JavaScript">
+<yield>yield</yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield>yield <expr><name>index</name></expr></yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield type="generator">yield* <expr><call><name>func1</name><argument_list>()</argument_list></call></expr></yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield type="generator">yield* <expr><literal type="string">"1234"</literal></expr></yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield type="generator">yield* <expr><array>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>, <expr><literal type="number">4</literal></expr>]</array></expr></yield>
+</unit>
+
+</unit>
+
