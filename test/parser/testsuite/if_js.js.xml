@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="if">
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if> <else>else <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"NOT positive"</literal></expr></expr_stmt>
+</block_content>}</block></else></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>a</name> <operator>===</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"zero"</literal></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>a</name> <operator>===</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"zero"</literal></expr></expr_stmt>
+</block_content>}</block></if> <else>else <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"negative"</literal></expr></expr_stmt>
+</block_content>}</block></else></if_stmt>
+</unit>
+
+</unit>
