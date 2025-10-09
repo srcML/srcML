@@ -971,8 +971,9 @@ public:
         temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* JAVASCRIPT STATEMENTS */
-        temp_array[JS_DEBUGGER] = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
-        temp_array[JS_YIELD]    = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_CONSTRUCTOR] = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_PARAMETER_LIST_JS, nullptr, nullptr };
+        temp_array[JS_DEBUGGER]    = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+        temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* DUPLEX KEYWORDS */
         temp_array[JS_YIELD_MULTOPS] = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
@@ -1396,6 +1397,10 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
+        // looking for lparen to start a parameter list
+        { inMode(MODE_PARAMETER_LIST_JS) }?
+        javascript_parameter_list |
+
         // looking for a keyword or operator that does not belong to a statement
         extends_js |
 
@@ -11804,8 +11809,22 @@ rparen[bool markup = true, bool end_control_incr = false] {
             }
 
             // found JavaScript rparen that ends a call
-            if (inLanguage(LANGUAGE_JAVASCRIPT) && !lparen_types_js.empty() && lparen_types_js.back() == 'c')
-                lparen_types_js.pop_back();
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && !lparen_types_js.empty()) {
+                switch (lparen_types_js.back()) {
+                    // found JavaScript rparen that ends a call
+                    case 'c':
+                        lparen_types_js.pop_back();
+                        break;
+
+                    // found JavaScript rparen that ends a parameter list
+                    case 'p':
+                        lparen_types_js.pop_back();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
 
             if (isempty) {
                 // additional right parentheses indicates end of non-list modes
@@ -17972,6 +17991,97 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
+            expression
+        )*
+;
+
+/*
+  javascript_parameter_list
+
+  Handles a parameter list in JavaScript.
+*/
+javascript_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            startElement(SPARAMETER_LIST);
+
+            lparen_types_js.emplace_back('p');  // parameter list LPAREN
+        }
+
+        LPAREN
+
+        (
+            {
+                // we are in a parameter list; we must end the current parameter
+                if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                    endMode();
+            }
+            comma |
+
+            complete_javascript_parameter
+        )*
+
+        rparen[false]
+;
+
+/*
+  complete_javascript_parameter
+
+  Handles a parameter in JavaScript.
+*/
+complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start the parameter
+            startNewMode(MODE_PARAMETER);
+            startElement(SPARAMETER);
+
+            // start the declaration
+            startNewMode(MODE_DECL);
+            startElement(SDECLARATION);
+        }
+
+        (
+            // rest parameter
+            (tripledotop compound_name) |
+
+            // regular parameter
+            compound_name
+        )
+
+        {
+            // initialization expression after a parameter is optional
+            if (LA(1) == EQUAL)
+                parameter_init_js();
+        }
+;
+
+/*
+  parameter_init_js
+
+  Handles an initialization expression that can appear after a parameter in JavaScript.
+*/
+parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SINIT);
+        }
+
+        EQUAL
+
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+
+        (options { greedy = true; } :
+            // do not consume the ending RPAREN for a parameter list
+            { (LA(1) == RPAREN && lparen_types_js.back() == 'p') }?
+            {
+                break;
+            } |
+
+            // consume commas for calls, but not for parameters
+            { lparen_types_js.back() == 'c' }?
+            comma |
+
             expression
         )*
 ;

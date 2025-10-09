@@ -355,6 +355,7 @@ tokens {
     // JavaScript
     JS_ARROW;
     JS_AWAIT;
+    JS_CONSTRUCTOR;
     JS_DEBUGGER;
     JS_DELETE;
     JS_EXTENDS;
@@ -823,6 +824,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "<="           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
         { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
         { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
+        { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
         { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
         { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT },
