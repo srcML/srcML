@@ -334,4 +334,6 @@ const static srcMLState::MODE_TYPE MODE_SUPER_LIST_JS;
 
 const static srcMLState::MODE_TYPE MODE_EXTENDS_JS;
 
+const static srcMLState::MODE_TYPE MODE_IMPORT_JS;
+
 #endif

@@ -354,13 +354,17 @@ tokens {
 
     // JavaScript
     JS_ARROW;
+    JS_AS;
     JS_AWAIT;
     JS_CONSTRUCTOR;
     JS_DEBUGGER;
+    JS_DEFAULT;
     JS_DELETE;
     JS_EXTENDS;
+    JS_FROM;
     JS_FUNCTION;
     JS_GET;
+    JS_IMPORT;
     JS_INSTANCEOF;
     JS_NULL;
     JS_RANGE_IN;
@@ -826,13 +830,17 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // JavaScript
         { "<="           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
         { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
+        { "as"           , JS_AS             , LANGUAGE_JAVASCRIPT },
         { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
         { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
+        { "default"      , JS_DEFAULT        , LANGUAGE_JAVASCRIPT },
         { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
         { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT },
+        { "from"         , JS_FROM           , LANGUAGE_JAVASCRIPT },
         { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT },
         { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT },
+        { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
         { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
         { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT },
         { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },

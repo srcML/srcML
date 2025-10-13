@@ -730,6 +730,7 @@ tokens {
     SFUNCTION_GENERATOR_STATEMENT;
     SFUNCTION_GET_STATEMENT;
     SFUNCTION_SET_STATEMENT;
+    SNAME_LIST;
     SUNDEFINED_JS;
     SYIELD_GENERATOR_STATEMENT;
 }
@@ -983,6 +984,7 @@ public:
         temp_array[JS_DEBUGGER]    = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
         temp_array[JS_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_GET]         = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_IMPORT]      = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_IMPORT_JS, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
         temp_array[JS_SET]         = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
@@ -1412,12 +1414,20 @@ start_javascript[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
+        // special behavior for import/export statements:
+        // - curly braces begin/end name lists
+        // - "from" denotes special markup
+        // - multops ('*') should be treated as a name
+        // - bare literals can appear (no expression)
+        { inTransparentMode(MODE_IMPORT_JS) }?
+        (name_list_js | from_js | multops_as_name | literals) |
+
         // looking for lparen to start a parameter list
         { inMode(MODE_PARAMETER_LIST_JS) }?
         javascript_parameter_list |
 
         // looking for a keyword or operator that does not belong to a statement
-        extends_js |
+        alias_js | extends_js |
 
         // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
         start
@@ -5769,6 +5779,10 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 comma[] { bool markup_comma = true; ENTRY_DEBUG } :
         {
+            // ensure comma is unmarked in import/export statements in JavaScript
+            if (inTransparentMode(MODE_IMPORT_JS))
+                markup_comma = false;
+
             // comma ends the current condition in a Python assert
             if (
                 inLanguage(LANGUAGE_PYTHON)
@@ -8515,7 +8529,10 @@ identifier_list[] { ENTRY_DEBUG } :
         EMIT | FOREACH | SIGNAL | FOREVER |
 
         // Python
-        PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE
+        PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE |
+
+        // JavaScript
+        JS_DEFAULT
 ;
 
 /*
@@ -17965,6 +17982,36 @@ pseudoblock[] { ENTRY_DEBUG } :
 ;
 
 /*
+  alias_js
+
+  Handles an "as" in JavaScript.
+*/
+alias_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SALIAS);
+        }
+
+        JS_AS
+        compound_name
+;
+
+/*
+  from_js
+
+  Handles a "from" in import/export statements in JavaScript.
+*/
+from_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SFROM);
+        }
+
+        JS_FROM
+        literals
+;
+
+/*
   extends_js
 
   Handles an "extends" expression in JavaScript.
@@ -18114,4 +18161,20 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
             expression
         )*
+;
+
+/*
+  name_list_js
+
+  Handles a list of names in JavaScript.  Begins and ends with a curly brace.
+*/
+name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SNAME_LIST);
+        }
+
+        LCURLY
+        (options { greedy = true; } : alias_js | literals | compound_name | COMMA)*
+        RCURLY
 ;

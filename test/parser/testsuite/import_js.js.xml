@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="import">
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <literal type="string">"module-name"</literal></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>defaultExport</name> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>*</name> <alias>as <name>name</name></alias> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>export1</name> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>export1</name> <alias>as <name>alias1</name></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>default</name> <alias>as <name>alias</name></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <literal type="string">"string name"</literal> <alias>as <name>alias</name></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>export1</name>, <name>export2</name> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>export1</name>, <name>export2</name> <alias>as <name>alias2</name></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>defaultExport</name>, <name_list>{ <name>export1</name> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>defaultExport</name>, <name>*</name> <alias>as <name>name</name></alias> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+</unit>
