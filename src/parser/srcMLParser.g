@@ -727,6 +727,10 @@ tokens {
 
     // JavaScript
     SDEBUGGER_STATEMENT;
+    SDECLARATION_CONST;
+    SDECLARATION_LET;
+    SDECLARATION_STATIC;
+    SDECLARATION_VAR;
     SFUNCTION_GENERATOR_STATEMENT;
     SFUNCTION_GET_STATEMENT;
     SFUNCTION_SET_STATEMENT;
@@ -773,6 +777,7 @@ public:
     std::deque<char> lparen_types_py;
     std::deque<char> lparen_types_js;
     bool in_template_param = false;
+    int current_decl_type_js = 0;
     int start_count = 0;
 
     static const antlr::BitSet keyword_name_token_set;
@@ -1398,6 +1403,12 @@ start_javascript[] {
         // invoke the table to handle keywords
         if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
+
+            // looking for "let", "var", "const", or "static" at the statement-level
+            if (LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || LA(1) == JS_STATIC) {
+                declaration_statement_js();
+                return;
+            }
 
             if (duplex_keyword_set.member((unsigned int) LA(1))) {
                 const auto lookup = duplexKeywords[token + (next_token() << 8)];
@@ -17982,6 +17993,100 @@ pseudoblock[] { ENTRY_DEBUG } :
 ;
 
 /*
+  declaration_statement_js
+
+  Handles a declaration statement in JavaScript.
+*/
+declaration_statement_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // do not nest declaration statements
+            if (!inMode(MODE_DECL_STATEMENT_JS)) {
+                startNewMode(MODE_DECL_STATEMENT_JS);
+                startElement(SDECLARATION_STATEMENT);
+            }
+        }
+
+        (options { greedy = true; } :
+            // termination token signifies the end of the declaration statement
+            TERMINATE
+            {
+                break;
+            } |
+
+            // "," followed by a name should continue the declaration statement
+            { next_token() == NAME }?
+            (COMMA declaration_js[true]) |
+
+            declaration_js[false]
+        )*
+;
+
+/*
+  declaration_js
+
+  Handles a declaration in JavaScript.  These typically begin with "let", "var", "const", or "static".
+  Multiple comma-separated declarations retain the type from the first variable (e.g., let a, b).
+*/
+declaration_js[bool is_comma_decl = false] { int decl_start_token = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_JS);
+
+            // first declaration in the declaration statement
+            if (!is_comma_decl) {
+                decl_start_token = LA(1);
+                current_decl_type_js = LA(1);
+            }
+            // additional declaration that appears after a comma
+            else
+                decl_start_token = current_decl_type_js;
+
+            switch (decl_start_token) {
+                case JS_LET :
+                    startElement(SDECLARATION_LET);
+                    break;
+
+                case JS_VAR :
+                    startElement(SDECLARATION_VAR);
+                    break;
+
+                case JS_STATIC :
+                    startElement(SDECLARATION_STATIC);
+                    break;
+
+                case JS_CONST :
+                    startElement(SDECLARATION_CONST);
+                    break;
+
+                default:
+                    startElement(SPARAMETER);
+                    break;
+            }
+        }
+
+        (JS_LET | JS_VAR | JS_STATIC | JS_CONST | compound_name)
+
+        (options { greedy = true; } :
+            // ensure the declaration ends before a termination token or comma
+            { LA(1) == TERMINATE || LA(1) == COMMA }?
+            {
+                break;
+            } |
+
+            // allow these tokens, but leave them unmarked
+            LBRACKET | RBRACKET | LCURLY | RCURLY |
+
+            declaration_init_js | compound_name
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECL_JS)) {
+                endDownToMode(MODE_DECL_JS);
+                endMode(MODE_DECL_JS);
+            }
+        }
+;
+
+/*
   alias_js
 
   Handles an "as" in JavaScript.
@@ -18009,6 +18114,31 @@ from_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         JS_FROM
         literals
+;
+
+/*
+  declaration_init_js
+
+  Handles an initialization expression that can appear after a declaration in JavaScript.
+*/
+declaration_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SINIT);
+        }
+
+        EQUAL
+
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+
+        (options { greedy = true; } :
+            // only consume commas for calls
+            { lparen_types_js.back() == 'c' }?
+            comma |
+
+            expression
+        )*
 ;
 
 /*

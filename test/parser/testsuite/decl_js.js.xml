@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="decl">
+
+<!-- "let" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name></decl>, <decl type="let"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="let"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- "let" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name></decl>, <decl type="let"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="let"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "var" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="var"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name></decl>, <decl type="var"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="var"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="var"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- "var" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="var"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name></decl>, <decl type="var"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="var"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="var"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "const" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>, <comment type="block">/* ..., */</comment> <decl type="const"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- "const" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>, <comment type="block">/* ..., */</comment> <decl type="const"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "static" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name></decl>;</decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name></decl>;</decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<!-- "static" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name></decl></decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>name1</name></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+</unit>

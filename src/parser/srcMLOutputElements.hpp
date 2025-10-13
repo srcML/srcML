@@ -341,6 +341,10 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
 
     // JavaScript
     { TOKEN::SDEBUGGER_STATEMENT,           { "debugger",          SRC,      0,           0,        0,                   0 }},
+    { TOKEN::SDECLARATION_CONST,            { "decl",              SRC, "type",     "const",        0,                   0}},
+    { TOKEN::SDECLARATION_LET,              { "decl",              SRC, "type",       "let",        0,                   0}},
+    { TOKEN::SDECLARATION_STATIC,           { "decl",              SRC, "type",    "static",        0,                   0}},
+    { TOKEN::SDECLARATION_VAR,              { "decl",              SRC, "type",       "var",        0,                   0}},
     { TOKEN::SFUNCTION_GENERATOR_STATEMENT, { "function",          SRC, "type", "generator",        0,                   0 }},
     { TOKEN::SFUNCTION_GET_STATEMENT,       { "function",          SRC, "type",       "get",        0,                   0 }},
     { TOKEN::SFUNCTION_SET_STATEMENT,       { "function",          SRC, "type",       "set",        0,                   0 }},

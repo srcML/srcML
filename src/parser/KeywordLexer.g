@@ -356,6 +356,7 @@ tokens {
     JS_ARROW;
     JS_AS;
     JS_AWAIT;
+    JS_CONST;
     JS_CONSTRUCTOR;
     JS_DEBUGGER;
     JS_DEFAULT;
@@ -366,11 +367,14 @@ tokens {
     JS_GET;
     JS_IMPORT;
     JS_INSTANCEOF;
+    JS_LET;
     JS_NULL;
     JS_RANGE_IN;
     JS_SET;
+    JS_STATIC;
     JS_TYPEOF;
     JS_UNDEFINED;
+    JS_VAR;
     JS_VOID;
     JS_YIELD;
     QMARK_PERIOD;
@@ -832,6 +836,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
         { "as"           , JS_AS             , LANGUAGE_JAVASCRIPT },
         { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
+        { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
         { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
         { "default"      , JS_DEFAULT        , LANGUAGE_JAVASCRIPT },
@@ -843,10 +848,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
         { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
         { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT },
+        { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT },
         { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },
         { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
+        { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT },
         { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT },
         { "undefined"    , JS_UNDEFINED      , LANGUAGE_JAVASCRIPT },
+        { "var"          , JS_VAR            , LANGUAGE_JAVASCRIPT },
         { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
    };
