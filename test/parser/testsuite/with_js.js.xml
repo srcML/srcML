@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="with">
+
+<unit revision="1.0.0" language="JavaScript">
+<with>with (<expr><name>Math</name></expr>) <block>{<block_content>
+    <expr_stmt><expr><name>a</name> <operator>=</operator> <name>PI</name> <operator>*</operator> <name>r</name> <operator>*</operator> <name>r</name></expr></expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>r</name> <operator>*</operator> <call><name>cos</name><argument_list>(<argument><expr><name>PI</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    <expr_stmt><expr><name>y</name> <operator>=</operator> <name>r</name> <operator>*</operator> <call><name>sin</name><argument_list>(<argument><expr><name>PI</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></with>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>dateTime</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <with>with (<expr><operator>new</operator> <call><name>Date</name><argument_list>()</argument_list></call></expr>)
+        <return>return <expr><literal type="string">`${gen(getDate(), 2)} ${gen(getHours(), 2)} : ${gen(getMinutes(), 2)}`</literal></expr></return></with>
+</block_content>}</block></function>
+</unit>
+
+</unit>

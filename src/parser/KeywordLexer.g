@@ -377,6 +377,7 @@ tokens {
     JS_UNDEFINED;
     JS_VAR;
     JS_VOID;
+    JS_WITH;
     JS_YIELD;
     QMARK_PERIOD;
 }
@@ -859,6 +860,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "undefined"    , JS_UNDEFINED      , LANGUAGE_JAVASCRIPT },
         { "var"          , JS_VAR            , LANGUAGE_JAVASCRIPT },
         { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },
+        { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
    };
 
