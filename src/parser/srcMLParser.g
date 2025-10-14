@@ -979,6 +979,7 @@ public:
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
         temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, &srcMLParser::pseudoblock };
+        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, nullptr };
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
@@ -1404,18 +1405,20 @@ start_javascript[] {
         if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
 
-            // looking for "let", "var", "const", or "static" at the statement-level
+            // looking for "let", "var", "const", or "static" at the statement level
             if (LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || LA(1) == JS_STATIC) {
                 declaration_statement_js();
                 return;
             }
 
+            // looking for statements that start with a duplex keyword (e.g., "else if")
             if (duplex_keyword_set.member((unsigned int) LA(1))) {
                 const auto lookup = duplexKeywords[token + (next_token() << 8)];
                 if (lookup)
                     token = lookup;
             }
 
+            // looking for keyword-based statements in the table
             const auto& rule = javascript_rules[token];
             if (rule.elementToken && processRule(rule)) {
                 return;
@@ -1436,6 +1439,10 @@ start_javascript[] {
         // looking for lparen to start a parameter list
         { inMode(MODE_PARAMETER_LIST_JS) }?
         javascript_parameter_list |
+
+        // looking for lparen to start control portion of a for-loop
+        { inMode(MODE_FOR_CONTROL_JS) }?
+        for_control_js |
 
         // looking for a keyword or operator that does not belong to a statement
         alias_js | extends_js |
@@ -18084,6 +18091,103 @@ declaration_js[bool is_comma_decl = false] { int decl_start_token = 0; ENTRY_DEB
                 endMode(MODE_DECL_JS);
             }
         }
+;
+
+/*
+  for_control_js
+
+  Handles the control portion of a for-loop in JavaScript.
+*/
+for_control_js[] { ENTRY_DEBUG } :
+        {
+            assertMode(MODE_FOR_CONTROL_JS | MODE_EXPECT);
+            startElement(SCONTROL);
+        }
+
+        LPAREN
+
+        (options { greedy = true; } : { LA(1) == TERMINATE }? { break; } | control_initialization_js)*
+
+        TERMINATE
+
+        (options { greedy = true; } : { LA(1) == TERMINATE }? { break; } | control_condition_js)*
+
+        TERMINATE
+
+        (options { greedy = true; } : { LA(1) == RPAREN }? { break; } | control_increment_js)*
+
+        RPAREN
+
+        {
+            if (inTransparentMode(MODE_FOR_CONTROL_JS)) {
+                endDownToMode(MODE_FOR_CONTROL_JS);
+                endMode(MODE_FOR_CONTROL_JS);
+            }
+        }
+;
+
+/*
+  control_initialization_js
+
+  Handles the first portion of a control in JavaScript.
+*/
+control_initialization_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_CONTROL_INITIALIZATION);
+            startElement(SCONTROL_INITIALIZATION);
+        }
+
+        (options { greedy = true; } :
+            // allow "," followed by a name as an additional declaration
+            { next_token() == NAME }?
+            (COMMA declaration_js[true]) |
+
+            declaration_js[false]
+        )*
+;
+
+/*
+  control_condition_js
+
+  Handles the second portion of a control in JavaScript.
+*/
+control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_CONTROL_CONDITION);
+            startElement(SCONTROL_CONDITION);
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+
+        (options { greedy = true; } :
+            { LA(1) == TERMINATE }?
+            {
+                break;
+            } |
+
+            expression | COMMA
+        )*
+;
+
+/*
+  control_increment_js
+
+  Handles the third portion of a control in JavaScript.
+*/
+control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_CONTROL_INCREMENT);
+            startElement(SCONTROL_INCREMENT);
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            expression | COMMA
+        )*
 ;
 
 /*

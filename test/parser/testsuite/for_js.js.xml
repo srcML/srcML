@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="for">
+
+<!-- Traditional for-loop (e.g., init;condition;incr) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">9</literal></expr></condition>; <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(; <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">9</literal></expr></condition>; <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; ; <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    <if_stmt><if>if <condition>(<expr><name>i</name> <operator>&gt;</operator> <literal type="number">3</literal></expr>)</condition><block type="pseudo"><block_content> <break>break</break></block_content></block></if></if_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(;;)</control> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><name>i</name> <operator>&gt;</operator> <literal type="number">3</literal></expr>)</condition><block type="pseudo"><block_content> <break>break</break></block_content></block></if></if_stmt>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    <expr_stmt><expr><name>i</name><operator>++</operator></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="let">let <name>l</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>, <decl type="let"><name>r</name> <init>= <expr><name><name>arr</name><operator>.</operator><name>length</name></name> <operator>-</operator> <literal type="number">1</literal></expr></init></decl></init>; <condition><expr><name>l</name> <operator>&lt;</operator> <name>r</name></expr></condition>; <incr><expr><name>l</name><operator>++</operator>, <name>r</name><operator>--</operator></expr></incr>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name><name>arr</name><index>[<expr><name>l</name></expr>]</index></name></expr></argument>, <argument><expr><name><name>arr</name><index>[<expr><name>r</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+</unit>

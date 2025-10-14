@@ -332,6 +332,8 @@ const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS;
 
 const static srcMLState::MODE_TYPE MODE_CONSTRUCTOR_JS;
 
+const static srcMLState::MODE_TYPE MODE_FOR_CONTROL_JS;
+
 const static srcMLState::MODE_TYPE MODE_SUPER_LIST_JS;
 
 const static srcMLState::MODE_TYPE MODE_EXTENDS_JS;
