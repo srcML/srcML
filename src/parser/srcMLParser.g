@@ -981,9 +981,9 @@ public:
         temp_array[CATCH]       = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
         temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
-        temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, nullptr, &srcMLParser::pseudoblock };
+        temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };
-        temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, &srcMLParser::pseudoblock };
+        temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
         temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, nullptr };
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
@@ -17994,20 +17994,6 @@ control_tuple_no_paren_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
             if (inTransparentMode(MODE_TUPLE_NO_PAREN_PY)) {
                 endDownToMode(MODE_TUPLE_NO_PAREN_PY);
                 endMode(MODE_TUPLE_NO_PAREN_PY);
-            }
-        }
-;
-
-/*
-  pseudoblock
-
-  Handles constructs that resemble a block of source code but are not a true block.
-*/
-pseudoblock[] { ENTRY_DEBUG } :
-        {
-            if (LA(1) != LCURLY) {
-                startNoSkipElement(SPSEUDO_BLOCK);
-                startNoSkipElement(SCONTENT);
             }
         }
 ;
