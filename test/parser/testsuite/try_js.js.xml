@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="try">
+
+<unit revision="1.0.0" language="JavaScript">
+<try>try <block>{<block_content>
+    <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">"oops"</literal></expr></argument>)</argument_list></call></expr></throw>
+</block_content>}</block> <catch>catch <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">"inner"</literal></expr></argument>, <argument><expr><name><name>ex</name><operator>.</operator><name>message</name></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<try>try <block>{<block_content>
+    <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">"oops"</literal></expr></argument>)</argument_list></call></expr></throw>
+</block_content>}</block> <finally>finally <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"finally"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></finally></try>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<try>try <block>{<block_content>
+    <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">"oops"</literal></expr></argument>)</argument_list></call></expr></throw>
+</block_content>}</block> <catch>catch (<name>ex</name>) <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">"inner"</literal></expr></argument>, <argument><expr><name><name>ex</name><operator>.</operator><name>message</name></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></catch> <finally>finally <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"finally"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></finally></try>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<try>try <block>{<block_content>
+    <try>try <block>{<block_content>
+        <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">"oops"</literal></expr></argument>)</argument_list></call></expr></throw>
+    </block_content>}</block> <finally>finally <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"finally"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></finally></try>
+</block_content>}</block> <catch>catch (<name>ex</name>) <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">"outer"</literal></expr></argument>, <argument><expr><name><name>ex</name><operator>.</operator><name>message</name></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></catch></try>
+</unit>
+
+</unit>
