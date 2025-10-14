@@ -356,11 +356,13 @@ tokens {
     JS_ARROW;
     JS_AS;
     JS_AWAIT;
+    JS_CATCH;
     JS_CONST;
     JS_CONSTRUCTOR;
     JS_DEBUGGER;
     JS_DEFAULT;
     JS_DELETE;
+    JS_ELSE;
     JS_EXTENDS;
     JS_FROM;
     JS_FUNCTION;
@@ -838,11 +840,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
         { "as"           , JS_AS             , LANGUAGE_JAVASCRIPT },
         { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
+        { "catch"        , JS_CATCH          , LANGUAGE_JAVASCRIPT },
         { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
         { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
         { "default"      , JS_DEFAULT        , LANGUAGE_JAVASCRIPT },
         { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
+        { "else"         , JS_ELSE           , LANGUAGE_JAVASCRIPT },
         { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT },
         { "finally"      , FINALLY           , LANGUAGE_JAVASCRIPT },
         { "from"         , JS_FROM           , LANGUAGE_JAVASCRIPT },

@@ -961,10 +961,10 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(const size_t CATCH_LPAREN, const size_t ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS) {
+    constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS) {
         std::array<int, SIZE * SIZE> temp_array{};
-        temp_array[CATCH + (LPAREN << 8)] = CATCH_LPAREN;
-        temp_array[ELSE + (IF << 8)] = ELSE_IF;
+        temp_array[JS_CATCH + (LPAREN << 8)] = JS_CATCH_LPAREN;
+        temp_array[JS_ELSE + (IF << 8)] = JS_ELSE_IF;
         temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
         temp_array[JS_STATIC + (LCURLY << 8)] = JS_STATIC_LCURLY;
         temp_array[JS_WITH + (LPAREN << 8)] = JS_WITH_LPAREN;
@@ -973,18 +973,18 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<Rule, SIZE> getJavaScriptRules(const size_t CATCH_LPAREN, const size_t ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS) {
+    constexpr const std::array<Rule, SIZE> getJavaScriptRules(const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS) {
         std::array<Rule, SIZE> temp_array;
 
         /* GENERIC STATEMENTS */
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[CATCH]       = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
+        temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
         temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };
-        temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };
+        temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can be an operator in JavaScript
+        temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
         temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, nullptr };
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
@@ -1004,8 +1004,8 @@ public:
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* DUPLEX KEYWORDS */
-        temp_array[CATCH_LPAREN]        = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
-        temp_array[ELSE_IF]             = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };  // extra consume for 'if'
+        temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
+        temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };  // extra consume for 'if'
         temp_array[JS_FUNCTION_MULTOPS] = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume for '*'
         temp_array[JS_STATIC_LCURLY]    = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a 'static' declaration from a 'static {}' block
         temp_array[JS_WITH_LPAREN]      = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WITH_JS, 0, nullptr, &srcMLParser::with_lparen_js };  // extra consume for '(' is in the provided rule
@@ -1396,8 +1396,8 @@ start_javascript[] {
 
         // The duplex keyword values must start at a value 100 greater than the duplex rule size directly above
         // Increment each new duplex keyword token by an additional one (except the first)
-        const int CATCH_LPAREN = DUPLEX_RULES_SIZE + 100;
-        const int ELSE_IF = DUPLEX_RULES_SIZE + 101;
+        const int JS_CATCH_LPAREN = DUPLEX_RULES_SIZE + 100;
+        const int JS_ELSE_IF = DUPLEX_RULES_SIZE + 101;
         const int JS_FUNCTION_MULTOPS = DUPLEX_RULES_SIZE + 102;
         const int JS_STATIC_LCURLY = DUPLEX_RULES_SIZE + 103;
         const int JS_WITH_LPAREN = DUPLEX_RULES_SIZE + 104;
@@ -1408,11 +1408,11 @@ start_javascript[] {
         const size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
 
         // A duplex keyword is a pair of adjacent keywords
-        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(CATCH_LPAREN, ELSE_IF, JS_FUNCTION_MULTOPS, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS);
+        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS);
 
         // JavaScript rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(CATCH_LPAREN, ELSE_IF, JS_FUNCTION_MULTOPS, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS);
+        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS);
 
         // ensure the lparen deque never starts empty by adding a dummy entry
         if (lparen_types_js.empty())
@@ -5375,7 +5375,7 @@ else_handling[] { ENTRY_DEBUG } :
             // catch and finally statements are nested inside of a try, if at that level; if no CATCH or FINALLY, then end now
             bool intry = inMode(MODE_TRY);
             bool in_for_like_list = inMode(MODE_FOR_LIKE_LIST);
-            bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == FINALLY;
+            bool restoftry = LA(1) == CATCH || LA(1) == CXX_CATCH || LA(1) == JS_CATCH || LA(1) == FINALLY;
 
             if (intry && !restoftry) {
                 endMode(MODE_TRY);
@@ -5384,7 +5384,7 @@ else_handling[] { ENTRY_DEBUG } :
 
             // handle parts of if
             if (inTransparentMode(MODE_IF) && !(intry && restoftry) && !in_for_like_list) {
-                if (LA(1) != ELSE) {
+                if (LA(1) != ELSE && LA(1) != JS_ELSE) {
                     endDownToMode(MODE_TOP);
                 // when an ELSE is next and already in an else, must end properly (not needed for then)
                 } else if (inMode(MODE_ELSE)) {
@@ -5394,7 +5394,7 @@ else_handling[] { ENTRY_DEBUG } :
                         endMode();
 
                         // we have an extra else that is rogue; it either is a single else statement, or part of an #ifdef ... #else ... #endif
-                        if (LA(1) == ELSE && ifcount == 1)
+                        if ((LA(1) == ELSE || LA(1) == JS_ELSE) && ifcount == 1)
                             break;
 
                         // ending an else means ending an if
