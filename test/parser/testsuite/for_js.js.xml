@@ -36,4 +36,21 @@
 </block_content>}</block></for>
 </unit>
 
+<!-- "for...in" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="const">const <name>prop</name> <range>in <expr><name>obj</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`obj.${prop} = ${obj[prop]}`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<!-- "for...of" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="let">let <name>value</name> <range>of <expr><name>iterable</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><name>value</name> <operator>+=</operator> <literal type="number">1</literal></expr></expr_stmt>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>value</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
 </unit>

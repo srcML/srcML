@@ -370,6 +370,7 @@ tokens {
     JS_LET;
     JS_NULL;
     JS_RANGE_IN;
+    JS_RANGE_OF;
     JS_SET;
     JS_STATIC;
     JS_TYPEOF;
@@ -850,6 +851,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT },
         { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT },
         { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },
+        { "of"           , JS_RANGE_OF       , LANGUAGE_JAVASCRIPT },
         { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
         { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT },
         { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT },

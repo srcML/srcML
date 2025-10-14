@@ -18082,7 +18082,7 @@ declaration_js[bool is_comma_decl = false] { int decl_start_token = 0; ENTRY_DEB
             // allow these tokens, but leave them unmarked
             LBRACKET | RBRACKET | LCURLY | RCURLY |
 
-            declaration_init_js | compound_name
+            declaration_init_js | declaration_range_js | compound_name
         )*
 
         {
@@ -18106,15 +18106,53 @@ for_control_js[] { ENTRY_DEBUG } :
 
         LPAREN
 
-        (options { greedy = true; } : { LA(1) == TERMINATE }? { break; } | control_initialization_js)*
+        // Initialization ends at ";" or ")".  Can be omitted.
+        (options { greedy = true; } :
+            { LA(1) == TERMINATE || LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            control_initialization_js
+        )*
+
+        {
+            // "for...of" loop must end after the initialization
+            if (LA(1) != TERMINATE) {
+                consume();  // likely ")"
+
+                if (inTransparentMode(MODE_FOR_CONTROL_JS)) {
+                    endDownToMode(MODE_FOR_CONTROL_JS);
+                    endMode(MODE_FOR_CONTROL_JS);
+                }
+
+                return;
+            }
+        }
 
         TERMINATE
 
-        (options { greedy = true; } : { LA(1) == TERMINATE }? { break; } | control_condition_js)*
+        // Condition ends at ";".  Can be omitted.
+        (options { greedy = true; } :
+            { LA(1) == TERMINATE }?
+            {
+                break;
+            } |
+
+            control_condition_js
+        )*
 
         TERMINATE
 
-        (options { greedy = true; } : { LA(1) == RPAREN }? { break; } | control_increment_js)*
+        // Increment ends at ")".  Can be omitted.
+        (options { greedy = true; } :
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            control_increment_js
+        )*
 
         RPAREN
 
@@ -18138,6 +18176,11 @@ control_initialization_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
+            { LA(1) == TERMINATE || LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
             // allow "," followed by a name as an additional declaration
             { next_token() == NAME }?
             (COMMA declaration_js[true]) |
@@ -18155,7 +18198,6 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_CONTROL_CONDITION);
             startElement(SCONTROL_CONDITION);
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
 
         (options { greedy = true; } :
@@ -18164,7 +18206,13 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 break;
             } |
 
-            expression | COMMA
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            COMMA
         )*
 ;
 
@@ -18177,7 +18225,6 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_CONTROL_INCREMENT);
             startElement(SCONTROL_INCREMENT);
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
 
         (options { greedy = true; } :
@@ -18186,7 +18233,13 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 break;
             } |
 
-            expression | COMMA
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            COMMA
         )*
 ;
 
@@ -18225,22 +18278,53 @@ from_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
   Handles an initialization expression that can appear after a declaration in JavaScript.
 */
-declaration_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
+declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
+            startNewMode(MODE_LOCAL);
             startElement(SINIT);
         }
 
         EQUAL
-
-        {
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-        }
 
         (options { greedy = true; } :
             // only consume commas for calls
             { lparen_types_js.back() == 'c' }?
             comma |
 
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression
+        )*
+;
+
+/*
+  declaration_range_js
+
+  Handles the range portion of a declaration in JavaScript.  Begins with "in" or "of".
+*/
+declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SDECLARATION_RANGE);
+        }
+
+        (JS_RANGE_IN | JS_RANGE_OF)
+
+        (options { greedy = true; } :
+            // only consume commas for calls
+            { lparen_types_js.back() == 'c' }?
+            comma |
+
+            {
+                // ensure ")" is not consumed here
+                if (LA(1) == RPAREN)
+                    break;
+
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
             expression
         )*
 ;
