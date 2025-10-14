@@ -1101,8 +1101,10 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         // expression_part_default |
 
         // statements that clearly start with a keyword
+        // keyword-based languages (e.g., Python and JavaScript) do not use keyword_statements
         {
-            (
+            !inLanguage(LANGUAGE_KEYWORD_FAMILY)
+            && (
                 LA(1) != TEMPLATE
                 || next_token() != TEMPOPS
             )
@@ -1472,14 +1474,11 @@ catch[...] {
 */
 keyword_statements[] { ENTRY_DEBUG } :
         // conditional statements
-        // Python if/elif/else are handled in start_py
-        { !inLanguage(LANGUAGE_PYTHON) }?
         if_statement |
 
-        { !inLanguage(LANGUAGE_PYTHON) && next_token() == IF }?
+        { next_token() == IF }?
         elseif_statement |
 
-        { !inLanguage(LANGUAGE_PYTHON) }?
         else_statement |
 
         switch_statement | switch_case | switch_default |
@@ -5561,8 +5560,10 @@ statement_part[] {
         expression[type, call_count] |
 
         // already in an expression and ran into a keyword; stop the expression and markup the keyword statement
+        // keyword-based languages (e.g., Python and JavaScript) do not use keyword_statements
         {
-            inMode(MODE_EXPRESSION)
+            !inLanguage(LANGUAGE_KEYWORD_FAMILY)
+            && inMode(MODE_EXPRESSION)
             && !(
                 inLanguage(LANGUAGE_OBJECTIVE_C)
                 && LA(1) == IMPORT
