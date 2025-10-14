@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="specifier">
+
+<!-- Declarations ("let") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><specifier>export</specifier> <decl type="let">let <name>rectangle</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><specifier>export</specifier> <specifier>default</specifier> <decl type="let">let <name>rectangle</name></decl></decl_stmt>
+</unit>
+
+<!-- Declarations ("var") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><specifier>export</specifier> <decl type="var">var <name>circle</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><specifier>export</specifier> <specifier>default</specifier> <decl type="var">var <name>circle</name></decl></decl_stmt>
+</unit>
+
+<!-- Declarations ("const") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><specifier>export</specifier> <decl type="const">const <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><specifier>export</specifier> <specifier>default</specifier> <decl type="const">const <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Declarations ("static") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><specifier>export</specifier> <decl type="static">static <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><specifier>export</specifier> <specifier>default</specifier> <decl type="static">static <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Regular functions ("function") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>functionName</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> <specifier>default</specifier> function <name>functionName</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<!-- Generator functions ("function*") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator"><specifier>export</specifier> function* <name>generatorFunctionName</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator"><specifier>export</specifier> <specifier>default</specifier> function* <name>generatorFunctionName</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<!-- Getters ("get") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="get"><specifier>export</specifier> get<parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="get"><specifier>export</specifier> get <name>msg</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="get"><specifier>export</specifier> <specifier>default</specifier> get<parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="get"><specifier>export</specifier> <specifier>default</specifier> get <name>msg</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<!-- Setters ("set") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="set"><specifier>export</specifier> set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="set"><specifier>export</specifier> set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="set"><specifier>export</specifier> <specifier>default</specifier> set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="set"><specifier>export</specifier> <specifier>default</specifier> set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<!-- Classes ("class" )-->
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> <specifier>default</specifier> class <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>ClassName</name> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> <specifier>default</specifier> class <name>ClassName</name> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></class>
+</unit>
+
+</unit>

@@ -355,6 +355,7 @@ tokens {
     // JavaScript
     JS_ARROW;
     JS_AS;
+    JS_ASYNC;
     JS_AWAIT;
     JS_CATCH;
     JS_CONST;
@@ -362,7 +363,9 @@ tokens {
     JS_DEBUGGER;
     JS_DEFAULT;
     JS_DELETE;
+    JS_EACH;
     JS_ELSE;
+    JS_EXPORT;
     JS_EXTENDS;
     JS_FROM;
     JS_FUNCTION;
@@ -839,6 +842,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "<="           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
         { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
         { "as"           , JS_AS             , LANGUAGE_JAVASCRIPT },
+        { "async"        , JS_ASYNC          , LANGUAGE_JAVASCRIPT },
         { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
         { "catch"        , JS_CATCH          , LANGUAGE_JAVASCRIPT },
         { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
@@ -846,7 +850,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
         { "default"      , JS_DEFAULT        , LANGUAGE_JAVASCRIPT },
         { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
+        { "each"         , JS_EACH           , LANGUAGE_JAVASCRIPT },
         { "else"         , JS_ELSE           , LANGUAGE_JAVASCRIPT },
+        { "export"       , JS_EXPORT         , LANGUAGE_JAVASCRIPT },
         { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT },
         { "finally"      , FINALLY           , LANGUAGE_JAVASCRIPT },
         { "from"         , JS_FROM           , LANGUAGE_JAVASCRIPT },

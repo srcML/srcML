@@ -799,6 +799,7 @@ public:
     static const antlr::BitSet right_bracket_py_token_set;
     static const antlr::BitSet comment_py_token_set;
     static const antlr::BitSet multiline_literals_py_token_set;
+    static const antlr::BitSet post_specifier_js_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -889,24 +890,21 @@ public:
     }
 
     void handleAttributes() {
-        // handle Python decorators
-        if (LA(1) == PY_ATSIGN) {
-            // handle multiple pre-keyword decorators in a row
-            while (LA(1) == PY_ATSIGN) {
-                attribute_py();
-            }
+        // handle multiple pre-keyword Python decorators in a row
+        while (LA(1) == PY_ATSIGN) {
+            attribute_py();
         }
     }
 
     void handleSpecifiers() {
-        // handle Python specifiers
-        if (inLanguage(LANGUAGE_PYTHON)) {
-            if (check_valid_specifier_py()) {
-                // handle multiple pre-keyword specifiers in a row
-                while (check_valid_specifier_py()) {
-                    specifier_py();
-                }
-            }
+        // handle multiple pre-keyword Python specifiers in a row
+        while (check_valid_specifier_py()) {
+            specifier_py();
+        }
+
+        // handle multiple pre-keyword JavaScript specifiers in a row
+        while (check_valid_specifier_js()) {
+            specifier_js();
         }
     }
 
@@ -983,7 +981,7 @@ public:
         temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can be an operator in JavaScript
+        temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
         temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
         temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, nullptr };
@@ -1418,13 +1416,44 @@ start_javascript[] {
         if (lparen_types_js.empty())
             lparen_types_js.emplace_back('*');
 
+        // check if the current non-comment token is a specifier that occurs before a statement keyword
+        if (LA(1) != SNOP && inMode(MODE_STATEMENT) && check_valid_specifier_js()) {
+            std::array<int, 2> post_specifier_tokens = perform_post_specifier_check_js();
+
+            // looking for "let", "var", "const", or "static"
+            if (
+                post_specifier_tokens[0] == JS_LET
+                || post_specifier_tokens[0] == JS_VAR
+                || post_specifier_tokens[0] == JS_CONST
+                || (post_specifier_tokens[0] == JS_STATIC && post_specifier_tokens[1] != LCURLY)
+            ) {
+                declaration_statement_js(true);
+                return;
+            }
+
+            // looking for duplex keywords (e.g., "function *")
+            if (duplex_keyword_set.member((unsigned int) post_specifier_tokens[0])) {
+                const auto lookup = duplexKeywords[post_specifier_tokens[0] + (post_specifier_tokens[1] << 8)];
+                if (lookup)
+                    post_specifier_tokens[0] = lookup;
+            }
+
+            // looking for classes or functions (regular/get/set)
+            if (post_specifier_tokens[0] != -1) {
+                const auto& rule = javascript_rules[post_specifier_tokens[0]];
+                if (rule.elementToken && processRule(rule)) {
+                    return;
+                }
+            }
+        }
+
         // invoke the table to handle keywords
         if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
 
             // looking for "let", "var", "const", or "static" at the statement level
             if (LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || (LA(1) == JS_STATIC && next_token() != LCURLY)) {
-                declaration_statement_js();
+                declaration_statement_js(false);
                 return;
             }
 
@@ -18002,16 +18031,96 @@ control_tuple_no_paren_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 ;
 
 /*
+  check_valid_specifier_js
+
+  Checks to see if the current token is a specifier in JavaScript.
+*/
+check_valid_specifier_js[] returns [int isspecifier] {
+        isspecifier = false;
+
+        if (
+            LA(1) == JS_ASYNC
+            || LA(1) == JS_EACH
+            || LA(1) == JS_EXPORT
+            || (LA(1) == JS_DEFAULT && next_token() != COLON)
+        )
+            isspecifier = true;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  perform_post_specifier_check_js
+
+  Returns the next token that occur after a JavaScript specifier.
+  If there are multiple specifiers in a row, returns the next token after the last specifier.
+*/
+perform_post_specifier_check_js[] returns [std::array<int, 2> keywords] {
+        keywords[0] = -1;
+        keywords[1] = -1;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                consume();
+
+                if (!check_valid_specifier_js())
+                    break;
+            }
+
+            if (post_specifier_js_token_set.member(LA(1))) {
+                keywords[0] = LA(1);
+                keywords[1] = next_token();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  specifier_js
+
+  Used to mark specifiers in JavaScript.
+*/
+specifier_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        (JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT)
+
+        {
+            endMode(MODE_LOCAL);
+        }
+;
+
+/*
   declaration_statement_js
 
   Handles a declaration statement in JavaScript.
 */
-declaration_statement_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+declaration_statement_js[bool handle_specifiers = false] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // do not nest declaration statements
             if (!inMode(MODE_DECL_STATEMENT_JS)) {
                 startNewMode(MODE_DECL_STATEMENT_JS);
                 startElement(SDECLARATION_STATEMENT);
+            }
+
+            // mark up any specifiers, if applicable
+            if (handle_specifiers) {
+                while (check_valid_specifier_js()) {
+                    specifier_js();
+                }
             }
         }
 
