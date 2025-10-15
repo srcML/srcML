@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="array">
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>colors</name> <init>= <expr><array>[]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>colors</name> <init>= <expr><array>[<expr><name>red</name></expr>, <expr><name>yellow</name></expr>, <expr><name>blue</name></expr>]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>colors</name> <init>= <expr><array>[<expr><call><name>red</name><argument_list>(<argument><expr><name>r1</name></expr></argument>, <argument><expr><name>g1</name></expr></argument>, <argument><expr><name>b1</name></expr></argument>)</argument_list></call></expr>, <expr><call><name>yellow</name><argument_list>(<argument><expr><name>r2</name></expr></argument>, <argument><expr><name>g2</name></expr></argument>, <argument><expr><name>b2</name></expr></argument>)</argument_list></call></expr>, <expr><call><name>blue</name><argument_list>(<argument><expr><name>r3</name></expr></argument>, <argument><expr><name>g3</name></expr></argument>, <argument><expr><name>b3</name></expr></argument>)</argument_list></call></expr>]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>colors</name> <init>= <expr><array>[<expr><literal type="string">"red"</literal></expr>, <expr><literal type="string">"yellow"</literal></expr>, <expr><literal type="string">"blue"</literal></expr>]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>colorsCopy</name> <init>= <expr><array>[<expr><operator>...</operator><name>colors</name></expr>]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>board</name> <init>= <expr><array>[
+    <expr><array>[<expr><literal type="string">"R"</literal></expr>, <expr><literal type="string">"N"</literal></expr>, <expr><literal type="string">"B"</literal></expr>, <expr><literal type="string">"Q"</literal></expr>, <expr><literal type="string">"K"</literal></expr>, <expr><literal type="string">"B"</literal></expr>, <expr><literal type="string">"N"</literal></expr>, <expr><literal type="string">"R"</literal></expr>]</array></expr>,
+    <expr><array>[<expr><literal type="string">"P"</literal></expr>, <expr><literal type="string">"P"</literal></expr>, <expr><literal type="string">"P"</literal></expr>, <expr><literal type="string">"P"</literal></expr>, <expr><literal type="string">"P"</literal></expr>, <expr><literal type="string">"P"</literal></expr>, <expr><literal type="string">"P"</literal></expr>, <expr><literal type="string">"P"</literal></expr>]</array></expr>,
+    <expr><array>[<expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>]</array></expr>,
+    <expr><array>[<expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>]</array></expr>,
+    <expr><array>[<expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>]</array></expr>,
+    <expr><array>[<expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>, <expr><literal type="string">" "</literal></expr>]</array></expr>,
+    <expr><array>[<expr><literal type="string">"p"</literal></expr>, <expr><literal type="string">"p"</literal></expr>, <expr><literal type="string">"p"</literal></expr>, <expr><literal type="string">"p"</literal></expr>, <expr><literal type="string">"p"</literal></expr>, <expr><literal type="string">"p"</literal></expr>, <expr><literal type="string">"p"</literal></expr>, <expr><literal type="string">"p"</literal></expr>]</array></expr>,
+    <expr><array>[<expr><literal type="string">"r"</literal></expr>, <expr><literal type="string">"n"</literal></expr>, <expr><literal type="string">"b"</literal></expr>, <expr><literal type="string">"q"</literal></expr>, <expr><literal type="string">"k"</literal></expr>, <expr><literal type="string">"b"</literal></expr>, <expr><literal type="string">"n"</literal></expr>, <expr><literal type="string">"r"</literal></expr>]</array></expr>,
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

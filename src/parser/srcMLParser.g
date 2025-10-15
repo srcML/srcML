@@ -5856,8 +5856,8 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 comma[] { bool markup_comma = true; ENTRY_DEBUG } :
         {
-            // ensure comma is unmarked in import/export statements in JavaScript
-            if (inTransparentMode(MODE_IMPORT_JS))
+            // ensure comma is unmarked in import/export (statements) and arrays in JavaScript
+            if (inTransparentMode(MODE_IMPORT_JS) || inTransparentMode(MODE_EXPORT_JS) || inTransparentMode(MODE_ARRAY_JS))
                 markup_comma = false;
 
             // comma ends the current condition in a Python assert
@@ -12299,6 +12299,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // looking for lbracket to start an array in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        array_js |
+
         // looking for a Python indexable function call (e.g., "a()[]", "b()[][]", etc.)
         {
             inLanguage(LANGUAGE_PYTHON)
@@ -18677,4 +18681,38 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         LCURLY
         (options { greedy = true; } : alias_js | literals | compound_name | COMMA)*
         RCURLY
+;
+
+/*
+  array_js
+
+  Handles arrays in JavaScript.  Not used directly, but can be called by expression_part.
+*/
+array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_ARRAY_JS);
+            startElement(SARRAY);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_ARRAY_JS))
+                endDownToMode(MODE_ARRAY_JS);
+        }
+
+        RBRACKET
 ;
