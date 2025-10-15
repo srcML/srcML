@@ -731,6 +731,7 @@ tokens {
     SDECLARATION_LET;
     SDECLARATION_STATIC;
     SDECLARATION_VAR;
+    SEXPORT_STATEMENT;
     SFUNCTION_GENERATOR_STATEMENT;
     SFUNCTION_GET_STATEMENT;
     SFUNCTION_SET_STATEMENT;
@@ -902,8 +903,8 @@ public:
             specifier_py();
         }
 
-        // handle multiple pre-keyword JavaScript specifiers in a row
-        while (check_valid_specifier_js()) {
+        // handle multiple pre-keyword JavaScript specifiers in a row (ignore "export" statements)
+        while (!inTransparentMode(MODE_EXPORT_JS) && check_valid_specifier_js()) {
             specifier_js();
         }
     }
@@ -995,6 +996,7 @@ public:
         /* JAVASCRIPT STATEMENTS */
         temp_array[JS_CONSTRUCTOR] = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_PARAMETER_LIST_JS, nullptr, nullptr };
         temp_array[JS_DEBUGGER]    = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
+        temp_array[JS_EXPORT]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT | MODE_EXPORT_JS, MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_GET]         = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_IMPORT]      = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_IMPORT_JS, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
@@ -1471,16 +1473,28 @@ start_javascript[] {
             }
         }
 
+        bool in_export_statement = inTransparentMode(MODE_EXPORT_JS) ;
+        bool in_import_statement = inTransparentMode(MODE_IMPORT_JS) ;
+
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
         // special behavior for import/export statements:
+        // - "default" is a valid specifier [export only]
+        // - bare literals can appear (no expression) [import only]
         // - curly braces begin/end name lists
         // - "from" denotes special markup
         // - multops ('*') should be treated as a name
-        // - bare literals can appear (no expression)
-        { inTransparentMode(MODE_IMPORT_JS) }?
-        (name_list_js | from_js | multops_as_name | literals) |
+        { in_export_statement || in_import_statement }?
+        (
+            { in_export_statement }?
+            specifier_js |
+
+            { in_import_statement }?
+            literals |
+
+            name_list_js | from_js | multops_as_name
+        ) |
 
         // looking for lparen to start a parameter list
         { inMode(MODE_PARAMETER_LIST_JS) }?
@@ -18401,14 +18415,29 @@ with_lparen_js[] { ENTRY_DEBUG } :
 
   Handles an "as" in JavaScript.
 */
-alias_js[] { SingleElement element(this); ENTRY_DEBUG } :
+alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
             startElement(SALIAS);
         }
 
         JS_AS
-        compound_name
+
+        (options { greedy = true; } :
+            // only consume commas for calls
+            { lparen_types_js.back() == 'c' }?
+            comma |
+
+            {
+                // ensure the "}" (for name lists) is not consumed here
+                if (LA(1) == RCURLY && inTransparentMode(MODE_NAME_LIST_JS))
+                    break;
+
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression
+        )*
 ;
 
 /*
@@ -18641,7 +18670,7 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 */
 name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_NAME_LIST_JS);
             startElement(SNAME_LIST);
         }
 
