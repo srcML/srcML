@@ -23,6 +23,10 @@
 <decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="let"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><call><name>value1</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <decl type="let"><name>nameN</name> <init>= <expr><call><name>valueN</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
 <!-- "let" (without semicolons) -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -43,6 +47,10 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="let"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><call><name>value1</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <decl type="let"><name>nameN</name> <init>= <expr><call><name>valueN</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "var" (with semicolons) -->

@@ -11,8 +11,17 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>dateTime</name><parameter_list>()</parameter_list> <block>{<block_content>
-    <with>with (<expr><operator>new</operator> <call><name>Date</name><argument_list>()</argument_list></call></expr>)
-        <return>return <expr><literal type="string">`${gen(getDate(), 2)} ${gen(getHours(), 2)} : ${gen(getMinutes(), 2)}`</literal></expr></return></with>
+    <with>with (<expr><operator>new</operator> <call><name>Date</name><argument_list>()</argument_list></call></expr>) <block>{<block_content>
+        <return>return <expr><literal type="string">`${gen(getDate(), 2)} ${gen(getHours(), 2)} : ${gen(getMinutes(), 2)}`</literal></expr></return>
+    </block_content>}</block></with>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>dateTime</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <with>with (<expr><call><name>Date</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr>) <block>{<block_content>
+        <return>return <expr><literal type="string">`${gen(getDate(), 2)} ${gen(getHours(), 2)} : ${gen(getMinutes(), 2)}`</literal></expr></return>
+    </block_content>}</block></with>
 </block_content>}</block></function>
 </unit>
 

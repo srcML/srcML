@@ -5856,8 +5856,19 @@ bar[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 comma[] { bool markup_comma = true; ENTRY_DEBUG } :
         {
-            // ensure comma is unmarked in import/export (statements) and arrays in JavaScript
-            if (inTransparentMode(MODE_IMPORT_JS) || inTransparentMode(MODE_EXPORT_JS) || inTransparentMode(MODE_ARRAY_JS))
+            // ensure comma is unmarked in certain instances for JavaScript
+            if (
+                inTransparentMode(MODE_IMPORT_JS)
+                || inTransparentMode(MODE_EXPORT_JS)
+                || inTransparentMode(MODE_ARRAY_JS)
+                || (
+                    inLanguage(LANGUAGE_JAVASCRIPT)
+                    && (
+                        inTransparentMode(MODE_CONTROL_INCREMENT)
+                        || inTransparentMode(MODE_CONTROL_CONDITION)
+                    )
+                )
+            )
                 markup_comma = false;
 
             // comma ends the current condition in a Python assert
@@ -18330,18 +18341,20 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == TERMINATE }?
-            {
-                break;
-            } |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
             {
+                // ensure ";" is not consumed here
+                if (LA(1) == TERMINATE)
+                    break;
+
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
             expression |
 
-            COMMA
+            comma
         )*
 ;
 
@@ -18357,18 +18370,20 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN }?
-            {
-                break;
-            } |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
             {
+                // ensure non-call ")" is not consumed here
+                if (LA(1) == RPAREN && lparen_types_js.back() != 'c')
+                    break;
+
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
             expression |
 
-            COMMA
+            comma
         )*
 ;
 
@@ -18390,20 +18405,22 @@ with_lparen_js[] { ENTRY_DEBUG } :
         LPAREN
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN }?
-            {
-                break;
-            } |
-
-            // only consume commas for calls
-            { lparen_types_js.back() == 'c' }?
-            comma |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
             {
+                // ensure non-call ")" is not consumed here
+                if (LA(1) == RPAREN && lparen_types_js.back() != 'c')
+                    break;
+
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            expression
+            expression |
+
+            // consume commas for calls, but not for parameters
+            { lparen_types_js.back() == 'c' }?
+            comma
         )*
 
         {
@@ -18428,9 +18445,8 @@ alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         JS_AS
 
         (options { greedy = true; } :
-            // only consume commas for calls
-            { lparen_types_js.back() == 'c' }?
-            comma |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
             {
                 // ensure the "}" (for name lists) is not consumed here
@@ -18440,7 +18456,11 @@ alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            expression
+            expression |
+
+            // consume commas for calls, but not for parameters
+            { lparen_types_js.back() == 'c' }?
+            comma
         )*
 ;
 
@@ -18473,15 +18493,18 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         EQUAL
 
         (options { greedy = true; } :
-            // only consume commas for calls
-            { lparen_types_js.back() == 'c' }?
-            comma |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            expression
+            expression |
+
+            // consume commas for calls, but not for parameters
+            { lparen_types_js.back() == 'c' }?
+            comma
         )*
 ;
 
@@ -18499,19 +18522,22 @@ declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         (JS_RANGE_IN | JS_RANGE_OF)
 
         (options { greedy = true; } :
-            // only consume commas for calls
-            { lparen_types_js.back() == 'c' }?
-            comma |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
             {
-                // ensure ")" is not consumed here
-                if (LA(1) == RPAREN)
+                // ensure non-call ")" is not consumed here
+                if (LA(1) == RPAREN && lparen_types_js.back() != 'c')
                     break;
 
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            expression
+            expression |
+
+            // consume commas for calls, but not for parameters
+            { lparen_types_js.back() == 'c' }?
+            comma
         )*
 ;
 
@@ -18568,11 +18594,18 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 break;
             } |
 
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            expression
+            expression |
+
+            // consume commas for calls, but not for parameters
+            { lparen_types_js.back() == 'c' }?
+            comma
         )*
 ;
 
@@ -18643,14 +18676,11 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 */
 parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
         {
+            startNewMode(MODE_LOCAL);
             startElement(SINIT);
         }
 
         EQUAL
-
-        {
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-        }
 
         (options { greedy = true; } :
             // do not consume the ending RPAREN for a parameter list
@@ -18659,11 +18689,18 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
                 break;
             } |
 
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
             // consume commas for calls, but not for parameters
             { lparen_types_js.back() == 'c' }?
-            comma |
-
-            expression
+            comma
         )*
 ;
 

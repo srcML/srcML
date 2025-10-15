@@ -27,6 +27,10 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>example</name><parameter_list>(<parameter><decl><name>a</name><init>=<expr><call><name>init</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
 <!-- Generator functions ("function*") -->
 
 <unit revision="1.0.0" language="JavaScript">

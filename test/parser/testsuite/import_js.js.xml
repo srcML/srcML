@@ -10,7 +10,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<import>import <name>*</name> <alias>as <name>name</name></alias> <from>from <literal type="string">"module-name"</literal></from></import>
+<import>import <name>*</name> <alias>as <expr><name>name</name></expr></alias> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -18,15 +18,15 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<import>import <name_list>{ <name>export1</name> <alias>as <name>alias1</name></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+<import>import <name_list>{ <name>export1</name> <alias>as <expr><name>alias1</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<import>import <name_list>{ <name>default</name> <alias>as <name>alias</name></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+<import>import <name_list>{ <name>default</name> <alias>as <expr><name>alias</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<import>import <name_list>{ <literal type="string">"string name"</literal> <alias>as <name>alias</name></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+<import>import <name_list>{ <literal type="string">"string name"</literal> <alias>as <expr><name>alias</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -34,7 +34,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<import>import <name_list>{ <name>export1</name>, <name>export2</name> <alias>as <name>alias2</name></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+<import>import <name_list>{ <name>export1</name>, <name>export2</name> <alias>as <expr><name>alias2</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -42,7 +42,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<import>import <name>defaultExport</name>, <name>*</name> <alias>as <name>name</name></alias> <from>from <literal type="string">"module-name"</literal></from></import>
+<import>import <name>defaultExport</name>, <name>*</name> <alias>as <expr><name>name</name></expr></alias> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
 </unit>
