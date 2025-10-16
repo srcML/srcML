@@ -18344,6 +18344,10 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inMode(MODE_ARGUMENT) }?
             argument |
 
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
             {
                 // ensure ";" is not consumed here
                 if (LA(1) == TERMINATE)
@@ -18372,6 +18376,10 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
             { inMode(MODE_ARGUMENT) }?
             argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
 
             {
                 // ensure non-call ")" is not consumed here
@@ -18407,6 +18415,10 @@ with_lparen_js[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             { inMode(MODE_ARGUMENT) }?
             argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
 
             {
                 // ensure non-call ")" is not consumed here
@@ -18447,6 +18459,10 @@ alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
             { inMode(MODE_ARGUMENT) }?
             argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
 
             {
                 // ensure the "}" (for name lists) is not consumed here
@@ -18496,6 +18512,10 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inMode(MODE_ARGUMENT) }?
             argument |
 
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -18524,6 +18544,10 @@ declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
             { inMode(MODE_ARGUMENT) }?
             argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
 
             {
                 // ensure non-call ")" is not consumed here
@@ -18596,6 +18620,10 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             { inMode(MODE_ARGUMENT) }?
             argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -18692,6 +18720,10 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
             { inMode(MODE_ARGUMENT) }?
             argument |
 
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -18736,6 +18768,10 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
             { inMode(MODE_ARGUMENT) }?
             argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))

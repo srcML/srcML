@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="ternary">
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name</name> <init>= <expr><ternary><condition><expr><name>person</name></expr> ?</condition><then> <expr><name><name>person</name><operator>.</operator><name>name</name></name></expr> </then><else>: <expr><literal type="string">"stranger"</literal></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name</name> <init>= <expr><ternary><condition><expr><name>person</name></expr> ?</condition><then> <expr><array>[<expr><name><name>person</name><operator>.</operator><name>name</name></name></expr>, <expr><name><name>person</name><operator>.</operator><name>age</name></name></expr>]</array></expr> </then><else>: <expr><array>[<expr><literal type="string">"stranger"</literal></expr>, <expr><literal type="number">0</literal></expr>]</array></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>beverage</name> <init>= <expr><ternary><condition><expr><name>age</name> <operator>&gt;=</operator> <literal type="number">21</literal></expr> ?</condition><then> <expr><literal type="string">"Beer"</literal></expr> </then><else>: <expr><literal type="string">"Juice"</literal></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- (x ? y : z) ? b : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><operator>(</operator><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary><operator>)</operator></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- x ? y : z ? b : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><ternary><condition><expr><name>z</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- a ? (x ? y : z) : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><operator>(</operator><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary><operator>)</operator></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- a ? x ? y : z : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- a ? b : (x ? y : z) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><operator>(</operator><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary><operator>)</operator></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- a ? b : x ? y : z -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>example</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><ternary><condition><expr><name>condition1</name></expr> ?</condition><then> <expr><name>value1</name></expr>
+        </then><else>: <expr><ternary><condition><expr><name>condition2</name></expr> ?</condition><then> <expr><name>value2</name></expr>
+        </then><else>: <expr><ternary><condition><expr><name>condition3</name></expr> ?</condition><then> <expr><name>value3</name></expr>
+        </then><else>: <expr><name>value4</name></expr></else></ternary></expr></else></ternary></expr></else></ternary></expr></return>
+</block_content>}</block></function>
+</unit>
+
+</unit>
+
