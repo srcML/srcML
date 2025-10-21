@@ -1377,7 +1377,7 @@ catch[...] {
 /*
   start_javascript
 
-  Invokes a table-based approach to detecting and handling tokens.
+  Utilizes a table-based approach to detect and process statement-starting tokens.
 
   Whitespace tokens are handled elsewhere and are automagically included
   in the output stream.
@@ -1387,6 +1387,33 @@ catch[...] {
 start_javascript[] {
         ++start_count;
 
+        // check for potential statement-start tokens before anything else
+        javascript_statements();
+
+        ENTRY_DEBUG_START
+        ENTRY_DEBUG
+} :
+        javascript_rules
+;
+exception
+catch[...] {
+        CATCH_DEBUG
+
+        // need to consume the token. If we got here because
+        // of an error with EOF token, then call EOF directly
+        if (LA(1) == 1)
+            eof();
+        else
+            consume();
+}
+
+/*
+  javascript_statements
+
+  Initializes the table-based approach and checks potential statement tokens for JavaScript.
+  Also includes specifier handling (e.g., "let", "var", "const", "static").
+*/
+javascript_statements[] {
         /*
           May need to increase these constants in the future as more tokens are added
         */
@@ -1473,10 +1500,21 @@ start_javascript[] {
             }
         }
 
-        bool in_export_statement = inTransparentMode(MODE_EXPORT_JS) ;
-        bool in_import_statement = inTransparentMode(MODE_IMPORT_JS) ;
+        ENTRY_DEBUG
+} :;
 
-        ENTRY_DEBUG_START
+/*
+  javascript_rules
+
+  Processes tokens that do not begin a statement in JavaScript.
+  Includes extra logic that differs from the generic start[] grammar rule.
+*/
+javascript_rules[] {
+        int call_count = 1;
+        CALL_TYPE type = NOCALL;
+        bool in_export_statement = inTransparentMode(MODE_EXPORT_JS);
+        bool in_import_statement = inTransparentMode(MODE_IMPORT_JS);
+
         ENTRY_DEBUG
 } :
         // special behavior for import/export statements:
@@ -1507,20 +1545,64 @@ start_javascript[] {
         // looking for a keyword or operator that does not belong to a statement
         alias_js | extends_js |
 
-        // invoke start to handle unprocessed tokens (e.g., EOF, literals, operators, etc.)
-        start
-;
-exception
-catch[...] {
-        CATCH_DEBUG
+        // end of file
+        eof |
 
-        // need to consume the token. If we got here because
-        // of an error with EOF token, then call EOF directly
-        if (LA(1) == 1)
-            eof();
-        else
-            consume();
-}
+        // end of line
+        line_continuation | EOL | LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START |
+
+        comma |
+
+        { !inTransparentMode(MODE_INTERNAL_END_PAREN) || inPrevMode(MODE_CONDITION) }?
+        rparen[false] |
+
+        // characters with special actions that usually end currently open elements
+        // special case for blocks (e.g., lambda capture) in lcurly argument lists
+        {
+            !inTransparentMode(MODE_INTERNAL_END_CURLY)
+            || (inMode(MODE_BLOCK_CONTENT) && inTransparentMode(MODE_ARGUMENT | MODE_LIST))
+        }?
+        block_end |
+
+        terminate |
+
+        // do not confuse with expression block
+        {
+            (
+                (
+                    inTransparentMode(MODE_CONDITION)
+                    || (
+                        !inMode(MODE_EXPRESSION)
+                        && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)
+                    )
+                )
+                && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
+                && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+                && !inTransparentMode(MODE_INIT | MODE_EXPECT)
+            )
+            || inTransparentMode(MODE_ANONYMOUS)
+        }?
+        lcurly |
+
+        { inMode(MODE_ARGUMENT_LIST) }?
+        call_argument_list |
+
+        {
+            !inMode(MODE_INIT)
+            && (
+                !inMode(MODE_EXPRESSION)
+                || inTransparentMode(MODE_DETECT_COLON)
+            )
+        }?
+        colon |
+
+        // must be an expression statement; do not invoke pattern_statements[]
+        { inMode(MODE_NEST | MODE_STATEMENT) }?
+        expression_statement[type, call_count] |
+
+        // in the middle of a statement
+        statement_part
+;
 
 /*
   keyword_statements
@@ -2798,7 +2880,7 @@ objective_c_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         objective_c_parameter
-        (objective_c_parameter)*
+        (options { greedy = true; } : objective_c_parameter)*
 ;
 
 /*
@@ -2931,7 +3013,7 @@ dynamic_statement[] { ENTRY_DEBUG } :
 */
 property_implementation_inner[] { ENTRY_DEBUG } :
         property_implementation_name
-        (COMMA property_implementation_name)*
+        (options { greedy = true; } : COMMA property_implementation_name)*
 ;
 
 /*
@@ -2945,7 +3027,7 @@ property_implementation_name[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         identifier
-        (property_implementation_initialization)*
+        (options { greedy = true; } : property_implementation_initialization)*
 ;
 
 /*
@@ -4066,7 +4148,7 @@ goto_case[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         CASE
-        (literals | ~TERMINATE)*
+        (options { greedy = true; } : literals | ~TERMINATE)*
 ;
 
 /*
@@ -4090,7 +4172,7 @@ asm_declaration[] { ENTRY_DEBUG } :
             specifier
         )*
 
-        ({ true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
+        (options { greedy = true; } : { true }? paren_pair | ~(LCURLY | RCURLY | TERMINATE))*
 ;
 
 /*
@@ -4195,7 +4277,7 @@ extern_definition[] { ENTRY_DEBUG } :
 
         EXTERN
 
-        (
+        (options { greedy = true; } :
             extern_alias
             (options { greedy = true; } : variable_identifier)*
         )*
@@ -4242,7 +4324,7 @@ namespace_definition[] { ENTRY_DEBUG } :
 
         (namespace_inline_specifier)*
         NAMESPACE
-        (attribute_cpp)*
+        (options { greedy = true; } : attribute_cpp)*
 ;
 
 /*
@@ -4293,7 +4375,7 @@ namespace_directive[] { ENTRY_DEBUG } :
         )*
 
         USING
-        (attribute_cpp)*
+        (options { greedy = true; } : attribute_cpp)*
 ;
 
 /*
@@ -4372,7 +4454,7 @@ class_directive[] { ENTRY_DEBUG } :
   Handles an Objective-C "@class" name.
 */
 atclass_name[] { ENTRY_DEBUG }:
-        (identifier | COMMA)*
+        (options { greedy = true; } : identifier | COMMA)*
 ;
 
 /*
@@ -4386,7 +4468,7 @@ protocol_declaration[] { ENTRY_DEBUG } :
         }
 
         ATPROTOCOL
-        (variable_identifier | COMMA)*
+        (options { greedy = true; } : variable_identifier | COMMA)*
 ;
 
 /*
@@ -4596,13 +4678,13 @@ objective_c_class[] { bool first = true; ENTRY_DEBUG } :
 
         (ATINTERFACE | ATIMPLEMENTATION)
 
-        (
+        (options { greedy = true; } :
             { first }?
             objective_c_class_header
             set_bool[first, false]
         )*
 
-        (
+        (options { greedy = true; } :
             lcurly[false]
 
             {
@@ -4633,7 +4715,7 @@ protocol_definition[] { bool first = true; ENTRY_DEBUG } :
 
         ATPROTOCOL
 
-        (
+        (options { greedy = true; } :
             { first }?
             objective_c_class_header
             set_bool[first, false]
@@ -4672,10 +4754,10 @@ objective_c_class_header_base[] { ENTRY_DEBUG } :
         (options { greedy = true; } : derived_list)*
 
         // suppressed ()* warning
-        (category)*
+        (options { greedy = true; } : category)*
 
         // suppressed ()* warning
-        (protocol_list)*
+        (options { greedy = true; } : protocol_list)*
 ;
 
 /*
@@ -5022,7 +5104,7 @@ class_header_base[] { bool insuper = false; ENTRY_DEBUG } :
             specifier
         )*
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (options { greedy = true; } : derived_list)
         )*
@@ -5104,7 +5186,7 @@ access_specifier_region[] { bool first = true; ENTRY_DEBUG } :
             ATOPTIONAL
         )
 
-        (
+        (options { greedy = true; } :
             { !inLanguage(LANGUAGE_OBJECTIVE_C) && first }?
             (compound_name)*
             COLON
@@ -5528,7 +5610,7 @@ statement_part[] {
         { (inLanguage(LANGUAGE_OO)) }?
         throw_list
         complete_arguments
-        (comma complete_arguments)*
+        (options { greedy = true; } : comma complete_arguments)*
         {
             endDownToMode(MODE_LIST);
             endMode(MODE_LIST);
@@ -5830,6 +5912,9 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
             incParen();
 
             startElement(SOPERATOR);
+
+            if (inLanguage(LANGUAGE_JAVASCRIPT))
+                lparen_types_js.emplace_back('o');  // operator LPAREN
         }
 
         LPAREN
@@ -8620,7 +8705,7 @@ identifier_list[] { ENTRY_DEBUG } :
         PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE |
 
         // JavaScript
-        JS_DEFAULT
+        JS_DEFAULT | JS_FUNCTION | JS_GET | JS_SET
 ;
 
 /*
@@ -9415,9 +9500,9 @@ constructor_definition[] { ENTRY_DEBUG } :
 
         constructor_header
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? member_initialization_list)*
 ;
 
 /*
@@ -9523,7 +9608,7 @@ destructor_definition[] { ENTRY_DEBUG } :
 
         destructor_header
 
-        ({ inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
+        (options { greedy = true; } : { inLanguage(LANGUAGE_CXX_FAMILY) }? try_statement)*
 ;
 
 /*
@@ -10914,7 +10999,7 @@ catch_statement[] { ENTRY_DEBUG } :
         }
 
         (CATCH | CXX_CATCH)
-        (parameter_list)*
+        (options { greedy = true; } : parameter_list)*
 ;
 
 /*
@@ -11906,6 +11991,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
 rparen[bool markup = true, bool end_control_incr = false] {
         bool isempty = getParen() == 0;
         bool wascall = false;
+        bool waslambda = false;
 
         ENTRY_DEBUG
 } :
@@ -11934,6 +12020,12 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     // found JavaScript rparen that ends a call
                     case 'c':
                         lparen_types_js.pop_back();
+                        break;
+
+                    // found JavaScript operator rparen
+                    case 'o':
+                        lparen_types_js.pop_back();
+                        waslambda = inPrevMode(MODE_FUNCTION_EXPRESSION_JS);
                         break;
 
                     // found JavaScript rparen that ends a parameter list
@@ -11965,6 +12057,10 @@ rparen[bool markup = true, bool end_control_incr = false] {
 
             if (end_control_incr || inMode(MODE_LIST | MODE_CONTROL_CONDITION))
                 setMode(MODE_END_CONTROL);
+
+            // ensure JavaScript lambdas enclosed in operator parentheses are marked as such
+            if (waslambda)
+                markup = true;
         }
 
         rparen_operator[markup]
@@ -12313,6 +12409,11 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // looking for lbracket to start an array in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         array_js |
+
+        // looking for "function" to start a function in an expression in JavaScript
+        // Note that "function:" is a property name in an object
+        { inLanguage(LANGUAGE_JAVASCRIPT) && next_token() != COLON }?
+        function_expression_js |
 
         // looking for a Python indexable function call (e.g., "a()[]", "b()[][]", etc.)
         {
@@ -12919,7 +13020,7 @@ derived[] { CompleteElement element(this); ENTRY_DEBUG } :
             (options { greedy = true; } : tripledotop)*
         )
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_CSHARP) }?
             period
             variable_identifier
@@ -14504,12 +14605,12 @@ enum_class_header[] {} :
         ({ inLanguage(LANGUAGE_CXX) && next_token() == LBRACKET }? attribute_cpp)*
 
         variable_identifier
-        (COLON enum_type)*
+        (options { greedy = true; } : COLON enum_type)*
 
         (options { greedy = true; } :
             COMMA
             variable_identifier
-            (COLON enum_type)*
+            (options { greedy = true; } : COLON enum_type)*
         )*
 ;
 
@@ -14537,7 +14638,7 @@ enum_csharp_definition[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : variable_identifier)*
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (options { greedy = true; } : derived_list)
         )*
@@ -14555,16 +14656,16 @@ enum_csharp_declaration[] { ENTRY_DEBUG } :
 
         (options { greedy = true; } : variable_identifier)*
 
-        (
+        (options { greedy = true; } :
             { inLanguage(LANGUAGE_CXX_FAMILY) }?
             (options { greedy = true; } : derived_list)
         )*
 
-        (
+        (options { greedy = true; } :
             COMMA
             (options { greedy = true; } : variable_identifier)*
 
-            (
+            (options { greedy = true; } :
                 { inLanguage(LANGUAGE_CXX_FAMILY) }?
                 (options { greedy = true; } : derived_list)
             )*
@@ -18788,4 +18889,71 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         RBRACKET
+;
+
+/*
+  function_expression_js
+
+  Handles functions that appear in expressions in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+function_expression_js[] { bool consume_multops = false; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            if (next_token() == MULTOPS) {
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+                consume_multops = true;
+            }
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+
+        JS_FUNCTION
+
+        {
+            // consume "*" for generator functions
+            if (consume_multops)
+                consume();
+
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+        function_expression_block_js
+;
+
+/*
+  function_expression_block_js
+
+  Handles a complete block inside a function (in an expression) in JavaScript.
+*/
+function_expression_block_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_BLOCK | MODE_EXPRESSION_BLOCK);
+            startElement(SBLOCK);
+        }
+
+        LCURLY
+
+        {
+            startNewMode(MODE_BLOCK_CONTENT);
+            startNoSkipElement(SCONTENT);
+
+            startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
+        }
+
+        set_bool[skip_ternary, false]
+
+        // in a block, so mimic behavior as if starting a statement for the first time
+        {
+            while (LA(1) != RCURLY && LA(1) != 1 /* EOF */) {
+                if (inMode(MODE_STATEMENT))
+                    javascript_statements();
+                else
+                    javascript_rules();
+            }
+        }
+
+        block_end
 ;

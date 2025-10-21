@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="contextual_keywords">
+
+<!-- "set" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>myMap</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><literal type="string">'age'</literal></expr></argument>, <argument><expr><literal type="number">30</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- "get" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><name><name>formData</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">'username'</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- "function" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><name><name>formData</name><operator>.</operator><name>function</name></name><argument_list>(<argument><expr><literal type="string">'username'</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+</unit>
