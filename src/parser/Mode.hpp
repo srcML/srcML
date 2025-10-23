@@ -340,6 +340,8 @@ const static srcMLState::MODE_TYPE MODE_SUPER_LIST_JS;
 
 const static srcMLState::MODE_TYPE MODE_NAME_LIST_JS;
 
+const static srcMLState::MODE_TYPE MODE_PROPERTY_JS;
+
 const static srcMLState::MODE_TYPE MODE_EXTENDS_JS;
 
 const static srcMLState::MODE_TYPE MODE_EXPORT_JS;
@@ -347,6 +349,8 @@ const static srcMLState::MODE_TYPE MODE_EXPORT_JS;
 const static srcMLState::MODE_TYPE MODE_IMPORT_JS;
 
 const static srcMLState::MODE_TYPE MODE_LAMBDA_JS;
+
+const static srcMLState::MODE_TYPE MODE_OBJECT_JS;
 
 const static srcMLState::MODE_TYPE MODE_ARRAY_JS;
 

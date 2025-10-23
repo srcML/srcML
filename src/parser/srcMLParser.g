@@ -736,6 +736,7 @@ tokens {
     SFUNCTION_GET_STATEMENT;
     SFUNCTION_SET_STATEMENT;
     SNAME_LIST;
+    SOBJECT_JS;
     SUNDEFINED_JS;
     SYIELD_GENERATOR_STATEMENT;
 }
@@ -12434,6 +12435,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         lambda_js[true] |
 
+        // looking for lcurly to start an object in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        object_js |
+
         // looking for a Python indexable function call (e.g., "a()[]", "b()[][]", etc.)
         {
             inLanguage(LANGUAGE_PYTHON)
@@ -18914,26 +18919,46 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
   function_expression_js
 
   Handles functions that appear in expressions in JavaScript.
+  Includes expression-level getters and setters, separate from the keyword table.
   Not used directly, but can be called by expression_part.
 */
-function_expression_js[] { bool consume_multops = false; ENTRY_DEBUG } :
+function_expression_js[] { bool consume_multops = false; bool consume_name = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
 
-            if (next_token() == MULTOPS) {
+            // found a getter
+            if (LA(1) == JS_GET || (check_valid_specifier_js() && next_token() == JS_GET)) {
+                startElement(SFUNCTION_GET_STATEMENT);
+                consume_name = true;
+            }
+            // found a setter
+            else if (LA(1) == JS_SET || (check_valid_specifier_js() && next_token() == JS_SET)) {
+                startElement(SFUNCTION_SET_STATEMENT);
+                consume_name = true;
+            }
+            // found a generator function
+            else if (
+                (LA(1) == JS_FUNCTION && next_token() == MULTOPS)
+                || (check_valid_specifier_js() && next_token() == JS_FUNCTION && next_token_two() == MULTOPS)
+            ) {
                 startElement(SFUNCTION_GENERATOR_STATEMENT);
                 consume_multops = true;
             }
+            // found a function
             else
                 startElement(SFUNCTION_DEFINITION);
         }
 
-        JS_FUNCTION
+        ((specifier_js)* (JS_FUNCTION | JS_GET | JS_SET))
 
         {
             // consume "*" for generator functions
             if (consume_multops)
                 consume();
+
+            // consume the name for expression-level getters/setters
+            if (consume_name)
+                compound_name();
 
             startNewMode(MODE_PARAMETER_LIST_JS);
         }
@@ -19095,3 +19120,95 @@ perform_lambda_check_js[] returns [bool islambda] {
 
         ENTRY_DEBUG
 } :;
+
+/*
+  object_js
+
+  Handles objects in JavaScript.  They start and end with curly braces.
+*/
+object_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_OBJECT_JS);
+            startElement(SOBJECT_JS);
+        }
+
+        LCURLY
+
+        (options { greedy = true; } :
+            { LA(1) == RCURLY }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_OBJECT_JS) }?
+            COMMA |
+
+            property_js
+        )*
+
+        {
+            if (inTransparentMode(MODE_OBJECT_JS))
+                endDownToMode(MODE_OBJECT_JS);
+        }
+
+        RCURLY
+;
+
+/*
+  property_js
+
+  Handles properties in JavaScript.  Not used directly, but called by object_js.
+*/
+property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_PROPERTY_JS);
+            startElement(SPROPERTY);
+        }
+
+        (options { greedy = true; } :
+            // do not consume non-call comma or ending RCURLY for an object
+            { (LA(1) == COMMA && lparen_types_js.back() != 'c') || LA(1) == RCURLY }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            // allow colon separators for properties
+            { inTransparentMode(MODE_PROPERTY_JS) }?
+            colon_property_js |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas for calls, but not for properties
+            { lparen_types_js.back() == 'c' }?
+            comma
+        )*
+;
+
+/*
+  colon_property_js
+
+  Handles colons in properties that are meant to be separators in JavaScript.
+*/
+colon_property_js[] { ENTRY_DEBUG } :
+        {
+            if (inTransparentMode(MODE_PROPERTY_JS))
+                endDownToMode(MODE_PROPERTY_JS);
+        }
+
+        COLON
+
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+        }
+;
