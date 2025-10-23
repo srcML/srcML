@@ -801,6 +801,7 @@ public:
     static const antlr::BitSet comment_py_token_set;
     static const antlr::BitSet multiline_literals_py_token_set;
     static const antlr::BitSet post_specifier_js_token_set;
+    static const antlr::BitSet table_keywords_js_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -12415,6 +12416,24 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && next_token() != COLON }?
         function_expression_js |
 
+        // special case: JavaScript lambda starts with (optional "async" with) a lone parameter
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                (LA(1) == NAME && next_token() == JS_ARROW)
+                || (LA(1) == JS_ASYNC && next_token() == NAME && next_token_two() == JS_ARROW)
+            )
+        }?
+        lambda_js[false] |
+
+        // special case: JavaScript lambda starts with (optional "async" with) a parameter list
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
+            && perform_lambda_check_js()
+        }?
+        lambda_js[true] |
+
         // looking for a Python indexable function call (e.g., "a()[]", "b()[][]", etc.)
         {
             inLanguage(LANGUAGE_PYTHON)
@@ -18948,7 +18967,13 @@ function_expression_block_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         // in a block, so mimic behavior as if starting a statement for the first time
         {
             while (LA(1) != RCURLY && LA(1) != 1 /* EOF */) {
-                if (inMode(MODE_STATEMENT))
+                if (
+                    inMode(MODE_STATEMENT)
+                    && (
+                        post_specifier_js_token_set.member((unsigned int) LA(1))
+                        || table_keywords_js_token_set.member((unsigned int) LA(1))
+                    )
+                )
                     javascript_statements();
                 else
                     javascript_rules();
@@ -18957,3 +18982,116 @@ function_expression_block_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         block_end
 ;
+
+/*
+  lambda_js
+
+  Handles a lambda in JavaScript.
+  Typically start with a name or parameter list followed by an arrow ("=>").
+*/
+lambda_js[bool is_list = false] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LAMBDA_JS);
+            startElement(SFUNCTION_LAMBDA);
+        }
+
+        (
+            // optional "async" specifier
+            (options { greedy = true; } : specifier_js)*
+
+            (
+                // follows the form "() => ..." or "() => { ... }"
+                { is_list }?
+                javascript_parameter_list |
+
+                // follows the form "name => ..." or "name => { ... }"
+                complete_javascript_parameter
+            )
+
+            arrow_operator_js
+        )
+
+        {
+            // end the parameter list lambda after the block
+            if (LA(1) == LCURLY) {
+                function_expression_block_js();
+                return;
+            }
+        }
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+;
+
+/*
+  arrow_operator_js
+
+  Marks "=>" as an operator in JavaScript lambdas.
+*/
+arrow_operator_js[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SOPERATOR);
+        }
+
+        JS_ARROW
+;
+
+/*
+  perform_lambda_check_js
+
+  Checks to see if an arrow (`=>`) follows a parameter list in JavaScript.
+*/
+perform_lambda_check_js[] returns [bool islambda] {
+        islambda = false;
+        int paren_count = 0;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            while (true) {
+                if (LA(1) == LPAREN)
+                    ++paren_count;
+
+                if (LA(1) == RPAREN)
+                    --paren_count;
+
+                if (paren_count < 1)
+                    break;
+
+                if (LA(1) == LCURLY || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+
+            if (paren_count == 0 && next_token() == JS_ARROW)
+                islambda = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;

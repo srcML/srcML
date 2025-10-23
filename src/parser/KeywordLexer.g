@@ -839,7 +839,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
 
         // JavaScript
-        { "<="           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
+        { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
         { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
         { "as"           , JS_AS             , LANGUAGE_JAVASCRIPT },
         { "async"        , JS_ASYNC          , LANGUAGE_JAVASCRIPT },

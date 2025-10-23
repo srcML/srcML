@@ -234,4 +234,14 @@ token_set(srcMLParser, post_specifier_js_token_set,
     srcMLParser::JS_STATIC, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
 )
 
+token_set(srcMLParser, table_keywords_js_token_set,
+    // JavaScript keywords that have regular entries (or duplex entries) for the table-based approach
+    srcMLParser::BREAK, srcMLParser::CASE, srcMLParser::CLASS, srcMLParser::CONTINUE, srcMLParser::DO,
+    srcMLParser::FINALLY, srcMLParser::FOR, srcMLParser::IF, srcMLParser::JS_CATCH, srcMLParser::JS_CONSTRUCTOR,
+    srcMLParser::JS_DEBUGGER, srcMLParser::JS_DEFAULT, srcMLParser::JS_ELSE, srcMLParser::JS_EXPORT,
+    srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_IMPORT, srcMLParser::JS_SET,
+    srcMLParser::JS_STATIC, srcMLParser::JS_WITH, srcMLParser::JS_YIELD, srcMLParser::RETURN,
+    srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::WHILE
+)
+
 #endif
