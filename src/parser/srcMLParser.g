@@ -779,6 +779,7 @@ public:
     std::deque<char> lparen_types_py;
     std::deque<char> lparen_types_js;
     bool in_template_param = false;
+    bool processed_statement = false;
     int current_decl_type_js = 0;
     int start_count = 0;
 
@@ -1392,6 +1393,13 @@ start_javascript[] {
         // check for potential statement-start tokens before anything else
         javascript_statements();
 
+        // if javascript_statements explicitly returns, force another return here so
+        // javascript_rules does not run; applicable for 2+ declaration statements in a row
+        if (processed_statement) {
+            processed_statement = false;
+            return;
+        }
+
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
@@ -1459,6 +1467,7 @@ javascript_statements[] {
                 || (post_specifier_tokens[0] == JS_STATIC && post_specifier_tokens[1] != LCURLY)
             ) {
                 declaration_statement_js(true);
+                processed_statement = true;
                 return;
             }
 
@@ -1473,6 +1482,7 @@ javascript_statements[] {
             if (post_specifier_tokens[0] != -1) {
                 const auto& rule = javascript_rules[post_specifier_tokens[0]];
                 if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
                     return;
                 }
             }
@@ -1485,6 +1495,7 @@ javascript_statements[] {
             // looking for "let", "var", "const", or "static" at the statement level
             if (LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || (LA(1) == JS_STATIC && next_token() != LCURLY)) {
                 declaration_statement_js(false);
+                processed_statement = true;
                 return;
             }
 
@@ -1498,6 +1509,7 @@ javascript_statements[] {
             // looking for keyword-based statements in the table
             const auto& rule = javascript_rules[token];
             if (rule.elementToken && processRule(rule)) {
+                processed_statement = true;
                 return;
             }
         }
@@ -18808,6 +18820,9 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (
+            // object parameter
+            object_js |
+
             // rest parameter
             (tripledotop compound_name) |
 

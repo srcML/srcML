@@ -169,4 +169,15 @@
 }</object></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>toBinary</name><parameter_list>(
+    <parameter><decl><name>x</name></decl></parameter>,
+    <parameter><decl><object>{ <property><expr><name>type</name> <operator>=</operator> <literal type="string">"Float64"</literal></expr></property>, <property><expr><name>littleEndian</name> <operator>=</operator> <literal type="boolean">false</literal></expr></property>, <property><expr><name>separator</name> <operator>=</operator> <literal type="string">" "</literal></expr></property>, <property><expr><name>radix</name> <operator>=</operator> <literal type="number">16</literal></expr></property> }</object> <init>= <expr><object>{}</object></expr></init></decl></parameter>,
+)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>bytesNeeded</name> <init>= <expr><name><name>globalThis</name><index>[<expr><literal type="string">`${type}Array`</literal></expr>]</index></name><operator>.</operator><name>BYTES_PER_ELEMENT</name></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="const">const <name>dv</name> <init>= <expr><operator>new</operator> <call><name>DataView</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ArrayBuffer</name><argument_list>(<argument><expr><name>bytesNeeded</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+    <return>return <expr><name>dv</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
 </unit>
