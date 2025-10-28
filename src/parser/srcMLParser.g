@@ -726,6 +726,7 @@ tokens {
     SYIELD_FROM_STATEMENT;
 
     // JavaScript
+    SCOMPUTED_PROPERTY;
     SDEBUGGER_STATEMENT;
     SDECLARATION_CONST;
     SDECLARATION_LET;
@@ -963,11 +964,16 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS) {
+    constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(
+        const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_GET_LBRACKET, const size_t JS_SET_LBRACKET,
+        const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS
+    ) {
         std::array<int, SIZE * SIZE> temp_array{};
         temp_array[JS_CATCH + (LPAREN << 8)] = JS_CATCH_LPAREN;
         temp_array[JS_ELSE + (IF << 8)] = JS_ELSE_IF;
         temp_array[JS_FUNCTION + (MULTOPS << 8)] = JS_FUNCTION_MULTOPS;
+        temp_array[JS_GET + (LBRACKET << 8)] = JS_GET_LBRACKET;
+        temp_array[JS_SET + (LBRACKET << 8)] = JS_SET_LBRACKET;
         temp_array[JS_STATIC + (LCURLY << 8)] = JS_STATIC_LCURLY;
         temp_array[JS_WITH + (LPAREN << 8)] = JS_WITH_LPAREN;
         temp_array[JS_YIELD + (MULTOPS << 8)] = JS_YIELD_MULTOPS;
@@ -975,7 +981,10 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<Rule, SIZE> getJavaScriptRules(const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS) {
+    constexpr const std::array<Rule, SIZE> getJavaScriptRules(
+        const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_GET_LBRACKET, const size_t JS_SET_LBRACKET,
+        const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS
+    ) {
         std::array<Rule, SIZE> temp_array;
 
         /* GENERIC STATEMENTS */
@@ -1010,6 +1019,8 @@ public:
         temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
         temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };  // extra consume for 'if'
         temp_array[JS_FUNCTION_MULTOPS] = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume for '*'
+        temp_array[JS_GET_LBRACKET]     = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
+        temp_array[JS_SET_LBRACKET]     = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
         temp_array[JS_STATIC_LCURLY]    = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a 'static' declaration from a 'static {}' block
         temp_array[JS_WITH_LPAREN]      = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WITH_JS, 0, nullptr, &srcMLParser::with_lparen_js };  // extra consume for '(' is in the provided rule
         temp_array[JS_YIELD_MULTOPS]    = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
@@ -1436,24 +1447,41 @@ javascript_statements[] {
         const int JS_CATCH_LPAREN = DUPLEX_RULES_SIZE + 100;
         const int JS_ELSE_IF = DUPLEX_RULES_SIZE + 101;
         const int JS_FUNCTION_MULTOPS = DUPLEX_RULES_SIZE + 102;
-        const int JS_STATIC_LCURLY = DUPLEX_RULES_SIZE + 103;
-        const int JS_WITH_LPAREN = DUPLEX_RULES_SIZE + 104;
-        const int JS_YIELD_MULTOPS = DUPLEX_RULES_SIZE + 105;
+        const int JS_GET_LBRACKET = DUPLEX_RULES_SIZE + 103;
+        const int JS_SET_LBRACKET = DUPLEX_RULES_SIZE + 104;
+        const int JS_STATIC_LCURLY = DUPLEX_RULES_SIZE + 105;
+        const int JS_WITH_LPAREN = DUPLEX_RULES_SIZE + 106;
+        const int JS_YIELD_MULTOPS = DUPLEX_RULES_SIZE + 107;
 
         // The JavaScript rule size must be 200 greater than the duplex rule size
         // If there are ever more than 100 duplex keywords, this has to change
         const size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
 
         // A duplex keyword is a pair of adjacent keywords
-        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS);
+        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(
+            JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_GET_LBRACKET, JS_SET_LBRACKET, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS
+        );
 
         // JavaScript rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS);
+        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(
+            JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_GET_LBRACKET, JS_SET_LBRACKET, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS
+        );
 
         // ensure the lparen deque never starts empty by adding a dummy entry
         if (lparen_types_js.empty())
             lparen_types_js.emplace_back('*');
+
+        // looking for "*[...](){}" to start a statement-level generator function computed property
+        if (
+            inMode(MODE_STATEMENT)
+            && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
+            && perform_generator_function_computed_property_check_js()
+        ) {
+            generator_function_computed_property_js();
+            processed_statement = true;
+            return;
+        }
 
         // check if the current non-comment token is a specifier that occurs before a statement keyword
         if (LA(1) != SNOP && inMode(MODE_STATEMENT) && check_valid_specifier_js()) {
@@ -5374,8 +5402,21 @@ rcurly[] { ENTRY_DEBUG } :
             // end any sections inside the mode
             endWhileMode(MODE_TOP_SECTION);
 
+            // ensure block content ends before rcurly
             if (inMode(MODE_BLOCK_CONTENT))
                 endMode(MODE_BLOCK_CONTENT);
+            // special case for certain expressions that can contain blocks in JavaScript
+            else if (
+                (
+                    inTransparentMode(MODE_LAMBDA_JS)
+                    || inTransparentMode(MODE_PROPERTY_JS)
+                    || inTransparentMode(MODE_COMPUTED_GENERATOR_FUNCTION_JS)
+                )
+                && inTransparentMode(MODE_BLOCK_CONTENT)
+            ) {
+                endDownToMode(MODE_BLOCK_CONTENT);
+                endMode(MODE_BLOCK_CONTENT);
+            }
 
             if (getCurly() != 0)
                 decCurly();
@@ -12420,6 +12461,18 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // looking for "*[...](){}" to start a generator function computed property
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
+            && perform_generator_function_computed_property_check_js()
+        }?
+        generator_function_computed_property_js |
+
+        // looking for "[...]:" to start a computed property in an object in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
+        computed_property_js |
+
         // looking for lbracket to start an array in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         array_js |
@@ -19227,3 +19280,194 @@ colon_property_js[] { ENTRY_DEBUG } :
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
 ;
+
+/*
+  computed_property_js
+
+  Handles computed properties in JavaScript.  Not used directly, but can be called by expression_part.
+*/
+computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
+            startElement(SCOMPUTED_PROPERTY);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_LOCAL))
+                endDownToMode(MODE_LOCAL);
+        }
+
+        RBRACKET
+;
+
+/*
+  perform_computed_property_check_js
+
+  Checks to see if a colon (`:`) follows square brackets in an object in JavaScript.
+*/
+perform_computed_property_check_js[] returns [bool iscomputed] {
+        iscomputed = false;
+        int square_bracket_count = 0;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            while (true) {
+                if (LA(1) == LBRACKET)
+                    ++square_bracket_count;
+
+                if (LA(1) == RBRACKET)
+                    --square_bracket_count;
+
+                if (square_bracket_count < 0)
+                    break;
+
+                if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+
+            if (LA(1) == RBRACKET && next_token() == COLON)
+                iscomputed = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  generator_function_computed_property_js
+
+  Handles a generator function computed property in JavaScript.
+  Specifically, these appear in the form "*[...](){}".
+*/
+generator_function_computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement-level
+            if (inMode(MODE_STATEMENT))
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_COMPUTED_GENERATOR_FUNCTION_JS);
+            // expression-level
+            else
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            startElement(SFUNCTION_GENERATOR_STATEMENT);
+        }
+
+        ((specifier_js)* MULTOPS)
+        computed_property_js
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+        function_expression_block_js
+;
+
+/*
+  perform_generator_function_computed_property_check_js
+
+  Checks for special generator function syntax in JavaScript.
+  Specifically, generator functions of the form "*[...](){}".
+*/
+perform_generator_function_computed_property_check_js[] returns [bool iscomputed] {
+        iscomputed = false;
+        int square_bracket_count = 0;
+        int last_consumed_current = last_consumed;
+        bool found_multops = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // consume "*"; if not found, exit
+            if (LA(1) == MULTOPS) {
+                consume();
+                found_multops = true;
+            }
+
+            // match "[...]"
+            while (found_multops) {
+                if (LA(1) == LBRACKET)
+                    ++square_bracket_count;
+
+                if (LA(1) == RBRACKET)
+                    --square_bracket_count;
+
+                if (square_bracket_count < 0)
+                    break;
+
+                if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+
+            // match "()"
+            if (found_multops && LA(1) == RBRACKET && next_token() == LPAREN) {
+                consume();  // "]"
+                int paren_count = 0;
+
+                while (found_multops) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    if (paren_count < 0)
+                        break;
+
+                    if ((LA(1) == RPAREN && paren_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        break;
+
+                    consume();
+                }
+
+                // found "*[...](){}"
+                if (LA(1) == RPAREN && next_token() == LCURLY)
+                    iscomputed = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;

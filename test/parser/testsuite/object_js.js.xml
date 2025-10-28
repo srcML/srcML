@@ -59,7 +59,7 @@
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
     <property><expr><function type="get">get <name>property</name><parameter_list>()</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
 
@@ -67,7 +67,7 @@
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
     <property><expr><function type="set">set <name>property</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
 
@@ -75,7 +75,7 @@
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
     <property><expr><function type="get"><specifier>async</specifier> get <name>property</name><parameter_list>()</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
 
@@ -83,7 +83,7 @@
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
     <property><expr><function type="set"><specifier>async</specifier> set <name>property</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
 
@@ -91,7 +91,7 @@
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
     <property><expr><name>fullName</name></expr>: <expr><function>function<parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>a</name></name></expr></return>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
 
@@ -99,15 +99,13 @@
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
     <property><expr><name>asyncFullName</name></expr>: <expr><function><specifier>async</specifier> function<parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>a</name></name></expr></return>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
 
-<!-- Note: This test has incorrect markup for now; deciding how to mark up computed properties at a later date -->
-
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
-    <property><expr><array>[<expr><name>expression</name></expr>]</array></expr>: <expr><literal type="string">"computed property"</literal></expr></property>,
+    <property><expr><name type="computed">[<expr><name>expression</name></expr>]</name></expr>: <expr><literal type="string">"computed property"</literal></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
 
@@ -122,8 +120,6 @@
     <property><expr><operator>...</operator><name>spreadProperty</name></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
-
-<!-- Note: This test has incorrect markup for now; deciding how to mark up computed properties at a later date -->
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
@@ -142,26 +138,26 @@
 
     <property><expr><function type="get">get <name>property</name><parameter_list>()</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
     <property><expr><function type="set">set <name>property</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 
     <property><expr><function type="get"><specifier>async</specifier> get <name>property</name><parameter_list>()</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
     <property><expr><function type="set"><specifier>async</specifier> set <name>property</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 
     <property><expr><name>fullName</name></expr>: <expr><function>function<parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>a</name></name></expr>;</return>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
     <property><expr><name>asyncFullName</name></expr>: <expr><function><specifier>async</specifier> function<parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>a</name></name></expr>;</return>
-    }</block_content></block></function></expr></property>,
+    </block_content>}</block></function></expr></property>,
 
-    <property><expr><array>[<expr><name>expression</name></expr>]</array></expr>: <expr><literal type="string">"computed property"</literal></expr></property>,
+    <property><expr><name type="computed">[<expr><name>expression</name></expr>]</name></expr>: <expr><literal type="string">"computed property"</literal></expr></property>,
 
     <property><expr><name>__proto__</name></expr>: <expr><name>prototype</name></expr></property>,
 
@@ -178,6 +174,38 @@
     <decl_stmt><decl type="const">const <name>dv</name> <init>= <expr><operator>new</operator> <call><name>DataView</name><argument_list>(<argument><expr><operator>new</operator> <call><name>ArrayBuffer</name><argument_list>(<argument><expr><name>bytesNeeded</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
     <return>return <expr><name>dv</name></expr></return>
 </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Person</name> <block>{<block_content>
+    <constructor>constructor<parameter_list>(<parameter><decl><name>firstName</name></decl></parameter>, <parameter><decl><name>lastName</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>firstName</name></name> <operator>=</operator> <name>firstName</name></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>lastName</name></name> <operator>=</operator> <name>lastName</name></expr></expr_stmt>
+    </block_content>}</block></constructor>
+
+    <function type="get">get <name type="computed">[<expr><name>name</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><literal type="string">`${this.firstName} ${this.lastName}`</literal></expr></return>
+    </block_content>}</block></function>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Person</name> <block>{<block_content>
+    <constructor>constructor<parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>name</name></expr></expr_stmt>
+    </block_content>}</block></constructor>
+
+    <function type="set">set <name type="computed">[<expr><name>name</name></expr>]</name><parameter_list>(<parameter><decl><name>input</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>input</name></expr></expr_stmt>
+    </block_content>}</block></function>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>o</name> <init>= <expr><object>{
+    <property><expr><name type="computed">[<expr><array>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr>]</name></expr>: <expr><literal type="string">"array"</literal></expr></property>,
+    <property><expr><name type="computed">[<expr><name><name>name</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>]</name></expr>: <expr><literal type="string">"index"</literal></expr></property>,
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 </unit>
