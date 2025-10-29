@@ -11,7 +11,7 @@
 
 #include <NewlineTerminateJavaScript.hpp>
 
-// Inserts TERMINATE tokens at EOL for JavaScript
+// inserts TERMINATE tokens at EOL for JavaScript
 antlr::RefToken NewlineTerminateJavaScript::nextToken() {
 
     // place all input tokens in the buffer so we can insert a TERMINATE
@@ -32,7 +32,7 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
         else if (parenthesesCount > 0 && (token->getType() == srcMLParser::RPAREN || token->getType() == srcMLParser::RBRACKET))
             --parenthesesCount;
 
-        // For a newline, insert a TERMINATE in certain cases
+        // for a newline, insert a TERMINATE in certain cases
         if (((token->getType() == srcMLParser::EOL ||
               token->getType() == srcMLParser::WS_EOL ||
               token->getType() == srcMLParser::HASHTAG_COMMENT_START ||
@@ -50,9 +50,11 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
             // do not place a TERMINATE right after a block begins
             lastToken->getType() != srcMLParser::LCURLY &&
 
+            // do not place a TERMINATE in the middle of a comma-separated structure
+            lastToken->getType() != srcMLParser::COMMA &&
+
             // not in the middle of an expression with a previous operator
-            // A non-postfix operator at the end means the expression is not complete
-            // JavaScript has two postfix operators ("++" and "--")
+            // a non-postfix operator at the end means the expression is not complete
             (lastNonWhitespaceToken->getType() != srcMLParser::OPERATORS || (
                 lastNonWhitespaceToken->getType() == srcMLParser::OPERATORS &&
                 (
@@ -63,7 +65,7 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
             lastNonWhitespaceToken->getType() != srcMLParser::TEMPOPE &&
             lastNonWhitespaceToken->getType() != srcMLParser::TEMPOPS) ||
 
-            // At EOF with no previous EOL
+            // at EOF with no previous EOL
             (token->getType() == 1 /* EOF */ && lastToken->getType() != srcMLParser::EOL)) {
 
             // create new terminate token

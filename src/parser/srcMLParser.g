@@ -12461,6 +12461,24 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // special case: JavaScript lambda starts with (optional "async" with) a lone parameter
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                (LA(1) == NAME && next_token() == JS_ARROW)
+                || (LA(1) == JS_ASYNC && next_token() == NAME && next_token_two() == JS_ARROW)
+            )
+        }?
+        lambda_js[false] |
+
+        // special case: JavaScript lambda starts with (optional "async" with) a parameter list
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
+            && perform_lambda_check_js()
+        }?
+        lambda_js[true] |
+
         // looking for "*[...](){}" to start a generator function computed property
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
@@ -12479,26 +12497,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // looking for "function" to start a function in an expression in JavaScript
         // Note that "function:" is a property name in an object
-        { inLanguage(LANGUAGE_JAVASCRIPT) && next_token() != COLON }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
         function_expression_js |
-
-        // special case: JavaScript lambda starts with (optional "async" with) a lone parameter
-        {
-            inLanguage(LANGUAGE_JAVASCRIPT)
-            && (
-                (LA(1) == NAME && next_token() == JS_ARROW)
-                || (LA(1) == JS_ASYNC && next_token() == NAME && next_token_two() == JS_ARROW)
-            )
-        }?
-        lambda_js[false] |
-
-        // special case: JavaScript lambda starts with (optional "async" with) a parameter list
-        {
-            inLanguage(LANGUAGE_JAVASCRIPT)
-            && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
-            && perform_lambda_check_js()
-        }?
-        lambda_js[true] |
 
         // looking for lcurly to start an object in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
@@ -18559,7 +18559,7 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 */
 control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_CONTROL_INCREMENT);
+            startNewMode(MODE_CONTROL_INCREMENT | MODE_LIST);
             startElement(SCONTROL_INCREMENT);
         }
 
