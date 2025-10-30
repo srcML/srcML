@@ -63,4 +63,8 @@
 <return>return <expr><operator>new</operator> <call><name>Promise</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>resolve</name></decl></parameter>, <parameter><decl><name>reject</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content><expr_stmt><expr><call><name><name>f</name><operator>.</operator><name>stats</name></name><argument_list>()</argument_list></call></expr></expr_stmt></block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></return>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><lambda><parameter_list>(<parameter><decl><name>resolve</name></decl></parameter>, <parameter><decl><name>reject</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content><expr_stmt><expr><call><name><name>f</name><operator>.</operator><name>stats</name></name><argument_list>()</argument_list></call></expr></expr_stmt></block_content>}</block></lambda></expr></return>
+</unit>
+
 </unit>

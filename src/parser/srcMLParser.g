@@ -1472,6 +1472,25 @@ javascript_statements[] {
         if (lparen_types_js.empty())
             lparen_types_js.emplace_back('*');
 
+        // special case: consume TERMINATE separating "then" and "else" portions of multi-line ternary
+        if (
+            LA(1) == TERMINATE
+            && inMode(MODE_EXPRESSION)
+            && inTransparentMode(MODE_THEN)
+            && inTransparentMode(MODE_TERNARY)
+            && next_token() == COLON
+        ) {
+            consume();
+        }
+
+        // special case: the terminate at the end of an expression-statement-defined object
+        // (e.g., "object = { ... }") must be processed here
+        if (LA(1) == TERMINATE) {
+            terminate();
+            processed_statement = true;
+            return;
+        }
+
         // looking for "*[...](){}" to start a statement-level generator function computed property
         if (
             inMode(MODE_STATEMENT)
@@ -5340,6 +5359,18 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
                 return;
             }
 
+            // ignore auto-inserted terminate, if applicable
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && LA(1) == TERMINATE
+                && (
+                    next_token() == FINALLY
+                    || next_token() == JS_CATCH
+                    || next_token() == JS_ELSE
+                )
+            )
+                consume();
+
             // end all the statements this statement is nested in
             // special case when ending then of if statement: end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
@@ -5378,7 +5409,7 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
 
   Handles a right curly brace.  Not used directly, but called by block_end.
 */
-rcurly[] { ENTRY_DEBUG } :
+rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); ENTRY_DEBUG } :
         {
             // end any elements inside of the block; this is basically endDownToMode(MODE_TOP) but checks for class ending
             if (inTransparentMode(MODE_TOP)) {
@@ -5426,7 +5457,14 @@ rcurly[] { ENTRY_DEBUG } :
 
         {
             // end the current mode for the block; do not end more than one since they may be nested
-            endMode(MODE_TOP);
+            if (!inLanguage(LANGUAGE_JAVASCRIPT)) {
+                endMode(MODE_TOP);
+            }
+            // special case for JavaScript lambdas that are inside a call
+            else {
+                if (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c')
+                    endMode(MODE_TOP);
+                }
         }
 ;
 
@@ -18884,9 +18922,18 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 
         {
+            // ignore auto-inserted terminate, if applicable
+            if (LA(1) == TERMINATE)
+                consume();
+
             // initialization expression after a parameter is optional
-            if (LA(1) == EQUAL)
+            if (LA(1) == EQUAL) {
                 parameter_init_js();
+
+                // ignore auto-inserted terminate, if applicable
+                if (LA(1) == TERMINATE)
+                    consume();
+            }
         }
 ;
 
@@ -18943,6 +18990,12 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         LCURLY
         (options { greedy = true; } : alias_js | literals | compound_name | COMMA)*
         RCURLY
+
+        {
+            // ignore auto-inserted terminate if the next token is "from"
+            if (LA(1) == TERMINATE && next_token() == JS_FROM)
+                consume();
+        }
 ;
 
 /*
@@ -19212,6 +19265,12 @@ object_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             COMMA |
 
             property_js
+            {
+                // the property in the object was treated like a statement
+                // in a block, so ignore the TERMINATE token
+                if (LA(1) == TERMINATE)
+                    consume();
+            }
         )*
 
         {
@@ -19235,7 +19294,7 @@ property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // do not consume non-call comma or ending RCURLY for an object
-            { (LA(1) == COMMA && lparen_types_js.back() != 'c') || LA(1) == RCURLY }?
+            { (LA(1) == COMMA && lparen_types_js.back() != 'c') || LA(1) == RCURLY || LA(1) == TERMINATE }?
             {
                 break;
             } |

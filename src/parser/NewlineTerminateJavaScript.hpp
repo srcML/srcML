@@ -25,14 +25,20 @@ public:
 
     antlr::RefToken nextToken();
 
+    void insertTerminateToken(int token);
+
 private:
     antlr::TokenStream& input;
     std::deque<antlr::RefToken> buffer;
     antlr::RefToken lastToken = srcMLToken::factory();
+
     bool isEmptyLine = true;
-    int parenthesesCount = 0;
     bool firstCharacter = true;
-    antlr::RefToken lastNonWhitespaceToken = srcMLToken::factory();
+    bool wasNameNewlineToken = false;
+    bool wasLambdaArrow = false;
+
+    int parenthesesCount = 0;
+    int lambdaBlockStartLine = -1;
 };
 
 #endif
