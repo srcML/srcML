@@ -71,6 +71,7 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
                     || nextToken->getType() == srcMLParser::TEMPOPE
                     || nextToken->getType() == srcMLParser::TEMPOPS
                     || nextToken->getType() == srcMLParser::COLON
+                    || nextToken->getType() == srcMLParser::EQUAL
                 )
             ) {
                 insertTerminateToken(token->getLine());
@@ -126,6 +127,7 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
                 )
                 && lastToken->getType() != srcMLParser::TEMPOPE
                 && lastToken->getType() != srcMLParser::TEMPOPS
+                && lastToken->getType() != srcMLParser::EQUAL
             )
 
             // special case: statement in a single-line lambda block ends before RCURLY
