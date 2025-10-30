@@ -17,11 +17,11 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>FilledRectangle</name> <super_list><extends>extends <super><expr><name>Rectangle</name></expr></super></extends></super_list> <block>{<block_content>
-  <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>color</name></decl></parameter>)</parameter_list> <block>{
+  <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>color</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>height</name></expr></argument>, <argument><expr><name>width</name></expr></argument>)</argument_list></call></expr></expr_stmt>
-    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <expr><literal type="string">"Filled rectangle"</literal></expr></expr_stmt>
-    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>color</name></name> <operator>=</operator> <expr><name>color</name></expr></expr_stmt>
-  }</block></constructor>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Filled rectangle"</literal></expr></expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>color</name></name> <operator>=</operator> <name>color</name></expr></expr_stmt>
+  </block_content>}</block></constructor>
 </block_content>}</block></class>
 </unit>
 
