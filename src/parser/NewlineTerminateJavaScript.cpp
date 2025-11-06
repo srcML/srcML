@@ -136,6 +136,9 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
             // special case: always insert a TERMINATE after RCURLY; the parser will ignore them if needed
             || (token->getType() != srcMLParser::TERMINATE && token->getType() != srcMLParser::RPAREN && lastToken->getType() == srcMLParser::RCURLY)
 
+            // special case: a line ends with a call in an expression-level block, and the block is in a call
+            || (token->getType() == srcMLParser::EOL && lastToken->getType() == srcMLParser::RPAREN)
+
             // at EOF with no previous EOL
             || (token->getType() == 1 /* EOF */ && lastToken->getType() != srcMLParser::EOL)
         ) {

@@ -5486,12 +5486,12 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
             if (!inLanguage(LANGUAGE_JAVASCRIPT)) {
                 endMode(MODE_TOP);
             }
-            // special case for JavaScript function expressions enclosed in operator parentheses
+            // special case for JavaScript function expressions enclosed in operator or call parentheses
             else if (
                 inLanguage(LANGUAGE_JAVASCRIPT)
                 && inTransparentMode(MODE_FUNCTION_EXPRESSION_JS)
                 && LA(1) == RPAREN
-                && lparen_types_js.back() == 'o'
+                && (lparen_types_js.back() == 'o' || lparen_types_js.back() == 'c')
             ) {
                 endDownToMode(MODE_FUNCTION_EXPRESSION_JS);
                 endMode(MODE_FUNCTION_EXPRESSION_JS);
@@ -12589,6 +12589,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         object_js |
 
+        // looking for "yield" or "yield*" to start a yield expression in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        yield_expression_js |
+
         // looking for a Python indexable function call (e.g., "a()[]", "b()[][]", etc.)
         {
             inLanguage(LANGUAGE_PYTHON)
@@ -19243,7 +19247,6 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
 
             // match "("
             if (found_name && LA(1) == LPAREN) {
-                consume();  // "("
                 int paren_count = 0;
 
                 while (true) {
@@ -19715,4 +19718,49 @@ class_expression_js[] { ENTRY_DEBUG } :
         }
 
         expression_block_js
+;
+
+/*
+yield_expression_js
+
+Handles "yield" and "yield*" that appear in expressions in JavaScript.
+*/
+yield_expression_js[] { CompleteElement element(this); bool consume_multops = false; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            // found a yield generator
+            if (next_token() == MULTOPS) {
+                startElement(SYIELD_GENERATOR_STATEMENT);
+                consume_multops = true;
+            }
+            // found a yield
+            else
+                startElement(SYIELD_STATEMENT);
+        }
+
+        JS_YIELD
+
+        {
+            // leave a yield generator MULTOPS unmarked
+            if (consume_multops && LA(1) == MULTOPS)
+                consume();  // '*'
+        }
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
 ;
