@@ -29,5 +29,42 @@
 <class>class <name>Bar</name> <super_list><extends>extends <super><expr><call><name>calculatorMixin</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></super></extends></super_list> <block>{<block_content/>}</block></class>
 </unit>
 
+<!-- Classes in expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{<block_content>
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+    <expr_stmt><expr><function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><literal type="string">"Hello, World!"</literal></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{<block_content>
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+    <expr_stmt><expr><function><specifier>async</specifier> <name>bar</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><literal type="string">"Hello, World!"</literal></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <name>NamedFoo</name> <block>{<block_content>
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+    <expr_stmt><expr><function><name>whoIsThere</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>NamedFoo</name><operator>.</operator><name>name</name></name></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <name>NamedFoo</name> <block>{<block_content>
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+    <expr_stmt><expr><function><specifier>async</specifier> <name>whoIsThere</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>NamedFoo</name><operator>.</operator><name>name</name></name></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

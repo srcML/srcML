@@ -779,6 +779,7 @@ public:
     std::vector<std::pair<srcMLState::MODE_TYPE, std::stack<int>>> finish_elements_add;
     std::deque<char> lparen_types_py;
     std::deque<char> lparen_types_js;
+    std::deque<char> lcurly_types_js;
     bool in_template_param = false;
     bool processed_statement = false;
     int current_decl_type_js = 0;
@@ -1464,13 +1465,17 @@ javascript_statements[] {
 
         // JavaScript rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascript_rules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(
+        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascriptRules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(
             JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_GET_LBRACKET, JS_SET_LBRACKET, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS
         );
 
         // ensure the lparen deque never starts empty by adding a dummy entry
         if (lparen_types_js.empty())
             lparen_types_js.emplace_back('*');
+
+        // ensure the lcurly deque never starts empty by adding a dummy entry
+        if (lcurly_types_js.empty())
+            lcurly_types_js.emplace_back('*');
 
         // special case: consume TERMINATE separating "then" and "else" portions of multi-line ternary
         if (
@@ -1527,7 +1532,7 @@ javascript_statements[] {
 
             // looking for classes or functions (regular/get/set)
             if (post_specifier_tokens[0] != -1) {
-                const auto& rule = javascript_rules[post_specifier_tokens[0]];
+                const auto& rule = javascriptRules[post_specifier_tokens[0]];
                 if (rule.elementToken && processRule(rule)) {
                     processed_statement = true;
                     return;
@@ -1554,7 +1559,7 @@ javascript_statements[] {
             }
 
             // looking for keyword-based statements in the table
-            const auto& rule = javascript_rules[token];
+            const auto& rule = javascriptRules[token];
             if (rule.elementToken && processRule(rule)) {
                 processed_statement = true;
                 return;
@@ -5325,6 +5330,10 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
                 setMode(MODE_FUNCTION_BODY);
 
             startElement(SBLOCK);
+
+            // lcurly starts a block
+            if (inLanguage(LANGUAGE_JAVASCRIPT))
+                lcurly_types_js.emplace_back('b');  // block LCURLY
         }
 
         LCURLY
@@ -5409,7 +5418,7 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
 
   Handles a right curly brace.  Not used directly, but called by block_end.
 */
-rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); ENTRY_DEBUG } :
+rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = false; ENTRY_DEBUG } :
         {
             // end any elements inside of the block; this is basically endDownToMode(MODE_TOP) but checks for class ending
             if (inTransparentMode(MODE_TOP)) {
@@ -5420,6 +5429,30 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); ENTRY_DEBUG } :
                         }
 
                     endMode();
+                }
+            }
+
+            // found JavaScript rcurly
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && !lcurly_types_js.empty()) {
+                switch (lcurly_types_js.back()) {
+                    // found JavaScript rcurly that ends a block
+                    case 'b':
+                        lcurly_types_js.pop_back();
+                        wasblock = true;
+                        break;
+
+                    // found JavaScript rcurly that ends a name list
+                    case 'n':
+                        lcurly_types_js.pop_back();
+                        break;
+
+                    // found JavaScript rcurly that ends an object
+                    case 'o':
+                        lcurly_types_js.pop_back();
+                        break;
+
+                    default:
+                        break;
                 }
             }
 
@@ -5436,15 +5469,8 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); ENTRY_DEBUG } :
             // ensure block content ends before rcurly
             if (inMode(MODE_BLOCK_CONTENT))
                 endMode(MODE_BLOCK_CONTENT);
-            // special case for certain expressions that can contain blocks in JavaScript
-            else if (
-                (
-                    inTransparentMode(MODE_LAMBDA_JS)
-                    || inTransparentMode(MODE_PROPERTY_JS)
-                    || inTransparentMode(MODE_COMPUTED_GENERATOR_FUNCTION_JS)
-                )
-                && inTransparentMode(MODE_BLOCK_CONTENT)
-            ) {
+            // special case for block rcurly in JavaScript
+            else if (wasblock && inTransparentMode(MODE_BLOCK_CONTENT)) {
                 endDownToMode(MODE_BLOCK_CONTENT);
                 endMode(MODE_BLOCK_CONTENT);
             }
@@ -5459,6 +5485,17 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); ENTRY_DEBUG } :
             // end the current mode for the block; do not end more than one since they may be nested
             if (!inLanguage(LANGUAGE_JAVASCRIPT)) {
                 endMode(MODE_TOP);
+            }
+            // special case for JavaScript function expressions enclosed in operator parentheses
+            else if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && inTransparentMode(MODE_FUNCTION_EXPRESSION_JS)
+                && LA(1) == RPAREN
+                && lparen_types_js.back() == 'o'
+            ) {
+                endDownToMode(MODE_FUNCTION_EXPRESSION_JS);
+                endMode(MODE_FUNCTION_EXPRESSION_JS);
+                rparen(true);
             }
             // special case for JavaScript lambdas that are inside a call
             else {
@@ -10123,6 +10160,10 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
                     startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
                     startElement(SBLOCK);
+
+                    // lcurly starts a block
+                    if (inLanguage(LANGUAGE_JAVASCRIPT))
+                        lcurly_types_js.emplace_back('b');  // block LCURLY
                 }
 
                 LCURLY
@@ -12084,7 +12125,7 @@ rparen_operator[bool markup = true] { LightweightElement element(this); ENTRY_DE
 rparen[bool markup = true, bool end_control_incr = false] {
         bool isempty = getParen() == 0;
         bool wascall = false;
-        bool waslambda = false;
+        bool forcemarkup = false;
 
         ENTRY_DEBUG
 } :
@@ -12115,10 +12156,10 @@ rparen[bool markup = true, bool end_control_incr = false] {
                         lparen_types_js.pop_back();
                         break;
 
-                    // found JavaScript operator rparen
+                    // found JavaScript operator rparen; force it to be marked as such
                     case 'o':
                         lparen_types_js.pop_back();
-                        waslambda = inPrevMode(MODE_FUNCTION_EXPRESSION_JS);
+                        forcemarkup = true;
                         break;
 
                     // found JavaScript rparen that ends a parameter list
@@ -12131,7 +12172,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                 }
             }
 
-            if (isempty) {
+            if (isempty && !forcemarkup) {
                 // additional right parentheses indicates end of non-list modes
                 endDownToModeSet(MODE_LIST | MODE_PREPROC | MODE_END_ONLY_AT_RPAREN | MODE_ONLY_END_TERMINATE);
 
@@ -12150,10 +12191,6 @@ rparen[bool markup = true, bool end_control_incr = false] {
 
             if (end_control_incr || inMode(MODE_LIST | MODE_CONTROL_CONDITION))
                 setMode(MODE_END_CONTROL);
-
-            // ensure JavaScript lambdas enclosed in operator parentheses are marked as such
-            if (waslambda)
-                markup = true;
         }
 
         rparen_operator[markup]
@@ -12533,6 +12570,16 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
         array_js |
 
+        // looking for "class" to start a class in an expression in JavaScript
+        // Note that "class:" is a property name in an object
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        class_expression_js |
+
+        // looking for "NAME(){...}" to start a keywordless function in JavaScript
+        // Note: do not confuse a call in a class super list for a keywordless function
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_SUPER_LIST_JS) && perform_keywordless_function_check_js() }?
+        keywordless_function_expression_js |
+
         // looking for "function" to start a function in an expression in JavaScript
         // Note that "function:" is a property name in an object
         { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
@@ -12755,6 +12802,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
                 startNewMode(MODE_EXPRESSION | MODE_LIST | MODE_TOP);
 
                 startElement(SBLOCK);
+
+                // lcurly starts a block
+                if (inLanguage(LANGUAGE_JAVASCRIPT))
+                    lcurly_types_js.emplace_back('b');  // block LCURLY
             }
 
             LCURLY
@@ -18447,9 +18498,6 @@ declaration_js[bool is_comma_decl = false] { int decl_start_token = 0; ENTRY_DEB
                 break;
             } |
 
-            // allow these tokens, but leave them unmarked
-            LBRACKET | RBRACKET | LCURLY | RCURLY |
-
             declaration_init_js | declaration_range_js | compound_name
         )*
 
@@ -18694,7 +18742,7 @@ alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             {
                 // ensure the "}" (for name lists) is not consumed here
-                if (LA(1) == RCURLY && inTransparentMode(MODE_NAME_LIST_JS))
+                if (LA(1) == RCURLY && inTransparentMode(MODE_NAME_LIST_JS) && lcurly_types_js.back() == 'n')
                     break;
 
                 if (!inMode(MODE_EXPRESSION))
@@ -18985,10 +19033,20 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_NAME_LIST_JS);
             startElement(SNAME_LIST);
+
+            // lcurly starts a name list
+            lcurly_types_js.emplace_back('n');  // name list LCURLY
         }
 
         LCURLY
         (options { greedy = true; } : alias_js | literals | compound_name | COMMA)*
+
+        {
+            // rcurly ends a name list
+            if (!lcurly_types_js.empty() && lcurly_types_js.back() == 'n')
+                lcurly_types_js.pop_back();
+        }
+
         RCURLY
 
         {
@@ -19085,18 +19143,21 @@ function_expression_js[] { bool consume_multops = false; bool consume_name = fal
         }
 
         javascript_parameter_list
-        function_expression_block_js
+        expression_block_js
 ;
 
 /*
-  function_expression_block_js
+  expression_block_js
 
-  Handles a complete block inside a function (in an expression) in JavaScript.
+  Handles a complete block inside an expression-level class or function in JavaScript.
 */
-function_expression_block_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+expression_block_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_BLOCK | MODE_EXPRESSION_BLOCK);
             startElement(SBLOCK);
+
+            // lcurly starts a block
+            lcurly_types_js.emplace_back('b');  // block LCURLY
         }
 
         LCURLY
@@ -19112,7 +19173,12 @@ function_expression_block_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         // in a block, so mimic behavior as if starting a statement for the first time
         {
-            while (LA(1) != RCURLY && LA(1) != 1 /* EOF */) {
+            lcurly_types_size = lcurly_types_js.size();  // should be at least two; '*' and 'b'
+
+            while (
+                (LA(1) != RCURLY || lcurly_types_js.back() != 'b' || lcurly_types_size != lcurly_types_js.size())
+                && LA(1) != 1 /* EOF */
+            ) {
                 if (
                     inMode(MODE_STATEMENT)
                     && (
@@ -19128,6 +19194,88 @@ function_expression_block_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         block_end
 ;
+
+/*
+  keywordless_function_expression_js
+
+  Handles functions without the "function" keyword that appear in expressions in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keywordless_function_expression_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        ((options { greedy = true; } : specifier_js)* compound_name)
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+        expression_block_js
+;
+
+/*
+  perform_keywordless_function_check_js
+
+  Checks for special keywordless function syntax in JavaScript.
+  Specifically, functions of the form "NAME(){...}".
+*/
+perform_keywordless_function_check_js[] returns [bool isfunction] {
+        isfunction = false;
+        int last_consumed_current = last_consumed;
+        bool found_name = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // match "NAME"
+            if (LA(1) == NAME) {
+                compound_name();
+                found_name = true;
+            }
+
+            // match "("
+            if (found_name && LA(1) == LPAREN) {
+                consume();  // "("
+                int paren_count = 0;
+
+                while (true) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    if (paren_count < 0)
+                        break;
+
+                    if ((LA(1) == RPAREN && paren_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        break;
+
+                    consume();
+                }
+
+                // found "NAME(){"
+                if (LA(1) == RPAREN && next_token() == LCURLY)
+                    isfunction = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
 
 /*
   lambda_js
@@ -19160,7 +19308,7 @@ lambda_js[bool is_list = false] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // end the parameter list lambda after the block
             if (LA(1) == LCURLY) {
-                function_expression_block_js();
+                expression_block_js();
                 return;
             }
         }
@@ -19247,16 +19395,21 @@ perform_lambda_check_js[] returns [bool islambda] {
 
   Handles objects in JavaScript.  They start and end with curly braces.
 */
-object_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_OBJECT_JS);
             startElement(SOBJECT_JS);
+
+            // lcurly starts an object
+            lcurly_types_js.emplace_back('o');  // name list LCURLY
+
+            lcurly_types_size = lcurly_types_js.size();
         }
 
         LCURLY
 
         (options { greedy = true; } :
-            { LA(1) == RCURLY }?
+            { LA(1) == RCURLY && lcurly_types_js.back() == 'o' && lcurly_types_size == lcurly_types_js.size() }?
             {
                 break;
             } |
@@ -19276,6 +19429,10 @@ object_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_OBJECT_JS))
                 endDownToMode(MODE_OBJECT_JS);
+
+            // rcurly ends an object
+            if (!lcurly_types_js.empty() && lcurly_types_js.back() == 'o')
+                lcurly_types_js.pop_back();
         }
 
         RCURLY
@@ -19286,15 +19443,21 @@ object_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
   Handles properties in JavaScript.  Not used directly, but called by object_js.
 */
-property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_PROPERTY_JS);
             startElement(SPROPERTY);
+
+            lcurly_types_size = lcurly_types_js.size();
         }
 
         (options { greedy = true; } :
             // do not consume non-call comma or ending RCURLY for an object
-            { (LA(1) == COMMA && lparen_types_js.back() != 'c') || LA(1) == RCURLY || LA(1) == TERMINATE }?
+            {
+                (LA(1) == COMMA && lparen_types_js.back() != 'c')
+                || (LA(1) == RCURLY && lcurly_types_js.back() == 'o' && lcurly_types_size == lcurly_types_js.size())
+                || LA(1) == TERMINATE
+            }?
             {
                 break;
             } |
@@ -19450,7 +19613,7 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
         }
 
         javascript_parameter_list
-        function_expression_block_js
+        expression_block_js
 ;
 
 /*
@@ -19530,3 +19693,26 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
 
         ENTRY_DEBUG
 } :;
+
+/*
+  class_expression_js
+
+  Handles classes that appear in expressions in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+class_expression_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_CLASS_EXPRESSION_JS);
+            startElement(SCLASS);
+        }
+
+        CLASS
+
+        {
+            // consume the name for expression-level classes, if applicable
+            if (LA(1) == NAME)
+                compound_name();
+        }
+
+        expression_block_js
+;

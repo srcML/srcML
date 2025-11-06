@@ -130,6 +130,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_SET_PY                     (bit(__CO
 // JavaScript
 const srcMLState::MODE_TYPE ModeStack::MODE_COMPUTED_GENERATOR_FUNCTION_JS (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_EXPRESSION_JS         (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_CLASS_EXPRESSION_JS            (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_DECL_STATEMENT_JS              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_PARAMETER_LIST_JS              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_CONSTRUCTOR_JS                 (bit(__COUNTER__));

@@ -132,25 +132,35 @@
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <return>return <expr><name>a</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
-}</block_content></block></function><operator>)</operator></expr></expr_stmt>
+</block_content>}</block></function><operator>)</operator></expr></expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <return>return <expr><name>a</name> <operator>+</operator> <name>b</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
-}</block_content></block></function><operator>)</operator></expr></expr_stmt>
+</block_content>}</block></function><operator>)</operator></expr></expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>getRectArea</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>height</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <return>return <expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
-}</block_content></block></function></expr></init></decl></decl_stmt>
+</block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name><name>x</name><operator>.</operator><name>default</name></name> <operator>=</operator> <function type="generator">function* <parameter_list>(<parameter><decl><name>sourcePath</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <yield>yield <expr><call><name><name>this</name><operator>.</operator><name>watch</name></name><argument_list>(<argument><expr><name>sourcePath</name></expr></argument>, <argument><expr><literal type="string">"input"</literal></expr></argument>)</argument_list></call></expr></yield>
-}</block_content></block></function></expr></expr_stmt>
+</block_content>}</block></function></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <function>function <name>addHundred</name><parameter_list>(<parameter><decl><name>y</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <return>return <expr><name>y</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
+    </block_content>}</block></function>
+
+    <return>return <expr><call><name>addHundred</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></return>
+</block_content>}</block></function><operator>)</operator></expr></expr_stmt>
 </unit>
 
 </unit>

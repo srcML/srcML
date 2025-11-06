@@ -49,9 +49,9 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name>o</name> <operator>=</operator> <object>{
-    <property><expr><call><name>method</name><argument_list>(<argument><expr><name>parameters</name></expr></argument>)</argument_list></call> <object>{
+    <property><expr><function><name>method</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</object></expr></property>,
+    </block_content>}</block></function></expr></property>,
 }</object></expr></expr_stmt>
 </unit>
 
@@ -132,9 +132,9 @@
 
     <property><expr><name>shorthandProperty</name></expr></property>,
 
-    <property><expr><call><name>method</name><argument_list>(<argument><expr><name>parameters</name></expr></argument>)</argument_list></call> <object>{
+    <property><expr><function><name>method</name><parameter_list>(<parameter><decl><name>parameters</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
-    }</object></expr></property>,
+    </block_content>}</block></function></expr></property>,
 
     <property><expr><function type="get">get <name>property</name><parameter_list>()</parameter_list> <block>{<block_content>
         <comment type="line">// ...</comment>
