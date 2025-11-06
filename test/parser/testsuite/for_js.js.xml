@@ -72,4 +72,51 @@
 </block_content>}</block></for>
 </unit>
 
+<!-- "for await...of" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <specifier>await</specifier> <control>(<init><decl type="const">const <name>chunk</name> <range>of <expr><call><name><name>data</name><operator>.</operator><name>read</name></name><argument_list>()</argument_list></call></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>process</name><operator>.</operator><name>stdout</name><operator>.</operator><name>write</name></name><argument_list>(<argument><expr><name>chunk</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <specifier>await</specifier> <control>(<init><parameter><name>user</name> <range>of <expr><name>users</name></expr></range></parameter></init>)</control> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><name><name>user</name><operator>.</operator><name>cookie</name><operator>.</operator><name>length</name></name> <operator>&lt;</operator> <literal type="number">500</literal></expr>)</condition> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Aborting: Incorrect cookie length"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <return>return</return>
+    </block_content>}</block></if></if_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="const">const <name>query</name> <range>of <expr><name>queries</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <for>for <specifier>await</specifier> <control>(<init><decl type="const">const <name>doc</name> <range>of <expr><name>events</name></expr></range></decl></init>)</control> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>queryResult</name><operator>.</operator><name>set</name></name><argument_list>(<argument><expr><name><name>doc</name><operator>.</operator><name>id</name></name></expr></argument>, <argument><expr><name>doc</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></for>
+</block_content>}</block></for>
+</unit>
+
+<!-- "for each...in" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <specifier>each</specifier> <control>(<init><decl type="var">var <name>member</name> <range>in <expr><name><name>this</name><operator>.</operator><name>dataStore</name></name></expr></range></decl></init>)</control> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><operator>!</operator><call><name><name>group</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><name>member</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+        <return>return <expr><literal type="boolean">false</literal></expr></return>
+    </block_content>}</block></if></if_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <specifier>each</specifier> <control>(<init><decl type="var">var <name>phase</name> <range>in <expr><array>[<expr><literal type="string">'early'</literal></expr>, <expr><literal type="string">'normal'</literal></expr>, <expr><literal type="string">'late'</literal></expr>]</array></expr></range></decl></init>)</control> <block>{<block_content>
+    <for>for <specifier>each</specifier> <control>(<init><parameter><name>handle</name> <range>in <expr><name><name>Stack</name><operator>.</operator><name>phases</name><index>[<expr><name>phase</name></expr>]</index></name></expr></range></parameter></init>)</control> <block>{<block_content>
+        <try>try <block>{<block_content>
+            <expr_stmt><expr><call><name><name>Stack</name><operator>.</operator><name>runHandle</name></name><argument_list>(<argument><expr><name>handle</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+        </block_content>}</block> <catch>catch(<name>e</name>) <block>{<block_content>
+            <throw>throw <expr><name>e</name></expr></throw>
+        </block_content>}</block></catch></try>
+    </block_content>}</block></for>
+</block_content>}</block></for>
+</unit>
+
 </unit>

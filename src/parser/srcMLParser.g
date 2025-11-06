@@ -998,7 +998,7 @@ public:
         temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
         temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
-        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, nullptr };
+        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::for_specifier_js };  // check for "await" or "each" following the "for"
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
@@ -18685,6 +18685,25 @@ catch_lparen_js[] { ENTRY_DEBUG } :
 ;
 
 /*
+  for_specifier_js
+
+  Handles the optional "await" or "each" specifiers that follow "for" in JavaScript
+*/
+for_specifier_js[] {
+        // found "for await" or "for each"
+        if (LA(1) == JS_AWAIT || LA(1) == JS_EACH) {
+            startNewMode(MODE_LOCAL);
+            startElement(SFUNCTION_SPECIFIER);
+
+            consume();  // "await" or "each"
+
+            endMode(MODE_LOCAL);
+        }
+
+        ENTRY_DEBUG
+} :;
+
+/*
   with_lparen_js
 
   Handles a parenthesized expression after a "with" statement in JavaScript.
@@ -19721,9 +19740,9 @@ class_expression_js[] { ENTRY_DEBUG } :
 ;
 
 /*
-yield_expression_js
+  yield_expression_js
 
-Handles "yield" and "yield*" that appear in expressions in JavaScript.
+  Handles "yield" and "yield*" that appear in expressions in JavaScript.
 */
 yield_expression_js[] { CompleteElement element(this); bool consume_multops = false; ENTRY_DEBUG } :
         {
