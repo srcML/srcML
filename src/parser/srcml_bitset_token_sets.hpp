@@ -146,7 +146,7 @@ token_set(srcMLParser, identifier_list_tokens_set,
     srcMLParser::PY_2_EXEC, srcMLParser::PY_2_PRINT, srcMLParser::PY_ASYNC, srcMLParser::PY_CASE, srcMLParser::PY_MATCH, srcMLParser::PY_TYPE,
 
     // JavaScript
-    srcMLParser::JS_DEFAULT, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
+    srcMLParser::JS_AS, srcMLParser::JS_DEFAULT, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
 )
 
 token_set(srcMLParser, whitespace_token_set,
@@ -244,6 +244,20 @@ token_set(srcMLParser, table_keywords_js_token_set,
     srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_IMPORT, srcMLParser::JS_SET,
     srcMLParser::JS_STATIC, srcMLParser::JS_WITH, srcMLParser::JS_YIELD, srcMLParser::RETURN,
     srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::WHILE
+)
+
+token_set(srcMLParser, name_differentiator_js_token_set,
+    // JavaScript keywords
+    srcMLParser::JS_AS, srcMLParser::JS_ASYNC, srcMLParser::JS_AWAIT, srcMLParser::BREAK, srcMLParser::CASE,
+    srcMLParser::JS_CATCH, srcMLParser::CLASS, srcMLParser::JS_CONST, srcMLParser::JS_CONSTRUCTOR, srcMLParser::CONTINUE,
+    srcMLParser::JS_DEBUGGER, srcMLParser::JS_DEFAULT, srcMLParser::JS_DELETE, srcMLParser::DO, srcMLParser::JS_EACH,
+    srcMLParser::JS_ELSE, srcMLParser::JS_EXPORT, srcMLParser::JS_EXTENDS, srcMLParser::LITERAL_FALSE, srcMLParser::FINALLY,
+    srcMLParser::FOR, srcMLParser::JS_FROM, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::IF,
+    srcMLParser::JS_IMPORT, srcMLParser::JS_RANGE_IN, srcMLParser::JS_INSTANCEOF, srcMLParser::JS_LET, srcMLParser::NEW,
+    srcMLParser::JS_NULL, srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::JS_SET, srcMLParser::JS_STATIC,
+    srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::LITERAL_TRUE, srcMLParser::TRY, srcMLParser::JS_TYPEOF,
+    srcMLParser::JS_UNDEFINED, srcMLParser::JS_VAR, srcMLParser::JS_VOID, srcMLParser::WHILE, srcMLParser::JS_WITH,
+    srcMLParser::JS_YIELD
 )
 
 #endif

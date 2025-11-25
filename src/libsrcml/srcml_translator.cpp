@@ -35,6 +35,7 @@
 #include <NewlineTerminatePython.hpp>
 #include <NameDifferentiatorPython.hpp>
 #include <NewlineTerminateJavaScript.hpp>
+#include <NameDifferentiatorJavaScript.hpp>
 
 using namespace ::std::literals::string_view_literals;
 
@@ -147,7 +148,10 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
         if (getLanguage() == LANGUAGE_JAVASCRIPT) {
             // intermediate token stage
-            NewlineTerminateJavaScript terminate(selector);
+            NameDifferentiatorJavaScript differentiator(selector);
+
+            // intermediate token stage
+            NewlineTerminateJavaScript terminate(differentiator);
 
             // base stream parser srcML connected to lexical analyzer
             StreamMLParser parser(terminate, getLanguage(), options);

@@ -838,6 +838,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "with"         , PY_WITH           , LANGUAGE_PYTHON },
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
 
+        // Existing language keywords that are names in JavaScript
+        { "enum"         , NAME              , LANGUAGE_JAVASCRIPT },
+        { "private"      , NAME              , LANGUAGE_JAVASCRIPT },
+        { "protected"    , NAME              , LANGUAGE_JAVASCRIPT },
+        { "public"       , NAME              , LANGUAGE_JAVASCRIPT },
+
         // JavaScript
         { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
         { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },

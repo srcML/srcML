@@ -806,6 +806,7 @@ public:
     static const antlr::BitSet multiline_literals_py_token_set;
     static const antlr::BitSet post_specifier_js_token_set;
     static const antlr::BitSet table_keywords_js_token_set;
+    static const antlr::BitSet name_differentiator_js_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -8832,10 +8833,7 @@ identifier_list[] { ENTRY_DEBUG } :
         EMIT | FOREACH | SIGNAL | FOREVER |
 
         // Python
-        PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE |
-
-        // JavaScript
-        JS_DEFAULT | JS_FUNCTION | JS_GET | JS_SET
+        PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE
 ;
 
 /*
@@ -19484,6 +19482,10 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
                 break;
             } |
 
+            // special case: "default:" is a property name, not a statement
+            { inMode(MODE_PROPERTY_JS) && next_token() == COLON }?
+            default_property_js |
+
             { inMode(MODE_ARGUMENT) }?
             argument |
 
@@ -19505,6 +19507,28 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             { lparen_types_js.back() == 'c' }?
             comma
         )*
+;
+
+/*
+  default_property_js
+
+  Handles the special case "default:" in a JavaScript property.
+*/
+default_property_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXPRESSION);
+            startElement(SEXPRESSION);
+
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+        }
+
+        JS_DEFAULT
+
+        {
+            endMode(MODE_VARIABLE_NAME);
+            endMode(MODE_EXPRESSION);
+        }
 ;
 
 /*
