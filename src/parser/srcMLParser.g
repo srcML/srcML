@@ -1478,6 +1478,14 @@ javascript_statements[] {
         if (lcurly_types_js.empty())
             lcurly_types_js.emplace_back('*');
 
+        // special case: detect labels that occur before a statement or a block
+        if (
+            next_token() == COLON
+            && (table_keywords_js_token_set.member(next_token_two()) || next_token_two() == LCURLY)
+            && !(LA(1) == CASE || LA(1) == JS_DEFAULT || inMode(MODE_PROPERTY_JS) || inMode(MODE_TERNARY))
+        )
+            label_js();
+
         // special case: consume TERMINATE separating "then" and "else" portions of multi-line ternary
         if (
             LA(1) == TERMINATE
@@ -1912,7 +1920,12 @@ pattern_statements[] {
   An efficient way to view the token after the current LA(1).
 */
 next_token[] returns [unsigned int token] {
-        if (LT(1)->getColumn() == current_column && LT(1)->getLine() == current_line) {
+        // ignore caching the next token if the current token is a JavaScript TERMINATE
+        if (
+            !(inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE)
+            && LT(1)->getColumn() == current_column
+            && LT(1)->getLine() == current_line
+        ) {
             token = nxt_token;
         } else {
             current_column = LT(1)->getColumn();
@@ -18790,6 +18803,28 @@ from_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         JS_FROM
         literals
+;
+
+/*
+  label_js
+
+  Handles a label (e.g., "NAME :") in JavaScript.
+  A label can appear before any statement.
+*/
+label_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SLABEL_STATEMENT);
+
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+
+            consume();  // NAME
+
+            endMode(MODE_VARIABLE_NAME);
+        }
+
+        COLON
 ;
 
 /*

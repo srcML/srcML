@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="label">
+
+<!-- Labeled block -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <block>{<block_content>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"one"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+  <break>break <name>foo</name></break>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"this will not be executed"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block>
+<expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"two"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- "break" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <break>break</break>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <break>break <name>outerBlock</name></break>
+</unit>
+
+<!-- "class" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <class>class <name>Rectangle</name> <block>{<block_content>
+  <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Rectangle"</literal></expr></expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
+  </block_content>}</block></constructor>
+</block_content>}</block></class>
+</unit>
+
+<!-- "constructor" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Rectangle</name> <block>{<block_content>
+    <label><name>customLabel</name>:</label> <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Rectangle"</literal></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
+    </block_content>}</block></constructor>
+</block_content>}</block></class>
+</unit>
+
+<!-- "continue" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <continue>continue</continue>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <continue>continue <name>outerBlock</name></continue>
+</unit>
+
+<!-- "debugger" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <debugger>debugger</debugger>
+</unit>
+
+<!-- "do..while" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <do>do <block>{<block_content>
+    <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">1</literal></expr></expr_stmt>
+    <expr_stmt><expr><name>result</name> <operator>+=</operator> <name>i</name></expr></expr_stmt>
+</block_content>}</block> while <condition>(<expr><name>i</name> <operator>&lt;</operator> <literal type="number">5</literal></expr>)</condition></do>
+</unit>
+
+<!-- "export" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <export>export <name_list>{ <name>name1</name>, <comment type="block">/* ..., */</comment> <name>nameN</name> }</name_list></export>
+</unit>
+
+<!-- "for" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>outerLoop</name>:</label> <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">3</literal></expr></condition>; <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
+    <label><name>innerLoop</name>:</label> <for>for <control>(<init><decl type="let">let <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; <condition><expr><name>j</name> <operator>&lt;</operator> <literal type="number">3</literal></expr></condition>; <incr><expr><name>j</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name>i</name> <operator>===</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>j</name> <operator>===</operator> <literal type="number">1</literal></expr>)</condition> <block>{<block_content>
+            <break>break <name>outerLoop</name></break>
+        </block_content>}</block></if></if_stmt>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`i: ${i}, j: ${j}`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></for>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <for>for <control>(<init><decl type="const">const <name>prop</name> <range>in <expr><name>obj</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`obj.${prop} = ${obj[prop]}`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<!-- "function"/"function*"/"get"/"set" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <function>function <name>calcRectArea</name><parameter_list>(<parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>height</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <function type="generator">function* <name>anotherGenerator</name><parameter_list>(<parameter><decl><name>i</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">2</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">3</literal></expr></yield>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithGet</name> <block>{<block_content>
+    <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
+
+    <label><name>customLabel</name>:</label> <function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
+    </block_content>}</block></function>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithSet</name> <block>{<block_content>
+    <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
+
+    <label><name>customLabel</name>:</label> <function type="set">set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <operator>=</operator> <literal type="string">`hello ${x}`</literal></expr></expr_stmt>
+    </block_content>}</block></function>
+</block_content>}</block></class>
+</unit>
+
+<!-- "if"/"else if"/"else" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"positive"</literal></expr></expr_stmt>
+</block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>a</name> <operator>===</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"zero"</literal></expr></expr_stmt>
+</block_content>}</block></if> <else>else <block>{<block_content>
+    <expr_stmt><expr><name>result</name> <operator>=</operator> <literal type="string">"negative"</literal></expr></expr_stmt>
+</block_content>}</block></else></if_stmt>
+</unit>
+
+<!-- "import" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <import>import <name>defaultExport</name> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<!-- "return" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <return>return</return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <return>return <expr><literal type="number">0</literal></expr></return>
+</unit>
+
+<!-- "static" block -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithStaticMethod</name> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>staticProperty</name> <init>= <expr><literal type="string">"someValue"</literal></expr></init></decl></decl_stmt>
+
+    <label><name>customLabel</name>:</label> <static>static <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Class static initialization block called"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></static>
+</block_content>}</block></class>
+</unit>
+
+<!-- "switch" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <switch>switch <condition>(<expr><name>input</name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><literal type="string">"Oranges"</literal></expr>:</case>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Oranges are $0.59 a pound."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+
+    <case>case <expr><literal type="string">"Mangoes"</literal></expr>:</case>
+    <case>case <expr><literal type="string">"Papayas"</literal></expr>:</case>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Mangoes and papayas are $2.79 a pound."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+
+    <default>default:</default>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Sorry, we are out of ${input}.`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<!-- "throw" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <throw>throw <expr><name>error</name></expr></throw>
+</unit>
+
+<!-- "try" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <try>try <block>{<block_content>
+    <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">"oops"</literal></expr></argument>)</argument_list></call></expr></throw>
+</block_content>}</block> <catch>catch (<name>ex</name>) <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">"inner"</literal></expr></argument>, <argument><expr><name><name>ex</name><operator>.</operator><name>message</name></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></catch> <finally>finally <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"finally"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></finally></try>
+</unit>
+
+<!-- "while" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <while>while <condition>(<expr><name>n</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><operator>++</operator><name>n</name></expr></expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>n</name></expr></expr_stmt>
+</block_content>}</block></while>
+</unit>
+
+<!-- "with" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <with>with (<expr><name>Math</name></expr>) <block>{<block_content>
+    <expr_stmt><expr><name>a</name> <operator>=</operator> <name>PI</name> <operator>*</operator> <name>r</name> <operator>*</operator> <name>r</name></expr></expr_stmt>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <name>r</name> <operator>*</operator> <call><name>cos</name><argument_list>(<argument><expr><name>PI</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    <expr_stmt><expr><name>y</name> <operator>=</operator> <name>r</name> <operator>*</operator> <call><name>sin</name><argument_list>(<argument><expr><name>PI</name> <operator>/</operator> <literal type="number">2</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></with>
+</unit>
+
+<!-- "yield" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <yield>yield</yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <yield>yield <expr><name>index</name></expr></yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<label><name>customLabel</name>:</label> <yield type="generator">yield* <expr><call><name>func1</name><argument_list>()</argument_list></call></expr></yield>
+</unit>
+
+</unit>
