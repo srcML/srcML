@@ -376,6 +376,7 @@ tokens {
     JS_NULL;
     JS_RANGE_IN;
     JS_RANGE_OF;
+    JS_REGEX;
     JS_SET;
     JS_STATIC;
     JS_TYPEOF;
@@ -400,6 +401,16 @@ public:
     int lastpos;
     int prev;
     int currentmode;
+    int lastnonwhitespacetoken;
+
+    virtual void consume() noexcept(false) {
+        if (LA(1) != ' ')
+            lastnonwhitespacetoken = LA(1);
+
+        antlr::CharScanner::consume();
+    }
+
+    int getLastToken() const { return lastnonwhitespacetoken; }
 
 // map from text of literal to token number, adjusted to language
 struct keyword { std::string_view text; int token; int language; };

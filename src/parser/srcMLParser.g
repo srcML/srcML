@@ -738,6 +738,7 @@ tokens {
     SFUNCTION_SET_STATEMENT;
     SNAME_LIST;
     SOBJECT_JS;
+    SREGEX_JS;
     SUNDEFINED_JS;
     SYIELD_GENERATOR_STATEMENT;
 }
@@ -12911,7 +12912,7 @@ rparen_expression[] { bool end_control_incr = false; ENTRY_DEBUG } :
 */
 literals[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
-        (backtick_literal_js | undefined_literal_js) |
+        (backtick_literal_js | undefined_literal_js | regex_literal_js) |
 
         { inLanguage(LANGUAGE_PYTHON) }?
         (dquote_literal_py | squote_literal_py) |
@@ -12945,6 +12946,19 @@ undefined_literal_js[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         JS_UNDEFINED
+;
+
+/*
+  regex_literal_js
+
+  Handles a regular expression literal (e.g., "/abc/") in JavaScript.
+*/
+regex_literal_js[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SREGEX_JS);
+        }
+
+        JS_REGEX
 ;
 
 /*

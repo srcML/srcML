@@ -187,8 +187,30 @@ NAME options { testLiterals = true; } :
     )?
 ;
 
-// Single-line comments (no EOL)
-LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; } : '/' 
+// Single-line comments (no EOL); also processes potential regular expression literals in JavaScript
+LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnonwhitespacetoken = this->getLastToken(); } : '/'
+    (
+        // for this conditional, lastnonwhitespacetoken must refer to the token before the first '/'
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) != '/'
+            && LA(1) != '*'
+            && (
+                startline
+                || lastnonwhitespacetoken == '='
+                || lastnonwhitespacetoken == '('
+                || lastnonwhitespacetoken == ','
+            )
+        }?
+        (options { greedy = true; } :
+            ('\\') { if (LA(1) == '\\' || LA(1) == '/') consume(); } |
+
+            ~('/' | '\\')
+        )*
+        ('/') (NAME)?
+        { $setType(JS_REGEX); }
+    )?
+
     ('/' 
         {
             // '//' is an operator in Python
