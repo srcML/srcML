@@ -350,6 +350,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SFUNCTION_GENERATOR_STATEMENT, { "function",          SRC, "type", "generator",        0,                   0 }},
     { TOKEN::SFUNCTION_GET_STATEMENT,       { "function",          SRC, "type",       "get",        0,                   0 }},
     { TOKEN::SFUNCTION_SET_STATEMENT,       { "function",          SRC, "type",       "set",        0,                   0 }},
+    { TOKEN::SHTML_COMMENT,                 { "comment",           SRC, "type",      "html",        0,                   0 }},
     { TOKEN::SNAME_LIST,                    { "name_list",         SRC,      0,           0,        0,                   0 }},
     { TOKEN::SOBJECT_JS,                    { "object",            SRC,      0,           0,        0,                   0 }},
     { TOKEN::SREGEX_JS,                     { "literal",           SRC, "type",     "regex",        0,                   0 }},

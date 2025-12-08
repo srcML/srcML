@@ -97,6 +97,7 @@ tokens {
 
 OPERATORS options { testLiterals = true; } {
     int start = LA(1);
+    bool iscomment = true;
 } : (
     // # (C++/Python/JavaScript), #! (Python/JavaScript)
     '#' (
@@ -147,8 +148,16 @@ OPERATORS options { testLiterals = true; } {
     // >, >>=, >=, >>> (JavaScript), >>>= (JavaScript), not >>
     '>' (('>' '=') => '>' '=' | { inLanguage(LANGUAGE_JAVASCRIPT) }? ('>' '>' '=') => '>' '>' '=')? ('=')? |
 
-    // <, << (C/C++), <=, <<< (CUDA), <> (Python)
-    '<' ('=' | '<' ({ inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) }? '<' | '=')? | { inLanguage(LANGUAGE_PYTHON) }? '>' )? |
+    // <, << (C/C++), <=, <<< (CUDA), <> (Python), <!-- (JavaScript)
+    '<' (
+        '=' |
+
+        '<' ({ inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) }? '<' | '=')? |
+
+        { inLanguage(LANGUAGE_PYTHON) }? '>' |
+
+        { inLanguage(LANGUAGE_JAVASCRIPT) }? ('!' '-' '-') { $setType(HTML_COMMENT_START); changetotextlexer(HTML_COMMENT_END); }
+    )? |
 
     // match these as individual operators only
     ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 

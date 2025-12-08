@@ -38,5 +38,34 @@ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[
 */</comment>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!----&gt;</comment>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!-- a --&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!-- &lt;!- a -&gt; --&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!--
+a
+b
+c
+--&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!-- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[]\;',./~_+{}|:"&lt;&gt;? --&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!--
+console.log("srcML");
+--&gt;</comment>
+</unit>
+
+</unit>

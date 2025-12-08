@@ -72,6 +72,7 @@ tokens {
     DOXYGEN_COMMENT_END;
     HASHBANG_COMMENT_END;
     HASHTAG_COMMENT_END;
+    HTML_COMMENT_END;
     PY_DQUOTE_STRING_START;
     PY_SIMPLE_DQUOTE_STRING_END;
     PY_SQUOTE_STRING_START;
@@ -151,9 +152,10 @@ COMMENT_TEXT {
     // since control characters must be single tokens
     bool first = true;
 
-    // record the previous character
-    int prevLA = 0;
-    int prevprevLA = 0;
+    // record previous characters (e.g., lookaheadMinusOne is like LA(-1) in the parser)
+    int lookaheadMinusOne = 0;
+    int lookaheadMinusTwo = 0;
+    int lookaheadMinusThree = 0;
 
     int lastColumn = 0;
 } :
@@ -167,8 +169,9 @@ COMMENT_TEXT {
         // only allow control characters the first (and only) time through
         (LA(1) > '\037' || LA(1) == '\011' || LA(1) == '\012' || first) }? {
 
-        prevLA = prevprevLA;
-        prevprevLA = LA(1);
+        lookaheadMinusThree = lookaheadMinusTwo;
+        lookaheadMinusTwo = lookaheadMinusOne;
+        lookaheadMinusOne = LA(1);
      }
      (
     '\000'..'\010'
@@ -199,7 +202,7 @@ COMMENT_TEXT {
 
         // end at EOL when for line comment, or the end of a string or char on a preprocessor line
         // Special case in C++ and C with end of comment
-        if ((mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END) && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && prevLA == '\\') {
+        if ((mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END) && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && lookaheadMinusTwo == '\\') {
 
             ;
 
@@ -221,7 +224,7 @@ COMMENT_TEXT {
         {
             dquote_count = 1;
 
-            if (mode == PY_SIMPLE_DQUOTE_STRING_END && (prevLA != '\\' || noescape)) {
+            if (mode == PY_SIMPLE_DQUOTE_STRING_END && (lookaheadMinusTwo != '\\' || noescape)) {
                 mode = STRING_END;
                 resetQuoteState();
                 skip_dquote_processing = true;
@@ -233,7 +236,7 @@ COMMENT_TEXT {
                 in_squotes = true;
         }
         (options { greedy = true; } :
-            { !skip_dquote_processing && (prevLA != '\\' || noescape) }?
+            { !skip_dquote_processing && (lookaheadMinusTwo != '\\' || noescape) }?
             '\042'
             {
                 ++dquote_count;
@@ -286,7 +289,7 @@ COMMENT_TEXT {
                         !is_multiple_dquotes
                         && (
                             (noescape && dquote_count % 2 == 1)
-                            || (!noescape && prevLA != '\\' && mode == STRING_END)
+                            || (!noescape && lookaheadMinusTwo != '\\' && mode == STRING_END)
                         )
                     ) {
                         resetQuoteState();
@@ -313,7 +316,7 @@ COMMENT_TEXT {
         {
             squote_count = 1;
 
-            if (mode == PY_SIMPLE_SQUOTE_STRING_END && (prevLA != '\\' || noescape)) {
+            if (mode == PY_SIMPLE_SQUOTE_STRING_END && (lookaheadMinusTwo != '\\' || noescape)) {
                 mode = CHAR_END;
                 resetQuoteState();
                 skip_squote_processing = true;
@@ -325,7 +328,7 @@ COMMENT_TEXT {
                 in_dquotes = true;
         }
         (options { greedy = true; } :
-            { !skip_squote_processing && (mode == PY_SQUOTE_STRING_START || is_multiple_squotes) && (prevLA != '\\' || noescape) }?
+            { !skip_squote_processing && (mode == PY_SQUOTE_STRING_START || is_multiple_squotes) && (lookaheadMinusTwo != '\\' || noescape) }?
             '\047'
             {
                 ++squote_count;
@@ -375,7 +378,7 @@ COMMENT_TEXT {
                 }
 
                 default: {
-                    if (!is_multiple_squotes && (prevLA != '\\' && mode == CHAR_END)) {
+                    if (!is_multiple_squotes && (lookaheadMinusTwo != '\\' && mode == CHAR_END)) {
                         resetQuoteState();
                         $setType(mode);
                         selector->pop();
@@ -407,31 +410,43 @@ COMMENT_TEXT {
 
     '\052'..'\056' |
 
-    '\057' /* '/' */
-        { if (prevLA == '*' && ((mode == BLOCK_COMMENT_END) ||
-                                (mode == JAVADOC_COMMENT_END) ||
-                                (mode == DOXYGEN_COMMENT_END) ) )
-            { $setType(mode); selector->pop(); }
-        } |
+    '\057' /* '/' */ {
+        if (lookaheadMinusTwo == '*'
+            && (
+                (mode == BLOCK_COMMENT_END)
+                || (mode == JAVADOC_COMMENT_END)
+                || (mode == DOXYGEN_COMMENT_END)
+            )
+        ) {
+            $setType(mode); selector->pop();
+        }
+    } |
 
     '\060'..';' | 
 
     '<' |
-    '=' | 
-    '>' |
+    '=' |
+
+    '>' {
+        // looking for the end of an HTML comment in JavaScript (e.g., "-->")
+        if (lookaheadMinusThree == '-' && lookaheadMinusTwo == '-' && mode == HTML_COMMENT_END) {
+            $setType(mode); selector->pop();
+        }
+    } |
+
     '?'..'[' |
 
     '\\' { 
         // wipe out previous escape character
-        if (prevLA == '\\') {
-            prevprevLA = 0;
+        if (lookaheadMinusTwo == '\\') {
+            lookaheadMinusOne = 0;
         }
     } |
 
     ']'..'_' |
 
     '`' {
-        if (prevLA != '\\' && mode == BACKTICK_END) {
+        if (lookaheadMinusTwo != '\\' && mode == BACKTICK_END) {
             $setType(mode);
             selector->pop();
         }
@@ -449,7 +464,7 @@ COMMENT_TEXT {
             Line comments are not ended if there is a line continuation character for C and C++. They do end the line comment for
             C# and Java
         */
-        if (_ttype == COMMENT_TEXT && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && prevprevLA == '\\' && LA(1) == '\n') {
+        if (_ttype == COMMENT_TEXT && (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C)) && lookaheadMinusOne == '\\' && LA(1) == '\n') {
 
             // line continuation for C++ and C of line comments
             ;

@@ -489,6 +489,26 @@ private:
 
                 break;
 
+            case srcMLParser::HTML_COMMENT_START:
+
+                pushSSkipToken(srcMLParser::SHTML_COMMENT);
+                pushSkipToken();
+                srcMLParser::consume();
+
+                open_comments.push(srcMLParser::SHTML_COMMENT);
+
+                break;
+
+            case srcMLParser::HTML_COMMENT_END:
+
+                open_comments.pop();
+
+                pushSkipToken();
+                srcMLParser::consume();
+                pushESkipToken(srcMLParser::SHTML_COMMENT);
+
+                break;
+
             default:
                 // skipped tokens are put on a special buffer
                 pushSkipToken();
