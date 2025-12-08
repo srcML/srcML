@@ -12549,6 +12549,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // special case: JavaScript tagged templates (e.g., a`b`)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_tagged_template_check_js(call_count) }?
+        tagged_template_js[call_count] |
+
         // special case: JavaScript lambda starts with (optional "async" with) a lone parameter
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
@@ -19856,4 +19860,102 @@ yield_expression_js[] { CompleteElement element(this); bool consume_multops = fa
 
             comma
         )*
+;
+
+/*
+  perform_tagged_template_check_js
+
+  Checks to see if a name or function call preceeds a tagged template in JavaScript (e.g., a`b`).
+  Also checks for any JavaScript tagged template variations (e.g., a`b`(c) or a`b``c`).
+*/
+perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
+        istagged = false;
+        call_count = 0;
+
+        bool is_complex = false;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                // process consecutive argument lists (before backticks)
+                while (LA(1) == LPAREN) {
+                    paren_pair();
+                    ++call_count;
+                }
+
+                // process consecutive backtick arguments
+                while (LA(1) == BACKTICK_START) {
+                    backtick_literal_js();
+                    ++call_count;
+                    istagged = true;
+                }
+
+                // process consecutive argument lists (after backticks)
+                while (LA(1) == LPAREN) {
+                    paren_pair();
+                    ++call_count;
+                }
+
+                // do not confuse array indexing (e.g., a[`${type}`]) with tagged templates
+                if (last_consumed == NAME && LA(1) == LBRACKET)
+                    variable_identifier_array_grammar_sub(is_complex);
+
+                if (
+                    LA(1) == LCURLY /* start of a block, object, or name list */
+                    || LA(1) == COLON /* start of a property */
+                    || LA(1) == EQUAL /* LHS of assignment is not a tagged template */
+                    || LA(1) == TERMINATE
+                    || LA(1) == 1 /* EOF */
+                )
+                    break;
+
+                consume();
+            }
+
+            if (!istagged)
+                call_count = 0;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+        ENTRY_DEBUG
+} :;
+
+/*
+  tagged_template_js
+
+  Handles tagged templates in JavaScript (e.g., a`b`, a`b`(c), a`b``c`, etc.).
+*/
+tagged_template_js[int call_count = 1] { ENTRY_DEBUG } :
+        {
+            do {
+                // start a new mode that will end after the argument list
+                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+
+                // start the function call element
+                startElement(SFUNCTION_CALL);
+            } while (--call_count > 0);
+        }
+
+        compound_name
+
+        (
+            { LA(1) == BACKTICK_START }?
+            argument |
+
+            call_argument_list
+        )
+
+        {
+            // end the call in preparation for the next call (e.g., a`b`(c) or a`b``c`)
+            if (LA(1) == LPAREN || LA(1) == BACKTICK_START) {
+                endDownToMode(MODE_FUNCTION_CALL);
+                endMode(MODE_FUNCTION_CALL);
+            }
+        }
 ;
