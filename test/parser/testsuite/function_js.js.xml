@@ -61,14 +61,15 @@
 </block_content>}</block></function>
 </unit>
 
+<!-- Note: The semicolon is required after the first declaration or else the code is invalid -->
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>Foo</name> <block>{<block_content>
-    <decl_stmt><decl type="var">var <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
     <function type="generator">*<name type="computed">[<expr><name><name>Symbol</name><operator>.</operator><name>iterator</name></name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><literal type="number">1</literal></expr></yield>
         <yield>yield <expr><literal type="number">2</literal></expr></yield>
     </block_content>}</block></function>
-    <decl_stmt><decl type="var">var <name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
 </block_content>}</block></class>
 </unit>
 

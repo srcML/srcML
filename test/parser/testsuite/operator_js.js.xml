@@ -22,15 +22,15 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><literal type="number">1</literal> <operator>**</operator> <literal type="number">2</literal></expr></expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>**</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><operator>+</operator><literal type="number">1</literal></expr></expr_stmt>
+<expr_stmt><expr><operator>+</operator><literal type="number">1</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr></expr_stmt>
+<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -58,7 +58,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;&gt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;&gt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

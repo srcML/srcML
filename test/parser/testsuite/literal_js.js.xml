@@ -2,15 +2,15 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="literal">
 
 <unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><literal type="number">1</literal></expr></expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><literal type="number">0</literal></expr></expr_stmt>
-</unit>
-
-<unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr></expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -26,15 +26,15 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><literal type="number">0.0</literal></expr></expr_stmt>
+<expr_stmt><expr><literal type="number">0.0</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><operator>-</operator><literal type="number">1.1</literal></expr></expr_stmt>
+<expr_stmt><expr><operator>-</operator><literal type="number">1.1</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><operator>-</operator><literal type="number">.1</literal></expr></expr_stmt>
+<expr_stmt><expr><operator>-</operator><literal type="number">.1</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -74,7 +74,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><literal type="number">0b10101</literal></expr></expr_stmt>
+<expr_stmt><expr><literal type="number">0b10101</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -82,11 +82,11 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><literal type="number">0o350</literal></expr></expr_stmt>
+<expr_stmt><expr><literal type="number">0o350</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><operator>-</operator><literal type="number">0o777</literal></expr></expr_stmt>
+<expr_stmt><expr><operator>-</operator><literal type="number">0o777</literal></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

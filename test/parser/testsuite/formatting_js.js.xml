@@ -53,4 +53,39 @@
 <expr_stmt><expr><name>d</name> <operator>=</operator> <operator>-</operator><name>e</name></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+<comment type="block">/* comment A */</comment>
+    
+
+<comment type="line">// comment B</comment>
+  <expr_stmt><expr><operator>++</operator>
+<name>c</name></expr></expr_stmt>
+<expr_stmt><expr><name>d</name> <operator>=</operator> <name>e</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+<comment type="block">/* comment A */</comment>
+    
+
+<comment type="line">// comment B</comment>
+  <expr_stmt><expr><operator>--</operator>
+<name>c</name></expr></expr_stmt>
+<expr_stmt><expr><name>d</name> <operator>=</operator> <name>e</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/* 1 */</comment> <expr_stmt><expr><name>a</name> <comment type="block">/* 2 */</comment> <operator>=</operator> <comment type="block">/* 3 */</comment> <name>b</name><operator>++</operator></expr></expr_stmt> <comment type="block">/* 4 */</comment>
+<comment type="block">/* 5 */</comment> <expr_stmt><expr><name>c</name></expr></expr_stmt> <comment type="block">/* 6 */</comment>
+<comment type="block">/* 7 */</comment> <expr_stmt><expr><name>d</name> <comment type="block">/* 8 */</comment> <operator>=</operator> <comment type="block">/* 9 */</comment> <name>e</name></expr></expr_stmt> <comment type="block">/* 10 */</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/* 1 */</comment> <expr_stmt><expr><name>a</name> <comment type="block">/* 2 */</comment> <operator>=</operator> <comment type="block">/* 3 */</comment> <name>b</name></expr></expr_stmt> <comment type="block">/* 4 */</comment>
+<comment type="block">/* 5 */</comment> <expr_stmt><expr><operator>++</operator> <comment type="block">/* 6 */</comment>
+<comment type="block">/* 7 */</comment> <name>c</name></expr></expr_stmt> <comment type="block">/* 8 */</comment>
+<comment type="block">/* 9 */</comment> <expr_stmt><expr><name>d</name> <comment type="block">/* 10 */</comment> <operator>=</operator> <comment type="block">/* 11 */</comment> <name>e</name></expr></expr_stmt> <comment type="block">/* 12 */</comment>
+</unit>
+
 </unit>

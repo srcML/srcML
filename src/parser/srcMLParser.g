@@ -809,6 +809,8 @@ public:
     static const antlr::BitSet post_specifier_js_token_set;
     static const antlr::BitSet table_keywords_js_token_set;
     static const antlr::BitSet name_differentiator_js_token_set;
+    static const antlr::BitSet insert_terminate_js_token_set;
+    static const antlr::BitSet insert_terminate_eol_js_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -19114,7 +19116,7 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         LCURLY
-        (options { greedy = true; } : alias_js | literals | compound_name | COMMA)*
+        (options { greedy = true; } : alias_js | literals | compound_name | COMMA | TERMINATE)*
 
         {
             // rcurly ends a name list
@@ -19489,12 +19491,16 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
             } |
 
             { inMode(MODE_OBJECT_JS) }?
-            COMMA |
+            COMMA
+            {
+                // cannot be a statement; ignore the TERMINATE token
+                if (LA(1) == TERMINATE)
+                    consume();
+            } |
 
             property_js
             {
-                // the property in the object was treated like a statement
-                // in a block, so ignore the TERMINATE token
+                // cannot be a statement; ignore the TERMINATE token
                 if (LA(1) == TERMINATE)
                     consume();
             }

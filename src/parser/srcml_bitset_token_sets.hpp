@@ -263,4 +263,19 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_YIELD
 )
 
+token_set(srcMLParser, insert_terminate_js_token_set,
+    // if two adjacent tokens are any of these, insert a TERMINATE in JavaScript
+    srcMLParser::CHAR_END, srcMLParser::CHAR_START, srcMLParser::CONSTANTS, srcMLParser::JS_NULL, srcMLParser::JS_REGEX,
+    srcMLParser::JS_UNDEFINED, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NAME,
+    srcMLParser::STRING_END, srcMLParser::STRING_START
+)
+
+token_set(srcMLParser, insert_terminate_eol_js_token_set,
+    // if two adjacent tokens are any of these, and EOL is between them, insert a TERMINATE in JavaScript
+    srcMLParser::BACKTICK_END, srcMLParser::BACKTICK_START, srcMLParser::CHAR_END, srcMLParser::CHAR_START,
+    srcMLParser::CONSTANTS, srcMLParser::DESTOP, srcMLParser::JS_NULL, srcMLParser::JS_REGEX,
+    srcMLParser::JS_UNDEFINED, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NAME,
+    srcMLParser::STRING_END, srcMLParser::STRING_START
+)
+
 #endif

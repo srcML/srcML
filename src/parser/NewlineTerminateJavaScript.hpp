@@ -25,20 +25,18 @@ public:
 
     antlr::RefToken nextToken();
 
+    bool isTerminateCase(antlr::RefToken token, antlr::RefToken nextToken, bool containsEOL);
+
     void insertTerminateToken(int token);
 
 private:
     antlr::TokenStream& input;
     std::deque<antlr::RefToken> buffer;
+    std::deque<antlr::RefToken> tempSkipBuffer;
     antlr::RefToken lastToken = srcMLToken::factory();
 
-    bool isEmptyLine = true;
-    bool firstCharacter = true;
-    bool wasNameNewlineToken = false;
-    bool wasLambdaArrow = false;
-
+    bool wasPostfixName = false;
     int parenthesesCount = 0;
-    int lambdaBlockStartLine = -1;
 };
 
 #endif

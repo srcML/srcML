@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file NewlineTerminateJavaScript.hpp
+ * @file NewlineTerminateJavaScript.cpp
  *
  * @copyright Copyright (C) 2025 srcML, LLC. (www.srcML.org)
  *
@@ -11,163 +11,69 @@
 
 #include <NewlineTerminateJavaScript.hpp>
 
-// inserts TERMINATE tokens at EOL for JavaScript
+// insert TERMINATE tokens to JavaScript code without semicolon delimiters
 antlr::RefToken NewlineTerminateJavaScript::nextToken() {
-
-    // place all input tokens in the buffer so we can insert a TERMINATE
     if (buffer.empty()) {
-        auto token = input.nextToken();
+        antlr::RefToken token = srcMLToken::factory();
 
-        // buffer any non-EOL whitespace or line continuation backslashes
-        // since these must be placed after the inserted terminate
-        std::deque<antlr::RefToken> wsBuffer;
-        while (token->getType() == srcMLParser::WS || token->getType() == srcMLParser::EOL_BACKSLASH) {
-            wsBuffer.emplace_back(token);
+        // use the previous token unless starting the file for the first time
+        if (lastToken->getType() == 0 && lastToken->getColumn() == 0 && lastToken->getLine() == 0)
             token = input.nextToken();
+        else
+            token = lastToken;
+
+        auto nextNonSkipToken = input.nextToken();
+        bool containsEOL = false;
+
+        // find the next non-skip token, if applicable
+        while (srcMLParser::skip_tokens_set.member(nextNonSkipToken->getType())) {
+            // record if the temporary skip token buffer will contain an EOL
+            if (nextNonSkipToken->getType() == srcMLParser::EOL)
+                containsEOL = true;
+
+            tempSkipBuffer.emplace_back(nextNonSkipToken);
+            nextNonSkipToken = input.nextToken();
         }
 
         // update the open parentheses count (includes parentheses and square brackets)
-        if (token->getType() == srcMLParser::LPAREN || token->getType() == srcMLParser::LBRACKET)
+        if (nextNonSkipToken->getType() == srcMLParser::LPAREN || nextNonSkipToken->getType() == srcMLParser::LBRACKET)
             ++parenthesesCount;
-        else if (parenthesesCount > 0 && (token->getType() == srcMLParser::RPAREN || token->getType() == srcMLParser::RBRACKET))
+        else if (parenthesesCount > 0 && (nextNonSkipToken->getType() == srcMLParser::RPAREN || nextNonSkipToken->getType() == srcMLParser::RBRACKET))
             --parenthesesCount;
 
-        // record the line the lambda block starts on, if applicable
-        if (wasLambdaArrow) {
-            if (token->getType() == srcMLParser::LCURLY)
-                lambdaBlockStartLine = token->getLine();
+        buffer.emplace_back(token);
 
-            wasLambdaArrow = false;
-        }
-
-        // found an arrow ("=>")
-        if (token->getType() == srcMLParser::JS_ARROW)
-            wasLambdaArrow = true;
-
-        //
-        // TERMINATE-checking logic that requires knowing the next token
-        //
-        if (
-            token->getType() == srcMLParser::EOL
-            && (
-                lastToken->getType() == srcMLParser::NAME
-                || srcMLParser::identifier_list_tokens_set.member(lastToken->getType())
-            )
-        ) {
-            auto nextToken = input.nextToken();
-
-            // for "NAME \n TOKEN", insert a TERMINATE if TOKEN is not an operator or colon
-            if (
-                (
-                    lastToken->getType() == srcMLParser::NAME
-                    || srcMLParser::identifier_list_tokens_set.member(lastToken->getType())
-                )
-                && !(
-                    (
-                        nextToken->getType() == srcMLParser::OPERATORS
-                        && nextToken->getText() != "++"
-                        && nextToken->getText() != "--"
-                    )
-                    || nextToken->getType() == srcMLParser::TEMPOPE
-                    || nextToken->getType() == srcMLParser::TEMPOPS
-                    || nextToken->getType() == srcMLParser::COLON
-                    || nextToken->getType() == srcMLParser::EQUAL
-                )
-            ) {
-                insertTerminateToken(token->getLine());
-            }
-
-            buffer.emplace_back(token);
-            buffer.emplace_back(nextToken);
-            lastToken = nextToken;
-            wasNameNewlineToken = true;
-        }
-        //
-        // TERMINATE-checking logic that only requires prior token information
-        //
-        else if (
-            (
-                (
-                    token->getType() == srcMLParser::EOL ||
-                    token->getType() == srcMLParser::WS_EOL ||
-                    token->getType() == srcMLParser::LINE_COMMENT_START ||
-                    token->getType() == srcMLParser::HASHBANG_COMMENT_START
-                )
-
-                // not in parentheses
-                && parenthesesCount == 0
-
-                // not an empty line
-                && !firstCharacter
-
-                // not an existing TERMINATE
-                && lastToken->getType() != srcMLParser::TERMINATE
-
-                // do not place a TERMINATE after a comment; if applicable, it should go before
-                && lastToken->getType() != srcMLParser::LINE_COMMENT_END
-                && lastToken->getType() != srcMLParser::HASHBANG_COMMENT_END
-                && lastToken->getType() != srcMLParser::BLOCK_COMMENT_END
-
-                // do not place a TERMINATE right after a block begins
-                && lastToken->getType() != srcMLParser::LCURLY
-
-                // do not place a TERMINATE in the middle of a comma-separated structure
-                && lastToken->getType() != srcMLParser::COMMA
-
-                // not in the middle of an expression with a previous operator
-                // a non-postfix operator at the end means the expression is not complete
-                && (lastToken->getType() != srcMLParser::OPERATORS
-                    || (
-                        lastToken->getType() == srcMLParser::OPERATORS
-                        && (
-                            lastToken->getText() == "++"
-                            || lastToken->getText() == "--"
-                        )
-                    )
-                )
-                && lastToken->getType() != srcMLParser::TEMPOPE
-                && lastToken->getType() != srcMLParser::TEMPOPS
-                && lastToken->getType() != srcMLParser::EQUAL
-            )
-
-            // special case: statement in a single-line lambda block ends before RCURLY
-            || (lambdaBlockStartLine != -1 && token->getType() == srcMLParser::RCURLY && token->getLine() == lambdaBlockStartLine)
-
-            // special case: always insert a TERMINATE after RCURLY; the parser will ignore them if needed
-            || (token->getType() != srcMLParser::TERMINATE && token->getType() != srcMLParser::RPAREN && lastToken->getType() == srcMLParser::RCURLY)
-
-            // special case: a line ends with a call in an expression-level block, and the block is in a call
-            || (token->getType() == srcMLParser::EOL && lastToken->getType() == srcMLParser::RPAREN)
-
-            // at EOF with no previous EOL
-            || (token->getType() == 1 /* EOF */ && lastToken->getType() != srcMLParser::EOL)
-        ) {
+        // insert a TERMINATE token if applicable
+        if (isTerminateCase(token, nextNonSkipToken, containsEOL))
             insertTerminateToken(token->getLine());
+
+        // empty the temporary skip token buffer, if applicable
+        while (!tempSkipBuffer.empty()) {
+            buffer.emplace_back(tempSkipBuffer.front());
+            tempSkipBuffer.pop_front();
         }
 
-        if (token->getType() == srcMLParser::EOL) {
-            firstCharacter = true;
-            isEmptyLine = true;
-        } else if (token->getType() != srcMLParser::WS) {
-            firstCharacter = false;
-            isEmptyLine = false;
-        }
+        lastToken = nextNonSkipToken;
 
-        // record current token for next iteration, unless it was already done previously
-        if (!wasNameNewlineToken)
-            lastToken = token;
+        // ensure the EOF token is not missed at the end of a file
+        if (nextNonSkipToken->getType() == 1 /* EOF */)
+            buffer.emplace_back(nextNonSkipToken);
 
-        // insert skipped whitespace
-        while (!wsBuffer.empty()) {
-            buffer.emplace_back(wsBuffer.front());
-            wsBuffer.pop_front();
-        }
+        // ensure name + postfix operator detection is turned off after potential usage
+        if (wasPostfixName)
+            wasPostfixName = false;
 
-        // insert read token, unless it was already done previously
-        if (!wasNameNewlineToken)
-            buffer.emplace_back(token);
-        else
-            wasNameNewlineToken = false;
+        // check if NAME and "++" (or "--") were directly next to each other
+        if (
+            !containsEOL
+            && token->getType() == srcMLParser::NAME
+            && nextNonSkipToken->getType() == srcMLParser::OPERATORS
+            && (
+                nextNonSkipToken->getText() == "++"
+                || nextNonSkipToken->getText() == "--"
+            )
+        )
+            wasPostfixName = true;
     }
 
     // next token
@@ -177,23 +83,173 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
 }
 
 /**
+ * Checks if the given situation requires a manual TERMINATE insertion.
+ *
+ * `token` is the current token.
+ * `nextNonSkipToken` is the next token after `token` that is not WS, comments, etc.
+ * `containsEOL` is true if there is an EOL between `token` and `nextNonSkipToken`, otherwise it is false.
+ */
+bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::RefToken nextNonSkipToken, bool containsEOL) {
+
+    return (
+        (
+            // token is not LCURLY and the next non-skip token is RCURLY
+            // (the parser will ignore these TERMINATEs for specific scenarios such as name lists)
+            (token->getType() != srcMLParser::LCURLY && nextNonSkipToken->getType() == srcMLParser::RCURLY)
+
+            // the next non-skip token is the end of the file
+            || (nextNonSkipToken->getType() == 1 /* EOF */)
+
+            // token is JS_DEBUGGER (always insert a terminate after a JS_DEBUGGER token) 
+            || (token->getType() == srcMLParser::JS_DEBUGGER)
+
+            // both token and the next non-skip token are any combination of the following:
+            // - names
+            // - literals (numbers, booleans, strings, etc.) except backtick literals
+            // Note: never place a TERMINATE between the start and end of a string or char
+            || (
+                srcMLParser::insert_terminate_js_token_set.member(token->getType())
+                && srcMLParser::insert_terminate_js_token_set.member(nextNonSkipToken->getType())
+                && (
+                    !(token->getType() == srcMLParser::STRING_START && nextNonSkipToken->getType() == srcMLParser::STRING_END)
+                    && !(token->getType() == srcMLParser::CHAR_START && nextNonSkipToken->getType() == srcMLParser::CHAR_END)
+                )
+            )
+
+            // an EOL separates (almost) any combination of the following tokens:
+            // - names
+            // - left parentheses (for lambdas; must be "nextNonSkipToken", not "token")
+            // - right parentheses/brackets/braces (must be "token", not "nextNonSkipToken")
+            // - literals (numbers, booleans, strings, etc.), including backtick literals
+            // - the bitwise NOT operator ("~")
+            // Note: never place a TERMINATE between the start and end of a string, char, or backtick literal
+            || (
+                containsEOL
+                && (
+                    srcMLParser::insert_terminate_eol_js_token_set.member(token->getType())
+                    || token->getType() == srcMLParser::RPAREN
+                    || token->getType() == srcMLParser::RBRACKET
+                    || token->getType() == srcMLParser::RCURLY
+                )
+                && (
+                    srcMLParser::insert_terminate_eol_js_token_set.member(nextNonSkipToken->getType())
+                    || nextNonSkipToken->getType() == srcMLParser::LPAREN
+                )
+                && (
+                    !(token->getType() == srcMLParser::STRING_START && nextNonSkipToken->getType() == srcMLParser::STRING_END)
+                    && !(token->getType() == srcMLParser::CHAR_START && nextNonSkipToken->getType() == srcMLParser::CHAR_END)
+                    && !(token->getType() == srcMLParser::BACKTICK_START && nextNonSkipToken->getType() == srcMLParser::BACKTICK_END)
+                )
+            )
+
+            // an EOL separates "++" or "--" (with a NAME before it) and any other non-skip token
+            || (
+                wasPostfixName
+                && containsEOL
+                && (
+                    token->getType() == srcMLParser::OPERATORS
+                    && (
+                        token->getText() == "++"
+                        || token->getText() == "--"
+                    )
+                )
+            )
+
+            // an EOL separates token and "++" (or "--")
+            || (
+                containsEOL
+                && (
+                    nextNonSkipToken->getType() == srcMLParser::OPERATORS
+                    && (
+                        nextNonSkipToken->getText() == "++"
+                        || nextNonSkipToken->getText() == "--"
+                    )
+                )
+            )
+
+            // an EOL separates token and "!"
+            || (
+                containsEOL
+                && nextNonSkipToken->getType() == srcMLParser::OPERATORS
+                && nextNonSkipToken->getText() == "!"
+            )
+
+            // an EOL separates BREAK/CONTINUE and NAME
+            || (
+                containsEOL
+                && (token->getType() == srcMLParser::BREAK || token->getType() == srcMLParser::CONTINUE)
+                && nextNonSkipToken->getType() == srcMLParser::NAME
+            )
+
+            // a non-NAME token separates BREAK/CONTINUE
+            || (
+                (token->getType() == srcMLParser::BREAK || token->getType() == srcMLParser::CONTINUE)
+                && nextNonSkipToken->getType() != srcMLParser::NAME
+            )
+
+            // an EOL separates RETURN/THROW/YIELD and any non-skip token
+            || (
+                containsEOL
+                && (
+                    token->getType() == srcMLParser::RETURN
+                    || token->getType() == srcMLParser::THROW
+                    || token->getType() == srcMLParser::JS_YIELD
+                )
+            )
+
+            // an EOL separates RPAREN and JS_ARROW
+            || (
+                containsEOL
+                && token->getType() == srcMLParser::RPAREN
+                && nextNonSkipToken->getType() == srcMLParser::JS_ARROW
+            )
+
+            // an EOL separates JS_ASYNC and LPAREN/JS_FUNCTION
+            || (
+                containsEOL
+                && token->getType() == srcMLParser::JS_ASYNC
+                && (
+                    nextNonSkipToken->getType() == srcMLParser::LPAREN
+                    || nextNonSkipToken->getType() == srcMLParser::JS_FUNCTION
+                )
+            )
+
+            // an EOL separates a token (in certain cases) and a JavaScript keyword
+            || (
+                containsEOL
+                && token->getType() != srcMLParser::LCURLY
+                && token->getType() != srcMLParser::COMMA
+                && (
+                    !srcMLParser::name_differentiator_js_token_set.member(token->getType())
+                    || token->getType() == srcMLParser::LITERAL_TRUE
+                    || token->getType() == srcMLParser::LITERAL_FALSE
+                    || token->getType() == srcMLParser::JS_NULL
+                    || token->getType() == srcMLParser::JS_UNDEFINED
+                    || token->getType() == srcMLParser::JS_REGEX
+                )
+                && srcMLParser::name_differentiator_js_token_set.member(nextNonSkipToken->getType())
+            )
+
+            // an EOL separates RPAREN/RBRACKET and any non-skip token if top-level
+            || (
+                containsEOL
+                && parenthesesCount == 0
+                && (token->getType() == srcMLParser::RPAREN || token->getType() == srcMLParser::RBRACKET)
+            )
+        )
+    );
+}
+
+/**
  * Creates a new TERMINATE token and adds it to the buffer.
  *
- * The `line` parameter is the TERMINATE token's intended line.
+ * `line` is the TERMINATE token's intended line number.
  */
 void NewlineTerminateJavaScript::insertTerminateToken(int line) {
-    // create new terminate token
     auto terminateToken = srcMLToken::factory();
     terminateToken->setType(srcMLParser::TERMINATE);
     terminateToken->setColumn(1);
     terminateToken->setLine(line);
 
-    // reset the parentheses count
-    parenthesesCount = 0;
-
-    // reset the lambda block starting line number
-    lambdaBlockStartLine = -1;
-
-    // insert terminal token
     buffer.emplace_back(terminateToken);
 }
