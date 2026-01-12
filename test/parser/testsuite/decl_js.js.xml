@@ -217,4 +217,46 @@
 </block_content>}</block></class>
 </unit>
 
+<!-- "using" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>_</name> <init>= <expr><operator>new</operator> <call><name>Lock</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>resource</name> <init>= <expr><operator>new</operator> <call><name>Resource</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>resource1</name> <init>= <expr><call><name>getFirstResource</name><argument_list>()</argument_list></call></expr></init></decl>, <decl type="using"><name>resource2</name> <init>= <expr><call><name>getSecondResource</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="using">using <name>resource</name> <range>of <expr><name>resources</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><name><name>resource</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <comment type="line">// ...</comment>
+</block_content>}</block></for>
+</unit>
+
+<!-- "using" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>_</name> <init>= <expr><operator>new</operator> <call><name>Lock</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>resource</name> <init>= <expr><operator>new</operator> <call><name>Resource</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>resource1</name> <init>= <expr><call><name>getFirstResource</name><argument_list>()</argument_list></call></expr></init></decl>, <decl type="using"><name>resource2</name> <init>= <expr><call><name>getSecondResource</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="using">using <name>resource</name> <range>of <expr><name>resources</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><name><name>resource</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+    <comment type="line">// ...</comment>
+</block_content>}</block></for>
+</unit>
+
 </unit>

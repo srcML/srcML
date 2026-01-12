@@ -233,10 +233,20 @@ token_set(srcMLParser, multiline_literals_py_token_set,
     srcMLParser::SQUOTE_DOCSTRING_END, srcMLParser::SQUOTE_DOXYGEN_END
 )
 
+token_set(srcMLParser, decl_start_js_token_set,
+    // JavaScript declarations contain one of these keywords
+    srcMLParser::JS_CONST, srcMLParser::JS_LET, srcMLParser::JS_STATIC, srcMLParser::JS_USING, srcMLParser::JS_VAR
+)
+
+token_set(srcMLParser, specifier_js_token_set,
+    // JavaScript keywords that could be specifiers
+    srcMLParser::JS_ASYNC, srcMLParser::JS_EACH, srcMLParser::JS_EXPORT, srcMLParser::JS_DEFAULT, srcMLParser::JS_AWAIT
+)
+
 token_set(srcMLParser, post_specifier_js_token_set,
     // JavaScript keywords that follow one or more specifiers
-    srcMLParser::CLASS, srcMLParser::JS_LET, srcMLParser::JS_VAR, srcMLParser::JS_CONST,
-    srcMLParser::JS_STATIC, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
+    srcMLParser::CLASS, srcMLParser::JS_LET, srcMLParser::JS_VAR, srcMLParser::JS_CONST, srcMLParser::JS_STATIC,
+    srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
 )
 
 token_set(srcMLParser, table_keywords_js_token_set,

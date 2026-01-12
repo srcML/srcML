@@ -4,41 +4,47 @@
 <!-- Declarations ("let") -->
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><specifier>export</specifier> <decl type="let">let <name>rectangle</name></decl></decl_stmt>
+<decl_stmt><decl type="let"><specifier>export</specifier> let <name>rectangle</name></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><specifier>export</specifier> <specifier>default</specifier> <decl type="let">let <name>rectangle</name></decl></decl_stmt>
+<decl_stmt><decl type="let"><specifier>export</specifier> <specifier>default</specifier> let <name>rectangle</name></decl></decl_stmt>
 </unit>
 
 <!-- Declarations ("var") -->
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><specifier>export</specifier> <decl type="var">var <name>circle</name></decl></decl_stmt>
+<decl_stmt><decl type="var"><specifier>export</specifier> var <name>circle</name></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><specifier>export</specifier> <specifier>default</specifier> <decl type="var">var <name>circle</name></decl></decl_stmt>
+<decl_stmt><decl type="var"><specifier>export</specifier> <specifier>default</specifier> var <name>circle</name></decl></decl_stmt>
 </unit>
 
 <!-- Declarations ("const") -->
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><specifier>export</specifier> <decl type="const">const <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><specifier>export</specifier> <specifier>default</specifier> <decl type="const">const <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const"><specifier>export</specifier> <specifier>default</specifier> const <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Declarations ("static") -->
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><specifier>export</specifier> <decl type="static">static <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="static"><specifier>export</specifier> static <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><specifier>export</specifier> <specifier>default</specifier> <decl type="static">static <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="static"><specifier>export</specifier> <specifier>default</specifier> static <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Declarations ("using") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using"><specifier>await</specifier> using <name>db</name> <init>= <expr><call><name>getConnection</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Regular functions ("function") -->

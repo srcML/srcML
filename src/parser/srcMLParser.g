@@ -731,6 +731,7 @@ tokens {
     SDECLARATION_CONST;
     SDECLARATION_LET;
     SDECLARATION_STATIC;
+    SDECLARATION_USING;
     SDECLARATION_VAR;
     SEXPORT_STATEMENT;
     SFUNCTION_GENERATOR_STATEMENT;
@@ -806,6 +807,8 @@ public:
     static const antlr::BitSet right_bracket_py_token_set;
     static const antlr::BitSet comment_py_token_set;
     static const antlr::BitSet multiline_literals_py_token_set;
+    static const antlr::BitSet decl_start_js_token_set;
+    static const antlr::BitSet specifier_js_token_set;
     static const antlr::BitSet post_specifier_js_token_set;
     static const antlr::BitSet table_keywords_js_token_set;
     static const antlr::BitSet name_differentiator_js_token_set;
@@ -1003,7 +1006,7 @@ public:
         temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
         temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
-        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::for_specifier_js };  // check for "await" or "each" following the "for"
+        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::situational_specifiers_js };  // check for "await" or "each" following the "for"
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
@@ -1524,14 +1527,12 @@ javascript_statements[] {
         if (LA(1) != SNOP && inMode(MODE_STATEMENT) && check_valid_specifier_js()) {
             std::array<int, 2> post_specifier_tokens = perform_post_specifier_check_js();
 
-            // looking for "let", "var", "const", or "static"
+            // looking for "let", "var", "const", "static", or "using"
             if (
-                post_specifier_tokens[0] == JS_LET
-                || post_specifier_tokens[0] == JS_VAR
-                || post_specifier_tokens[0] == JS_CONST
-                || (post_specifier_tokens[0] == JS_STATIC && post_specifier_tokens[1] != LCURLY)
+                decl_start_js_token_set.member(post_specifier_tokens[0])
+                && (post_specifier_tokens[0] != JS_STATIC || (post_specifier_tokens[0] == JS_STATIC && post_specifier_tokens[1] != LCURLY))
             ) {
-                declaration_statement_js(true);
+                declaration_statement_js(post_specifier_tokens[0]);
                 processed_statement = true;
                 return;
             }
@@ -1557,9 +1558,12 @@ javascript_statements[] {
         if (inMode(MODE_STATEMENT)) {
             auto token = LA(1);
 
-            // looking for "let", "var", "const", or "static" at the statement level
-            if (LA(1) == JS_LET || LA(1) == JS_VAR || LA(1) == JS_CONST || (LA(1) == JS_STATIC && next_token() != LCURLY)) {
-                declaration_statement_js(false);
+            // looking for "let", "var", "const", "static", or "using" at the statement level
+            if (
+                decl_start_js_token_set.member(LA(1))
+                && (LA(1) != JS_STATIC || (LA(1) == JS_STATIC && next_token() != LCURLY))
+            ) {
+                declaration_statement_js(LA(1));
                 processed_statement = true;
                 return;
             }
@@ -18383,10 +18387,9 @@ check_valid_specifier_js[] returns [int isspecifier] {
         isspecifier = false;
 
         if (
-            LA(1) == JS_ASYNC
-            || LA(1) == JS_EACH
-            || LA(1) == JS_EXPORT
-            || (LA(1) == JS_DEFAULT && next_token() != COLON)
+            specifier_js_token_set.member(LA(1))
+            && (LA(1) != JS_DEFAULT || (LA(1) == JS_DEFAULT && next_token() != COLON))
+            && (LA(1) != JS_AWAIT || (LA(1) == JS_AWAIT && next_token() == JS_USING))
         )
             isspecifier = true;
 
@@ -18452,7 +18455,7 @@ specifier_js[] { ENTRY_DEBUG } :
 
   Handles a declaration statement in JavaScript.
 */
-declaration_statement_js[bool handle_specifiers = false] { CompleteElement element(this); ENTRY_DEBUG } :
+declaration_statement_js[int post_specifier_token = -1] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // do not nest declaration statements
             if (!inMode(MODE_DECL_STATEMENT_JS)) {
@@ -18460,43 +18463,44 @@ declaration_statement_js[bool handle_specifiers = false] { CompleteElement eleme
                 startElement(SDECLARATION_STATEMENT);
             }
 
-            // mark up any specifiers, if applicable
-            if (handle_specifiers) {
-                while (check_valid_specifier_js()) {
-                    specifier_js();
+            while (true) {
+                // termination token signifies the end of the declaration statement
+                if (LA(1) == TERMINATE) {
+                    consume();  // TERMINATE
+                    break;
+                }
+                // "," followed by a name should continue the declaration statement
+                else if (LA(1) == COMMA && next_token() == NAME) {
+                    consume();  // COMMA
+                    declaration_js(true, post_specifier_token);
+                }
+                else if (decl_start_js_token_set.member(LA(1))) {
+                    declaration_js(false, LA(1));
+                }
+                else if (decl_start_js_token_set.member(post_specifier_token)) {
+                    declaration_js(false, post_specifier_token);
+                }
+                else {
+                    break;
                 }
             }
         }
-
-        (options { greedy = true; } :
-            // termination token signifies the end of the declaration statement
-            TERMINATE
-            {
-                break;
-            } |
-
-            // "," followed by a name should continue the declaration statement
-            { next_token() == NAME }?
-            (COMMA declaration_js[true]) |
-
-            declaration_js[false]
-        )*
 ;
 
 /*
   declaration_js
 
-  Handles a declaration in JavaScript.  These typically begin with "let", "var", "const", or "static".
+  Handles a declaration in JavaScript.  These typically begin with "let", "var", "const", "static", or "using".
   Multiple comma-separated declarations retain the type from the first variable (e.g., let a, b).
 */
-declaration_js[bool is_comma_decl = false] { int decl_start_token = 0; ENTRY_DEBUG } :
+declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int decl_start_token = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_DECL_JS);
 
             // first declaration in the declaration statement
             if (!is_comma_decl) {
-                decl_start_token = LA(1);
-                current_decl_type_js = LA(1);
+                decl_start_token = post_specifier_token;
+                current_decl_type_js = post_specifier_token;
             }
             // additional declaration that appears after a comma
             else
@@ -18519,13 +18523,27 @@ declaration_js[bool is_comma_decl = false] { int decl_start_token = 0; ENTRY_DEB
                     startElement(SDECLARATION_CONST);
                     break;
 
+                case JS_USING :
+                    startElement(SDECLARATION_USING);
+                    break;
+
                 default:
                     startElement(SPARAMETER);
                     break;
             }
+
+            // "await" is a specifier on a declaration (not an operator)
+            while (LA(1) == JS_AWAIT) {
+                situational_specifiers_js();
+            }
+
+            // mark up any specifiers, if applicable
+            while (check_valid_specifier_js()) {
+                specifier_js();
+            }
         }
 
-        (JS_LET | JS_VAR | JS_STATIC | JS_CONST | compound_name)
+        (JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)
 
         (options { greedy = true; } :
             // ensure the declaration ends before a termination token or comma
@@ -18558,15 +18576,21 @@ for_control_js[] { ENTRY_DEBUG } :
 
         LPAREN
 
-        // Initialization ends at ";" or ")".  Can be omitted.
-        (options { greedy = true; } :
-            { LA(1) == TERMINATE || LA(1) == RPAREN }?
-            {
-                break;
-            } |
-
-            control_initialization_js
-        )*
+        {
+            // Initialization ends at ";" or ")".  Can be omitted.
+            while (true) {
+                if (LA(1) == TERMINATE || LA(1) == RPAREN) {
+                    break;
+                }
+                // allow names in "for await...of" and "for each...in" loops
+                else if (decl_start_js_token_set.member(LA(1)) || check_valid_specifier_js() || LA(1) == NAME) {
+                    control_initialization_js();
+                }
+                else {
+                    break;
+                }
+            }
+        }
 
         {
             // "for...of" loop must end after the initialization
@@ -18623,22 +18647,33 @@ for_control_js[] { ENTRY_DEBUG } :
 */
 control_initialization_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
+            std::array<int, 2> post_specifier_tokens = perform_post_specifier_check_js();
+
             startNewMode(MODE_CONTROL_INITIALIZATION);
             startElement(SCONTROL_INITIALIZATION);
+
+            while (true) {
+                // termination token or right parenthesis signifiy the end of the initialization
+                if (LA(1) == TERMINATE || LA(1) == RPAREN) {
+                    break;
+                }
+                // allow "," followed by a name as an additional declaration
+                else if (LA(1) == COMMA && next_token() == NAME) {
+                    consume();  // COMMA
+                    declaration_js(true, post_specifier_tokens[0]);
+                }
+                // allow names in "for await...of" and "for each...in" loops
+                else if (decl_start_js_token_set.member(LA(1)) || LA(1) == NAME) {
+                    declaration_js(false, LA(1));
+                }
+                else if (decl_start_js_token_set.member(post_specifier_tokens[0])) {
+                    declaration_js(false, post_specifier_tokens[0]);
+                }
+                else {
+                    break;
+                }
+            }
         }
-
-        (options { greedy = true; } :
-            { LA(1) == TERMINATE || LA(1) == RPAREN }?
-            {
-                break;
-            } |
-
-            // allow "," followed by a name as an additional declaration
-            { next_token() == NAME }?
-            (COMMA declaration_js[true]) |
-
-            declaration_js[false]
-        )*
 ;
 
 /*
@@ -18717,12 +18752,12 @@ catch_lparen_js[] { ENTRY_DEBUG } :
 ;
 
 /*
-  for_specifier_js
+  situational_specifiers_js
 
-  Handles the optional "await" or "each" specifiers that follow "for" in JavaScript
+  Handles the optional "await" or "each" specifiers that follow "for" in JavaScript.
+  Also marks up "await" as a specifier in "using" declarations.
 */
-for_specifier_js[] {
-        // found "for await" or "for each"
+situational_specifiers_js[] {
         if (LA(1) == JS_AWAIT || LA(1) == JS_EACH) {
             startNewMode(MODE_LOCAL);
             startElement(SFUNCTION_SPECIFIER);

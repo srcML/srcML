@@ -345,6 +345,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SDECLARATION_CONST,            { "decl",              SRC, "type",     "const",        0,                   0 }},
     { TOKEN::SDECLARATION_LET,              { "decl",              SRC, "type",       "let",        0,                   0 }},
     { TOKEN::SDECLARATION_STATIC,           { "decl",              SRC, "type",    "static",        0,                   0 }},
+    { TOKEN::SDECLARATION_USING,            { "decl",              SRC, "type",     "using",        0,                   0 }},
     { TOKEN::SDECLARATION_VAR,              { "decl",              SRC, "type",       "var",        0,                   0 }},
     { TOKEN::SEXPORT_STATEMENT,             { "export",            SRC,      0,           0,        0,                   0 }},
     { TOKEN::SFUNCTION_GENERATOR_STATEMENT, { "function",          SRC, "type", "generator",        0,                   0 }},
