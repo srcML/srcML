@@ -13,15 +13,26 @@
 
 // insert TERMINATE tokens to JavaScript code without semicolon delimiters
 antlr::RefToken NewlineTerminateJavaScript::nextToken() {
-    if (buffer.empty()) {
-        antlr::RefToken token = srcMLToken::factory();
+    // determine the first non-skip token in the file before doing anything else
+    if (firstToken) {
+        antlr::RefToken token = input.nextToken();
 
-        // use the previous token unless starting the file for the first time
-        if (lastToken->getType() == 0 && lastToken->getColumn() == 0 && lastToken->getLine() == 0)
+        // find the next non-skip token
+        while (srcMLParser::skip_tokens_set.member(token->getType())) {
+            buffer.emplace_back(token);
             token = input.nextToken();
-        else
-            token = lastToken;
+        }
 
+        firstToken = false;
+
+        // denote the current token as the upcoming last token, if it is not a skip token
+        if (!srcMLParser::skip_tokens_set.member(token->getType()))
+            lastToken = token;
+    }
+
+    // process pairs of tokens: the previously-used token and the next non-skip token
+    if (buffer.empty()) {
+        antlr::RefToken token = lastToken;
         auto nextNonSkipToken = input.nextToken();
         bool containsEOL = false;
 

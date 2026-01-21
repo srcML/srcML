@@ -35,6 +35,7 @@ private:
     std::deque<antlr::RefToken> tempSkipBuffer;
     antlr::RefToken lastToken = srcMLToken::factory();
 
+    bool firstToken = true;
     bool wasPostfixName = false;
     int parenthesesCount = 0;
 };
