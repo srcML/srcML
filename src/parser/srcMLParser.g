@@ -1662,6 +1662,7 @@ javascript_rules[] {
                 && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
                 && !inTransparentMode(MODE_INTERNAL_END_CURLY)
                 && !inTransparentMode(MODE_INIT | MODE_EXPECT)
+                && !inTransparentMode(MODE_ARGUMENT | MODE_EXPECT)
             )
             || inTransparentMode(MODE_ANONYMOUS)
         }?
@@ -5512,7 +5513,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
             else if (
                 inLanguage(LANGUAGE_JAVASCRIPT)
                 && inTransparentMode(MODE_FUNCTION_EXPRESSION_JS)
-                && LA(1) == RPAREN
+                && (LA(1) == RPAREN && next_token() != LPAREN)
                 && (lparen_types_js.back() == 'o' || lparen_types_js.back() == 'c')
             ) {
                 endDownToMode(MODE_FUNCTION_EXPRESSION_JS);
@@ -5581,9 +5582,13 @@ terminate_token[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 terminate_pre[] { ENTRY_DEBUG } :
         {
-            // end any elements inside of the statement
-            if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST))
-                endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+            // end any elements inside of the statement (non-JavaScript languages)
+            if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)) {
+                if (inLanguage(LANGUAGE_JAVASCRIPT))
+                    endDownToMode(MODE_STATEMENT);
+                else
+                    endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
+            }
 
             if (inTransparentMode(MODE_TRAILING_RETURN)) {
                 endDownToMode(MODE_TRAILING_RETURN);
@@ -12555,6 +12560,14 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
+        keyword_iife_js |
+
+        // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) with no keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_iife_check_js() }?
+        keywordless_iife_js |
+
         // special case: JavaScript tagged templates (e.g., a`b`)
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_tagged_template_check_js(call_count) }?
         tagged_template_js[call_count] |
@@ -19569,9 +19582,19 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
         (options { greedy = true; } :
             // do not consume non-call comma or ending RCURLY for an object
             {
-                (LA(1) == COMMA && lparen_types_js.back() != 'c')
-                || (LA(1) == RCURLY && lcurly_types_js.back() == 'o' && lcurly_types_size == lcurly_types_js.size())
-                || LA(1) == TERMINATE
+                LA(1) == TERMINATE
+                || (LA(1) == COMMA && lparen_types_js.back() != 'c')
+                || (
+                    LA(1) == COMMA
+                    && lcurly_types_js.back() == 'o'
+                    && lcurly_types_size == lcurly_types_js.size()
+                    && next_token() == RCURLY
+                )
+                || (
+                    LA(1) == RCURLY
+                    && lcurly_types_js.back() == 'o'
+                    && lcurly_types_size == lcurly_types_js.size()
+                )
             }?
             {
                 break;
@@ -19599,7 +19622,7 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             expression |
 
             // consume commas for calls, but not for properties
-            { lparen_types_js.back() == 'c' }?
+            { lparen_types_js.back() == 'c' && lcurly_types_js.size() == 0 }?
             comma
         )*
 ;
@@ -19999,4 +20022,296 @@ tagged_template_js[int call_count = 1] { ENTRY_DEBUG } :
                 endMode(MODE_FUNCTION_CALL);
             }
         }
+;
+
+/*
+  perform_keyword_iife_check_js
+
+  Checks to see if a function expression should really be an IIFE in JavaScript.
+  For example, "(function (){})()".
+*/
+perform_keyword_iife_check_js[] returns [bool isiife] {
+        isiife = false;
+        int curly_count = 0;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // keyword IIFE must start with "("
+            if (LA(1) == LPAREN) {
+                consume();
+
+                // consume optional "async" before checking
+                if (LA(1) == JS_ASYNC)
+                    consume();
+
+                // consume the "function" keyword
+                if (LA(1) == JS_FUNCTION) {
+                    consume();
+
+                    // consume parameter list
+                    paren_pair();
+
+                    // consume block
+                    if (LA(1) == LCURLY) {
+                        while (true) {
+                            if (LA(1) == LCURLY)
+                                ++curly_count;
+                            else if (LA(1) == RCURLY && curly_count > 1)
+                                --curly_count;
+                            else if (
+                                (LA(1) == RCURLY && curly_count == 1)
+                                || curly_count < 0
+                                || LA(1) == 1 /* EOF */
+                            )
+                                break;
+
+                            consume();
+                        }
+
+                        // end the block
+                        if (LA(1) == RCURLY) {
+                            --curly_count;
+                            consume();
+                        }
+
+                        // looking for ")(" after the function expression
+                        if (LA(1) == RPAREN) {
+                            consume();
+
+                            if (LA(1) == LPAREN)
+                                isiife = true;
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  keyword_iife_js
+
+  Handles Immediately Invoked Function Expressions (IIFEs) in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_IIFE_CALL_JS);
+            startElement(SFUNCTION_CALL);
+        }
+
+        lparen_marked
+
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        ((specifier_js)* JS_FUNCTION)
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+        expression_block_js
+
+        {
+            endDownToMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            endMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+        }
+
+        // manually handle operator RPAREN
+        rparen
+
+        {
+            endDownToMode(MODE_IIFE_CALL_JS);
+            endMode(MODE_IIFE_CALL_JS);
+        }
+
+        call_argument_list
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+;
+
+/*
+  perform_keywordless_iife_check_js
+
+  Checks to see if a lambda should really be an IIFE in JavaScript.
+  For example, "(() => {})()".
+*/
+perform_keywordless_iife_check_js[] returns [bool isiife] {
+        isiife = false;
+        int curly_count = 0;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // keywordless IIFE must start with "("
+            if (LA(1) == LPAREN) {
+                consume();
+
+                // consume optional "async" before checking
+                if (LA(1) == JS_ASYNC)
+                    consume();
+
+                // consume parameter list
+                paren_pair();
+
+                // consume "=>"
+                if (LA(1) == JS_ARROW) {
+                    consume();
+
+                    // consume block
+                    if (LA(1) == LCURLY) {
+                        while (true) {
+                            if (LA(1) == LCURLY)
+                                ++curly_count;
+                            else if (LA(1) == RCURLY && curly_count > 1)
+                                --curly_count;
+                            else if (
+                                (LA(1) == RCURLY && curly_count == 1)
+                                || curly_count < 0
+                                || LA(1) == 1 /* EOF */
+                            )
+                                break;
+
+                            consume();
+                        }
+
+                        // end the block
+                        if (LA(1) == RCURLY) {
+                            --curly_count;
+                            consume();
+                        }
+
+                        // looking for ")(" after the function expression
+                        if (LA(1) == RPAREN) {
+                            consume();
+
+                            if (LA(1) == LPAREN)
+                                isiife = true;
+                        }
+                    }
+                }
+
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  keywordless_iife_js
+
+  Handles Immediately Invoked Function Expressions (IIFEs) with arrows ("=>") in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_IIFE_CALL_JS);
+            startElement(SFUNCTION_CALL);
+        }
+
+        lparen_marked
+
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
+            startElement(SFUNCTION_LAMBDA);
+        }
+
+        ((specifier_js)*)
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+        arrow_operator_js
+        expression_block_js
+
+        {
+            endDownToMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
+            endMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
+        }
+
+        // manually handle operator RPAREN
+        rparen
+
+        {
+            endDownToMode(MODE_IIFE_CALL_JS);
+            endMode(MODE_IIFE_CALL_JS);
+        }
+
+        call_argument_list
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
 ;

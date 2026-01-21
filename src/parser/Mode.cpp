@@ -136,6 +136,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_PARAMETER_LIST_JS              (bit(
 const srcMLState::MODE_TYPE ModeStack::MODE_CONSTRUCTOR_JS                 (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FOR_CONTROL_JS                 (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_SUPER_LIST_JS                  (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_IIFE_CALL_JS                   (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_NAME_LIST_JS                   (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_PROPERTY_JS                    (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_EXTENDS_JS                     (bit(__COUNTER__));

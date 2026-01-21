@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="iife">
+
+<!-- IIFEs (Function Expressions) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list><block>{<block_content/>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">"Verification required."</literal></expr></argument>)</argument_list></call></expr></throw>
+</block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Testing nested function expressions."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function><specifier>async</specifier> function <parameter_list>()</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><operator>await</operator> <call><name><name>fs</name><operator>.</operator><name>writeFile</name></name><argument_list>(<argument><expr><literal type="string">'./server/qs.json'</literal></expr></argument>, <argument><expr><call><name><name>JSON</name><operator>.</operator><name>stringify</name></name><argument_list>(<argument><expr><object>{ <property><expr><name>data</name></expr>: <expr><name>qss</name></expr></property> }</object></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><object>{
+        <property><expr><name>encoding</name></expr>: <expr><literal type="string">'utf8'</literal></expr></property>,
+    }</object></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<!-- IIFEs (Lambdas) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">"Timeout"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Testing nested lambdas."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">"Timeout"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <expr_stmt><expr><call><operator>(</operator><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Testing nested async lambdas."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <try>try <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name><name>argv</name><operator>.</operator><name>v</name></name> <operator>||</operator> <name><name>argv</name><operator>.</operator><name>version</name></name>)</expr></condition> <block>{<block_content>
+            <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>version</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+            <return>return</return>
+        </block_content>}</block></if></if_stmt>
+
+        <decl_stmt><decl type="const">const <name>program</name> <init>= <expr><call><name>getProgram</name><argument_list>(<argument><expr><name>argv</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+        <decl_stmt><decl type="const">const <name>result</name> <init>= <expr><operator>await</operator> <call><name>program</name><argument_list>(<argument><expr><name>argv</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+
+        <expr_stmt><expr><name>result</name> <operator>&amp;&amp;</operator> <call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block> <catch>catch (<name>error</name>) <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><name>error</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <expr_stmt><expr><call><name><name>process</name><operator>.</operator><name>exit</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></catch></try>
+</block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+</unit>
