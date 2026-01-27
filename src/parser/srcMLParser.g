@@ -5520,11 +5520,11 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
                 endMode(MODE_FUNCTION_EXPRESSION_JS);
                 rparen(true);
             }
-            // special case for JavaScript lambdas that are inside a call
+            // special case for JavaScript lambdas that are inside a call or object
             else {
-                if (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c')
+                if (LA(1) != COMMA && (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c'))
                     endMode(MODE_TOP);
-                }
+            }
         }
 ;
 
@@ -19538,7 +19538,8 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
                 break;
             } |
 
-            { inMode(MODE_OBJECT_JS) }?
+            // note that a lparen_types_js size of 1 is "empty" because it always contains dummy element '*'
+            { inMode(MODE_OBJECT_JS) || (lcurly_types_size == lcurly_types_js.size() && lparen_types_js.size() == 1) }?
             COMMA
             {
                 // cannot be a statement; ignore the TERMINATE token

@@ -33,11 +33,12 @@ private:
     antlr::TokenStream& input;
     std::deque<antlr::RefToken> buffer;
     std::deque<antlr::RefToken> tempSkipBuffer;
+    std::deque<std::string> bracketTokenTracker;  // tracks '(', '[', and '{'
     antlr::RefToken lastToken = srcMLToken::factory();
 
     bool firstToken = true;
     bool wasPostfixName = false;
-    int parenthesesCount = 0;
+    bool insertTerminate = false;
 };
 
 #endif

@@ -15,6 +15,9 @@
 antlr::RefToken NewlineTerminateJavaScript::nextToken() {
     // determine the first non-skip token in the file before doing anything else
     if (firstToken) {
+        // add a dummy entry to the bracket token buffer to ensure it is never empty
+        bracketTokenTracker.emplace_front("*");
+
         antlr::RefToken token = input.nextToken();
 
         // find the next non-skip token
@@ -22,6 +25,14 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
             buffer.emplace_back(token);
             token = input.nextToken();
         }
+
+        // in a code snippet beginning with '(', '[', or '{'
+        if (
+            token->getType() == srcMLParser::LPAREN
+            || token->getType() == srcMLParser::LBRACKET
+            || token->getType() == srcMLParser::LCURLY
+        )
+            bracketTokenTracker.emplace_back(token->getText());
 
         firstToken = false;
 
@@ -46,16 +57,36 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
             nextNonSkipToken = input.nextToken();
         }
 
-        // update the open parentheses count (includes parentheses and square brackets)
-        if (nextNonSkipToken->getType() == srcMLParser::LPAREN || nextNonSkipToken->getType() == srcMLParser::LBRACKET)
-            ++parenthesesCount;
-        else if (parenthesesCount > 0 && (nextNonSkipToken->getType() == srcMLParser::RPAREN || nextNonSkipToken->getType() == srcMLParser::RBRACKET))
-            --parenthesesCount;
+        // in a code snippet beginning with '(', '[', or '{'
+        if (
+            token->getType() == srcMLParser::LPAREN
+            || token->getType() == srcMLParser::LBRACKET
+            || token->getType() == srcMLParser::LCURLY
+        ) {
+            bracketTokenTracker.emplace_front(token->getText());
+        }
+        // exiting a code snippet that began with '(', '[', or '{'
+        else if (
+            bracketTokenTracker.front() != "*"
+            && (
+                token->getType() == srcMLParser::RPAREN
+                || token->getType() == srcMLParser::RBRACKET
+                || token->getType() == srcMLParser::RCURLY
+            )
+        ) {
+            bracketTokenTracker.pop_front();
+        }
+
+        // do not insert a terminate in code enclosed in parentheses or square brackets
+        if (bracketTokenTracker.front() == "(" || bracketTokenTracker.front() == "[")
+            insertTerminate = false;
+        else
+            insertTerminate = true;
 
         buffer.emplace_back(token);
 
         // insert a TERMINATE token if applicable
-        if (isTerminateCase(token, nextNonSkipToken, containsEOL))
+        if (insertTerminate && isTerminateCase(token, nextNonSkipToken, containsEOL))
             insertTerminateToken(token->getLine());
 
         // empty the temporary skip token buffer, if applicable
@@ -244,7 +275,7 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
             // an EOL separates RPAREN/RBRACKET and any non-skip token if top-level
             || (
                 containsEOL
-                && parenthesesCount == 0
+                && (bracketTokenTracker.front() == "*" || bracketTokenTracker.front() == "{")
                 && (token->getType() == srcMLParser::RPAREN || token->getType() == srcMLParser::RBRACKET)
             )
         )

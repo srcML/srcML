@@ -208,4 +208,22 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>object</name> <init>= <expr><object>{
+    <property><expr><name>prop</name></expr>: <expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></lambda></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>object</name> <init>= <expr><object>{
+    <property><expr><name>prop</name></expr>: <expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+        <expr_stmt><expr><call><name>example</name><argument_list>(
+          <argument><expr><operator>new</operator> <call><name>inst</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></argument>
+        )</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></lambda></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
