@@ -783,6 +783,7 @@ public:
     std::deque<char> lparen_types_py;
     std::deque<char> lparen_types_js;
     std::deque<char> lcurly_types_js;
+    std::deque<std::string> bracket_types_js;  // '(' and '{'
     bool in_template_param = false;
     bool processed_statement = false;
     int current_decl_type_js = 0;
@@ -1484,6 +1485,10 @@ javascript_statements[] {
         // ensure the lcurly deque never starts empty by adding a dummy entry
         if (lcurly_types_js.empty())
             lcurly_types_js.emplace_back('*');
+
+        // ensure the bracket deque never starts empty by adding a dummy entry
+        if (bracket_types_js.empty())
+            bracket_types_js.emplace_back("*");
 
         // special case: detect labels that occur before a statement or a block
         if (
@@ -5355,8 +5360,10 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
             startElement(SBLOCK);
 
             // lcurly starts a block
-            if (inLanguage(LANGUAGE_JAVASCRIPT))
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                 lcurly_types_js.emplace_back('b');  // block LCURLY
+                bracket_types_js.emplace_back("bLCURLY");
+            }
         }
 
         LCURLY
@@ -5461,17 +5468,29 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
                     // found JavaScript rcurly that ends a block
                     case 'b':
                         lcurly_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "bLCURLY")
+                            bracket_types_js.pop_back();
+
                         wasblock = true;
                         break;
 
                     // found JavaScript rcurly that ends a name list
                     case 'n':
                         lcurly_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "nLCURLY")
+                            bracket_types_js.pop_back();
+
                         break;
 
                     // found JavaScript rcurly that ends an object
                     case 'o':
                         lcurly_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "oLCURLY")
+                            bracket_types_js.pop_back();
+
                         break;
 
                     default:
@@ -6070,8 +6089,10 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             startElement(SOPERATOR);
 
-            if (inLanguage(LANGUAGE_JAVASCRIPT))
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                 lparen_types_js.emplace_back('o');  // operator LPAREN
+                bracket_types_js.emplace_back("oLPAREN");
+            }
         }
 
         LPAREN
@@ -9898,8 +9919,10 @@ call_argument_list[] { ENTRY_DEBUG } :
                 lparen_types_py.emplace_back('c');  // call LPAREN
 
             // lparen starts a call
-            if (inLanguage(LANGUAGE_JAVASCRIPT))
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                 lparen_types_js.emplace_back('c');  // call LPAREN
+                bracket_types_js.emplace_back("cLPAREN");
+            }
         }
 
         (
@@ -10186,8 +10209,10 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
                     startElement(SBLOCK);
 
                     // lcurly starts a block
-                    if (inLanguage(LANGUAGE_JAVASCRIPT))
+                    if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                         lcurly_types_js.emplace_back('b');  // block LCURLY
+                        bracket_types_js.emplace_back("bLCURLY");
+                    }
                 }
 
                 LCURLY
@@ -12178,17 +12203,29 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     // found JavaScript rparen that ends a call
                     case 'c':
                         lparen_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "cLPAREN")
+                            bracket_types_js.pop_back();
+
                         break;
 
                     // found JavaScript operator rparen; force it to be marked as such
                     case 'o':
                         lparen_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "oLPAREN")
+                            bracket_types_js.pop_back();
+
                         forcemarkup = true;
                         break;
 
                     // found JavaScript rparen that ends a parameter list
                     case 'p':
                         lparen_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "pLPAREN")
+                            bracket_types_js.pop_back();
+
                         break;
 
                     default:
@@ -12844,8 +12881,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
                 startElement(SBLOCK);
 
                 // lcurly starts a block
-                if (inLanguage(LANGUAGE_JAVASCRIPT))
+                if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                     lcurly_types_js.emplace_back('b');  // block LCURLY
+                    bracket_types_js.emplace_back("bLCURLY");
+                }
             }
 
             LCURLY
@@ -18810,7 +18849,7 @@ with_lparen_js[] { ENTRY_DEBUG } :
             expression |
 
             // consume commas for calls, but not for parameters
-            { lparen_types_js.back() == 'c' }?
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 
@@ -18854,7 +18893,7 @@ alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             expression |
 
             // consume commas for calls, but not for parameters
-            { lparen_types_js.back() == 'c' }?
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 ;
@@ -18924,7 +18963,7 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             expression |
 
             // consume commas for calls, but not for parameters
-            { lparen_types_js.back() == 'c' }?
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 ;
@@ -18961,7 +19000,7 @@ declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             expression |
 
             // consume commas for calls, but not for parameters
-            { lparen_types_js.back() == 'c' }?
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 ;
@@ -19033,7 +19072,7 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             expression |
 
             // consume commas for calls, but not for parameters
-            { lparen_types_js.back() == 'c' }?
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 ;
@@ -19049,6 +19088,7 @@ javascript_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
             startElement(SPARAMETER_LIST);
 
             lparen_types_js.emplace_back('p');  // parameter list LPAREN
+            bracket_types_js.emplace_back("pLPAREN");
         }
 
         LPAREN
@@ -19144,7 +19184,7 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
             expression |
 
             // consume commas for calls, but not for parameters
-            { lparen_types_js.back() == 'c' }?
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 ;
@@ -19161,6 +19201,7 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // lcurly starts a name list
             lcurly_types_js.emplace_back('n');  // name list LCURLY
+            bracket_types_js.emplace_back("nLCURLY");
         }
 
         LCURLY
@@ -19168,8 +19209,12 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         {
             // rcurly ends a name list
-            if (!lcurly_types_js.empty() && lcurly_types_js.back() == 'n')
+            if (!lcurly_types_js.empty() && lcurly_types_js.back() == 'n') {
                 lcurly_types_js.pop_back();
+
+                if (bracket_types_js.back() == "nLCURLY")
+                    bracket_types_js.pop_back();
+            }
         }
 
         RCURLY
@@ -19283,6 +19328,7 @@ expression_block_js[] { CompleteElement element(this); size_t lcurly_types_size 
 
             // lcurly starts a block
             lcurly_types_js.emplace_back('b');  // block LCURLY
+            bracket_types_js.emplace_back("bLCURLY");
         }
 
         LCURLY
@@ -19525,7 +19571,8 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
             startElement(SOBJECT_JS);
 
             // lcurly starts an object
-            lcurly_types_js.emplace_back('o');  // name list LCURLY
+            lcurly_types_js.emplace_back('o');  // object LCURLY
+            bracket_types_js.emplace_back("oLCURLY");
 
             lcurly_types_size = lcurly_types_js.size();
         }
@@ -19538,8 +19585,8 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
                 break;
             } |
 
-            // note that a lparen_types_js size of 1 is "empty" because it always contains dummy element '*'
-            { inMode(MODE_OBJECT_JS) || (lcurly_types_size == lcurly_types_js.size() && lparen_types_js.size() == 1) }?
+            // only consume a comma if it is at the top level of an object
+            { inMode(MODE_OBJECT_JS) || bracket_types_js.back() == "oLCURLY" }?
             COMMA
             {
                 // cannot be a statement; ignore the TERMINATE token
@@ -19560,8 +19607,12 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
                 endDownToMode(MODE_OBJECT_JS);
 
             // rcurly ends an object
-            if (!lcurly_types_js.empty() && lcurly_types_js.back() == 'o')
+            if (!lcurly_types_js.empty() && lcurly_types_js.back() == 'o') {
                 lcurly_types_js.pop_back();
+
+                if (bracket_types_js.back() == "oLCURLY")
+                    bracket_types_js.pop_back();
+            }
         }
 
         RCURLY
@@ -19622,8 +19673,8 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             }
             expression |
 
-            // consume commas for calls, but not for properties
-            { lparen_types_js.back() == 'c' && lcurly_types_js.size() == 0 }?
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 ;

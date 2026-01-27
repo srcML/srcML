@@ -226,4 +226,22 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name><name>a</name><operator>.</operator><name>b</name><operator>.</operator><name>c</name></name> <operator>=</operator> <object>{
+    <property><expr><literal type="string">'example'</literal></expr>: <expr><call><name><name>path</name><operator>.</operator><name>resolve</name></name><argument_list>(
+        <argument><expr><name>__dirname</name></expr></argument>,
+        <argument><expr><literal type="string">'../path'</literal></expr></argument>,
+    )</argument_list></call></expr></property>,
+}</object></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>a</name><operator>.</operator><name>b</name><operator>.</operator><name>c</name></name><argument_list>(
+    <argument><expr><operator>new</operator> <call><name>Plugin</name><argument_list>(<argument><expr><object>{
+        <property><expr><name>languages</name></expr>: <expr><array>[<expr><literal type="string">'typescript'</literal></expr>, <expr><literal type="string">'javascript'</literal></expr>]</array></expr></property>,
+        <property><expr><name>filename</name></expr>: <expr><literal type="string">'filename'</literal></expr></property>,
+    }</object></expr></argument>)</argument_list></call></expr></argument>
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
 </unit>
