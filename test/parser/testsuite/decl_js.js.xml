@@ -259,4 +259,24 @@
 </block_content>}</block></for>
 </unit>
 
+<!-- Object Destructuring -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<name>sync</name>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'child_process'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<name>copy</name>, <name>validate</name>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'./src/gd'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Array Destructuring -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<name>stack</name>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<name>r</name>, <name>g</name>, <name>b</name>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

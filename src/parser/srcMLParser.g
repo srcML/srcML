@@ -18597,6 +18597,12 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
 
         (JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)
 
+        {
+            // handle optional array or object destructuring syntax (e.g., "const {NAME}")
+            if (LA(1) == LBRACKET || LA(1) == LCURLY)
+                decl_with_destructuring_js();
+        }
+
         (options { greedy = true; } :
             // ensure the declaration ends before a termination token or comma
             { LA(1) == TERMINATE || LA(1) == COMMA }?
@@ -19224,6 +19230,17 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             if (LA(1) == TERMINATE && next_token() == JS_FROM)
                 consume();
         }
+;
+
+/*
+  decl_with_destructuring_js
+
+  Handles array or object destructuring in declarations in JavaScript.
+*/
+decl_with_destructuring_js[] { bool is_array = (LA(1) == LBRACKET); ENTRY_DEBUG } :
+        ({ is_array }? LBRACKET | LCURLY)
+        (options { greedy = true; } : compound_name | COMMA | TERMINATE)*
+        ({ is_array }? RBRACKET | RCURLY)
 ;
 
 /*
