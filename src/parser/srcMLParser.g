@@ -3397,7 +3397,7 @@ perform_ternary_check[] returns [bool is_ternary] {
                 is_ternary = true;
         } catch(...) {}
 
-        if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY))
+        if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY) && !inLanguage(LANGUAGE_JAVASCRIPT))
             skip_ternary = true;
 
         inputState->guessing--;

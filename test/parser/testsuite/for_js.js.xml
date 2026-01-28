@@ -42,6 +42,13 @@
 </block_content>}</block></for>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="let">let <name>x</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; <condition><expr><name>x</name> <operator>&gt;</operator> <name>min</name></expr></condition>; <incr><expr><name>x</name> <operator>+=</operator> <ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><literal type="number">10</literal></expr> </then><else>: <expr><literal type="number">20</literal></expr></else></ternary></expr></incr>)</control> <block>{<block_content>
+    <expr_stmt><expr><name>x</name> <operator>*=</operator> <literal type="number">2</literal></expr></expr_stmt>
+    <expr_stmt><expr><name>y</name> <operator>+=</operator> <name>x</name></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
 <!-- "for...in" -->
 
 <unit revision="1.0.0" language="JavaScript">
