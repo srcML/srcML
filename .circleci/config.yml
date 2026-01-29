@@ -1,4 +1,6 @@
-version: 2
+version: 2.1
+orbs:
+  windows: circleci/windows@5.1.1
 jobs:
     build_ubuntu:
       docker:
@@ -21,10 +23,10 @@ jobs:
             path: /root/project-build/dist/
 
     build_windows:
-      machine:
-        - image: windows-server-2025-gui:current
+      executor: win/server-2025
       steps:
         - checkout
+        - Write-Host 'Hello, Windows'
         - run: cmake --version
 
 workflows:
