@@ -30,7 +30,11 @@ jobs:
         - run: choco install cmake -y
         - run: $env:Path+=";$Env:ProgramFiles\CMake\bin"
         - run: cmake --version
-        - run: choco install vcpkg -y
+        - run: git clone https://github.com/microsoft/vcpkg.git
+        - run: cd vcpkg; .\bootstrap-vcpkg.bat
+        - run: $pwd
+        - run: $env:VCPKG_ROOT = $pwd
+        - run: $env:PATH = "$env:VCPKG_ROOT;$env:PATH"
         - run: cmake --workflow --preset ci-msvc
 
 workflows:
