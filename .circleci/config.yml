@@ -23,7 +23,7 @@ jobs:
             path: /root/project-build/dist/
 
     build_windows:
-      executor: win/server-2025
+      executor: windows/server-2025
       steps:
         - checkout
         - run: Write-Host 'Hello, Windows'
