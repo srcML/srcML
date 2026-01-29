@@ -30,7 +30,7 @@ jobs:
         # - run: $env:Path+=";$Env:ProgramFiles\CMake\bin"
         - run: cmake --version
         - run: git clone https://github.com/microsoft/vcpkg.git; cd vcpkg; .\bootstrap-vcpkg.bat
-        - run: $env:VCPKG_ROOT = $pwd\vcpkg; $env:PATH = "$env:VCPKG_ROOT;$env:PATH"; cmake --workflow --preset ci-msvc
+        - run: $env:VCPKG_ROOT = "$pwd\vcpkg"; $env:PATH = "$env:VCPKG_ROOT;$env:PATH"; cmake --workflow --preset ci-msvc
 
 workflows:
   version: 2
