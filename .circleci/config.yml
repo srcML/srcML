@@ -25,7 +25,7 @@ jobs:
         - image: windows-server-2025-gui:current
       steps:
         - checkout
-        - run: cmake --workflow --preset ci-msvc
+        - run: cmake --version
 
 workflows:
   version: 2
