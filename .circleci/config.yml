@@ -26,7 +26,7 @@ jobs:
       executor: win/server-2025
       steps:
         - checkout
-        - Write-Host 'Hello, Windows'
+        - run: Write-Host 'Hello, Windows'
         - run: cmake --version
 
 workflows:
