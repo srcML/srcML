@@ -5,7 +5,7 @@ macOS, Fedora, Ubuntu, OpenSUSE, and Windows Visual Studio.
 
 Out-of-source builds (builds outside the source directory) are required, and in-source builds are not supported.
 
-For full configuration, use a presets for your platform: ci-ubuntu, ci-rpm, macOS, and ci-msvc.
+For full configuration, use a presets for your platform: ci-ubuntu, ci-rpm, ci-macos, and ci-msvc.
 
 ## Unix
 
@@ -38,10 +38,16 @@ cmake . -DBUILD_CLIENT_TESTS=OFF -DBUILD_LIBSRCML_TESTS=ON -DBUILD_PARSER_TESTS=
 
 ### macOS
 
+If your system has npt been setup for C/C++ development, you will need to install Xcode tools to provide standard library headers
+
+```console
+sudo xcode-select --install
+```
+
 The main packages required may be installed via brew:
 
 ```console
-brew install cmake
+brew install cmake ninja
 ```
 
 Libarchive greater than 3.0.0 is required. For macOS previous to Catalina (19.*.*), libarchive.a 3.3.* must be statically included. Use brew to install a more recent version:
