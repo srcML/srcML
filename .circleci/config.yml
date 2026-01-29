@@ -23,7 +23,7 @@ jobs:
             path: /root/project-build/dist/
 
     build_windows:
-      executor: windows/server-2025
+      executor: windows/server-2022
       steps:
         - checkout
         - run: choco install cmake -y
