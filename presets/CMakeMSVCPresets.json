@@ -97,7 +97,11 @@
       "steps": [
         { "type": "configure", "name": "ci-msvc" },
         { "type": "build",     "name": "ci-msvc" },
-        { "type": "package",   "name": "ci-msvc" }
+        { "type": "package",   "name": "ci-msvc" },
+        { "type": "build",     "name": "ci-install-package-msvc" },
+        { "type": "build",     "name": "ci-test-client-msvc" },
+        { "type": "build",     "name": "ci-test-libsrcml-msvc" },
+        { "type": "build",     "name": "ci-test-parser-msvc" }
       ]
     }
   ]

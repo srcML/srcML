@@ -20,9 +20,17 @@ jobs:
         - store_test_results:
             path: /root/project-build/dist/
 
+    build_windows:
+      machine:
+        - image: windows-server-2025-gui:current
+      steps:
+        - checkout
+        - run: cmake --workflow --preset ci-msvc
+
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - build_ubuntu
-      - build_fedora
+      # - build_ubuntu
+      # - build_fedora
+      - build_windows
