@@ -30,6 +30,7 @@ jobs:
         - run: choco install cmake -y
         - run: $env:Path+=";$Env:ProgramFiles\CMake\bin"
         - run: cmake --version
+        - run: choco install vcpkg -y
         - run: cmake --workflow --preset ci-msvc
 
 workflows:
