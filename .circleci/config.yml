@@ -27,7 +27,10 @@ jobs:
       steps:
         - checkout
         - run: Write-Host 'Hello, Windows'
+        - run: choco install cmake -y
+        - run: $env:Path+=";$Env:ProgramFiles\CMake\bin"
         - run: cmake --version
+        - run: cmake --workflow --preset ci-msvc
 
 workflows:
   version: 2
