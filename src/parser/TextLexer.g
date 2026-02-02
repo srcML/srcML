@@ -160,11 +160,11 @@ CONSTANTS :
 ;
 
 NAME options { testLiterals = true; } :
-    { startline = false; this->recordCurrentCharacter(); }
+    { startline = false; this->updateNonWhitespaceCharacters(); this->recordCurrentCharacter(); }
     ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
     (
         (options { greedy = true; } :
-            { this->recordCurrentCharacter(); } ('0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+            { this->updateNonWhitespaceCharacters(); this->recordCurrentCharacter(); } ('0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
         )*
     )
     (
@@ -266,7 +266,7 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnons
 ;
 
 // whitespace (except for newline)
-WS { int lastColumn = 0; } : { this->recordCurrentCharacter(); } (
+WS { int lastColumn = 0; } : { this->updateNonWhitespaceCharacters(); this->recordCurrentCharacter(); } (
     // single space
     ' ' |
 
@@ -306,7 +306,7 @@ WS { int lastColumn = 0; } : { this->recordCurrentCharacter(); } (
 )? ;
 
 // end of line
-EOL : { this->recordCurrentCharacter(); } '\n' {
+EOL : { this->updateNonWhitespaceCharacters(); this->recordCurrentCharacter(); } '\n' {
 
     // onpreprocline is turned on when on a preprocessor line
     // to prevent mostly string ending problems.

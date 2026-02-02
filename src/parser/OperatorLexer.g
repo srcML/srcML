@@ -189,7 +189,6 @@ OPERATORS options { testLiterals = true; } {
     '<' (
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
-            && LA(1) != ' '                   // do not mark operator '<' as an XML literal
             && LA(1) != '!'                   // do not mark XML comments as XML literals
             && (
                 isxml                         // common case: keyword + '<'
