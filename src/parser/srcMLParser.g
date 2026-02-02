@@ -737,11 +737,12 @@ tokens {
     SFUNCTION_GENERATOR_STATEMENT;
     SFUNCTION_GET_STATEMENT;
     SFUNCTION_SET_STATEMENT;
-    SHTML_COMMENT;
+    SXML_COMMENT;
     SNAME_LIST;
     SOBJECT_JS;
     SREGEX_JS;
     SUNDEFINED_JS;
+    SXML_LITERAL;
     SYIELD_GENERATOR_STATEMENT;
 }
 
@@ -1607,7 +1608,7 @@ javascript_rules[] {
 } :
         // special behavior for import/export statements:
         // - "default" is a valid specifier [export only]
-        // - bare literals can appear (no expression) [import only]
+        // - bare literals can appear (no expression)
         // - curly braces begin/end name lists
         // - "from" denotes special markup
         // - multops ('*') should be treated as a name
@@ -1616,10 +1617,7 @@ javascript_rules[] {
             { in_export_statement }?
             specifier_js |
 
-            { in_import_statement }?
-            literals |
-
-            name_list_js | from_js | multops_as_name
+            literals | name_list_js | from_js | multops_as_name
         ) |
 
         // looking for lparen to start a parameter list
@@ -12975,7 +12973,7 @@ rparen_expression[] { bool end_control_incr = false; ENTRY_DEBUG } :
 */
 literals[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
-        (backtick_literal_js | undefined_literal_js | regex_literal_js) |
+        (backtick_literal_js | undefined_literal_js | regex_literal_js | xml_literal_js) |
 
         { inLanguage(LANGUAGE_PYTHON) }?
         (dquote_literal_py | squote_literal_py) |
@@ -13022,6 +13020,19 @@ regex_literal_js[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         JS_REGEX
+;
+
+/*
+  xml_literal_js
+
+  Handles special cases of XML literals (e.g., "(<> ... </>)") in JavaScript code using React.
+*/
+xml_literal_js[] { LightweightElement element(this); ENTRY_DEBUG }:
+        {
+            startElement(SXML_LITERAL);
+        }
+
+        JS_XML_LITERAL
 ;
 
 /*

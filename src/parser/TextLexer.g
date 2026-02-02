@@ -51,7 +51,7 @@ tokens {
     COMPLEX_NUMBER;
     HASHBANG_COMMENT_START;
     HASHTAG_COMMENT_START;
-    HTML_COMMENT_START;
+    XML_COMMENT_START;
     WS_EOL;
 }
 
@@ -160,9 +160,13 @@ CONSTANTS :
 ;
 
 NAME options { testLiterals = true; } :
-    { startline = false; }
+    { startline = false; this->recordCurrentCharacter(); }
     ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
-    ((options { greedy = true; } : '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')*)
+    (
+        (options { greedy = true; } :
+            { this->recordCurrentCharacter(); } ('0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+        )*
+    )
     (
         { text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv }?
         { $setType(STRING_START); } STRING_START |
@@ -189,18 +193,18 @@ NAME options { testLiterals = true; } :
 ;
 
 // Single-line comments (no EOL); also processes potential regular expression literals in JavaScript
-LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnonwhitespacetoken = this->getLastToken(); } : '/'
+LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnonspacetoken = this->getLastToken(); } : '/'
     (
-        // for this conditional, lastnonwhitespacetoken must refer to the token before the first '/'
+        // for this conditional, lastnonspacetoken must refer to the token before the first '/'
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && LA(1) != '/'
             && LA(1) != '*'
             && (
                 startline
-                || lastnonwhitespacetoken == '='
-                || lastnonwhitespacetoken == '('
-                || lastnonwhitespacetoken == ','
+                || lastnonspacetoken == '='
+                || lastnonspacetoken == '('
+                || lastnonspacetoken == ','
             )
         }?
         (options { greedy = true; } :
@@ -262,7 +266,7 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnonw
 ;
 
 // whitespace (except for newline)
-WS { int lastColumn = 0; } : (
+WS { int lastColumn = 0; } : { this->recordCurrentCharacter(); } (
     // single space
     ' ' |
 
@@ -302,7 +306,7 @@ WS { int lastColumn = 0; } : (
 )? ;
 
 // end of line
-EOL : '\n' { 
+EOL : { this->recordCurrentCharacter(); } '\n' {
 
     // onpreprocline is turned on when on a preprocessor line
     // to prevent mostly string ending problems.

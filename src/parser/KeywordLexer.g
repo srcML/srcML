@@ -370,6 +370,7 @@ tokens {
     JS_FROM;
     JS_FUNCTION;
     JS_GET;
+    JS_XML_LITERAL;
     JS_IMPORT;
     JS_INSTANCEOF;
     JS_LET;
@@ -402,16 +403,44 @@ public:
     int lastpos;
     int prev;
     int currentmode;
-    int lastnonwhitespacetoken;
+    int lastnonspacetoken;
 
     virtual void consume() noexcept(false) {
         if (LA(1) != ' ')
-            lastnonwhitespacetoken = LA(1);
+            lastnonspacetoken = LA(1);
 
         antlr::CharScanner::consume();
     }
 
-    int getLastToken() const { return lastnonwhitespacetoken; }
+    int getLastToken() const { return lastnonspacetoken; }
+
+    // special string that represents the previous nine read characters
+    std::string keywordLookback = {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'};
+
+    // updates the keyword string by adding the newest character to the end of the string,
+    // pushing all other characters backward (or, "up" the string in terms of indices)
+    void recordCurrentCharacter() {
+        keywordLookback = keywordLookback.substr(1, 8);
+        keywordLookback.resize(9, '\0');
+
+        keywordLookback[8] = (char)LA(1);
+    }
+
+    // if LA(1) is the current character, then this was the value of LA(1) two non-whitespace characters ago
+    // Note: excludes newline characters, tabs, and whitespace
+    int lookaheadMinusTwo;
+
+    // if LA(1) is the current character, then this was the value of LA(1) one non-whitespace characters ago
+    // Note: excludes newline characters, tabs, and whitespace
+    int lookaheadMinusOne;
+
+    // adjust the prior non-whitespace character values
+    void updateNonWhitespaceCharacters() {
+        if (LA(1) != '\n' && LA(1) != '\t' && LA(1) != ' ') {
+            lookaheadMinusTwo = lookaheadMinusOne;
+            lookaheadMinusOne = LA(1);
+        }
+    }
 
 // map from text of literal to token number, adjusted to language
 struct keyword { std::string_view text; int token; int language; };
