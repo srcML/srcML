@@ -41,19 +41,19 @@ abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<comment type="xml">&lt;!----&gt;</comment>
+<comment type="jsx">&lt;!----&gt;</comment>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<comment type="xml">&lt;!-- a --&gt;</comment>
+<comment type="jsx">&lt;!-- a --&gt;</comment>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<comment type="xml">&lt;!-- &lt;!- a -&gt; --&gt;</comment>
+<comment type="jsx">&lt;!-- &lt;!- a -&gt; --&gt;</comment>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<comment type="xml">&lt;!--
+<comment type="jsx">&lt;!--
 a
 b
 c
@@ -61,11 +61,11 @@ c
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<comment type="xml">&lt;!-- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[]\;',./~_+{}|:"&lt;&gt;? --&gt;</comment>
+<comment type="jsx">&lt;!-- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[]\;',./~_+{}|:"&lt;&gt;? --&gt;</comment>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<comment type="xml">&lt;!--
+<comment type="jsx">&lt;!--
 console.log("srcML");
 --&gt;</comment>
 </unit>

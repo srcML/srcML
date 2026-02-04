@@ -737,12 +737,12 @@ tokens {
     SFUNCTION_GENERATOR_STATEMENT;
     SFUNCTION_GET_STATEMENT;
     SFUNCTION_SET_STATEMENT;
-    SXML_COMMENT;
+    SJSX_COMMENT;
+    SJSX_LITERAL;
     SNAME_LIST;
     SOBJECT_JS;
     SREGEX_JS;
     SUNDEFINED_JS;
-    SXML_LITERAL;
     SYIELD_GENERATOR_STATEMENT;
 }
 
@@ -12973,7 +12973,7 @@ rparen_expression[] { bool end_control_incr = false; ENTRY_DEBUG } :
 */
 literals[] { ENTRY_DEBUG } :
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
-        (backtick_literal_js | undefined_literal_js | regex_literal_js | xml_literal_js) |
+        (backtick_literal_js | undefined_literal_js | regex_literal_js | jsx_literal_js) |
 
         { inLanguage(LANGUAGE_PYTHON) }?
         (dquote_literal_py | squote_literal_py) |
@@ -13023,16 +13023,16 @@ regex_literal_js[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
-  xml_literal_js
+  jsx_literal_js
 
-  Handles special cases of XML literals (e.g., "(<> ... </>)") in JavaScript code using React.
+  Handles special cases of JSX literals (e.g., "(<> ... </>)") in JavaScript code using React.
 */
-xml_literal_js[] { LightweightElement element(this); ENTRY_DEBUG }:
+jsx_literal_js[] { LightweightElement element(this); ENTRY_DEBUG }:
         {
-            startElement(SXML_LITERAL);
+            startElement(SJSX_LITERAL);
         }
 
-        JS_XML_LITERAL
+        JS_JSX_LITERAL
 ;
 
 /*

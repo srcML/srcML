@@ -370,9 +370,9 @@ tokens {
     JS_FROM;
     JS_FUNCTION;
     JS_GET;
-    JS_XML_LITERAL;
     JS_IMPORT;
     JS_INSTANCEOF;
+    JS_JSX_LITERAL;
     JS_LET;
     JS_NULL;
     JS_RANGE_IN;

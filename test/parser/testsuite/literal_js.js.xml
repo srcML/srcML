@@ -117,14 +117,14 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
-    <return>return <expr><operator>(</operator><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal><operator>)</operator></expr></return>
+    <return>return <expr><operator>(</operator><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal><operator>)</operator></expr></return>
 </block_content>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;&gt;
+        <literal type="jsx">&lt;&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -140,7 +140,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;unit&gt;
+        <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -156,7 +156,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;unit revision="1.0.0" language="JavaScript"&gt;
+        <literal type="jsx">&lt;unit revision="1.0.0" language="JavaScript"&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -173,7 +173,7 @@
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
         <comment type="line">// example line comment</comment>
-        <literal type="xml">&lt;unit&gt;
+        <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -190,7 +190,7 @@
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
         <comment type="block">/* example block comment */</comment>
-        <literal type="xml">&lt;unit&gt;
+        <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -209,7 +209,7 @@
         <comment type="block">/*
           example multi-line block comment
         */</comment>
-        <literal type="xml">&lt;unit&gt;
+        <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -226,7 +226,7 @@
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
         <comment type="hashbang">#! example hashbang comment</comment>
-        <literal type="xml">&lt;unit&gt;
+        <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -242,8 +242,8 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <comment type="xml">&lt;!-- example XML comment --&gt;</comment>
-        <literal type="xml">&lt;unit&gt;
+        <comment type="jsx">&lt;!-- example XML comment --&gt;</comment>
+        <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -259,10 +259,10 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <comment type="xml">&lt;!--
+        <comment type="jsx">&lt;!--
           example multi-line XML comment
         --&gt;</comment>
-        <literal type="xml">&lt;unit&gt;
+        <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
                     &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
@@ -278,7 +278,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;img src="logo.jpg" alt="srcML" class="photo"/&gt;</literal>
+        <literal type="jsx">&lt;img src="logo.jpg" alt="srcML" class="photo"/&gt;</literal>
     <operator>)</operator></expr></return>
 </block_content>}</block></function>
 </unit>
@@ -286,7 +286,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;img
+        <literal type="jsx">&lt;img
             src="logo.jpg"
             alt="srcML"
             class="photo"
@@ -298,7 +298,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
   <return>return <expr><operator>(</operator>
-    <literal type="xml">&lt;FixtureSet
+    <literal type="jsx">&lt;FixtureSet
       title="Suspense"
       description="Preserving the state of timed-out children"&gt;
       &lt;p&gt;
@@ -496,57 +496,57 @@
 <!-- XML literals (without parentheses) -->
 
 <unit revision="1.0.0" language="JavaScript">
-<import>import <name>*</name> <alias>as <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></alias> <from>from <literal type="string">"module-name"</literal></from></import>
+<import>import <name>*</name> <alias>as <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></alias> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <switch>switch <condition>(<expr><name>input</name></expr>)</condition> <block>{<block_content>
-    <case>case <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr>:</case>
+    <case>case <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr>:</case>
         <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Found a button"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
         <break>break</break>
 </block_content>}</block></switch>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<export>export <specifier>default</specifier> <literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></export>
+<export>export <specifier>default</specifier> <literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></export>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<export>export <literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></export>
+<export>export <literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></export>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<for>for <control>(<init><decl type="const">const <name>char</name> <range>in <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></range></decl></init>)</control> <block>{<block_content>
+<for>for <control>(<init><decl type="const">const <name>char</name> <range>in <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></range></decl></init>)</control> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Found letter '${char}'`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></for>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<for>for <control>(<init><decl type="let">let <name>char</name> <range>of <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></range></decl></init>)</control> <block>{<block_content>
+<for>for <control>(<init><decl type="let">let <name>char</name> <range>of <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></range></decl></init>)</control> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Found letter '${char}'`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></for>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
-    <return>return <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></return>
+    <return>return <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<throw>throw <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></throw>
+<throw>throw <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></throw>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<yield>yield <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></yield>
+<yield>yield <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></yield>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<yield type="generator">yield* <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></yield>
+<yield type="generator">yield* <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></yield>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<yield type="generator">yield * <expr><literal type="xml">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></yield>
+<yield type="generator">yield * <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></yield>
 </unit>
 
 <!-- XML literals (multiple instances of the same starting tag) -->
@@ -554,7 +554,7 @@
 <unit revision="1.0.0" language="JavaScript">
   <expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-      <literal type="xml">&lt;&gt;
+      <literal type="jsx">&lt;&gt;
         &lt;div ref={this.parentContainer}&gt;
           &lt;div ref={this.container} /&gt;
         &lt;/div&gt;
@@ -579,7 +579,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt; div &gt;
+        <literal type="jsx">&lt; div &gt;
           Hello, World!
         &lt;/ div &gt;</literal>
     <operator>)</operator></expr></return>
@@ -589,7 +589,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;div&gt;
+        <literal type="jsx">&lt;div&gt;
           Hello, World!
         &lt;/ div &gt;</literal>
     <operator>)</operator></expr></return>
@@ -599,7 +599,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt; div &gt;
+        <literal type="jsx">&lt; div &gt;
           Hello, World!
         &lt;/div&gt;</literal>
     <operator>)</operator></expr></return>
@@ -609,7 +609,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt; div id="srcml" &gt;
+        <literal type="jsx">&lt; div id="srcml" &gt;
           Hello, World!
         &lt;/ div &gt;</literal>
     <operator>)</operator></expr></return>
@@ -619,7 +619,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt; div &gt;
+        <literal type="jsx">&lt; div &gt;
           &lt; div &gt;
             Hello, World!
           &lt;/ div &gt;
@@ -631,7 +631,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;
+        <literal type="jsx">&lt;
         div
         &gt;
           Hello, World!
@@ -645,7 +645,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt; div &gt;
+        <literal type="jsx">&lt; div &gt;
           &lt; div id="srcml" &gt;
             Hello, World!
           &lt;/ div &gt;
@@ -657,7 +657,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;div&gt;
+        <literal type="jsx">&lt;div&gt;
           &lt;div id="&gt;srcml" tag="&lt;srcml" set="&lt;srcml&gt;"&gt;
             Hello, World!
           &lt;/div&gt;
@@ -669,7 +669,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;div&gt;
+        <literal type="jsx">&lt;div&gt;
           &lt;div id="\"srcml\"" tag='\'srcml\'' set="\`srcml\`"&gt;
             Hello, World!
           &lt;/div&gt;
@@ -681,7 +681,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;TestComponent
+        <literal type="jsx">&lt;TestComponent
             name="y"
             ref={current =&gt; {
                 instance = current;
@@ -694,7 +694,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <literal type="xml">&lt;TestComponent
+        <literal type="jsx">&lt;TestComponent
             name="y"
             ref={current =&gt; {
                 instance = "><";

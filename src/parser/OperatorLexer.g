@@ -123,7 +123,7 @@ OPERATORS options { testLiterals = true; } {
         std::replace(keyword.begin(), keyword.end(), '\n', ' ');
         std::replace(keyword.begin(), keyword.end(), '\t', ' ');
 
-        // if any of these keywords are found, then '<' starts an XML literal
+        // if any of these keywords are found, then '<' starts a JSX literal
         if (
             keyword.find(" as ") != std::string::npos || keyword.find(" case ") != std::string::npos
             || keyword.find(" default ") != std::string::npos || keyword.find(" export ") != std::string::npos
@@ -186,16 +186,16 @@ OPERATORS options { testLiterals = true; } {
     // >, >>=, >=, >>> (JavaScript), >>>= (JavaScript), not >>
     '>' (('>' '=') => '>' '=' | { inLanguage(LANGUAGE_JAVASCRIPT) }? ('>' '>' '=') => '>' '>' '=')? ('=')? |
 
-    // <, << (C/C++), <=, <<< (CUDA), <> (Python), <!-- (JavaScript), XML (JavaScript)
+    // <, << (C/C++), <=, <<< (CUDA), <> (Python), <!-- (JavaScript), JSX (JavaScript)
     '<' (
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
-            && LA(1) != '!'                   // do not mark XML comments as XML literals
+            && LA(1) != '!'                   // do not mark JSX comments as JSX literals
             && (
                 isxml                         // common case: keyword + '<'
-                || lookaheadMinusTwo == '('   // common case: parenthesized XML tags
+                || lookaheadMinusTwo == '('   // common case: parenthesized JSX tags
                 || lookaheadMinusTwo == '#'   // edge case: the prior code was a hashbang comment
-                || lookaheadMinusTwo == '<'   // edge case: the prior code was an XML comment
+                || lookaheadMinusTwo == '<'   // edge case: the prior code was a JSX comment
             )
         }?
         // add characters to starttag to create the starting tag
@@ -225,7 +225,7 @@ OPERATORS options { testLiterals = true; } {
             ('=') { isarrow = true; if (wasescape) wasescape = false; } |
 
             { prevtoken = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '\\' | '=') {
-                // do not end the XML literal at an arrow (e.g., "=>")
+                // do not end the JSX literal at an arrow (e.g., "=>")
                 if (isarrow && prevtoken != '>')
                     isarrow = false;
 
@@ -237,7 +237,7 @@ OPERATORS options { testLiterals = true; } {
                 if (!isarrow)
                     starttag += prevtoken;
 
-                // '>' indicates the end of the XML tag
+                // '>' indicates the end of the JSX tag
                 if (!wasescape && !isarrow && prevtoken == '>')
                     break;
 
@@ -290,11 +290,11 @@ OPERATORS options { testLiterals = true; } {
                     if (stringtoken != '\000')
                         continue;
 
-                    // '<' denotes the start of an XML tag
+                    // '<' denotes the start of a JSX tag
                     if (prevtoken == '<')
                         recordtag = true;
 
-                    // in an XML tag, but not all content should be recorded
+                    // in a JSX tag, but not all content should be recorded
                     if (recordtag) {
                         // ignore '>' from nested tag as to not mess up xmlcount
                         if (ignorenexttoken && prevtoken == '>') {
@@ -357,9 +357,9 @@ OPERATORS options { testLiterals = true; } {
                 }
             )*
         )?
-        { $setType(JS_XML_LITERAL); } |
+        { $setType(JS_JSX_LITERAL); } |
 
-        { inLanguage(LANGUAGE_JAVASCRIPT) }? ('!' '-' '-') { $setType(XML_COMMENT_START); changetotextlexer(XML_COMMENT_END); } |
+        { inLanguage(LANGUAGE_JAVASCRIPT) }? ('!' '-' '-') { $setType(JSX_COMMENT_START); changetotextlexer(JSX_COMMENT_END); } |
 
         { inLanguage(LANGUAGE_PYTHON) }? '>' |
 
