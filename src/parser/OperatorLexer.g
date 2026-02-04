@@ -97,19 +97,19 @@ tokens {
 
 OPERATORS options { testLiterals = true; } {
     int start = LA(1);
-    int numstarttags = 1;
+    int xmlcount = 0;
 
-    char prevtoken;
+    char prevtoken = '\000';
+    char stringtoken = '\000';
 
-    bool iscomment = true;
-    bool isempty = false;
+    bool ignorenexttoken = false;
     bool isselfclosing = false;
+    bool wasescape = false;
     bool isxml = false;
     bool recordtag = false;
 
     std::string keyword;
     std::string starttag;
-    std::string endtag = "</";
     std::string dummytag;
 
     // update the previous two non-whitespace characters
@@ -205,98 +205,114 @@ OPERATORS options { testLiterals = true; } {
         )*
 
         {
-            // remove any attributes and the closing '>' from the starting tag
-            // do not do this if the tag is a self-closing tag (e.g., "<unit/>")
-            if (starttag.size() > 1 && starttag.substr(starttag.size() - 2) != "/>") {
-                int firstspace = std::numeric_limits<int>::max();
-                int firsttab = std::numeric_limits<int>::max();
-                int firstnewline = std::numeric_limits<int>::max();
-
-                if (starttag.find(' ') != std::string::npos)
-                    firstspace = starttag.find(' ');
-                if (starttag.find('\t') != std::string::npos)
-                    firsttab = starttag.find('\t');
-                if (starttag.find('\n') != std::string::npos)
-                    firstnewline = starttag.find('\n');
-
-                int firstwhitespace = std::min({firstspace, firsttab, firstnewline});
-
-                std::string temptag = starttag.substr(0, firstwhitespace);
-                starttag = temptag;
+            // remove all spaces, tabs, and newline characters from the starting tag
+            if (!starttag.empty()) {
+                starttag.erase(std::remove(starttag.begin(), starttag.end(), ' '), starttag.end());
+                starttag.erase(std::remove(starttag.begin(), starttag.end(), '\t'), starttag.end());
+                starttag.erase(std::remove(starttag.begin(), starttag.end(), '\n'), starttag.end());
             }
 
-            // create the end tag using the starting tag name
-            if (!starttag.empty())
-                endtag += starttag;
-
-            // complete the starting tag by adding a '<' (if applicable)
-            if (starttag.front() != '<')
-                starttag.insert(0, 1, '<');
-
-            // remove extraneous whitespace tokens from the final result (possible if tag had attributes)
-            while (endtag.back() == '\n' || endtag.back() == '\t' || endtag.back() == ' ')
-                endtag.pop_back();
-
-            // if the closing tag is "</>", then the starting tag was "<>" (i.e., empty)
-            if (endtag == "</>") {
-                isempty = true;
-            }
-            // add closing '>' if it is not there (possible if tag had attributes)
-            else if (endtag.back() != '>') {
-                endtag += '>';
-            }
-
-            // found a self-closing tag (e.g., "<unit/>")
-            if (!isempty && endtag.substr(endtag.size() - 2) == "/>") {
+            // if the starting tag is a self-closing tag, ignore the processing step below
+            if (starttag.size() > 1 && starttag.substr(starttag.size() - 2) == "/>")
                 isselfclosing = true;
-            }
-            // found a regular starting tag (e.g., "<unit>")
-            else {
-                // discard any characters after (and including) the first space
-                size_t space_loc = endtag.find(' ');
-                if (space_loc != std::string::npos)
-                    endtag.erase(space_loc);
-
-                // add closing '>' back if it is not there
-                if (endtag.back() != '>') {
-                    endtag += '>';
-                }
-            }
+            else
+                ++xmlcount;
         }
 
         // consume tokens until reaching the closing tag
         (options { greedy = true; } :
 
-            ('\n') { recordtag = false; dummytag.clear(); } |
-            { prevtoken = (char)LA(1); } ~('\n') {
+            ('\000') |
+            { prevtoken = (char)LA(1); } ~('\000') {
+                // special case: the only tag, a self-closing tag, was already processed
+                if (isselfclosing)
+                    break;
+
+                // found closing character for a string
+                if (!wasescape && prevtoken == stringtoken) {
+                    stringtoken = '\000';
+                }
+                // found starting character for a string
+                else if (!wasescape && (prevtoken == '"' || prevtoken == '\'' || prevtoken == '`')) {
+                    stringtoken = prevtoken;
+                }
+
+                // reset escaped character detection
+                if (wasescape)
+                    wasescape = false;
+
+                // record if the next character will be escaped
+                if (prevtoken == '\\')
+                    wasescape = true;
+
+                // do not add to dummytag if inside a string
+                if (stringtoken != '\000')
+                    continue;
+
+                // '<' denotes the start of an XML tag
                 if (prevtoken == '<')
                     recordtag = true;
 
-                if (recordtag)
-                    dummytag += prevtoken;
-
-                // found a nested tag with the same name as the starting tag
-                if (dummytag == starttag)
-                    ++numstarttags;
-
-                // found a closing tag for the starting tag; only break if top-level
-                if (dummytag == endtag) {
-                    if (numstarttags == 1) {
-                        break;
+                // in an XML tag, but not all content should be recorded
+                if (recordtag) {
+                    // ignore '>' from nested tag as to not mess up xmlcount
+                    if (ignorenexttoken && prevtoken == '>') {
+                        dummytag += ' ';
+                    }
+                    // found '<'; only add it to dummytag if there are no other '<'
+                    else if (prevtoken == '<') {
+                        if (std::count(dummytag.begin(), dummytag.end(), '<') == 0) {
+                            dummytag += '<';
+                        }
+                        else {
+                            dummytag += ' ';
+                            ignorenexttoken = true;
+                        }
+                    }
+                    // found '>'; only add it to dummytag if there are no other '>'
+                    else if (prevtoken == '>') {
+                        if (std::count(dummytag.begin(), dummytag.end(), '>') == 0)
+                            dummytag += '>';
+                        else
+                            dummytag += ' ';
                     }
                     else {
-                        dummytag.clear();
-                        --numstarttags;
+                        dummytag += prevtoken;
                     }
                 }
 
-                if (prevtoken == '>') {
-                    // found the end of a self-closing tag (since '/' was already consumed)
-                    if (isselfclosing)
+                // check if dummytag is a starting tag or ending tag
+                if (!ignorenexttoken && dummytag.size() > 1 && prevtoken == '>') {
+                    // remove all spaces, tabs, and newline characters from the starting tag
+                    if (!dummytag.empty()) {
+                        dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), ' '), dummytag.end());
+                        dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), '\t'), dummytag.end());
+                        dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), '\n'), dummytag.end());
+                    }
+
+                    // found a starting tag
+                    if (dummytag[1] != '/' && dummytag.substr(dummytag.size() - 2) != "/>")
+                        ++xmlcount;
+
+                    // special case: ending tag with no tag name
+                    else if (dummytag == "</>")
+                        --xmlcount;
+
+                    // found an ending tag
+                    else if (dummytag[1] == '/' && dummytag.substr(dummytag.size() - 2) != "/>")
+                        --xmlcount;
+
+                    // exit
+                    if (xmlcount == 0)
                         break;
 
+                    dummytag.clear();
                     recordtag = false;
                 }
+
+                // reset ignore next '>' detection
+                if (ignorenexttoken && prevtoken == '>')
+                    ignorenexttoken = false;
             }
         )*
 

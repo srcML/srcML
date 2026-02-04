@@ -574,4 +574,108 @@
   </block_content>}</block></function></expr></expr_stmt>
 </unit>
 
+<!-- XML literals (edge cases) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt; div &gt;
+          Hello, World!
+        &lt;/ div &gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt;div&gt;
+          Hello, World!
+        &lt;/ div &gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt; div &gt;
+          Hello, World!
+        &lt;/div&gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt; div id="srcml" &gt;
+          Hello, World!
+        &lt;/ div &gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt; div &gt;
+          &lt; div &gt;
+            Hello, World!
+          &lt;/ div &gt;
+        &lt;/ div &gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt;
+        div
+        &gt;
+          Hello, World!
+        &lt;/
+        div
+        &gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt; div &gt;
+          &lt; div id="srcml" &gt;
+            Hello, World!
+          &lt;/ div &gt;
+        &lt;/ div &gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt;div&gt;
+          &lt;div id="&gt;srcml" tag="&lt;srcml" set="&lt;srcml&gt;"&gt;
+            Hello, World!
+          &lt;/div&gt;
+        &lt;/div&gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt;div&gt;
+          &lt;div id="\"srcml\"" tag='\'srcml\'' set="\`srcml\`"&gt;
+            Hello, World!
+          &lt;/div&gt;
+        &lt;/div&gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
 </unit>
