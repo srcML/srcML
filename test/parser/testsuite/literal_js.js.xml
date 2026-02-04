@@ -678,4 +678,33 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt;TestComponent
+            name="y"
+            ref={current =&gt; {
+                instance = current;
+            }}
+        /&gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <literal type="xml">&lt;TestComponent
+            name="y"
+            ref={current =&gt; {
+                instance = "><";
+                instance = "\"";
+                instance = '\'';
+                instance = `\``;
+            }}
+        /&gt;</literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
 </unit>

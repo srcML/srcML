@@ -103,13 +103,14 @@ OPERATORS options { testLiterals = true; } {
     char stringtoken = '\000';
 
     bool ignorenexttoken = false;
+    bool isarrow = false;
     bool isselfclosing = false;
     bool wasescape = false;
     bool isxml = false;
     bool recordtag = false;
 
     std::string keyword;
-    std::string starttag;
+    std::string starttag = "<";
     std::string dummytag;
 
     // update the previous two non-whitespace characters
@@ -197,20 +198,61 @@ OPERATORS options { testLiterals = true; } {
                 || lookaheadMinusTwo == '<'   // edge case: the prior code was an XML comment
             )
         }?
-        // record the first character in the starting tag name so it is not lost
-        { starttag += (char)LA(1); }
-
+        // add characters to starttag to create the starting tag
         (options { greedy = true; } :
-            ~('>') { starttag += (char)LA(1); }
+
+            // ignore spaces, tabs, and newlines
+            (' ' | '\t' | '\n') { if (wasescape) wasescape = false; } |
+
+            // ignore strings
+            { prevtoken = (char)LA(1); } ('"' | '\'' | '`') {
+                // found closing character for a string
+                if (!wasescape && prevtoken == stringtoken) {
+                    stringtoken = '\000';
+                }
+                // found starting character for a string
+                else if (!wasescape) {
+                    stringtoken = prevtoken;
+                }
+
+                if (wasescape) wasescape = false;
+            } |
+
+            // ignore backslashes
+            ('\\') { wasescape = true; } |
+
+            // ignore equal signs
+            ('=') { isarrow = true; if (wasescape) wasescape = false; } |
+
+            { prevtoken = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '\\' | '=') {
+                // do not end the XML literal at an arrow (e.g., "=>")
+                if (isarrow && prevtoken != '>')
+                    isarrow = false;
+
+                // do not add to dummytag if inside a string
+                if (stringtoken != '\000')
+                    continue;
+
+                // add the most recently consumed character to the starting tag (if it is not an arrow)
+                if (!isarrow)
+                    starttag += prevtoken;
+
+                // '>' indicates the end of the XML tag
+                if (!wasescape && !isarrow && prevtoken == '>')
+                    break;
+
+                if (isarrow)
+                    isarrow = false;
+
+                if (wasescape)
+                    wasescape = false;
+            }
         )*
 
         {
-            // remove all spaces, tabs, and newline characters from the starting tag
-            if (!starttag.empty()) {
-                starttag.erase(std::remove(starttag.begin(), starttag.end(), ' '), starttag.end());
-                starttag.erase(std::remove(starttag.begin(), starttag.end(), '\t'), starttag.end());
-                starttag.erase(std::remove(starttag.begin(), starttag.end(), '\n'), starttag.end());
-            }
+            prevtoken = '\000';
+            stringtoken = '\000';
+            wasescape = false;
 
             // if the starting tag is a self-closing tag, ignore the processing step below
             if (starttag.size() > 1 && starttag.substr(starttag.size() - 2) == "/>")
@@ -219,103 +261,102 @@ OPERATORS options { testLiterals = true; } {
                 ++xmlcount;
         }
 
-        // consume tokens until reaching the closing tag
-        (options { greedy = true; } :
+        (
+            // consume tokens until reaching the closing tag (skip this for a self-closing tag)
+            { !isselfclosing }?
+            (options { greedy = true; } :
 
-            ('\000') |
-            { prevtoken = (char)LA(1); } ~('\000') {
-                // special case: the only tag, a self-closing tag, was already processed
-                if (isselfclosing)
-                    break;
+                ('\000') |
 
-                // found closing character for a string
-                if (!wasescape && prevtoken == stringtoken) {
-                    stringtoken = '\000';
-                }
-                // found starting character for a string
-                else if (!wasescape && (prevtoken == '"' || prevtoken == '\'' || prevtoken == '`')) {
-                    stringtoken = prevtoken;
-                }
-
-                // reset escaped character detection
-                if (wasescape)
-                    wasescape = false;
-
-                // record if the next character will be escaped
-                if (prevtoken == '\\')
-                    wasescape = true;
-
-                // do not add to dummytag if inside a string
-                if (stringtoken != '\000')
-                    continue;
-
-                // '<' denotes the start of an XML tag
-                if (prevtoken == '<')
-                    recordtag = true;
-
-                // in an XML tag, but not all content should be recorded
-                if (recordtag) {
-                    // ignore '>' from nested tag as to not mess up xmlcount
-                    if (ignorenexttoken && prevtoken == '>') {
-                        dummytag += ' ';
+                { prevtoken = (char)LA(1); } ~('\000') {
+                    // found closing character for a string
+                    if (!wasescape && prevtoken == stringtoken) {
+                        stringtoken = '\000';
                     }
-                    // found '<'; only add it to dummytag if there are no other '<'
-                    else if (prevtoken == '<') {
-                        if (std::count(dummytag.begin(), dummytag.end(), '<') == 0) {
-                            dummytag += '<';
+                    // found starting character for a string
+                    else if (!wasescape && (prevtoken == '"' || prevtoken == '\'' || prevtoken == '`')) {
+                        stringtoken = prevtoken;
+                    }
+
+                    // reset escaped character detection
+                    if (wasescape)
+                        wasescape = false;
+
+                    // record if the next character will be escaped
+                    if (prevtoken == '\\')
+                        wasescape = true;
+
+                    // do not add to dummytag if inside a string
+                    if (stringtoken != '\000')
+                        continue;
+
+                    // '<' denotes the start of an XML tag
+                    if (prevtoken == '<')
+                        recordtag = true;
+
+                    // in an XML tag, but not all content should be recorded
+                    if (recordtag) {
+                        // ignore '>' from nested tag as to not mess up xmlcount
+                        if (ignorenexttoken && prevtoken == '>') {
+                            dummytag += ' ';
+                        }
+                        // found '<'; only add it to dummytag if there are no other '<'
+                        else if (prevtoken == '<') {
+                            if (std::count(dummytag.begin(), dummytag.end(), '<') == 0) {
+                                dummytag += '<';
+                            }
+                            else {
+                                dummytag += ' ';
+                                ignorenexttoken = true;
+                            }
+                        }
+                        // found '>'; only add it to dummytag if there are no other '>'
+                        else if (prevtoken == '>') {
+                            if (std::count(dummytag.begin(), dummytag.end(), '>') == 0)
+                                dummytag += '>';
+                            else
+                                dummytag += ' ';
                         }
                         else {
-                            dummytag += ' ';
-                            ignorenexttoken = true;
+                            dummytag += prevtoken;
                         }
                     }
-                    // found '>'; only add it to dummytag if there are no other '>'
-                    else if (prevtoken == '>') {
-                        if (std::count(dummytag.begin(), dummytag.end(), '>') == 0)
-                            dummytag += '>';
-                        else
-                            dummytag += ' ';
+
+                    // check if dummytag is a starting tag or ending tag
+                    if (!ignorenexttoken && dummytag.size() > 1 && prevtoken == '>') {
+                        // remove all spaces, tabs, and newline characters from the starting tag
+                        if (!dummytag.empty()) {
+                            dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), ' '), dummytag.end());
+                            dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), '\t'), dummytag.end());
+                            dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), '\n'), dummytag.end());
+                        }
+
+                        // found a starting tag
+                        if (dummytag[1] != '/' && dummytag.substr(dummytag.size() - 2) != "/>")
+                            ++xmlcount;
+
+                        // special case: ending tag with no tag name
+                        else if (dummytag == "</>")
+                            --xmlcount;
+
+                        // found an ending tag
+                        else if (dummytag[1] == '/' && dummytag.substr(dummytag.size() - 2) != "/>")
+                            --xmlcount;
+
+                        // exit
+                        if (xmlcount == 0)
+                            break;
+
+                        dummytag.clear();
+                        recordtag = false;
                     }
-                    else {
-                        dummytag += prevtoken;
-                    }
+
+                    // reset ignore next '>' detection
+                    if (ignorenexttoken && prevtoken == '>')
+                        ignorenexttoken = false;
                 }
-
-                // check if dummytag is a starting tag or ending tag
-                if (!ignorenexttoken && dummytag.size() > 1 && prevtoken == '>') {
-                    // remove all spaces, tabs, and newline characters from the starting tag
-                    if (!dummytag.empty()) {
-                        dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), ' '), dummytag.end());
-                        dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), '\t'), dummytag.end());
-                        dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), '\n'), dummytag.end());
-                    }
-
-                    // found a starting tag
-                    if (dummytag[1] != '/' && dummytag.substr(dummytag.size() - 2) != "/>")
-                        ++xmlcount;
-
-                    // special case: ending tag with no tag name
-                    else if (dummytag == "</>")
-                        --xmlcount;
-
-                    // found an ending tag
-                    else if (dummytag[1] == '/' && dummytag.substr(dummytag.size() - 2) != "/>")
-                        --xmlcount;
-
-                    // exit
-                    if (xmlcount == 0)
-                        break;
-
-                    dummytag.clear();
-                    recordtag = false;
-                }
-
-                // reset ignore next '>' detection
-                if (ignorenexttoken && prevtoken == '>')
-                    ignorenexttoken = false;
-            }
-        )*
-
+            )*
+        )?
         { $setType(JS_XML_LITERAL); } |
 
         { inLanguage(LANGUAGE_JAVASCRIPT) }? ('!' '-' '-') { $setType(XML_COMMENT_START); changetotextlexer(XML_COMMENT_END); } |
