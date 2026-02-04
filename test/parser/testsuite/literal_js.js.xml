@@ -496,6 +496,14 @@
 <!-- XML literals (without parentheses) -->
 
 <unit revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="jsx">&lt;div&gt;
+        Hello, World!
+    &lt;/div&gt;</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <import>import <name>*</name> <alias>as <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></alias> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
