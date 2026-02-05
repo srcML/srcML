@@ -705,7 +705,7 @@
         <literal type="jsx">&lt;TestComponent
             name="y"
             ref={current =&gt; {
-                instance = "><";
+                instance = "&gt;&lt;";
                 instance = "\"";
                 instance = '\'';
                 instance = `\``;
@@ -748,5 +748,95 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>title</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="jsx">&lt;h1&gt;Welcome, {name}!&lt;/h1&gt;</literal></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
+
+<!-- Comments in JSX literals (left unmarked) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;App
+    key="three"
+    // We reset after &lt;App /&gt; so we need to render one more
+    siblingsBeforeStackOne={501}
+  /&gt;</literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;App
+    key="three"
+    /*
+      We reset after &lt;App /&gt; so we need to render one more
+    */
+    siblingsBeforeStackOne={501}
+  /&gt;</literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;App
+    key="three"
+    #! We reset after &lt;App /&gt; so we need to render one more
+    siblingsBeforeStackOne={501}
+  /&gt;</literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;App
+    key="three"
+    &lt;!-- We reset after &lt;App /&gt; so we need to render one more --&gt;
+    siblingsBeforeStackOne={501}
+  /&gt;</literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- These tests will crash srcML, so they are commented out until they are fixed -->
+
+<!--
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;App&gt;
+    // We reset after &lt;/App&gt; so we need to render one more
+    siblingsBeforeStackOne={501}
+  &lt;/App&gt;</literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+-->
+
+<!--
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;App&gt;
+    /* We reset after &lt;/App&gt; so we need to render one more */
+    siblingsBeforeStackOne={501}
+  &lt;/App&gt;</literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+-->
+
+<!--
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;App&gt;
+    #! We reset after &lt;/App&gt; so we need to render one more
+    siblingsBeforeStackOne={501}
+  &lt;/App&gt;</literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+-->
+
+<!--
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;App&gt;
+    &lt;!-- We reset after &lt;/App&gt; so we need to render one more --&gt;
+    siblingsBeforeStackOne={501}
+  &lt;/App&gt;</literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+-->
 
 </unit>

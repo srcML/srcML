@@ -104,6 +104,10 @@ OPERATORS options { testLiterals = true; } {
 
     bool ignorenexttoken = false;
     bool isarrow = false;
+    bool islinecomment = false;
+    bool isblockcomment = false;
+    bool ishashbangcomment = false;
+    bool isjsxcomment = false;
     bool isselfclosing = false;
     bool wasescape = false;
     bool isxml = false;
@@ -208,8 +212,20 @@ OPERATORS options { testLiterals = true; } {
         // add characters to starttag to create the starting tag
         (options { greedy = true; } :
 
-            // ignore spaces, tabs, and newlines
-            (' ' | '\t' | '\n') { if (wasescape) wasescape = false; } |
+            // ignore spaces and tabs
+            (' ' | '\t') { if (wasescape) wasescape = false; } |
+
+            // ignore newlines
+            ('\n') {
+                if (wasescape)
+                    wasescape = false;
+
+                if (ishashbangcomment)
+                    ishashbangcomment = false;
+
+                if (islinecomment)
+                    islinecomment = false;
+            } |
 
             // ignore strings
             { prevtoken = (char)LA(1); } ('"' | '\'' | '`') {
@@ -222,8 +238,24 @@ OPERATORS options { testLiterals = true; } {
                     stringtoken = prevtoken;
                 }
 
-                if (wasescape) wasescape = false;
+                if (wasescape)
+                    wasescape = false;
             } |
+
+            // ignore JSX comments
+            ('<') { starttag += '<'; } (('!' '-' '-') => '!' '-' '-' { isjsxcomment = true; })? |
+
+            // "-->" will end a JSX comment
+            ('-') { starttag += '-'; } ({ isjsxcomment }? ('-' '>') => '-' '>' { isjsxcomment = false; })? |
+
+            // ignore hashbang comments (e.g., "#! ...")
+            ('#') { starttag += '#'; } ({ !ishashbangcomment }? '!' { ishashbangcomment = true; })? |
+
+            // ignore line comments (e.g., "// ...") and block comments (e.g., "/* ... */")
+            ('/') { starttag += '/'; } ({ !islinecomment }? '/' { islinecomment = true; })? ({ !isblockcomment }? '*' { isblockcomment = true; })? |
+
+            // "*/" will end a block comment
+            ('*') { starttag += '*'; } ({ isblockcomment }? '/' { isblockcomment = false; })? |
 
             // ignore backslashes
             ('\\') { wasescape = true; } |
@@ -231,13 +263,13 @@ OPERATORS options { testLiterals = true; } {
             // ignore equal signs
             ('=') { isarrow = true; if (wasescape) wasescape = false; } |
 
-            { prevtoken = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '\\' | '=') {
+            { prevtoken = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '<' | '-' | '#' | '/' | '*' | '\\' | '=') {
                 // do not end the JSX literal at an arrow (e.g., "=>")
                 if (isarrow && prevtoken != '>')
                     isarrow = false;
 
-                // do not add to dummytag if inside a string
-                if (stringtoken != '\000')
+                // do not add to starttag if inside a string or a comment
+                if (stringtoken != '\000' || islinecomment || isblockcomment || ishashbangcomment || isjsxcomment)
                     continue;
 
                 // add the most recently consumed character to the starting tag (if it is not an arrow)
@@ -259,6 +291,10 @@ OPERATORS options { testLiterals = true; } {
         {
             prevtoken = '\000';
             stringtoken = '\000';
+            islinecomment = false;
+            isblockcomment = false;
+            ishashbangcomment = false;
+            isjsxcomment = false;
             wasescape = false;
 
             // if the starting tag is a self-closing tag, ignore the processing step below
@@ -339,7 +375,7 @@ OPERATORS options { testLiterals = true; } {
                         }
 
                         // found a starting tag
-                        if (dummytag[1] != '/' && dummytag.substr(dummytag.size() - 2) != "/>")
+                        if (dummytag[1] != '/' && dummytag[1] != '!' && dummytag.substr(dummytag.size() - 2) != "/>")
                             ++xmlcount;
 
                         // special case: ending tag with no tag name
@@ -347,7 +383,7 @@ OPERATORS options { testLiterals = true; } {
                             --xmlcount;
 
                         // found an ending tag
-                        else if (dummytag[1] == '/' && dummytag.substr(dummytag.size() - 2) != "/>")
+                        else if (dummytag[1] == '/' && dummytag[1] != '!' && dummytag.substr(dummytag.size() - 2) != "/>")
                             --xmlcount;
 
                         // exit
