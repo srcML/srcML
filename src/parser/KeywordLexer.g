@@ -27,6 +27,7 @@ header "pre_include_cpp" {
 }
 
 header {
+    #include <algorithm>
     #include <string>
     #include <string_view>
     #include <unordered_map>
@@ -388,6 +389,46 @@ tokens {
     JS_WITH;
     JS_YIELD;
     QMARK_PERIOD;
+
+    // Rust
+    RS_ABSTRACT;   
+    RS_AS;  
+    RS_ASYNC; 
+    RS_AWAIT;
+    RS_BECOME;
+    RS_BOX;
+    RS_CONST;
+    RS_CRATE;
+    RS_DYN;
+    RS_FINAL;
+    RS_FN;
+    RS_GEN;
+    RS_IMPL;
+    RS_IN;
+    RS_LET;
+    RS_LOOP;
+    RS_MACRO;
+    RS_MACRO_RULES;
+    RS_MATCH;
+    RS_MOD;
+    RS_MOVE;
+    RS_MUT;
+    RS_OVERRIDE;
+    RS_PRIV;
+    RS_PUB;
+    RS_REF;
+    RS_STATIC;
+    RS_SUPER;
+    RS_TRAIT;
+    RS_TRY;
+    RS_TYPE;
+    RS_TYPEOF;
+    RS_UNSAFE;
+    RS_UNSIZED;
+    RS_USE;
+    RS_VIRTUAL;
+    RS_WHERE;
+    RS_YIELD;
 }
 
 {
@@ -568,12 +609,12 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "pragma"       , PRAGMA         , LANGUAGE_C_FAMILY | LANGUAGE_JAVA },
         { "undef"        , UNDEF          , LANGUAGE_C_FAMILY | LANGUAGE_JAVA },
 
-        { "union"        , UNION          , LANGUAGE_C | LANGUAGE_CXX },
-        { "struct"       , STRUCT         , LANGUAGE_C_FAMILY },
+        { "union"        , UNION          , LANGUAGE_C | LANGUAGE_CXX | LANGUAGE_RUST },
+        { "struct"       , STRUCT         , LANGUAGE_C_FAMILY | LANGUAGE_RUST },
         { "void"         , VOID           , LANGUAGE_ALL },
 
         { "inline"       , INLINE         , LANGUAGE_C_FAMILY },
-        { "extern"       , EXTERN         , LANGUAGE_C_FAMILY },
+        { "extern"       , EXTERN         , LANGUAGE_C_FAMILY | LANGUAGE_RUST },
 
         { "asm"          , ASM            , LANGUAGE_C_FAMILY },
         { "__asm__"      , ASM            , LANGUAGE_C_FAMILY },
@@ -920,6 +961,53 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },
         { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
+
+        // Existing langauge keywords that are names in Rust
+        { "class"        , NAME              , LANGUAGE_RUST },
+        { "private"      , NAME              , LANGUAGE_RUST },
+        { "protected"    , NAME              , LANGUAGE_RUST },
+        { "public"       , NAME              , LANGUAGE_RUST },
+        
+        // Rust Keywords
+        { "abstract"     , RS_ABSTRACT       , LANGUAGE_RUST },
+        { "as"           , RS_AS             , LANGUAGE_RUST },
+        { "async"        , RS_ASYNC          , LANGUAGE_RUST },
+        { "await"        , RS_AWAIT          , LANGUAGE_RUST },
+        { "become"       , RS_BECOME         , LANGUAGE_RUST },
+        { "box"          , RS_BOX            , LANGUAGE_RUST },
+        { "const"        , RS_CONST          , LANGUAGE_RUST },
+        { "crate"        , RS_CRATE          , LANGUAGE_RUST },
+        { "dyn"          , RS_DYN            , LANGUAGE_RUST },
+        { "final"        , RS_FINAL          , LANGUAGE_RUST },
+        { "fn"           , RS_FN             , LANGUAGE_RUST },
+        { "gen"          , RS_GEN            , LANGUAGE_RUST },
+        { "impl"         , RS_IMPL           , LANGUAGE_RUST },
+        { "in"           , RS_IN             , LANGUAGE_RUST },
+        { "let"          , RS_LET            , LANGUAGE_RUST },
+        { "loop"         , RS_LOOP           , LANGUAGE_RUST },
+        { "macro"        , RS_MACRO          , LANGUAGE_RUST },
+        { "macro_rules"  , RS_MACRO_RULES    , LANGUAGE_RUST },
+        { "match"        , RS_MATCH          , LANGUAGE_RUST },
+        { "mod"          , RS_MOD            , LANGUAGE_RUST },
+        { "move"         , RS_MOVE           , LANGUAGE_RUST },
+        { "mut"          , RS_MUT            , LANGUAGE_RUST },
+        { "override"     , RS_OVERRIDE       , LANGUAGE_RUST },
+        { "priv"         , RS_PRIV           , LANGUAGE_RUST },
+        { "pub"          , RS_PUB            , LANGUAGE_RUST },
+        { "ref"          , RS_REF            , LANGUAGE_RUST },
+        { "static"       , RS_STATIC         , LANGUAGE_RUST },
+        { "super"        , RS_SUPER          , LANGUAGE_RUST },
+        { "trait"        , RS_TRAIT          , LANGUAGE_RUST },
+        { "try"          , RS_TRY            , LANGUAGE_RUST },
+        { "type"         , RS_TYPE           , LANGUAGE_RUST },
+        { "typeof"       , RS_TYPEOF         , LANGUAGE_RUST },
+        { "unsafe"       , RS_UNSAFE         , LANGUAGE_RUST },
+        { "unsized"      , RS_UNSIZED        , LANGUAGE_RUST },
+        { "use"          , RS_USE            , LANGUAGE_RUST },
+        { "virtual"      , RS_VIRTUAL        , LANGUAGE_RUST },
+        { "where"        , RS_WHERE          , LANGUAGE_RUST },
+        { "yield"        , RS_YIELD          , LANGUAGE_RUST },
+
    };
 
     // fill up the literals for the language that we are parsing

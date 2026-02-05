@@ -52,6 +52,9 @@ namespace LanguageName {
 
     /** String constant for JavaScript language */
     const char* const LANGUAGE_JAVASCRIPT = "JavaScript";
+
+    /** String constant for Rust language */
+    const char* const LANGUAGE_RUST = "Rust";
 }
 
 /**
@@ -96,6 +99,9 @@ public:
         /** JavaScript language */
         LANGUAGE_JAVASCRIPT = 64,
 
+        /** Rust language */
+        LANGUAGE_RUST = 128,
+
         /** C++ family i.e. C++/C#  */
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
 
@@ -105,11 +111,11 @@ public:
         /** Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA,
 
-        /** Keyword-based language family i.e. Python/JavaScript */
-        LANGUAGE_KEYWORD_FAMILY = LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT,
+        /** Keyword-based language family i.e. Python/JavaScript/Rust */
+        LANGUAGE_KEYWORD_FAMILY = LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT | LANGUAGE_RUST,
 
-        /** Object-Oriented languages i.e. C++/C#/Java/Python/JavaScript */
-        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY | LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT,
+        /** Object-Oriented languages i.e. C++/C#/Java/Python/JavaScript/Rust */
+        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY | LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT | LANGUAGE_RUST,
 
         /** All languages */
         LANGUAGE_ALL = ~0

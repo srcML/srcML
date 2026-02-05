@@ -201,6 +201,10 @@ private:
                 srcMLParser::start_javascript();
                 break;
 
+            case LANGUAGE_RUST:
+                srcMLParser::start_rust();
+                break;
+
             default:
                 srcMLParser::start();
             }

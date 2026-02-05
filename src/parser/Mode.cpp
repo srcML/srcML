@@ -147,3 +147,6 @@ const srcMLState::MODE_TYPE ModeStack::MODE_OBJECT_JS                      (bit(
 const srcMLState::MODE_TYPE ModeStack::MODE_ARRAY_JS                       (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_DECL_JS                        (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_WITH_JS                        (bit(__COUNTER__));
+
+// Rust
+const srcMLState::MODE_TYPE ModeStack::MODE_DECL_STMT_RS (bit(__COUNTER__));

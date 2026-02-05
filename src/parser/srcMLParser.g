@@ -744,6 +744,16 @@ tokens {
     SREGEX_JS;
     SUNDEFINED_JS;
     SYIELD_GENERATOR_STATEMENT;
+
+    // Rust
+    SIMPL;             
+    SINNER_ATTRIBUTE;  
+    SLOOP;             
+    SMACRO_RULES;      
+    SMACRO_DEFN;       
+    SMODULE;           
+    SOUTER_ATTRIBUTE;  
+    STRAIT;            
 }
 
 /*
@@ -1035,6 +1045,13 @@ public:
         temp_array[JS_STATIC_LCURLY]    = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a 'static' declaration from a 'static {}' block
         temp_array[JS_WITH_LPAREN]      = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WITH_JS, 0, nullptr, &srcMLParser::with_lparen_js };  // extra consume for '(' is in the provided rule
         temp_array[JS_YIELD_MULTOPS]    = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
+
+        return temp_array;
+    }
+
+    template <size_t SIZE>
+    constexpr const std::array<Rule, SIZE> getRustRules() {
+        std::array<Rule, SIZE> temp_array;
 
         return temp_array;
     }
@@ -1690,6 +1707,36 @@ javascript_rules[] {
         // in the middle of a statement
         statement_part
 ;
+
+start_rust[] {
+        ++start_count;
+
+        // check for potential statement-start tokens before anything else
+        // rust_statements();
+
+        // if javascript_statements explicitly returns, force another return here so
+        // javascript_rules does not run; applicable for 2+ declaration statements in a row
+        if (processed_statement) {
+            processed_statement = false;
+            return;
+        }
+
+        ENTRY_DEBUG_START
+        ENTRY_DEBUG
+} :
+;
+exception
+catch[...] {
+        CATCH_DEBUG
+
+        // need to consume the token. If we got here because
+        // of an error with EOF token, then call EOF directly
+        if (LA(1) == 1)
+            eof();
+        else
+            consume();
+}
+
 
 /*
   keyword_statements
