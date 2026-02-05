@@ -190,12 +190,19 @@ OPERATORS options { testLiterals = true; } {
     '<' (
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
-            && LA(1) != '!'                   // do not mark JSX comments as JSX literals
+            && LA(1) != '!'                                                  // do not mark JSX comments (e.g., "<!--") as JSX literals
             && (
-                isxml                         // common case: keyword + '<'
-                || lookaheadMinusTwo == '('   // common case: parenthesized JSX tags
-                || lookaheadMinusTwo == '#'   // edge case: the prior code was a hashbang comment
-                || lookaheadMinusTwo == '<'   // edge case: the prior code was a JSX comment
+                isxml                                                        // case: keyword + '<'
+                || lookaheadMinusTwo == '('                                  // case: parenthesized JSX tags
+                || lookaheadMinusTwo == '#'                                  // case: the prior code was a hashbang comment
+                || lookaheadMinusTwo == '<'                                  // case: the prior code was a JSX comment
+                || lookaheadMinusTwo == '='                                  // case: initialization
+                || lookaheadMinusTwo == ','                                  // case: JSX tags in a list (e.g., argument list)
+                || lookaheadMinusTwo == '['                                  // case: first expression in an array
+                || lookaheadMinusTwo == '{'                                  // case: first expression in an object
+                || lookaheadMinusTwo == '?'                                  // case: first expression in a ternary
+                || lookaheadMinusTwo == ':'                                  // case: additional expressions in properties and ternaries
+                || (lookaheadMinusThree == '=' && lookaheadMinusTwo == '>')  // case: first expression in a lambda
             )
         }?
         // add characters to starttag to create the starting tag

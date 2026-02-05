@@ -715,4 +715,38 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>tag</name> <init>= <expr><literal type="jsx">&lt;div&gt;Hello, World!&lt;/div&gt;</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>exampleCall</name><argument_list>(<argument><expr><literal type="jsx">&lt;div&gt;Hello, World!&lt;/div&gt;</literal></expr></argument>, <argument><expr><literal type="jsx">&lt;div&gt;srcML&lt;/div&gt;</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>tags</name> <init>= <expr><array>[<expr><literal type="jsx">&lt;div&gt;Hello, World!&lt;/div&gt;</literal></expr>, <expr><literal type="jsx">&lt;div&gt;srcML&lt;/div&gt;</literal></expr>]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>tags</name> <init>= <expr><object>{
+    <property><expr><name>title</name></expr>: <expr><literal type="jsx">&lt;div&gt;srcML&lt;/div&gt;</literal></expr></property>,
+    <property><expr><name>content</name></expr>: <expr><literal type="jsx">&lt;div&gt;Hello, World!&lt;/div&gt;</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>tags</name> <init>= <expr><object>{
+    <property><expr><literal type="jsx">&lt;h1&gt;title&lt;/h1&gt;</literal></expr>: <expr><literal type="jsx">&lt;div&gt;srcML&lt;/div&gt;</literal></expr></property>,
+    <property><expr><literal type="jsx">&lt;h2&gt;content&lt;/h2&gt;</literal></expr>: <expr><literal type="jsx">&lt;div&gt;Hello, World!&lt;/div&gt;</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><ternary><condition><expr><operator>(</operator><name>num</name> <operator>%</operator> <literal type="number">2</literal> <operator>==</operator> <literal type="number">0</literal><operator>)</operator></expr> ?</condition><then> <expr><literal type="jsx">&lt;div&gt;Even&lt;/div&gt;</literal></expr> </then><else>: <expr><literal type="jsx">&lt;div&gt;Odd&lt;/div&gt;</literal></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>title</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="jsx">&lt;h1&gt;Welcome, {name}!&lt;/h1&gt;</literal></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

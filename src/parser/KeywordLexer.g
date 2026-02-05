@@ -426,6 +426,10 @@ public:
         keywordLookback[8] = (char)LA(1);
     }
 
+    // if LA(1) is the current character, then this was the value of LA(1) three non-whitespace characters ago
+    // Note: excludes newline characters, tabs, and whitespace
+    int lookaheadMinusThree;
+
     // if LA(1) is the current character, then this was the value of LA(1) two non-whitespace characters ago
     // Note: excludes newline characters, tabs, and whitespace
     int lookaheadMinusTwo;
@@ -437,6 +441,7 @@ public:
     // adjust the prior non-whitespace character values
     void updateNonWhitespaceCharacters() {
         if (LA(1) != '\n' && LA(1) != '\t' && LA(1) != ' ') {
+            lookaheadMinusThree = lookaheadMinusTwo;
             lookaheadMinusTwo = lookaheadMinusOne;
             lookaheadMinusOne = LA(1);
         }
