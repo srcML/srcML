@@ -1,0 +1,47 @@
+---
+name: Cache Windows Dependencies
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    environment: build
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Windows
+        uses: microsoft/setup-msbuild@v1.3.1
+
+      - name: Setup vcpkg
+        uses: ./.github/actions/vcpkg
+        with:
+          vcpkg-ref: e140b1fde236eb682b0d47f905e65008a191800f
+          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-bucket: ${{ secrets.R2_BUCKET_NAME }}
+          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+
+      - name: Set up CMake
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: 4.0
+
+      - name: Setup devcmd to use cl.exe
+        uses: ilammy/msvc-dev-cmd@v1.13.0
+
+      - name: Create build directory
+        shell: bash
+        run: |
+          cmake --version
+          mkdir build
+
+      - name: CMake Setup on Windows
+        shell: bash
+        working-directory: build
+        run: |
+          export UseMultiToolTask=true
+          cmake .. --preset ci-msvc
