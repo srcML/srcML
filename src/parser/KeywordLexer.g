@@ -27,6 +27,7 @@ header "pre_include_cpp" {
 }
 
 header {
+    #include <algorithm>
     #include <string>
     #include <string_view>
     #include <unordered_map>
