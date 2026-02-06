@@ -288,10 +288,14 @@ token_set(srcMLParser, insert_terminate_eol_js_token_set,
     srcMLParser::STRING_END, srcMLParser::STRING_START
 )
 
-// token_set(srcMLParser, decl_start_rs_token_set,
-//     // Rust declarations contain one of these keywords
-//     srcMLParser::RS_CONST, srcMLParser::RS_LET, srcMLParser::RS_STATIC
-// )
+token_set(srcMLParser, decl_start_rs_token_set,
+    // Rust declarations contain one of these keywords
+    srcMLParser::RS_CONST, srcMLParser::RS_LET, srcMLParser::RS_STATIC
+)
+
+token_set(srcMLParser, modifier_rs_token_set,
+    srcMLParser::RS_MUT, srcMLParser::REFOPS, srcMLParser::MULTOPS, srcMLParser::RS_LIFETIME
+)
 
 // token_set(srcMLParser, specifier_rs_token_set,
 //     srcMLParser::RS_ASYNC, srcMLParser::RS_DYN, srcMLParser::EXTERN, srcMLParser::RS_MOVE, srcMLParser::RS_MUT srcMLParser::RS_PUB, srcMLParser::RS_UNSAFE

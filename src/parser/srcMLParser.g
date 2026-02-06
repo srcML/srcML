@@ -826,6 +826,8 @@ public:
     static const antlr::BitSet name_differentiator_js_token_set;
     static const antlr::BitSet insert_terminate_js_token_set;
     static const antlr::BitSet insert_terminate_eol_js_token_set;
+    static const antlr::BitSet decl_start_rs_token_set;
+    static const antlr::BitSet modifier_rs_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -1052,6 +1054,20 @@ public:
     template <size_t SIZE>
     constexpr const std::array<Rule, SIZE> getRustRules() {
         std::array<Rule, SIZE> temp_array;
+
+        /* GENERIC STATEMENTS */
+        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[STRUCT]      = { SSTRUCT, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr }; 
+        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::situational_specifiers_js };  // check for "await" or "each" following the "for"
+        temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
+        temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[RS_SWITCH]   = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[TRY]         = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_TRY, 0, nullptr, nullptr };
+        temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         return temp_array;
     }
@@ -1712,7 +1728,7 @@ start_rust[] {
         ++start_count;
 
         // check for potential statement-start tokens before anything else
-        // rust_statements();
+        rust_statements();
 
         // if javascript_statements explicitly returns, force another return here so
         // javascript_rules does not run; applicable for 2+ declaration statements in a row
@@ -1724,6 +1740,7 @@ start_rust[] {
         ENTRY_DEBUG_START
         ENTRY_DEBUG
 } :
+    rust_rules
 ;
 exception
 catch[...] {
@@ -1736,6 +1753,144 @@ catch[...] {
         else
             consume();
 }
+
+rust_statements[] {
+        // For now there are no Rust duplex keywords, may change in the future
+        const size_t RUST_RULES_SIZE = 900;
+        static const std::array<Rule, RUST_RULES_SIZE> rustRules = getRustRules<RUST_RULES_SIZE>();
+
+        // check for start of Rust declaration statement
+        if (decl_start_rs_token_set.member(LA(1))) 
+            declaration_statement_rs();
+}:
+    
+;
+
+rust_rules[] {
+    int call_count = 0;
+    CALL_TYPE type = NOCALL;
+
+    ENTRY_DEBUG
+}:
+
+;
+
+declaration_statement_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            if (!inMode(MODE_DECL_STATEMENT_RS)) {
+                startNewMode(MODE_DECL_STATEMENT_RS);
+                startElement(SDECLARATION_STATEMENT);
+            }
+
+            while (true) {
+                // termination signals end of declaration
+                if (LA(1) == TERMINATE) {
+                    consume();
+                    break;
+                }
+                // 
+                else if (decl_start_rs_token_set.member(LA(1))) {
+                    declaration_rs(LA(1));
+                }
+                else {
+                    break;
+                }
+            }
+        }
+;
+
+declaration_rs[int decl_start_token = -1] { 
+    int type_count = 0;    
+    ENTRY_DEBUG
+} :
+        {
+            startNewMode(MODE_DECL_RS);
+
+            switch (decl_start_token) {
+                case RS_LET:
+                    startElement(SDECLARATION_LET);
+                    break;
+                case RS_CONST:
+                    startElement(SDECLARATION_CONST);
+                    break;
+                case RS_STATIC:
+                    startElement(SDECLARATION_STATIC);
+                    break;
+                default:
+                    startElement(SPARAMETER);
+                    break;
+            }
+        }
+        (RS_LET | RS_CONST | RS_STATIC | compound_name)
+
+        (options { greedy = true; } :
+             // ensure the declaration ends before a termination token or comma
+            { LA(1) == TERMINATE || LA(1) == COMMA }?
+            {
+                break;
+            } |
+            { LA(1) == COLON }? type_rs[type_count] |
+            { modifier_rs_token_set.member(LA(1)) }? modifier_rs |
+            declaration_init_rs | compound_name
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECL_RS)) {
+                endDownToMode(MODE_DECL_RS);
+                endMode(MODE_DECL_RS);
+            }
+        }
+
+;
+
+modifier_rs[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SMODIFIER);
+        }
+        
+        (MULTOPS | REFOPS | RS_MUT | RS_LIFETIME)
+
+;
+
+lifetime_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
+        compound_name
+;
+
+type_rs[int type_count] { CompleteElement element(this); ENTRY_DEBUG } :
+        COLON
+
+        {
+            startNewMode(MODE_LOCAL | MODE_EAT_TYPE);
+            startElement(STYPE);
+        }
+        ( options { greedy = true; } :
+            { modifier_rs_token_set.member(LA(1)) }? modifier_rs |
+            compound_name
+        )*
+        {
+            if (inTransparentMode(MODE_EAT_TYPE)){
+                endDownToMode(MODE_EAT_TYPE);
+                endMode(MODE_EAT_TYPE);
+            }
+        }
+;
+
+declaration_init_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SINIT);
+        }
+
+        EQUAL
+
+        (options { greedy = true; } :
+            { 
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression 
+        )*
+;
 
 
 /*

@@ -406,6 +406,7 @@ tokens {
     RS_IMPL;
     RS_IN;
     RS_LET;
+    RS_LIFETIME;
     RS_LOOP;
     RS_MACRO;
     RS_MACRO_RULES;
@@ -419,6 +420,7 @@ tokens {
     RS_REF;
     RS_STATIC;
     RS_SUPER;
+    RS_SWITCH;
     RS_TRAIT;
     RS_TRY;
     RS_TYPE;
@@ -984,6 +986,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "impl"         , RS_IMPL           , LANGUAGE_RUST },
         { "in"           , RS_IN             , LANGUAGE_RUST },
         { "let"          , RS_LET            , LANGUAGE_RUST },
+        { "'"            , RS_LIFETIME       , LANGUAGE_RUST },
         { "loop"         , RS_LOOP           , LANGUAGE_RUST },
         { "macro"        , RS_MACRO          , LANGUAGE_RUST },
         { "macro_rules"  , RS_MACRO_RULES    , LANGUAGE_RUST },
@@ -997,6 +1000,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "ref"          , RS_REF            , LANGUAGE_RUST },
         { "static"       , RS_STATIC         , LANGUAGE_RUST },
         { "super"        , RS_SUPER          , LANGUAGE_RUST },
+        { "match"        , RS_SWITCH         , LANGUAGE_RUST },
         { "trait"        , RS_TRAIT          , LANGUAGE_RUST },
         { "try"          , RS_TRY            , LANGUAGE_RUST },
         { "type"         , RS_TYPE           , LANGUAGE_RUST },

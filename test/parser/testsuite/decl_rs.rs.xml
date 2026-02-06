@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="decl_simple_rs">
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>x</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>x</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>x</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <modifier>mut</modifier> <name>x</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>x</name>: <type><modfier>&amp;</modifier><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>x</name>: <type><modifier>mut</modifier> <name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>x</name>: <type><modifier>mut</modifier> <modifier>&amp;</modifier><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <modifier>mut</modifier> <name>x</name>: <type><modifier>mut</modifier> <modifier>&amp;</modifier><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="const">const <name>x</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="static">static <name>x</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>
