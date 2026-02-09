@@ -1724,7 +1724,21 @@ javascript_rules[] {
         statement_part
 ;
 
+/*
+    start_rust
+
+    Uses table-based approach to detect and process statement-starting tokens
+
+    Whitespace tokens are handled elsewhere and are automagically included
+    in the output stream.
+
+    Order of evaluation is important.
+*/
 start_rust[] {
+        ENTRY_DEBUG_START
+        ENTRY_DEBUG
+} : {
+
         ++start_count;
 
         // check for potential statement-start tokens before anything else
@@ -1732,14 +1746,11 @@ start_rust[] {
 
         // if javascript_statements explicitly returns, force another return here so
         // javascript_rules does not run; applicable for 2+ declaration statements in a row
-        if (processed_statement) {
-            processed_statement = false;
-            return;
-        }
-
-        ENTRY_DEBUG_START
-        ENTRY_DEBUG
-} :
+        // if (processed_statement) {
+        //     processed_statement = false;
+        //     return;
+        // }
+}
     rust_rules
 ;
 exception
@@ -1754,144 +1765,48 @@ catch[...] {
             consume();
 }
 
+/*
+    rust_statements
+
+    Initializes the table-based approach and checks potential statement tokens for Rust
+*/
 rust_statements[] {
         // For now there are no Rust duplex keywords, may change in the future
         const size_t RUST_RULES_SIZE = 900;
         static const std::array<Rule, RUST_RULES_SIZE> rustRules = getRustRules<RUST_RULES_SIZE>();
-
+        
+        std::cerr << RS_FN << std::endl;
+        std::cerr << LA(1) << std::endl;
+        
         // check for start of Rust declaration statement
         if (decl_start_rs_token_set.member(LA(1))) 
             declaration_statement_rs();
+        
+        if (LA(1) == RS_FN) {
+            bool isDecl = perform_function_declaration_check_rs();
+            if (isDecl) 
+                function_declaration_rs();
+            else 
+                function_definition_rs();
+        }
 }:
     
 ;
 
+/*
+    rust_rules
+
+    Process tokens that do not begin with a statement in Rust
+    Extra logic that differs from the generic start[] grammar
+*/
 rust_rules[] {
     int call_count = 0;
     CALL_TYPE type = NOCALL;
 
     ENTRY_DEBUG
 }:
-
+start
 ;
-
-declaration_statement_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
-        {
-            if (!inMode(MODE_DECL_STATEMENT_RS)) {
-                startNewMode(MODE_DECL_STATEMENT_RS);
-                startElement(SDECLARATION_STATEMENT);
-            }
-
-            while (true) {
-                // termination signals end of declaration
-                if (LA(1) == TERMINATE) {
-                    consume();
-                    break;
-                }
-                // 
-                else if (decl_start_rs_token_set.member(LA(1))) {
-                    declaration_rs(LA(1));
-                }
-                else {
-                    break;
-                }
-            }
-        }
-;
-
-declaration_rs[int decl_start_token = -1] { 
-    int type_count = 0;    
-    ENTRY_DEBUG
-} :
-        {
-            startNewMode(MODE_DECL_RS);
-
-            switch (decl_start_token) {
-                case RS_LET:
-                    startElement(SDECLARATION_LET);
-                    break;
-                case RS_CONST:
-                    startElement(SDECLARATION_CONST);
-                    break;
-                case RS_STATIC:
-                    startElement(SDECLARATION_STATIC);
-                    break;
-                default:
-                    startElement(SPARAMETER);
-                    break;
-            }
-        }
-        (RS_LET | RS_CONST | RS_STATIC | compound_name)
-
-        (options { greedy = true; } :
-             // ensure the declaration ends before a termination token or comma
-            { LA(1) == TERMINATE || LA(1) == COMMA }?
-            {
-                break;
-            } |
-            { LA(1) == COLON }? type_rs[type_count] |
-            { modifier_rs_token_set.member(LA(1)) }? modifier_rs |
-            declaration_init_rs | compound_name
-        )*
-
-        {
-            if (inTransparentMode(MODE_DECL_RS)) {
-                endDownToMode(MODE_DECL_RS);
-                endMode(MODE_DECL_RS);
-            }
-        }
-
-;
-
-modifier_rs[] { SingleElement element(this); ENTRY_DEBUG } :
-        {
-            startElement(SMODIFIER);
-        }
-        
-        (MULTOPS | REFOPS | RS_MUT | RS_LIFETIME)
-
-;
-
-lifetime_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
-        compound_name
-;
-
-type_rs[int type_count] { CompleteElement element(this); ENTRY_DEBUG } :
-        COLON
-
-        {
-            startNewMode(MODE_LOCAL | MODE_EAT_TYPE);
-            startElement(STYPE);
-        }
-        ( options { greedy = true; } :
-            { modifier_rs_token_set.member(LA(1)) }? modifier_rs |
-            compound_name
-        )*
-        {
-            if (inTransparentMode(MODE_EAT_TYPE)){
-                endDownToMode(MODE_EAT_TYPE);
-                endMode(MODE_EAT_TYPE);
-            }
-        }
-;
-
-declaration_init_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
-        {
-            startNewMode(MODE_LOCAL);
-            startElement(SINIT);
-        }
-
-        EQUAL
-
-        (options { greedy = true; } :
-            { 
-                if (!inMode(MODE_EXPRESSION))
-                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-            }
-            expression 
-        )*
-;
-
 
 /*
   keyword_statements
@@ -20597,3 +20512,282 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         rparen[false]
 ;
+
+/*
+    declaration_statement_rs
+
+    Handles a declaration statement in Rust.
+*/
+declaration_statement_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            if (!inMode(MODE_DECL_STATEMENT_RS)) {
+                startNewMode(MODE_DECL_STATEMENT_RS);
+                startElement(SDECLARATION_STATEMENT);
+            }
+
+            while (true) {
+                // termination signals end of declaration
+                if (LA(1) == TERMINATE) {
+                    consume();
+                    break;
+                }
+                // 
+                else if (decl_start_rs_token_set.member(LA(1))) {
+                    declaration_rs(LA(1));
+                }
+                else {
+                    break;
+                }
+            }
+        }
+;
+
+/*
+    declaration_rust
+
+    Handles declarations (parameters, let, const, static) in Rust.
+*/
+declaration_rs[int decl_start_token = -1] { 
+    int type_count = 0;    
+    ENTRY_DEBUG
+} :
+        {
+            startNewMode(MODE_DECL_RS);
+
+            switch (decl_start_token) {
+                case RS_LET:
+                    startElement(SDECLARATION_LET);
+                    break;
+                case RS_CONST:
+                    startElement(SDECLARATION_CONST);
+                    break;
+                case RS_STATIC:
+                    startElement(SDECLARATION_STATIC);
+                    break;
+                default:
+                    startElement(SPARAMETER);
+                    startElement(SDECLARATION);
+                    break;
+            }
+        }
+        (RS_LET | RS_CONST | RS_STATIC | compound_name)
+
+        (options { greedy = true; } :
+             // ensure the declaration ends before a termination token or comma
+            { LA(1) == TERMINATE || LA(1) == COMMA }?
+            {
+                break;
+            } |
+            { LA(1) == COLON }? type_rs[type_count] |
+            { modifier_rs_token_set.member(LA(1)) }? modifier_rs |
+            declaration_init_rs | compound_name
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECL_RS)) {
+                endDownToMode(MODE_DECL_RS);
+                endMode(MODE_DECL_RS);
+            }
+        }
+
+;
+
+/*
+    modifier_rs
+
+    Handles modifiers in Rust.
+*/
+modifier_rs[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SMODIFIER);
+        }
+        
+        (MULTOPS | REFOPS | RS_MUT | RS_LIFETIME)
+
+;
+
+/*
+    lifetime_rs
+
+    Handles lifetime modifiers in Rust.
+*/
+lifetime_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
+        compound_name
+;
+
+/*
+    type_rs
+
+    Handles types in Rust.
+*/
+type_rs[int type_count] { ENTRY_DEBUG } :
+        (COLON | RS_ARROW)
+
+        {
+            startNewMode(MODE_LOCAL | MODE_EAT_TYPE);
+            startElement(STYPE);
+        }
+        ( options { greedy = true; } :
+            { modifier_rs_token_set.member(LA(1)) }? modifier_rs |
+            compound_name
+        )*
+        {
+            if (inTransparentMode(MODE_EAT_TYPE)){
+                endDownToMode(MODE_EAT_TYPE);
+                endMode(MODE_EAT_TYPE);
+            }
+        }
+;
+
+/*
+    declaration_init_rs
+
+    Handles initializations in Rust declarations.
+*/
+declaration_init_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SINIT);
+        }
+
+        EQUAL
+
+        (options { greedy = true; } :
+            { 
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression 
+        )*
+;
+
+/*
+    function_declaration_rs
+*/
+function_declaration_rs[] { 
+    ENTRY_DEBUG 
+} :
+        {
+            startNewMode(MODE_FUNCTION_DECLARATION_RS | MODE_STATEMENT);
+            startElement(SFUNCTION_DECLARATION);
+        }
+
+        RS_FN
+
+        compound_name
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_RS);
+        }
+
+        parameter_list_rs
+
+        ( 
+            type_rs[1]
+        )*
+;
+
+/*
+    function_definition_rs
+*/
+function_definition_rs[] { 
+    ENTRY_DEBUG 
+} :
+        {
+            startNewMode(MODE_FUNCTION_DEFINITION_RS | MODE_STATEMENT | MODE_NEST);
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        RS_FN
+
+        compound_name
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_RS);
+        }
+
+        parameter_list_rs
+
+        ( 
+            type_rs[1]
+        )*
+
+        {
+            startNewMode(MODE_FUNCTION_TAIL);
+        }
+
+        lcurly
+;
+
+/*
+    parameter_list_rs
+
+    Handles parameter lists in Rust.
+*/
+parameter_list_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
+            startElement(SPARAMETER_LIST);
+        }
+
+        LPAREN
+
+        (
+            {
+                if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
+                    endMode();
+            }
+            comma |
+
+            complete_parameter_rs
+            
+        )*
+
+        rparen[false]
+;
+
+complete_parameter_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start parameter
+            startNewMode(MODE_PARAMETER);
+        }
+        declaration_rs
+
+;
+
+/*
+    perform_function_declaration_check_rs
+
+    Searches for semicolon (;) or left curly ({)
+    to determine if it is a function declaration or definition.
+*/
+perform_function_declaration_check_rs[] returns [bool isdecl] {
+        isdecl = false;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                if (LA(1) == LCURLY) {
+                    isdecl = false;
+                    break;
+                }
+
+                if (LA(1) == TERMINATE) {
+                    isdecl = true;
+                    break;
+                }
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;

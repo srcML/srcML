@@ -366,6 +366,15 @@ const static srcMLState::MODE_TYPE MODE_WITH_JS;
 
 /** Rust modes */
 const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_RS;
+
 const static srcMLState::MODE_TYPE MODE_DECL_RS;
+
+const static srcMLState::MODE_TYPE MODE_FUNCTION_RS;
+
+const static srcMLState::MODE_TYPE MODE_FUNCTION_DECLARATION_RS;
+
+const static srcMLState::MODE_TYPE MODE_FUNCTION_DEFINITION_RS;
+
+const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_RS;
 
 #endif

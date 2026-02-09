@@ -391,7 +391,8 @@ tokens {
     QMARK_PERIOD;
 
     // Rust
-    RS_ABSTRACT;   
+    RS_ABSTRACT;  
+    RS_ARROW; 
     RS_AS;  
     RS_ASYNC; 
     RS_AWAIT;
@@ -972,6 +973,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         
         // Rust Keywords
         { "abstract"     , RS_ABSTRACT       , LANGUAGE_RUST },
+        { "->"           , RS_ARROW          , LANGUAGE_RUST },
         { "as"           , RS_AS             , LANGUAGE_RUST },
         { "async"        , RS_ASYNC          , LANGUAGE_RUST },
         { "await"        , RS_AWAIT          , LANGUAGE_RUST },
