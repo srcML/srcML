@@ -99,15 +99,12 @@ OPERATORS options { testLiterals = true; } {
     int start = LA(1);
     int xmlcount = 0;
 
-    char prevtoken = '\000';
-    char stringtoken = '\000';
+    char prevchar = '\000';      // [JavaScript] records previous char before it is consumed
+    char stringtoken = '\000';   // [JavaScript] denotes a string: '"', '\'', or '`'
+    char commenttoken = '\000';  // [JavaScript] denotes a comment: 'l', 'b', 'h', or 'j'
 
     bool ignorenexttoken = false;
     bool isarrow = false;
-    bool islinecomment = false;
-    bool isblockcomment = false;
-    bool ishashbangcomment = false;
-    bool isjsxcomment = false;
     bool isselfclosing = false;
     bool wasescape = false;
     bool isxml = false;
@@ -209,22 +206,20 @@ OPERATORS options { testLiterals = true; } {
                 if (wasescape)
                     wasescape = false;
 
-                if (ishashbangcomment)
-                    ishashbangcomment = false;
-
-                if (islinecomment)
-                    islinecomment = false;
+                // no longer in a hashbang or line comment
+                if (commenttoken == 'h' || commenttoken == 'l')
+                    commenttoken = '\000';
             } |
 
             // ignore strings
-            { prevtoken = (char)LA(1); } ('"' | '\'' | '`') {
+            { prevchar = (char)LA(1); } ('"' | '\'' | '`') {
                 // found closing character for a string
-                if (!wasescape && prevtoken == stringtoken) {
+                if (!wasescape && prevchar == stringtoken) {
                     stringtoken = '\000';
                 }
                 // found starting character for a string
                 else if (!wasescape) {
-                    stringtoken = prevtoken;
+                    stringtoken = prevchar;
                 }
 
                 if (wasescape)
@@ -232,19 +227,19 @@ OPERATORS options { testLiterals = true; } {
             } |
 
             // ignore JSX comments
-            ('<') { starttag += '<'; } (('!' '-' '-') => '!' '-' '-' { isjsxcomment = true; })? |
+            ('<') { starttag += '<'; } (('!' '-' '-') => '!' '-' '-' { commenttoken = 'j'; })? |
 
             // "-->" will end a JSX comment
-            ('-') { starttag += '-'; } ({ isjsxcomment }? ('-' '>') => '-' '>' { isjsxcomment = false; })? |
+            ('-') { starttag += '-'; } ({ commenttoken == 'j' }? ('-' '>') => '-' '>' { commenttoken = '\000'; })? |
 
             // ignore hashbang comments (e.g., "#! ...")
-            ('#') { starttag += '#'; } ({ !ishashbangcomment }? '!' { ishashbangcomment = true; })? |
+            ('#') { starttag += '#'; } ({ commenttoken != 'h' }? '!' { commenttoken = 'h'; })? |
 
             // ignore line comments (e.g., "// ...") and block comments (e.g., "/* ... */")
-            ('/') { starttag += '/'; } ({ !islinecomment }? '/' { islinecomment = true; })? ({ !isblockcomment }? '*' { isblockcomment = true; })? |
+            ('/') { starttag += '/'; } ({ commenttoken != 'l' }? '/' { commenttoken = 'l'; })? ({ commenttoken != 'b' }? '*' { commenttoken = 'b'; })? |
 
             // "*/" will end a block comment
-            ('*') { starttag += '*'; } ({ isblockcomment }? '/' { isblockcomment = false; })? |
+            ('*') { starttag += '*'; } ({ commenttoken == 'b' }? '/' { commenttoken = '\000'; })? |
 
             // ignore backslashes
             ('\\') { wasescape = true; } |
@@ -252,21 +247,21 @@ OPERATORS options { testLiterals = true; } {
             // ignore equal signs
             ('=') { isarrow = true; if (wasescape) wasescape = false; } |
 
-            { prevtoken = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '<' | '-' | '#' | '/' | '*' | '\\' | '=') {
+            { prevchar = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '<' | '-' | '#' | '/' | '*' | '\\' | '=') {
                 // do not end the JSX literal at an arrow (e.g., "=>")
-                if (isarrow && prevtoken != '>')
+                if (isarrow && prevchar != '>')
                     isarrow = false;
 
                 // do not add to starttag if inside a string or a comment
-                if (stringtoken != '\000' || islinecomment || isblockcomment || ishashbangcomment || isjsxcomment)
+                if (stringtoken != '\000' || commenttoken != '\000')
                     continue;
 
                 // add the most recently consumed character to the starting tag (if it is not an arrow)
                 if (!isarrow)
-                    starttag += prevtoken;
+                    starttag += prevchar;
 
                 // '>' indicates the end of the JSX tag
-                if (!wasescape && !isarrow && prevtoken == '>')
+                if (!wasescape && !isarrow && prevchar == '>')
                     break;
 
                 if (isarrow)
@@ -278,12 +273,9 @@ OPERATORS options { testLiterals = true; } {
         )*
 
         {
-            prevtoken = '\000';
+            prevchar = '\000';
             stringtoken = '\000';
-            islinecomment = false;
-            isblockcomment = false;
-            ishashbangcomment = false;
-            isjsxcomment = false;
+            commenttoken = '\000';
             wasescape = false;
 
             // if the starting tag is a self-closing tag, ignore the processing step below
@@ -300,14 +292,14 @@ OPERATORS options { testLiterals = true; } {
 
                 ('\000') |
 
-                { prevtoken = (char)LA(1); } ~('\000') {
+                { prevchar = (char)LA(1); } ~('\000') {
                     // found closing character for a string
-                    if (!wasescape && prevtoken == stringtoken) {
+                    if (!wasescape && prevchar == stringtoken) {
                         stringtoken = '\000';
                     }
                     // found starting character for a string
-                    else if (!wasescape && (prevtoken == '"' || prevtoken == '\'' || prevtoken == '`')) {
-                        stringtoken = prevtoken;
+                    else if (!wasescape && (prevchar == '"' || prevchar == '\'' || prevchar == '`')) {
+                        stringtoken = prevchar;
                     }
 
                     // reset escaped character detection
@@ -315,7 +307,7 @@ OPERATORS options { testLiterals = true; } {
                         wasescape = false;
 
                     // record if the next character will be escaped
-                    if (prevtoken == '\\')
+                    if (prevchar == '\\')
                         wasescape = true;
 
                     // do not add to dummytag if inside a string
@@ -323,17 +315,17 @@ OPERATORS options { testLiterals = true; } {
                         continue;
 
                     // '<' denotes the start of a JSX tag
-                    if (prevtoken == '<')
+                    if (prevchar == '<')
                         recordtag = true;
 
                     // in a JSX tag, but not all content should be recorded
                     if (recordtag) {
                         // ignore '>' from nested tag as to not mess up xmlcount
-                        if (ignorenexttoken && prevtoken == '>') {
+                        if (ignorenexttoken && prevchar == '>') {
                             dummytag += ' ';
                         }
                         // found '<'; only add it to dummytag if there are no other '<'
-                        else if (prevtoken == '<') {
+                        else if (prevchar == '<') {
                             if (std::count(dummytag.begin(), dummytag.end(), '<') == 0) {
                                 dummytag += '<';
                             }
@@ -343,19 +335,19 @@ OPERATORS options { testLiterals = true; } {
                             }
                         }
                         // found '>'; only add it to dummytag if there are no other '>'
-                        else if (prevtoken == '>') {
+                        else if (prevchar == '>') {
                             if (std::count(dummytag.begin(), dummytag.end(), '>') == 0)
                                 dummytag += '>';
                             else
                                 dummytag += ' ';
                         }
                         else {
-                            dummytag += prevtoken;
+                            dummytag += prevchar;
                         }
                     }
 
                     // check if dummytag is a starting tag or ending tag
-                    if (!ignorenexttoken && dummytag.size() > 1 && prevtoken == '>') {
+                    if (!ignorenexttoken && dummytag.size() > 1 && prevchar == '>') {
                         // remove all spaces, tabs, and newline characters from the starting tag
                         if (!dummytag.empty()) {
                             dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), ' '), dummytag.end());
@@ -384,7 +376,7 @@ OPERATORS options { testLiterals = true; } {
                     }
 
                     // reset ignore next '>' detection
-                    if (ignorenexttoken && prevtoken == '>')
+                    if (ignorenexttoken && prevchar == '>')
                         ignorenexttoken = false;
                 }
             )*
