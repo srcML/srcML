@@ -107,7 +107,8 @@ OPERATORS options { testLiterals = true; } {
     bool isarrow = false;
     bool isselfclosing = false;
     bool wasescape = false;
-    bool isxml = false;
+    bool isjsx = false;
+    bool endjsx = false;
     bool recordtag = false;
 
     std::string starttag = "<";
@@ -123,7 +124,7 @@ OPERATORS options { testLiterals = true; } {
         && start == '<'
         && srcMLParser::keyword_expression_pair_js_token_set.member(TokenLookbackJavaScript::lastTokenType())
     ) {
-        isxml = true;
+        isjsx = true;
     }
 } : (
     // # (C++/Python/JavaScript), #! (Python/JavaScript)
@@ -181,7 +182,7 @@ OPERATORS options { testLiterals = true; } {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && LA(1) != '!'                                                  // do not mark JSX comments (e.g., "<!--") as JSX literals
             && (
-                isxml                                                        // case: keyword + '<'
+                isjsx                                                        // case: keyword + '<'
                 || lookaheadMinusTwo == '*'                                  // case: "yield *" syntax
                 || lookaheadMinusTwo == '('                                  // case: parenthesized JSX tags
                 || lookaheadMinusTwo == '#'                                  // case: the prior code was a hashbang comment
@@ -277,45 +278,36 @@ OPERATORS options { testLiterals = true; } {
         }
 
         (
-            // consume tokens until reaching the closing tag (skip this for a self-closing tag)
+            // consume tokens until reaching the closing tag (skip this step for a self-closing tag)
             { !isselfclosing }?
             (options { greedy = true; } :
+                // failsafe to ensure ANTLR-generated version breaks properly
+                { endjsx }? { break; } |
 
-                ('\000') |
+                // skip any escaped characters in the JSX literal
+                ('\\') ~('\000') |
 
-                { prevchar = (char)LA(1); } ~('\000') {
-                    // found closing character for a string
-                    if (!wasescape && prevchar == stringtoken) {
-                        stringtoken = '\000';
-                    }
-                    // found starting character for a string
-                    else if (!wasescape && (prevchar == '"' || prevchar == '\'' || prevchar == '`')) {
-                        stringtoken = prevchar;
-                    }
+                // ignore whitespace and tabs
+                (' ' | '\t') |
 
-                    // reset escaped character detection
-                    wasescape = false;
+                // ignore newline characters (which end hashbang and line comments)
+                ('\n') { if (commenttoken == 'h' || commenttoken == 'l') commenttoken = '\000'; } |
 
-                    // record if the next character will be escaped
-                    if (prevchar == '\\')
-                        wasescape = true;
+                // process string contents separately
+                { stringtoken != '\000' }? ~('\\' | ' ' | '\t' | '\n' | '"' | '\'' | '`') |
 
-                    // do not add to dummytag if inside a string
-                    if (stringtoken != '\000')
-                        continue;
+                // '<' denotes the start of a JSX tag (unless found in a string or comment)
+                { stringtoken == '\000' && commenttoken == '\000' }?
+                (
+                    // always consume '<', but ignore JSX comments
+                    ('<') (('!' '-' '-') => '!' '-' '-' { commenttoken = 'j'; })?
 
-                    // '<' denotes the start of a JSX tag
-                    if (prevchar == '<')
-                        recordtag = true;
+                    {
+                        // only apply this logic if not inside a comment
+                        if (commenttoken == '\000') {
+                            recordtag = true;
 
-                    // in a JSX tag, but not all content should be recorded
-                    if (recordtag) {
-                        // ignore '>' from nested tag as to not mess up xmlcount
-                        if (ignorenexttoken && prevchar == '>') {
-                            dummytag += ' ';
-                        }
-                        // found '<'; only add it to dummytag if there are no other '<'
-                        else if (prevchar == '<') {
+                            // only add '<' to dummytag if there are no other '<'
                             if (std::count(dummytag.begin(), dummytag.end(), '<') == 0) {
                                 dummytag += '<';
                             }
@@ -324,27 +316,26 @@ OPERATORS options { testLiterals = true; } {
                                 ignorenexttoken = true;
                             }
                         }
-                        // found '>'; only add it to dummytag if there are no other '>'
-                        else if (prevchar == '>') {
-                            if (std::count(dummytag.begin(), dummytag.end(), '>') == 0)
-                                dummytag += '>';
-                            else
-                                dummytag += ' ';
-                        }
-                        else {
-                            dummytag += prevchar;
-                        }
+                    }
+                ) |
+
+                // '>' ends the current JSX tag (unless found in a string)
+                { recordtag && stringtoken == '\000' }?
+                ('>') {
+                    // ignore '>' from nested tag as to not mess up xmlcount
+                    if (ignorenexttoken) {
+                        dummytag += ' ';
+                    }
+                    // found '>'; only add it to dummytag if there are no other '>'
+                    else {
+                        if (std::count(dummytag.begin(), dummytag.end(), '>') == 0)
+                            dummytag += '>';
+                        else
+                            dummytag += ' ';
                     }
 
                     // check if dummytag is a starting tag or ending tag
-                    if (!ignorenexttoken && dummytag.size() > 1 && prevchar == '>') {
-                        // remove all spaces, tabs, and newline characters from the starting tag
-                        if (!dummytag.empty()) {
-                            dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), ' '), dummytag.end());
-                            dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), '\t'), dummytag.end());
-                            dummytag.erase(std::remove(dummytag.begin(), dummytag.end(), '\n'), dummytag.end());
-                        }
-
+                    if (!ignorenexttoken && dummytag.size() > 1) {
                         // found a starting tag
                         if (dummytag[1] != '/' && dummytag[1] != '!' && dummytag.substr(dummytag.size() - 2) != "/>")
                             ++xmlcount;
@@ -357,18 +348,57 @@ OPERATORS options { testLiterals = true; } {
                         else if (dummytag[1] == '/' && dummytag[1] != '!' && dummytag.substr(dummytag.size() - 2) != "/>")
                             --xmlcount;
 
-                        // exit
+                        // set a flag to end the JSX literal
                         if (xmlcount == 0)
-                            break;
+                            endjsx = true;
 
                         dummytag.clear();
                         recordtag = false;
                     }
 
                     // reset ignore next '>' detection
-                    if (ignorenexttoken && prevchar == '>')
+                    if (ignorenexttoken)
                         ignorenexttoken = false;
-                }
+
+                    // failsafe to ensure ANTLR-generated version breaks properly
+                    if (endjsx)
+                        break;
+                } |
+
+                // start a string
+                { stringtoken == '\000' }? { prevchar = (char)LA(1); } ('"' | '\'' | '`') { stringtoken = prevchar; } |
+
+                // end a string
+                { LA(1) == stringtoken }? ('"' | '\'' | '`') { stringtoken = '\000'; } |
+
+                // start a comment
+                { commenttoken == '\000' }?
+                (
+                    // ignore hashbang comments (e.g., "#! ...")
+                    ('#') { if (recordtag) dummytag += '#'; } ({ commenttoken != 'h' }? '!' { commenttoken = 'h'; })? |
+
+                    // ignore line comments (e.g., "// ...") and block comments (e.g., "/* ... */")
+                    ('/') { if (recordtag) dummytag += '/'; } ({ commenttoken != 'l' }? '/' { commenttoken = 'l'; })? ({ commenttoken != 'b' }? '*' { commenttoken = 'b'; })?
+                ) |
+
+                // end a comment
+                { commenttoken == 'b' || commenttoken == 'j' }?
+                (
+                    // "-->" will end a JSX comment
+                    ('-') { if (recordtag) dummytag += '-'; } ({ commenttoken == 'j' }? ('-' '>') => '-' '>' { commenttoken = '\000'; })? |
+
+                    // "*/" will end a block comment
+                    ('*') { if (recordtag) dummytag += '*'; } ({ commenttoken == 'b' }? '/' { commenttoken = '\000'; })?
+                ) |
+
+                // process comment contents separately
+                { commenttoken != '\000' }? ~('\\' | ' ' | '\t' | '\n' | '-' | '*') |
+
+                // do not record characters that are outside of a tag
+                { !recordtag }? ~('\\' | '<' | ' ' | '\t' | '\n') |
+
+                // record the main content in a JSX literal
+                { recordtag }? { prevchar = (char)LA(1); } ~('\\' | '<' | '>' | ' ' | '\t' | '\n') { dummytag += prevchar; }
             )*
         )?
         { $setType(JS_JSX_LITERAL); } |

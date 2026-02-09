@@ -793,9 +793,6 @@
 )</argument_list></call></expr></expr_stmt>
 </unit>
 
-<!-- These tests will crash srcML, so they are commented out until they are fixed -->
-
-<!--
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name>render</name><argument_list>(
   <argument><expr><literal type="jsx">&lt;App&gt;
@@ -804,9 +801,7 @@
   &lt;/App&gt;</literal></expr></argument>,
 )</argument_list></call></expr></expr_stmt>
 </unit>
--->
 
-<!--
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name>render</name><argument_list>(
   <argument><expr><literal type="jsx">&lt;App&gt;
@@ -815,9 +810,7 @@
   &lt;/App&gt;</literal></expr></argument>,
 )</argument_list></call></expr></expr_stmt>
 </unit>
--->
 
-<!--
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name>render</name><argument_list>(
   <argument><expr><literal type="jsx">&lt;App&gt;
@@ -826,9 +819,7 @@
   &lt;/App&gt;</literal></expr></argument>,
 )</argument_list></call></expr></expr_stmt>
 </unit>
--->
 
-<!--
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name>render</name><argument_list>(
   <argument><expr><literal type="jsx">&lt;App&gt;
@@ -837,6 +828,5 @@
   &lt;/App&gt;</literal></expr></argument>,
 )</argument_list></call></expr></expr_stmt>
 </unit>
--->
 
 </unit>
