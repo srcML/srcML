@@ -199,12 +199,11 @@ OPERATORS options { testLiterals = true; } {
         (options { greedy = true; } :
 
             // ignore spaces and tabs
-            (' ' | '\t') { if (wasescape) wasescape = false; } |
+            (' ' | '\t') { wasescape = false; } |
 
             // ignore newlines
             ('\n') {
-                if (wasescape)
-                    wasescape = false;
+                wasescape = false;
 
                 // no longer in a hashbang or line comment
                 if (commenttoken == 'h' || commenttoken == 'l')
@@ -222,36 +221,31 @@ OPERATORS options { testLiterals = true; } {
                     stringtoken = prevchar;
                 }
 
-                if (wasescape)
-                    wasescape = false;
+                wasescape = false;
             } |
 
             // ignore JSX comments
-            ('<') { starttag += '<'; } (('!' '-' '-') => '!' '-' '-' { commenttoken = 'j'; })? |
+            ('<') { starttag += '<'; wasescape = false; } (('!' '-' '-') => '!' '-' '-' { commenttoken = 'j'; })? |
 
             // "-->" will end a JSX comment
-            ('-') { starttag += '-'; } ({ commenttoken == 'j' }? ('-' '>') => '-' '>' { commenttoken = '\000'; })? |
+            ('-') { starttag += '-'; wasescape = false; } ({ commenttoken == 'j' }? ('-' '>') => '-' '>' { commenttoken = '\000'; })? |
 
             // ignore hashbang comments (e.g., "#! ...")
-            ('#') { starttag += '#'; } ({ commenttoken != 'h' }? '!' { commenttoken = 'h'; })? |
+            ('#') { starttag += '#'; wasescape = false; } ({ commenttoken != 'h' }? '!' { commenttoken = 'h'; })? |
 
             // ignore line comments (e.g., "// ...") and block comments (e.g., "/* ... */")
-            ('/') { starttag += '/'; } ({ commenttoken != 'l' }? '/' { commenttoken = 'l'; })? ({ commenttoken != 'b' }? '*' { commenttoken = 'b'; })? |
+            ('/') { starttag += '/'; wasescape = false; } ({ commenttoken != 'l' }? '/' { commenttoken = 'l'; })? ({ commenttoken != 'b' }? '*' { commenttoken = 'b'; })? |
 
             // "*/" will end a block comment
-            ('*') { starttag += '*'; } ({ commenttoken == 'b' }? '/' { commenttoken = '\000'; })? |
+            ('*') { starttag += '*'; wasescape = false; } ({ commenttoken == 'b' }? '/' { commenttoken = '\000'; })? |
 
             // ignore backslashes
             ('\\') { wasescape = true; } |
 
-            // ignore equal signs
-            ('=') { isarrow = true; if (wasescape) wasescape = false; } |
+            // ignore arrows (e.g., "=>")
+            ('=') { starttag += '='; wasescape = false; } ({ !isarrow }? '>' { isarrow = true; })? |
 
             { prevchar = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '<' | '-' | '#' | '/' | '*' | '\\' | '=') {
-                // do not end the JSX literal at an arrow (e.g., "=>")
-                if (isarrow && prevchar != '>')
-                    isarrow = false;
-
                 // do not add to starttag if inside a string or a comment
                 if (stringtoken != '\000' || commenttoken != '\000')
                     continue;
@@ -264,11 +258,8 @@ OPERATORS options { testLiterals = true; } {
                 if (!wasescape && !isarrow && prevchar == '>')
                     break;
 
-                if (isarrow)
-                    isarrow = false;
-
-                if (wasescape)
-                    wasescape = false;
+                isarrow = false;
+                wasescape = false;
             }
         )*
 
@@ -303,8 +294,7 @@ OPERATORS options { testLiterals = true; } {
                     }
 
                     // reset escaped character detection
-                    if (wasescape)
-                        wasescape = false;
+                    wasescape = false;
 
                     // record if the next character will be escaped
                     if (prevchar == '\\')
