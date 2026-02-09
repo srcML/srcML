@@ -36,6 +36,7 @@ header {
     #include <antlr/TokenStreamSelector.hpp>
     #include <CommentTextLexer.hpp>
     #include <srcMLToken.hpp>
+    #include <TextTokenFilter.hpp>
     #undef CONST
     #undef VOID
     #undef DELETE

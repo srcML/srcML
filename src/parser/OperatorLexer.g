@@ -15,6 +15,7 @@ header {
 #endif
 
    #include <iostream>
+   #include <TextTokenFilter.hpp>
 }
 
 options {
@@ -126,6 +127,9 @@ OPERATORS options { testLiterals = true; } {
         // convert newlines and tabs into spaces
         std::replace(keyword.begin(), keyword.end(), '\n', ' ');
         std::replace(keyword.begin(), keyword.end(), '\t', ' ');
+
+        // Use to check previous token. Does not include comments or whitespace
+        // TextTokenFilter::lastTokenType();
 
         // if any of these keywords are found, then '<' starts a JSX literal
         if (
