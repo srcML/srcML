@@ -15,7 +15,6 @@ header {
 #endif
 
    #include <iostream>
-   #include <TextTokenFilter.hpp>
 }
 
 options {
@@ -114,36 +113,21 @@ OPERATORS options { testLiterals = true; } {
     bool isxml = false;
     bool recordtag = false;
 
-    std::string keyword;
     std::string starttag = "<";
     std::string dummytag;
 
     // update the previous two non-whitespace characters
     this->updateNonWhitespaceCharacters();
 
-    if (inLanguage(LANGUAGE_JAVASCRIPT) && start == '<') {
-        keyword = keywordLookback;
-
-        // convert newlines and tabs into spaces
-        std::replace(keyword.begin(), keyword.end(), '\n', ' ');
-        std::replace(keyword.begin(), keyword.end(), '\t', ' ');
-
-        // Use to check previous token. Does not include comments or whitespace
-        // TextTokenFilter::lastTokenType();
-
-        // if any of these keywords are found, then '<' starts a JSX literal
-        if (
-            keyword.find(" as ") != std::string::npos || keyword.find(" case ") != std::string::npos
-            || keyword.find(" default ") != std::string::npos || keyword.find(" export ") != std::string::npos
-            || keyword.find(" in ") != std::string::npos || keyword.find(" of ") != std::string::npos
-            || keyword.find(" return ") != std::string::npos || keyword.find(" throw ") != std::string::npos
-            || keyword.find(" yield ") != std::string::npos || keyword.find(" yield* ") != std::string::npos
-        ) {
-            isxml = true;
-        }
+    // if the previous token is a keyword that can contain one or more expressions
+    // afterward (e.g., "as", "return", etc.), then '<' starts a JSX literal
+    if (
+        inLanguage(LANGUAGE_JAVASCRIPT)
+        && start == '<'
+        && srcMLParser::keyword_expression_pair_js_token_set.member(TokenLookbackJavaScript::lastTokenType())
+    ) {
+        isxml = true;
     }
-
-    this->recordCurrentCharacter();
 } : (
     // # (C++/Python/JavaScript), #! (Python/JavaScript)
     '#' (
@@ -201,6 +185,7 @@ OPERATORS options { testLiterals = true; } {
             && LA(1) != '!'                                                  // do not mark JSX comments (e.g., "<!--") as JSX literals
             && (
                 isxml                                                        // case: keyword + '<'
+                || lookaheadMinusTwo == '*'                                  // case: "yield *" syntax
                 || lookaheadMinusTwo == '('                                  // case: parenthesized JSX tags
                 || lookaheadMinusTwo == '#'                                  // case: the prior code was a hashbang comment
                 || lookaheadMinusTwo == '<'                                  // case: the prior code was a JSX comment

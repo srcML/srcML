@@ -36,7 +36,7 @@ header {
     #include <antlr/TokenStreamSelector.hpp>
     #include <CommentTextLexer.hpp>
     #include <srcMLToken.hpp>
-    #include <TextTokenFilter.hpp>
+    #include <TokenLookbackJavaScript.hpp>
     #undef CONST
     #undef VOID
     #undef DELETE
@@ -415,18 +415,6 @@ public:
     }
 
     int getLastToken() const { return lastnonspacetoken; }
-
-    // special string that represents the previous nine read characters
-    std::string keywordLookback = {'\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'};
-
-    // updates the keyword string by adding the newest character to the end of the string,
-    // pushing all other characters backward (or, "up" the string in terms of indices)
-    void recordCurrentCharacter() {
-        keywordLookback = keywordLookback.substr(1, 8);
-        keywordLookback.resize(9, '\0');
-
-        keywordLookback[8] = (char)LA(1);
-    }
 
     // if LA(1) is the current character, then this was the value of LA(1) three non-whitespace characters ago
     // Note: excludes newline characters, tabs, and whitespace

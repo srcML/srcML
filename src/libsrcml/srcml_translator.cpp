@@ -36,7 +36,7 @@
 #include <NameDifferentiatorPython.hpp>
 #include <NewlineTerminateJavaScript.hpp>
 #include <NameDifferentiatorJavaScript.hpp>
-#include <TextTokenFilter.hpp>
+#include <TokenLookbackJavaScript.hpp>
 
 using namespace ::std::literals::string_view_literals;
 
@@ -148,9 +148,8 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
         selector.select(&lexer);
 
         if (getLanguage() == LANGUAGE_JAVASCRIPT) {
-
             // records last non-skip token
-            TextTokenFilter monitor(selector);
+            TokenLookbackJavaScript monitor(selector);
 
             // intermediate token stage
             NameDifferentiatorJavaScript differentiator(monitor);
