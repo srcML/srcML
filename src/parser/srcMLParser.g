@@ -5524,6 +5524,15 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
         RCURLY
 
         {
+            // ensure JavaScript expression blocks end here (except at the end of objects)
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && inMode(MODE_EXPRESSION_BLOCK)
+                && lcurly_types_js.back() != 'o'
+                && bracket_types_js.back() != "oLCURLY"
+            )
+                endMode(MODE_EXPRESSION_BLOCK);
+
             // end the current mode for the block; do not end more than one since they may be nested
             if (!inLanguage(LANGUAGE_JAVASCRIPT)) {
                 endMode(MODE_TOP);
@@ -5531,6 +5540,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
             // special case for JavaScript function expressions enclosed in operator or call parentheses
             else if (
                 inLanguage(LANGUAGE_JAVASCRIPT)
+                && !inMode(MODE_LAMBDA_JS)
                 && inTransparentMode(MODE_FUNCTION_EXPRESSION_JS)
                 && (LA(1) == RPAREN && next_token() != LPAREN)
                 && (lparen_types_js.back() == 'o' || lparen_types_js.back() == 'c')
@@ -5539,10 +5549,16 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
                 endMode(MODE_FUNCTION_EXPRESSION_JS);
                 rparen(true);
             }
-            // end the mode unless dealing with JavaScript lambdas that are inside a call or object
-            else {
-                if (LA(1) != COMMA && (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c'))
-                    endMode(MODE_TOP);
+            // end the mode unless (except for JavaScript lambdas that are inside a call or at the end of an object)
+            else if (
+                !inLanguage(LANGUAGE_JAVASCRIPT)
+                || (
+                    LA(1) != COMMA
+                    && (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c')
+                    && (!inMode(MODE_EXPRESSION_BLOCK) || lcurly_types_js.back() != 'o' || bracket_types_js.back() != "oLCURLY")
+                )
+            ) {
+                endMode(MODE_TOP);
             }
 
             // special case to close RPAREN for JavaScript lambdas that are inside a call
