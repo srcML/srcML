@@ -149,6 +149,13 @@ OPERATORS options { testLiterals = true; } {
         { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) != '!' }?
             NAME { $setType(NAME); } |
 
+        // Marks the start of an attribute in Rust
+        { inLanguage(LANGUAGE_RUST) && LA(1) == '!' && LA(2) == '['}?
+            '!' '[' { $setType(RS_INNER_ATTRIBUTE); } |
+
+        { inLanguage(LANGUAGE_RUST) && LA(1) == '['}?
+            '[' { $setType(RS_OUTER_ATTRIBUTE); } |
+
         { startline }?
             {
                 $setType(PREPROC);

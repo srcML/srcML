@@ -406,6 +406,7 @@ tokens {
     RS_GEN;
     RS_IMPL;
     RS_IN;
+    RS_INNER_ATTRIBUTE;
     RS_LET;
     RS_LIFETIME;
     RS_LOOP;
@@ -415,6 +416,7 @@ tokens {
     RS_MOD;
     RS_MOVE;
     RS_MUT;
+    RS_OUTER_ATTRIBUTE;
     RS_OVERRIDE;
     RS_PRIV;
     RS_PUB;
@@ -987,6 +989,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "gen"          , RS_GEN            , LANGUAGE_RUST },
         { "impl"         , RS_IMPL           , LANGUAGE_RUST },
         { "in"           , RS_IN             , LANGUAGE_RUST },
+        { "#!["          , RS_INNER_ATTRIBUTE, LANGUAGE_RUST },
         { "let"          , RS_LET            , LANGUAGE_RUST },
         { "'"            , RS_LIFETIME       , LANGUAGE_RUST },
         { "loop"         , RS_LOOP           , LANGUAGE_RUST },
@@ -996,6 +999,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "mod"          , RS_MOD            , LANGUAGE_RUST },
         { "move"         , RS_MOVE           , LANGUAGE_RUST },
         { "mut"          , RS_MUT            , LANGUAGE_RUST },
+        { "#["           , RS_OUTER_ATTRIBUTE, LANGUAGE_RUST },
         { "override"     , RS_OVERRIDE       , LANGUAGE_RUST },
         { "priv"         , RS_PRIV           , LANGUAGE_RUST },
         { "pub"          , RS_PUB            , LANGUAGE_RUST },

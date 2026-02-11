@@ -828,6 +828,8 @@ public:
     static const antlr::BitSet insert_terminate_eol_js_token_set;
     static const antlr::BitSet decl_start_rs_token_set;
     static const antlr::BitSet modifier_rs_token_set;
+    static const antlr::BitSet outer_attribute_statement_rs_token_set;
+    static const antlr::BitSet specifier_rs_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -922,6 +924,10 @@ public:
         while (LA(1) == PY_ATSIGN) {
             attribute_py();
         }
+
+        while (LA(1) == RS_OUTER_ATTRIBUTE) {
+            outer_attribute_rs();
+        }
     }
 
     void handleSpecifiers() {
@@ -934,6 +940,10 @@ public:
         while (!inTransparentMode(MODE_EXPORT_JS) && check_valid_specifier_js()) {
             specifier_js();
         }
+
+        // while (check_valid_specifier_rs()) {
+        //     specifier_rs();
+        // }
     }
 
     template <size_t SIZE>
@@ -1775,13 +1785,31 @@ rust_statements[] {
         const size_t RUST_RULES_SIZE = 900;
         static const std::array<Rule, RUST_RULES_SIZE> rustRules = getRustRules<RUST_RULES_SIZE>();
         
-        std::cerr << RS_FN << std::endl;
-        std::cerr << LA(1) << std::endl;
-        
-        // check for start of Rust declaration statement
-        if (decl_start_rs_token_set.member(LA(1))) 
-            declaration_statement_rs();
-        
+        if (LA(1) == RS_OUTER_ATTRIBUTE) {
+            int post_attribute_token = perform_post_attribute_check_rs();
+            std::cerr << post_attribute_token << std::endl;
+            std::cerr << RS_LET << std::endl;
+            // check for start of Rust declaration statement
+            if (decl_start_rs_token_set.member(post_attribute_token)) 
+                declaration_statement_rs();
+            
+            if (post_attribute_token == RS_FN) {
+                bool isDecl = perform_function_declaration_check_rs();
+                if (isDecl) 
+                    function_declaration_rs();
+                else 
+                    function_definition_rs();
+            }
+
+            if (post_attribute_token == STRUCT) {
+                const auto& rule = rustRules[post_attribute_token];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
+            }
+        }
+
         if (LA(1) == RS_FN) {
             bool isDecl = perform_function_declaration_check_rs();
             if (isDecl) 
@@ -1789,6 +1817,9 @@ rust_statements[] {
             else 
                 function_definition_rs();
         }
+
+        if (decl_start_rs_token_set.member(LA(1))) 
+            declaration_statement_rs();
 }:
     
 ;
@@ -1805,7 +1836,14 @@ rust_rules[] {
 
     ENTRY_DEBUG
 }:
-start
+
+        inner_attribute_rs |
+
+        { inMode(MODE_CONDITION) }? condition_rs |
+
+        { inMode(MODE_CLASS) | LA(1) == STRUCT }? struct_rs |
+
+        start
 ;
 
 /*
@@ -6295,6 +6333,13 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                 || inLanguage(LANGUAGE_PYTHON)
             )
                 markup_comma = false;
+
+            if (
+                inLanguage(LANGUAGE_RUST) 
+                && (inTransparentMode(MODE_INNER_ATTRIBUTE_RS) || inTransparentMode(MODE_OUTER_ATTRIBUTE_RS))
+            ) 
+                markup_comma = false;
+
         }
 
         comma_marked[markup_comma]
@@ -20531,6 +20576,8 @@ declaration_statement_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
                     consume();
                     break;
                 }
+                else if (LA(1) == RS_OUTER_ATTRIBUTE) 
+                    outer_attribute_rs();
                 // 
                 else if (decl_start_rs_token_set.member(LA(1))) {
                     declaration_rs(LA(1));
@@ -20672,6 +20719,10 @@ function_declaration_rs[] {
             startElement(SFUNCTION_DECLARATION);
         }
 
+        (
+            outer_attribute_rs
+        )*
+
         RS_FN
 
         compound_name
@@ -20697,6 +20748,10 @@ function_definition_rs[] {
             startNewMode(MODE_FUNCTION_DEFINITION_RS | MODE_STATEMENT | MODE_NEST);
             startElement(SFUNCTION_DEFINITION);
         }
+
+        (
+            outer_attribute_rs
+        )*
 
         RS_FN
 
@@ -20791,3 +20846,180 @@ perform_function_declaration_check_rs[] returns [bool isdecl] {
 
         ENTRY_DEBUG
 } :;
+
+/*
+    perform_post_attribute_check_rs
+
+    Checks for the next token after an outer attribute in Rust
+    If there are multiple outer attributes, it returns the 
+    next token after the last attribute
+*/
+perform_post_attribute_check_rs[] returns [int keyword] {
+        keyword = -1;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                consume();
+
+                if (outer_attribute_statement_rs_token_set.member(LA(1)) 
+                    || specifier_rs_token_set.member(LA(1))
+                    || LA(1) == 1 /* eof */
+                ) {
+                    keyword = LA(1);
+                    break;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+    perform_post_specifer_check_rs
+
+    Checks for the next token after a specifier in Rust
+    If there are multiple outer specifers, it returns the 
+    next token after the last specifier
+*/
+perform_post_specifier_check_rs[] returns [int keyword] {
+        keyword = -1;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                consume();
+
+                if (outer_attribute_statement_rs_token_set.member(LA(1)) 
+                    || LA(1) == 1 /* eof */
+                ) {
+                    keyword = LA(1);
+                    break;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+    inner_attribute_rs
+
+    Handles inner attributes in Rust.
+    Inner attributes start with #![ and are "statements",
+    unlike outer attributes which are subelements
+*/
+inner_attribute_rs[] { 
+    CompleteElement element(this);
+    ENTRY_DEBUG 
+} :
+        {
+            startNewMode(MODE_INNER_ATTRIBUTE_RS);
+            startNewMode(MODE_LIST | MODE_EXPECT | MODE_EXPRESSION);
+            startElement(SINNER_ATTRIBUTE);
+        }
+
+        RS_INNER_ATTRIBUTE
+
+        (options { greedy = true; } :
+            expression |
+            comma
+        )*
+
+        {
+            if (inMode(MODE_EXPRESSION)) {
+                endDownToMode(MODE_EXPRESSION);
+                endMode(MODE_EXPRESSION);
+            }
+        }
+
+        RBRACKET
+
+        {
+            endDownToMode(MODE_INNER_ATTRIBUTE_RS);
+            endMode(MODE_INNER_ATTRIBUTE_RS);
+        }
+
+;
+
+/*
+    outer_attribute_rs
+
+    Handles single outer attribute in Rust
+*/
+outer_attribute_rs[] { 
+    CompleteElement element(this);    
+    ENTRY_DEBUG 
+} :
+        {
+            startNewMode(MODE_OUTER_ATTRIBUTE_RS | MODE_LIST | MODE_EXPECT | MODE_EXPRESSION);
+            startElement(SOUTER_ATTRIBUTE);
+        }
+
+        RS_OUTER_ATTRIBUTE
+
+        (options { greedy = true; } :
+            expression |
+            comma
+        )*
+
+        {
+            if (inMode(MODE_EXPRESSION)) {
+                endDownToMode(MODE_EXPRESSION);
+                endMode(MODE_EXPRESSION);
+            }
+        }
+
+        RBRACKET
+
+        {
+            endDownToMode(MODE_OUTER_ATTRIBUTE_RS);
+            endMode(MODE_OUTER_ATTRIBUTE_RS);
+        }
+
+;
+
+/*
+    struct_rs
+
+    Hanldles structs in Rust
+*/
+struct_rs[] { ENTRY_DEBUG } :
+        {
+            startElement(SSTRUCT);
+        }
+
+        STRUCT
+;
+
+/* 
+    condition_rs
+
+    Handle conditions in Rust
+*/
+condition_rs[] { ENTRY_DEBUG } :
+        
+        {
+            startElement(SCONDITION);
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST);
+        }
+
+        expression
+
+;

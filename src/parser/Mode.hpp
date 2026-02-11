@@ -377,4 +377,8 @@ const static srcMLState::MODE_TYPE MODE_FUNCTION_DEFINITION_RS;
 
 const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_RS;
 
+const static srcMLState::MODE_TYPE MODE_INNER_ATTRIBUTE_RS;
+
+const static srcMLState::MODE_TYPE MODE_OUTER_ATTRIBUTE_RS;
+
 #endif

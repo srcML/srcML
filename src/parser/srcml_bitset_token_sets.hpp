@@ -297,8 +297,14 @@ token_set(srcMLParser, modifier_rs_token_set,
     srcMLParser::RS_MUT, srcMLParser::REFOPS, srcMLParser::MULTOPS, srcMLParser::RS_LIFETIME
 )
 
-// token_set(srcMLParser, specifier_rs_token_set,
-//     srcMLParser::RS_ASYNC, srcMLParser::RS_DYN, srcMLParser::EXTERN, srcMLParser::RS_MOVE, srcMLParser::RS_MUT srcMLParser::RS_PUB, srcMLParser::RS_UNSAFE
-// )
+token_set(srcMLParser, specifier_rs_token_set,
+    srcMLParser::RS_ASYNC, srcMLParser::RS_DYN, srcMLParser::EXTERN, srcMLParser::RS_MOVE, srcMLParser::RS_MUT, srcMLParser::RS_PUB, srcMLParser::RS_UNSAFE
+)
+
+token_set(srcMLParser, outer_attribute_statement_rs_token_set,
+    // Keywords that denote the start of a statement that can have outer attributes
+    srcMLParser::RS_CONST, srcMLParser::RS_LET, srcMLParser::RS_STATIC,
+    srcMLParser::RS_FN, srcMLParser::STRUCT, srcMLParser::RS_IMPL, srcMLParser::RS_TRAIT
+)
 
 #endif
