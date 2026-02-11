@@ -1003,37 +1003,37 @@ public:
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
-        temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
-        temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
-        temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
-        temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };
-        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::situational_specifiers_js };  // check for "await" or "each" following the "for"
-        temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
+        temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
+        temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };
+        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::situational_specifiers_js };  // check for "await" or "each" following the "for"
+        temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
         temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[TRY]         = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_TRY, 0, nullptr, nullptr };
-        temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[TRY]         = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_TRY, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };
+        temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         /* JAVASCRIPT STATEMENTS */
-        temp_array[JS_CONSTRUCTOR] = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_PARAMETER_LIST_JS, nullptr, nullptr };
+        temp_array[JS_CONSTRUCTOR] = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
         temp_array[JS_DEBUGGER]    = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
         temp_array[JS_EXPORT]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT | MODE_EXPORT_JS, MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[JS_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
-        temp_array[JS_GET]         = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_GET]         = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_IMPORT]      = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_IMPORT_JS, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
-        temp_array[JS_SET]         = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_SET]         = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* DUPLEX KEYWORDS */
-        temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
-        temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };  // extra consume for 'if'
-        temp_array[JS_FUNCTION_MULTOPS] = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume for '*'
-        temp_array[JS_GET_LBRACKET]     = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
-        temp_array[JS_SET_LBRACKET]     = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
-        temp_array[JS_STATIC_LCURLY]    = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a 'static' declaration from a 'static {}' block
+        temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
+        temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };  // extra consume for 'if'
+        temp_array[JS_FUNCTION_MULTOPS] = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume for '*'
+        temp_array[JS_GET_LBRACKET]     = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
+        temp_array[JS_SET_LBRACKET]     = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
+        temp_array[JS_STATIC_LCURLY]    = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a 'static' declaration from a 'static {}' block
         temp_array[JS_WITH_LPAREN]      = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WITH_JS, 0, nullptr, &srcMLParser::with_lparen_js };  // extra consume for '(' is in the provided rule
         temp_array[JS_YIELD_MULTOPS]    = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
 
@@ -1669,6 +1669,7 @@ javascript_rules[] {
                 && !inTransparentMode(MODE_ARGUMENT | MODE_EXPECT)
             )
             || inTransparentMode(MODE_ANONYMOUS)
+            || inMode(MODE_LCURLY_BLOCK_JS)
         }?
         lcurly |
 
@@ -5538,11 +5539,20 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
                 endMode(MODE_FUNCTION_EXPRESSION_JS);
                 rparen(true);
             }
-            // special case for JavaScript lambdas that are inside a call or object
+            // end the mode unless dealing with JavaScript lambdas that are inside a call or object
             else {
                 if (LA(1) != COMMA && (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c'))
                     endMode(MODE_TOP);
             }
+
+            // special case to close RPAREN for JavaScript lambdas that are inside a call
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && waslambda
+                && LA(1) == RPAREN
+                && lparen_types_js.back() == 'c'
+            )
+                rparen(true);
         }
 ;
 
@@ -6311,6 +6321,12 @@ condition[] { ENTRY_DEBUG } :
 
             // mark the condition mode as the one to stop at a right parentheses; non-empty conditions contain an expression
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            // lparen starts a condition
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                lparen_types_js.emplace_back('n');  // condition LPAREN
+                bracket_types_js.emplace_back("nLPAREN");
+            }
         }
 
         LPAREN
@@ -12208,6 +12224,15 @@ rparen[bool markup = true, bool end_control_incr = false] {
 
                         break;
 
+                    // found JavaScript rparen that ends a condition
+                    case 'n':
+                        lparen_types_js.pop_back();
+
+                        if (bracket_types_js.back() == "nLPAREN")
+                            bracket_types_js.back().pop_back();
+
+                        break;
+
                     // found JavaScript operator rparen; force it to be marked as such
                     case 'o':
                         lparen_types_js.pop_back();
@@ -12263,7 +12288,10 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     endMode(MODE_CONDITION);
 
                     // then part of the if statement (after the condition)
-                    startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
+                    if (inLanguage(LANGUAGE_JAVASCRIPT))
+                        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN | MODE_LCURLY_BLOCK_JS);
+                    else
+                        startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
 
                     // Commented-out code
                     // start the then element
@@ -18642,6 +18670,12 @@ for_control_js[] { ENTRY_DEBUG } :
         {
             assertMode(MODE_FOR_CONTROL_JS | MODE_EXPECT);
             startElement(SCONTROL);
+
+            // lparen starts a condition
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                lparen_types_js.emplace_back('n');  // condition LPAREN
+                bracket_types_js.emplace_back("nLPAREN");
+            }
         }
 
         LPAREN
@@ -18663,8 +18697,16 @@ for_control_js[] { ENTRY_DEBUG } :
         }
 
         {
-            // "for...of" loop must end after the initialization
+            // "for...in" and "for...of" loops must end after the initialization
             if (LA(1) != TERMINATE) {
+                // found JavaScript rparen that ends a condition
+                if (LA(1) == RPAREN && lparen_types_js.back() == 'n') {
+                    lparen_types_js.pop_back();
+
+                    if (bracket_types_js.back() == "nLPAREN")
+                        bracket_types_js.back().pop_back();
+                }
+
                 consume();  // likely ")"
 
                 if (inTransparentMode(MODE_FOR_CONTROL_JS)) {
@@ -18699,6 +18741,16 @@ for_control_js[] { ENTRY_DEBUG } :
 
             control_increment_js
         )*
+
+        {
+            // found JavaScript rparen that ends a condition
+            if (LA(1) == RPAREN && lparen_types_js.back() == 'n') {
+                lparen_types_js.pop_back();
+
+                if (bracket_types_js.back() == "nLPAREN")
+                    bracket_types_js.back().pop_back();
+            }
+        }
 
         RPAREN
 
@@ -19379,16 +19431,17 @@ expression_block_js[] { CompleteElement element(this); size_t lcurly_types_size 
                 (LA(1) != RCURLY || lcurly_types_js.back() != 'b' || lcurly_types_size != lcurly_types_js.size())
                 && LA(1) != 1 /* EOF */
             ) {
-                if (
-                    inMode(MODE_STATEMENT)
-                    && (
-                        post_specifier_js_token_set.member((unsigned int) LA(1))
-                        || table_keywords_js_token_set.member((unsigned int) LA(1))
-                    )
-                )
-                    javascript_statements();
-                else
+                // check for potential statement-start tokens before anything else
+                javascript_statements();
+
+                // if javascript_statements explicitly returns, do not run
+                // javascript_rules; applicable for 2+ declaration statements in a row
+                if (processed_statement) {
+                    processed_statement = false;
+                }
+                else {
                     javascript_rules();
+                }
             }
         }
 

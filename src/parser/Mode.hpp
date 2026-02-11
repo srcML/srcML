@@ -336,6 +336,8 @@ const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_JS;
 
 const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS;
 
+const static srcMLState::MODE_TYPE MODE_LCURLY_BLOCK_JS;
+
 const static srcMLState::MODE_TYPE MODE_CONSTRUCTOR_JS;
 
 const static srcMLState::MODE_TYPE MODE_FOR_CONTROL_JS;

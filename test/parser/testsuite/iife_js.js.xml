@@ -70,7 +70,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><operator>(</operator><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
     <try>try <block>{<block_content>
-        <if_stmt><if>if <condition>(<expr><name><name>argv</name><operator>.</operator><name>v</name></name> <operator>||</operator> <name><name>argv</name><operator>.</operator><name>version</name></name>)</expr></condition> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name><name>argv</name><operator>.</operator><name>v</name></name> <operator>||</operator> <name><name>argv</name><operator>.</operator><name>version</name></name></expr>)</condition> <block>{<block_content>
             <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>, <argument><expr><name>version</name></expr></argument>)</argument_list></call></expr></expr_stmt>
             <return>return</return>
         </block_content>}</block></if></if_stmt>
