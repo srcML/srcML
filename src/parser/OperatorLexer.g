@@ -225,8 +225,54 @@ OPERATORS options { testLiterals = true; } {
                 wasescape = false;
             } |
 
-            // ignore JSX comments
-            ('<') { starttag += '<'; wasescape = false; } (('!' '-' '-') => '!' '-' '-' { commenttoken = 'j'; })? |
+            // ignore JSX comments, but allow '<' to begin a JSX literal starting tag
+            ('<') {
+                // do not add to starttag if inside a string or a comment
+                if (stringtoken != '\000' || commenttoken != '\000')
+                    continue;
+
+                wasescape = false;
+            }
+            (('!' '-' '-') => '!' '-' '-' { commenttoken = 'j'; })?
+            {
+                // only apply this logic if not inside a comment
+                if (commenttoken == '\000') {
+                    // only add '<' to starttag if there are no other '<'
+                    if (std::count(starttag.begin(), starttag.end(), '<') == 0) {
+                        starttag += '<';
+                    }
+                    else {
+                        starttag += ' ';
+                        ignorenexttoken = true;
+                    }
+                }
+            } |
+
+            // '>' will end a JSX literal starting tag if outside a string or comment
+            ('>') {
+                // do not add to starttag if inside a string or a comment
+                if (stringtoken != '\000' || commenttoken != '\000')
+                    continue;
+
+                // ignore '>' from nested tag as to not mess up xmlcount
+                if (ignorenexttoken) {
+                    starttag += ' ';
+                }
+                // found '>'; only add it to starttag if there are no other '>'
+                else {
+                    if (std::count(starttag.begin(), starttag.end(), '>') == 0)
+                        starttag += '>';
+                    else
+                        starttag += ' ';
+                }
+
+                // '>' indicates the end of the JSX tag
+                if (!wasescape && !isarrow && !ignorenexttoken)
+                    break;
+
+                ignorenexttoken = false;
+                wasescape = false;
+            } |
 
             // "-->" will end a JSX comment
             ('-') { starttag += '-'; wasescape = false; } ({ commenttoken == 'j' }? ('-' '>') => '-' '>' { commenttoken = '\000'; })? |
@@ -246,7 +292,7 @@ OPERATORS options { testLiterals = true; } {
             // ignore arrows (e.g., "=>")
             ('=') { starttag += '='; wasescape = false; } ({ !isarrow }? '>' { isarrow = true; })? |
 
-            { prevchar = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '<' | '-' | '#' | '/' | '*' | '\\' | '=') {
+            { prevchar = (char)LA(1); } ~(' ' | '\t' | '\n' | '"' | '\'' | '`' | '<' | '>' | '-' | '#' | '/' | '*' | '\\' | '=') {
                 // do not add to starttag if inside a string or a comment
                 if (stringtoken != '\000' || commenttoken != '\000')
                     continue;
@@ -254,10 +300,6 @@ OPERATORS options { testLiterals = true; } {
                 // add the most recently consumed character to the starting tag (if it is not an arrow)
                 if (!isarrow)
                     starttag += prevchar;
-
-                // '>' indicates the end of the JSX tag
-                if (!wasescape && !isarrow && prevchar == '>')
-                    break;
 
                 isarrow = false;
                 wasescape = false;
@@ -268,6 +310,8 @@ OPERATORS options { testLiterals = true; } {
             prevchar = '\000';
             stringtoken = '\000';
             commenttoken = '\000';
+            ignorenexttoken = false;
+            isarrow = false;
             wasescape = false;
 
             // if the starting tag is a self-closing tag, ignore the processing step below
@@ -357,8 +401,7 @@ OPERATORS options { testLiterals = true; } {
                     }
 
                     // reset ignore next '>' detection
-                    if (ignorenexttoken)
-                        ignorenexttoken = false;
+                    ignorenexttoken = false;
 
                     // failsafe to ensure ANTLR-generated version breaks properly
                     if (endjsx)
