@@ -19461,7 +19461,7 @@ expression_block_js[] { CompleteElement element(this); size_t lcurly_types_size 
             }
         }
 
-        block_end
+        rcurly
 ;
 
 /*
