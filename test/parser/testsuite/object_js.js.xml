@@ -254,4 +254,10 @@
 )</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><object>{<property><expr><name>languages</name></expr></property>}</object></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><name>languages</name></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
+</unit>
+
 </unit>

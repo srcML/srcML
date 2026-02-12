@@ -19636,10 +19636,7 @@ perform_lambda_check_js[] returns [bool islambda] {
                 if (LA(1) == RPAREN)
                     --paren_count;
 
-                if (paren_count < 1)
-                    break;
-
-                if (LA(1) == LCURLY || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                if (paren_count < 1 || LA(1) == 1 /* EOF */)
                     break;
 
                 consume();
