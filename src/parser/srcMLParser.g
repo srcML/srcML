@@ -1752,7 +1752,7 @@ start_rust[] {
         ++start_count;
 
         // check for potential statement-start tokens before anything else
-        rust_statements();
+        bool completeElement = rust_statements();
 
         // if javascript_statements explicitly returns, force another return here so
         // javascript_rules does not run; applicable for 2+ declaration statements in a row
@@ -1760,6 +1760,8 @@ start_rust[] {
         //     processed_statement = false;
         //     return;
         // }
+
+        if (completeElement) return;
 }
     rust_rules
 ;
@@ -1780,7 +1782,10 @@ catch[...] {
 
     Initializes the table-based approach and checks potential statement tokens for Rust
 */
-rust_statements[] {
+rust_statements[] returns [bool completeElement] {
+        // Tells start_rust not to run rust_rules if element is already complete
+        completeElement = false;
+
         // For now there are no Rust duplex keywords, may change in the future
         const size_t RUST_RULES_SIZE = 900;
         static const std::array<Rule, RUST_RULES_SIZE> rustRules = getRustRules<RUST_RULES_SIZE>();
@@ -1789,8 +1794,10 @@ rust_statements[] {
             int post_attribute_token = perform_post_attribute_check_rs();
             
             // check for start of Rust declaration statement
-            if (decl_start_rs_token_set.member(post_attribute_token)) 
+            if (decl_start_rs_token_set.member(post_attribute_token)) { 
                 declaration_statement_rs();
+                completeElement = true;
+            }
             
             if (post_attribute_token == RS_FN) {
                 bool isDecl = perform_function_declaration_check_rs();
@@ -1804,7 +1811,7 @@ rust_statements[] {
                 const auto& rule = rustRules[post_attribute_token];
                 if (rule.elementToken && processRule(rule)) {
                     processed_statement = true;
-                    return;
+                    return false;
                 }
             }
         }
@@ -1813,9 +1820,10 @@ rust_statements[] {
             int post_specifier_token = perform_post_specifier_check_rs();
 
             // check for start of Rust declaration statement
-            if (decl_start_rs_token_set.member(post_specifier_token)) 
+            if (decl_start_rs_token_set.member(post_specifier_token)) {
                 declaration_statement_rs();
-            
+                completeElement = true;
+            }
             if (post_specifier_token == RS_FN) {
                 bool isDecl = perform_function_declaration_check_rs();
                 if (isDecl) 
@@ -1828,7 +1836,7 @@ rust_statements[] {
                 const auto& rule = rustRules[post_specifier_token];
                 if (rule.elementToken && processRule(rule)) {
                     processed_statement = true;
-                    return;
+                    return false;
                 }
             }
         }
@@ -1841,8 +1849,10 @@ rust_statements[] {
                 function_definition_rs();
         }
 
-        if (decl_start_rs_token_set.member(LA(1))) 
+        if (decl_start_rs_token_set.member(LA(1))) {
             declaration_statement_rs();
+            completeElement = true;
+        }
 }:
     
 ;
