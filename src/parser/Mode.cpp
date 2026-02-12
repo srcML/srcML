@@ -157,3 +157,4 @@ const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_DEFINITION_RS  (bit(__COUNT
 const srcMLState::MODE_TYPE ModeStack::MODE_PARAMETER_LIST_RS       (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_INNER_ATTRIBUTE_RS      (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_OUTER_ATTRIBUTE_RS      (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_SPECIFIER_RS            (bit(__COUNTER__));

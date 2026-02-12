@@ -381,4 +381,6 @@ const static srcMLState::MODE_TYPE MODE_INNER_ATTRIBUTE_RS;
 
 const static srcMLState::MODE_TYPE MODE_OUTER_ATTRIBUTE_RS;
 
+const static srcMLState::MODE_TYPE MODE_SPECIFIER_RS;
+
 #endif

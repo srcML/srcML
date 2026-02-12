@@ -941,9 +941,9 @@ public:
             specifier_js();
         }
 
-        // while (check_valid_specifier_rs()) {
-        //     specifier_rs();
-        // }
+        while (check_valid_specifier_rs()) {
+            specifier_rs();
+        }
     }
 
     template <size_t SIZE>
@@ -1787,8 +1787,7 @@ rust_statements[] {
         
         if (LA(1) == RS_OUTER_ATTRIBUTE) {
             int post_attribute_token = perform_post_attribute_check_rs();
-            std::cerr << post_attribute_token << std::endl;
-            std::cerr << RS_LET << std::endl;
+            
             // check for start of Rust declaration statement
             if (decl_start_rs_token_set.member(post_attribute_token)) 
                 declaration_statement_rs();
@@ -1803,6 +1802,30 @@ rust_statements[] {
 
             if (post_attribute_token == STRUCT) {
                 const auto& rule = rustRules[post_attribute_token];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
+            }
+        }
+
+        if (specifier_rs_token_set.member(LA(1))) {
+            int post_specifier_token = perform_post_specifier_check_rs();
+
+            // check for start of Rust declaration statement
+            if (decl_start_rs_token_set.member(post_specifier_token)) 
+                declaration_statement_rs();
+            
+            if (post_specifier_token == RS_FN) {
+                bool isDecl = perform_function_declaration_check_rs();
+                if (isDecl) 
+                    function_declaration_rs();
+                else 
+                    function_definition_rs();
+            }
+
+            if (post_specifier_token == STRUCT) {
+                const auto& rule = rustRules[post_specifier_token];
                 if (rule.elementToken && processRule(rule)) {
                     processed_statement = true;
                     return;
@@ -20578,6 +20601,8 @@ declaration_statement_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
                 }
                 else if (LA(1) == RS_OUTER_ATTRIBUTE) 
                     outer_attribute_rs();
+                else if (specifier_rs_token_set.member(LA(1)))
+                    specifier_rs();
                 // 
                 else if (decl_start_rs_token_set.member(LA(1))) {
                     declaration_rs(LA(1));
@@ -20723,6 +20748,10 @@ function_declaration_rs[] {
             outer_attribute_rs
         )*
 
+        (
+            specifier_rs
+        )*
+
         RS_FN
 
         compound_name
@@ -20751,6 +20780,10 @@ function_definition_rs[] {
 
         (
             outer_attribute_rs
+        )*
+
+        (
+            specifier_rs
         )*
 
         RS_FN
@@ -20993,6 +21026,63 @@ outer_attribute_rs[] {
             endMode(MODE_OUTER_ATTRIBUTE_RS);
         }
 
+;
+
+/*
+    check_valid_specifier_rs
+
+    Checks if token is a specifier in Rust
+*/
+check_valid_specifier_rs[] returns [bool isspecifier] { 
+    ENTRY_DEBUG
+    isspecifier = specifier_rs_token_set.member(LA(1)); 
+} :;
+
+/*
+    specifier_rs
+
+    Handle specifiers in Rust.
+*/
+specifier_rs[] {
+    SingleElement element(this);    
+    ENTRY_DEBUG 
+} :
+        {
+            startNewMode(MODE_SPECIFIER_RS);
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        { LA(1) == RS_PUB }? (
+            RS_PUB
+
+            {
+                if (LA(1) == LPAREN) {
+                    while (true) {
+                        // eventually break out if parenthesis
+                        // are not closed
+                        if (LA(1) == RS_FN) {
+                            break;
+                        }
+                        else if (LA(1) == RPAREN) {
+                            consume();
+                            break;
+                        }
+                        else if (LA(1) == RS_IN) {
+                            consume();
+                            compound_name();
+                        }
+                        else 
+                            consume();
+                    }
+                }
+            }
+        ) |
+
+        (RS_ASYNC | RS_EXTERN | RS_UNSAFE | RS_MUT | RS_DYN | RS_MOVE | RS_CONST)
+
+        {
+            endMode(MODE_SPECIFIER_RS);
+        }
 ;
 
 /*
