@@ -19582,6 +19582,12 @@ lambda_js[bool is_list = false] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
+            // do not consume condition-ending right parenthesis
+            { LA(1) == RPAREN && lparen_types_js.back() == 'n' && bracket_types_js.back() == "nLPAREN" }?
+            {
+                break;
+            } |
+
             { inMode(MODE_ARGUMENT) }?
             argument |
 
