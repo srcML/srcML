@@ -111,6 +111,19 @@
 <decl_stmt><decl type="const">const <name>complex</name> <init>= <expr><call><name><name>input</name><operator>.</operator><name>sample</name></name><argument_list>(<argument><expr><literal type="regex">/hello/</literal></expr></argument>,<argument><expr><literal type="regex">/world/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Regular expressions following ':' -->
+
+<unit revision="1.0.0" language="JavaScript">
+  <decl_stmt><decl type="const">const <name>getStyleLoaders</name> <init>= <expr><object>{
+    <property><expr><name>rules</name></expr>: <expr><array>[
+      <expr><name>shouldUseSourceMap</name> <operator>&amp;&amp;</operator> <object>{
+        <property><expr><name>exclude</name></expr>: <expr><literal type="regex">/@babel(?:\/|\\{1,2})runtime/</literal></expr></property>,
+        <property><expr><name>test</name></expr>: <expr><literal type="regex">/\.(js|mjs|jsx|ts|tsx|css)$/</literal></expr></property>,
+      }</object></expr>,
+    ]</array></expr></property>,
+  }</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- The following should NOT be marked as regular expression literals -->
 
 <unit revision="1.0.0" language="JavaScript">
