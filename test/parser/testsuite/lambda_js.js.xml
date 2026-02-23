@@ -67,6 +67,24 @@
 <return>return <expr><lambda><parameter_list>(<parameter><decl><name>resolve</name></decl></parameter>, <parameter><decl><name>reject</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content><expr_stmt><expr><call><name><name>f</name><operator>.</operator><name>stats</name></name><argument_list>()</argument_list></call></expr></expr_stmt></block_content>}</block></lambda></expr></return>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+  <return>return <expr><object>{
+    <property><expr><name>resolve</name></expr>: <expr><object>{
+      <property><expr><name>extensions</name></expr>: <expr><call><name><name>paths</name><operator>.</operator><name>moduleFileExtensions</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter><decl><name>ext</name></decl></parameter> <operator>=&gt;</operator> <expr><literal type="string">`.${ext}`</literal></expr></lambda></expr></argument>)</argument_list></call></expr></property>
+    }</object></expr></property>,
+  }</object></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+  <return>return <expr><object>{
+    <property><expr><name>resolve</name></expr>: <expr><object>{
+      <property><expr><name>extensions</name></expr>: <expr><call><name><name>paths</name><operator>.</operator><name>moduleFileExtensions</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>ext</name></decl></parameter>, <parameter><decl><name>sample</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="string">`.${ext}-${sample}`</literal></expr></lambda></expr></argument>)</argument_list></call></expr></property>
+    }</object></expr></property>,
+  }</object></expr></return>
+</unit>
+
 <!-- Lambdas containing statements with blocks -->
 
 <unit revision="1.0.0" language="JavaScript">
