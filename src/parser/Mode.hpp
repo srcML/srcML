@@ -332,6 +332,8 @@ const static srcMLState::MODE_TYPE MODE_FUNCTION_EXPRESSION_JS;
 
 const static srcMLState::MODE_TYPE MODE_CLASS_EXPRESSION_JS;
 
+const static srcMLState::MODE_TYPE MODE_DECL_DESTRUCTURE_JS;
+
 const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_JS;
 
 const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS;

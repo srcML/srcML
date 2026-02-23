@@ -19320,16 +19320,78 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
   Handles array or object destructuring in declarations in JavaScript.
 */
 decl_with_destructuring_js[] { bool is_array = (LA(1) == LBRACKET); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_DESTRUCTURE_JS);
+
+            if (is_array)
+                bracket_types_js.emplace_back("dLBRACKET");
+            else
+                bracket_types_js.emplace_back("dLCURLY");
+        }
+
         ({ is_array }? LBRACKET | LCURLY)
 
         (options { greedy = true; } :
-            { LA(1) != TEMPOPS && LA(1) != DESTOP }?
-            general_operators |
+            // end the array or object destructuring at the correct ']' or '}'
+            {
+                (is_array && LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET")
+                || (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY")
+            }?
+            {
+                break;
+            } |
 
-            compound_name | COMMA | TERMINATE
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            {
+                if (
+                    inTransparentMode(MODE_DECL_DESTRUCTURE_JS)
+                    && (
+                        bracket_types_js.back() == "dLBRACKET"
+                        || bracket_types_js.back() == "dLCURLY"
+                    )
+                )
+                    endDownToMode(MODE_DECL_DESTRUCTURE_JS);
+                // end argument tags in a call argument list
+                else if (
+                    inTransparentMode(MODE_LIST)
+                    && (
+                        lparen_types_js.back() == 'c'
+                        && bracket_types_js.back() == "cLPAREN"
+                    )
+                )
+                    endDownToMode(MODE_LIST);
+            }
+            COMMA |
+
+            TERMINATE
         )*
 
+        {
+            if (bracket_types_js.back() == "dLBRACKET" || bracket_types_js.back() == "dLCURLY")
+                bracket_types_js.pop_back();
+
+            if (inTransparentMode(MODE_DECL_DESTRUCTURE_JS))
+                endDownToMode(MODE_DECL_DESTRUCTURE_JS);
+        }
+
         ({ is_array }? RBRACKET | RCURLY)
+
+        {
+            if (inMode(MODE_DECL_DESTRUCTURE_JS))
+                endMode(MODE_DECL_DESTRUCTURE_JS);
+        }
 ;
 
 /*
