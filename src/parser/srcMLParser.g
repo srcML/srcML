@@ -19551,7 +19551,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
   Handles a lambda in JavaScript.
   Typically start with a name or parameter list followed by an arrow ("=>").
 */
-lambda_js[bool is_list = false] { CompleteElement element(this); ENTRY_DEBUG } :
+lambda_js[bool is_list = false] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LAMBDA_JS);
             startElement(SFUNCTION_LAMBDA);
@@ -19579,11 +19579,13 @@ lambda_js[bool is_list = false] { CompleteElement element(this); ENTRY_DEBUG } :
                 expression_block_js();
                 return;
             }
+
+            lparen_types_size = lparen_types_js.size();
         }
 
         (options { greedy = true; } :
-            // do not consume condition-ending right parenthesis
-            { LA(1) == RPAREN && lparen_types_js.back() == 'n' && bracket_types_js.back() == "nLPAREN" }?
+            // do not consume right parentheses outside the scope of the lambda
+            { LA(1) == RPAREN && lparen_types_size == lparen_types_js.size() }?
             {
                 break;
             } |
@@ -19601,6 +19603,8 @@ lambda_js[bool is_list = false] { CompleteElement element(this); ENTRY_DEBUG } :
             }
             expression |
 
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 ;

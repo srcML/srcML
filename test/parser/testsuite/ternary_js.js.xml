@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="ternary">
 
+<!-- a ? b : c -->
+
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>name</name> <init>= <expr><ternary><condition><expr><name>person</name></expr> ?</condition><then> <expr><name><name>person</name><operator>.</operator><name>name</name></name></expr> </then><else>: <expr><literal type="string">"stranger"</literal></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
@@ -49,6 +51,8 @@
 <decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Complex Cases -->
+
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>example</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><ternary><condition><expr><name>condition1</name></expr> ?</condition><then> <expr><name>value1</name></expr>
@@ -58,5 +62,14 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name><name>module</name><operator>.</operator><name>exports</name></name> <operator>=</operator> <function>function <parameter_list>(<parameter><decl><name>path</name></decl></parameter>, <parameter><decl><name>info</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><object>{
+    <property><expr><name>template</name></expr>: <expr><ternary><condition><expr><name>isEnv</name></expr>
+      ?</condition><then> <expr><lambda><parameter><decl><name>info</name></decl></parameter> <operator>=&gt;</operator> <expr><name>path</name></expr></lambda></expr>
+      </then><else>: <expr><operator>(</operator><lambda><parameter><decl><name>info</name></decl></parameter> <operator>=&gt;</operator> <expr><call><name>resolve</name><argument_list>(<argument><expr><name>path</name></expr></argument>)</argument_list></call></expr></lambda><operator>)</operator></expr></else></ternary></expr></property>,
+  }</object></expr></return>
+</block_content>}</block></function></expr></expr_stmt>
 </unit>
 
+</unit>
