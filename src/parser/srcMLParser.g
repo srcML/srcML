@@ -1671,6 +1671,7 @@ javascript_rules[] {
             )
             || inTransparentMode(MODE_ANONYMOUS)
             || inMode(MODE_LCURLY_BLOCK_JS)
+            || inMode(MODE_TOP)
         }?
         lcurly |
 
