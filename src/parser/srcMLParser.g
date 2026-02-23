@@ -19319,7 +19319,14 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 */
 decl_with_destructuring_js[] { bool is_array = (LA(1) == LBRACKET); ENTRY_DEBUG } :
         ({ is_array }? LBRACKET | LCURLY)
-        (options { greedy = true; } : compound_name | COMMA | TERMINATE)*
+
+        (options { greedy = true; } :
+            { LA(1) != TEMPOPS && LA(1) != DESTOP }?
+            general_operators |
+
+            compound_name | COMMA | TERMINATE
+        )*
+
         ({ is_array }? RBRACKET | RCURLY)
 ;
 

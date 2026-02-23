@@ -279,4 +279,8 @@
 <decl_stmt><decl type="const">const [<name>r</name>, <name>g</name>, <name>b</name>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<name>_</name>, <operator>...</operator><name>rest</name>] <init>= <expr><name><name>props</name><operator>.</operator><name>array</name></name></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
