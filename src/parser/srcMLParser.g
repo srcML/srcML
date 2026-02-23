@@ -1001,7 +1001,7 @@ public:
 
         /* GENERIC STATEMENTS */
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
-        temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT | MODE_IGNORE_LABEL_JS, nullptr, nullptr };
         temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
         temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
@@ -1494,7 +1494,8 @@ javascript_statements[] {
 
         // special case: detect labels that occur before a statement or a block
         if (
-            next_token() == COLON
+            !inMode(MODE_IGNORE_LABEL_JS)
+            && next_token() == COLON
             && (table_keywords_js_token_set.member(next_token_two()) || next_token_two() == LCURLY)
             && !(LA(1) == CASE || LA(1) == JS_DEFAULT || inMode(MODE_PROPERTY_JS) || inMode(MODE_TERNARY))
         )

@@ -133,6 +133,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_EXPRESSION_JS         (bit(
 const srcMLState::MODE_TYPE ModeStack::MODE_CLASS_EXPRESSION_JS            (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_DECL_STATEMENT_JS              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_PARAMETER_LIST_JS              (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_IGNORE_LABEL_JS                (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_LCURLY_BLOCK_JS                (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_CONSTRUCTOR_JS                 (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FOR_CONTROL_JS                 (bit(__COUNTER__));

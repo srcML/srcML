@@ -41,5 +41,14 @@
 </block_content>}</block></switch>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<switch>switch <condition>(<expr><name><name>props</name><operator>.</operator><name>test</name></name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><name>true</name></expr>:</case> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name><name>handlers</name><operator>.</operator><name>value</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+        <break>break</break><empty_stmt>;</empty_stmt>
+    </block_content>}</block>
+    <default>default:</default> <block>{<block_content/>}</block>
+</block_content>}</block></switch>
 </unit>
 
+</unit>
