@@ -9925,7 +9925,7 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_OBJECTIVE_C) }?
             objective_c_call |
 
-            { inLanguage(LANGUAGE_PYTHON) }?
+            { inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) }?
             compound_name
             call_argument_list |
 
@@ -12719,9 +12719,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         variable_identifier_array_grammar_sub[flag] |
 
-        // looking for name to start a Python subscriptable function call (e.g., "a[]()" or "a.b[]()")
+        // looking for name to start a Python or JavaScript subscriptable function call (e.g., "a[]()" or "a.b[]()")
         {
-            inLanguage(LANGUAGE_PYTHON)
+            (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT))
             && LA(1) == NAME
             && (next_token() == LBRACKET || (next_token() == PERIOD && perform_member_access_function_call_check_py()))
             && perform_subscriptable_function_call_check_py()

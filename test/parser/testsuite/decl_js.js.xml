@@ -283,4 +283,14 @@
 <decl_stmt><decl type="const">const [<name>_</name>, <operator>...</operator><name>rest</name>] <init>= <expr><name><name>props</name><operator>.</operator><name>array</name></name></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Subscriptable Function Call -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><call><name><name>foo</name><index>[<expr><name><name>props</name><operator>.</operator><name>method</name></name></expr>]</index></name><argument_list>(<argument><expr><operator>...</operator><name><name>props</name><operator>.</operator><name>a</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><operator>...</operator><name><name>props</name><operator>.</operator><name>b</name></name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><call><name><name>foo</name><index>[<expr><name>a</name></expr>]</index><index>[<expr><name>b</name></expr>]</index></name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
