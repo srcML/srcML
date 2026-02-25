@@ -19215,6 +19215,9 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (
+            // array parameter
+            array_js |
+
             // object parameter
             object_js |
 
@@ -19442,19 +19445,17 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
   Includes expression-level getters and setters, separate from the keyword table.
   Not used directly, but can be called by expression_part.
 */
-function_expression_js[] { bool consume_multops = false; bool consume_name = false; ENTRY_DEBUG } :
+function_expression_js[] { bool consume_multops = false; ENTRY_DEBUG } :
         {
             startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
 
             // found a getter
             if (LA(1) == JS_GET || (check_valid_specifier_js() && next_token() == JS_GET)) {
                 startElement(SFUNCTION_GET_STATEMENT);
-                consume_name = true;
             }
             // found a setter
             else if (LA(1) == JS_SET || (check_valid_specifier_js() && next_token() == JS_SET)) {
                 startElement(SFUNCTION_SET_STATEMENT);
-                consume_name = true;
             }
             // found a generator function
             else if (
@@ -19465,8 +19466,9 @@ function_expression_js[] { bool consume_multops = false; bool consume_name = fal
                 consume_multops = true;
             }
             // found a function
-            else
+            else {
                 startElement(SFUNCTION_DEFINITION);
+            }
         }
 
         ((specifier_js)* (JS_FUNCTION | JS_GET | JS_SET))
@@ -19476,8 +19478,8 @@ function_expression_js[] { bool consume_multops = false; bool consume_name = fal
             if (consume_multops)
                 consume();
 
-            // consume the name for expression-level getters/setters
-            if (consume_name)
+            // consume the name for named expression-level functions
+            if (LA(1) == NAME)
                 compound_name();
 
             startNewMode(MODE_PARAMETER_LIST_JS);

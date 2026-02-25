@@ -172,4 +172,12 @@
 </block_content>}</block></function><operator>)</operator></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>j</name> <init>= <expr><function>function <name>bar</name><parameter_list>(<parameter><decl><name>args</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>j</name> <init>= <expr><function>function <name>bar</name><parameter_list>(<parameter><decl><array>[<expr><name>quz</name></expr>, <expr><name>qux</name></expr>]</array></decl></parameter>, <parameter><decl><name>args</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
