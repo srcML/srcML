@@ -222,6 +222,10 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><call><name><name>JSON</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>json</name></expr></argument>)</argument_list></call><operator>?.</operator><name>foo</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name>a</name></expr><operator>,</operator> <expr><name>b</name></expr></expr_stmt>
 </unit>
 

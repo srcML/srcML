@@ -12891,6 +12891,9 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             dot_dereference |
             /* Commented-out code: newop | */
 
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            qmark_period |
+
             // left parentheses
             { function_pointer_name_check() }?
             function_pointer_name |
