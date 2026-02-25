@@ -113,7 +113,7 @@
 <expr_stmt><expr><literal type="undefined">undefined</literal></expr></expr_stmt>
 </unit>
 
-<!-- XML literals (enclosed in parentheses) -->
+<!-- JSX literals (enclosed in parentheses) -->
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
@@ -242,7 +242,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
-        <comment type="jsx">&lt;!-- example XML comment --&gt;</comment>
+        <comment type="jsx">&lt;!-- example JSX comment --&gt;</comment>
         <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
                 &lt;div&gt;
@@ -260,7 +260,7 @@
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
         <comment type="jsx">&lt;!--
-          example multi-line XML comment
+          example multi-line JSX comment
         --&gt;</comment>
         <literal type="jsx">&lt;unit&gt;
             &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
@@ -493,7 +493,7 @@
 </block_content>}</block></function></expr></expr_stmt>
 </unit>
 
-<!-- XML literals (without parentheses) -->
+<!-- JSX literals (without parentheses) -->
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
@@ -557,7 +557,7 @@
 <yield type="generator">yield * <expr><literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</literal></expr></yield>
 </unit>
 
-<!-- XML literals (multiple instances of the same starting tag) -->
+<!-- JSX literals (multiple instances of the same starting tag) -->
 
 <unit revision="1.0.0" language="JavaScript">
   <expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
@@ -582,7 +582,7 @@
   </block_content>}</block></function></expr></expr_stmt>
 </unit>
 
-<!-- XML literals (edge cases) -->
+<!-- JSX literals (edge cases) -->
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
@@ -747,6 +747,30 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>title</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="jsx">&lt;h1&gt;Welcome, {name}!&lt;/h1&gt;</literal></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>(</operator>
+  <literal type="jsx">&lt;fbt desc="Gift button's label"&gt;
+    {'Gift | '}
+  &lt;/fbt&gt;</literal>
+<operator>)</operator></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>(</operator>
+  <literal type="jsx">&lt;fbt desc="The \"real\" label"&gt;
+    {'Gift | '}
+  &lt;/fbt&gt;</literal>
+<operator>)</operator></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>(</operator>
+  <literal type="jsx">&lt;fbt desc="The `code` label"&gt;
+    {'Gift | '}
+  &lt;/fbt&gt;</literal>
+<operator>)</operator></expr></return>
 </unit>
 
 <!-- Comments in JSX literals (left unmarked) -->

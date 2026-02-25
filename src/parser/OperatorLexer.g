@@ -218,7 +218,7 @@ OPERATORS options { testLiterals = true; } {
                     stringtoken = '\000';
                 }
                 // found starting character for a string
-                else if (!wasescape) {
+                else if (!wasescape && stringtoken == '\000') {
                     stringtoken = prevchar;
                 }
 
