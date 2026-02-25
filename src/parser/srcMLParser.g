@@ -9163,6 +9163,10 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
                 }
 
                 (
+                    // optional computed access in JavaScript
+                    { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed == QMARK_PERIOD }?
+                    computed_property_js |
+
                     keyword_name |
 
                     simple_name_optional_template |
