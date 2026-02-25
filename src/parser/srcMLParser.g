@@ -12247,7 +12247,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                         lparen_types_js.pop_back();
 
                         if (bracket_types_js.back() == "nLPAREN")
-                            bracket_types_js.back().pop_back();
+                            bracket_types_js.pop_back();
 
                         break;
 
