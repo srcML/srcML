@@ -383,4 +383,12 @@ const static srcMLState::MODE_TYPE MODE_OUTER_ATTRIBUTE_RS;
 
 const static srcMLState::MODE_TYPE MODE_SPECIFIER_RS;
 
+const static srcMLState::MODE_TYPE MODE_UNIT_STRUCT_RS;
+
+const static srcMLState::MODE_TYPE MODE_TUPLE_STRUCT_RS; 
+
+const static srcMLState::MODE_TYPE MODE_STRUCT_RS; 
+
+const static srcMLState::MODE_TYPE MODE_TUPLE_RS;
+
 #endif

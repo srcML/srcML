@@ -360,14 +360,16 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SYIELD_GENERATOR_STATEMENT,    { "yield",             SRC, "type", "generator",        0,                   0 }},
 
     // Rust
-    { TOKEN::SIMPL,                         { "imple", SRC, 0, 0, 0, 0 }},
-    { TOKEN::SINNER_ATTRIBUTE,              { "attribute", SRC, "type", "inner", 0, 0 }},
-    { TOKEN::SLOOP,                         { "loop", SRC, 0, 0, 0, 0 }},
-    { TOKEN::SMACRO_RULES,                  { "macro_rules", SRC, 0, 0, 0, 0 }},
-    { TOKEN::SMACRO_DEFN,                   { "macro_defn", SRC, 0, 0, 0, 0 }},
-    { TOKEN::SMODULE,                       { "module", SRC, 0, 0, 0, 0 }},
-    { TOKEN::SOUTER_ATTRIBUTE,              { "attribute", SRC, "type", "outer", 0, 0 }},
-    { TOKEN::STRAIT,                        { "trait", SRC, 0, 0, 0, 0 }},
+    { TOKEN::SIMPL,                         { "imple",             SRC, 0,       0,                 0,                   0 }},
+    { TOKEN::SINNER_ATTRIBUTE,              { "attribute",         SRC, "type",  "inner",           0,                   0 }},
+    { TOKEN::SLOOP,                         { "loop",              SRC, 0,       0,                 0,                   0 }},
+    { TOKEN::SMACRO_RULES,                  { "macro_rules",       SRC, 0,       0,                 0,                   0 }},
+    { TOKEN::SMACRO_DEFN,                   { "macro_defn",        SRC, 0,       0,                 0,                   0 }},
+    { TOKEN::SMODULE,                       { "module",            SRC, 0,       0,                 0,                   0 }},
+    { TOKEN::SOUTER_ATTRIBUTE,              { "attribute",         SRC, "type",  "outer",           0,                   0 }},
+    { TOKEN::SSTRUCT_UNIT,                  { "struct",            SRC, "type",  "unit",            0,                   0 }},
+    { TOKEN::SSTRUCT_TUPLE,                 { "struct",            SRC, "type",  "tuple",           0,                   0 }},
+    { TOKEN::STRAIT,                        { "trait",             SRC, 0,       0,                 0,                   0 }},
     
 
 };

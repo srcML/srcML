@@ -753,6 +753,8 @@ tokens {
     SMACRO_DEFN;       
     SMODULE;           
     SOUTER_ATTRIBUTE;  
+    SSTRUCT_UNIT;
+    SSTRUCT_TUPLE;
     STRAIT;            
 }
 
@@ -1068,7 +1070,7 @@ public:
         /* GENERIC STATEMENTS */
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[STRUCT]      = { SSTRUCT, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
+        //temp_array[STRUCT]      = { SSTRUCT, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr }; 
         temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::situational_specifiers_js };  // check for "await" or "each" following the "for"
@@ -1808,11 +1810,9 @@ rust_statements[] returns [bool completeElement] {
             }
 
             if (post_attribute_token == STRUCT) {
-                const auto& rule = rustRules[post_attribute_token];
-                if (rule.elementToken && processRule(rule)) {
-                    processed_statement = true;
-                    return false;
-                }
+                int struct_type = struct_rs();
+                // Unit structs are handled entirely in struct_rs
+                if (struct_type != 2) completeElement = true;
             }
         }
 
@@ -1833,11 +1833,9 @@ rust_statements[] returns [bool completeElement] {
             }
 
             if (post_specifier_token == STRUCT) {
-                const auto& rule = rustRules[post_specifier_token];
-                if (rule.elementToken && processRule(rule)) {
-                    processed_statement = true;
-                    return false;
-                }
+                int struct_type = struct_rs();
+                // Unit structs are handled entirely in struct_rs
+                if (struct_type != 2) completeElement = true;
             }
         }
 
@@ -1852,6 +1850,12 @@ rust_statements[] returns [bool completeElement] {
         if (decl_start_rs_token_set.member(LA(1))) {
             declaration_statement_rs();
             completeElement = true;
+        }
+
+        if (LA(1) == STRUCT) {
+            int struct_type = struct_rs();
+            // Unit structs are handled entirely in struct_rs
+            if (struct_type != 2) completeElement = true;
         }
 }:
     
@@ -1874,7 +1878,11 @@ rust_rules[] {
 
         { inMode(MODE_CONDITION) }? condition_rs |
 
-        { inMode(MODE_CLASS) | LA(1) == STRUCT }? struct_rs |
+        { 
+            inTransparentMode(MODE_STRUCT_RS) 
+            && LA(1) == NAME 
+            && LA(2) == COLON 
+        }? declaration_rs[NAME] (COMMA)* |
 
         start
 ;
@@ -6369,7 +6377,11 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 
             if (
                 inLanguage(LANGUAGE_RUST) 
-                && (inTransparentMode(MODE_INNER_ATTRIBUTE_RS) || inTransparentMode(MODE_OUTER_ATTRIBUTE_RS))
+                && (
+                    inTransparentMode(MODE_INNER_ATTRIBUTE_RS) 
+                    || inTransparentMode(MODE_OUTER_ATTRIBUTE_RS)
+                    || inTransparentMode(MODE_TUPLE_RS)
+                )
             ) 
                 markup_comma = false;
 
@@ -12450,6 +12462,11 @@ rparen[bool markup = true, bool end_control_incr = false] {
         rparen_operator[markup]
 
         {
+            if (inLanguage(LANGUAGE_RUST) && inTransparentMode(MODE_TUPLE_STRUCT_RS)) {
+                endDownToMode(MODE_TUPLE_STRUCT_RS);
+                endMode(MODE_TUPLE_STRUCT_RS);
+            }
+
             if (isempty) {
                 // special handling for the then part of an if statement; only accessed when in the condition of an if statement
                 if (inMode(MODE_CONDITION) && inPrevMode(MODE_IF)) {
@@ -20646,6 +20663,9 @@ declaration_rs[int decl_start_token = -1] {
                 case RS_STATIC:
                     startElement(SDECLARATION_STATIC);
                     break;
+                case NAME:
+                    startElement(SDECLARATION);
+                    break;
                 default:
                     startElement(SPARAMETER);
                     startElement(SDECLARATION);
@@ -20660,7 +20680,7 @@ declaration_rs[int decl_start_token = -1] {
             {
                 break;
             } |
-            { LA(1) == COLON }? type_rs[type_count] |
+            { LA(1) == COLON }? type_rs |
             { modifier_rs_token_set.member(LA(1)) }? modifier_rs |
             declaration_init_rs | compound_name
         )*
@@ -20702,17 +20722,28 @@ lifetime_rs[] { CompleteElement element(this); ENTRY_DEBUG } :
 
     Handles types in Rust.
 */
-type_rs[int type_count] { ENTRY_DEBUG } :
+type_rs[] { ENTRY_DEBUG } :
         (COLON | RS_ARROW)
 
+        type_name_rs
+;
+
+/*
+    type_name_rs
+
+    Handles cases where a bare type needs marked up (such as in tuples)
+*/
+type_name_rs[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL | MODE_EAT_TYPE);
             startElement(STYPE);
         }
+
         ( options { greedy = true; } :
             { modifier_rs_token_set.member(LA(1)) }? modifier_rs |
             compound_name
         )*
+
         {
             if (inTransparentMode(MODE_EAT_TYPE)){
                 endDownToMode(MODE_EAT_TYPE);
@@ -20773,7 +20804,7 @@ function_declaration_rs[] {
         parameter_list_rs
 
         ( 
-            type_rs[1]
+            type_rs
         )*
 ;
 
@@ -20807,7 +20838,7 @@ function_definition_rs[] {
         parameter_list_rs
 
         ( 
-            type_rs[1]
+            type_rs
         )*
 
         {
@@ -20874,6 +20905,56 @@ perform_function_declaration_check_rs[] returns [bool isdecl] {
 
                 if (LA(1) == TERMINATE) {
                     isdecl = true;
+                    break;
+                }
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+    perform_struct_type_check_rs
+
+    Determines if struct is a normal struct (ends with block),
+    a unit struct (ends with semi-colon), or a tuple struct
+
+    0 = normal struct
+    1 = unit struct
+    2 = tuple struct
+*/
+perform_struct_type_check_rs[] returns [int structtype] {
+        structtype = 0;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                if (LA(1) == STRUCT) break;
+                else consume();
+            }
+            while (true) {
+                if (LA(1) == LCURLY) {
+                    structtype = 0;
+                    break;
+                }
+
+                if (LA(1) == TERMINATE) {
+                    structtype = 1;
+                    break;
+                }
+
+                if (LA(1) == LPAREN) {
+                    structtype = 2;
                     break;
                 }
 
@@ -21070,7 +21151,7 @@ specifier_rs[] {
                     while (true) {
                         // eventually break out if parenthesis
                         // are not closed
-                        if (LA(1) == RS_FN) {
+                        if (outer_attribute_statement_rs_token_set.member(LA(1))) {
                             break;
                         }
                         else if (LA(1) == RPAREN) {
@@ -21100,12 +21181,86 @@ specifier_rs[] {
 
     Hanldles structs in Rust
 */
-struct_rs[] { ENTRY_DEBUG } :
-        {
-            startElement(SSTRUCT);
+struct_rs[] returns [int struct_type] { ENTRY_DEBUG } :
+        {   
+            int struct_type = perform_struct_type_check_rs();
+            switch (struct_type) {
+                case 1: 
+                    startNewMode(MODE_UNIT_STRUCT_RS);
+                    startElement(SSTRUCT_UNIT); 
+                    break;
+                case 2: 
+                    startNewMode(MODE_TUPLE_STRUCT_RS);
+                    startElement(SSTRUCT_TUPLE); 
+                    break;
+                default: 
+                    startNewMode(MODE_STRUCT_RS);
+                    startElement(SSTRUCT);
+            }
         }
 
+        (outer_attribute_rs)*
+
+        (specifier_rs)*
+
         STRUCT
+
+        compound_name
+
+       ( 
+            { inMode(MODE_UNIT_STRUCT_RS) }? TERMINATE 
+            {
+                endDownToMode(MODE_UNIT_STRUCT_RS);
+                endMode(MODE_UNIT_STRUCT_RS);
+            } |
+
+            { inMode(MODE_TUPLE_STRUCT_RS) }? 
+                tuple_rs[false] 
+                {
+                    endDownToMode(MODE_TUPLE_STRUCT_RS);
+                    endMode(MODE_TUPLE_STRUCT_RS);
+                }
+            |
+
+            {
+                startNewMode(MODE_NEST);
+            }
+            lcurly[false]
+        )
+;
+
+/*
+    tuple_rs
+
+    Hanlde tuples in Rust
+*/
+tuple_rs[bool in_expression=true] { 
+    // CompleteElement element(this);
+    ENTRY_DEBUG 
+} :
+        {
+            startNewMode(MODE_TUPLE_RS | MODE_LIST | MODE_EXPECT);
+            startElement(STUPLE);
+        }
+
+        LPAREN
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN }? { break; } |
+
+            { LA(1) == COMMA }? comma | 
+
+            { in_expression }? expression |
+
+            type_name_rs
+        )*
+
+        RPAREN
+
+        {
+            endDownToMode(MODE_TUPLE_RS);
+            endMode(MODE_TUPLE_RS);
+        }
 ;
 
 /* 
