@@ -6,7 +6,7 @@
 # 
 # The master CMake project file for srcML
 
-if(DEFINED ENV{VCPKG_ROOT} OR DEFINED CMAKE_TOOLCHAIN_FILE)
+if(DEFINED ENV{VCPKG_ROOT})
     message(STATUS "Building with vcpkg")
     set(VCPKG_BUILD_TYPE "release")
     include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
