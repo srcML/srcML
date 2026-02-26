@@ -18729,7 +18729,7 @@ for_control_js[] { ENTRY_DEBUG } :
                     lparen_types_js.pop_back();
 
                     if (bracket_types_js.back() == "nLPAREN")
-                        bracket_types_js.back().pop_back();
+                        bracket_types_js.pop_back();
                 }
 
                 consume();  // likely ")"
@@ -18773,7 +18773,7 @@ for_control_js[] { ENTRY_DEBUG } :
                 lparen_types_js.pop_back();
 
                 if (bracket_types_js.back() == "nLPAREN")
-                    bracket_types_js.back().pop_back();
+                    bracket_types_js.pop_back();
             }
         }
 
