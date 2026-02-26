@@ -6,45 +6,31 @@ on:
   schedule:
     - cron: '43 12 * * *'
 
+permissions:
+  packages: write
+
 jobs:
-  build:
-    runs-on: windows-latest
-    timeout-minutes: 30
+  job:
+    name: ${{ matrix.os }}-${{ github.workflow }}
+    runs-on: ${{ matrix.os }}
     environment: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        triplet: [x64-windows]
+
     steps:
+      - uses: actions/checkout@v4
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Windows
-        uses: microsoft/setup-msbuild@v1.3.1
+      - uses: lukka/get-cmake@latest
 
       - name: Setup vcpkg
         uses: ./.github/actions/vcpkg
         with:
-          vcpkg-ref: e140b1fde236eb682b0d47f905e65008a191800f
-          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
-          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
-          r2-bucket: ${{ secrets.R2_BUCKET_NAME }}
-          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up CMake
-        uses: lukka/get-cmake@latest
+      - name: Run CMake
+        uses: lukka/run-cmake@v10
         with:
-          cmakeVersion: 4.0
-
-      - name: Setup devcmd to use cl.exe
-        uses: ilammy/msvc-dev-cmd@v1.13.0
-
-      - name: Create build directory
-        shell: bash
-        run: |
-          cmake --version
-          mkdir build
-
-      - name: CMake Setup on Windows
-        shell: bash
-        working-directory: build
-        run: |
-          export UseMultiToolTask=true
-          cmake .. --preset ci-msvc
+          configurePreset: ci-msvc

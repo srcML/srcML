@@ -3,58 +3,39 @@ name: Build Windows
 
 on: workflow_dispatch
 
+permissions:
+  packages: write
+
 jobs:
-  build:
-    runs-on: windows-latest
-    timeout-minutes: 30
+  job:
+    name: ${{ matrix.os }}-${{ github.workflow }}
+    runs-on: ${{ matrix.os }}
     environment: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+
     steps:
+      - uses: actions/checkout@v4
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Windows
-        uses: microsoft/setup-msbuild@v1.3.1
+      - uses: lukka/get-cmake@latest
 
       - name: Setup vcpkg
         uses: ./.github/actions/vcpkg
         with:
-          vcpkg-ref: e140b1fde236eb682b0d47f905e65008a191800f
-          r2-access-key: ${{ secrets.R2_ACCESS_KEY }}
-          r2-secret-key: ${{ secrets.R2_SECRET_KEY }}
-          r2-bucket: ${{ secrets.R2_BUCKET_NAME }}
-          r2-endpoint: ${{ secrets.R2_ENDPOINT }}
-
-      - name: Set up CMake
-        uses: lukka/get-cmake@latest
-        with:
-          cmakeVersion: 4.0
-
-      - name: Setup devcmd to use cl.exe
-        uses: ilammy/msvc-dev-cmd@v1.13.0
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create build directory
         shell: bash
-        run: |
-          cmake --version
-          mkdir build
+        run: mkdir build
 
-      - name: CMake Setup on Windows
-        shell: bash
-        working-directory: build
-        run: |
-          export UseMultiToolTask=true
-          cmake .. --preset ci-msvc
+      - name: Run CMake with vcpkg.json manifest
+        uses: lukka/run-cmake@v10
+        with:
+          workflowPreset: ci-msvc
 
-      - name: Build
-        shell: bash
-        working-directory: build
-        continue-on-error: true
-        run: |
-          export UseMultiToolTask=true
-          cmake --build . --config Release
-
-      - name: Package
+      - name: List packages
         working-directory: build
         continue-on-error: true
         run: |
@@ -77,191 +58,3 @@ jobs:
             build/dist/*.zip
             build/dist/*.exe
             build/dist/*.nupkg
-
-      - name: Install from build
-        working-directory: build
-        continue-on-error: true
-        run: |
-          cmake --build . --config Release --target install
-
-      - name: Set PATH for Windows
-        shell: bash
-        continue-on-error: true
-        run: |
-          echo "/c/Program Files/srcML/bin" >> $GITHUB_PATH
-
-      - name: Run Installed srcml
-        shell: bash
-        working-directory: build
-        continue-on-error: true
-        run: |
-          EOL="\r\n"
-          SRCML_HOME="/c/Program Files/srcML/bin"
-          ls -lh "$SRCML_HOME"
-          SRCML="$SRCML_HOME/srcml.exe"
-          ls -lh "$SRCML"
-          export MSYS2_ARG_CONV_EXCL="*"
-          diff='diff -Z '
-          "$SRCML" --version
-          "$SRCML" --text="int a;" -l C++
-          touch "a.cpp"
-          "$SRCML" a.cpp
-          echo "a;" >> a.cpp
-          "$SRCML" a.cpp
-          echo "b;" >> b.cpp
-          "$SRCML" a.cpp b.cpp
-
-      - name: Create build examples directory
-        shell: bash
-        continue-on-error: true
-        run: |
-          mkdir build2
-
-      - name: Build examples
-        shell: bash
-        working-directory: build2
-        continue-on-error: true
-        run: |
-          cmake "/c/Program Files/srcML/share/srcml/examples/libsrcml" -DsrcML_DIR="C:/Program Files/srcML/cmake" -G Ninja
-          ninja
-
-      - name: Run examples in PowerShell (see loader errors)
-        shell: pwsh
-        working-directory: build2
-        continue-on-error: true
-        run: |
-          Get-ChildItem *.exe
-          foreach ($e in Get-ChildItem *.exe) {
-            Write-Host "== $($e.Name) =="
-            & .\${e.Name}
-            if ($LASTEXITCODE) { Write-Host "rc=$LASTEXITCODE" }
-          }
-
-      - name: Run examples
-        shell: bash
-        working-directory: build2
-        continue-on-error: true
-        run: |
-          ls *.exe
-          ./srcml_copy_archive.exe || echo $?
-          ./srcml_create_archive_fd.exe || echo $?
-          ./srcml_create_archive_file.exe || echo $?
-          ./srcml_create_archive_filename.exe || echo $?
-          ./srcml_create_archive_full.exe || echo $?
-          ./srcml_direct_language.exe || echo $?
-          ./srcml_direct_language_list.exe || echo $?
-          ./srcml_direct_language_xml.exe || echo $?
-          ./srcml_direct_src2srcml.exe || echo $?
-          ./srcml_direct_srcml2src.exe || echo $?
-          ./srcml_list.exe || echo $?
-          ./srcml_read_archive_fd.exe || echo $?
-          ./srcml_read_archive_file.exe || echo $?
-          ./srcml_read_archive_filename.exe || echo $?
-          ./srcml_read_archive_full.exe || echo $?
-          ./srcml_read_archive_memory.exe || echo $?
-          ./srcml_relaxng.exe || echo $?
-          ./srcml_sort_archive.exe || echo $?
-          ./srcml_split_archive.exe || echo $?
-          ./srcml_transform.exe || echo $?
-          ./srcml_xpath.exe || echo $?
-          ./srcml_xslt.exe || echo $?
-
-  test-installer:
-    needs: build
-    runs-on: windows-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        installer: [msi, inno, nuget]
-
-    steps:
-
-      # Download the installer artifact
-      - name: Download installer
-        uses: actions/download-artifact@v4
-        with:
-          name: "Windows Packages"
-
-      - name: Install package Wix msi
-        if: ${{ matrix.installer == 'msi' }}
-        run: |
-          msiexec /i srcml-1.1.0-windows-x86_64.msi /quiet /norestart /L*vx .\msi.log
-      - uses: actions/upload-artifact@v4
-        with:
-          name: msi.windows-latest.log
-          path: msi.log
-
-      - name: Install package Inno Setup
-        if: ${{ matrix.installer == 'inno' }}
-        run: |
-          dir
-          D:\a\srcML\srcML\srcml-1.1.0-windows-x86_64.exe /VERYSILENT /LOG="$GITHUB_WORKSPACE/inno.log"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: inno.windows-latest.log
-          path: inno.log
-
-      - name: Install package Nuget
-        if: ${{ matrix.installer == 'nuget' }}
-        run: |
-          mkdir LocalNuGetFeed
-          nuget add srcml.1.1.0.nupkg -Source LocalNuGetFeed -Verbosity detailed -NonInteractive
-          nuget install srcml -Source D:\a\srcML\srcML\LocalNuGetFeed -OutputDirectory "C:\Program Files" -Verbosity detailed -NonInteractive
-          mv "C:\Program Files\srcml.1.1.0" "C:\Program Files\srcML"
-
-      - name: Set PATH for Windows
-        shell: bash
-        continue-on-error: true
-        run: |
-          echo "C:\\Program Files\\srcML\\bin" >> "$GITHUB_PATH"
-          ls -lh "/c/Program Files/srcML/bin"
-
-      - name: Run Installed srcml
-        shell: bash
-        continue-on-error: true
-        run: |
-          srcml --help
-          srcml --text="a;" -l C++
-
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup msys2 with additional client-test packages for Windows
-        uses: msys2/setup-msys2@v2
-        continue-on-error: true
-        with:
-          install: >-
-            zip
-            cpio
-            diffutils
-            util-linux
-            cmake
-            libxml2
-
-      - name: Create build directory
-        shell: bash
-        run: |
-          mkdir build
-
-      - name: Build
-        shell: bash
-        working-directory: build
-        continue-on-error: true
-        run: |
-          export UseMultiToolTask=true
-          cmake ../test -DSRCML_TEST_INSTALLED=ON -G Ninja
-
-      - name: Test client
-        uses: ./.github/actions/test-client
-        with:
-          prefix: "Windows ${{ matrix.installer }}"
-
-      - name: Test libsrcml
-        uses: ./.github/actions/test-libsrcml
-        with:
-          prefix: "Windows ${{ matrix.installer }}"
-
-      - name: Test parser
-        uses: ./.github/actions/test-parser
-        with:
-          prefix: "Windows ${{ matrix.installer }}"

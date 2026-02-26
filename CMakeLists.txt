@@ -7,7 +7,9 @@
 # The master CMake project file for srcML
 
 if(DEFINED ENV{VCPKG_ROOT} OR DEFINED CMAKE_TOOLCHAIN_FILE)
+    message(STATUS "Building with vcpkg")
     set(VCPKG_BUILD_TYPE "release")
+    include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 endif()
 
 cmake_minimum_required(VERSION 3.28)
