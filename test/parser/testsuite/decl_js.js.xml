@@ -262,33 +262,75 @@
 <!-- Object Destructuring -->
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const {<expr><name>sync</name></expr>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'child_process'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const {<decl><name>sync</name></decl>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'child_process'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const {<expr><name>copy</name></expr>, <expr><name>validate</name></expr>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'./src/gd'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const {<decl><name>copy</name></decl>, <decl><name>validate</name></decl>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'./src/gd'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<decl><name>copy</name></decl>, <decl/>, <decl><name>validate</name></decl>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'./src/gd'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><literal type="string">"key"</literal></expr>: <decl><name>value</name></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><literal type="string">"key1"</literal></expr>: <decl><name>value1</name></decl>, <expr><literal type="string">"key2"</literal></expr>: <decl><name>value2</name></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><literal type="string">"key1"</literal></expr>: <decl><name>value1</name></decl>, <decl/>, <expr><literal type="string">"key2"</literal></expr>: <decl><name>value2</name></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl><name>a1</name> <init>= <expr><name>aDefault</name></expr></init></decl>, <decl><name>b</name> <init>= <expr><name>bDefault</name></expr></init></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl><name>a1</name> <init>= <expr><name>aDefault</name></expr></init></decl>, <expr><name>b</name></expr>: <decl><name>b1</name> <init>= <expr><name>bDefault</name></expr></init></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Array Destructuring -->
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const [<expr><name>stack</name></expr>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const [<decl><name>stack</name></decl>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const [<expr><name>r</name></expr>, <expr><name>g</name></expr>, <expr><name>b</name></expr>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const [<decl><name>r</name></decl>, <decl><name>g</name></decl>, <decl><name>b</name></decl>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const [<expr><name>_</name></expr>, <expr><operator>...</operator><name>rest</name></expr>] <init>= <expr><name><name>props</name><operator>.</operator><name>array</name></name></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const [<decl><name>_</name></decl>, <decl><modifier>...</modifier><name>rest</name></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>array</name></name></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const [<expr><name>x</name> <operator>=</operator> <array>[<expr><operator>-</operator><literal type="number">1</literal></expr>, <expr><literal type="number">1</literal></expr>]</array></expr>] <init>= <expr><name><name>props</name><operator>.</operator><name>value</name></name></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const [<decl><name>x</name> <init>= <expr><array>[<expr><operator>-</operator><literal type="number">1</literal></expr>, <expr><literal type="number">1</literal></expr>]</array></expr></init></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>value</name></name></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const [<expr><name>x</name> <operator>=</operator> <call><name>sum</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr>] <init>= <expr><name><name>props</name><operator>.</operator><name>value</name></name></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const [<decl><name>x</name> <init>= <expr><call><name>sum</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>value</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Nested Destructuring -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>a</name></decl>, <decl>[<decl><name>b</name></decl>, <decl><name>c</name></decl>]</decl>] <init>= <expr><name>array</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>a</name></decl>, <decl>{<expr><name>b</name></expr>: <decl><name>b1</name></decl>}</decl>] <init>= <expr><name>array</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl>[<decl><name>a1</name></decl>]</decl>, <expr><name>b</name></expr>: <decl>[<decl><name>b1</name></decl>]</decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl>{<expr><name>b</name></expr>: <decl><name>b1</name></decl>}</decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Subscriptable Function Call -->

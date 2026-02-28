@@ -18663,9 +18663,12 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
         (JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)
 
         {
-            // handle optional array or object destructuring syntax (e.g., "const {NAME}")
-            if (LA(1) == LBRACKET || LA(1) == LCURLY)
-                decl_with_destructuring_js();
+            // handle optional array destructuring syntax (e.g., "const [a, b]")
+            if (LA(1) == LBRACKET)
+                decl_with_array_destructuring_js();
+            // handle optional object destructuring syntax (e.g., "const {'key': value}")
+            else if (LA(1) == LCURLY)
+                decl_with_object_destructuring_js();
         }
 
         (options { greedy = true; } :
@@ -19325,84 +19328,223 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
-  decl_with_destructuring_js
+  decl_with_array_destructuring_js
 
-  Handles array or object destructuring in declarations in JavaScript.
+  Handles array destructuring (e.g., "const [a, b]") in declarations in JavaScript.
 */
-decl_with_destructuring_js[] { bool is_array = (LA(1) == LBRACKET); ENTRY_DEBUG } :
+decl_with_array_destructuring_js[] { ENTRY_DEBUG } :
         {
-            startNewMode(MODE_DECL_DESTRUCTURE_JS);
+            startNewMode(MODE_ARRAY_DESTRUCTURE_JS);
 
-            if (is_array)
-                bracket_types_js.emplace_back("dLBRACKET");
-            else
-                bracket_types_js.emplace_back("dLCURLY");
+            bracket_types_js.emplace_back("dLBRACKET");
         }
 
-        ({ is_array }? LBRACKET | LCURLY)
+        LBRACKET
 
         (options { greedy = true; } :
-            // end the array or object destructuring at the correct ']' or '}'
-            {
-                (is_array && LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET")
-                || (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY")
-            }?
+            // end the array destructuring at the correct ']'
+            { LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET" }?
             {
                 break;
             } |
 
-            { inMode(MODE_ARGUMENT) }?
-            argument |
+            // found "'key': a" case; requires special markup
+            { LA(1) != LCURLY && LA(1) != LBRACKET && perform_decl_with_colon_check_js() }?
+            declaration_destructure_js[false] |
 
-            // allow JavaScript ternaries to use existing "else" logic
-            { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
-
-            {
-                if (!inMode(MODE_EXPRESSION))
-                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-            }
-            expression |
-
-            {
-                if (
-                    inTransparentMode(MODE_DECL_DESTRUCTURE_JS)
-                    && (
-                        bracket_types_js.back() == "dLBRACKET"
-                        || bracket_types_js.back() == "dLCURLY"
-                    )
-                )
-                    endDownToMode(MODE_DECL_DESTRUCTURE_JS);
-                // end argument tags in a call argument list
-                else if (
-                    inTransparentMode(MODE_LIST)
-                    && (
-                        lparen_types_js.back() == 'c'
-                        && bracket_types_js.back() == "cLPAREN"
-                    )
-                )
-                    endDownToMode(MODE_LIST);
-            }
-            COMMA |
-
-            TERMINATE
+            declaration_destructure_js[true]
         )*
 
         {
-            if (bracket_types_js.back() == "dLBRACKET" || bracket_types_js.back() == "dLCURLY")
+            if (LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET")
                 bracket_types_js.pop_back();
 
-            if (inTransparentMode(MODE_DECL_DESTRUCTURE_JS))
-                endDownToMode(MODE_DECL_DESTRUCTURE_JS);
+            if (inTransparentMode(MODE_ARRAY_DESTRUCTURE_JS))
+                endDownToMode(MODE_ARRAY_DESTRUCTURE_JS);
         }
 
-        ({ is_array }? RBRACKET | RCURLY)
+        RBRACKET
 
         {
-            if (inMode(MODE_DECL_DESTRUCTURE_JS))
-                endMode(MODE_DECL_DESTRUCTURE_JS);
+            if (inMode(MODE_ARRAY_DESTRUCTURE_JS))
+                endMode(MODE_ARRAY_DESTRUCTURE_JS);
         }
 ;
+
+/*
+  decl_with_object_destructuring_js
+
+  Handles object destructuring (e.g., "const {'key': value}") in declarations in JavaScript.
+*/
+decl_with_object_destructuring_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_OBJECT_DESTRUCTURE_JS);
+
+            bracket_types_js.emplace_back("dLCURLY");
+        }
+
+        LCURLY
+
+        (options { greedy = true; } :
+            // end the object destructuring at the correct '}'
+            { LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY" }?
+            {
+                break;
+            } |
+
+            { bracket_types_js.back() == "dLCURLY" }?
+            TERMINATE |
+
+            // found "'key': a" case; requires special markup
+            { LA(1) != LCURLY && LA(1) != LBRACKET && perform_decl_with_colon_check_js() }?
+            declaration_destructure_js[false] |
+
+            declaration_destructure_js[true]
+        )*
+
+        {
+            if (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY")
+                bracket_types_js.pop_back();
+
+            if (inTransparentMode(MODE_OBJECT_DESTRUCTURE_JS))
+                endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+        }
+
+        RCURLY
+
+        {
+            if (inMode(MODE_OBJECT_DESTRUCTURE_JS))
+                endMode(MODE_OBJECT_DESTRUCTURE_JS);
+        }
+;
+
+/*
+  declaration_destructure_js
+
+  Handles a destructured declaration in JavaScript.
+  All declarations here do not have a type, even those that are comma-separated.
+*/
+declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_DESTRUCTURE_JS);
+
+            // do not enclose "'key'" in decl in "'key': a" case
+            if (markup)
+                startElement(SDECLARATION);
+        }
+
+        (options { greedy = true; } :
+            // ensure the declaration ends before a termination token or comma
+            { LA(1) == COMMA }?
+            {
+                break;
+            } |
+
+            // "expression: declaration" syntax for object destructuring
+            { LA(1) != LCURLY && LA(1) != LBRACKET && perform_decl_with_colon_check_js() }?
+            (
+                {
+                    if (!inMode(MODE_EXPRESSION))
+                        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                }
+
+                expression
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                }
+
+                COLON
+                declaration_destructure_js[true]
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                    break;
+                }
+            ) |
+
+            // nested destructuring
+            decl_with_array_destructuring_js | decl_with_object_destructuring_js |
+
+            declaration_init_js | declaration_range_js | tripledotop | compound_name
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECL_DESTRUCTURE_JS) && LA(1) == COMMA) {
+                endDownToMode(MODE_DECL_DESTRUCTURE_JS);
+                endMode(MODE_DECL_DESTRUCTURE_JS);
+            }
+
+            // consume comma that ends the declaration
+            if (LA(1) == COMMA) {
+                consume();
+
+                // consume commas that separate empty declarations
+                while (LA(1) == COMMA) {
+                    startNewMode(MODE_DECL_JS);
+                    startElement(SDECLARATION);
+                    endMode(MODE_DECL_JS);
+
+                    consume();
+                }
+            }
+        }
+;
+
+/*
+  perform_decl_with_colon_check_js
+
+  Checks for object destructuring with colons (e.g., "const {a: a1} = obj;") in JavaScript.
+*/
+perform_decl_with_colon_check_js[] returns [bool hascolon] {
+        hascolon = false;
+        int last_consumed_current = last_consumed;
+        int bracket_count = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                if (LA(1) == LPAREN || LA(1) == LBRACKET || LA(1) == LCURLY)
+                    ++bracket_count;
+
+                if (LA(1) == RPAREN || LA(1) == RBRACKET || LA(1) == RCURLY)
+                    --bracket_count;
+
+                if (bracket_count < 0)
+                    break;
+
+                if (LA(1) == COLON && bracket_count == 0) {
+                    hascolon = true;
+                    break;
+                }
+
+                if (
+                    (
+                        bracket_count == 0
+                        && (
+                            LA(1) == RPAREN
+                            || LA(1) == RBRACKET
+                            || LA(1) == RCURLY
+                            || LA(1) == COMMA
+                        )
+                    )
+                    || LA(1) == 1 /* EOF */
+                )
+                    break;
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
 
 /*
   array_js
