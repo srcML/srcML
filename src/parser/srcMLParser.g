@@ -19341,6 +19341,17 @@ decl_with_array_destructuring_js[] { ENTRY_DEBUG } :
 
         LBRACKET
 
+        {
+            // consume commas that separate empty declarations
+            while (LA(1) == COMMA) {
+                startNewMode(MODE_DECL_JS);
+                startElement(SDECLARATION);
+                endMode(MODE_DECL_JS);
+
+                consume();
+            }
+        }
+
         (options { greedy = true; } :
             // end the array destructuring at the correct ']'
             { LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET" }?
@@ -19384,6 +19395,17 @@ decl_with_object_destructuring_js[] { ENTRY_DEBUG } :
         }
 
         LCURLY
+
+        {
+            // consume commas that separate empty declarations
+            while (LA(1) == COMMA) {
+                startNewMode(MODE_DECL_JS);
+                startElement(SDECLARATION);
+                endMode(MODE_DECL_JS);
+
+                consume();
+            }
+        }
 
         (options { greedy = true; } :
             // end the object destructuring at the correct '}'
