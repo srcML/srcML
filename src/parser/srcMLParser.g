@@ -20407,6 +20407,7 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
 
                 if (
                     LA(1) == LCURLY /* start of a block, object, or name list */
+                    || LA(1) == COMMA /* do not confuse with arguments in an argument list */
                     || LA(1) == COLON /* start of a property */
                     || LA(1) == EQUAL /* LHS of assignment is not a tagged template */
                     || LA(1) == JS_ARROW /* LHS of lambda is not a tagged template */
