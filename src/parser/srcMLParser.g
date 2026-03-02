@@ -1567,9 +1567,17 @@ javascript_statements[] {
             auto token = LA(1);
 
             // looking for "let", "var", "const", "static", or "using" at the statement level
+            // (Note: do not confuse static declaration with static method in a class)
             if (
                 decl_start_js_token_set.member(LA(1))
-                && (LA(1) != JS_STATIC || (LA(1) == JS_STATIC && next_token() != LCURLY))
+                && (
+                    LA(1) != JS_STATIC
+                    || (
+                        LA(1) == JS_STATIC
+                        && next_token() != LCURLY
+                        && !perform_keywordless_function_check_js()
+                    )
+                )
             ) {
                 declaration_statement_js(LA(1));
                 processed_statement = true;
@@ -18507,6 +18515,7 @@ check_valid_specifier_js[] returns [int isspecifier] {
             specifier_js_token_set.member(LA(1))
             && (LA(1) != JS_DEFAULT || (LA(1) == JS_DEFAULT && next_token() != COLON))
             && (LA(1) != JS_AWAIT || (LA(1) == JS_AWAIT && next_token() == JS_USING))
+            && (LA(1) != JS_STATIC || (LA(1) == JS_STATIC && perform_keywordless_function_check_js()))
         )
             isspecifier = true;
 
@@ -18560,7 +18569,7 @@ specifier_js[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
 
-        (JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT)
+        (JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT | JS_STATIC)
 
         {
             endMode(MODE_LOCAL);
@@ -19782,8 +19791,8 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
         inputState->guessing++;
 
         try {
-            // consume optional "async" before checking
-            if (LA(1) == JS_ASYNC)
+            // consume optional "async" or "static" before checking
+            if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
                 consume();
 
             // match "NAME"

@@ -67,4 +67,12 @@
 </block_content>}</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> <specifier>default</specifier> class <name>ErrorBoundary</name> <super_list><extends>extends <super><expr><name><name>React</name><operator>.</operator><name>Component</name></name></expr></super></extends></super_list> <block>{<block_content>
+  <expr_stmt><expr><function><specifier>static</specifier> <name>getDerivedStateFromError</name><parameter_list>(<parameter><decl><name>error</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><object>{<property><expr><name>error</name></expr></property>}</object></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></class>
+</unit>
+
 </unit>
