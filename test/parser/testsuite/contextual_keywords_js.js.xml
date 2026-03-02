@@ -341,6 +341,14 @@
 <expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>set</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>set</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>set</name> <init>= <expr><operator>new</operator> <call><name>WeakSet</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "static" -->
 
 <unit revision="1.0.0" language="JavaScript">

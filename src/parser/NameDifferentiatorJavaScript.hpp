@@ -37,6 +37,7 @@ private:
     std::deque<antlr::RefToken> buffer;
 
     antlr::RefToken prevToken = srcMLToken::factory();
+    antlr::RefToken prevNonWhitespaceToken = srcMLToken::factory();
 
     int numBrackets = 0;  // encompasses (), {}, and []
 };

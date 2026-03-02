@@ -32,6 +32,10 @@ antlr::RefToken NameDifferentiatorJavaScript::nextToken() {
 
     // Remove the front token from the buffer and return it
     auto token = buffer.front();
+
+    if (!srcMLParser::skip_tokens_set.member(token->getType()))
+        prevNonWhitespaceToken = token;
+
     buffer.pop_front();
     return token;
 }
@@ -49,15 +53,35 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     buffer.emplace_back(nextToken);
 
     /*
-        CASE 1: Do not change `token` if it is followed by `{` or another NAME
+        CASE 1: `token` should be the name of a variable in a declaration (if it is not already)
     */
-    if (nextToken->getType() == srcMLParser::LCURLY || nextToken->getType() == srcMLParser::NAME) {
+    if (
+        srcMLParser::decl_start_js_token_set.member(prevNonWhitespaceToken->getType())
+        && token->getType() != srcMLParser::NAME
+    ) {
+        token->setType(srcMLParser::NAME);
         prevToken = nextToken;
+
+        if (!srcMLParser::skip_tokens_set.member(token->getType()))
+            prevNonWhitespaceToken = token;
+
         return;
     }
 
     /*
-        CASE 2: `token` is followed by whitespace, comments, EOL, etc.
+        CASE 2: Do not change `token` if it is followed by `{` or another NAME
+    */
+    if (nextToken->getType() == srcMLParser::LCURLY || nextToken->getType() == srcMLParser::NAME) {
+        prevToken = nextToken;
+
+        if (!srcMLParser::skip_tokens_set.member(token->getType()))
+            prevNonWhitespaceToken = token;
+
+        return;
+    }
+
+    /*
+        CASE 3: `token` is followed by whitespace, comments, EOL, etc.
     */
     if (srcMLParser::whitespace_token_set.member(nextToken->getType()) || nextToken->getType() == srcMLParser::EOL) {
         auto newPrevToken = prevToken;
@@ -75,6 +99,9 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
 
         prevToken = newPrevToken;
 
+        if (!srcMLParser::skip_tokens_set.member(token->getType()))
+            prevNonWhitespaceToken = token;
+
         // The new `nextToken` may need to be processed (e.g., "as default" in name lists)
         if (srcMLParser::name_differentiator_js_token_set.member(nextToken->getType()))
             lookAheadDifferentiator(nextToken);
@@ -83,7 +110,7 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     }
 
     /*
-        CASE 3: Change `token` to a NAME if one of the following conditions is met
+        CASE 4: Change `token` to a NAME if one of the following conditions is met
     */
     if (
         isNameToken(token, nextToken)
@@ -104,6 +131,10 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     ) {
         token->setType(srcMLParser::NAME);
         prevToken = nextToken;
+
+        if (!srcMLParser::skip_tokens_set.member(token->getType()))
+            prevNonWhitespaceToken = token;
+
         return;
     }
 }
