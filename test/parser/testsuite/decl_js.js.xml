@@ -111,6 +111,10 @@
 <decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>, <comment type="block">/* ..., */</comment> <decl type="const"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>tmp</name> <init>= <expr><operator>(</operator><call><name>mutate</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call><operator>,</operator> <name>key</name><operator>)</operator></expr></init></decl>;</decl_stmt>
+</unit>
+
 <!-- "const" (without semicolons) -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -123,6 +127,10 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>, <comment type="block">/* ..., */</comment> <decl type="const"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>tmp</name> <init>= <expr><operator>(</operator><call><name>mutate</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call><operator>,</operator> <name>key</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "static" (with semicolons) -->

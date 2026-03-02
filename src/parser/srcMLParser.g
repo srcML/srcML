@@ -19060,8 +19060,11 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             }
             expression |
 
-            // consume commas for calls, but not for parameters
-            { bracket_types_js.back() == "cLPAREN" }?
+            // consume commas for calls and operator parentheses, but not for parameters
+            {
+                bracket_types_js.back() == "cLPAREN"
+                || (bracket_types_js.back() == "oLPAREN" && lparen_types_js.back() == 'o')
+            }?
             comma
         )*
 ;
