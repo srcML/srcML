@@ -20399,9 +20399,11 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
 
                 // process consecutive backtick arguments
                 while (LA(1) == BACKTICK_START) {
+                    if (last_consumed == NAME || last_consumed == RPAREN)
+                        istagged = true;
+
                     backtick_literal_js();
                     ++call_count;
-                    istagged = true;
                 }
 
                 // process consecutive argument lists (after backticks)

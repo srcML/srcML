@@ -31,4 +31,12 @@
 <decl_stmt><decl type="const">const <name>pkgDir</name> <init>= <expr><call><name><name>path</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>__dirname</name></expr></argument>, <argument><expr><literal type="string">`../../packages/${pkgName}`</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>dotenvFiles</name> <init>= <expr><array>[
+  <expr><literal type="string">`${paths.dotenv}.${NODE_ENV}.local`</literal></expr>,
+  <expr><name>NODE_ENV</name> <operator>!==</operator> <literal type="string">'test'</literal> <operator>&amp;&amp;</operator> <literal type="string">`${paths.dotenv}.local`</literal></expr>,
+  <expr><literal type="string">`${paths.dotenv}.${NODE_ENV}`</literal></expr>,
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
