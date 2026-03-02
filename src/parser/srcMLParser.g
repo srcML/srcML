@@ -19418,7 +19418,7 @@ decl_with_object_destructuring_js[] { ENTRY_DEBUG } :
             TERMINATE |
 
             // special case: computed property used as key
-            { last_consumed == LCURLY }?
+            { last_consumed == LCURLY || last_consumed == COMMA }?
             (computed_property_js COLON) => (
                 {
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
