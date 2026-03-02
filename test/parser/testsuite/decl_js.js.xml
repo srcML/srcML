@@ -293,6 +293,10 @@
 <decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl><name>a1</name> <init>= <expr><name>aDefault</name></expr></init></decl>, <expr><name>b</name></expr>: <decl><name>b1</name> <init>= <expr><name>bDefault</name></expr></init></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name type="computed">[<expr><name>computedKey</name></expr>]</name></expr>: <decl><name>x</name></decl>} <init>= <expr><name><name>props</name><operator>.</operator><name>val</name></name></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Array Destructuring -->
 
 <unit revision="1.0.0" language="JavaScript">

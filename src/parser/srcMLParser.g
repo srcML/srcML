@@ -19395,6 +19395,28 @@ decl_with_object_destructuring_js[] { ENTRY_DEBUG } :
             { bracket_types_js.back() == "dLCURLY" }?
             TERMINATE |
 
+            // special case: computed property used as key
+            { last_consumed == LCURLY }?
+            (computed_property_js COLON) => (
+                {
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    startElement(SEXPRESSION);
+                }
+
+                computed_property_js
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                }
+
+                COLON
+                declaration_destructure_js[true]
+
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                }
+            ) |
+
             // found "'key': a" case; requires special markup
             { LA(1) != LCURLY && LA(1) != LBRACKET && perform_decl_with_colon_check_js() }?
             declaration_destructure_js[false] |
