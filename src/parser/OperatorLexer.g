@@ -275,16 +275,16 @@ OPERATORS options { testLiterals = true; } {
             } |
 
             // "-->" will end a JSX comment
-            ('-') { starttag += '-'; wasescape = false; } ({ commenttoken == 'j' }? ('-' '>') => '-' '>' { commenttoken = '\000'; })? |
+            ('-') { starttag += '-'; wasescape = false; } ({ stringtoken == '\000' && commenttoken == 'j' }? ('-' '>') => '-' '>' { commenttoken = '\000'; })? |
 
             // ignore hashbang comments (e.g., "#! ...")
-            ('#') { starttag += '#'; wasescape = false; } ({ commenttoken != 'h' }? '!' { commenttoken = 'h'; })? |
+            ('#') { starttag += '#'; wasescape = false; } ({ stringtoken == '\000' && commenttoken != 'h' }? '!' { commenttoken = 'h'; })? |
 
             // ignore line comments (e.g., "// ...") and block comments (e.g., "/* ... */")
-            ('/') { starttag += '/'; wasescape = false; } ({ commenttoken != 'l' }? '/' { commenttoken = 'l'; })? ({ commenttoken != 'b' }? '*' { commenttoken = 'b'; })? |
+            ('/') { starttag += '/'; wasescape = false; } ({ stringtoken == '\000' && commenttoken != 'l' }? '/' { commenttoken = 'l'; })? ({ stringtoken == '\000' && commenttoken != 'b' }? '*' { commenttoken = 'b'; })? |
 
             // "*/" will end a block comment
-            ('*') { starttag += '*'; wasescape = false; } ({ commenttoken == 'b' }? '/' { commenttoken = '\000'; })? |
+            ('*') { starttag += '*'; wasescape = false; } ({ stringtoken == '\000' && commenttoken == 'b' }? '/' { commenttoken = '\000'; })? |
 
             // ignore backslashes
             ('\\') { wasescape = true; } |

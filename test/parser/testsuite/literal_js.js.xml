@@ -773,6 +773,14 @@
 <operator>)</operator></expr></return>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><call><name><name>memo</name><operator>.</operator><name>concat</name></name><argument_list>(
+  <argument><expr><literal type="jsx">&lt;a href={'https://github.com/facebook/react/issues/' + issue} key={issue}&gt;
+    {issue}
+  &lt;/a&gt;</literal></expr></argument>
+)</argument_list></call></expr></return>
+</unit>
+
 <!-- Comments in JSX literals (left unmarked) -->
 
 <unit revision="1.0.0" language="JavaScript">
