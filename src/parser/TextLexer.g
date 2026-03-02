@@ -204,6 +204,7 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnons
                 startline
                 || lastnonspacetoken == '='
                 || lastnonspacetoken == '('
+                || lastnonspacetoken == '['
                 || lastnonspacetoken == ','
                 || lastnonspacetoken == ':'
             )

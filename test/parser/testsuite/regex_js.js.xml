@@ -111,6 +111,14 @@
 <decl_stmt><decl type="const">const <name>complex</name> <init>= <expr><call><name><name>input</name><operator>.</operator><name>sample</name></name><argument_list>(<argument><expr><literal type="regex">/hello/</literal></expr></argument>,<argument><expr><literal type="regex">/world/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Regular expressions following '[' -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>babelOptions</name> <init>= <expr><object>{
+  <property><expr><name>ignore</name></expr>: <expr><array>[<expr><literal type="regex">/\/(build|node_modules)\//</literal></expr>]</array></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Regular expressions following ':' -->
 
 <unit revision="1.0.0" language="JavaScript">
