@@ -75,4 +75,12 @@
 </block_content>}</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>Component</name> <init>= <expr><class>class <name>Component</name> <super_list><extends>extends <super><expr><name><name>React</name><operator>.</operator><name>Component</name></name></expr></super></extends></super_list> <block>{<block_content>
+  <expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="jsx">&lt;div /&gt;</literal></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

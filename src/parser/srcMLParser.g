@@ -19141,7 +19141,7 @@ extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 super_list_js[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // ensure the super list ends before the start of the class block
-            { inTransparentMode(MODE_CLASS) && LA(1) == LCURLY }?
+            { (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS)) && LA(1) == LCURLY }?
             {
                 break;
             } |
@@ -19163,7 +19163,7 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // ensure the super ends before the start of the class block
-            { inTransparentMode(MODE_CLASS) && LA(1) == LCURLY }?
+            { (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS)) && LA(1) == LCURLY }?
             {
                 break;
             } |
@@ -20324,6 +20324,10 @@ class_expression_js[] { ENTRY_DEBUG } :
             // consume the name for expression-level classes, if applicable
             if (LA(1) == NAME)
                 compound_name();
+
+            // consume the "extends" portion of an expression-level class, if applicable
+            if (LA(1) == JS_EXTENDS)
+                extends_js();
         }
 
         expression_block_js
