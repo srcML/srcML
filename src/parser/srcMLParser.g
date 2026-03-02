@@ -19500,6 +19500,8 @@ perform_decl_with_colon_check_js[] returns [bool hascolon] {
         hascolon = false;
         int last_consumed_current = last_consumed;
         int bracket_count = 0;
+        bool internary = false;
+        int ternary_bracket_count = 0;
         int start = mark();
         inputState->guessing++;
 
@@ -19514,7 +19516,18 @@ perform_decl_with_colon_check_js[] returns [bool hascolon] {
                 if (bracket_count < 0)
                     break;
 
-                if (LA(1) == COLON && bracket_count == 0) {
+                if (LA(1) == QMARK) {
+                    internary = true;
+                    ternary_bracket_count = bracket_count;
+                }
+
+                // false positive: colon as part of a ternary
+                if (internary && LA(1) == COLON && ternary_bracket_count == bracket_count) {
+                    internary = false;
+                    ternary_bracket_count = 0;
+                }
+                // found colon for a decl with object syntax
+                else if (LA(1) == COLON && bracket_count == 0) {
                     hascolon = true;
                     break;
                 }

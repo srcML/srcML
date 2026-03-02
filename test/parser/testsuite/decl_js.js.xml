@@ -315,6 +315,10 @@
 <decl_stmt><decl type="const">const [<decl><name>x</name> <init>= <expr><call><name>sum</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>value</name></name></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>x</name> <init>= <expr><ternary><condition><expr><literal type="boolean">true</literal></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></init></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>y</name></name></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Nested Destructuring -->
 
 <unit revision="1.0.0" language="JavaScript">
