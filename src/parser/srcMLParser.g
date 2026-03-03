@@ -19815,7 +19815,11 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     if (paren_count < 0)
                         break;
 
-                    if ((LA(1) == RPAREN && paren_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    if (
+                        (LA(1) == RPAREN && paren_count == 0)
+                        || (LA(1) == TERMINATE && next_token() != RCURLY)
+                        || LA(1) == 1 /* EOF */
+                    )
                         break;
 
                     consume();

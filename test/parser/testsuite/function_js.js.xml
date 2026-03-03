@@ -173,6 +173,21 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><function><name>setBoundingClientRect</name><parameter_list>(<parameter><decl><object>{<property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property>, <property><expr><name>width</name></expr></property>, <property><expr><name>height</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name><name>node</name><operator>.</operator><name>getBoundingClientRect</name></name> <operator>=</operator> <function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><object>{
+      <property><expr><name>width</name></expr></property>,
+      <property><expr><name>height</name></expr></property>,
+      <property><expr><name>left</name></expr>: <expr><name>x</name></expr></property>,
+      <property><expr><name>right</name></expr>: <expr><name>x</name> <operator>+</operator> <name>width</name></expr></property>,
+      <property><expr><name>top</name></expr>: <expr><name>y</name></expr></property>,
+      <property><expr><name>bottom</name></expr>: <expr><name>y</name> <operator>+</operator> <name>height</name></expr></property>,
+    }</object></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></function></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>j</name> <init>= <expr><function>function <name>bar</name><parameter_list>(<parameter><decl><name>args</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
