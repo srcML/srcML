@@ -74,6 +74,10 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">`Hello, ${`World!`}`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><literal type="number">0b10101</literal></expr>;</expr_stmt>
 </unit>
 

@@ -157,6 +157,9 @@ COMMENT_TEXT {
     int lookaheadMinusTwo = 0;
     int lookaheadMinusThree = 0;
 
+    // detect scoping in JavaScript backtick literals (e.g., `${...}`)
+    int scopeCount = 0;
+
     int lastColumn = 0;
 } :
 
@@ -446,13 +449,27 @@ COMMENT_TEXT {
     ']'..'_' |
 
     '`' {
-        if (lookaheadMinusTwo != '\\' && mode == BACKTICK_END) {
+        if (scopeCount == 0 && lookaheadMinusTwo != '\\' && mode == BACKTICK_END) {
             $setType(mode);
             selector->pop();
         }
     } |
 
-    'a'..'\377') {
+    'a'..'z' |
+
+    '{' {
+        if (lookaheadMinusTwo == '$' && mode == BACKTICK_END)
+            ++scopeCount;
+    } |
+
+    '|' |
+
+    '}' {
+        if (scopeCount > 0 && mode == BACKTICK_END)
+            --scopeCount;
+    } |
+
+    '~'..'\377') {
 
         // not the first character anymore
         first = false;
