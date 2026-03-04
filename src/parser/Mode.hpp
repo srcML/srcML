@@ -350,6 +350,10 @@ const static srcMLState::MODE_TYPE MODE_CONSTRUCTOR_JS;
 
 const static srcMLState::MODE_TYPE MODE_FOR_CONTROL_JS;
 
+const static srcMLState::MODE_TYPE MODE_INNER_NAME_JS;
+
+const static srcMLState::MODE_TYPE MODE_OUTER_NAME_JS;
+
 const static srcMLState::MODE_TYPE MODE_SUPER_LIST_JS;
 
 const static srcMLState::MODE_TYPE MODE_IIFE_CALL_JS;

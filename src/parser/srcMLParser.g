@@ -12684,6 +12684,15 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         lambda_js[true] |
 
+        // special case: JavaScript optional chaining with function calls
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && last_consumed != PERIOD
+            && last_consumed != QMARK_PERIOD
+            && perform_optional_call_chaining_check_js()
+        }?
+        optional_call_chain_js |
+
         // looking for "*[...](){}" to start a generator function computed property
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
@@ -20775,3 +20784,188 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         rparen[false]
 ;
+
+/*
+  perform_optional_call_chaining_check_js
+
+  Checks to see if a call is an optional chaining call in JavaScript.
+  For example, "a?.b?.(c)".
+*/
+perform_optional_call_chaining_check_js[] returns [bool iscall] {
+        iscall = false;
+        int last_consumed_current = last_consumed;
+        int optional_call_chain_count = 0;
+        int paren_count = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                if (LA(1) == LPAREN)
+                    ++paren_count;
+
+                if (LA(1) == RPAREN)
+                    --paren_count;
+
+                if (paren_count < 0)
+                    break;
+
+                // looking for "?.("
+                if (last_consumed == QMARK_PERIOD && LA(1) == LPAREN) {
+                    ++optional_call_chain_count;
+                }
+
+                // only break at EOL/EOF to avoid double-counting
+                if (
+                    (LA(1) == TERMINATE && next_token() != RCURLY)
+                    || (LA(1) == RPAREN && paren_count == 0 && next_token() != QMARK_PERIOD)
+                    || LA(1) == 1 /* EOF */
+                ) {
+                    break;
+                }
+
+                consume();
+            }
+
+            if (optional_call_chain_count > 0)
+                iscall = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  optional_call_chain_js
+
+  Handles optional chaining with function calls in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+optional_call_chain_js[] {
+        CompleteElement element(this);
+
+        bool is_compound = (next_token() != QMARK_PERIOD || next_token_two() != LPAREN);
+        int chained_call_count = perform_chained_call_count_js();
+
+        ENTRY_DEBUG
+} :
+        {
+            do {
+                startNewMode(MODE_LOCAL);
+                startElement(SFUNCTION_CALL);
+            } while (--chained_call_count > 0);
+
+            if (is_compound) {
+                // start outer name
+                startNewMode(MODE_OUTER_NAME_JS);
+                startElement(SNAME);
+
+                // start inner name
+                startNewMode(MODE_INNER_NAME_JS);
+                startElement(SNAME);
+            }
+            else {
+                startNewMode(MODE_VARIABLE_NAME);
+                startElement(SNAME);
+            }
+        }
+
+        NAME
+
+        {
+            if (is_compound)
+                endMode(MODE_INNER_NAME_JS);
+            else
+                endMode(MODE_VARIABLE_NAME);
+        }
+
+        (
+            // compound name required (e.g., "a?.b?.(c)")
+            { is_compound }?
+            (options { greedy = true; } :
+                // special syntax for "?.("
+                { next_token() == LPAREN }?
+                (
+                    {
+                        if (inTransparentMode(MODE_OUTER_NAME_JS)) {
+                            endDownToMode(MODE_OUTER_NAME_JS);
+                            endMode(MODE_OUTER_NAME_JS);
+                        }
+                    }
+                    qmark_period
+                    complete_argument_list
+                ) |
+
+                qmark_period | period |
+
+                // found an inner name
+                {
+                    startNewMode(MODE_INNER_NAME_JS);
+                    startElement(SNAME);
+                }
+                NAME
+                {
+                    endMode(MODE_INNER_NAME_JS);
+                } |
+
+                // found an index on a name
+                {
+                    startNewMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
+                    startElement(SINDEX);
+                }
+                (
+                    LBRACKET
+                    variable_identifier_array_grammar_sub_contents
+                    RBRACKET
+                )
+                {
+                    endDownToMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
+                    endMode(MODE_LOCAL | MODE_TOP | MODE_LIST);
+                }
+            )* |
+
+            // no compound name required (e.g., "a?.(b)")
+            (qmark_period complete_argument_list)
+        )
+;
+
+/*
+  perform_chained_call_count_js
+
+  Counts the number of chained calls in a JavaScript function call.
+  For example, "a?.b?.(c)?.(d)" has two chained calls.
+*/
+perform_chained_call_count_js[] returns [int numchainedcalls] {
+        numchainedcalls = 0;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                // looking for "?.("
+                if (last_consumed == QMARK_PERIOD && LA(1) == LPAREN) {
+                    ++numchainedcalls;
+                }
+
+                if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */) {
+                    break;
+                }
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;

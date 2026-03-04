@@ -217,6 +217,8 @@
 <expr_stmt><expr><name><name>a</name><operator>.</operator><name>b</name></name></expr></expr_stmt>
 </unit>
 
+<!-- Optional Chaining Operator ("?.") -->
+
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name><name>a</name><operator>?.</operator><name>b</name></name></expr></expr_stmt>
 </unit>
@@ -230,6 +232,36 @@
   <return>return <expr><name><name>x</name><operator>?.</operator><name>y</name><operator>?.</operator><name type="computed">[<expr><operator>(</operator><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>y</name></expr></argument>)</argument_list></call><operator>,</operator> <name>z</name><operator>)</operator></expr>]</name></name></expr></return>
 </block_content>}</block></function>
 </unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>config</name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>config</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>config</name><operator>.</operator><name>onA</name></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>config</name><operator>?.</operator><name>onA</name></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><name><name>handler</name><operator>.</operator><name>onA</name></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call><operator>?.</operator><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><name><name>handler</name><operator>.</operator><name>onA</name></name><operator>?.</operator><argument_list>(<argument><expr><object>{<property><expr><literal type="string">"event"</literal></expr>: <expr><name>event</name></expr></property>}</object></expr></argument>)</argument_list></call><operator>?.</operator><argument_list>(<argument><expr><object>{<property><expr><literal type="string">"x"</literal></expr>: <expr><literal type="number">1</literal></expr></property>, <property><expr><literal type="string">"y"</literal></expr>: <expr><literal type="number">2</literal></expr></property>}</object></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>config</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- End of Optional Chaining Operator Tests -->
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name>a</name></expr><operator>,</operator> <expr><name>b</name></expr></expr_stmt>
