@@ -110,7 +110,29 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     }
 
     /*
-        CASE 4: Change `token` to a NAME if one of the following conditions is met
+        CASE 4: `token` is a keyword that is used in a list, so it should be a NAME instead
+    */
+    if (
+        srcMLParser::table_keywords_js_token_set.member(token->getType())
+        && (
+            nextToken->getType() == srcMLParser::COMMA
+            || nextToken->getType() == srcMLParser::RPAREN
+            || nextToken->getType() == srcMLParser::RCURLY
+            || nextToken->getType() == srcMLParser::RBRACKET
+            || nextToken->getType() == srcMLParser::TERMINATE  // recall "a}" has a TERMINATE in-between
+        )
+    ) {
+        token->setType(srcMLParser::NAME);
+        prevToken = nextToken;
+
+        if (!srcMLParser::skip_tokens_set.member(token->getType()))
+            prevNonWhitespaceToken = token;
+
+        return;
+    }
+
+    /*
+        CASE 5: Change `token` to a NAME if one of the following conditions is met
     */
     if (
         isNameToken(token, nextToken)

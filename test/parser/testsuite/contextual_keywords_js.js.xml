@@ -241,6 +241,18 @@
 <expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<decl><name>get</name></decl>, <decl><name>set</name></decl>} <init>= <expr><name>descriptor</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>get</name></decl>, <decl><name>set</name></decl>] <init>= <expr><name>descriptor</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><call><name>descriptor</name><argument_list>(<argument><expr><name>get</name></expr></argument>, <argument><expr><name>set</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "if" -->
 
 <unit revision="1.0.0" language="JavaScript">
