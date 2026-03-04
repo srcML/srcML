@@ -132,6 +132,14 @@
   }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Regular expressions following '!' -->
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><operator>!</operator><literal type="regex">/\s*javascript:/i</literal><operator>.</operator><call><name>test</name><argument_list>(<argument><expr><name>action</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+  <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">'Navigate to: '</literal> <operator>+</operator> <name>action</name></expr></argument>)</argument_list></call></expr></throw>
+</block_content>}</block></if></if_stmt>
+</unit>
+
 <!-- The following should NOT be marked as regular expression literals -->
 
 <unit revision="1.0.0" language="JavaScript">

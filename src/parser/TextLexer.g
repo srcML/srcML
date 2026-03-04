@@ -207,6 +207,7 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnons
                 || lastnonspacetoken == '['
                 || lastnonspacetoken == ','
                 || lastnonspacetoken == ':'
+                || lastnonspacetoken == '!'
             )
         }?
         (options { greedy = true; } :
