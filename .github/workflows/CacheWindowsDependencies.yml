@@ -13,6 +13,7 @@ jobs:
   job:
     name: ${{ matrix.os }}-${{ github.workflow }}
     runs-on: ${{ matrix.os }}
+    if: ${{ github.repository == 'srcML/srcML' }}
     environment: build
     strategy:
       fail-fast: false
