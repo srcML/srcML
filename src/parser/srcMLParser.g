@@ -3298,8 +3298,13 @@ control_initialization_action[] { ENTRY_DEBUG } :
 
             bool in_if_mode = inPrevMode(MODE_IF);
 
-            // setup a mode for initialization that will end with a ";"
-            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
+            if (LA(1) == RPAREN) {
+                // an empty control initialization should not contain an expression
+                startNewMode(MODE_INIT);
+            } else {
+                // setup a mode for initialization that will end with a ";"
+                startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_STATEMENT | MODE_LIST);
+            }
 
             if (!in_if_mode) {
                 startElement(SCONTROL_INITIALIZATION);
