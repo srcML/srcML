@@ -1634,6 +1634,10 @@ javascript_rules[] {
         { inMode(MODE_PARAMETER_LIST_JS) }?
         javascript_parameter_list |
 
+        // looking for an empty control portion of a for-loop (e.g., lparen rparen)
+        { inMode(MODE_FOR_CONTROL_JS) && next_token() == RPAREN }?
+        empty_for_control_js |
+
         // looking for lparen to start control portion of a for-loop
         { inMode(MODE_FOR_CONTROL_JS) }?
         for_control_js |
@@ -18703,6 +18707,36 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
             if (inTransparentMode(MODE_DECL_JS)) {
                 endDownToMode(MODE_DECL_JS);
                 endMode(MODE_DECL_JS);
+            }
+        }
+;
+
+/*
+  empty_for_control_js
+
+  Handles an empty control portion of a for-loop in JavaScript.
+*/
+empty_for_control_js[] { ENTRY_DEBUG } :
+        {
+            assertMode(MODE_FOR_CONTROL_JS | MODE_EXPECT);
+            startElement(SCONTROL);
+        }
+
+        LPAREN
+
+        {
+            // add an empty initialization tag
+            startNewMode(MODE_INIT);
+            startElement(SCONTROL_INITIALIZATION);
+            endMode(MODE_INIT);
+        }
+
+        RPAREN
+
+        {
+            if (inTransparentMode(MODE_FOR_CONTROL_JS)) {
+                endDownToMode(MODE_FOR_CONTROL_JS);
+                endMode(MODE_FOR_CONTROL_JS);
             }
         }
 ;

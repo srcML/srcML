@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="for">
 
+<!-- Empty for-loop -->
+<unit revision="1.0.0" language="JavaScript">
+<for>for<control>(<init/>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
 <!-- Traditional for-loop (e.g., init;condition;incr) -->
 
 <unit revision="1.0.0" language="JavaScript">
