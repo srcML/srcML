@@ -2817,10 +2817,6 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
                         && !inTransparentMode(MODE_INTERNAL_END_CURLY)
                         && postcalltoken == RCURLY
                     )
-                    || (
-                        postnametoken != 1
-                        && postcalltoken == 1 /* EOF ? */
-                    )
                     || postcalltoken == TEMPLATE
                     || postcalltoken == INLINE
                     || postcalltoken == PUBLIC
