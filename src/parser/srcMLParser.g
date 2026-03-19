@@ -880,30 +880,70 @@ public:
     static constexpr std::size_t DUPLEX_RULES_SIZE = 700;
 
     // The duplex keyword values must start at a value 100 greater than the duplex rule size directly above
-    // Increment each new duplex keyword token by an additional one (except the first)
+    /* Python */
     static constexpr std::size_t PY_EXCEPT_MULTOPS = DUPLEX_RULES_SIZE + 100;
-    static constexpr std::size_t PY_YIELD_PY_FROM  = DUPLEX_RULES_SIZE + 101; // incremented by 1 after the first
+    static constexpr std::size_t PY_YIELD_PY_FROM  = DUPLEX_RULES_SIZE + 101;  // incremented by 1 after the first
 
-    // The Python rule size must be 200 greater than the duplex rule size
-    // If there are ever more than 100 duplex keywords, this has to change
-    static constexpr std::size_t PYTHON_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
+    /* JavaScript */
+    static constexpr std::size_t JS_CATCH_LPAREN     = DUPLEX_RULES_SIZE + 100;
+    static constexpr std::size_t JS_ELSE_IF          = DUPLEX_RULES_SIZE + 101;  // incremented by 1 after the first
+    static constexpr std::size_t JS_FUNCTION_MULTOPS = DUPLEX_RULES_SIZE + 102;
+    static constexpr std::size_t JS_GET_LBRACKET     = DUPLEX_RULES_SIZE + 103;
+    static constexpr std::size_t JS_SET_LBRACKET     = DUPLEX_RULES_SIZE + 104;
+    static constexpr std::size_t JS_STATIC_LCURLY    = DUPLEX_RULES_SIZE + 105;
+    static constexpr std::size_t JS_WITH_LPAREN      = DUPLEX_RULES_SIZE + 106;
+    static constexpr std::size_t JS_YIELD_MULTOPS    = DUPLEX_RULES_SIZE + 107;
 
-    // If downstream helpers expect INDEX, provide aliases matching the absolute codes above.
-    // If the helpers instead expect 0-based indices, change these to 0 and 1 respectively.
+    // Any language rule size must be 200 greater than the duplex rule size
+    // If there are ever more than 100 duplex keywords in a single language, this must change
+    static constexpr std::size_t PYTHON_RULES_SIZE     = DUPLEX_RULES_SIZE + 200;
+    static constexpr std::size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
+
+    // If downstream helpers expect INDEX, provide aliases matching the absolute codes above
+    // If the helpers instead expect 0-based indices, change these to 0 and 1 respectively
+    /* Python */
     static constexpr std::size_t PY_EXCEPT_MULTOPS_INDEX = PY_EXCEPT_MULTOPS;
     static constexpr std::size_t PY_YIELD_PY_FROM_INDEX  = PY_YIELD_PY_FROM;
 
+    /* JavaScript */
+    static constexpr std::size_t JS_CATCH_LPAREN_INDEX     = JS_CATCH_LPAREN;
+    static constexpr std::size_t JS_ELSE_IF_INDEX          = JS_ELSE_IF;
+    static constexpr std::size_t JS_FUNCTION_MULTOPS_INDEX = JS_FUNCTION_MULTOPS;
+    static constexpr std::size_t JS_GET_LBRACKET_INDEX     = JS_GET_LBRACKET;
+    static constexpr std::size_t JS_SET_LBRACKET_INDEX     = JS_SET_LBRACKET;
+    static constexpr std::size_t JS_STATIC_LCURLY_INDEX    = JS_STATIC_LCURLY;
+    static constexpr std::size_t JS_WITH_LPAREN_INDEX      = JS_WITH_LPAREN;
+    static constexpr std::size_t JS_YIELD_MULTOPS_INDEX    = JS_YIELD_MULTOPS;
+
     // Static getters that materialize the arrays once in static storage
-    static inline const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE>& getStaticDuplexKeywords() {
+    /* Python */
+    static inline const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE>& getStaticPythonDuplexKeywords() {
         static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords =
-            getDuplexKeywords<DUPLEX_RULES_SIZE>(PY_EXCEPT_MULTOPS_INDEX, PY_YIELD_PY_FROM_INDEX);
+            getPythonDuplexKeywords<DUPLEX_RULES_SIZE>(PY_EXCEPT_MULTOPS_INDEX, PY_YIELD_PY_FROM_INDEX);
         return duplexKeywords;
     }
 
     static inline const std::array<Rule, PYTHON_RULES_SIZE>& getStaticPythonRules() {
-        static const std::array<Rule, PYTHON_RULES_SIZE> python_rules =
+        static const std::array<Rule, PYTHON_RULES_SIZE> pythonRules =
             getPythonRules<PYTHON_RULES_SIZE>(PY_EXCEPT_MULTOPS_INDEX, PY_YIELD_PY_FROM_INDEX);
-        return python_rules;
+        return pythonRules;
+    }
+
+    /* JavaScript */
+    static inline const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE>& getStaticJavaScriptDuplexKeywords() {
+        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords =
+            getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(JS_CATCH_LPAREN_INDEX, JS_ELSE_IF_INDEX, JS_FUNCTION_MULTOPS_INDEX,
+                JS_GET_LBRACKET_INDEX, JS_SET_LBRACKET_INDEX, JS_STATIC_LCURLY_INDEX, JS_WITH_LPAREN_INDEX, JS_YIELD_MULTOPS_INDEX
+            );
+        return duplexKeywords;
+    }
+
+    static inline const std::array<Rule, JAVASCRIPT_RULES_SIZE>& getStaticJavaScriptRules() {
+        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascriptRules =
+            getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(JS_CATCH_LPAREN_INDEX, JS_ELSE_IF_INDEX, JS_FUNCTION_MULTOPS_INDEX,
+                JS_GET_LBRACKET_INDEX, JS_SET_LBRACKET_INDEX, JS_STATIC_LCURLY_INDEX, JS_WITH_LPAREN_INDEX, JS_YIELD_MULTOPS_INDEX
+            );
+        return javascriptRules;
     }
 
     bool processRule(const Rule& rule) {
@@ -1006,7 +1046,7 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(
+    static constexpr const std::array<int, SIZE * SIZE> getJavaScriptDuplexKeywords(
         const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_GET_LBRACKET, const size_t JS_SET_LBRACKET,
         const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS
     ) {
@@ -1023,7 +1063,7 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<Rule, SIZE> getJavaScriptRules(
+    static constexpr std::array<Rule, SIZE> getJavaScriptRules(
         const size_t JS_CATCH_LPAREN, const size_t JS_ELSE_IF, const size_t JS_FUNCTION_MULTOPS, const size_t JS_GET_LBRACKET, const size_t JS_SET_LBRACKET,
         const size_t JS_STATIC_LCURLY, const size_t JS_WITH_LPAREN, const size_t JS_YIELD_MULTOPS
     ) {
@@ -1269,9 +1309,9 @@ catch[...] {
 start_python[] {
         ++start_count;
 
-        // Get const references to the static arrays (no stack allocation)
-        const auto& duplexKeywords = getStaticDuplexKeywords();
-        const auto& python_rules = getStaticPythonRules();
+        // get const references to the static arrays (no stack allocation)
+        const auto& duplexKeywords = getStaticPythonDuplexKeywords();
+        const auto& pythonRules = getStaticPythonRules();
 
         // ensure the lparen deque never starts empty by adding a dummy entry
         if (lparen_types_py.empty())
@@ -1305,7 +1345,7 @@ start_python[] {
 
             // looking for functions or classes
             if (post_attribute_token != -1) {
-                const auto& rule = python_rules[post_attribute_token];
+                const auto& rule = pythonRules[post_attribute_token];
                 if (rule.elementToken && processRule(rule)) {
                     return;
                 }
@@ -1318,7 +1358,7 @@ start_python[] {
 
             // looking for for-loops, functions, or with
             if (post_specifier_token != -1) {
-                const auto& rule = python_rules[post_specifier_token];
+                const auto& rule = pythonRules[post_specifier_token];
                 if (rule.elementToken && processRule(rule)) {
                     return;
                 }
@@ -1337,7 +1377,7 @@ start_python[] {
             }
 
             if (LA(1) != PY_TYPE || is_type_stmt) {
-                const auto& rule = python_rules[token];
+                const auto& rule = pythonRules[token];
                 if (rule.elementToken && processRule(rule)) {
                     return;
                 }
@@ -1458,38 +1498,9 @@ catch[...] {
   Also includes specifier handling (e.g., "let", "var", "const", "static").
 */
 javascript_statements[] {
-        /*
-          May need to increase these constants in the future as more tokens are added
-        */
-
-        // The number of tokens is the next highest "hundred" in `srcMLParserTokenTypes.txt` in the build directory
-        const size_t DUPLEX_RULES_SIZE = 700;
-
-        // The duplex keyword values must start at a value 100 greater than the duplex rule size directly above
-        // Increment each new duplex keyword token by an additional one (except the first)
-        const int JS_CATCH_LPAREN = DUPLEX_RULES_SIZE + 100;
-        const int JS_ELSE_IF = DUPLEX_RULES_SIZE + 101;
-        const int JS_FUNCTION_MULTOPS = DUPLEX_RULES_SIZE + 102;
-        const int JS_GET_LBRACKET = DUPLEX_RULES_SIZE + 103;
-        const int JS_SET_LBRACKET = DUPLEX_RULES_SIZE + 104;
-        const int JS_STATIC_LCURLY = DUPLEX_RULES_SIZE + 105;
-        const int JS_WITH_LPAREN = DUPLEX_RULES_SIZE + 106;
-        const int JS_YIELD_MULTOPS = DUPLEX_RULES_SIZE + 107;
-
-        // The JavaScript rule size must be 200 greater than the duplex rule size
-        // If there are ever more than 100 duplex keywords, this has to change
-        const size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
-
-        // A duplex keyword is a pair of adjacent keywords
-        static const std::array<int, DUPLEX_RULES_SIZE * DUPLEX_RULES_SIZE> duplexKeywords = getJavaScriptDuplexKeywords<DUPLEX_RULES_SIZE>(
-            JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_GET_LBRACKET, JS_SET_LBRACKET, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS
-        );
-
-        // JavaScript rules adhere to the following form:
-        // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, JAVASCRIPT_RULES_SIZE> javascriptRules = getJavaScriptRules<JAVASCRIPT_RULES_SIZE>(
-            JS_CATCH_LPAREN, JS_ELSE_IF, JS_FUNCTION_MULTOPS, JS_GET_LBRACKET, JS_SET_LBRACKET, JS_STATIC_LCURLY, JS_WITH_LPAREN, JS_YIELD_MULTOPS
-        );
+        // get const references to the static arrays (no stack allocation)
+        const auto& duplexKeywords = getStaticJavaScriptDuplexKeywords();
+        const auto& javascriptRules = getStaticJavaScriptRules();
 
         // ensure the lparen deque never starts empty by adding a dummy entry
         if (lparen_types_js.empty())
