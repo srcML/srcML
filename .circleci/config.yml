@@ -1,11 +1,28 @@
 version: 2
 jobs:
-    build:
-      branches:
-        only:
-          - develop
+    build_ubuntu:
       docker:
-        - image: srcml/ubuntu:24.04
+        - image: srcml/ubuntu:latest
       steps:
+        - run: apt-get update
+        - run: apt-get install -y ssh
         - checkout
         - run: cmake --workflow --preset ci-ubuntu
+        - store_test_results:
+            path: /root/project-build/dist/
+
+    build_fedora:
+      docker:
+        - image: srcml/fedora:latest
+      steps:
+        - checkout
+        - run: cmake --workflow --preset ci-rpm
+        - store_test_results:
+            path: /root/project-build/dist/
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build_ubuntu
+      - build_fedora

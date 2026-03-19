@@ -228,6 +228,11 @@ foreach(GENURL IN ITEMS ${TESTFILES})
             continue()
         endif()
 
+        # skip generating any test variation for files containing invalid code (e.g., for srcQL purposes)
+        if(URL STREQUAL "keyword_call_cpp" OR URL STREQUAL "keyword_call_m" OR URL STREQUAL "keyword_call_cs")
+            continue()
+        endif()
+
         add_custom_command(
             COMMAND ${SRCML_EXE} --output-srcml --xslt ${XSLT_DIR}/insert${VARIATION}.xsl --url=${URL}.${VARIATION} ${GENURL}
                      -o ${URL}.${VARIATION}.${LANGEXT}.xml
@@ -239,15 +244,18 @@ foreach(GENURL IN ITEMS ${TESTFILES})
         list(APPEND CONTEXT_FILES ${URL}.${VARIATION}.${LANGEXT}.xml)
     endforeach()
 
-    # all is generated separately because it does not use an XSLT transformation
-    add_custom_command(
-        COMMAND ${SRCML_EXE} --cat --url=${URL}.all ${GENURL} -o ${URL}.all.${LANGEXT}.xml
-        COMMENT "Generating parser testfile ${URL}.all.${LANGEXT}.xml from ${GENURL}"
-        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-        OUTPUT ${URL}.all.${LANGEXT}.xml
-    )
-    list(APPEND CONTEXT_FILES ${URL}.all.${LANGEXT}.xml)
+    # skip generating a test "all" file for files containing invalid code (e.g., for srcQL purposes)
+    if(NOT (URL STREQUAL "keyword_call_cpp") AND NOT (URL STREQUAL "keyword_call_m") AND NOT (URL STREQUAL "keyword_call_cs"))
+        # all is generated separately because it does not use an XSLT transformation
+        add_custom_command(
+            COMMAND ${SRCML_EXE} --cat --url=${URL}.all ${GENURL} -o ${URL}.all.${LANGEXT}.xml
+            COMMENT "Generating parser testfile ${URL}.all.${LANGEXT}.xml from ${GENURL}"
+            DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${GENURL}
+            WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+            OUTPUT ${URL}.all.${LANGEXT}.xml
+        )
+        list(APPEND CONTEXT_FILES ${URL}.all.${LANGEXT}.xml)
+    endif()
 
 endforeach()
 

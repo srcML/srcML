@@ -64,9 +64,8 @@ int srcml_unit_set_language(struct srcml_unit* unit, const char* language) {
         unit->language = language;
     else
         unit->language = decltype(unit->language)();
-
     // revision is based on language
-    unit->revision = srcml_markup_version_string(unit->language->data());
+    unit->revision = srcml_markup_version_string(unit->language.value_or("").c_str());
 
     return SRCML_STATUS_OK;
 }

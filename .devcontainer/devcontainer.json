@@ -1,0 +1,9 @@
+// For more customization options, see https://containers.dev/implementors/json_reference
+{
+  "name": "srcml-dev",
+  "image": "srcml/ubuntu:latest",
+  "features": {
+    "ghcr.io/devcontainers/features/git" : {}
+    // Add additional features to your project using auto-completion.
+  }
+}

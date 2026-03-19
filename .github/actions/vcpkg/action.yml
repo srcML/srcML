@@ -1,7 +1,7 @@
-name: Setup vcpkg with cache
+name: Setup vcpkg
 
 description: |
-  Checks out vcpkg, bootstraps it, and sets up binary cache with optional R2 remote cache.
+  Sets up vcpkg with nuget binary caching.
 
 inputs:
   vcpkg-ref:
@@ -12,74 +12,78 @@ inputs:
     description: 'vcpkg triplet (used only for cache partitioning)'
     required: false
     default: 'x64-windows'
-  r2-access-key:
-    description: 'Cloudflare R2 access key (optional - enables remote cache)'
+  github-token:
+    description: 'GitHub token used for authenticating to GitHub Packages NuGet feed'
+    required: true
+  no-remote-cache:
+    description: 'Whether to disable remote cache (nuget) and only use local cache'
     required: false
-    default: ''
-  r2-secret-key:
-    description: 'Cloudflare R2 secret key (optional - enables remote cache)'
+    default: false
+  feed-url:
+    description: 'The URL of the NuGet feed to use for vcpkg binary caching'
     required: false
-    default: ''
-  r2-bucket:
-    description: 'R2 bucket name for vcpkg cache (optional)'
+    default: 'https://nuget.pkg.github.com/srcML/index.json'
+  username:
+    description: 'The username to authenticate to the NuGet feed'
     required: false
-    default: ''
-  r2-endpoint:
-    description: 'R2 endpoint URL (optional)'
-    required: false
-    default: ''
+    default: 'srcML'
 
 runs:
   using: "composite"
   steps:
-    - name: Set vcpkg cache env
+    - name: Set vcpkg env
       shell: bash
       run: |
-        echo "VCPKG_FEATURE_FLAGS=manifests,binarycaching" >> "$GITHUB_ENV"
-        echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg-cache" >> "$GITHUB_ENV"
-        echo "VCPKG_DEFAULT_TRIPLET=${{ inputs.triplet }}" >> "$GITHUB_ENV"
-        echo "VCPKG_DEFAULT_HOST_TRIPLET=${{ inputs.triplet }}" >> "$GITHUB_ENV"
+        echo "VCPKG_BINARY_SOURCES=clear;nuget,${{ inputs.feed-url }},readwrite" >> "$GITHUB_ENV"
         echo "VCPKG_BUILD_TYPE=release" >> "$GITHUB_ENV"
+        echo "VCPKG_CACHE_DIR=$GITHUB_WORKSPACE/vcpkg-cache" >> "$GITHUB_ENV"
+        echo "VCPKG_DEFAULT_HOST_TRIPLET=${{ inputs.triplet }}" >> "$GITHUB_ENV"
+        echo "VCPKG_DEFAULT_TRIPLET=${{ inputs.triplet }}" >> "$GITHUB_ENV"
         mkdir -p "$GITHUB_WORKSPACE/vcpkg-cache"
 
-        # Configure binary sources based on whether R2 credentials are provided
-        if [ -n "${{ inputs.r2-access-key }}" ] && [ -n "${{ inputs.r2-secret-key }}" ]; then
-          echo "Setting up R2 remote cache + local fallback"
-          echo "VCPKG_BINARY_SOURCES=clear;x-aws,s3://${{ inputs.r2-bucket }}/vcpkg-cache,readwrite;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite" >> "$GITHUB_ENV"
-          echo "AWS_ACCESS_KEY_ID=${{ inputs.r2-access-key }}" >> "$GITHUB_ENV"
-          echo "AWS_SECRET_ACCESS_KEY=${{ inputs.r2-secret-key }}" >> "$GITHUB_ENV"
-          echo "AWS_DEFAULT_REGION=auto" >> "$GITHUB_ENV"
-          echo "AWS_ENDPOINT_URL=${{ inputs.r2-endpoint }}" >> "$GITHUB_ENV"
-        else
-          echo "Using local cache only"
+        if [ "${{ inputs.no-remote-cache }}" = "true" ]; then
+          echo "Remote cache disabled, using local cache at $GITHUB_WORKSPACE/vcpkg-cache"
           echo "VCPKG_BINARY_SOURCES=clear;files,$GITHUB_WORKSPACE/vcpkg-cache,readwrite" >> "$GITHUB_ENV"
         fi
 
-    - name: Debug vcpkg env
-      shell: bash
-      run: |
-        echo "VCPKG_BINARY_SOURCES=$VCPKG_BINARY_SOURCES"
-        echo "AWS_ENDPOINT_URL=$AWS_ENDPOINT_URL"
-        echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID"
-
-    - name: Cache vcpkg binary artifacts
-      uses: actions/cache@v4
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@v11
+      id: runvcpkg
       with:
-        path: ${{ env.VCPKG_CACHE_DIR }}
-        key: vcpkg-bin-release-v1-${{ runner.os }}-${{ inputs.triplet }}-${{ hashFiles('**/vcpkg.json', '**/vcpkg-configuration.json') }}
-        restore-keys: |
-          vcpkg-bin-release-v1-${{ runner.os }}-${{ inputs.triplet }}-
-          vcpkg-bin-release-v1-${{ runner.os }}-
+        vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+        vcpkgGitCommitId: '${{ inputs.vcpkg-ref}}'
+        vcpkgJsonGlob: '**/vcpkg.json'
 
-    - name: Clone vcpkg
+    - name: Prints output of run-vcpkg's action
       shell: bash
-      run: |
-        git config --global advice.detachedHead false
-        git clone https://github.com/microsoft/vcpkg.git
-        cd vcpkg
-        git checkout --quiet ${{ inputs.vcpkg-ref }}
+      run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}'"
 
-    - name: Bootstrap vcpkg
-      shell: bash
+    - name: Add NuGet sources on Windows
+      shell: pwsh
+      if: ${{ inputs.triplet == 'x64-windows' }}
       run: |
-        ./vcpkg/bootstrap-vcpkg.sh
+        .$(vcpkg fetch nuget) `
+          sources add `
+          -Source "${{ inputs.feed-url }}" `
+          -StorePasswordInClearText `
+          -Name GitHubPackages `
+          -UserName "${{ inputs.username }}" `
+          -Password "${{ inputs.github-token }}"
+        .$(vcpkg fetch nuget) `
+          setapikey "${{ inputs.github-token }}" `
+          -Source "${{ inputs.feed-url }}"
+
+    # TODO: Handle mono install here for non-Windows platforms
+
+    - name: Add NuGet sources on non-Windows platforms
+      shell: bash
+      if: ${{ inputs.triplet != 'x64-windows' }}
+      run: |
+        mono `vcpkg fetch nuget | tail -n 1` sources add \
+          -Source ${{ inputs.feed-url }} \
+          -StorePasswordInClearText \
+          -Name GitHubPackages \
+          -UserName "${{ inputs.username }}" \
+          -Password "${{ inputs.github-token }}"
+        mono `vcpkg fetch nuget | tail -n 1` setapikey ${{ inputs.github-token }} \
+          -Source ${{ inputs.feed-url }}

@@ -70,7 +70,11 @@ void srcSAXController::parse(srcSAXHandler * handler) {
     if (status != 0) {
 
         auto ep = xmlCtxtGetLastError(context->libxml2_context);
-        SAXError error = { std::string(ep->message), ep->code };
+        std::string error_message = "Unknown error message from libxml2 - code: " + ep->code;
+        if (ep->message) {
+            error_message = ep->message;
+        }
+        SAXError error = { error_message, ep->code };
 
         throw error;
     }

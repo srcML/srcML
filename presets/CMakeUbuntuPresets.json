@@ -22,6 +22,23 @@
       "displayName": "Ubuntu Release",
       "description": "Default build options for Ubuntu release",
       "inherits": ["ci-base", "ci-ubuntu-only", "ci-gcc", "ci-sibling-build"]
+    },
+    {
+      "name": "ci-ubuntu-wasm",
+      "displayName": "Ubuntu Release",
+      "description": "Default build options for Ubuntu release",
+      "inherits": ["ci-base", "ci-ubuntu-only", "ci-gcc", "ci-subdirectory-build"],
+      "cacheVariables": {
+        "BUILD_WITH_VCPKG": "ON",
+        "VCPKG_FEATURE_FLAGS": "manifests,binarycaching,-compilertracking",
+        "VCPKG_INSTALL_OPTIONS": "--x-abi-tools-use-exact-versions",
+        "BUILD_SHARED_LIBS": "OFF",
+        "SRCML_BUILD_CLIENT": "OFF",
+        "SRCML_BUILD_TESTS": "OFF",
+        "BUILD_LIBSRCML_TESTS": "OFF",
+        "BUILD_PARSER_TESTS": "OFF",
+        "VCPKG_TARGET_TRIPLET": "wasm32-emscripten"
+      }
     }
   ],
   "buildPresets" : [
@@ -93,6 +110,14 @@
         { "type": "build",     "name": "ci-test-client-ubuntu" },
         { "type": "build",     "name": "ci-test-libsrcml-ubuntu" },
         { "type": "build",     "name": "ci-test-parser-ubuntu" }
+      ]
+    },
+    {
+      "name": "ci-ubuntu-wasm",
+      "steps": [
+        { "type": "configure", "name": "ci-ubuntu" },
+        { "type": "build",     "name": "ci-ubuntu" },
+        { "type": "package",   "name": "ci-ubuntu" }
       ]
     }
   ]
