@@ -434,6 +434,9 @@ OPERATORS options { testLiterals = true; } {
                     ('*') { if (recordtag) dummytag += '*'; } ({ commenttoken == 'b' }? '/' { commenttoken = '\000'; })?
                 ) |
 
+                // ignore arrows (e.g., "=>")
+                { recordtag }? ('=') { dummytag += '='; } ({ recordtag }? '>')? |
+
                 // process comment contents separately
                 { commenttoken != '\000' }? ~('\\' | ' ' | '\t' | '\n' | '-' | '*') |
 

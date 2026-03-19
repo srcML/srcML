@@ -497,6 +497,21 @@
 </block_content>}</block></function></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>ChildComponent</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><object>{<property><expr><name>id</name></expr></property>, <property><expr><name>eventHandler</name></expr></property>}</object></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>(</operator>
+  <literal type="jsx">&lt;div
+    id={id + '__DIV'}
+    onClickCapture={e =&gt; eventHandler(e.currentTarget.id, 'captured', e.type)}
+    onClick={e =&gt; eventHandler(e.currentTarget.id, 'bubbled', e.type)}&gt;
+    &lt;div
+      id={id + '__DIV_1'}
+      onClickCapture={e =&gt; eventHandler(e.currentTarget.id, 'captured', e.type)}
+      onClick={e =&gt; eventHandler(e.currentTarget.id, 'bubbled', e.type)}
+    /&gt;
+  &lt;/div&gt;</literal>
+<operator>)</operator></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- JSX literals (without parentheses) -->
 
 <unit revision="1.0.0" language="JavaScript">
