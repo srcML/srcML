@@ -73,7 +73,6 @@ if(NOT MSVC)
             set(WASM_OPTIONS ${WASM_OPTIONS} "-sENVIRONMENT=worker,web")
         endif()
 
-        # TODO: Replace with v1.1.0 curated exports, for now export everything
         set(EXPORTS "")
         file(READ "export_list" FILE_CONTENT)
         string(REGEX REPLACE "\n" ";" FILE_LINES "${FILE_CONTENT}")
@@ -82,7 +81,6 @@ if(NOT MSVC)
         endforeach()
         string(REGEX REPLACE ",$" "" EXPORTS "${EXPORTS}")
 
-        # TODO: Link against required libraries only
         file(GLOB VCPKG_SRCML_DEPENDENCIES "${CMAKE_SOURCE_DIR}/build/vcpkg_installed/wasm32-emscripten/lib/*.a")
         add_custom_command(
                 TARGET libsrcml_js
@@ -91,7 +89,7 @@ if(NOT MSVC)
                 -o "${CMAKE_BINARY_DIR}/bin/libsrcml-${PROJECT_VERSION}.js"
                 -sEXPORTED_FUNCTIONS=${EXPORTS},_malloc,_free
                 -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,setValue,getValue,UTF8ToString,stringToUTF8
-                -fexceptions -sALLOW_MEMORY_GROWTH -pthread -sPTHREAD_POOL_SIZE=2
+                -fwasm-exceptions -sALLOW_MEMORY_GROWTH -pthread -sPTHREAD_POOL_SIZE=2
                 -sMODULARIZE=1 -sEXPORT_ES6=1 ${WASM_OPTIONS}
                 COMMAND_EXPAND_LISTS
                 VERBATIM
