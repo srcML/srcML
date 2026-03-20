@@ -81,6 +81,23 @@ namespace {
         get_node_text(top_node, s, true);
         return s;
     }
+
+    std::unordered_set<std::string> set_split(const std::string& str, const std::string& delim) {
+        std::unordered_set<std::string> res;
+        size_t pos = 0;
+
+        while (str.find(delim, pos) != std::string::npos) {
+            size_t end = str.find(delim, pos);
+            std::string sub = str.substr(pos, end - pos);
+            if (!sub.empty()) { res.insert(sub); }
+            pos = end + delim.size();
+        }
+
+        std::string sub = str.substr(pos, str.size() - pos);
+        if (!sub.empty()) { res.insert(sub); }
+
+        return res;
+    }
 }
 
 void add_element(xmlXPathParserContext* ctxt, int nargs) {
@@ -324,6 +341,66 @@ void regex_match(xmlXPathParserContext* ctxt, int nargs) {
     table->add_regex_rule(identifier,regex);
 
     xmlXPathReturnBoolean(ctxt, true);
+}
+
+void attribute_intersection(xmlXPathParserContext* ctxt, int nargs) {
+    if (nargs != 2) {
+        std::cerr << "Arg arity error" << std::endl;
+        return;
+    }
+
+    // xmlChar* r = xmlXPathPopString(ctxt);
+    // std::string right = (const char*)(r);
+    // std::unordered_set<std::string>right_attributes = set_split(right," ");
+
+    // xmlChar* l = xmlXPathPopString(ctxt);
+    // std::string left = (const char*)(l);
+    // std::unordered_set<std::string>left_attributes = set_split(left," ");
+
+    xmlXPathObjectPtr rightAttrNodeSet = valuePop(ctxt);
+    xmlXPathObjectPtr leftAttrNodeSet  = valuePop(ctxt);
+
+    if (!rightAttrNodeSet || !leftAttrNodeSet ||
+        leftAttrNodeSet->type != XPATH_NODESET ||
+        rightAttrNodeSet->type != XPATH_NODESET) {
+
+        if (leftAttrNodeSet) xmlXPathFreeObject(leftAttrNodeSet);
+        if (rightAttrNodeSet) xmlXPathFreeObject(rightAttrNodeSet);
+        xmlXPathReturnBoolean(ctxt, false);
+        return;
+    }
+
+    std::unordered_set<std::string> left_attributes;
+    std::unordered_set<std::string> right_attributes;
+
+    auto extract_tokens = [](xmlNodeSetPtr nodes, std::unordered_set<std::string>& out) {
+        if (!nodes) return;
+
+        for (int i = 0; i < nodes->nodeNr; ++i) {
+            xmlNodePtr node = nodes->nodeTab[i];
+            xmlChar* val = xmlNodeGetContent(node);
+            if (!val) continue;
+
+            std::string str = (const char*)val;
+            auto tokens = set_split(str, " ");
+
+            out.insert(tokens.begin(), tokens.end());
+
+            xmlFree(val);
+        }
+    };
+
+    extract_tokens(leftAttrNodeSet->nodesetval, left_attributes);
+    extract_tokens(rightAttrNodeSet->nodesetval, right_attributes);
+
+    for (const std::string& attr : left_attributes) {
+        if (right_attributes.find(attr) != right_attributes.end()) {
+            xmlXPathReturnBoolean(ctxt, true);
+            return;
+        }
+    }
+
+    xmlXPathReturnBoolean(ctxt, false);
 }
 
 void debug_print(xmlXPathParserContext* ctxt, int nargs) {

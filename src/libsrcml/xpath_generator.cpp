@@ -1,6 +1,8 @@
 #include "xpath_generator.hpp"
 #include <srcml.h>
 #include <cassert>
+#include <string>
+#include <cctype>
 #include <algorithm>
 #include <map>
 #include <memory>
@@ -8,7 +10,9 @@
 // HELPERS
 // Helper function for adding clears. Populates locations with the XPathNode* that are add-element calls
 
-std::vector<std::string> split(std::string str, std::string delim) {
+const int SLICE_ID_LENGTH = 40;
+
+std::vector<std::string> split(const std::string& str, const std::string& delim) {
     std::vector<std::string> res;
     size_t pos = 0;
     while (str.find(delim,pos) != std::string::npos) {
@@ -20,6 +24,15 @@ std::vector<std::string> split(std::string str, std::string delim) {
     std::string sub = str.substr(pos,str.size()-pos);
     if (sub != "") { res.push_back(sub); }
     return res;
+}
+
+bool is_hex_string(const std::string& str) {
+    for (unsigned char c : str) {
+        if (!std::isxdigit(c)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 void find_adds(XPathNode* x_node, std::map<std::string, std::vector<XPathNode*>>* locations) {
@@ -226,6 +239,7 @@ std::string XPathGenerator::convert() {
     std::string build_expr = "";
     bool is_where_clause = false;
     bool is_with_op = false;
+    bool is_slice = false;
     int inner_id = 0;
     for (size_t i = 0; i < tokens.size(); ++i) {
         std::string token = tokens[i];
@@ -234,6 +248,9 @@ std::string XPathGenerator::convert() {
 
         // Other no-ops
         else if (token == "BY") { /* Do nothing */ }
+
+        // SLICE specifier
+        else if (token == "SLICE") { is_slice = true; }
 
         // srcQL operators - save whatever the current built token is as the next expr
         else if (token == "CONTAINS"   ||
@@ -261,10 +278,17 @@ std::string XPathGenerator::convert() {
                 if (expr_type == "") {
                     // XPATH
                     if (build_expr.find("/",0) == 0) { expr_type = "XPATH"; }
+                    else if (is_slice && build_expr.size() == SLICE_ID_LENGTH && is_hex_string(build_expr)) {
+                        expr_type = "SLICE_ID";
+                    }
                     else if (build_expr.find(" ",0) == std::string::npos &&
                             build_expr.find(":",0) != std::string::npos) {
-                        if (split(build_expr,":").size() <= 2) {
+                        auto colon_terms = split(build_expr,":");
+                        if (colon_terms.size() <= 2) {
                             expr_type = "TAG";
+                        }
+                        else if(colon_terms.size() == 3 && is_slice) {
+                            expr_type = "SLICE_FILE_LOC";
                         }
                         else { expr_type = "PATTERN"; }
                     }
@@ -287,6 +311,14 @@ std::string XPathGenerator::convert() {
                 }
                 else if (expr_type == "TAG") {
                     node = new XPathNode(build_expr);
+                }
+                else if (expr_type == "SLICE_ID") {
+                    //node = new XPathNode("*[@slice:*=\""+build_expr+"\"]");
+                    node = new XPathNode("@slice:decl[.=\""+build_expr+"\"]");
+                }
+                else if (expr_type == "SLICE_FILE_LOC") {
+                    auto colon_terms = split(build_expr,":");
+                    node = new XPathNode("src:unit[@filename=\""+colon_terms[0]+"\"]//src:name[.=\""+colon_terms[2]+"\"][starts-with(@pos:start,\""+colon_terms[1]+"\")]/..");
                 }
             }
 
@@ -419,9 +451,31 @@ std::string XPathGenerator::convert() {
             }
             // Add node and operation to vectors
             if (token == "WITH") { is_with_op = true; }
-            if (token == "WHERE") { is_where_clause = true; }
+            else if (token == "WHERE") { is_where_clause = true; }
             else if (token != "END") { operations.push_back(token); }
-            source_exprs.push_back(node);
+            
+
+            if (!is_slice) {
+                source_exprs.push_back(node);
+            }
+            else {
+                if (expr_type != "SLICE_ID") {
+                    node->add_child(new XPathNode("@slice:decl",NEXT));
+                }
+                if (node->get_type() != PARENTHESES) {
+                    node->set_type(ANY);
+                }
+                XPathNode* left_arg = new XPathNode("@slice:*",NO_CONN);
+                XPathNode* call = new XPathNode("qli:attribute-intersection",CALL);
+                call->add_child(left_arg);
+                call->add_child(node);
+                XPathNode* predicate = new XPathNode("",PREDICATE);
+                predicate->add_child(call);
+                XPathNode* top = new XPathNode("*",ANY);
+                top->add_child(predicate);
+                source_exprs.push_back(top);
+                is_slice = false;
+            }
 
             // Reset strings
             expr_type = "";
