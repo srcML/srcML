@@ -51,7 +51,6 @@ const char* srcql_convert_query_to_xpath(const char* src_query, const char* lang
         else {
             XPathGenerator generator(src_query,language);
             xpath = generator.convert();
-            std::cout << "XPath: " << xpath << std::endl;
             queries.insert(std::make_pair(key,xpath));
         }
     }
