@@ -207,6 +207,10 @@
 <decl_stmt><decl type="const">const <name>constructor</name> <init>= <expr><name>constructor</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>componentName</name> <init>= <expr><operator>(</operator><name>constructor</name> <operator>&amp;&amp;</operator> <operator>(</operator><name><name>constructor</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>constructor</name><operator>.</operator><name>name</name></name><operator>)</operator><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "continue" -->
 
 <unit revision="1.0.0" language="JavaScript">

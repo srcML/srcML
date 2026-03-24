@@ -89,6 +89,7 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     */
     if (srcMLParser::whitespace_token_set.member(nextToken->getType()) || nextToken->getType() == srcMLParser::EOL) {
         auto newPrevToken = prevToken;
+        bool foundTerminate = false;
 
         // Find the next non-whitespace token
         while (srcMLParser::whitespace_token_set.member(nextToken->getType()) || nextToken->getType() == srcMLParser::EOL) {
@@ -126,7 +127,6 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
             || nextToken->getType() == srcMLParser::RPAREN
             || nextToken->getType() == srcMLParser::RCURLY
             || nextToken->getType() == srcMLParser::RBRACKET
-            || nextToken->getType() == srcMLParser::TERMINATE  // recall "a}" has a TERMINATE in-between
         )
     ) {
         token->setType(srcMLParser::NAME);
@@ -189,6 +189,14 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 (
                     prevNonWhitespaceToken->getLine() == token->getLine()
                     && prevNonWhitespaceToken->getType() == srcMLParser::EQUAL
+                )
+                || (
+                    (prevNonWhitespaceToken->getLine() == token->getLine())
+                    && token->getType() != srcMLParser::JS_LET
+                    && token->getType() != srcMLParser::JS_VAR
+                    && token->getType() != srcMLParser::JS_CONST
+                    && token->getType() != srcMLParser::JS_STATIC
+                    && prevNonWhitespaceToken->getType() == srcMLParser::LPAREN
                 )
                 || (
                     (prevNonWhitespaceToken->getLine() == token->getLine() || bracketBuffer.front() == "(")
