@@ -876,6 +876,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         // Existing language keywords that are names in JavaScript
         { "enum"         , NAME              , LANGUAGE_JAVASCRIPT },
+        { "goto"         , NAME              , LANGUAGE_JAVASCRIPT },
         { "private"      , NAME              , LANGUAGE_JAVASCRIPT },
         { "protected"    , NAME              , LANGUAGE_JAVASCRIPT },
         { "public"       , NAME              , LANGUAGE_JAVASCRIPT },

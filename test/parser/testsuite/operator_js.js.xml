@@ -303,4 +303,8 @@
 <decl_stmt><decl type="var">var <name>f</name> <init>= <expr><operator>await</operator> <call><name>functionCall</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>await</operator> <call><name><name>page</name><operator>.</operator><name>goto</name></name><argument_list>(<argument><expr><literal type="string">'example_url'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
 </unit>
