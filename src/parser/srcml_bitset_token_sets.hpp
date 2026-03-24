@@ -274,6 +274,19 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_YIELD
 )
 
+token_set(srcMLParser, name_differentiator_subset_js_token_set,
+    // A subset of JavaScript keywords from "name_differentiator_js_token_set"
+    // Notable exclusions include literals (e.g., true), operators (e.g., await), async, functions, and classes
+    srcMLParser::JS_AS, srcMLParser::BREAK, srcMLParser::CASE, srcMLParser::JS_CATCH,
+    srcMLParser::JS_CONST, srcMLParser::JS_CONSTRUCTOR, srcMLParser::CONTINUE, srcMLParser::JS_DEBUGGER,
+    srcMLParser::JS_DEFAULT, srcMLParser::JS_DELETE, srcMLParser::DO, srcMLParser::JS_EACH, srcMLParser::JS_ELSE,
+    srcMLParser::JS_EXPORT, srcMLParser::JS_EXTENDS, srcMLParser::FINALLY, srcMLParser::FOR, srcMLParser::JS_FROM,
+    srcMLParser::JS_GET, srcMLParser::IF, srcMLParser::JS_IMPORT, srcMLParser::JS_RANGE_IN, srcMLParser::JS_INSTANCEOF,
+    srcMLParser::JS_LET, srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::JS_SET, srcMLParser::JS_STATIC,
+    srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::JS_VAR, srcMLParser::WHILE,
+    srcMLParser::JS_WITH 
+)
+
 token_set(srcMLParser, insert_terminate_js_token_set,
     // if two adjacent tokens are any of these, insert a TERMINATE in JavaScript
     srcMLParser::CHAR_END, srcMLParser::CHAR_START, srcMLParser::CONSTANTS, srcMLParser::JS_NULL, srcMLParser::JS_REGEX,

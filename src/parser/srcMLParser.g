@@ -814,6 +814,7 @@ public:
     static const antlr::BitSet post_specifier_js_token_set;
     static const antlr::BitSet table_keywords_js_token_set;
     static const antlr::BitSet name_differentiator_js_token_set;
+    static const antlr::BitSet name_differentiator_subset_js_token_set;
     static const antlr::BitSet insert_terminate_js_token_set;
     static const antlr::BitSet insert_terminate_eol_js_token_set;
     static const antlr::BitSet keyword_expression_pair_js_token_set;
@@ -20444,6 +20445,8 @@ yield_expression_js[] { CompleteElement element(this); bool consume_multops = fa
             }
             expression |
 
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
 ;

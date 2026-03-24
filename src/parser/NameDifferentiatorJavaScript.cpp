@@ -13,9 +13,15 @@
 
 // Converts certain statement, operator, specifier, etc. tokens to names
 antlr::RefToken NameDifferentiatorJavaScript::nextToken() {
+    // Ensure that the bracket buffer is never empty by adding a dummy entry
+    if (bracketBuffer.empty()) {
+        bracketBuffer.emplace_front("*");
+    }
+
     // Place all input tokens in a buffer to help check for keywords that should be names
     if (buffer.empty()) {
         auto token = input.nextToken();
+        checkBracketToken(token);  // Detect if currently in/out of `()`, `{}`, or `[]`
 
         // Check if the current JavaScript keyword is really a keyword, or if it is used as a name
         if (srcMLParser::name_differentiator_js_token_set.member(token->getType()))
@@ -23,8 +29,6 @@ antlr::RefToken NameDifferentiatorJavaScript::nextToken() {
         // Manually set the previous token as the current token
         else
             prevToken = token;
-
-        checkBracketToken(token);  // Detect if currently in/out of `()`, `{}`, or `[]`
 
         // Insert read token
         buffer.emplace_front(token);
@@ -90,12 +94,14 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
         while (srcMLParser::whitespace_token_set.member(nextToken->getType()) || nextToken->getType() == srcMLParser::EOL) {
             newPrevToken = nextToken;
             nextToken = input.nextToken();
-            checkBracketToken(nextToken);  // Detect if currently in/out of `()`, `{}`, or `[]`
             buffer.emplace_back(nextToken);
         }
 
         if (isNameToken(token, nextToken))
             token->setType(srcMLParser::NAME);
+
+        // Update here to ensure the bracket count is correct after invoking name-checking logic
+        checkBracketToken(nextToken);  // Detect if currently in/out of `()`, `{}`, or `[]`
 
         prevToken = newPrevToken;
 
@@ -113,9 +119,10 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
         CASE 4: `token` is a keyword that is used in a list, so it should be a NAME instead
     */
     if (
-        srcMLParser::table_keywords_js_token_set.member(token->getType())
+        srcMLParser::name_differentiator_subset_js_token_set.member(token->getType())
         && (
             nextToken->getType() == srcMLParser::COMMA
+            || nextToken->getType() == srcMLParser::OPERATORS
             || nextToken->getType() == srcMLParser::RPAREN
             || nextToken->getType() == srcMLParser::RCURLY
             || nextToken->getType() == srcMLParser::RBRACKET
@@ -176,7 +183,19 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || nextToken->getType() == srcMLParser::RBRACKET
             )
         )
-        || nextToken->getType() == srcMLParser::EQUALS
+        || (
+            srcMLParser::name_differentiator_subset_js_token_set.member(token->getType())
+            && (
+                (
+                    prevNonWhitespaceToken->getLine() == token->getLine()
+                    && prevNonWhitespaceToken->getType() == srcMLParser::EQUAL
+                )
+                || (
+                    (prevNonWhitespaceToken->getLine() == token->getLine() || bracketBuffer.front() == "(")
+                    && prevNonWhitespaceToken->getType() == srcMLParser::OPERATORS
+                )
+            )
+        )
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
     );
 }
@@ -187,8 +206,25 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
  * Operates under the assumption the code contains balanced brackets.
  */
 void NameDifferentiatorJavaScript::checkBracketToken(antlr::RefToken token) {
-    if (token->getType() == srcMLParser::LPAREN || token->getType() == srcMLParser::LCURLY || token->getType() == srcMLParser::LBRACKET)
-        ++numBrackets;
-    else if (numBrackets > 0 && (token->getType() == srcMLParser::RPAREN || token->getType() == srcMLParser::RCURLY || token->getType() == srcMLParser::RBRACKET))
-        --numBrackets;
+    switch (token->getType()) {
+        case srcMLParser::LPAREN:
+        case srcMLParser::LCURLY:
+        case srcMLParser::LBRACKET:
+            ++numBrackets;
+            bracketBuffer.emplace_front(token->getText());
+            break;
+
+        case srcMLParser::RPAREN:
+        case srcMLParser::RCURLY:
+        case srcMLParser::RBRACKET:
+            if (numBrackets > 0) {
+                --numBrackets;
+            }
+
+            if (bracketBuffer.front() != "*") {
+                bracketBuffer.pop_front();
+            }
+
+            break;
+    }
 }

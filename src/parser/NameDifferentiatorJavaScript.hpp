@@ -35,6 +35,7 @@ public:
 private:
     antlr::TokenStream& input;
     std::deque<antlr::RefToken> buffer;
+    std::deque<std::string> bracketBuffer;
 
     antlr::RefToken prevToken = srcMLToken::factory();
     antlr::RefToken prevNonWhitespaceToken = srcMLToken::factory();
