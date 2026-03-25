@@ -25,10 +25,29 @@
 #include <Language.hpp>
 
 #include <qli_extensions.hpp>
+#include <srcml_xpath_extensions.hpp>
 #include <unification_table.hpp>
 #include <srcql.hpp>
 
+#include <vector>
+
 const char* const xpathTransformation::simple_xpath_attribute_name = "location";
+
+struct XPathExtensionFunction {
+    std::string function_name;
+    std::string function_type; // "predicate" or "nodeset"
+    std::string expression;
+    std::string expression_type; //"xpath" or "srcql"
+    std::string language; //"ANY" for any language
+};
+
+const std::vector<XPathExtensionFunction> extension_functions {
+    {"is-static","predicate","src:type/src:specifier='static' or src:decl/src:type/src:specifier='static' or (not(self::src:type) and src:specifier='static') or (self::src:decl and ../src:decl/src:type/src:specifier='static') or self::src:static","xpath","ANY"},
+    {"is-static","predicate","src:attribute/src:expr='staticmethod' or src:attribute/src:expr='classmethod' or (self::src:expr_stmt/ancestor::src:block_content/ancestor::src:block/ancestor::src:class and src:expr/src:operator='=')","xpath","Python"},
+    {"type-definitions","nodeset","src:class | src:union | src:enum | src:interface | src:struct | src:actor | src:protocol","XPath","ANY:"}
+};
+
+static std::unordered_map<std::string, std::string> xpath_extension_registry;
 
 #define stringOrNull(m) (m ? m : "")
 
@@ -174,6 +193,83 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
 }
 #pragma GCC diagnostic push
 
+
+void evaluate_boolean_xpath(xmlXPathParserContext* ctxt, int nargs) {
+    if (nargs != 1) {
+        xmlXPathSetArityError(ctxt);
+        return;
+    }
+
+    // pop the argument from the stack
+    xmlXPathObjectPtr obj = valuePop(ctxt);
+
+    // check if the argument is a nodeset
+    if (obj->type != XPATH_NODESET) {
+        xmlXPathFreeObject(obj);
+        xmlXPathSetTypeError(ctxt);
+        return;
+    }
+
+    bool flag = false;
+
+    // Loop through all the nodes in the nodeset
+    for (int i = 0; i < obj->nodesetval->nodeNr; i++) {
+
+        xmlNodePtr node = obj->nodesetval->nodeTab[i];
+
+        // temporarily set the context node to the current node
+        xmlNodePtr oldNode = ctxt->context->node;
+        ctxt->context->node = node;
+
+        // evaluate the XPath expression on the temporary context node
+        const xmlChar* func_name = ctxt->context->function;
+        auto it = xpath_extension_registry.find(reinterpret_cast<const char*>(func_name));
+        const xmlChar* xpath = reinterpret_cast<const xmlChar*>(it->second.c_str());
+
+        xmlXPathObject* result = xmlXPathEvalExpression(xpath, ctxt->context);
+
+        // restore the context node
+        ctxt->context->node = oldNode;
+
+        // find any true results
+        if (result != NULL && result->type == XPATH_BOOLEAN && result->boolval) {
+            flag = true;
+            xmlXPathFreeObject(result);
+            break;
+        }
+
+        xmlXPathFreeObject(result);
+    }
+
+    // Free the input object
+    xmlXPathFreeObject(obj);
+
+    // Push the result back to the stack.
+    xmlXPathReturnBoolean(ctxt, flag);
+}
+
+void evaluate_nodeset_xpath(xmlXPathParserContext* ctxt, int nargs) {
+    if (nargs != 0) {
+        xmlXPathSetArityError(ctxt);
+        return;
+    }
+
+    // evaluate the XPath expression on the temporary context node
+    const xmlChar* func_name = ctxt->context->function;
+    auto it = xpath_extension_registry.find(reinterpret_cast<const char*>(func_name));
+    const xmlChar* xpath = reinterpret_cast<const xmlChar*>(it->second.c_str());
+
+    xmlXPathObject* result = xmlXPathEvalExpression(xpath, ctxt->context);
+
+    // Push the result(s) back to the stack.
+    xmlXPathReturnNodeSet(ctxt, result->nodesetval);
+
+    xmlXPathFreeObject(result);
+
+}
+
+
+
 /**
  * apply
  *
@@ -182,7 +278,6 @@ xmlXPathContextPtr xpathTransformation::createContext(xmlDocPtr doc) const {
  * @returns true on success false on failure.
  */
 TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) const {
-
 
     std::unique_ptr<xmlXPathContext> context(xmlXPathNewContext(doc));
     if (!context) {
@@ -203,26 +298,57 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
         }
     }
 
-    // register exslt set functions for sets
+    // Register exslt set functions for sets
     exsltSetsXpathCtxtRegister (context.get(), BAD_CAST "set");
 
-    // register prefixes from the doc
+    // Register prefixes from the doc
     for (auto p = doc->children->nsDef; p; p = p->next) {
-
         xmlXPathRegisterNs(context.get(), p->prefix, p->href);
     }
 
-    // register srcQL extension functions
-    // qli Namespace
+    // Register srcML XPath Extension functions
+    for (XPathExtensionFunction func : extension_functions) {
+        if (func.language != "ANY" && func.language != Language(position).getLanguageString()) {
+            continue;
+        }
+
+        // Store the mapping
+        xpath_extension_registry[func.function_name] = func.expression;
+
+        // Register the function
+        if (func.function_type == "predicate") {
+            xmlXPathRegisterFuncNS(
+                context.get(),
+                (const xmlChar*)func.function_name.c_str(),
+                (const xmlChar*)"http://www.srcML.org/srcML/src",
+                &evaluate_boolean_xpath
+            );
+        }
+        else if (func.function_type == "nodeset") {
+            xmlXPathRegisterFuncNS(
+                context.get(),
+                (const xmlChar*)func.function_name.c_str(),
+                (const xmlChar*)"http://www.srcML.org/srcML/src",
+                &evaluate_nodeset_xpath
+            );
+        }
+    }
+
+    //// Predicates
+    // xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"is-static",(xmlChar*)"http://www.srcML.org/srcML/src",evaluate_boolean_xpath);
+    // xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"is-not-static",(xmlChar*)"http://www.srcML.org/srcML/src",evaluate_boolean_xpath);
+
+    // Register srcQL Implementation Extension functions
+    //// qli Namespace
     xmlXPathRegisterNs(context.get(),(xmlChar*)"qli",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation");
-    // Unification Operations
+    //// Unification Operations
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"add-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&add_element);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"match-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&match_element);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"clear",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&clear_elements);
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"is-valid-element",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&is_valid_element);
-    // WHERE Clause Functions
+    //// WHERE Clause Functions
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"regex-match",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&regex_match);
-    // Debug
+    //// Debug
     xmlXPathRegisterFuncNS(context.get(), (const xmlChar*)"debug-print",(xmlChar*)"http://www.srcML.org/srcML/srcQLImplementation",&debug_print);
 
     // Add Unification Table to userData
