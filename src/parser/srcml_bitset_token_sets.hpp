@@ -257,7 +257,10 @@ token_set(srcMLParser, table_keywords_js_token_set,
     srcMLParser::JS_DEBUGGER, srcMLParser::JS_DEFAULT, srcMLParser::JS_ELSE, srcMLParser::JS_EXPORT,
     srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_IMPORT, srcMLParser::JS_SET,
     srcMLParser::JS_STATIC, srcMLParser::JS_WITH, srcMLParser::JS_YIELD, srcMLParser::RETURN,
-    srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::WHILE
+    srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::WHILE,
+
+    // TypeScript keywords that have regular entries (or duplex entries) for the table-based approach
+    srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_js_token_set,
@@ -271,7 +274,10 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_NULL, srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::JS_SET, srcMLParser::JS_STATIC,
     srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::LITERAL_TRUE, srcMLParser::TRY, srcMLParser::JS_TYPEOF,
     srcMLParser::JS_UNDEFINED, srcMLParser::JS_VAR, srcMLParser::JS_VOID, srcMLParser::WHILE, srcMLParser::JS_WITH,
-    srcMLParser::JS_YIELD
+    srcMLParser::JS_YIELD,
+
+    // TypeScript keywords
+    srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,
@@ -284,7 +290,10 @@ token_set(srcMLParser, name_differentiator_subset_js_token_set,
     srcMLParser::JS_GET, srcMLParser::IF, srcMLParser::JS_IMPORT, srcMLParser::JS_RANGE_IN, srcMLParser::JS_INSTANCEOF,
     srcMLParser::JS_LET, srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::JS_SET, srcMLParser::JS_STATIC,
     srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::JS_VAR, srcMLParser::WHILE,
-    srcMLParser::JS_WITH 
+    srcMLParser::JS_WITH,
+
+    // TypeScript keywords
+    srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, insert_terminate_js_token_set,

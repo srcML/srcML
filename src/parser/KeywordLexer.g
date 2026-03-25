@@ -390,6 +390,9 @@ tokens {
     JS_WITH;
     JS_YIELD;
     QMARK_PERIOD;
+
+    // TypeScript
+    TS_TYPE;
 }
 
 {
@@ -916,6 +919,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },
         { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
+
+        // TypeScript
+        { "type"         , TS_TYPE           , LANGUAGE_JAVASCRIPT },
    };
 
     // fill up the literals for the language that we are parsing

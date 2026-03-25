@@ -338,6 +338,7 @@ LANGUAGE_JAVASCRIPT yield_js
 
 # TypeScript (grouped with JavaScript for now)
 LANGUAGE_JAVASCRIPT type_ts
+LANGUAGE_JAVASCRIPT typedef_ts
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

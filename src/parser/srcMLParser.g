@@ -1098,6 +1098,9 @@ public:
         temp_array[JS_SET]         = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
+        /* TYPESCRIPT STATEMENTS */
+        temp_array[TS_TYPE] = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+
         /* DUPLEX KEYWORDS */
         temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
         temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };  // extra consume for 'if'
@@ -1669,9 +1672,15 @@ javascript_rules[] {
         javascript_parameter_list
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                consume();  // ":"
                 type_ts();
+            }
         } |
+
+        // looking for the type (e.g., "= TYPE") in a TypeScript type definition
+        { inTransparentMode(MODE_TYPEDEF) }?
+        (EQUAL type_ts) |
 
         // looking for an empty control portion of a for-loop (e.g., lparen rparen)
         { inMode(MODE_FOR_CONTROL_JS) && next_token() == RPAREN }?
@@ -18762,7 +18771,7 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 break;
             } |
 
-            declaration_init_js | declaration_range_js | type_ts | compound_name
+            declaration_init_js | declaration_range_js | (COLON type_ts) | compound_name
         )*
 
         {
@@ -19354,8 +19363,10 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                consume();  // ":"
                 type_ts();
+            }
 
             // ignore auto-inserted terminate, if applicable
             if (LA(1) == TERMINATE)
@@ -19813,8 +19824,10 @@ function_expression_js[] { bool consume_multops = false; ENTRY_DEBUG } :
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                consume();  // ":"
                 type_ts();
+            }
         }
 
         expression_block_js
@@ -19893,8 +19906,10 @@ keywordless_function_expression_js[] { ENTRY_DEBUG } :
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                consume();  // ":"
                 type_ts();
+            }
         }
 
         expression_block_js
@@ -19952,6 +19967,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                 // match optional TypeScript type, consuming RPAREN first
                 if (LA(1) == RPAREN && next_token() == COLON) {
                     consume();  // ")"
+                    consume();  // ":"
                     type_ts();
                     found_type = true;
                 }
@@ -20366,8 +20382,10 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                consume();  // ":"
                 type_ts();
+            }
         }
 
         expression_block_js
@@ -20440,6 +20458,7 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
                 // match optional TypeScript type, consuming RPAREN first
                 if (LA(1) == RPAREN && next_token() == COLON) {
                     consume();  // ")"
+                    consume();  // ":"
                     type_ts();
                     found_type = true;
                 }
@@ -20491,8 +20510,10 @@ computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG 
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                consume();  // ":"
                 type_ts();
+            }
         }
 
         expression_block_js
@@ -20563,6 +20584,7 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
                 // match optional TypeScript type, consuming RPAREN first
                 if (LA(1) == RPAREN && next_token() == COLON) {
                     consume();  // ")"
+                    consume();  // ":"
                     type_ts();
                     found_type = true;
                 }
@@ -20791,8 +20813,10 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                     paren_pair();
 
                     // match optional TypeScript type
-                    if (LA(1) == COLON)
+                    if (LA(1) == COLON) {
+                        consume();  // ":"
                         type_ts();
+                    }
 
                     // consume block
                     if (LA(1) == LCURLY) {
@@ -20867,8 +20891,10 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                consume();  // ":"
                 type_ts();
+            }
         }
 
         expression_block_js
@@ -20943,8 +20969,10 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
                 paren_pair();
 
                 // match optional TypeScript type
-                if (LA(1) == COLON)
+                if (LA(1) == COLON) {
+                    consume();  // ":"
                     type_ts();
+                }
 
                 // consume "=>"
                 if (LA(1) == JS_ARROW) {
@@ -21024,8 +21052,10 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                consume();  // ":"
                 type_ts();
+            }
         }
 
         arrow_operator_js
@@ -21266,8 +21296,6 @@ perform_chained_call_count_js[] returns [int numchainedcalls] {
   Handles a type in TypeScript.
 */
 type_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
-        COLON
-
         {
             startNewMode(MODE_TYPE_TS);
             startElement(STYPE);
@@ -21282,7 +21310,7 @@ type_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
             void_as_name |
 
             // do not confuse LCURLY with the start of a block
-            { last_consumed == COLON }?
+            { last_consumed == COLON || inTransparentMode(MODE_TYPEDEF) }?
             object_js |
 
             literals | compound_name
