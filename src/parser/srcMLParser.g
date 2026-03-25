@@ -1666,7 +1666,12 @@ javascript_rules[] {
 
         // looking for lparen to start a parameter list
         { inMode(MODE_PARAMETER_LIST_JS) }?
-        javascript_parameter_list |
+        javascript_parameter_list
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                type_ts();
+        } |
 
         // looking for an empty control portion of a for-loop (e.g., lparen rparen)
         { inMode(MODE_FOR_CONTROL_JS) && next_token() == RPAREN }?
@@ -6203,6 +6208,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                     && (
                         inTransparentMode(MODE_CONTROL_INCREMENT)
                         || inTransparentMode(MODE_CONTROL_CONDITION)
+                        || (lparen_types_js.back() == 'c' && bracket_types_js.back() == "cLPAREN")
                     )
                 )
             )
@@ -18560,6 +18566,19 @@ control_tuple_no_paren_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 ;
 
 /*
+  void_as_name
+
+  Handles cases where "void" is the name of a type in TypeScript.
+*/
+void_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        JS_VOID
+;
+
+/*
   check_valid_specifier_js
 
   Checks to see if the current token is a specifier in JavaScript.
@@ -19791,6 +19810,13 @@ function_expression_js[] { bool consume_multops = false; ENTRY_DEBUG } :
         }
 
         javascript_parameter_list
+
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                type_ts();
+        }
+
         expression_block_js
 ;
 
@@ -19864,6 +19890,13 @@ keywordless_function_expression_js[] { ENTRY_DEBUG } :
         }
 
         javascript_parameter_list
+
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                type_ts();
+        }
+
         expression_block_js
 ;
 
@@ -19877,6 +19910,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
         isfunction = false;
         int last_consumed_current = last_consumed;
         bool found_name = false;
+        bool found_type = false;
         int start = mark();
         inputState->guessing++;
 
@@ -19915,8 +19949,18 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     consume();
                 }
 
-                // found "NAME(){"
-                if (LA(1) == RPAREN && next_token() == LCURLY)
+                // match optional TypeScript type, consuming RPAREN first
+                if (LA(1) == RPAREN && next_token() == COLON) {
+                    consume();  // ")"
+                    type_ts();
+                    found_type = true;
+                }
+
+                // found "NAME(){" or "NAME(): TYPE {"
+                if (
+                    (LA(1) == RPAREN && next_token() == LCURLY)
+                    || (found_type && LA(1) == LCURLY)
+                )
                     isfunction = true;
             }
         }
@@ -20319,6 +20363,13 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
         }
 
         javascript_parameter_list
+
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                type_ts();
+        }
+
         expression_block_js
 ;
 
@@ -20333,6 +20384,7 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
         int square_bracket_count = 0;
         int last_consumed_current = last_consumed;
         bool found_multops = false;
+        bool found_type = false;
         int start = mark();
         inputState->guessing++;
 
@@ -20385,8 +20437,18 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
                     consume();
                 }
 
-                // found "*[...](){}"
-                if (LA(1) == RPAREN && next_token() == LCURLY)
+                // match optional TypeScript type, consuming RPAREN first
+                if (LA(1) == RPAREN && next_token() == COLON) {
+                    consume();  // ")"
+                    type_ts();
+                    found_type = true;
+                }
+
+                // found "*[...](){" or "*[...](): TYPE {"
+                if (
+                    (LA(1) == RPAREN && next_token() == LCURLY)
+                    || (found_type && LA(1) == LCURLY)
+                )
                     iscomputed = true;
             }
         }
@@ -20426,6 +20488,13 @@ computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG 
         }
 
         javascript_parameter_list
+
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                type_ts();
+        }
+
         expression_block_js
 ;
 
@@ -20440,6 +20509,7 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
         int square_bracket_count = 0;
         int last_consumed_current = last_consumed;
         bool found_start = false;
+        bool found_type = false;
         int start = mark();
         inputState->guessing++;
 
@@ -20490,8 +20560,18 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
                     consume();
                 }
 
-                // found "*[...](){}"
-                if (LA(1) == RPAREN && next_token() == LCURLY)
+                // match optional TypeScript type, consuming RPAREN first
+                if (LA(1) == RPAREN && next_token() == COLON) {
+                    consume();  // ")"
+                    type_ts();
+                    found_type = true;
+                }
+
+                // found "*[...](){" or "*[...](): TYPE {"
+                if (
+                    (LA(1) == RPAREN && next_token() == LCURLY)
+                    || (found_type && LA(1) == LCURLY)
+                )
                     iscomputed = true;
             }
         }
@@ -20710,6 +20790,10 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                     // consume parameter list
                     paren_pair();
 
+                    // match optional TypeScript type
+                    if (LA(1) == COLON)
+                        type_ts();
+
                     // consume block
                     if (LA(1) == LCURLY) {
                         while (true) {
@@ -20780,6 +20864,13 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         }
 
         javascript_parameter_list
+
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                type_ts();
+        }
+
         expression_block_js
 
         {
@@ -20850,6 +20941,10 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
 
                 // consume parameter list
                 paren_pair();
+
+                // match optional TypeScript type
+                if (LA(1) == COLON)
+                    type_ts();
 
                 // consume "=>"
                 if (LA(1) == JS_ARROW) {
@@ -20926,6 +21021,13 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         }
 
         javascript_parameter_list
+
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                type_ts();
+        }
+
         arrow_operator_js
         expression_block_js
 
@@ -21172,9 +21274,17 @@ type_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LT(1)->getText() == "|" }?
+            // only allow a subset of all operators
+            { LT(1)->getText() == "-" || LT(1)->getText() == "|" }?
             general_operators |
 
-            compound_name | literals | object_js
+            // "void" is a valid TypeScript type
+            void_as_name |
+
+            // do not confuse LCURLY with the start of a block
+            { last_consumed == COLON }?
+            object_js |
+
+            literals | compound_name
         )*
 ;
