@@ -154,3 +154,6 @@ const srcMLState::MODE_TYPE ModeStack::MODE_OBJECT_JS                  (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_ARRAY_JS                   (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_DECL_JS                    (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_WITH_JS                    (bit(__COUNTER__));
+
+// TypeScript
+const srcMLState::MODE_TYPE ModeStack::MODE_TYPE_TS                    (bit(__COUNTER__));

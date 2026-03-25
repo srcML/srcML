@@ -18743,7 +18743,7 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 break;
             } |
 
-            declaration_init_js | declaration_range_js | compound_name
+            declaration_init_js | declaration_range_js | type_ts | compound_name
         )*
 
         {
@@ -19334,6 +19334,10 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 
         {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                type_ts();
+
             // ignore auto-inserted terminate, if applicable
             if (LA(1) == TERMINATE)
                 consume();
@@ -21153,3 +21157,24 @@ perform_chained_call_count_js[] returns [int numchainedcalls] {
 
         ENTRY_DEBUG
 } :;
+
+/*
+  type_ts
+
+  Handles a type in TypeScript.
+*/
+type_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
+        COLON
+
+        {
+            startNewMode(MODE_TYPE_TS);
+            startElement(STYPE);
+        }
+
+        (options { greedy = true; } :
+            { LT(1)->getText() == "|" }?
+            general_operators |
+
+            compound_name | literals | object_js
+        )*
+;
