@@ -1554,6 +1554,17 @@ javascript_statements[] {
             return;
         }
 
+        // looking for "[...](){}" to start a statement-level computed property function
+        if (
+            inMode(MODE_STATEMENT)
+            && (LA(1) == LBRACKET || LA(1) == JS_ASYNC && next_token() == LBRACKET)
+            && perform_computed_property_as_function_check_js()
+        ) {
+            computed_property_as_function_js();
+            processed_statement = true;
+            return;
+        }
+
         // check if the current non-comment token is a specifier that occurs before a statement keyword
         if (LA(1) != SNOP && inMode(MODE_STATEMENT) && check_valid_specifier_js()) {
             std::array<int, 2> post_specifier_tokens = perform_post_specifier_check_js();
@@ -12729,6 +12740,14 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         generator_function_computed_property_js |
 
+        // looking for "[...](){}" to start a computed property function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LBRACKET || LA(1) == JS_ASYNC && next_token() == LBRACKET)
+            && perform_computed_property_as_function_check_js()
+        }?
+        computed_property_as_function_js |
+
         // looking for "[...]:" to start a computed property in an object in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
         computed_property_js |
@@ -20280,7 +20299,7 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
         {
             // statement-level
             if (inMode(MODE_STATEMENT))
-                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_COMPUTED_GENERATOR_FUNCTION_JS);
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_COMPUTED_FUNCTION_JS);
             // expression-level
             else
                 startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
@@ -20347,6 +20366,111 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
                 int paren_count = 0;
 
                 while (found_multops) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    if (paren_count < 0)
+                        break;
+
+                    if ((LA(1) == RPAREN && paren_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        break;
+
+                    consume();
+                }
+
+                // found "*[...](){}"
+                if (LA(1) == RPAREN && next_token() == LCURLY)
+                    iscomputed = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  computed_property_as_function_js
+
+  Handles a computed property that starts a function in JavaScript.
+  Specifically, these appear in the form "[...](){}".
+*/
+computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // statement-level
+            if (inMode(MODE_STATEMENT))
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_COMPUTED_FUNCTION_JS);
+            // expression-level
+            else
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        (specifier_js)*
+        computed_property_js
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+        expression_block_js
+;
+
+/*
+  perform_computed_property_as_function_check_js
+
+  Checks for special computed property function syntax in JavaScript.
+  Specifically, functions of the form "[...](){}".
+*/
+perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
+        iscomputed = false;
+        int square_bracket_count = 0;
+        int last_consumed_current = last_consumed;
+        bool found_start = false;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // identify that the first token is "["; if not found, exit
+            if (LA(1) == LBRACKET)
+                found_start = true;
+
+            // match "[...]"
+            while (found_start) {
+                if (LA(1) == LBRACKET)
+                    ++square_bracket_count;
+
+                if (LA(1) == RBRACKET)
+                    --square_bracket_count;
+
+                if (square_bracket_count < 0)
+                    break;
+
+                if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+
+            // match "()"
+            if (found_start && LA(1) == RBRACKET && next_token() == LPAREN) {
+                consume();  // "]"
+                int paren_count = 0;
+
+                while (found_start) {
                     if (LA(1) == LPAREN)
                         ++paren_count;
 

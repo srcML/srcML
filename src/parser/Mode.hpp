@@ -326,13 +326,13 @@ const static srcMLState::MODE_TYPE MODE_FROM_PY;
 const static srcMLState::MODE_TYPE MODE_SET_PY;
 
 // JavaScript modes
-const static srcMLState::MODE_TYPE MODE_COMPUTED_GENERATOR_FUNCTION_JS;
-
 const static srcMLState::MODE_TYPE MODE_FUNCTION_EXPRESSION_JS;
 
 const static srcMLState::MODE_TYPE MODE_OBJECT_DESTRUCTURE_JS;
 
 const static srcMLState::MODE_TYPE MODE_ARRAY_DESTRUCTURE_JS;
+
+const static srcMLState::MODE_TYPE MODE_COMPUTED_FUNCTION_JS;
 
 const static srcMLState::MODE_TYPE MODE_CLASS_EXPRESSION_JS;
 

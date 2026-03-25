@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="function">
 
-<!-- Regular functions ("function") -->
+<!-- Regular functions ("function" or "[](){}") -->
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>empty</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
@@ -39,7 +39,21 @@
 </block_content>}</block></function>
 </unit>
 
-<!-- Generator functions ("function*") -->
+<unit revision="1.0.0" language="JavaScript">
+<function><name type="computed">[<expr><name>DEV</name></expr>]</name><parameter_list>(<parameter><decl><name>source</name></decl></parameter>, <parameter><decl><name>filename</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>source</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>topLevelWrappers</name> <init>= <expr><object>{
+  <property><expr><function><name type="computed">[<expr><name>DEV</name></expr>]</name><parameter_list>(<parameter><decl><name>source</name></decl></parameter>, <parameter><decl><name>filename</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>source</name></expr></return>
+  </block_content>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Generator functions ("function*" or "*[](){}") -->
 
 <unit revision="1.0.0" language="JavaScript">
 <function type="generator">function* <name>emptyGenerator</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
