@@ -59,7 +59,7 @@ int main(int, char* argv[]) {
         srcml_archive_free(iarchive);
     }
 
-    //// is-static
+    //// is-static()
     // C++
     const std::string static_constructs_cpp = R"(
 static int a;
@@ -86,9 +86,7 @@ class Foo {
         R"(<decl_stmt><decl><type><specifier>const</specifier> <specifier>static</specifier> <name>int</name></type> <name>f</name></decl>;</decl_stmt>)",
         R"(<decl><type><specifier>const</specifier> <specifier>static</specifier> <name>int</name></type> <name>f</name></decl>)",
         R"(<function><type><specifier>static</specifier> <name>void</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>)",
-        R"(<class>class <name>Foo</name> <block>{<private type="default">
-    <function><type><specifier>static</specifier> <name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
-</private>}</block>;</class>)"
+        R"(<function><type><specifier>static</specifier> <name>void</name></type> <name>bar</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>)"
     };
 
     {
@@ -206,13 +204,13 @@ interface A {
 
         dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
         dassert(srcml_transform_get_unit_size(result), 7);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), static_constructs_cpp_srcml[0]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), static_constructs_cpp_srcml[1]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), static_constructs_cpp_srcml[2]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), static_constructs_cpp_srcml[3]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), static_constructs_cpp_srcml[4]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), static_constructs_cpp_srcml[5]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,6)), static_constructs_cpp_srcml[6]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), static_constructs_java_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), static_constructs_java_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), static_constructs_java_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), static_constructs_java_srcml[3]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), static_constructs_java_srcml[4]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), static_constructs_java_srcml[5]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,6)), static_constructs_java_srcml[6]);
 
         srcml_unit_free(unit);
         srcml_transform_free(result);
@@ -255,7 +253,7 @@ interface INumber<T> {
     const std::vector<std::string> static_constructs_cs_srcml = {
         R"(<decl_stmt><decl><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>Count</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>)",
         R"(<decl><type><specifier>public</specifier> <specifier>static</specifier> <name>int</name></type> <name>Count</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>)",
-        R"(function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>)",
+        R"(<function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>Foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>)",
         R"(<constructor><specifier>static</specifier> <name>A</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>)",
         R"(<class><specifier>static</specifier> class <name>Utils</name> <block>{
     <function><type><specifier>public</specifier> <specifier>static</specifier> <name>void</name></type> <name>Helper</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
@@ -295,15 +293,15 @@ interface INumber<T> {
 
         dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
         dassert(srcml_transform_get_unit_size(result), 9);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), static_constructs_cpp_srcml[0]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), static_constructs_cpp_srcml[1]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), static_constructs_cpp_srcml[2]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), static_constructs_cpp_srcml[3]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), static_constructs_cpp_srcml[4]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), static_constructs_cpp_srcml[5]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,6)), static_constructs_cpp_srcml[6]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,7)), static_constructs_cpp_srcml[7]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,8)), static_constructs_cpp_srcml[8]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), static_constructs_cs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), static_constructs_cs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), static_constructs_cs_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), static_constructs_cs_srcml[3]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), static_constructs_cs_srcml[4]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), static_constructs_cs_srcml[5]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,6)), static_constructs_cs_srcml[6]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,7)), static_constructs_cs_srcml[7]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,8)), static_constructs_cs_srcml[8]);
 
         srcml_unit_free(unit);
         srcml_transform_free(result);
@@ -369,9 +367,9 @@ class A:
 
         dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
         dassert(srcml_transform_get_unit_size(result), 3);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), static_constructs_cpp_srcml[0]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), static_constructs_cpp_srcml[1]);
-        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), static_constructs_cpp_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), static_constructs_py_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), static_constructs_py_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), static_constructs_py_srcml[2]);
 
         srcml_unit_free(unit);
         srcml_transform_free(result);
@@ -380,5 +378,409 @@ class A:
     }
 
 
+    //// is-inline()
+    // C++
+    const std::string inline_constructs_cpp = R"(
+inline int sum(int a, int b) { return a + b; }
+
+inline std::atomic<int> counter(0);
+)";
+
+    const std::vector<std::string> inline_constructs_cpp_srcml = {
+        R"(<function><type><specifier>inline</specifier> <name>int</name></type> <name>sum</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>b</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>a</name> <operator>+</operator> <name>b</name></expr>;</return> </block_content>}</block></function>)",
+        R"(<decl_stmt><decl><type><specifier>inline</specifier> <name><name>std</name><operator>::</operator><name>atomic</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name></type> <name>counter</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>inline</specifier> <name><name>std</name><operator>::</operator><name>atomic</name><argument_list type="generic">&lt;<argument><expr><name>int</name></expr></argument>&gt;</argument_list></name></type> <name>counter</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></decl>)"
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,inline_constructs_cpp.c_str(),inline_constructs_cpp.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-inline(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 3);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), inline_constructs_cpp_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), inline_constructs_cpp_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), inline_constructs_cpp_srcml[2]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+
+    //// is-pure-virtual()
+    // C++
+    const std::string pure_virtual_constructs_cpp = R"(
+class Base {
+    int foo() = 0;
+    virtual ~Base() = 0;
+};
+)";
+
+    const std::vector<std::string> pure_virtual_constructs_cpp_srcml = {
+        R"(<function_decl><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list> = <literal type="number">0</literal>;</function_decl>)",
+        R"(<destructor_decl><specifier>virtual</specifier> <name>~Base</name><parameter_list>()</parameter_list> = <literal type="number">0</literal>;</destructor_decl>)",
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,pure_virtual_constructs_cpp.c_str(),pure_virtual_constructs_cpp.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-pure-virtual(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), pure_virtual_constructs_cpp_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), pure_virtual_constructs_cpp_srcml[1]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+
+    // C#
+    const std::string pure_virtual_constructs_cs = R"(
+abstract class Base {
+    public abstract void DoWork();
+}
+
+interface IWorker {
+    void DoWork();
+}
+)";
+
+    const std::vector<std::string> pure_virtual_constructs_cs_srcml = {
+        R"(<function_decl><type><specifier>public</specifier> <specifier>abstract</specifier> <name>void</name></type> <name>DoWork</name><parameter_list>()</parameter_list>;</function_decl>)",
+        R"(<function_decl><type><name>void</name></type> <name>DoWork</name><parameter_list>()</parameter_list>;</function_decl>)",
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C#");
+        srcml_unit_parse_memory(unit,pure_virtual_constructs_cs.c_str(),pure_virtual_constructs_cs.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-pure-virtual(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), pure_virtual_constructs_cs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), pure_virtual_constructs_cs_srcml[1]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // Java
+    const std::string pure_virtual_constructs_java = R"(
+abstract class Base {
+    abstract void doWork();
+}
+
+interface Worker {
+    void doWork();
+}
+)";
+
+    const std::vector<std::string> pure_virtual_constructs_java_srcml = {
+        R"(<function_decl><type><specifier>abstract</specifier> <name>void</name></type> <name>doWork</name><parameter_list>()</parameter_list>;</function_decl>)",
+        R"(<function_decl><type><name>void</name></type> <name>doWork</name><parameter_list>()</parameter_list>;</function_decl>)",
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"Java");
+        srcml_unit_parse_memory(unit,pure_virtual_constructs_java.c_str(),pure_virtual_constructs_java.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-pure-virtual(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 2);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), pure_virtual_constructs_java_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), pure_virtual_constructs_java_srcml[1]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+
+    //// is-explicit
+    // C++
+    const std::string explicit_constructs_cpp = R"(
+struct B
+{
+    explicit B(int) {}
+    explicit B(int, int) {}
+    explicit operator bool() const { return true; }
+};
+)";
+
+    const std::vector<std::string> explicit_constructs_cpp_srcml = {
+        R"(<constructor><specifier>explicit</specifier> <name>B</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></constructor>)",
+        R"(<constructor><specifier>explicit</specifier> <name>B</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>, <parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></constructor>)",
+        R"(<function type="operator"><type><specifier>explicit</specifier></type> <name>operator <name>bool</name></name><parameter_list>()</parameter_list> <specifier>const</specifier> <block>{<block_content> <return>return <expr><literal type="boolean">true</literal></expr>;</return> </block_content>}</block></function>)"
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,explicit_constructs_cpp.c_str(),explicit_constructs_cpp.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-explicit(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 3);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), explicit_constructs_cpp_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), explicit_constructs_cpp_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), explicit_constructs_cpp_srcml[2]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // C#
+    const std::string explicit_constructs_cs = R"(
+public class Product
+{
+    public static explicit operator string(Product p) {}
+}
+)";
+
+    const std::vector<std::string> explicit_constructs_cs_srcml = {
+        R"(<function type="operator"><type><specifier>public</specifier> <specifier>static</specifier> <specifier>explicit</specifier></type> <name>operator <name>string</name></name><parameter_list>(<parameter><decl><type><name>Product</name></type> <name>p</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>)",
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C#");
+        srcml_unit_parse_memory(unit,explicit_constructs_cs.c_str(),explicit_constructs_cs.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-explicit(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 1);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), explicit_constructs_cs_srcml[0]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+
+
+    //// is-deleted
+    // C++
+    const std::string deleted_constructs_cpp = R"(
+void printInt(int x) {}
+void printInt(char) = delete;
+void printInt(bool) = delete;
+
+template <typename T>
+void foo(T) = delete;
+void foo(int) {}
+
+struct A {
+    A() = delete;
+    A(int) = delete;
+    A(const A&) = delete;
+    A& operator=(const A&) = delete;
+    A& operator=(A&&) = delete;
+    ~A() = delete;
+    operator int() = delete;
+};
+)";
+
+    const std::vector<std::string> deleted_constructs_cpp_srcml = {
+        R"(<function_decl><type><name>void</name></type> <name>printInt</name><parameter_list>(<parameter><decl><type><name>char</name></type></decl></parameter>)</parameter_list> = <specifier>delete</specifier>;</function_decl>)",
+        R"(<function_decl><type><name>void</name></type> <name>printInt</name><parameter_list>(<parameter><decl><type><name>bool</name></type></decl></parameter>)</parameter_list> = <specifier>delete</specifier>;</function_decl>)",
+        R"(<function_decl><template>template <parameter_list>&lt;<parameter><type><name>typename</name></type> <name>T</name></parameter>&gt;</parameter_list></template>
+<type><name>void</name></type> <name>foo</name><parameter_list>(<parameter><decl><type><name>T</name></type></decl></parameter>)</parameter_list> = <specifier>delete</specifier>;</function_decl>)",
+        R"(<constructor_decl><name>A</name><parameter_list>()</parameter_list> = <specifier>delete</specifier>;</constructor_decl>)",
+        R"(<constructor_decl><name>A</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list> = <specifier>delete</specifier>;</constructor_decl>)",
+        R"(<constructor_decl><name>A</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>A</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> = <specifier>delete</specifier>;</constructor_decl>)",
+        R"(<function_decl type="operator"><type><name>A</name><modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>A</name><modifier>&amp;</modifier></type></decl></parameter>)</parameter_list> = <specifier>delete</specifier>;</function_decl>)",
+        R"(<function_decl type="operator"><type><name>A</name><modifier>&amp;</modifier></type> <name>operator<name>=</name></name><parameter_list>(<parameter><decl><type><name>A</name><modifier>&amp;&amp;</modifier></type></decl></parameter>)</parameter_list> = <specifier>delete</specifier>;</function_decl>)",
+        R"(<destructor_decl><name>~A</name><parameter_list>()</parameter_list> = <specifier>delete</specifier>;</destructor_decl>)",
+        R"(<function_decl type="operator"><name>operator <name>int</name></name><parameter_list>()</parameter_list> = <specifier>delete</specifier>;</function_decl>)"
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,deleted_constructs_cpp.c_str(),deleted_constructs_cpp.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-deleted(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 10);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), deleted_constructs_cpp_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), deleted_constructs_cpp_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), deleted_constructs_cpp_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), deleted_constructs_cpp_srcml[3]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), deleted_constructs_cpp_srcml[4]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), deleted_constructs_cpp_srcml[5]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,6)), deleted_constructs_cpp_srcml[6]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,7)), deleted_constructs_cpp_srcml[7]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,8)), deleted_constructs_cpp_srcml[8]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,9)), deleted_constructs_cpp_srcml[9]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
 
 }
