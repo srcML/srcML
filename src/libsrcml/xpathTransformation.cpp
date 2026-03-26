@@ -42,9 +42,70 @@ struct XPathExtensionFunction {
 };
 
 const std::vector<XPathExtensionFunction> extension_functions {
-    {"is-static","predicate","src:type/src:specifier='static' or src:decl/src:type/src:specifier='static' or (not(self::src:type) and src:specifier='static') or (self::src:decl and ../src:decl/src:type/src:specifier='static') or self::src:static","xpath","ANY"},
-    {"is-static","predicate","src:attribute/src:expr='staticmethod' or src:attribute/src:expr='classmethod' or (self::src:expr_stmt/ancestor::src:block_content/ancestor::src:block/ancestor::src:class and src:expr/src:operator='=')","xpath","Python"},
-    {"type-definitions","nodeset","src:class | src:union | src:enum | src:interface | src:struct | src:actor | src:protocol","XPath","ANY:"}
+    {
+        "is-static",
+        "predicate",
+        "src:type/src:specifier='static' or src:decl/src:type/src:specifier='static' or (not(self::src:type) and src:specifier='static') or (self::src:decl and ../src:decl/src:type/src:specifier='static') or self::src:static",
+        "xpath",
+        "ANY" //C, C++, Java, C#
+    },
+    {
+        "is-static",
+        "predicate",
+        "src:attribute/src:expr='staticmethod' or src:attribute/src:expr='classmethod' or (self::src:expr_stmt and parent::src:block_content/parent::src:block/parent::src:class and src:expr/src:operator='=')",
+        "xpath",
+        "Python"
+    },
+    {
+        "is-inline",
+        "predicate",
+        "src:type/src:specifier='inline' or src:decl/src:type/src:specifier='inline' or (not(self::src:type) and src:specifier='inline') or (self::src:decl and ../src:decl/src:type/src:specifier='inline')",
+        "xpath",
+        "ANY" //C++
+    },
+    {
+        "is-pure-virtual",
+        "predicate",
+        "self::src:function_decl and (parent::src:block/parent::src:interface or src:type/src:specifier='abstract')",
+        "xpath",
+        "ANY" // Java, C#
+    },
+    {
+        "is-pure-virtual",
+        "predicate",
+        "(self::src:function_decl or self::src:destructor_decl) and (src:literal='0')",
+        "xpath",
+        "C++"
+    },
+    {
+        "is-explicit",
+        "predicate",
+        "(not(self::src:type) and src:specifier='explicit') or src:type/src:specifier='explicit'",
+        "xpath",
+        "ANY" // C++, C#
+    },
+    {
+        "is-deleted",
+        "predicate",
+        "src:specifier='delete'",
+        "xpath",
+        "ANY" // C++
+    },
+    {
+        "is-const",
+        "preditcate",
+        "(not(self::src:type) and src:specifier='const') or src:type/src:specifier='const' or src:decl/src:type/src:specifier='const' or (self::src:decl and ../src:decl/src:type/src:specifier='const')",
+        "xpath",
+        "ANY" //
+    }
+
+    // {
+    //     "type-definitions",
+    //     "nodeset",
+    //     "src:class | src:union | src:enum | src:interface | src:struct | src:actor | src:protocol",
+    //     "xpath",
+    //     "ANY:"
+    // }
 };
 
 static std::unordered_map<std::string, std::string> xpath_extension_registry;
