@@ -783,4 +783,166 @@ struct A {
         srcml_archive_free(iarchive);
     }
 
+
+    //// is-const
+    // C++
+    const std::string const_constructs_cpp = R"(
+const int x = 5;
+const int x = 5, y = 10;
+const int* p1;
+int* const p2 = &x;
+const int* const p3 = &x;
+
+void f(const int x);
+const int f();
+
+class A {
+public:
+    const int x;
+    int get() const;
+    const int foo() const;
+    const int* const bar(const int* const x) const;
+};
+)";
+
+    const std::vector<std::string> const_constructs_cpp_srcml = {
+        R"(<decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>)",
+        R"(<decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>, <decl><type ref="prev"/><name>y</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>)",
+        R"(<decl><type ref="prev"/><name>y</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>)",
+        R"(<decl_stmt><decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>p1</name></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier></type> <name>p1</name></decl>)",
+        R"(<decl_stmt><decl><type><name>int</name><modifier>*</modifier> <specifier>const</specifier></type> <name>p2</name> <init>= <expr><operator>&amp;</operator><name>x</name></expr></init></decl>;</decl_stmt>)",
+        R"(<decl><type><name>int</name><modifier>*</modifier> <specifier>const</specifier></type> <name>p2</name> <init>= <expr><operator>&amp;</operator><name>x</name></expr></init></decl>)",
+        R"(<decl_stmt><decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier> <specifier>const</specifier></type> <name>p3</name> <init>= <expr><operator>&amp;</operator><name>x</name></expr></init></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier> <specifier>const</specifier></type> <name>p3</name> <init>= <expr><operator>&amp;</operator><name>x</name></expr></init></decl>)",
+        R"(<parameter><decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name></decl></parameter>)",
+        R"(<decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name></decl>)",
+        R"(<decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name></decl>)",
+        R"(<function_decl><type><name>int</name></type> <name>get</name><parameter_list>()</parameter_list> <specifier>const</specifier>;</function_decl>)",
+        R"(<function_decl><type><specifier>const</specifier> <name>int</name></type> <name>foo</name><parameter_list>()</parameter_list> <specifier>const</specifier>;</function_decl>)",
+        R"(<function_decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier> <specifier>const</specifier></type> <name>bar</name><parameter_list>(<parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier> <specifier>const</specifier></type> <name>x</name></decl></parameter>)</parameter_list> <specifier>const</specifier>;</function_decl>)",
+        R"(<parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier> <specifier>const</specifier></type> <name>x</name></decl></parameter>)",
+        R"(<decl><type><specifier>const</specifier> <name>int</name><modifier>*</modifier> <specifier>const</specifier></type> <name>x</name></decl>)",
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,const_constructs_cpp.c_str(),const_constructs_cpp.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-const(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 20);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), const_constructs_cpp_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), const_constructs_cpp_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), const_constructs_cpp_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), const_constructs_cpp_srcml[3]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), const_constructs_cpp_srcml[4]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), const_constructs_cpp_srcml[5]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,6)), const_constructs_cpp_srcml[6]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,7)), const_constructs_cpp_srcml[7]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,8)), const_constructs_cpp_srcml[8]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,9)), const_constructs_cpp_srcml[9]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,10)), const_constructs_cpp_srcml[10]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,11)), const_constructs_cpp_srcml[11]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,12)), const_constructs_cpp_srcml[12]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,13)), const_constructs_cpp_srcml[13]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,14)), const_constructs_cpp_srcml[14]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,15)), const_constructs_cpp_srcml[15]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,16)), const_constructs_cpp_srcml[16]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,17)), const_constructs_cpp_srcml[17]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,18)), const_constructs_cpp_srcml[18]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,19)), const_constructs_cpp_srcml[19]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
+
+    // C#
+    const std::string const_constructs_cs = R"(
+class A {
+    public const int X = 5;
+    private const string Name = "test";
+    void f() {
+        const int x = 10;
+    }
+}
+)";
+
+    const std::vector<std::string> const_constructs_cs_srcml = {
+        R"(<decl_stmt><decl><type><specifier>public</specifier> <specifier>const</specifier> <name>int</name></type> <name>X</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>public</specifier> <specifier>const</specifier> <name>int</name></type> <name>X</name> <init>= <expr><literal type="number">5</literal></expr></init></decl>)",
+        R"(<decl_stmt><decl><type><specifier>private</specifier> <specifier>const</specifier> <name>string</name></type> <name>Name</name> <init>= <expr><literal type="string">"test"</literal></expr></init></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>private</specifier> <specifier>const</specifier> <name>string</name></type> <name>Name</name> <init>= <expr><literal type="string">"test"</literal></expr></init></decl>)",
+        R"(<decl_stmt><decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>;</decl_stmt>)",
+        R"(<decl><type><specifier>const</specifier> <name>int</name></type> <name>x</name> <init>= <expr><literal type="number">10</literal></expr></init></decl>)"
+    };
+
+    {
+        char* s;
+        size_t size;
+
+        srcml_archive* oarchive = srcml_archive_create();
+        srcml_archive_write_open_memory(oarchive,&s, &size);
+
+        srcml_unit* unit = srcml_unit_create(oarchive);
+        srcml_unit_set_language(unit,"C++");
+        srcml_unit_parse_memory(unit,const_constructs_cs.c_str(),const_constructs_cs.size());
+        dassert(srcml_archive_write_unit(oarchive,unit), SRCML_STATUS_OK);
+
+        srcml_unit_free(unit);
+        srcml_archive_close(oarchive);
+        srcml_archive_free(oarchive);
+
+        std::string srcml_text = std::string(s, size);
+        free(s);
+
+        srcml_archive* iarchive = srcml_archive_create();
+        srcml_archive_read_open_memory(iarchive,srcml_text.c_str(),srcml_text.size());
+        dassert(srcml_append_transform_xpath(iarchive,"//*[src:is-const(.)]"), SRCML_STATUS_OK);
+
+        unit = srcml_archive_read_unit(iarchive);
+        srcml_transform_result* result = nullptr;
+        srcml_unit_apply_transforms(iarchive, unit, &result);
+
+        dassert(srcml_transform_get_type(result), SRCML_RESULT_UNITS);
+        dassert(srcml_transform_get_unit_size(result), 6);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,0)), const_constructs_cs_srcml[0]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,1)), const_constructs_cs_srcml[1]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,2)), const_constructs_cs_srcml[2]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,3)), const_constructs_cs_srcml[3]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,4)), const_constructs_cs_srcml[4]);
+        dassert(srcml_unit_get_srcml_inner(srcml_transform_get_unit(result,5)), const_constructs_cs_srcml[5]);
+
+        srcml_unit_free(unit);
+        srcml_transform_free(result);
+        srcml_archive_close(iarchive);
+        srcml_archive_free(iarchive);
+    }
 }

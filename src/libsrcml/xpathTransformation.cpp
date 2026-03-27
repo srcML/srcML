@@ -93,10 +93,10 @@ const std::vector<XPathExtensionFunction> extension_functions {
     },
     {
         "is-const",
-        "preditcate",
-        "(not(self::src:type) and src:specifier='const') or src:type/src:specifier='const' or src:decl/src:type/src:specifier='const' or (self::src:decl and ../src:decl/src:type/src:specifier='const')",
+        "predicate",
+        "(not(self::src:type) and src:specifier='const') or (src:type/src:specifier='const' and not(self::src:function) and not(self::src:function_decl)) or src:decl/src:type/src:specifier='const' or (self::src:decl and ../src:decl/src:type/src:specifier='const')",
         "xpath",
-        "ANY" //
+        "ANY" // C++
     }
 
     // {
