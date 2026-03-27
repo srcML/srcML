@@ -65,6 +65,15 @@ endif()
 # used as defaults for installation and packaging
 include(GNUInstallDirs)
 
+# CMake Resource Compiler for embedding data files
+include(FetchContent)
+FetchContent_Declare(cmrc
+    GIT_REPOSITORY https://github.com/vector-of-bool/cmrc.git
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(cmrc)
+
 # Call at root so testing can be run at root
 enable_testing()
 
