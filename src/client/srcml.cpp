@@ -25,11 +25,15 @@
 #include <stdin_libarchive.hpp>
 #include <input_archive.hpp>
 #include <string_view>
+#include <cmrc/cmrc.hpp>
 
 #ifndef _MSC_VER
 #include <sys/uio.h>
 #include <unistd.h>
 #endif
+
+// register srcml with cmrc
+CMRC_DECLARE(srcml);
 
 using namespace ::std::literals::string_view_literals;
 
@@ -103,25 +107,9 @@ int main(int argc, char* argv[]) {
     // stdin from a terminal is not allowed
     if (srcml_request.stdindex && isatty(0)) {
 
-        fprintf(stderr, R"(srcml typically accepts input from standard input from a pipe, not a terminal.
-Typical usage includes:
-
-    # convert from a source file to srcML
-    srcml main.cpp -o main.cpp.xml
-
-    # convert from text to srcML
-    srcml --text="int i = 1;" --language C++
-
-    # pipe in source code
-    echo "int i = 1;" | srcml --language C++
-
-    # convert from srcML back to source code
-    srcml main.cpp.xml -o main.cpp
-
-Consider using the --text option for direct entry of text.
-
-See `srcml --help` for more information.
-)");
+        auto fs = cmrc::srcml::get_filesystem();
+        auto help = fs.open("srcml_terminal_help.txt");
+        std::cerr.write(help.begin(), help.size());
         exit(1);
     }
 
