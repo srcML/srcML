@@ -391,7 +391,7 @@ tokens {
     JS_YIELD;
     QMARK_PERIOD;
 
-    // TypeScript only
+    // TypeScript only (but can technically appear in JavaScript)
     TS_TYPE;
 }
 
@@ -920,8 +920,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT_FAMILY },
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT_FAMILY },
 
-        // TypeScript only
-        { "type"         , TS_TYPE           , LANGUAGE_TYPESCRIPT },
+        // TypeScript only (but can technically appear in JavaScript)
+        { "type"         , TS_TYPE           , LANGUAGE_JAVASCRIPT_FAMILY },
    };
 
     // fill up the literals for the language that we are parsing
