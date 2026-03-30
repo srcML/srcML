@@ -93,7 +93,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<for>for <specifier>await</specifier> <control>(<init><parameter><name>user</name> <range>of <expr><name>users</name></expr></range></parameter></init>)</control> <block>{<block_content>
+<for>for <specifier>await</specifier> <control>(<init><decl><name>user</name> <range>of <expr><name>users</name></expr></range></decl></init>)</control> <block>{<block_content>
     <if_stmt><if>if <condition>(<expr><name><name>user</name><operator>.</operator><name>cookie</name><operator>.</operator><name>length</name></name> <operator>&lt;</operator> <literal type="number">500</literal></expr>)</condition> <block>{<block_content>
         <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Aborting: Incorrect cookie length"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
         <return>return</return>
@@ -121,7 +121,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <for>for <specifier>each</specifier> <control>(<init><decl type="var">var <name>phase</name> <range>in <expr><array>[<expr><literal type="string">'early'</literal></expr>, <expr><literal type="string">'normal'</literal></expr>, <expr><literal type="string">'late'</literal></expr>]</array></expr></range></decl></init>)</control> <block>{<block_content>
-    <for>for <specifier>each</specifier> <control>(<init><parameter><name>handle</name> <range>in <expr><name><name>Stack</name><operator>.</operator><name>phases</name><index>[<expr><name>phase</name></expr>]</index></name></expr></range></parameter></init>)</control> <block>{<block_content>
+    <for>for <specifier>each</specifier> <control>(<init><decl><name>handle</name> <range>in <expr><name><name>Stack</name><operator>.</operator><name>phases</name><index>[<expr><name>phase</name></expr>]</index></name></expr></range></decl></init>)</control> <block>{<block_content>
         <try>try <block>{<block_content>
             <expr_stmt><expr><call><name><name>Stack</name><operator>.</operator><name>runHandle</name></name><argument_list>(<argument><expr><name>handle</name></expr></argument>)</argument_list></call></expr></expr_stmt>
         </block_content>}</block> <catch>catch(<name>e</name>) <block>{<block_content>

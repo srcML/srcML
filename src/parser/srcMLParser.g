@@ -18743,7 +18743,7 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                     break;
 
                 default:
-                    startElement(SPARAMETER);
+                    startElement(SDECLARATION);
                     break;
             }
 
