@@ -198,6 +198,7 @@ private:
                 break;
 
             case LANGUAGE_JAVASCRIPT:
+            case LANGUAGE_TYPESCRIPT:
                 srcMLParser::start_javascript();
                 break;
 

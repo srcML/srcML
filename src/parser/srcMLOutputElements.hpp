@@ -339,7 +339,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SYIELD_STATEMENT,              { "yield",             SRC,      0,           0,        0,                   0 }},
     { TOKEN::SYIELD_FROM_STATEMENT,         { "yield",             SRC, "type",      "from",        0,                   0 }},
 
-    // JavaScript
+    // JavaScript and TypeScript
     { TOKEN::SCOMPUTED_PROPERTY,            { "name",              SRC, "type",  "computed",        0,                   0 }},
     { TOKEN::SDEBUGGER_STATEMENT,           { "debugger",          SRC,      0,           0,        0,                   0 }},
     { TOKEN::SDECLARATION_CONST,            { "decl",              SRC, "type",     "const",        0,                   0 }},

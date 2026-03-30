@@ -6,7 +6,7 @@
  *
  * This file is part of the srcML Toolkit.
  *
- * Changes certain JavaScript keywords to names if their inclusion is unexpected.
+ * Changes certain JavaScript/TypeScript keywords to names if their inclusion is unexpected.
  */
 
 #include <NameDifferentiatorJavaScript.hpp>
@@ -23,7 +23,7 @@ antlr::RefToken NameDifferentiatorJavaScript::nextToken() {
         auto token = input.nextToken();
         checkBracketToken(token);  // Detect if currently in/out of `()`, `{}`, or `[]`
 
-        // Check if the current JavaScript keyword is really a keyword, or if it is used as a name
+        // Check if the current JavaScript/TypeScript keyword is really a keyword, or if it is used as a name
         if (srcMLParser::name_differentiator_js_token_set.member(token->getType()))
             lookAheadDifferentiator(token);
         // Manually set the previous token as the current token

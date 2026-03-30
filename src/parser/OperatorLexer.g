@@ -99,9 +99,9 @@ OPERATORS options { testLiterals = true; } {
     int start = LA(1);
     int xmlcount = 0;
 
-    char prevchar = '\000';      // [JavaScript] records previous char before it is consumed
-    char stringtoken = '\000';   // [JavaScript] denotes a string: '"', '\'', or '`'
-    char commenttoken = '\000';  // [JavaScript] denotes a comment: 'l', 'b', 'h', or 'j'
+    char prevchar = '\000';      // [JavaScript/TypeScript] records previous char before it is consumed
+    char stringtoken = '\000';   // [JavaScript/TypeScript] denotes a string: '"', '\'', or '`'
+    char commenttoken = '\000';  // [JavaScript/TypeScript] denotes a comment: 'l', 'b', 'h', or 'j'
 
     bool ignorenexttoken = false;
     bool isarrow = false;
@@ -120,23 +120,23 @@ OPERATORS options { testLiterals = true; } {
     // if the previous token is a keyword that can contain one or more expressions
     // afterward (e.g., "as", "return", etc.), then '<' starts a JSX literal
     if (
-        inLanguage(LANGUAGE_JAVASCRIPT)
+        inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
         && start == '<'
         && srcMLParser::keyword_expression_pair_js_token_set.member(TokenLookbackJavaScript::lastTokenType())
     ) {
         isjsx = true;
     }
 } : (
-    // # (C++/Python/JavaScript), #! (Python/JavaScript)
+    // # (C++/Python/JavaScript/TypeScript), #! (Python/JavaScript/TypeScript)
     '#' (
-        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) == '!' }?
+        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) && LA(1) == '!' }?
             { $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END); } |
 
-        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) != '!' }?
+        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) && LA(1) != '!' }?
             { $setType(HASHTAG_COMMENT_START); changetotextlexer(HASHTAG_COMMENT_END); } |
 
-        // Names can include '#' (JavaScript)
-        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) != '!' }?
+        // Names can include '#' (JavaScript/TypeScript)
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && LA(1) != '!' }?
             NAME { $setType(NAME); } |
 
         { startline }?
@@ -154,32 +154,32 @@ OPERATORS options { testLiterals = true; } {
     '+' ('+' | '=')? |
     '-' ('-' | '=' | '>' ('*')? )? |
 
-    // *, *=, ** (Python/JavaScript), **= (Python/JavaScript)
-    '*' ({ inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) }? '*')? ('=')? |
+    // *, *=, ** (Python/JavaScript/TypeScript), **= (Python/JavaScript/TypeScript)
+    '*' ({ inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? '*')? ('=')? |
 
     '%' ('=')? |
     '^' ('=')? |
     '|' ('|')? ('=')? |
 
-    // !, !=, !== (JavaScript)
-    '!' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')?)? |
+    // !, !=, !== (JavaScript/TypeScript)
+    '!' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? '=')?)? |
 
     // :, := (Python), ::
     ':' ({ inLanguage(LANGUAGE_PYTHON) }? '=')? (':')? |
 
-    // =, ==, => (C#/JavaScript), === (JavaScript)
-    '=' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? | { (inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#')) || inLanguage(LANGUAGE_JAVASCRIPT) }? '>')? |
+    // =, ==, => (C#/JavaScript/TypeScript), === (JavaScript/TypeScript)
+    '=' ('=' ({ inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? '=')? | { (inLanguage(LANGUAGE_CSHARP) && (lastpos != (getColumn() - 1) || prev == ')' || prev == '#')) || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? '>')? |
 
     // &, &&, &&=, &=
     '&' ('&')? ('=')? |
 
-    // >, >>=, >=, >>> (JavaScript), >>>= (JavaScript), not >>
-    '>' (('>' '=') => '>' '=' | { inLanguage(LANGUAGE_JAVASCRIPT) }? ('>' '>' '=') => '>' '>' '=')? ('=')? |
+    // >, >>=, >=, >>> (JavaScript/TypeScript), >>>= (JavaScript/TypeScript), not >>
+    '>' (('>' '=') => '>' '=' | { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? ('>' '>' '=') => '>' '>' '=')? ('=')? |
 
-    // <, << (C/C++), <=, <<< (CUDA), <> (Python), <!-- (JavaScript), JSX (JavaScript)
+    // <, << (C/C++), <=, <<< (CUDA), <> (Python), <!-- (JavaScript/TypeScript), JSX (JavaScript/TypeScript)
     '<' (
         {
-            inLanguage(LANGUAGE_JAVASCRIPT)
+            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
             && LA(1) != '!'                                                  // do not mark JSX comments (e.g., "<!--") as JSX literals
             && (
                 isjsx                                                        // case: keyword + '<'
@@ -449,7 +449,7 @@ OPERATORS options { testLiterals = true; } {
         )?
         { $setType(JS_JSX_LITERAL); } |
 
-        { inLanguage(LANGUAGE_JAVASCRIPT) }? ('!' '-' '-') { $setType(JSX_COMMENT_START); changetotextlexer(JSX_COMMENT_END); } |
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? ('!' '-' '-') { $setType(JSX_COMMENT_START); changetotextlexer(JSX_COMMENT_END); } |
 
         { inLanguage(LANGUAGE_PYTHON) }? '>' |
 
@@ -493,8 +493,8 @@ OPERATORS options { testLiterals = true; } {
         }
         STRING_START )? |
 
-    // ?, ??, etc. (part of ternary); ?. (JavaScript), ??= (JavaScript)
-    '?' ('?')* ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '.')? ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? |
+    // ?, ??, etc. (part of ternary); ?. (JavaScript/TypeScript), ??= (JavaScript/TypeScript)
+    '?' ('?')* ({ inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? '.')? ({ inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? '=')? |
 
     '~' | // has to be separate if part of name
 

@@ -11,7 +11,7 @@
 #include <algorithm>
 
 /** static size of lang2int */
-int Language::lang2intcount = 8;
+int Language::lang2intcount = 9;
 
 /** static array holding string/numeric language pairs */
 language_pair Language::lang2int[] = {
@@ -22,5 +22,6 @@ language_pair Language::lang2int[] = {
     language_pair( LanguageName::LANGUAGE_OBJECTIVE_C, LANGUAGE_OBJECTIVE_C | LANGUAGE_C ),
     language_pair( LanguageName::LANGUAGE_PYTHON, LANGUAGE_PYTHON ),
     language_pair( LanguageName::LANGUAGE_JAVASCRIPT, LANGUAGE_JAVASCRIPT ),
+    language_pair( LanguageName::LANGUAGE_TYPESCRIPT, LANGUAGE_TYPESCRIPT ),
     language_pair( LanguageName::LANGUAGE_NONE, LANGUAGE_NONE ),
 };

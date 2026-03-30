@@ -336,9 +336,9 @@ LANGUAGE_JAVASCRIPT while_js
 LANGUAGE_JAVASCRIPT with_js
 LANGUAGE_JAVASCRIPT yield_js
 
-# TypeScript (grouped with JavaScript for now)
-LANGUAGE_JAVASCRIPT type_ts
-LANGUAGE_JAVASCRIPT typedef_ts
+# TypeScript
+LANGUAGE_TYPESCRIPT type_ts
+LANGUAGE_TYPESCRIPT typedef_ts
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

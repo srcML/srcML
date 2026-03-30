@@ -6,7 +6,7 @@
  *
  * This file is part of the srcML Toolkit.
  *
- * Changes certain JavaScript keywords to names if their inclusion is unexpected.
+ * Changes certain JavaScript/TypeScript keywords to names if their inclusion is unexpected.
  */
 
 #ifndef INCLUDED_NAMEDIFFERENTIATORJAVASCRIPT_HPP

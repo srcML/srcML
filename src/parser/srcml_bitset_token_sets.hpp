@@ -146,7 +146,7 @@ token_set(srcMLParser, identifier_list_tokens_set,
     // Python
     srcMLParser::PY_2_EXEC, srcMLParser::PY_2_PRINT, srcMLParser::PY_ASYNC, srcMLParser::PY_CASE, srcMLParser::PY_MATCH, srcMLParser::PY_TYPE,
 
-    // JavaScript
+    // JavaScript and TypeScript
     srcMLParser::JS_AS, srcMLParser::JS_DEFAULT, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
 )
 
@@ -180,7 +180,7 @@ token_set(srcMLParser, duplex_keyword_set,
     srcMLParser::PY_EXCEPT,
     srcMLParser::PY_YIELD,
 
-    // JavaScript
+    // JavaScript and TypeScript
     srcMLParser::JS_CATCH,
     srcMLParser::JS_ELSE,
     srcMLParser::JS_FUNCTION,
@@ -234,24 +234,24 @@ token_set(srcMLParser, multiline_literals_py_token_set,
 )
 
 token_set(srcMLParser, decl_start_js_token_set,
-    // JavaScript declarations contain one of these keywords
+    // JavaScript and TypeScript declarations contain one of these keywords
     srcMLParser::JS_CONST, srcMLParser::JS_LET, srcMLParser::JS_STATIC, srcMLParser::JS_USING, srcMLParser::JS_VAR
 )
 
 token_set(srcMLParser, specifier_js_token_set,
-    // JavaScript keywords that could be specifiers
+    // JavaScript and TypeScript keywords that could be specifiers
     srcMLParser::JS_ASYNC, srcMLParser::JS_AWAIT, srcMLParser::JS_DEFAULT, srcMLParser::JS_EACH, srcMLParser::JS_EXPORT,
     srcMLParser::JS_STATIC
 )
 
 token_set(srcMLParser, post_specifier_js_token_set,
-    // JavaScript keywords that follow one or more specifiers
+    // JavaScript and TypeScript keywords that follow one or more specifiers
     srcMLParser::CLASS, srcMLParser::JS_LET, srcMLParser::JS_VAR, srcMLParser::JS_CONST, srcMLParser::JS_STATIC,
     srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
 )
 
 token_set(srcMLParser, table_keywords_js_token_set,
-    // JavaScript keywords that have regular entries (or duplex entries) for the table-based approach
+    // JavaScript and TypeScript keywords that have regular entries (or duplex entries) for the table-based approach
     srcMLParser::BREAK, srcMLParser::CASE, srcMLParser::CLASS, srcMLParser::CONTINUE, srcMLParser::DO,
     srcMLParser::FINALLY, srcMLParser::FOR, srcMLParser::IF, srcMLParser::JS_CATCH, srcMLParser::JS_CONSTRUCTOR,
     srcMLParser::JS_DEBUGGER, srcMLParser::JS_DEFAULT, srcMLParser::JS_ELSE, srcMLParser::JS_EXPORT,
@@ -264,7 +264,7 @@ token_set(srcMLParser, table_keywords_js_token_set,
 )
 
 token_set(srcMLParser, name_differentiator_js_token_set,
-    // JavaScript keywords
+    // JavaScript and TypeScript keywords
     srcMLParser::JS_AS, srcMLParser::JS_ASYNC, srcMLParser::JS_AWAIT, srcMLParser::BREAK, srcMLParser::CASE,
     srcMLParser::JS_CATCH, srcMLParser::CLASS, srcMLParser::JS_CONST, srcMLParser::JS_CONSTRUCTOR, srcMLParser::CONTINUE,
     srcMLParser::JS_DEBUGGER, srcMLParser::JS_DEFAULT, srcMLParser::JS_DELETE, srcMLParser::DO, srcMLParser::JS_EACH,
@@ -281,7 +281,7 @@ token_set(srcMLParser, name_differentiator_js_token_set,
 )
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,
-    // A subset of JavaScript keywords from "name_differentiator_js_token_set"
+    // A subset of JavaScript and TypeScript keywords from "name_differentiator_js_token_set"
     // Notable exclusions include literals (e.g., true), operators (e.g., await), async, functions, and classes
     srcMLParser::JS_AS, srcMLParser::BREAK, srcMLParser::CASE, srcMLParser::JS_CATCH,
     srcMLParser::JS_CONST, srcMLParser::JS_CONSTRUCTOR, srcMLParser::CONTINUE, srcMLParser::JS_DEBUGGER,
@@ -297,14 +297,14 @@ token_set(srcMLParser, name_differentiator_subset_js_token_set,
 )
 
 token_set(srcMLParser, insert_terminate_js_token_set,
-    // if two adjacent tokens are any of these, insert a TERMINATE in JavaScript
+    // if two adjacent tokens are any of these, insert a TERMINATE in JavaScript and TypeScript
     srcMLParser::CHAR_END, srcMLParser::CHAR_START, srcMLParser::CONSTANTS, srcMLParser::JS_NULL, srcMLParser::JS_REGEX,
     srcMLParser::JS_UNDEFINED, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NAME,
     srcMLParser::STRING_END, srcMLParser::STRING_START
 )
 
 token_set(srcMLParser, insert_terminate_eol_js_token_set,
-    // if two adjacent tokens are any of these, and EOL is between them, insert a TERMINATE in JavaScript
+    // if two adjacent tokens are any of these, and EOL is between them, insert a TERMINATE in JavaScript and TypeScript
     srcMLParser::BACKTICK_END, srcMLParser::BACKTICK_START, srcMLParser::CHAR_END, srcMLParser::CHAR_START,
     srcMLParser::CONSTANTS, srcMLParser::DESTOP, srcMLParser::JS_NULL, srcMLParser::JS_REGEX,
     srcMLParser::JS_UNDEFINED, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NAME,
@@ -312,7 +312,7 @@ token_set(srcMLParser, insert_terminate_eol_js_token_set,
 )
 
 token_set(srcMLParser, keyword_expression_pair_js_token_set,
-    // JavaScript keywords that can have one (or more) expressions after them
+    // JavaScript and TypeScript keywords that can have one (or more) expressions after them
     srcMLParser::JS_AS, srcMLParser::CASE, srcMLParser::JS_DEFAULT, srcMLParser::JS_EXPORT, srcMLParser::JS_RANGE_IN,
     srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::THROW, srcMLParser::JS_YIELD
 )

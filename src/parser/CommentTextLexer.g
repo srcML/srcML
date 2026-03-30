@@ -157,7 +157,7 @@ COMMENT_TEXT {
     int lookaheadMinusTwo = 0;
     int lookaheadMinusThree = 0;
 
-    // detect scoping in JavaScript backtick literals (e.g., `${...}`)
+    // detect scoping in JavaScript/TypeScript backtick literals (e.g., `${...}`)
     int scopeCount = 0;
 
     int lastColumn = 0;
@@ -431,7 +431,7 @@ COMMENT_TEXT {
     '=' |
 
     '>' {
-        // looking for the end of a JSX comment in JavaScript (e.g., "-->")
+        // looking for the end of a JSX comment in JavaScript/TypeScript (e.g., "-->")
         if (lookaheadMinusThree == '-' && lookaheadMinusTwo == '-' && mode == JSX_COMMENT_END) {
             $setType(mode); selector->pop();
         }

@@ -354,7 +354,7 @@ tokens {
     PY_WITH;
     PY_YIELD;
 
-    // JavaScript
+    // JavaScript and TypeScript
     JS_ARROW;
     JS_AS;
     JS_ASYNC;
@@ -391,7 +391,7 @@ tokens {
     JS_YIELD;
     QMARK_PERIOD;
 
-    // TypeScript
+    // TypeScript only
     TS_TYPE;
 }
 
@@ -877,51 +877,51 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "with"         , PY_WITH           , LANGUAGE_PYTHON },
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
 
-        // Existing language keywords that are names in JavaScript
-        { "enum"         , NAME              , LANGUAGE_JAVASCRIPT },
-        { "goto"         , NAME              , LANGUAGE_JAVASCRIPT },
-        { "private"      , NAME              , LANGUAGE_JAVASCRIPT },
-        { "protected"    , NAME              , LANGUAGE_JAVASCRIPT },
-        { "public"       , NAME              , LANGUAGE_JAVASCRIPT },
+        // Existing language keywords that are names in JavaScript and TypeScript
+        { "enum"         , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "goto"         , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "private"      , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "protected"    , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "public"       , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
 
-        // JavaScript
-        { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
-        { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
-        { "as"           , JS_AS             , LANGUAGE_JAVASCRIPT },
-        { "async"        , JS_ASYNC          , LANGUAGE_JAVASCRIPT },
-        { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
-        { "catch"        , JS_CATCH          , LANGUAGE_JAVASCRIPT },
-        { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
-        { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
-        { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
-        { "default"      , JS_DEFAULT        , LANGUAGE_JAVASCRIPT },
-        { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
-        { "each"         , JS_EACH           , LANGUAGE_JAVASCRIPT },
-        { "else"         , JS_ELSE           , LANGUAGE_JAVASCRIPT },
-        { "export"       , JS_EXPORT         , LANGUAGE_JAVASCRIPT },
-        { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT },
-        { "finally"      , FINALLY           , LANGUAGE_JAVASCRIPT },
-        { "from"         , JS_FROM           , LANGUAGE_JAVASCRIPT },
-        { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT },
-        { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT },
-        { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
-        { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
-        { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT },
-        { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT },
-        { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },
-        { "of"           , JS_RANGE_OF       , LANGUAGE_JAVASCRIPT },
-        { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
-        { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT },
-        { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT },
-        { "undefined"    , JS_UNDEFINED      , LANGUAGE_JAVASCRIPT },
-        { "using"        , JS_USING          , LANGUAGE_JAVASCRIPT },
-        { "var"          , JS_VAR            , LANGUAGE_JAVASCRIPT },
-        { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },
-        { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
-        { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
+        // JavaScript and TypeScript
+        { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "as"           , JS_AS             , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "async"        , JS_ASYNC          , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "catch"        , JS_CATCH          , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "default"      , JS_DEFAULT        , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "each"         , JS_EACH           , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "else"         , JS_ELSE           , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "export"       , JS_EXPORT         , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "finally"      , FINALLY           , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "from"         , JS_FROM           , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "of"           , JS_RANGE_OF       , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "undefined"    , JS_UNDEFINED      , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "using"        , JS_USING          , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "var"          , JS_VAR            , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT_FAMILY },
 
-        // TypeScript
-        { "type"         , TS_TYPE           , LANGUAGE_JAVASCRIPT },
+        // TypeScript only
+        { "type"         , TS_TYPE           , LANGUAGE_TYPESCRIPT },
    };
 
     // fill up the literals for the language that we are parsing

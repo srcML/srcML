@@ -52,6 +52,9 @@ namespace LanguageName {
 
     /** String constant for JavaScript language */
     const char* const LANGUAGE_JAVASCRIPT = "JavaScript";
+
+    /** String constant for TypeScript language */
+    const char* const LANGUAGE_TYPESCRIPT = "TypeScript";
 }
 
 /**
@@ -96,6 +99,9 @@ public:
         /** JavaScript language */
         LANGUAGE_JAVASCRIPT = 64,
 
+        /** TypeScript language */
+        LANGUAGE_TYPESCRIPT = 128,
+
         /** C++ family i.e. C++/C#  */
         LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
 
@@ -105,11 +111,14 @@ public:
         /** Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA,
 
-        /** Keyword-based language family i.e. Python/JavaScript */
-        LANGUAGE_KEYWORD_FAMILY = LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT,
+        /** JavaScript family i.e. JavaScript/TypeScript */
+        LANGUAGE_JAVASCRIPT_FAMILY = LANGUAGE_JAVASCRIPT | LANGUAGE_TYPESCRIPT,
 
-        /** Object-Oriented languages i.e. C++/C#/Java/Python/JavaScript */
-        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY | LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT,
+        /** Keyword-based language family i.e. Python/JavaScript/TypeScript */
+        LANGUAGE_KEYWORD_FAMILY = LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT | LANGUAGE_TYPESCRIPT,
+
+        /** Object-Oriented languages i.e. C++/C#/Java/Python/JavaScript/TypeScript */
+        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY | LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT | LANGUAGE_TYPESCRIPT,
 
         /** All languages */
         LANGUAGE_ALL = ~0

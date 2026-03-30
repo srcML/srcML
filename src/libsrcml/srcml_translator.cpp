@@ -147,7 +147,7 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
         selector.addInputStream(&textlexer, "text");
         selector.select(&lexer);
 
-        if (getLanguage() == LANGUAGE_JAVASCRIPT) {
+        if (getLanguage() == LANGUAGE_JAVASCRIPT || getLanguage() == LANGUAGE_TYPESCRIPT) {
             // records last non-skip token
             TokenLookbackJavaScript monitor(selector);
 
@@ -165,6 +165,10 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
 
             // parse and form srcML output with unit attributes
             out.consume(getLanguageString(), revision, url, filename, version, timestamp, hash, encoding);
+
+            // record if the parser encountered any TypeScript in JavaScript file(s)
+            if (getLanguage() == LANGUAGE_JAVASCRIPT)
+                is_typescript = parser.isTypeScript();
         }
         else if (getLanguage() == LANGUAGE_PYTHON) {
             // intermediate token stage
@@ -278,6 +282,10 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
     out.initNamespaces(mergedns);
 
     auto languageRevision = srcml_markup_version_string(derivedLanguage.data());
+
+    // if the parser found TypeScript, force the output language to be TypeScript
+    if (!inLanguage(LANGUAGE_TYPESCRIPT) && unit->is_typescript)
+        derivedLanguage = "TypeScript";
 
     out.startUnit(derivedLanguage.data(),
             (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->data() : languageRevision,

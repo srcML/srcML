@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="type_ts">
-
-<!--
-  [!] For now, TypeScript is marked as JavaScript
--->
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="type">
 
 <!-- Declarations -->
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>name</name>: <type><name>string</name></type> <init>= <expr><literal type="string">"srcML"</literal></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>title</name>: <type><literal type="string">"srcML"</literal></type> <init>= <expr><literal type="string">"srcML"</literal></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>result</name>: <type><name>string</name> <operator>|</operator> <name>boolean</name> <operator>|</operator> <name>number</name></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>result</name>: <type><name><name>string</name><index>[]</index></name></type> <init>= <expr><array>[<expr><literal type="string">"hello"</literal></expr>, <expr><literal type="string">"world"</literal></expr>]</array></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>result</name>: <type><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><name>string</name></argument>&gt;</argument_list></name></type> <init>= <expr><array>[<expr><literal type="string">"red"</literal></expr>, <expr><literal type="string">"green"</literal></expr>, <expr><literal type="string">"blue"</literal></expr>]</array></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="const">const <name>paper</name>: <type><object>{ <property><expr><name>title</name></expr>: <expr><name>string</name></expr></property>, <property><expr><name>year</name></expr>: <expr><name>number</name></expr></property> }</object></type> <init>= <expr><object>{
   <property><expr><name>title</name></expr>: <expr><literal type="string">"An XML-Based Lightweight C++ Fact Extractor"</literal></expr></property>,
   <property><expr><name>year</name></expr>: <expr><literal type="number">2003</literal></expr></property>
@@ -36,19 +32,19 @@
 
 <!-- Functions (with "function" keyword) -->
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name>: <type><name>number</name> <operator>|</operator> <name>string</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
   <return>return <expr><name>bar</name></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name>: <type><name>number</name> <operator>|</operator> <name>string</name></type></decl></parameter>, <parameter><decl><name>baz</name>: <type><name>boolean</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
   <return>return <expr><name>bar</name></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <function>function <name>printTextOrNumber</name><parameter_list>(
   <parameter><decl><name>textOrNumber</name>:
     <type><operator>|</operator> <name>string</name>
@@ -58,31 +54,31 @@
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <function>function <name>getString</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"srcML"</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <function><specifier>async</specifier> function <name>getString</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><name>string</name></argument>&gt;</argument_list></name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"srcML"</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <function>function <name>compare</name><parameter_list>(<parameter><decl><name>a</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><operator>-</operator><literal type="number">1</literal> <operator>|</operator> <literal type="number">0</literal> <operator>|</operator> <literal type="number">1</literal></type> <block>{<block_content>
   <return>return <expr><ternary><condition><expr><name>a</name> <operator>===</operator> <name>b</name></expr> ?</condition><then> <expr><literal type="number">0</literal></expr> </then><else>: <expr><ternary><condition><expr><name>a</name> <operator>&gt;</operator> <name>b</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><operator>-</operator><literal type="number">1</literal></expr></else></ternary></expr></else></ternary></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function>function <name>foo</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>foo</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>bar</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type> <block>{<block_content>
   <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`${foo}, ${bar}!`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></function><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
@@ -90,19 +86,19 @@
 
 <!-- Functions (without "function" keyword) -->
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function><name>foo</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function type="generator">*<name type="computed">[<expr><name>FOO</name></expr>]</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function><name type="computed">[<expr><name>FOO</name></expr>]</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
@@ -110,7 +106,7 @@
 
 <!-- Lambdas -->
 
-<unit revision="1.0.0" language="JavaScript">
+<unit revision="1.0.0" language="TypeScript">
 <expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>foo</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>bar</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type> <operator>=&gt;</operator> <block>{<block_content>
   <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`${foo}, ${bar}!`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>

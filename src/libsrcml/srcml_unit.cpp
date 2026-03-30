@@ -1174,6 +1174,7 @@ int srcml_write_start_unit(struct srcml_unit* unit) {
 
         if (unit->unit_translator) {
             unit->unit_translator->close();
+            unit->is_typescript = unit->unit_translator->is_typescript;
             delete unit->unit_translator;
             unit->unit_translator = nullptr;
             xmlBufferFree(unit->output_buffer);
