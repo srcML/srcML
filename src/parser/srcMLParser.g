@@ -777,6 +777,7 @@ public:
     int nxt_token = -1;
     TokenPosition prevTokenPosition;
     int last_consumed = -1;
+    int last_consumed_guessing_mode = -1;
     bool wait_terminate_post = false;
     bool cppif_duplicate = false;
     size_t number_finishing_elements = 0;
@@ -853,14 +854,19 @@ public:
     void endAllModes();
 
     virtual void consume() {
-        // do not update last_consumed if in Python guessing mode or the token is in the skip_tokens_set
-        if ((!inLanguage(LANGUAGE_PYTHON) || inputState->guessing==0) && !skip_tokens_set.member((unsigned int) LA(1)))
+        // use a separate variable when in guessing mode for Python/JavaScript/TypeScript
+        if ((inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) && inputState->guessing!=0) {
+            last_consumed_guessing_mode = LA(1);
+        }
+        // do not update last_consumed if the token is in the skip_tokens_set
+        else if (!skip_tokens_set.member((unsigned int) LA(1))) {
             last_consumed = LA(1);
+        }
 
         LLkParser::consume();
     }
 
-    void setTypeScript() { if (!inLanguage(LANGUAGE_TYPESCRIPT)) is_typescript = true; }
+    void setTypeScript() { if (!is_typescript && !inLanguage(LANGUAGE_TYPESCRIPT)) is_typescript = true; }
 
     bool isTypeScript() const { return is_typescript; }
 
@@ -3216,6 +3222,7 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         isempty = false;
         type = NOCALL;
 
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
         int save_first = LA(1);
@@ -3451,6 +3458,7 @@ call_check_paren_pair[int& argumenttoken, int depth = 0] { int call_token = LA(1
 perform_ternary_check[] returns [bool is_ternary] {
         is_ternary = false;
 
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -6457,6 +6465,7 @@ pattern_check[STMT_TYPE& type, int& token, int& type_count, int& after_token, bo
         int template_count;
         type = NONE;
 
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -10677,6 +10686,7 @@ eat_optional_macro_call[] {
         bool success = false;
 
         // find out if we have a macro call
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -14269,6 +14279,7 @@ template_declaration_initialization[] { ENTRY_DEBUG } :
 generic_argument_list_check[] returns [bool is_generic_argument_list] {
         is_generic_argument_list = false;
 
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -16558,7 +16569,7 @@ from_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
 */
 perform_from_import_check[] returns [bool isimport] {
         isimport = false;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -16577,8 +16588,6 @@ perform_from_import_check[] returns [bool isimport] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -17162,7 +17171,7 @@ check_valid_specifier_py[] returns [int isspecifier] {
 */
 perform_post_specifier_check_py[] returns [int keyword] {
         keyword = -1;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -17185,8 +17194,6 @@ perform_post_specifier_check_py[] returns [int keyword] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -17218,7 +17225,7 @@ specifier_py[] { ENTRY_DEBUG } :
 */
 perform_post_attribute_check_py[] returns [int keyword] {
         keyword = -1;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -17240,8 +17247,6 @@ perform_post_attribute_check_py[] returns [int keyword] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -17647,7 +17652,7 @@ perform_dictionary_check_py[] returns [int is_dictionary] {
         is_dictionary = false;
         bool is_lambda = false;
         int num_brackets = 0;  // counts all "()", "{}", and "[]"
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -17692,8 +17697,6 @@ perform_dictionary_check_py[] returns [int is_dictionary] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -17785,7 +17788,7 @@ perform_tuple_check_py[] returns [bool is_tuple] {
         bool is_lambda = false;
         bool is_comprehension = false;
         int num_brackets = 0;  // counts all "()", "{}", and "[]"
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -17838,8 +17841,6 @@ perform_tuple_check_py[] returns [bool is_tuple] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -17910,7 +17911,7 @@ tuple_no_paren_py[] { CompleteElement element(this); size_t lparen_types_size = 
 perform_tuple_check_no_paren_py[] returns [bool is_tuple] {
         is_tuple = false;
         int num_brackets = 0;  // counts all "()", "{}", and "[]"
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -17947,8 +17948,6 @@ perform_tuple_check_no_paren_py[] returns [bool is_tuple] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -18271,7 +18270,7 @@ python_2_except_py[] { ENTRY_DEBUG } :
 perform_python_2_except_check returns [bool is_python_2] {
         is_python_2 = false;
         int num_brackets = 0;  // counts all "()", "{}", and "[]"
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -18325,8 +18324,6 @@ perform_python_2_except_check returns [bool is_python_2] {
         inputState->guessing--;
         rewind(start);
 
-        last_consumed = last_consumed_current;
-
         ENTRY_DEBUG
 } :;
 
@@ -18337,7 +18334,7 @@ perform_python_2_except_check returns [bool is_python_2] {
 */
 perform_member_access_function_call_check_py returns [bool is_call] {
         is_call = false;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -18372,8 +18369,6 @@ perform_member_access_function_call_check_py returns [bool is_call] {
         inputState->guessing--;
         rewind(start);
 
-        last_consumed = last_consumed_current;
-
         ENTRY_DEBUG
 } :;
 
@@ -18385,7 +18380,7 @@ perform_member_access_function_call_check_py returns [bool is_call] {
 perform_subscriptable_function_call_check_py returns [bool is_call] {
         is_call = false;
         int num_square_brackets = 0;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -18425,8 +18420,6 @@ perform_subscriptable_function_call_check_py returns [bool is_call] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -18620,7 +18613,7 @@ check_valid_specifier_js[] returns [int isspecifier] {
 perform_post_specifier_check_js[] returns [std::array<int, 2> keywords] {
         keywords[0] = -1;
         keywords[1] = -1;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -18641,8 +18634,6 @@ perform_post_specifier_check_js[] returns [std::array<int, 2> keywords] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -19679,10 +19670,10 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
 */
 perform_decl_with_colon_check_js[] returns [bool hascolon] {
         hascolon = false;
-        int last_consumed_current = last_consumed;
         int bracket_count = 0;
         bool internary = false;
         int ternary_bracket_count = 0;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -19734,8 +19725,6 @@ perform_decl_with_colon_check_js[] returns [bool hascolon] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -19928,9 +19917,9 @@ keywordless_function_expression_js[] { ENTRY_DEBUG } :
 */
 perform_keywordless_function_check_js[] returns [bool isfunction] {
         isfunction = false;
-        int last_consumed_current = last_consumed;
         bool found_name = false;
         bool found_type = false;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -19989,8 +19978,6 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -20080,7 +20067,7 @@ arrow_operator_js[] { SingleElement element(this); ENTRY_DEBUG } :
 perform_lambda_check_js[] returns [bool islambda] {
         islambda = false;
         int paren_count = 0;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -20109,8 +20096,6 @@ perform_lambda_check_js[] returns [bool islambda] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -20320,7 +20305,7 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 perform_computed_property_check_js[] returns [bool iscomputed] {
         iscomputed = false;
         int square_bracket_count = 0;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -20352,8 +20337,6 @@ perform_computed_property_check_js[] returns [bool iscomputed] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -20405,9 +20388,9 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
 perform_generator_function_computed_property_check_js[] returns [bool iscomputed] {
         iscomputed = false;
         int square_bracket_count = 0;
-        int last_consumed_current = last_consumed;
         bool found_multops = false;
         bool found_type = false;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -20481,8 +20464,6 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
         inputState->guessing--;
         rewind(start);
 
-        last_consumed = last_consumed_current;
-
         ENTRY_DEBUG
 } :;
 
@@ -20533,9 +20514,9 @@ computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG 
 perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
         iscomputed = false;
         int square_bracket_count = 0;
-        int last_consumed_current = last_consumed;
         bool found_start = false;
         bool found_type = false;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -20606,8 +20587,6 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -20697,7 +20676,7 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
         call_count = 0;
 
         bool is_complex = false;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -20711,7 +20690,7 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
 
                 // process consecutive backtick arguments
                 while (LA(1) == BACKTICK_START) {
-                    if (last_consumed == NAME || last_consumed == RPAREN)
+                    if (last_consumed_guessing_mode == NAME || last_consumed_guessing_mode == RPAREN)
                         istagged = true;
 
                     backtick_literal_js();
@@ -20725,7 +20704,7 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
                 }
 
                 // do not confuse array indexing (e.g., a[`${type}`]) with tagged templates
-                if (last_consumed == NAME && LA(1) == LBRACKET)
+                if (last_consumed_guessing_mode == NAME && LA(1) == LBRACKET)
                     variable_identifier_array_grammar_sub(is_complex);
 
                 if (
@@ -20750,7 +20729,6 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
         inputState->guessing--;
         rewind(start);
 
-        last_consumed = last_consumed_current;
         ENTRY_DEBUG
 } :;
 
@@ -20797,7 +20775,7 @@ tagged_template_js[int call_count = 1] { ENTRY_DEBUG } :
 perform_keyword_iife_check_js[] returns [bool isiife] {
         isiife = false;
         int curly_count = 0;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -20861,8 +20839,6 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -20957,7 +20933,7 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 perform_keywordless_iife_check_js[] returns [bool isiife] {
         isiife = false;
         int curly_count = 0;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -21022,8 +20998,6 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -21118,9 +21092,9 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 */
 perform_optional_call_chaining_check_js[] returns [bool iscall] {
         iscall = false;
-        int last_consumed_current = last_consumed;
         int optional_call_chain_count = 0;
         int paren_count = 0;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
@@ -21136,7 +21110,7 @@ perform_optional_call_chaining_check_js[] returns [bool iscall] {
                     break;
 
                 // looking for "?.("
-                if (last_consumed == QMARK_PERIOD && LA(1) == LPAREN) {
+                if (last_consumed_guessing_mode == QMARK_PERIOD && LA(1) == LPAREN) {
                     ++optional_call_chain_count;
                 }
 
@@ -21159,8 +21133,6 @@ perform_optional_call_chaining_check_js[] returns [bool iscall] {
 
         inputState->guessing--;
         rewind(start);
-
-        last_consumed = last_consumed_current;
 
         ENTRY_DEBUG
 } :;
@@ -21267,14 +21239,14 @@ optional_call_chain_js[] {
 */
 perform_chained_call_count_js[] returns [int numchainedcalls] {
         numchainedcalls = 0;
-        int last_consumed_current = last_consumed;
+        last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
             while (true) {
                 // looking for "?.("
-                if (last_consumed == QMARK_PERIOD && LA(1) == LPAREN) {
+                if (last_consumed_guessing_mode == QMARK_PERIOD && LA(1) == LPAREN) {
                     ++numchainedcalls;
                 }
 
@@ -21290,8 +21262,6 @@ perform_chained_call_count_js[] returns [int numchainedcalls] {
         inputState->guessing--;
         rewind(start);
 
-        last_consumed = last_consumed_current;
-
         ENTRY_DEBUG
 } :;
 
@@ -21300,7 +21270,7 @@ perform_chained_call_count_js[] returns [int numchainedcalls] {
 
   Handles a type in TypeScript.
 */
-type_ts[] { CompleteElement element(this); is_typescript = true; ENTRY_DEBUG } :
+type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
         {
             startNewMode(MODE_TYPE_TS);
             startElement(STYPE);
