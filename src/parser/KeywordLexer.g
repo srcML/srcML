@@ -393,6 +393,7 @@ tokens {
 
     // TypeScript only (but can technically appear in JavaScript)
     TS_DECLARE;
+    TS_IMPLEMENTS;
     TS_INTERFACE;
     TS_OVERRIDE;
     TS_PRIVATE;
@@ -887,9 +888,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // Existing language keywords that are names in JavaScript and TypeScript
         { "enum"         , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
         { "goto"         , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
-        // { "private"      , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
-        // { "protected"    , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
-        // { "public"       , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
 
         // JavaScript and TypeScript
         { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT_FAMILY },
@@ -929,6 +927,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         // TypeScript only (but can technically appear in JavaScript)
         { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "implements"   , TS_IMPLEMENTS     , LANGUAGE_JAVASCRIPT_FAMILY },
         { "interface"    , TS_INTERFACE      , LANGUAGE_JAVASCRIPT_FAMILY },
         { "override"     , TS_OVERRIDE       , LANGUAGE_JAVASCRIPT_FAMILY },
         { "private"      , TS_PRIVATE        , LANGUAGE_JAVASCRIPT_FAMILY },

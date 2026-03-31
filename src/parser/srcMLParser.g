@@ -1725,7 +1725,7 @@ javascript_rules[] {
         for_control_js |
 
         // looking for a keyword or operator that does not belong to a statement
-        alias_js | extends_js |
+        alias_js | super_list_js |
 
         // end of file
         eof |
@@ -19249,45 +19249,80 @@ declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
-  extends_js
+  super_list_js
 
-  Handles an "extends" expression in JavaScript.
+  Handles a super list in JavaScript differently from other languages (e.g., Java).
 */
-extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+super_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_SUPER_LIST_JS);
             startElement(SDERIVATION_LIST);
+        }
 
+        (extends_js | implements_ts)
+        (options { greedy = true; } : extends_js | implements_ts)*
+;
+
+/*
+  extends_js
+
+  Handles an "extends" derivation list in JavaScript.
+*/
+extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
             startNewMode(MODE_EXTENDS_JS);
             startElement(SEXTENDS);
         }
 
         JS_EXTENDS
-        super_list_js
+        derivation_list_js
 ;
 
 /*
-  super_list_js
+  implements_ts
 
-  Handles a super list in JavaScript differently from other languages (e.g., Java).
+  Handles an "implements" derivation list in TypeScript.
 */
-super_list_js[] { ENTRY_DEBUG } :
+implements_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_EXTENDS_JS);
+            startElement(SIMPLEMENTS);
+        }
+
+        TS_IMPLEMENTS
+        derivation_list_js
+;
+
+/*
+  derivation_list_js
+
+  Handles a list of derivations in JavaScript or TypeScript.
+*/
+derivation_list_js[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // ensure the super list ends before the start of the class or interface block
             {
-                LA(1) == LCURLY
-                && (
-                    inTransparentMode(MODE_CLASS)
-                    || inTransparentMode(MODE_CLASS_EXPRESSION_JS)
-                    || inTransparentMode(MODE_INTERFACE_TS)
+                (
+                    LA(1) == LCURLY
+                    && (
+                        inTransparentMode(MODE_CLASS)
+                        || inTransparentMode(MODE_CLASS_EXPRESSION_JS)
+                        || inTransparentMode(MODE_INTERFACE_TS)
+                    )
                 )
+                || LA(1) == JS_EXTENDS
+                || LA(1) == TS_IMPLEMENTS
             }?
             {
                 break;
             } |
 
-            // allow commas for extending multiple interfaces in TypeScript
-            { inTransparentMode(MODE_INTERFACE_TS) }?
+            // allow commas for implementing multiple interfaces in TypeScript
+            {
+                inTransparentMode(MODE_INTERFACE_TS)
+                || inTransparentMode(MODE_CLASS)
+                || inTransparentMode(MODE_CLASS_EXPRESSION_JS)
+            }?
             COMMA |
 
             super_js
@@ -19317,6 +19352,8 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                     )
                 )
                 || (LA(1) == COMMA && inTransparentMode(MODE_INTERFACE_TS))
+                || LA(1) == JS_EXTENDS
+                || LA(1) == TS_IMPLEMENTS
             }?
             {
                 break;
@@ -20654,9 +20691,9 @@ class_expression_js[] { ENTRY_DEBUG } :
             if (LA(1) == NAME)
                 compound_name();
 
-            // consume the "extends" portion of an expression-level class, if applicable
-            if (LA(1) == JS_EXTENDS)
-                extends_js();
+            // consume the "extends" or "implements" portion of an expression-level class, if applicable
+            if (LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS)
+                super_list_js();
         }
 
         expression_block_js
