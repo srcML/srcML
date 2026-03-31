@@ -820,6 +820,7 @@ public:
     static const antlr::BitSet insert_terminate_js_token_set;
     static const antlr::BitSet insert_terminate_eol_js_token_set;
     static const antlr::BitSet keyword_expression_pair_js_token_set;
+    static const antlr::BitSet declaration_specifiers_ts_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -1110,7 +1111,8 @@ public:
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* TYPESCRIPT STATEMENTS */
-        temp_array[TS_TYPE] = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::setTypeScript, nullptr };
+        temp_array[TS_INTERFACE] = { SINTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
+        temp_array[TS_TYPE]      = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::setTypeScript, nullptr };
 
         /* DUPLEX KEYWORDS */
         temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
@@ -1553,6 +1555,27 @@ javascript_statements[] {
         // (e.g., "object = { ... }") must be processed here
         if (LA(1) == TERMINATE) {
             terminate();
+            processed_statement = true;
+            return;
+        }
+
+        // looking for a declaration in a TypeScript interface block
+        if (
+            (is_typescript || inLanguage(LANGUAGE_TYPESCRIPT))
+            && inTransparentMode(MODE_INTERFACE_TS)
+            && inMode(MODE_STATEMENT)
+            && (
+                LA(1) == NAME
+                || (LA(1) == LBRACKET && next_token() == NAME)
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            )
+            && (
+                last_consumed == LCURLY
+                || last_consumed == TERMINATE
+                || last_consumed == COMMA
+            )
+        ) {
+            declaration_statement_ts();
             processed_statement = true;
             return;
         }
@@ -19250,11 +19273,22 @@ extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 */
 super_list_js[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
-            // ensure the super list ends before the start of the class block
-            { (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS)) && LA(1) == LCURLY }?
+            // ensure the super list ends before the start of the class or interface block
+            {
+                LA(1) == LCURLY
+                && (
+                    inTransparentMode(MODE_CLASS)
+                    || inTransparentMode(MODE_CLASS_EXPRESSION_JS)
+                    || inTransparentMode(MODE_INTERFACE_TS)
+                )
+            }?
             {
                 break;
             } |
+
+            // allow commas for extending multiple interfaces in TypeScript
+            { inTransparentMode(MODE_INTERFACE_TS) }?
+            COMMA |
 
             super_js
         )*
@@ -19272,8 +19306,18 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            // ensure the super ends before the start of the class block
-            { (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS)) && LA(1) == LCURLY }?
+            // ensure the super ends before the start of a block or a comma
+            {
+                (
+                    LA(1) == LCURLY
+                    && (
+                        inTransparentMode(MODE_CLASS)
+                        || inTransparentMode(MODE_CLASS_EXPRESSION_JS)
+                        || inTransparentMode(MODE_INTERFACE_TS)
+                    )
+                )
+                || (LA(1) == COMMA && inTransparentMode(MODE_INTERFACE_TS))
+            }?
             {
                 break;
             } |
@@ -20286,7 +20330,7 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             }
             expression |
 
-            comma
+            (COLON type_ts) | comma
         )*
 
         {
@@ -21290,4 +21334,99 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
 
             literals | compound_name
         )*
+;
+
+/*
+  declaration_statement_ts
+
+  Handles a TypeScript-declaration statement marked with bare declarations.
+*/
+declaration_statement_ts[int post_specifier_token = -1] { setTypeScript(); ENTRY_DEBUG } :
+        {
+            // do not nest declaration statements
+            if (!inMode(MODE_DECL_STATEMENT_TS)) {
+                startNewMode(MODE_DECL_STATEMENT_TS);
+                startElement(SDECLARATION_STATEMENT);
+            }
+        }
+
+        (options { greedy = true; } :
+            // special syntax: declaration statements end at a terminate token or a comma
+            { LA(1) == TERMINATE || LA(1) == COMMA }?
+            {
+                consume();
+                break;
+            } |
+
+            declaration_ts
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECL_STATEMENT_TS)) {
+                endDownToMode(MODE_DECL_STATEMENT_TS);
+
+                // manually consume statement-ending token
+                if (LA(1) == TERMINATE || LA(1) == COMMA)
+                    consume();
+
+                endMode(MODE_DECL_STATEMENT_TS);
+            }
+        }
+;
+
+/*
+  declaration_ts
+
+  Handles a declaration in TypeScript.  These do not begin with a keyword (only a name or a specifier).
+*/
+declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_JS);
+            startElement(SDECLARATION);
+        }
+
+        ((declaration_specifiers_ts)* (computed_property_js | compound_name))
+
+        (options { greedy = true; } :
+            // ensure the declaration ends before a termination token or comma
+            { LA(1) == TERMINATE || LA(1) == COMMA }?
+            {
+                break;
+            } |
+
+            declaration_modifiers_ts | declaration_init_js | (COLON type_ts)
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECL_JS)) {
+                endDownToMode(MODE_DECL_JS);
+                endMode(MODE_DECL_JS);
+            }
+        }
+;
+
+/*
+  declaration_modifiers_ts
+
+  Handles modifiers (e.g., "?" and "!") that can occur on a name in a TypeScript declaration.
+*/
+declaration_modifiers_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startElement(SMODIFIER);
+        }
+
+        (QMARK | { LT(1)->getText() == "!" }? OPERATORS)
+;
+
+/*
+  declaration_specifiers_ts
+
+  Handles specifiers that can appear in a TypeScript declaration.
+*/
+declaration_specifiers_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        (TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
 ;

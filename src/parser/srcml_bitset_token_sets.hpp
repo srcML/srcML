@@ -260,7 +260,7 @@ token_set(srcMLParser, table_keywords_js_token_set,
     srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::WHILE,
 
     // TypeScript keywords that have regular entries (or duplex entries) for the table-based approach
-    srcMLParser::TS_TYPE
+    srcMLParser::TS_INTERFACE, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_js_token_set,
@@ -277,7 +277,8 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_YIELD,
 
     // TypeScript keywords
-    srcMLParser::TS_TYPE
+    srcMLParser::TS_DECLARE, srcMLParser::TS_INTERFACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
+    srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,
@@ -293,7 +294,8 @@ token_set(srcMLParser, name_differentiator_subset_js_token_set,
     srcMLParser::JS_WITH,
 
     // TypeScript keywords
-    srcMLParser::TS_TYPE
+    srcMLParser::TS_DECLARE, srcMLParser::TS_INTERFACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
+    srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, insert_terminate_js_token_set,
@@ -315,6 +317,12 @@ token_set(srcMLParser, keyword_expression_pair_js_token_set,
     // JavaScript and TypeScript keywords that can have one (or more) expressions after them
     srcMLParser::JS_AS, srcMLParser::CASE, srcMLParser::JS_DEFAULT, srcMLParser::JS_EXPORT, srcMLParser::JS_RANGE_IN,
     srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::THROW, srcMLParser::JS_YIELD
+)
+
+token_set(srcMLParser, declaration_specifiers_ts_token_set,
+    // TypeScript specifiers on a declaration
+    srcMLParser::TS_DECLARE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED,
+    srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY
 )
 
 #endif

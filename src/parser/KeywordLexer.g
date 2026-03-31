@@ -392,6 +392,13 @@ tokens {
     QMARK_PERIOD;
 
     // TypeScript only (but can technically appear in JavaScript)
+    TS_DECLARE;
+    TS_INTERFACE;
+    TS_OVERRIDE;
+    TS_PRIVATE;
+    TS_PROTECTED;
+    TS_PUBLIC;
+    TS_READONLY;
     TS_TYPE;
 }
 
@@ -880,9 +887,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // Existing language keywords that are names in JavaScript and TypeScript
         { "enum"         , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
         { "goto"         , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
-        { "private"      , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
-        { "protected"    , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
-        { "public"       , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
+        // { "private"      , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
+        // { "protected"    , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
+        // { "public"       , NAME              , LANGUAGE_JAVASCRIPT_FAMILY },
 
         // JavaScript and TypeScript
         { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT_FAMILY },
@@ -921,6 +928,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT_FAMILY },
 
         // TypeScript only (but can technically appear in JavaScript)
+        { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "interface"    , TS_INTERFACE      , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "override"     , TS_OVERRIDE       , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "private"      , TS_PRIVATE        , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "protected"    , TS_PROTECTED      , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "public"       , TS_PUBLIC         , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "readonly"     , TS_READONLY       , LANGUAGE_JAVASCRIPT_FAMILY },
         { "type"         , TS_TYPE           , LANGUAGE_JAVASCRIPT_FAMILY },
    };
 
