@@ -20,4 +20,8 @@
 <typedef>type <name>Printable</name> = <type><object>{ <property><expr><name>print</name></expr>: <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></expr></property> }</object></type></typedef>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<typedef>type <name>ColorfulCircle</name> = <type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></type></typedef>
+</unit>
+
 </unit>

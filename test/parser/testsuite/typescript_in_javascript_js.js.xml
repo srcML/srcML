@@ -83,6 +83,13 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>cc</name>: <type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></type> <init>= <expr><object>{
+  <property><expr><name>color</name></expr>: <expr><literal type="string">"red"</literal></expr></property>,
+  <property><expr><name>radius</name></expr>: <expr><literal type="number">42</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Types (in functions with "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">
@@ -184,6 +191,10 @@
 
 <unit revision="1.0.0" language="TypeScript">
 <typedef>type <name>Printable</name> = <type><object>{ <property><expr><name>print</name></expr>: <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></expr></property> }</object></type></typedef>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<typedef>type <name>ColorfulCircle</name> = <type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></type></typedef>
 </unit>
 
 </unit>

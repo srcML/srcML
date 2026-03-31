@@ -21322,7 +21322,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // only allow a subset of all operators
-            { LT(1)->getText() == "-" || LT(1)->getText() == "|" }?
+            { LT(1)->getText() == "-" || LT(1)->getText() == "|" || LT(1)->getText() == "&" }?
             general_operators |
 
             // "void" is a valid TypeScript type
