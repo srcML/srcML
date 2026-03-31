@@ -245,9 +245,12 @@ token_set(srcMLParser, specifier_js_token_set,
 )
 
 token_set(srcMLParser, post_specifier_js_token_set,
-    // JavaScript and TypeScript keywords that follow one or more specifiers
+    // JavaScript keywords that follow one or more specifiers
     srcMLParser::CLASS, srcMLParser::JS_LET, srcMLParser::JS_VAR, srcMLParser::JS_CONST, srcMLParser::JS_STATIC,
-    srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
+    srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET,
+
+    // TypeScript keywords that follow one or more specifiers
+    srcMLParser::TS_INTERFACE, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, table_keywords_js_token_set,
@@ -277,8 +280,9 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_YIELD,
 
     // TypeScript keywords
-    srcMLParser::TS_DECLARE, srcMLParser::TS_INTERFACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
-    srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY, srcMLParser::TS_TYPE
+    srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE, srcMLParser::TS_OVERRIDE,
+    srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY,
+    srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,
@@ -294,8 +298,9 @@ token_set(srcMLParser, name_differentiator_subset_js_token_set,
     srcMLParser::JS_WITH,
 
     // TypeScript keywords
-    srcMLParser::TS_DECLARE, srcMLParser::TS_INTERFACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
-    srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY, srcMLParser::TS_TYPE
+    srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE, srcMLParser::TS_OVERRIDE,
+    srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY,
+    srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, insert_terminate_js_token_set,

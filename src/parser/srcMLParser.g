@@ -1002,7 +1002,7 @@ public:
             specifier_py();
         }
 
-        // handle multiple pre-keyword JavaScript specifiers in a row (ignore "export" statements)
+        // handle multiple pre-keyword JavaScript/TypeScript specifiers in a row (ignore "export" statements)
         while (!inTransparentMode(MODE_EXPORT_JS) && check_valid_specifier_js()) {
             specifier_js();
         }
