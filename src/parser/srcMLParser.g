@@ -994,6 +994,11 @@ public:
         while (LA(1) == PY_ATSIGN) {
             attribute_py();
         }
+
+        // handle multiple pre-keyword TypeScript decorators in a row
+        while (LA(1) == TS_ATSIGN) {
+            attribute_ts();
+        }
     }
 
     void handleSpecifiers() {
@@ -1559,7 +1564,7 @@ javascript_statements[] {
             return;
         }
 
-        // looking for a declaration in a TypeScript interface block
+        // [TypeScript] looking for a declaration in an interface block
         if (
             (is_typescript || inLanguage(LANGUAGE_TYPESCRIPT))
             && inTransparentMode(MODE_INTERFACE_TS)
@@ -1578,6 +1583,42 @@ javascript_statements[] {
             declaration_statement_ts();
             processed_statement = true;
             return;
+        }
+
+        // [TypeScript] looking for types at the statement-level
+        if (
+            inMode(MODE_STATEMENT)
+            && inTransparentMode(MODE_LCURLY_BLOCK_JS)
+            && (
+                (LA(1) == NAME && next_token() == COLON)
+                || (LA(1) == LBRACKET && next_token() == NAME)
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            )
+        ) {
+            declaration_statement_ts();
+            processed_statement = true;
+            return;
+        }
+
+        // [TypeScript] looking for a decorator that occurs before a keyword (or specifiers)
+        if (LA(1) == TS_ATSIGN) {
+            std::array<int, 2> post_specifier_tokens = perform_post_attribute_check_ts();
+
+            // looking for duplex keywords (e.g., "function *")
+            if (duplex_keyword_set.member((unsigned int) post_specifier_tokens[0])) {
+                const auto lookup = duplexKeywords[post_specifier_tokens[0] + (post_specifier_tokens[1] << 8)];
+                if (lookup)
+                    post_specifier_tokens[0] = lookup;
+            }
+
+            // looking for classes or functions (regular/get/set)
+            if (post_specifier_tokens[0] != -1) {
+                const auto& rule = javascriptRules[post_specifier_tokens[0]];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
+            }
         }
 
         // looking for "*[...](){}" to start a statement-level generator function computed property
@@ -12262,7 +12303,10 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             EXPONENTIATION | PY_AND | PY_ATSIGN | PY_AWAIT | PY_COLON | PY_IN | PY_IS | PY_NOT | PY_OR |
 
             // JavaScript
-            JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID
+            JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID |
+
+            // TypeScript
+            TS_ATSIGN
         )
 ;
 
@@ -12817,15 +12861,45 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
         class_expression_js |
 
+        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_keywordless_function_check_js() }?
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            startElement(SFUNCTION_DEFINITION);
+        }
+        ((attribute_ts)+ keywordless_function_expression_js[false]) |
+
         // looking for "NAME(){...}" to start a keywordless function in JavaScript
         // Note: do not confuse a call in a class super list for a keywordless function
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !inTransparentMode(MODE_SUPER_LIST_JS) && perform_keywordless_function_check_js() }?
-        keywordless_function_expression_js |
+        keywordless_function_expression_js[true] |
+
+        // looking for "@decorator function" to start a function (with a decorator) in an expression in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_decorator_function_expression_check_ts() }?
+        {
+            std::array<int, 2> post_specifier_tokens = perform_post_decorator_check_ts();
+
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            if (post_specifier_tokens[0] == JS_GET)
+                startElement(SFUNCTION_GET_STATEMENT);
+            else if (post_specifier_tokens[0] == JS_SET)
+                startElement(SFUNCTION_SET_STATEMENT);
+            else if (post_specifier_tokens[0] == JS_FUNCTION && post_specifier_tokens[1] == MULTOPS)
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        (
+            attribute_ts
+            (options { greedy = true; } : attribute_ts | specifier_js)*
+            function_expression_js[false]
+        ) |
 
         // looking for "function" to start a function in an expression in JavaScript
         // Note that "function:" is a property name in an object
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
-        function_expression_js |
+        function_expression_js[true] |
 
         // looking for lcurly to start an object in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
@@ -19437,6 +19511,9 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
             // rest parameter
             (tripledotop compound_name) |
 
+            // decorator parameter (TypeScript)
+            (attribute_ts compound_name COLON type_ts) |
+
             // regular parameter
             compound_name
         )
@@ -19861,29 +19938,26 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
   Includes expression-level getters and setters, separate from the keyword table.
   Not used directly, but can be called by expression_part.
 */
-function_expression_js[] { bool consume_multops = false; ENTRY_DEBUG } :
+function_expression_js[bool markup] { ENTRY_DEBUG } :
         {
-            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            if (markup) {
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
 
-            // found a getter
-            if (LA(1) == JS_GET || (check_valid_specifier_js() && next_token() == JS_GET)) {
-                startElement(SFUNCTION_GET_STATEMENT);
-            }
-            // found a setter
-            else if (LA(1) == JS_SET || (check_valid_specifier_js() && next_token() == JS_SET)) {
-                startElement(SFUNCTION_SET_STATEMENT);
-            }
-            // found a generator function
-            else if (
-                (LA(1) == JS_FUNCTION && next_token() == MULTOPS)
-                || (check_valid_specifier_js() && next_token() == JS_FUNCTION && next_token_two() == MULTOPS)
-            ) {
-                startElement(SFUNCTION_GENERATOR_STATEMENT);
-                consume_multops = true;
-            }
-            // found a function
-            else {
-                startElement(SFUNCTION_DEFINITION);
+                // found a getter
+                if (LA(1) == JS_GET || (check_valid_specifier_js() && next_token() == JS_GET))
+                    startElement(SFUNCTION_GET_STATEMENT);
+                // found a setter
+                else if (LA(1) == JS_SET || (check_valid_specifier_js() && next_token() == JS_SET))
+                    startElement(SFUNCTION_SET_STATEMENT);
+                // found a generator function
+                else if (
+                    (LA(1) == JS_FUNCTION && next_token() == MULTOPS)
+                    || (check_valid_specifier_js() && next_token() == JS_FUNCTION && next_token_two() == MULTOPS)
+                )
+                    startElement(SFUNCTION_GENERATOR_STATEMENT);
+                // found a function
+                else
+                    startElement(SFUNCTION_DEFINITION);
             }
         }
 
@@ -19891,7 +19965,7 @@ function_expression_js[] { bool consume_multops = false; ENTRY_DEBUG } :
 
         {
             // consume "*" for generator functions
-            if (consume_multops)
+            if (LA(1) == MULTOPS)
                 consume();
 
             // consume the name for named expression-level functions
@@ -19971,10 +20045,13 @@ expression_block_js[] { CompleteElement element(this); size_t lcurly_types_size 
   Handles functions without the "function" keyword that appear in expressions in JavaScript.
   Not used directly, but can be called by expression_part.
 */
-keywordless_function_expression_js[] { ENTRY_DEBUG } :
+keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
         {
-            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
-            startElement(SFUNCTION_DEFINITION);
+            // tag would be created already if TypeScript attributes precede the function
+            if (markup) {
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+                startElement(SFUNCTION_DEFINITION);
+            }
         }
 
         ((options { greedy = true; } : specifier_js)* compound_name)
@@ -20011,6 +20088,16 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
         inputState->guessing++;
 
         try {
+            // consume optional decorator before checking
+            while (LA(1) == TS_ATSIGN) {
+                while (LA(1) != TERMINATE && LA(1) != 1 /* EOF */) {
+                    consume();
+                }
+                if (LA(1) == TERMINATE) {
+                    consume();
+                }
+            }
+
             // consume optional "async" or "static" before checking
             if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
                 consume();
@@ -21486,3 +21573,197 @@ declaration_specifiers_ts[] { LightweightElement element(this); setTypeScript();
 
         (TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
 ;
+
+/*
+  perform_post_attribute_check_ts
+
+  Returns the next token that occur after a Python decorator.
+  If there are multiple decorators in a row, returns the next token after the last decorator.
+*/
+perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
+        keywords[0] = -1;
+        keywords[1] = -1;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                consume();
+
+                if (
+                    LA(1) == CLASS
+                    || LA(1) == JS_FUNCTION
+                    || LA(1) == JS_GET
+                    || LA(1) == JS_SET
+                    || LA(1) == 1 /* EOF */
+                )
+                    break;
+            }
+
+            if (LA(1) == CLASS || LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
+                keywords[0] = LA(1);
+                keywords[1] = next_token();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  attribute_ts
+
+  Used to mark decorators (e.g., "@decorator") as attributes in TypeScript.
+*/
+attribute_ts[] { setTypeScript(); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECORATOR_TS);
+            startElement(SATTRIBUTE);
+        }
+
+        TS_ATSIGN
+
+        (options { greedy = true; } :
+            // decorator ends at another "@", a corresponding class/function, or a type in a parameter
+            {
+                LA(1) == TS_ATSIGN
+                || LA(1) == CLASS
+                || LA(1) == JS_FUNCTION
+                || LA(1) == JS_GET
+                || LA(1) == JS_SET
+                || LA(1) == TERMINATE
+                || (
+                    inTransparentMode(MODE_PARAMETER)
+                    && LA(1) == NAME
+                    && next_token() == COLON
+                )
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_DECORATOR_TS)) {
+                endDownToMode(MODE_DECORATOR_TS);
+                endMode(MODE_DECORATOR_TS);
+            }
+
+            // TERMINATE after a decorator does not indicate the end of a statement
+            // decorators occur before a function/class, so ignore the TERMINATE
+            if (LA(1) == TERMINATE)
+                consume();
+        }
+;
+
+/*
+  perform_decorator_function_expression_check_ts
+
+  Checks for decorators that can appear before expression-level functions with keywords in TypeScript.
+  These include "function", "function*", "get", and "set" keywords.
+*/
+perform_decorator_function_expression_check_ts[] returns [bool isfunction] {
+        isfunction = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume decorator(s) before checking
+            while (LA(1) == TS_ATSIGN) {
+                while (
+                    LA(1) != CLASS
+                    && LA(1) != JS_FUNCTION
+                    && LA(1) != JS_GET
+                    && LA(1) != JS_SET
+                    && LA(1) != TERMINATE
+                    && LA(1) != 1 /* EOF */
+                ) {
+                    consume();
+                }
+                if (LA(1) == TERMINATE) {
+                    consume();
+                }
+            }
+
+            // consume optional "async" or "static" before checking
+            if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
+                consume();
+
+            // found a keyword-based function after the decorators/specifiers
+            if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET)
+                isfunction = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  perform_post_decorator_check_ts
+
+  Returns the next token that occurs after a series of TypeScript decorators/specifiers.
+*/
+perform_post_decorator_check_ts[] returns [std::array<int, 2> keywords] {
+        keywords[0] = -1;
+        keywords[1] = -1;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume decorator(s) before checking
+            while (LA(1) == TS_ATSIGN) {
+                while (
+                    LA(1) != CLASS
+                    && LA(1) != JS_FUNCTION
+                    && LA(1) != JS_GET
+                    && LA(1) != JS_SET
+                    && LA(1) != TERMINATE
+                    && LA(1) != 1 /* EOF */
+                ) {
+                    consume();
+                }
+                if (LA(1) == TERMINATE) {
+                    consume();
+                }
+            }
+
+            // consume optional "async" or "static" before checking
+            if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
+                consume();
+
+            if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
+                keywords[0] = LA(1);
+                keywords[1] = next_token();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;

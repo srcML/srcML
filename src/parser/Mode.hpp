@@ -381,6 +381,8 @@ const static srcMLState::MODE_TYPE MODE_WITH_JS;
 // TypeScript modes
 const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_TS;
 
+const static srcMLState::MODE_TYPE MODE_DECORATOR_TS;
+
 const static srcMLState::MODE_TYPE MODE_INTERFACE_TS;
 
 const static srcMLState::MODE_TYPE MODE_TYPE_TS;

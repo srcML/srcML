@@ -157,5 +157,6 @@ const srcMLState::MODE_TYPE ModeStack::MODE_WITH_JS                    (bit(__CO
 
 // TypeScript
 const srcMLState::MODE_TYPE ModeStack::MODE_DECL_STATEMENT_TS          (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECORATOR_TS               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_INTERFACE_TS               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_TYPE_TS                    (bit(__COUNTER__));
