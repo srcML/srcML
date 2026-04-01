@@ -1698,6 +1698,9 @@ javascript_rules[] {
             { in_export_statement }?
             specifier_js |
 
+            { in_import_statement }?
+            type_as_specifier_ts |
+
             literals | name_list_js | from_js | multops_as_name
         ) |
 
@@ -19515,7 +19518,10 @@ name_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         LCURLY
-        (options { greedy = true; } : alias_js | literals | compound_name | COMMA | TERMINATE)*
+
+        (options { greedy = true; } :
+            alias_js | literals | type_as_specifier_ts | compound_name | COMMA | TERMINATE
+        )*
 
         {
             // rcurly ends a name list
@@ -21371,6 +21377,19 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
 
             literals | compound_name
         )*
+;
+
+/*
+  type_as_specifier_ts
+
+  Marks "type" as a specifier in TypeScript "import" statements.
+*/
+type_as_specifier_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        TS_TYPE
 ;
 
 /*

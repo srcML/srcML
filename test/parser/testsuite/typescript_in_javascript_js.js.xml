@@ -19,6 +19,16 @@
 </block_content>}</block></class>
 </unit>
 
+<!-- Import -->
+
+<unit revision="1.0.0" language="TypeScript">
+<import>import <specifier>type</specifier> <name_list>{ <name>Something</name> }</name_list></import>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<import>import <name_list>{ <name>createUser</name>, <specifier>type</specifier> <name>User</name> }</name_list> <from>from <literal type="string">"./user"</literal></from></import>
+</unit>
+
 <!-- Interfaces -->
 
 <unit revision="1.0.0" language="TypeScript">
