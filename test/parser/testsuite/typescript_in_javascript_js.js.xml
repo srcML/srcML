@@ -241,6 +241,20 @@ class <name>BugReport</name> <block>{<block_content>
 <decl_stmt><decl type="let">let <name>x</name> <init>= <expr><name>y</name> <operator>as</operator> <type><name>any</name></type> <operator>as</operator> <type><name>T</name></type></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Type Predicate ("is") -->
+
+<unit revision="1.0.0" language="TypeScript">
+<function>function <name>isFish</name><parameter_list>(<parameter><decl><name>pet</name>: <type><name>Fish</name> <operator>|</operator> <name>Bird</name></type></decl></parameter>)</parameter_list>: <type><name>pet</name> <operator>is</operator> <name>Fish</name></type> <block>{<block_content>
+  <return>return <expr><operator>(</operator><name>pet</name> <alias>as <expr><name>Fish</name></expr></alias><operator>)</operator><operator>.</operator><name>swim</name> <operator>!==</operator> <literal type="undefined">undefined</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<function><specifier>export</specifier> function <name>isNullOrFalse</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>any</name></type></decl></parameter>)</parameter_list>: <type><name>x</name> <operator>is</operator> <literal type="boolean">false</literal> <operator>|</operator> <literal type="null">null</literal></type> <block>{<block_content>
+  <return>return <expr><name>x</name> <operator>===</operator> <literal type="boolean">false</literal> <operator>||</operator> <name>x</name> <operator>===</operator> <literal type="null">null</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
 <!-- Type Statement (typedef) -->
 
 <unit revision="1.0.0" language="TypeScript">

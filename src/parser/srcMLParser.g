@@ -21470,8 +21470,22 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
             { last_consumed == COLON || inTransparentMode(MODE_TYPEDEF) }?
             object_js |
 
-            literals | compound_name
+            literals | type_predicate_operator_ts | compound_name
         )*
+;
+
+/*
+  type_predicate_operator_ts
+
+  Handles the "is" portion of a type predicate in TypeScript.
+  The entire type predicate looks something like "NAME is TYPE".
+*/
+type_predicate_operator_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startElement(SOPERATOR);
+        }
+
+        TS_IS
 ;
 
 /*

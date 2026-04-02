@@ -396,6 +396,7 @@ tokens {
     TS_DECLARE;
     TS_IMPLEMENTS;
     TS_INTERFACE;
+    TS_IS;
     TS_OVERRIDE;
     TS_PRIVATE;
     TS_PROTECTED;
@@ -928,6 +929,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         // TypeScript special characters or operators
         { "@"            , TS_ATSIGN         , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "is"           , TS_IS             , LANGUAGE_JAVASCRIPT_FAMILY },
 
         // TypeScript only (but can technically appear in JavaScript)
         { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT_FAMILY },
