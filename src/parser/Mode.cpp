@@ -143,6 +143,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_FOR_CONTROL_JS             (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_INNER_NAME_JS              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_OUTER_NAME_JS              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_SUPER_LIST_JS              (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECL_INIT_JS               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_IIFE_CALL_JS               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_NAME_LIST_JS               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_PROPERTY_JS                (bit(__COUNTER__));

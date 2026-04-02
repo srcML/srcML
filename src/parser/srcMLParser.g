@@ -1768,8 +1768,12 @@ javascript_rules[] {
         { inMode(MODE_FOR_CONTROL_JS) }?
         for_control_js |
 
-        // looking for a keyword or operator that does not belong to a statement
-        alias_js | super_list_js |
+        // looking for "as" used in a type alias (different from TypeScript "as" for type casting)
+        { !inTransparentMode(MODE_DECL_INIT_JS) }?
+        alias_js |
+
+        // looking for "extends" (JavaScript) or "implements" (TypeScript) for a derivation list
+        super_list_js |
 
         // end of file
         eof |
@@ -12793,6 +12797,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // looking for "as" for type casting in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_DECL_INIT_JS) }?
+        (declaration_cast_ts type_ts) |
+
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_keyword_iife_check_js() }?
         keyword_iife_js |
@@ -19259,7 +19267,7 @@ label_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 */
 declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_LOCAL);
+            startNewMode(MODE_DECL_INIT_JS);
             startElement(SINIT);
         }
 
@@ -21477,6 +21485,19 @@ type_as_specifier_ts[] { LightweightElement element(this); setTypeScript(); ENTR
         }
 
         TS_TYPE
+;
+
+/*
+  declaration_cast_ts
+
+  Handles the "as" portion of a type cast in TypeScript.
+*/
+declaration_cast_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startElement(SOPERATOR);
+        }
+
+        JS_AS
 ;
 
 /*

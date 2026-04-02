@@ -356,6 +356,8 @@ const static srcMLState::MODE_TYPE MODE_OUTER_NAME_JS;
 
 const static srcMLState::MODE_TYPE MODE_SUPER_LIST_JS;
 
+const static srcMLState::MODE_TYPE MODE_DECL_INIT_JS;
+
 const static srcMLState::MODE_TYPE MODE_IIFE_CALL_JS;
 
 const static srcMLState::MODE_TYPE MODE_NAME_LIST_JS;

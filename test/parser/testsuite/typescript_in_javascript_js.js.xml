@@ -231,6 +231,16 @@ class <name>BugReport</name> <block>{<block_content>
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
 </unit>
 
+<!-- Type Cast ("as") -->
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>fishPet</name> <init>= <expr><name>pet</name> <operator>as</operator> <type><name>Fish</name></type></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>x</name> <init>= <expr><name>y</name> <operator>as</operator> <type><name>any</name></type> <operator>as</operator> <type><name>T</name></type></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Type Statement (typedef) -->
 
 <unit revision="1.0.0" language="TypeScript">

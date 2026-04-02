@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="operator">
+
+<!-- Type Cast ("as") -->
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>x</name> <init>= <expr><literal type="string">"hello"</literal> <operator>as</operator> <type><name>const</name></type></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>fishPet</name> <init>= <expr><name>pet</name> <operator>as</operator> <type><name>Fish</name></type></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>x</name> <init>= <expr><name>y</name> <operator>as</operator> <type><name>any</name></type> <operator>as</operator> <type><name>T</name></type></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>
