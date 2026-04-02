@@ -21618,6 +21618,7 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
                     || LA(1) == JS_GET
                     || LA(1) == JS_SET
                     || LA(1) == 1 /* EOF */
+                    || (LA(1) == NAME && perform_keywordless_function_check_js())
                 )
                     break;
             }
