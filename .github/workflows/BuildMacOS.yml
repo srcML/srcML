@@ -5,10 +5,8 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [macos-15]
-        architecture: [Universal, x86_64, arm64]
+        os: [macos-latest]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
     steps:
 
       - name: Checkout Repository
@@ -19,61 +17,16 @@ jobs:
         with:
           cmakeVersion: 4.0
 
-      - name: Configure cmake for universal binary
-        if: matrix.architecture == 'Universal'
-        shell: bash
-        run: |
-          cmake -B build --preset ci-macos
-
-      - name: Configure cmake for single architecture binary
-        if: matrix.architecture != 'Universal'
-        shell: bash
-        run: |
-          cmake --preset ci-macos -DCMAKE_OSX_ARCHITECTURES=${{ matrix.architecture }} -B build
-
-      - name: Build
-        shell: bash
-        run: |
-          cmake --build build
-
-      - name: Package
-        working-directory: build
-        shell: bash
-        run: |
-          cpack
-
-      - name: Install package
-        working-directory: build/dist
-        shell: bash
-        run: |
-          sudo installer -dumplog -pkg srcml-*-macOS*.pkg -target /
-
-      - name: Run installed srcml
-        shell: bash
-        run: |
-          srcml --version
-          srcml --text="int a;" -l C++
-
-      - name: Test client
-        uses: ./.github/actions/test-client
+      - name: Run CMake
+        uses: lukka/run-cmake@v10
         with:
-          prefix: "macOS ${{ matrix.architecture }}"
-
-      - name: Test libsrcml
-        uses: ./.github/actions/test-libsrcml
-        with:
-          prefix: "macOS ${{ matrix.architecture }}"
-
-      - name: Test parser
-        uses: ./.github/actions/test-parser
-        with:
-          prefix: "macOS ${{ matrix.architecture }}"
+          workflowPreset: ci-macos
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: macOS ${{ matrix.architecture }} Package
+          name: macOS Package
           path: |
-            build/dist/*.pkg
-            build/dist/*.tar.gz
-            build/dist/*.tar.bz2
+            ../srcML-build/dist/*.pkg
+            ../srcML-build/dist/*.tar.gz
+            ../srcML-build/dist/*.tar.bz2
