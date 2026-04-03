@@ -30,6 +30,7 @@
 #include <srcql.hpp>
 
 #include <vector>
+#include <unordered_set>
 
 const char* const xpathTransformation::simple_xpath_attribute_name = "location";
 
@@ -38,7 +39,7 @@ struct XPathExtensionFunction {
     std::string function_type; // "predicate" or "nodeset"
     std::string expression;
     std::string expression_type; //"xpath" or "srcql"
-    std::string language; //"ANY" for any language
+    std::unordered_set<std::string> language;
 };
 
 const std::vector<XPathExtensionFunction> extension_functions {
@@ -47,56 +48,70 @@ const std::vector<XPathExtensionFunction> extension_functions {
         "predicate",
         "src:type/src:specifier='static' or src:decl/src:type/src:specifier='static' or (not(self::src:type) and src:specifier='static') or (self::src:decl and ../src:decl/src:type/src:specifier='static') or self::src:static",
         "xpath",
-        "ANY" //C, C++, Java, C#
+        {"C", "C++", "C#", "Java", "Objective-C"} //Default case, implementation for C, C++, Java, C#
     },
     {
         "is-static",
         "predicate",
         "src:attribute/src:expr='staticmethod' or src:attribute/src:expr='classmethod' or (self::src:expr_stmt and parent::src:block_content/parent::src:block/parent::src:class and src:expr/src:operator='=')",
         "xpath",
-        "Python"
+        {"Python"}
     },
     {
         "is-inline",
         "predicate",
         "src:type/src:specifier='inline' or src:decl/src:type/src:specifier='inline' or (not(self::src:type) and src:specifier='inline') or (self::src:decl and ../src:decl/src:type/src:specifier='inline')",
         "xpath",
-        "ANY" //C++
+        {"C++", "C", "C#", "Java", "Python", "Objective-C"} // Default case, implementation for C++
     },
     {
         "is-pure-virtual",
         "predicate",
         "self::src:function_decl and (parent::src:block/parent::src:interface or src:type/src:specifier='abstract')",
         "xpath",
-        "ANY" // Java, C#
+        {"Java","C#", "C", "C++", "Java", "Python", "Objective-C"} // Default case, implementation for C#, Java
     },
     {
         "is-pure-virtual",
         "predicate",
         "(self::src:function_decl or self::src:destructor_decl) and (src:literal='0')",
         "xpath",
-        "C++"
+        {"C++"}
     },
     {
         "is-explicit",
         "predicate",
         "(not(self::src:type) and src:specifier='explicit') or src:type/src:specifier='explicit'",
         "xpath",
-        "ANY" // C++, C#
+        {"C++","C#", "C", "Java", "Python", "Objective-C"} // Default case, implementation for C++, C#
     },
     {
         "is-deleted",
         "predicate",
         "src:specifier='delete'",
         "xpath",
-        "ANY" // C++
+        {"C++", "C", "C#", "Java", "Python", "Objective-C"} // Default case, implementation for C++
     },
     {
         "is-const",
         "predicate",
         "(not(self::src:type) and src:specifier='const') or (src:type/src:specifier='const' and not(self::src:function) and not(self::src:function_decl)) or src:decl/src:type/src:specifier='const' or (self::src:decl and ../src:decl/src:type/src:specifier='const')",
         "xpath",
-        "ANY" // C++
+        {"C++","C#", "C", "Java", "Python", "Objective-C"} // Default case, implementation for C++, C#
+    },
+    {
+        "is-constant",
+        "predicate",
+        "src:is-const(.) or (not(self::src:type) and src:specifier='constexpr') or src:type/src:specifier='constexpr' or src:decl/src:type/src:specifier='constexpr' or (self::src:decl and ../src:decl/src:type/src:specifier='constexpr')",
+        "xpath",
+        {"C++"} //Default case, implementation for C++
+    },
+    {
+        "is-constant",
+        "predicate",
+        "src:is-const(.) or (not(self::src:type) and src:specifier='readonly') or src:type/src:specifier='readonly' or src:decl/src:type/src:specifier='readonly' or (self::src:decl and ../src:decl/src:type/src:specifier='readonly') or (not(self::src:type) and src:specifier='in') or src:type/src:specifier='in' or src:decl/src:type/src:specifier='in'",
+        "xpath",
+        {"C#"}
     }
 
     // {
@@ -369,7 +384,10 @@ TransformationResult xpathTransformation::apply(xmlDocPtr doc, int position) con
 
     // Register srcML XPath Extension functions
     for (XPathExtensionFunction func : extension_functions) {
-        if (func.language != "ANY" && func.language != Language(position).getLanguageString()) {
+
+        std::string current_language = Language(position).getLanguageString();
+
+        if (func.language.find(current_language) == func.language.end()) {
             continue;
         }
 
