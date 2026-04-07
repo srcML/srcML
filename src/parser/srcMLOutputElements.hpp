@@ -360,7 +360,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SYIELD_GENERATOR_STATEMENT,    { "yield",             SRC, "type", "generator",        0,                   0 }},
 
     // Rust
-    { TOKEN::SIMPL,                         { "imple",             SRC, 0,       0,                 0,                   0 }},
+    { TOKEN::SIMPL,                         { "impl",              SRC, 0,       0,                 0,                   0 }},
     { TOKEN::SINNER_ATTRIBUTE,              { "attribute",         SRC, "type",  "inner",           0,                   0 }},
     { TOKEN::SLOOP,                         { "loop",              SRC, 0,       0,                 0,                   0 }},
     { TOKEN::SMACRO_RULES,                  { "macro_rules",       SRC, 0,       0,                 0,                   0 }},

@@ -1073,7 +1073,7 @@ public:
         //temp_array[STRUCT]      = { SSTRUCT, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr }; 
-        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::situational_specifiers_js };  // check for "await" or "each" following the "for"
+        temp_array[FOR]         = { SFOR_STATEMENT, MODE_IMPL_RS, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, nullptr };  
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[RS_SWITCH]   = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
@@ -1081,6 +1081,7 @@ public:
         temp_array[TRY]         = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_TRY, 0, nullptr, nullptr };
         temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
+        temp_array[RS_IMPL]     = { SIMPL, 0, MODE_IMPL_RS | MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, &srcMLParser::impl_rs };
         return temp_array;
     }
 }
@@ -1814,11 +1815,17 @@ rust_statements[] returns [bool completeElement] {
                 // Unit structs are handled entirely in struct_rs
                 if (struct_type != 2) completeElement = true;
             }
+
+            if (post_attribute_token == RS_IMPL) {
+                const auto& rule = rustRules[post_attribute_token];
+                if (rule.elementToken && processRule(rule)) {
+                    return true;
+                }
+            }
         }
 
         if (specifier_rs_token_set.member(LA(1))) {
             int post_specifier_token = perform_post_specifier_check_rs();
-
             // check for start of Rust declaration statement
             if (decl_start_rs_token_set.member(post_specifier_token)) {
                 declaration_statement_rs();
@@ -1836,6 +1843,13 @@ rust_statements[] returns [bool completeElement] {
                 int struct_type = struct_rs();
                 // Unit structs are handled entirely in struct_rs
                 if (struct_type != 2) completeElement = true;
+            }
+
+            if (post_specifier_token == RS_IMPL) {
+                const auto& rule = rustRules[post_specifier_token];
+                if (rule.elementToken && processRule(rule)) {
+                    return true;
+                }
             }
         }
 
@@ -1856,6 +1870,11 @@ rust_statements[] returns [bool completeElement] {
             int struct_type = struct_rs();
             // Unit structs are handled entirely in struct_rs
             if (struct_type != 2) completeElement = true;
+        }
+
+        const auto& rule = rustRules[LA(1)];
+        if (rule.elementToken && processRule(rule)) {
+            return true;
         }
 }:
     
@@ -20989,7 +21008,7 @@ perform_post_attribute_check_rs[] returns [int keyword] {
                 consume();
 
                 if (outer_attribute_statement_rs_token_set.member(LA(1)) 
-                    || specifier_rs_token_set.member(LA(1))
+                    //|| specifier_rs_token_set.member(LA(1))
                     || LA(1) == 1 /* eof */
                 ) {
                     keyword = LA(1);
@@ -21261,6 +21280,25 @@ tuple_rs[bool in_expression=true] {
             endDownToMode(MODE_TUPLE_RS);
             endMode(MODE_TUPLE_RS);
         }
+;
+
+/*
+    impl_rs
+
+    Handle impl in Rust.
+*/
+impl_rs[] { ENTRY_DEBUG } :
+
+        compound_name
+
+        {
+            if (LA(1) == FOR) {
+                consume();
+                compound_name();
+            }
+        }
+
+        lcurly[false]
 ;
 
 /* 

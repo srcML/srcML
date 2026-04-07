@@ -162,3 +162,4 @@ const srcMLState::MODE_TYPE ModeStack::MODE_UNIT_STRUCT_RS          (bit(__COUNT
 const srcMLState::MODE_TYPE ModeStack::MODE_TUPLE_STRUCT_RS         (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_STRUCT_RS               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_TUPLE_RS                (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_IMPL_RS                 (bit(__COUNTER__));
