@@ -1082,6 +1082,7 @@ public:
         temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         temp_array[RS_IMPL]     = { SIMPL, 0, MODE_IMPL_RS | MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, &srcMLParser::impl_rs };
+        temp_array[RS_TRAIT]    = { STRAIT, 0, MODE_TRAIT_RS | MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, &srcMLParser::trait_rs };
         return temp_array;
     }
 }
@@ -1816,7 +1817,7 @@ rust_statements[] returns [bool completeElement] {
                 if (struct_type != 2) completeElement = true;
             }
 
-            if (post_attribute_token == RS_IMPL) {
+            if (post_attribute_token == RS_IMPL || post_attribute_token == RS_TRAIT) {
                 const auto& rule = rustRules[post_attribute_token];
                 if (rule.elementToken && processRule(rule)) {
                     return true;
@@ -1845,7 +1846,7 @@ rust_statements[] returns [bool completeElement] {
                 if (struct_type != 2) completeElement = true;
             }
 
-            if (post_specifier_token == RS_IMPL) {
+            if (post_specifier_token == RS_IMPL || post_specifier_token == RS_TRAIT) {
                 const auto& rule = rustRules[post_specifier_token];
                 if (rule.elementToken && processRule(rule)) {
                     return true;
@@ -21300,6 +21301,19 @@ impl_rs[] { ENTRY_DEBUG } :
 
         lcurly[false]
 ;
+
+/*
+    impl_rs
+
+    Handle impl in Rust.
+*/
+trait_rs[] { ENTRY_DEBUG } :
+
+        compound_name
+
+        lcurly[false]
+;
+
 
 /* 
     condition_rs

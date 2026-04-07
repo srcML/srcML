@@ -393,4 +393,6 @@ const static srcMLState::MODE_TYPE MODE_TUPLE_RS;
 
 const static srcMLState::MODE_TYPE MODE_IMPL_RS;
 
+const static srcMLState::MODE_TYPE MODE_TRAIT_RS;
+
 #endif
