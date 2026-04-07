@@ -20374,6 +20374,10 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
                 break;
             } |
 
+            // special case: index signatures in TypeScript
+            { (is_typescript || inLanguage(LANGUAGE_TYPESCRIPT)) && perform_constraint_check_ts() }?
+            constraint_ts |
+
             // special case: "default:" is a property name, not a statement
             { inMode(MODE_PROPERTY_JS) && next_token() == COLON }?
             default_property_js |
@@ -21563,7 +21567,7 @@ declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
             startElement(SDECLARATION);
         }
 
-        ((declaration_specifiers_ts)* (computed_property_js | compound_name))
+        ((declaration_specifiers_ts)* (constraint_ts | compound_name))
 
         (options { greedy = true; } :
             // ensure the declaration ends before a termination token or comma
@@ -21582,6 +21586,86 @@ declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
             }
         }
 ;
+
+/*
+  constraint_ts
+
+  Handles index signatures (e.g., "[NAME : TYPE]: TYPE") in TypeScript.
+*/
+constraint_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
+            startElement(SCONSTRAINT);
+
+            startNewMode(MODE_INDEX_TS);
+            startElement(SINDEX);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } : compound_name | (COLON type_ts))*
+
+        {
+            if (inTransparentMode(MODE_INDEX_TS))
+                endDownToMode(MODE_INDEX_TS);
+        }
+
+        RBRACKET
+
+        {
+            if (inMode(MODE_INDEX_TS))
+                endMode(MODE_INDEX_TS);
+        }
+
+        COLON
+        type_ts
+;
+
+/*
+  perform_constraint_check_ts
+
+  Checks if an index is a constraint (TypeScript) or a computed property (JavaScript/TypeScript).
+*/
+perform_constraint_check_ts[] returns [bool isconstraint] {
+        isconstraint = false;
+        last_consumed_guessing_mode = -1;
+        int bracket_count = 0;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == LBRACKET) {
+                consume();
+                ++bracket_count;
+
+                while (true) {
+                    if (bracket_count < 1)
+                        break;
+
+                    if (LA(1) == LBRACKET) {
+                        ++bracket_count;
+                        consume();
+                    } else if (LA(1) == RBRACKET) {
+                        --bracket_count;
+                        consume();
+                    } else if (LA(1) == COLON && bracket_count == 1) {
+                        isconstraint = true;
+                        break;
+                    } else if ((LA(1) == RBRACKET && bracket_count == 1) || LA(1) == 1 /* EOF */) {
+                        break;
+                    } else {
+                        consume();
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
 
 /*
   declaration_modifiers_ts

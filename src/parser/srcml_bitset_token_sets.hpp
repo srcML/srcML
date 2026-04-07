@@ -315,7 +315,7 @@ token_set(srcMLParser, insert_terminate_eol_js_token_set,
     srcMLParser::BACKTICK_END, srcMLParser::BACKTICK_START, srcMLParser::CHAR_END, srcMLParser::CHAR_START,
     srcMLParser::CONSTANTS, srcMLParser::DESTOP, srcMLParser::JS_NULL, srcMLParser::JS_REGEX,
     srcMLParser::JS_UNDEFINED, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NAME,
-    srcMLParser::STRING_END, srcMLParser::STRING_START
+    srcMLParser::STRING_END, srcMLParser::STRING_START, srcMLParser::TS_ATSIGN
 )
 
 token_set(srcMLParser, keyword_expression_pair_js_token_set,

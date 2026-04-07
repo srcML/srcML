@@ -387,6 +387,8 @@ const static srcMLState::MODE_TYPE MODE_DECORATOR_TS;
 
 const static srcMLState::MODE_TYPE MODE_INTERFACE_TS;
 
+const static srcMLState::MODE_TYPE MODE_INDEX_TS;
+
 const static srcMLState::MODE_TYPE MODE_TYPE_TS;
 
 #endif

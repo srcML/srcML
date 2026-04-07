@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="typescript_in_javascript">
 
+<!-- Constraints -->
+
+<unit revision="1.0.0" language="TypeScript">
+<interface>interface <name>Foo</name> <block>{<block_content>
+  <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
+</block_content>}</block></interface>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<typedef><specifier>export</specifier> type <name>Paths</name> = <type><object>{
+  <property><constraint><index>[<name>path</name>: <type><name>string</name></type>]</index>: <type><name>string</name></type></constraint></property>
+}</object></type></typedef>
+</unit>
+
 <!-- Decorators -->
 
 <unit revision="1.0.0" language="TypeScript">
@@ -85,13 +99,13 @@ class <name>BugReport</name> <block>{<block_content>
 
 <unit revision="1.0.0" language="TypeScript">
 <interface>interface <name>StringArray</name> <block>{<block_content>
-  <decl_stmt><decl><name type="computed">[<expr><name>index</name>: <type><name>number</name></type></expr>]</name>: <type><name>string</name></type></decl></decl_stmt>
+  <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
 </block_content>}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
 <interface>interface <name>ReadonlyStringArray</name> <block>{<block_content>
-  <decl_stmt><decl><specifier>readonly</specifier> <name type="computed">[<expr><name>index</name>: <type><name>number</name></type></expr>]</name>: <type><name>string</name></type></decl></decl_stmt>
+  <decl_stmt><decl><specifier>readonly</specifier> <constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
 </block_content>}</block></interface>
 </unit>
 

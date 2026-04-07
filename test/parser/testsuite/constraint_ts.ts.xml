@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="constraint">
+
+<unit revision="1.0.0" language="TypeScript">
+<interface>interface <name>Foo</name> <block>{<block_content>
+  <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
+</block_content>}</block></interface>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<interface><specifier>export</specifier> interface <name>KeyMap</name> <block>{<block_content>
+  <decl_stmt><decl><constraint><index>[<name>key</name>: <type><name>string</name></type>]</index>: <type><name>KeyMap</name> <operator>|</operator> <name>Action</name></type></constraint></decl></decl_stmt>
+</block_content>}</block></interface>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<typedef><specifier>export</specifier> type <name>Paths</name> = <type><object>{
+  <property><constraint><index>[<name>path</name>: <type><name>string</name></type>]</index>: <type><name>string</name></type></constraint></property>
+}</object></type></typedef>
+</unit>
+
+</unit>
