@@ -91,6 +91,13 @@
 </block_content>}</block></function><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<function><specifier>export</specifier> function <name>mapTerminalSuccessors</name><parameter_list>(
+  <parameter><decl><name>terminal</name>: <type><name>Terminal</name></type></decl></parameter>,
+  <parameter><decl><name>fn</name>: <type><lambda><parameter_list>(<parameter><decl><name>block</name>: <type><name>BlockId</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>BlockId</name></expr></lambda></type></decl></parameter>,
+)</parameter_list>: <type><name>Terminal</name></type> <block>{<block_content/>}</block></function>
+</unit>
+
 <!-- Functions (without "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">

@@ -991,24 +991,28 @@ public:
 
     void handleAttributes() {
         // handle multiple pre-keyword Python decorators in a row
-        while (LA(1) == PY_ATSIGN) {
+        while (inLanguage(LANGUAGE_PYTHON) && LA(1) == PY_ATSIGN) {
             attribute_py();
         }
 
         // handle multiple pre-keyword TypeScript decorators in a row
-        while (LA(1) == TS_ATSIGN) {
+        while (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && LA(1) == TS_ATSIGN) {
             attribute_ts();
         }
     }
 
     void handleSpecifiers() {
         // handle multiple pre-keyword Python specifiers in a row
-        while (check_valid_specifier_py()) {
+        while (inLanguage(LANGUAGE_PYTHON) && check_valid_specifier_py()) {
             specifier_py();
         }
 
         // handle multiple pre-keyword JavaScript/TypeScript specifiers in a row (ignore "export" statements)
-        while (!inTransparentMode(MODE_EXPORT_JS) && check_valid_specifier_js()) {
+        while (
+            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            && !inTransparentMode(MODE_EXPORT_JS)
+            && check_valid_specifier_js()
+        ) {
             // special case: TypeScript namespace statements
             if (declaration_specifiers_ts_token_set.member(LA(1)))
                 declaration_specifiers_ts();
@@ -6046,7 +6050,8 @@ statement_part[] {
         { inLanguage(LANGUAGE_C_FAMILY) && inMode(MODE_FUNCTION_TAIL) }?
         macro_call |
 
-        { inMode(MODE_EXPRESSION | MODE_EXPECT) }?
+        // colons were not in the expression rule, but that changed with TypeScript
+        { inMode(MODE_EXPRESSION | MODE_EXPECT) && LA(1) != COLON }?
         expression[type, call_count] |
 
         // already in an expression and ran into a keyword; stop the expression and markup the keyword statement
@@ -6108,7 +6113,8 @@ statement_part[] {
         keyword_statements |
 
         // already in an expression
-        { inMode(MODE_EXPRESSION) }?
+        // colons were not in the expression rule, but that changed with TypeScript
+        { inMode(MODE_EXPRESSION) && LA(1) != COLON }?
         expression_part_plus_linq |
 
         // call list in member initialization list
@@ -8728,7 +8734,8 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             argument |
 
             // expression with right parentheses if a previous match is in one
-            { LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN) }?
+            // colons were not in the expression rule, but that changed with TypeScript
+            { (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) && LA(1) != COLON }?
             {
                 // ensure each part of a comma-separated index is marked with an expression tag
                 if (!inMode(MODE_EXPRESSION))
@@ -19530,6 +19537,9 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
             // decorator parameter (TypeScript)
             (attribute_ts compound_name COLON type_ts) |
 
+            // typed parameter (TypeScript)
+            (COLON type_ts) |
+
             // regular parameter
             compound_name
         )
@@ -20474,13 +20484,17 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inTransparentMode(MODE_TERNARY) }?
             colon_marked |
 
+            // consume TypeScript types
+            { is_typescript || inLanguage(LANGUAGE_TYPESCRIPT) }?
+            (COLON type_ts) |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
             expression |
 
-            (COLON type_ts) | comma
+            comma
         )*
 
         {
@@ -21471,6 +21485,16 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
+            // do not consume parameter list RPAREN or "as" here
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
+                || LA(1) == JS_AS
+                || LA(1) == EQUAL
+            }?
+            {
+                break;
+            } |
+
             // only allow a subset of all operators
             {
                 LT(1)->getText() == "-"
@@ -21482,13 +21506,23 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
             general_operators |
 
             // "void" is a valid TypeScript type
+            { is_typescript || inLanguage(LANGUAGE_TYPESCRIPT) }?
             void_as_name |
 
             // do not confuse LCURLY with the start of a block
             { last_consumed == COLON || inTransparentMode(MODE_TYPEDEF) }?
             object_js |
 
-            literals | type_predicate_operator_ts | compound_name
+            // marks "is" as an operator
+            type_predicate_operator_ts |
+
+            // catch non-LCURLY expressions, but do not mark them with an expression tag
+            { LA(1) != LCURLY }?
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION);
+            }
+            expression
         )*
 ;
 
