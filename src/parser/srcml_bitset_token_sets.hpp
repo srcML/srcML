@@ -250,7 +250,7 @@ token_set(srcMLParser, post_specifier_js_token_set,
     srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET,
 
     // TypeScript keywords that follow one or more specifiers
-    srcMLParser::TS_INTERFACE, srcMLParser::TS_TYPE
+    srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, table_keywords_js_token_set,
@@ -263,7 +263,7 @@ token_set(srcMLParser, table_keywords_js_token_set,
     srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::WHILE,
 
     // TypeScript keywords that have regular entries (or duplex entries) for the table-based approach
-    srcMLParser::TS_INTERFACE, srcMLParser::TS_TYPE
+    srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_js_token_set,
@@ -280,9 +280,9 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_YIELD,
 
     // TypeScript keywords
-    srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE, srcMLParser::TS_OVERRIDE,
-    srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY,
-    srcMLParser::TS_TYPE
+    srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE, srcMLParser::TS_KEYOF,
+    srcMLParser::TS_NAMESPACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED,
+    srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,
@@ -298,9 +298,9 @@ token_set(srcMLParser, name_differentiator_subset_js_token_set,
     srcMLParser::JS_WITH,
 
     // TypeScript keywords
-    srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE, srcMLParser::TS_OVERRIDE,
-    srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY,
-    srcMLParser::TS_TYPE
+    srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE,
+    srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC,
+    srcMLParser::TS_READONLY, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, insert_terminate_js_token_set,

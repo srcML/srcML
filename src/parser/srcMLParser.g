@@ -1009,7 +1009,11 @@ public:
 
         // handle multiple pre-keyword JavaScript/TypeScript specifiers in a row (ignore "export" statements)
         while (!inTransparentMode(MODE_EXPORT_JS) && check_valid_specifier_js()) {
-            specifier_js();
+            // special case: TypeScript namespace statements
+            if (declaration_specifiers_ts_token_set.member(LA(1)))
+                declaration_specifiers_ts();
+            else
+                specifier_js();
         }
     }
 
@@ -1117,6 +1121,7 @@ public:
 
         /* TYPESCRIPT STATEMENTS */
         temp_array[TS_INTERFACE] = { SINTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
+        temp_array[TS_NAMESPACE] = { SNAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
         temp_array[TS_TYPE]      = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::setTypeScript, nullptr };
 
         /* DUPLEX KEYWORDS */
@@ -12310,7 +12315,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID |
 
             // TypeScript
-            TS_ATSIGN
+            TS_ATSIGN | TS_KEYOF
         )
 ;
 
@@ -18696,16 +18701,19 @@ void_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
 /*
   check_valid_specifier_js
 
-  Checks to see if the current token is a specifier in JavaScript.
+  Checks to see if the current token is a specifier in JavaScript or TypeScript (namespaces).
 */
 check_valid_specifier_js[] returns [int isspecifier] {
         isspecifier = false;
 
         if (
-            specifier_js_token_set.member(LA(1))
-            && (LA(1) != JS_DEFAULT || (LA(1) == JS_DEFAULT && next_token() != COLON))
-            && (LA(1) != JS_AWAIT || (LA(1) == JS_AWAIT && next_token() == JS_USING))
-            && (LA(1) != JS_STATIC || (LA(1) == JS_STATIC && perform_keywordless_function_check_js()))
+            (
+                specifier_js_token_set.member(LA(1))
+                && (LA(1) != JS_DEFAULT || (LA(1) == JS_DEFAULT && next_token() != COLON))
+                && (LA(1) != JS_AWAIT || (LA(1) == JS_AWAIT && next_token() == JS_USING))
+                && (LA(1) != JS_STATIC || (LA(1) == JS_STATIC && perform_keywordless_function_check_js()))
+            )
+            || declaration_specifiers_ts_token_set.member(LA(1))
         )
             isspecifier = true;
 
@@ -21464,7 +21472,13 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // only allow a subset of all operators
-            { LT(1)->getText() == "-" || LT(1)->getText() == "|" || LT(1)->getText() == "&" }?
+            {
+                LT(1)->getText() == "-"
+                || LT(1)->getText() == "|"
+                || LT(1)->getText() == "&"
+                || LT(1)->getText() == "keyof"
+                || LT(1)->getText() == "typeof"
+            }?
             general_operators |
 
             // "void" is a valid TypeScript type

@@ -397,6 +397,8 @@ tokens {
     TS_IMPLEMENTS;
     TS_INTERFACE;
     TS_IS;
+    TS_KEYOF;
+    TS_NAMESPACE;
     TS_OVERRIDE;
     TS_PRIVATE;
     TS_PROTECTED;
@@ -930,11 +932,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         // TypeScript special characters or operators
         { "@"            , TS_ATSIGN         , LANGUAGE_JAVASCRIPT_FAMILY },
         { "is"           , TS_IS             , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "keyof"        , TS_KEYOF          , LANGUAGE_JAVASCRIPT_FAMILY },
 
         // TypeScript only (but can technically appear in JavaScript)
         { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT_FAMILY },
         { "implements"   , TS_IMPLEMENTS     , LANGUAGE_JAVASCRIPT_FAMILY },
         { "interface"    , TS_INTERFACE      , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "namespace"    , TS_NAMESPACE      , LANGUAGE_JAVASCRIPT_FAMILY },
         { "override"     , TS_OVERRIDE       , LANGUAGE_JAVASCRIPT_FAMILY },
         { "private"      , TS_PRIVATE        , LANGUAGE_JAVASCRIPT_FAMILY },
         { "protected"    , TS_PROTECTED      , LANGUAGE_JAVASCRIPT_FAMILY },

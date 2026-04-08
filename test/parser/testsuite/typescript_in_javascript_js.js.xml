@@ -127,6 +127,26 @@ class <name>BugReport</name> <block>{<block_content>
 </block_content>}</block></interface>
 </unit>
 
+<!-- Namespaces -->
+
+<unit revision="1.0.0" language="TypeScript">
+<namespace>namespace <name>$</name> <block>{<block_content>
+  <typedef><specifier>export</specifier> type <name>$</name> = <type><operator>typeof</operator> <name>$$</name></type></typedef>
+  <class><specifier>export</specifier> <specifier>declare</specifier> class <name>$$</name> <super_list><extends>extends <super><expr><name>$</name></expr></super></extends></super_list> <block>{<block_content>
+    <decl_stmt><decl type="static">static <name>$</name>: <type><name>$</name></type></decl></decl_stmt>
+  </block_content>}</block></class>
+  <namespace>namespace <name>$$</name> <block>{<block_content>
+    <typedef><specifier>export</specifier> type <name>$$</name> = <type><name>$</name></type></typedef>
+  </block_content>}</block></namespace>
+</block_content>}</block></namespace>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<namespace><specifier>declare</specifier> namespace <name>JSX</name> <block>{<block_content>
+  <typedef>type <name>Element</name> = <type><name><name>globalThis</name><operator>.</operator><name>Element</name></name></type></typedef>
+</block_content>}</block></namespace>
+</unit>
+
 <!-- Types (in declarations) -->
 
 <unit revision="1.0.0" language="TypeScript">
