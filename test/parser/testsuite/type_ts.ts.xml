@@ -98,6 +98,17 @@
 )</parameter_list>: <type><name>Terminal</name></type> <block>{<block_content/>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<function>function <name><name>Scale</name><argument_list type="generic">&lt;<argument><name>TBase</name> <extends>extends <type><name>Constructor</name></type></extends></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>Base</name>: <type><name>TBase</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<function><specifier>export</specifier> function <name><name>terminalHasFallthrough</name><argument_list type="generic">&lt;
+  <argument><name>T</name> <extends>extends <type><name>Terminal</name></type></extends></argument>,
+  <argument><name>U</name> <extends>extends <type><name>T</name> <operator>&amp;</operator> <object>{<property><expr><name>fallthrough</name></expr>: <expr><name>BlockId</name></expr></property>}</object></type></extends></argument>,
+&gt;</argument_list></name><parameter_list>(<parameter><decl><name>terminal</name>: <type><name>T</name></type></decl></parameter>)</parameter_list>: <type><name>terminal</name> <operator>is</operator> <name>U</name></type> <block>{<block_content/>}</block></function>
+</unit>
+
 <!-- Functions (without "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">

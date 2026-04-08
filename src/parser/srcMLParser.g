@@ -8881,12 +8881,12 @@ simple_name_optional_template[bool push = true] { CompleteElement element(this);
         (
             {
                 inLanguage(LANGUAGE_CXX_FAMILY)
-                || inLanguage(LANGUAGE_JAVA_FAMILY)
                 || inLanguage(LANGUAGE_OBJECTIVE_C)
+                || inLanguage(LANGUAGE_JAVA_FAMILY)
+                || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
             }?
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list
-            /* Commented-out code: (options { greedy = true; } : generic_type_constraint)* */ |
+            generic_argument_list |
 
             (cuda_argument_list) => cuda_argument_list |
 
@@ -8919,12 +8919,12 @@ simple_name_optional_template_destop[bool push = true] { CompleteElement element
         (
             {
                 inLanguage(LANGUAGE_CXX_FAMILY)
-                || inLanguage(LANGUAGE_JAVA_FAMILY)
                 || inLanguage(LANGUAGE_OBJECTIVE_C)
+                || inLanguage(LANGUAGE_JAVA_FAMILY)
+                || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
             }?
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list
-            /* Commented-out code: (options { greedy = true; } : generic_type_constraint)* */ |
+            generic_argument_list |
 
             (cuda_argument_list) => cuda_argument_list |
 
@@ -8947,7 +8947,7 @@ simple_name_optional_template_optional_specifier[bool push = true] { CompleteEle
 
         (
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list
+            generic_argument_list
             (options { greedy = true; } : generic_type_constraint)* |
 
             (cuda_argument_list) => cuda_argument_list |
@@ -8981,7 +8981,7 @@ simple_name_optional_template_optional_specifier_destop[bool push = true] {
 
         (
             { generic_argument_list_check() }?
-            (generic_argument_list) => generic_argument_list
+            generic_argument_list
             (options { greedy = true; } : generic_type_constraint)* |
 
             (cuda_argument_list) => cuda_argument_list |
@@ -14795,6 +14795,10 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
                 )
                 (options { generateAmbigWarnings = false; } : template_operators)*
             ) |
+
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+            mixins_ts |
 
             template_extends_java |
 
@@ -21485,9 +21489,13 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            // do not consume parameter list RPAREN or "as" here
+            // do not include the following as part of a type:
+            // - a parameter list closing RPAREN
+            // - an argument list closing ">"
+            // - "as" or "=" (start of next type/expression)
             {
                 (LA(1) == RPAREN && lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
+                || (LA(1) == TEMPOPE && inTransparentMode(MODE_MIXINS_TS))
                 || LA(1) == JS_AS
                 || LA(1) == EQUAL
             }?
@@ -21510,20 +21518,36 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
             void_as_name |
 
             // do not confuse LCURLY with the start of a block
-            { last_consumed == COLON || inTransparentMode(MODE_TYPEDEF) }?
+            { last_consumed == COLON || inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_MIXINS_TS) }?
             object_js |
 
             // marks "is" as an operator
             type_predicate_operator_ts |
 
-            // catch non-LCURLY expressions, but do not mark them with an expression tag
+            // allow certain expression, but do not consume LCURLY (could be a block)
             { LA(1) != LCURLY }?
             {
+                // no expression tag
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION);
             }
             expression
         )*
+;
+
+/*
+  mixins_ts
+
+  Handles generic types (also called mixins) in TypeScript (e.g., "<A extends B>").
+*/
+mixins_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_MIXINS_TS);
+            startElement(SEXTENDS);
+        }
+
+        JS_EXTENDS
+        type_ts
 ;
 
 /*
