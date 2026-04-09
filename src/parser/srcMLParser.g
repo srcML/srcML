@@ -1102,6 +1102,7 @@ public:
 
         temp_array[RS_IMPL]     = { SIMPL, 0, MODE_IMPL_RS | MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, &srcMLParser::impl_rs };
         temp_array[RS_TRAIT]    = { STRAIT, 0, MODE_TRAIT_RS | MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, &srcMLParser::trait_rs };
+        temp_array[RS_USE]      = { SUSING_DIRECTIVE, 0, MODE_USE_RS | MODE_STATEMENT, 0, nullptr, &srcMLParser::use_rs };
 
         temp_array[RS_ELSE_IF]  = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };
         return temp_array;
@@ -1866,7 +1867,7 @@ rust_statements[] returns [bool completeElement] {
                 if (struct_type != 2) completeElement = true;
             }
 
-            if (post_attribute_token == RS_IMPL || post_attribute_token == RS_TRAIT) {
+            if (post_attribute_token == RS_IMPL || post_attribute_token == RS_TRAIT || post_attribute_token == RS_USE) {
                 const auto& rule = rustRules[post_attribute_token];
                 if (rule.elementToken && processRule(rule)) {
                     return true;
@@ -1895,7 +1896,7 @@ rust_statements[] returns [bool completeElement] {
                 if (struct_type != 2) completeElement = true;
             }
 
-            if (post_specifier_token == RS_IMPL || post_specifier_token == RS_TRAIT) {
+            if (post_specifier_token == RS_IMPL || post_specifier_token == RS_TRAIT || post_specifier_token == RS_USE) {
                 const auto& rule = rustRules[post_specifier_token];
                 if (rule.elementToken && processRule(rule)) {
                     return true;
@@ -9358,9 +9359,12 @@ compound_name_inner[bool index] {
             { inLanguage(LANGUAGE_C) }?
             compound_name_c[iscompound] |
 
-            { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_RUST) }?
+            { inLanguage(LANGUAGE_CXX) }?
             compound_name_cpp[iscompound] |
 
+            { inLanguage(LANGUAGE_RUST) }?
+            compound_name_rs[iscompound] |
+            
             { inLanguage(LANGUAGE_KEYWORD_FAMILY) && !inLanguage(LANGUAGE_RUST) }?
             compound_name_keyword[iscompound] |
 
@@ -9648,6 +9652,99 @@ compound_name_java[bool& iscompound] { ENTRY_DEBUG } :
             )
         )*
 ;
+
+/*
+  compound_name_rs
+
+  Handles a compound name (Rust).
+  Compound names in Rust can include name lists
+*/
+compound_name_rs[bool& iscompound] { namestack.fill(""); bool iscolon = false; ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            { !in_template_param }?
+            typename_keyword
+            {
+                iscompound = true;
+            }
+        )*
+
+        (
+            dcolon
+            {
+                iscompound = true;
+            }
+        )*
+
+        (
+            set_bool[isdestructor]
+            { /* Commented-out code: iscompound = true; */ }
+            simple_name_optional_template_destop |
+
+            typename_keyword |
+
+            simple_name_optional_template | 
+
+            push_namestack
+            overloaded_operator
+        )
+
+        (options { greedy = true; } : { !inTransparentMode(MODE_EXPRESSION) }? multops)*
+
+        // "a::" causes an exception to be thrown
+        (options { greedy = true; } :
+            (
+                { !modifier_tokens_set.member(last_consumed) }?
+                dcolon
+                set_bool[iscolon, true]
+                {
+                    iscompound = true;
+                } |
+
+                (period | member_pointer | member_pointer_dereference | dot_dereference)
+                clearnamestack
+                {
+                    iscompound = true;
+                }
+            )
+
+            (options { greedy = true; } : dcolon)*
+
+            { inTransparentMode(MODE_USE_RS) && LA(1) }?
+            ( options { greedy = true; } :
+                namelist_rs
+                {
+                    iscompound = true;
+                }
+            )*
+
+
+            (
+                set_bool[isdestructor]
+                simple_name_optional_template_optional_specifier_destop[iscolon] |
+
+                (multops)*
+
+                (
+                    simple_name_optional_template_optional_specifier[iscolon] |
+
+                    push_namestack
+                    overloaded_operator |
+
+                    function_identifier_main |
+
+                    keyword_identifier
+                )
+            )
+
+            // Commented-out code: (options { greedy = true; } : { look_past_rule(&srcMLParser::multops_star) == DCOLON }? multops)*
+        )*
+
+        {
+            notdestructor = LA(1) == DESTOP;
+        }
+;
+exception
+catch[antlr::RecognitionException&] {}
 
 /*
   keyword_name
@@ -21522,4 +21619,25 @@ break_rs[] { ENTRY_DEBUG }:
         }
 
         terminate
+;
+
+use_rs[] { ENTRY_DEBUG }:
+        compound_name
+        terminate
+;
+
+namelist_rs[] { 
+    CompleteElement element(this);
+    ENTRY_DEBUG 
+}:
+        {
+            startNewMode(MODE_NAME_LIST_RS);
+            startElement(SNAME_LIST);
+        }
+
+        LCURLY
+
+        (compound_name | COMMA)*
+
+        RCURLY
 ;

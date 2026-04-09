@@ -307,7 +307,8 @@ token_set(srcMLParser, specifier_rs_token_set,
 token_set(srcMLParser, outer_attribute_statement_rs_token_set,
     // Keywords that denote the start of a statement that can have outer attributes
     srcMLParser::RS_CONST, srcMLParser::RS_LET, srcMLParser::RS_STATIC,
-    srcMLParser::RS_FN, srcMLParser::STRUCT, srcMLParser::RS_IMPL, srcMLParser::RS_TRAIT
+    srcMLParser::RS_FN, srcMLParser::STRUCT, srcMLParser::RS_IMPL, srcMLParser::RS_TRAIT,
+    srcMLParser::RS_USE
 )
 
 token_set(srcMLParser, label_statement_rs_token_set,

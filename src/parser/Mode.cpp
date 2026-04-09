@@ -167,3 +167,5 @@ const srcMLState::MODE_TYPE ModeStack::MODE_TRAIT_RS                (bit(__COUNT
 const srcMLState::MODE_TYPE ModeStack::MODE_LABEL_RS                (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_CHARACTER_LITERAL_RS    (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FOR_CONTROL_RS          (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_USE_RS                  (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_NAME_LIST_RS            (bit(__COUNTER__));
