@@ -395,4 +395,10 @@ const static srcMLState::MODE_TYPE MODE_IMPL_RS;
 
 const static srcMLState::MODE_TYPE MODE_TRAIT_RS;
 
+const static srcMLState::MODE_TYPE MODE_LABEL_RS;
+
+const static srcMLState::MODE_TYPE MODE_CHARACTER_LITERAL_RS;
+
+const static srcMLState::MODE_TYPE MODE_FOR_CONTROL_RS;
+
 #endif

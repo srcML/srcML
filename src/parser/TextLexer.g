@@ -119,6 +119,13 @@ CHAR_START :
         // handle a string that starts/ends with one single-quote in Python
         else if (inLanguage(LANGUAGE_PYTHON))
             changetotextlexer(PY_SIMPLE_SQUOTE_STRING_END);
+        else if (inLanguage(LANGUAGE_RUST)) {
+            $setType(RS_SINGLE_QUOTE);
+            if (LA(1) == '\\') {
+                $setType(RS_SINGLE_QUOTE);
+                consume();
+            }
+        }
         else {
             $setType(CHAR_START); changetotextlexer(CHAR_END);
         }
@@ -186,7 +193,7 @@ NAME options { testLiterals = true; } :
             { LA(1) == '"' }?
             { $setType(STRING_START); } STRING_START |
 
-            { LA(1) == '\'' }?
+            { LA(1) == '\''}?
             { $setType(CHAR_START); } CHAR_START
         )
     )?

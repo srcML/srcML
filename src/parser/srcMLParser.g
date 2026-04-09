@@ -832,6 +832,7 @@ public:
     static const antlr::BitSet modifier_rs_token_set;
     static const antlr::BitSet outer_attribute_statement_rs_token_set;
     static const antlr::BitSet specifier_rs_token_set;
+    static const antlr::BitSet label_statement_rs_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -913,6 +914,10 @@ public:
 
         handleSpecifiers();
 
+        if (inLanguage(LANGUAGE_RUST)) {
+            handleLabel();
+        }
+
         consume();
 
         if (rule.post)
@@ -945,6 +950,12 @@ public:
 
         while (check_valid_specifier_rs()) {
             specifier_rs();
+        }
+    }
+
+    void handleLabel() {
+        if (LA(1) == RS_SINGLE_QUOTE) {
+            single_quote_rs();
         }
     }
 
@@ -1064,17 +1075,25 @@ public:
     }
 
     template <size_t SIZE>
-    constexpr const std::array<Rule, SIZE> getRustRules() {
+    constexpr const std::array<int, SIZE * SIZE> getRustDuplexKeywords(const size_t RS_ELSE_IF) {
+        std::array<int, SIZE * SIZE> temp_array{};
+        temp_array[ELSE + (IF << 8)] = RS_ELSE_IF;
+        return temp_array;
+    }
+
+    template <size_t SIZE>
+    constexpr const std::array<Rule, SIZE> getRustRules(const size_t RS_ELSE_IF) {
         std::array<Rule, SIZE> temp_array;
 
         /* GENERIC STATEMENTS */
-        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::break_rs };
         temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         //temp_array[STRUCT]      = { SSTRUCT, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[ELSE]        = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr }; 
-        temp_array[FOR]         = { SFOR_STATEMENT, MODE_IMPL_RS, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, nullptr };  
+        temp_array[FOR]         = { SFOR_STATEMENT, MODE_IMPL_RS, MODE_STATEMENT | MODE_NEST, MODE_FOR_CONTROL_RS | MODE_EXPECT, nullptr, nullptr };  
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
+        temp_array[RS_LOOP]     = { SLOOP, 0, MODE_STATEMENT | MODE_NEST, MODE_EXPECT, nullptr, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[RS_SWITCH]   = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
         temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
@@ -1083,6 +1102,8 @@ public:
 
         temp_array[RS_IMPL]     = { SIMPL, 0, MODE_IMPL_RS | MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, &srcMLParser::impl_rs };
         temp_array[RS_TRAIT]    = { STRAIT, 0, MODE_TRAIT_RS | MODE_STATEMENT | MODE_NEST, MODE_VARIABLE_NAME, nullptr, &srcMLParser::trait_rs };
+
+        temp_array[RS_ELSE_IF]  = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };
         return temp_array;
     }
 }
@@ -1791,8 +1812,36 @@ rust_statements[] returns [bool completeElement] {
         completeElement = false;
 
         // For now there are no Rust duplex keywords, may change in the future
-        const size_t RUST_RULES_SIZE = 900;
-        static const std::array<Rule, RUST_RULES_SIZE> rustRules = getRustRules<RUST_RULES_SIZE>();
+        const size_t RUST_DUPLEX_KEYWORDS_SIZE = 700;
+        const int RS_ELSE_IF = RUST_DUPLEX_KEYWORDS_SIZE + 100;
+
+        static const std::array<int, RUST_DUPLEX_KEYWORDS_SIZE * RUST_DUPLEX_KEYWORDS_SIZE> duplexKeywords =
+            getRustDuplexKeywords<RUST_DUPLEX_KEYWORDS_SIZE>(RS_ELSE_IF);
+
+        // Number of rules must be 200 greater than the DUPLEX_KEYWORDS_SIZE
+        // if there are ever more than 100 duplex keywords, this has to change
+        const size_t RUST_RULES_SIZE = RUST_DUPLEX_KEYWORDS_SIZE + 200;
+        static const std::array<Rule, RUST_RULES_SIZE> rustRules = getRustRules<RUST_RULES_SIZE>(RS_ELSE_IF);
+
+        if (LA(1) == RS_SINGLE_QUOTE && inMode(MODE_STATEMENT)) {
+            int post_label_token = perform_post_label_check_rs();
+            if (post_label_token == LCURLY) {
+                lcurly();
+            }
+            if (
+                post_label_token == RS_LOOP
+                || post_label_token == FOR
+                || post_label_token == WHILE
+            ) {
+                const auto& rule = rustRules[post_label_token];
+                if (rule.elementToken && processRule(rule)) {
+                    return true;
+                }
+            }
+            if (post_label_token == NAME) {
+                start();
+            }
+        }
         
         if (LA(1) == RS_OUTER_ATTRIBUTE) {
             int post_attribute_token = perform_post_attribute_check_rs();
@@ -1873,7 +1922,16 @@ rust_statements[] returns [bool completeElement] {
             if (struct_type != 2) completeElement = true;
         }
 
-        const auto& rule = rustRules[LA(1)];
+        auto token = LA(1);
+
+        if (duplex_keyword_set.member(token)) {
+            const auto lookup = duplexKeywords[token + (next_token() << 8)];
+            if (lookup)
+                token = lookup;
+
+        }
+
+        const auto& rule = rustRules[token];
         if (rule.elementToken && processRule(rule)) {
             return true;
         }
@@ -1897,6 +1955,8 @@ rust_rules[] {
         inner_attribute_rs |
 
         { inMode(MODE_CONDITION) }? condition_rs |
+
+        { inMode(MODE_FOR_CONTROL_RS) }? control_rs |
 
         { 
             inTransparentMode(MODE_STRUCT_RS) 
@@ -5736,7 +5796,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
         }
 
         RCURLY
-
+        
         {
             // end the current mode for the block; do not end more than one since they may be nested
             if (!inLanguage(LANGUAGE_JAVASCRIPT)) {
@@ -8916,6 +8976,7 @@ simple_name_optional_template[bool push = true] { CompleteElement element(this);
                 inLanguage(LANGUAGE_CXX_FAMILY)
                 || inLanguage(LANGUAGE_JAVA_FAMILY)
                 || inLanguage(LANGUAGE_OBJECTIVE_C)
+                || inLanguage(LANGUAGE_RUST)
             }?
             { generic_argument_list_check() }?
             (generic_argument_list) => generic_argument_list
@@ -9297,10 +9358,10 @@ compound_name_inner[bool index] {
             { inLanguage(LANGUAGE_C) }?
             compound_name_c[iscompound] |
 
-            { inLanguage(LANGUAGE_CXX) }?
+            { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_RUST) }?
             compound_name_cpp[iscompound] |
 
-            { inLanguage(LANGUAGE_KEYWORD_FAMILY) }?
+            { inLanguage(LANGUAGE_KEYWORD_FAMILY) && !inLanguage(LANGUAGE_RUST) }?
             compound_name_keyword[iscompound] |
 
             macro_type_name_call
@@ -13209,6 +13270,9 @@ literals[] { ENTRY_DEBUG } :
 
         { inLanguage(LANGUAGE_PYTHON) }?
         (dquote_literal_py | squote_literal_py) |
+
+        { inLanguage(LANGUAGE_RUST) }?
+        (character_literal_rs) |
 
         string_literal | char_literal | literal | boolean | null_literal |
         complex_literal | nil_literal | none_literal | ellipsis_literal
@@ -20724,7 +20788,7 @@ modifier_rs[] { SingleElement element(this); ENTRY_DEBUG } :
             startElement(SMODIFIER);
         }
         
-        (MULTOPS | REFOPS | RS_MUT | RS_LIFETIME)
+        (MULTOPS | REFOPS | RS_MUT | RS_SINGLE_QUOTE)
 
 ;
 
@@ -21063,6 +21127,40 @@ perform_post_specifier_check_rs[] returns [int keyword] {
 } :;
 
 /*
+    perform_post_label_check_rs
+
+    Checks for the next token after a label in Rust
+*/
+perform_post_label_check_rs[] returns [int keyword] {
+        keyword = -1;
+        int last_consumed_current = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                consume();
+
+                if (label_statement_rs_token_set.member(LA(1)) 
+                    || LA(1) == 1 /* eof */
+                    || LA(1) == TERMINATE
+                ) {
+                    keyword = LA(1);
+                    break;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        last_consumed = last_consumed_current;
+
+        ENTRY_DEBUG
+} :;
+
+/*
     inner_attribute_rs
 
     Handles inner attributes in Rust.
@@ -21303,9 +21401,9 @@ impl_rs[] { ENTRY_DEBUG } :
 ;
 
 /*
-    impl_rs
+    trait_rs
 
-    Handle impl in Rust.
+    Handle trait in Rust.
 */
 trait_rs[] { ENTRY_DEBUG } :
 
@@ -21313,7 +21411,6 @@ trait_rs[] { ENTRY_DEBUG } :
 
         lcurly[false]
 ;
-
 
 /* 
     condition_rs
@@ -21329,4 +21426,100 @@ condition_rs[] { ENTRY_DEBUG } :
 
         expression
 
+;
+
+/*
+    control_rs
+
+    Handles control for Rust for loops.
+*/
+control_rs[] { ENTRY_DEBUG } :
+        {
+            startElement(SCONTROL);
+        }
+
+        declaration_rs[NAME]
+
+        RS_IN
+        
+        {
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT | MODE_LIST);
+        }
+
+        expression
+
+        {
+            endDownToMode(MODE_FOR_CONTROL_RS);
+            endMode(MODE_FOR_CONTROL_RS);
+        }
+
+;  
+
+/*
+    single_quote_rs
+
+    Resolves if a single quote is a lifetime, label, or character literal
+*/
+single_quote_rs[] { ENTRY_DEBUG } :
+        {
+            if (next_token_two() == RS_SINGLE_QUOTE) {
+                character_literal_rs();
+            }
+            else if (next_token_two() == COLON) {
+                label_rs();
+            }
+            else {
+                modifier_rs();
+            }
+        }
+;
+
+character_literal_rs[] { 
+    CompleteElement element(this);
+    ENTRY_DEBUG 
+} :
+        {
+            startNewMode(MODE_CHARACTER_LITERAL_RS);
+            startElement(SCHAR);
+        }
+
+        RS_SINGLE_QUOTE
+
+        (options { greedy = true; }:
+            NAME
+        )*
+
+        RS_SINGLE_QUOTE
+;
+
+label_rs[] { 
+    CompleteElement element(this);
+    ENTRY_DEBUG 
+} :
+        {
+            startNewMode(MODE_LABEL_RS);
+            startElement(SLABEL_STATEMENT);
+        }
+
+        RS_SINGLE_QUOTE
+
+        compound_name
+
+        (COLON)*
+;
+
+break_rs[] { ENTRY_DEBUG }: 
+        {
+            if (LA(1) == RS_SINGLE_QUOTE) {
+                label_rs();
+            }
+            if (LA(1) != TERMINATE) {
+                if (!inMode(MODE_EXPRESSION)) {
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    expression();
+                }
+            }
+        }
+
+        terminate
 ;

@@ -188,7 +188,10 @@ token_set(srcMLParser, duplex_keyword_set,
     srcMLParser::JS_SET,
     srcMLParser::JS_STATIC,
     srcMLParser::JS_WITH,
-    srcMLParser::JS_YIELD
+    srcMLParser::JS_YIELD,
+
+    // Rust
+    srcMLParser::ELSE
 )
 
 token_set(srcMLParser, keyword_name_token_set_py,
@@ -294,7 +297,7 @@ token_set(srcMLParser, decl_start_rs_token_set,
 )
 
 token_set(srcMLParser, modifier_rs_token_set,
-    srcMLParser::RS_MUT, srcMLParser::REFOPS, srcMLParser::MULTOPS, srcMLParser::RS_LIFETIME
+    srcMLParser::RS_MUT, srcMLParser::REFOPS, srcMLParser::MULTOPS, srcMLParser::RS_SINGLE_QUOTE
 )
 
 token_set(srcMLParser, specifier_rs_token_set,
@@ -305,6 +308,10 @@ token_set(srcMLParser, outer_attribute_statement_rs_token_set,
     // Keywords that denote the start of a statement that can have outer attributes
     srcMLParser::RS_CONST, srcMLParser::RS_LET, srcMLParser::RS_STATIC,
     srcMLParser::RS_FN, srcMLParser::STRUCT, srcMLParser::RS_IMPL, srcMLParser::RS_TRAIT
+)
+
+token_set(srcMLParser, label_statement_rs_token_set,
+    srcMLParser::RS_LOOP, srcMLParser::WHILE, srcMLParser::FOR, srcMLParser::RCURLY
 )
 
 #endif

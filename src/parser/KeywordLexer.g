@@ -408,7 +408,6 @@ tokens {
     RS_IN;
     RS_INNER_ATTRIBUTE;
     RS_LET;
-    RS_LIFETIME;
     RS_LOOP;
     RS_MACRO;
     RS_MACRO_RULES;
@@ -421,6 +420,7 @@ tokens {
     RS_PRIV;
     RS_PUB;
     RS_REF;
+    RS_SINGLE_QUOTE;
     RS_STATIC;
     RS_SUPER;
     RS_SWITCH;
@@ -682,7 +682,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "delete"       , DELETE        , LANGUAGE_CXX },
         
         // special C++ operators
-        { "::"           , DCOLON        , LANGUAGE_CXX_FAMILY },
+        { "::"           , DCOLON        , LANGUAGE_CXX_FAMILY | LANGUAGE_RUST },
         { "&&"           , RVALUEREF     , LANGUAGE_CXX_FAMILY },
 
         // special C++ constant values
@@ -991,7 +991,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "in"           , RS_IN             , LANGUAGE_RUST },
         { "#!["          , RS_INNER_ATTRIBUTE, LANGUAGE_RUST },
         { "let"          , RS_LET            , LANGUAGE_RUST },
-        { "'"            , RS_LIFETIME       , LANGUAGE_RUST },
         { "loop"         , RS_LOOP           , LANGUAGE_RUST },
         { "macro"        , RS_MACRO          , LANGUAGE_RUST },
         { "macro_rules"  , RS_MACRO_RULES    , LANGUAGE_RUST },
@@ -1004,6 +1003,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "priv"         , RS_PRIV           , LANGUAGE_RUST },
         { "pub"          , RS_PUB            , LANGUAGE_RUST },
         { "ref"          , RS_REF            , LANGUAGE_RUST },
+        { "'"            , RS_SINGLE_QUOTE   , LANGUAGE_RUST },
         { "static"       , RS_STATIC         , LANGUAGE_RUST },
         { "super"        , RS_SUPER          , LANGUAGE_RUST },
         { "match"        , RS_SWITCH         , LANGUAGE_RUST },

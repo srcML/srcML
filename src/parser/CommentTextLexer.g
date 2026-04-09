@@ -436,7 +436,7 @@ COMMENT_TEXT {
 
     '?'..'[' |
 
-    '\\' { 
+    '\\' {
         // wipe out previous escape character
         if (lookaheadMinusTwo == '\\') {
             lookaheadMinusOne = 0;
