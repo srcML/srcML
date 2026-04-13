@@ -1598,11 +1598,7 @@ javascript_statements[] {
         if (
             inMode(MODE_STATEMENT)
             && inTransparentMode(MODE_LCURLY_BLOCK_JS)
-            && (
-                (LA(1) == NAME && next_token() == COLON)
-                || (LA(1) == LBRACKET && next_token() == NAME)
-                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-            )
+            && perform_declaration_statement_check_ts()
         ) {
             declaration_statement_ts();
             processed_statement = true;
@@ -3547,6 +3543,10 @@ perform_ternary_check[] returns [bool is_ternary] {
             if (LA(1) == QMARK)
                 is_ternary = true;
         } catch(...) {}
+
+        // "?:" should not be marked as a ternary in JavaScript/TypeScript
+        if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && is_ternary && next_token() == COLON)
+            is_ternary = false;
 
         if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY) && !inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
             skip_ternary = true;
@@ -12810,6 +12810,21 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // special case: mark "?" and "!" as modifiers in certain TypeScript instances
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            && (
+                LA(1) == QMARK
+                || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+            )
+            && (
+                next_token() == COLON
+                || last_consumed == TEMPOPS
+                || last_consumed == COMMA
+            )
+        }?
+        declaration_modifiers_ts |
+
         // looking for "as" for type casting in TypeScript
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_DECL_INIT_JS) }?
         (declaration_cast_ts type_ts) |
@@ -13005,6 +13020,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         {
             !skip_ternary
             && !inMode(MODE_TERNARY_CONDITION)
+            && !inTransparentMode(MODE_DECL_STATEMENT_TS)
             && (
                 !inLanguage(LANGUAGE_JAVA)
                 || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
@@ -21689,6 +21705,40 @@ declaration_cast_ts[] { LightweightElement element(this); setTypeScript(); ENTRY
 ;
 
 /*
+  perform_declaration_statement_check_ts
+
+  Checks if an expression statement should be a TypeScript-declaration statement marked with bare declarations.
+*/
+perform_declaration_statement_check_ts[] returns [bool isdecl] {
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional specifiers
+            while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
+                declaration_specifiers_ts();
+
+            compound_name();
+
+            // consume optional modifiers
+            while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+                declaration_modifiers_ts();
+
+            // found "NAME:" or "[NAME]:"
+            if (LA(1) == COLON)
+                isdecl = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
   declaration_statement_ts
 
   Handles a TypeScript-declaration statement marked with bare declarations.
@@ -21746,7 +21796,11 @@ declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
                 break;
             } |
 
-            declaration_modifiers_ts | declaration_init_js | (COLON type_ts)
+            // currently, "?" and "!" are the only valid modifiers
+            { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+            declaration_modifiers_ts |
+
+            declaration_init_js | (COLON type_ts)
         )*
 
         {

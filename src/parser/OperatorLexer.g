@@ -449,7 +449,7 @@ OPERATORS options { testLiterals = true; } {
         )?
         { $setType(JS_JSX_LITERAL); } |
 
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? ('!' '-' '-') { $setType(JSX_COMMENT_START); changetotextlexer(JSX_COMMENT_END); } |
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? ('!' '-' '-') => '!' '-' '-' { $setType(JSX_COMMENT_START); changetotextlexer(JSX_COMMENT_END); } |
 
         { inLanguage(LANGUAGE_PYTHON) }? '>' |
 

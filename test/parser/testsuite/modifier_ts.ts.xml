@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="modifier">
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>obj</name> <init>= <expr><object>{
+  <property><expr><name>optional</name><modifier>?</modifier></expr>: <expr><literal type="string">"optional"</literal></expr></property>,
+  <property><expr><name>definite</name><modifier>!</modifier></expr>: <expr><literal type="string">"definite"</literal></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>FetchEvent</name> <super_list><extends>extends <super><expr><name>ExtendableEvent</name></expr></super></extends></super_list> <block>{<block_content>
+  <decl_stmt><decl><name>preloadOne</name><modifier>?</modifier>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><modifier>?</modifier><name>Response</name></expr></argument>, <argument><expr><modifier>?</modifier><name>Response</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
+  <decl_stmt><decl><name>preloadTwo</name><modifier>!</modifier>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><modifier>!</modifier><name>Response</name></expr></argument>, <argument><expr><modifier>!</modifier><name>Response</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+</unit>
