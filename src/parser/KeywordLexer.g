@@ -500,9 +500,9 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "inline"       , INLINE         , LANGUAGE_C_FAMILY },
         { "extern"       , EXTERN         , LANGUAGE_C_FAMILY },
 
-        { "asm"          , ASM            , LANGUAGE_C_FAMILY },
-        { "__asm__"      , ASM            , LANGUAGE_C_FAMILY },
-        { "__asm"        , VISUAL_CXX_ASM , LANGUAGE_C_FAMILY },
+        { "asm"          , ASM            , LANGUAGE_C | LANGUAGE_CXX },
+        { "__asm__"      , ASM            , LANGUAGE_C | LANGUAGE_CXX },
+        { "__asm"        , VISUAL_CXX_ASM , LANGUAGE_C | LANGUAGE_CXX },
 
         { "goto"         , GOTO           , LANGUAGE_ALL },
         { "sizeof"       , SIZEOF         , LANGUAGE_C_FAMILY },
