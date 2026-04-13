@@ -20401,7 +20401,11 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             } |
 
             // special case: index signatures in TypeScript
-            { (is_typescript || inLanguage(LANGUAGE_TYPESCRIPT)) && perform_constraint_check_ts() }?
+            {
+                (is_typescript || inLanguage(LANGUAGE_TYPESCRIPT))
+                && last_consumed != COLON
+                && perform_constraint_check_ts()
+            }?
             constraint_ts |
 
             // special case: "default:" is a property name, not a statement

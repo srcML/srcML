@@ -19,4 +19,17 @@
 }</object></type></typedef>
 </unit>
 
+<!-- The following should NOT be marked as constraints, although they look similar -->
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><call><name><name>CompilerError</name><operator>.</operator><name>invariant</name></name><argument_list>(<argument><expr><object>{
+  <property><expr><name>details</name></expr>: <expr><array>[
+    <expr><object>{
+      <property><expr><name>kind</name></expr>: <expr><literal type="string">'error'</literal></expr></property>,
+      <property><expr><name>message</name></expr>: <expr><literal type="null">null</literal></expr></property>,
+    }</object></expr>,
+  ]</array></expr></property>,
+}</object></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
 </unit>
