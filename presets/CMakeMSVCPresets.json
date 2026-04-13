@@ -10,7 +10,9 @@
       "description": "Default build options for MSVC",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
       "toolchainFile": "toolchain-msvc.cmake",
+      "inherits": ["ci-base", "ci-subdirectory-build"],
       "cacheVariables": {
+        "BUILD_WITH_VCPKG": "ON",
         "CMAKE_CXX_COMPILER": "cl",
         "CMAKE_C_COMPILER": "cl",
         "CMAKE_CXX_FLAGS": "/Wall /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_WARNINGS /wd4068 /wd4514 /wd4710 /wd4820 /wd5039 /wd4711 /wd4706 /wd4625 /wd4626 /wd5026 /wd5027 /wd4668 /wd4868 /wd4371 /wd4623 /wd5045 ",
@@ -22,15 +24,17 @@
         "SRCML_LIBSRCML_SHARED_LINK_FLAGS_RELEASE": "/DEBUG /OPT:REF /OPT:ICF",
         "SRCML_LIBSRCML_STATIC_LINK_FLAGS_RELEASE": "/LTCG:OFF",
         "SRCML_CLIENT_COMPILE_FLAGS": "/wd4355;/wd5204",
-        "SRCML_CLIENT_LINK_FLAGS": ""
+        "SRCML_CLIENT_LINK_FLAGS": "",
+        "VCPKG_FEATURE_FLAGS": "manifests,binarycaching,-compilertracking",
+        "VCPKG_INSTALL_OPTIONS": "--x-abi-tools-use-exact-versions"
       }
     }
   ],
   "buildPresets" : [
     {
       "name": "ci-msvc-only",
-      "displayName": "Ubuntu only",
-      "description": "Restrict to Ubuntu",
+      "displayName": "MSVC only",
+      "description": "Restrict to MSVC",
       "hidden": true,
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
       "configurePreset": "ci-msvc"
