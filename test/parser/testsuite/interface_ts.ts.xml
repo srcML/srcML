@@ -49,7 +49,7 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><name>Type</name></argument>&gt;</argument_list></name> <block>{<block_content>
+<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{<block_content>
   <decl_stmt><decl><name>contents</name>: <type><name>Type</name></type></decl></decl_stmt>
 </block_content>}</block></interface>
 </unit>
@@ -109,7 +109,7 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><name>Type</name></argument>&gt;</argument_list></name> <block>{<block_content>
+<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{<block_content>
   <decl_stmt><decl><name>contents</name>: <type><name>Type</name></type></decl>;</decl_stmt>
 </block_content>}</block></interface>
 </unit>
@@ -169,7 +169,7 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><name>Type</name></argument>&gt;</argument_list></name> <block>{<block_content>
+<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{<block_content>
   <decl_stmt><decl><name>contents</name>: <type><name>Type</name></type></decl>,</decl_stmt>
 </block_content>}</block></interface>
 </unit>

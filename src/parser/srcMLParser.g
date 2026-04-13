@@ -8880,12 +8880,13 @@ simple_name_optional_template[bool push = true] { CompleteElement element(this);
 
         (
             {
-                inLanguage(LANGUAGE_CXX_FAMILY)
-                || inLanguage(LANGUAGE_OBJECTIVE_C)
-                || inLanguage(LANGUAGE_JAVA_FAMILY)
-                || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                (
+                    inLanguage(LANGUAGE_CXX_FAMILY)
+                    || inLanguage(LANGUAGE_OBJECTIVE_C)
+                    || inLanguage(LANGUAGE_JAVA_FAMILY)
+                )
+                && generic_argument_list_check()
             }?
-            { generic_argument_list_check() }?
             generic_argument_list |
 
             (cuda_argument_list) => cuda_argument_list |
@@ -9311,7 +9312,7 @@ multops_star[] { ENTRY_DEBUG } :
   Handles a compound name for keyword-based languages (e.g., Python and JavaScript).
 */
 compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
-        generic_argument_list | simple_name_optional_template
+        generic_argument_list | simple_name_optional_template_js
 
         (options { greedy = true; } :
             (
@@ -9328,7 +9329,7 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
 
                     keyword_name |
 
-                    simple_name_optional_template |
+                    simple_name_optional_template_js |
 
                     { next_token() == TERMINATE }?
                     multop_name
@@ -20329,6 +20330,9 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
                 break;
             } |
 
+            { inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+            TERMINATE |
+
             // only consume a comma if it is at the top level of an object
             { inMode(MODE_OBJECT_JS) || bracket_types_js.back() == "oLCURLY" }?
             COMMA
@@ -21478,6 +21482,91 @@ perform_chained_call_count_js[] returns [int numchainedcalls] {
 } :;
 
 /*
+  simple_name_optional_template_js
+
+  Handles a name (including a template argument list) in JavaScript/TypeScript differently from other languages.
+*/
+simple_name_optional_template_js[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+        {
+            // local mode that is automatically ended by leaving this function
+            startNewMode(MODE_LOCAL);
+
+            // start outer name
+            startElement(SCNAME);
+
+            // record the name token so we can replace it if necessary
+            setTokenPosition(tp);
+        }
+
+        push_namestack[push]
+        identifier
+
+        {
+            // consume generic argument list, if applicable
+            if (LA(1) == TEMPOPS && generic_argument_list_check())
+                generic_argument_list_js();
+            // set the token to NOP since we did not find a template argument list
+            else
+                tp.setType(SNOP);
+        }
+;
+
+/*
+  generic_argument_list_js
+
+  Handles a generic argument list (e.g., "<...>") in JavaScript/TypeScript differently from other languages.
+*/
+generic_argument_list_js[] { CompleteElement element(this); decltype(namestack) namestack_save; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TEMPLATE_ARGUMENT_TS);
+            startElement(SGENERIC_ARGUMENT_LIST);
+        }
+
+        savenamestack[namestack_save]
+
+        tempops
+        (options { generateAmbigWarnings = false; } :
+            { LA(1) == TEMPOPE }?
+            {
+                break;
+            } |
+
+            COMMA | template_argument_js
+        )*
+        tempope
+
+        restorenamestack[namestack_save]
+;
+
+/*
+  template_argument_js
+
+  Handles an argument in a generic argument list in JavaScript/TypeScript differently from other languages.
+*/
+template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SGENERIC_ARGUMENT);
+        }
+
+        (options { greedy = true; } :
+            { LA(1) == TEMPOPE || LA(1) == COMMA }?
+            {
+                break;
+            } |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            mixins_ts
+        )+
+;
+
+/*
   type_ts
 
   Handles a type in TypeScript.
@@ -21495,7 +21584,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
             // - "as" or "=" (start of next type/expression)
             {
                 (LA(1) == RPAREN && lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
-                || (LA(1) == TEMPOPE && inTransparentMode(MODE_MIXINS_TS))
+                || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
                 || LA(1) == JS_AS
                 || LA(1) == EQUAL
             }?
@@ -21518,14 +21607,19 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
             void_as_name |
 
             // do not confuse LCURLY with the start of a block
-            { last_consumed == COLON || inTransparentMode(MODE_TYPEDEF) || inTransparentMode(MODE_MIXINS_TS) }?
+            {
+                last_consumed == COLON
+                || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                || inTransparentMode(MODE_MIXINS_TS)
+                || inTransparentMode(MODE_TYPEDEF)
+            }?
             object_js |
 
             // marks "is" as an operator
             type_predicate_operator_ts |
 
             // allow certain expression, but do not consume LCURLY (could be a block)
-            { LA(1) != LCURLY }?
+            { LA(1) != LCURLY || (LA(1) == LCURLY && inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)) }?
             {
                 // no expression tag
                 if (!inMode(MODE_EXPRESSION))

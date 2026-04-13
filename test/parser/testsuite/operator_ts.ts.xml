@@ -30,7 +30,7 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<function>function <name>isPromise</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>any</name></type></decl></parameter>)</parameter_list>: <type><name>x</name> <operator>is</operator> <name><name>Promise</name><argument_list type="generic">&lt;<argument><name>any</name></argument>&gt;</argument_list></name></type> <block>{<block_content>
+<function>function <name>isPromise</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>any</name></type></decl></parameter>)</parameter_list>: <type><name>x</name> <operator>is</operator> <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></type> <block>{<block_content>
   <return>return <expr><literal type="string">'then'</literal> <operator>in</operator> <name>x</name></expr></return>
 </block_content>}</block></function>
 </unit>

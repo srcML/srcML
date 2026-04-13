@@ -122,7 +122,7 @@ class <name>BugReport</name> <block>{<block_content>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><name>Type</name></argument>&gt;</argument_list></name> <block>{<block_content>
+<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{<block_content>
   <decl_stmt><decl><name>contents</name>: <type><name>Type</name></type></decl></decl_stmt>
 </block_content>}</block></interface>
 </unit>
@@ -166,7 +166,7 @@ class <name>BugReport</name> <block>{<block_content>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<decl_stmt><decl type="let">let <name>result</name>: <type><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><name>string</name></argument>&gt;</argument_list></name></type> <init>= <expr><array>[<expr><literal type="string">"red"</literal></expr>, <expr><literal type="string">"green"</literal></expr>, <expr><literal type="string">"blue"</literal></expr>]</array></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>result</name>: <type><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></type> <init>= <expr><array>[<expr><literal type="string">"red"</literal></expr>, <expr><literal type="string">"green"</literal></expr>, <expr><literal type="string">"blue"</literal></expr>]</array></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
@@ -214,7 +214,7 @@ class <name>BugReport</name> <block>{<block_content>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<function><specifier>async</specifier> function <name>getString</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><name>string</name></argument>&gt;</argument_list></name></type> <block>{<block_content>
+<function><specifier>async</specifier> function <name>getString</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"srcML"</literal></expr></return>
 </block_content>}</block></function>
 </unit>
