@@ -42,4 +42,20 @@
 <function><type><specifier>static</specifier> <name>int</name></type> <name>WordCount</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>this</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<function><type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><modifier>out</modifier> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content><expr_stmt><expr><operator>++</operator><name>b</name></expr>;</expr_stmt></block_content></block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<function><type><specifier>static</specifier> <name>int</name></type> <name>WordCount</name><parameter_list>(<parameter><decl><type><name>String</name></type> <name>this</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content> <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>Split</name></name><argument_list>(<argument><expr><literal type="char">' '</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>Length</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block_content></block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<function><type><specifier>public</specifier> <name>void</name></type> <name>M</name><parameter_list>(<parameter><decl><type><modifier>out</modifier> <name>int</name></type> <name>i</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content><expr>;</empty_stmt></block_content></block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<function><type><name>void</name></type> <name>CallMethod</name><parameter_list>(<parameter><decl><type><name>string</name></type> <name>methodName</name></decl></parameter>, <parameter><decl><type><name>Object</name></type> <name>args</name></decl></parameter>)</parameter_list> =&gt;<block type="pseudo"><block_content><expr_stmt><expr><call><call><name>GetMethod</name><argument_list>(<argument><expr><name>methodName</name></expr></argument>)</argument_list></call><argument_list>(<argument><expr><name>args</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></function>
+</unit>
+
 </unit>

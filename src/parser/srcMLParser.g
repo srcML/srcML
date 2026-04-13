@@ -1050,6 +1050,10 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         }?
         lcurly |
 
+        // check for expression body members
+        { inLanguage(LANGUAGE_CSHARP) && inMode(MODE_FUNCTION_TAIL) }?
+        lambda |
+
         { inMode(MODE_ARGUMENT_LIST) }?
         call_argument_list |
 
@@ -4257,7 +4261,7 @@ friend_statement[] { ENTRY_DEBUG } :
   Used to check the ending token.
 */
 check_end[int& token] { token = LA(1); ENTRY_DEBUG } :
-        LCURLY | TERMINATE | COLON | COMMA | RPAREN | EQUAL
+        LCURLY | TERMINATE | COLON | COMMA | RPAREN | EQUAL | LAMBDA
 ;
 
 /*
@@ -11932,6 +11936,21 @@ dcolon[] { LightweightElement element(this); ENTRY_DEBUG } :
         }
 
         DCOLON
+;
+
+/*
+  lambda
+
+  Used to process a C# lambda => operator for expression body members
+*/
+lambda[] { LightweightElement element(this); ENTRY_DEBUG } :
+        LAMBDA
+        {
+            startNewMode(MODE_BLOCK_CONTENT | MODE_FUNCTION_BODY);
+            startNoSkipElement(SPSEUDO_BLOCK);
+            startNoSkipElement(SCONTENT);
+            expression_statement();
+        }
 ;
 
 /*
