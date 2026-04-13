@@ -1,0 +1,37 @@
+---
+name: Cache Windows Dependencies
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '43 12 * * *'
+
+permissions:
+  packages: write
+
+jobs:
+  job:
+    name: ${{ matrix.os }}-${{ github.workflow }}
+    runs-on: ${{ matrix.os }}
+    if: ${{ github.repository == 'srcML/srcML' }}
+    environment: build
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
+        triplet: [x64-windows]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: lukka/get-cmake@latest
+
+      - name: Setup vcpkg
+        uses: ./.github/actions/vcpkg
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run CMake
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: ci-msvc

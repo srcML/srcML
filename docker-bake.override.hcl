@@ -23,12 +23,15 @@
 variable "distributions" {
   description = "Table of supported Linux distributions"
   default = [
-    { id = "ubuntu",   version_id = "25.04",  java_version_id="22.04", name = "Ubuntu 25.04", workflow = "ubuntu", java = "latest", tag = "latest" },
-    { id = "ubuntu",   version_id = "24.10",  java_version_id="22.04", name = "Ubuntu 24.10", workflow = "ubuntu", java = "latest"},
-    { id = "ubuntu",   version_id = "24.04",  java_version_id="22.04", name = "Ubuntu 24.04", workflow = "ubuntu", java = "latest"},
+    { id = "ubuntu",   version_id = "26.04",  java_version_id="22.04", name = "Ubuntu 26.04", workflow = "ubuntu", java = "latest", tag = "latest" },
+    { id = "ubuntu",   version_id = "25.10",  java_version_id="22.04", name = "Ubuntu 25.10", workflow = "ubuntu", java = "latest" },
+    { id = "ubuntu",   version_id = "25.04",  java_version_id="22.04", name = "Ubuntu 25.04", workflow = "ubuntu", java = "latest" },
+    { id = "ubuntu",   version_id = "24.10",  java_version_id="22.04", name = "Ubuntu 24.10", workflow = "ubuntu", java = "latest" },
+    { id = "ubuntu",   version_id = "24.04",  java_version_id="22.04", name = "Ubuntu 24.04", workflow = "ubuntu", java = "latest" },
     { id = "ubuntu",   version_id = "22.04",  java_version_id="22.04", name = "Ubuntu 22.04", workflow = "ubuntu" },
     { id = "ubuntu",   version_id = "20.04",  java_version_id="20.04", name = "Ubuntu 20.04", workflow = "ubuntu", cmake = "ON", tag = "earliest" },
-    { id = "fedora",   version_id = "43",     java_version_id="38",    name = "Fedora 43", workflow = "rpm",    java = "latest", tag = "latest" },
+    { id = "fedora",   version_id = "44",     java_version_id="38",    name = "Fedora 44", workflow = "rpm",    java = "latest", tag = "latest" },
+    { id = "fedora",   version_id = "43",     java_version_id="38",    name = "Fedora 43", workflow = "rpm",    java = "latest" },
     { id = "fedora",   version_id = "42",     java_version_id="38",    name = "Fedora 42", workflow = "rpm",    java = "latest" },
     { id = "fedora",   version_id = "41",     java_version_id="38",    name = "Fedora 41", workflow = "rpm",    java = "17" },
     { id = "fedora",   version_id = "40",     java_version_id="38",    name = "Fedora 40", workflow = "rpm",    java = "17" },

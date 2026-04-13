@@ -64,8 +64,8 @@ int src_input_text(ParseQueue& queue,
         prequest->srcml_arch = srcml_arch;
         prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
 
-        // if there there is no language specified, then try to use the filename extension
-        if (prequest->language.empty())
+        // if there is no language specified, then try to use the filename extension
+        if (prequest->language.empty() && prequest->filename)
             if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->data()))
                 prequest->language = l;
 

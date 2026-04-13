@@ -90,16 +90,17 @@ function(add_workflow_test_targets binary_dir output_directory package_file_name
     # Target for test_client
     add_custom_target(test_client
         WORKING_DIRECTORY ${binary_dir}
-        COMMAND ${CMAKE_CTEST_COMMAND} -VV -R ^srcml --timeout ${SRCML_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-client.log || true
+        COMMAND ${CMAKE_CTEST_COMMAND} -VV -R ^srcml --timeout ${SRCML_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-client.log --output-junit ${output_directory}/${package_file_name}-client.xml || true
     )
 
     # Target for test_libsrcml
     add_custom_target(test_libsrcml
         WORKING_DIRECTORY ${binary_dir}
-        COMMAND ${CMAKE_CTEST_COMMAND} -VV -R ^libsrcml --timeout ${SRCML_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-libsrcml.log || true
+        COMMAND ${CMAKE_CTEST_COMMAND} -VV -R ^libsrcml --timeout ${SRCML_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-libsrcml.log --output-junit ${output_directory}/${package_file_name}-libsrcml.xml || true
     )
 
     # Target for test_parser
+    # TODO: export/convert log to junit for ingestion into circleci
     add_custom_target(test_parser
         WORKING_DIRECTORY ${binary_dir}
         COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${output_directory}/${package_file_name}-parser.log
