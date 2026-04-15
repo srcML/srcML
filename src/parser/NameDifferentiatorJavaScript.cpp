@@ -58,10 +58,25 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
 
     /*
         CASE 1: `token` should be the name of a variable in a declaration (if it is not already)
+                and `token` should be the name of a TypeScript type in an argument list
     */
     if (
-        srcMLParser::decl_start_js_token_set.member(prevNonWhitespaceToken->getType())
-        && token->getType() != srcMLParser::NAME
+        (
+            srcMLParser::decl_start_js_token_set.member(prevNonWhitespaceToken->getType())
+            && token->getType() != srcMLParser::NAME
+        )
+        || (
+            bracketBuffer.front() == "*"
+            && (
+                prevNonWhitespaceToken->getType() == srcMLParser::TEMPOPS
+                || prevNonWhitespaceToken->getType() == srcMLParser::COMMA
+            )
+            && srcMLParser::name_differentiator_js_token_set.member(token->getType())
+            && (
+                nextToken->getType() == srcMLParser::TEMPOPE
+                || nextToken->getType() == srcMLParser::COMMA
+            )
+        )
     ) {
         token->setType(srcMLParser::NAME);
         prevToken = nextToken;
@@ -207,6 +222,18 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
+        || (
+            bracketBuffer.front() == "*"
+            && (
+                prevNonWhitespaceToken->getType() == srcMLParser::TEMPOPS
+                || prevNonWhitespaceToken->getType() == srcMLParser::COMMA
+            )
+            && srcMLParser::name_differentiator_js_token_set.member(token->getType())
+            && (
+                nextToken->getType() == srcMLParser::TEMPOPE
+                || nextToken->getType() == srcMLParser::COMMA
+            )
+        )
     );
 }
 

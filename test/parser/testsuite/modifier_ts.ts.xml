@@ -15,4 +15,10 @@
 </block_content>}</block></class>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl><name>getNotifications</name><modifier>?</modifier>: <type><expr><lambda><parameter_list>(
+  <parameter><decl><name>filter</name><modifier>?</modifier>: <type><name>GetNotificationOptions</name></type></decl></parameter>
+)</parameter_list> <operator>=&gt;</operator> <expr><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name><name>$ReadOnlyArray</name><argument_list type="generic">&lt;<argument><expr><name>Notification</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></expr></lambda></decl></decl_stmt>
+</unit>
+
 </unit>

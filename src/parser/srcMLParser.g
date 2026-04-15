@@ -1597,7 +1597,10 @@ javascript_statements[] {
         // [TypeScript] looking for types at the statement-level
         if (
             inMode(MODE_STATEMENT)
-            && inTransparentMode(MODE_LCURLY_BLOCK_JS)
+            && (
+                inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+            )
             && perform_declaration_statement_check_ts()
         ) {
             declaration_statement_ts();
@@ -18793,7 +18796,11 @@ specifier_js[] { ENTRY_DEBUG } :
             startElement(SFUNCTION_SPECIFIER);
         }
 
-        (JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT | JS_STATIC)
+        (
+            JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT | JS_STATIC |
+
+            TS_DECLARE { setTypeScript(); }
+        )
 
         {
             endMode(MODE_LOCAL);
@@ -19566,6 +19573,16 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 
         {
+            // "?" and "!" are valid TypeScript modifiers if preceded by a name
+            if (
+                last_consumed == NAME
+                && (
+                    LA(1) == QMARK
+                    || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+                )
+            )
+                declaration_modifiers_ts();
+
             // consume TypeScript types, if applicable
             if (LA(1) == COLON) {
                 consume();  // ":"
@@ -21611,6 +21628,10 @@ type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
             {
                 break;
             } |
+
+            // "?" and "!" are valid TypeScript modifiers
+            { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+            declaration_modifiers_ts |
 
             // only allow a subset of all operators
             {

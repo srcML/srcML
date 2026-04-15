@@ -239,9 +239,12 @@ token_set(srcMLParser, decl_start_js_token_set,
 )
 
 token_set(srcMLParser, specifier_js_token_set,
-    // JavaScript and TypeScript keywords that could be specifiers
+    // JavaScript keywords that could be specifiers
     srcMLParser::JS_ASYNC, srcMLParser::JS_AWAIT, srcMLParser::JS_DEFAULT, srcMLParser::JS_EACH, srcMLParser::JS_EXPORT,
-    srcMLParser::JS_STATIC
+    srcMLParser::JS_STATIC,
+
+    // TypeScript keywords that could be specifiers
+    srcMLParser::TS_DECLARE
 )
 
 token_set(srcMLParser, post_specifier_js_token_set,

@@ -37,6 +37,14 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="var"><specifier>declare</specifier> var <name>clients</name>: <type><name>Clients</name></type></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="var"><specifier>declare</specifier> var <name>onactivate</name>: <type><modifier>?</modifier><name>EventHandler</name></type></decl></decl_stmt>
+</unit>
+
 <!-- Functions (with "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">
@@ -107,6 +115,18 @@
   <argument><expr><name>T</name> <extends>extends <type><name>Terminal</name></type></extends></expr></argument>,
   <argument><expr><name>U</name> <extends>extends <type><name>T</name> <operator>&amp;</operator> <object>{<property><expr><name>fallthrough</name></expr>: <expr><name>BlockId</name></expr></property>}</object></type></extends></expr></argument>,
 &gt;</argument_list></name><parameter_list>(<parameter><decl><name>terminal</name>: <type><name>T</name></type></decl></parameter>)</parameter_list>: <type><name>terminal</name> <operator>is</operator> <name>U</name></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<function><specifier>declare</specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></type></function>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<function><specifier>declare</specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>,<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></type></function>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<function><specifier>declare</specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt; <argument><expr><name>void</name></expr></argument> , <argument><expr><name>void</name></expr></argument> &gt;</argument_list></name></type></function>
 </unit>
 
 <!-- Functions (without "function" keyword) -->
