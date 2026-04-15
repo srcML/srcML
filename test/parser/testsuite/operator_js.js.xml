@@ -134,6 +134,18 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>!</operator><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>!</operator><operator>!</operator><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
