@@ -20245,6 +20245,9 @@ lambda_js[bool is_list = false] { CompleteElement element(this); size_t lparen_t
                 complete_javascript_parameter
             )
 
+            // consume TypeScript types
+            (options { greedy = true; } : (COLON type_ts))*
+
             arrow_operator_js
         )
 
@@ -20321,13 +20324,19 @@ perform_lambda_check_js[] returns [bool islambda] {
                 if (LA(1) == RPAREN)
                     --paren_count;
 
+                consume();
+
                 if (paren_count < 1 || LA(1) == 1 /* EOF */)
                     break;
-
-                consume();
             }
 
-            if (paren_count == 0 && next_token() == JS_ARROW)
+            // consume optional TypeScript type
+            if (LA(1) == COLON) {
+                consume();  // ":"
+                type_ts();
+            }
+
+            if (paren_count == 0 && LA(1) == JS_ARROW)
                 islambda = true;
         }
         catch (...) {}

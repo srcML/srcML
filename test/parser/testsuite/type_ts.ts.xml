@@ -157,6 +157,12 @@
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>handleTabChange</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>tab</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type> <operator>=&gt;</operator> <block>{<block_content>
+  <expr_stmt><expr><call><name>startTransition</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Edge Cases -->
 
 <unit revision="1.0.0" language="TypeScript">
