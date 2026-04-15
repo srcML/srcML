@@ -19168,7 +19168,26 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
   Handles the optional parenthesized name after a "catch" statement in JavaScript.
 */
 catch_lparen_js[] { ENTRY_DEBUG } :
-        LPAREN compound_name RPAREN
+        {
+            startNewMode(MODE_CATCH_LPAREN_JS);
+        }
+
+        LPAREN
+
+        compound_name
+        (COLON type_ts)*
+
+        {
+            if (inTransparentMode(MODE_CATCH_LPAREN_JS))
+                endDownToMode(MODE_CATCH_LPAREN_JS);
+        }
+
+        RPAREN
+
+        {
+            if (inTransparentMode(MODE_CATCH_LPAREN_JS))
+                endMode(MODE_CATCH_LPAREN_JS);
+        }
 ;
 
 /*
@@ -21620,19 +21639,27 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
   Handles a type in TypeScript.
 */
-type_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
+type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_TYPE_TS);
             startElement(STYPE);
+
+            lparen_types_size = lparen_types_js.size();
         }
 
         (options { greedy = true; } :
             // do not include the following as part of a type:
-            // - a parameter list closing RPAREN
+            // - a parameter list or catch condition closing RPAREN
             // - an argument list closing ">"
             // - "as" or "=" (start of next type/expression)
             {
-                (LA(1) == RPAREN && lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
+                (
+                    LA(1) == RPAREN
+                    && (
+                        (lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
+                        || (inTransparentMode(MODE_CATCH_LPAREN_JS) && lparen_types_size == lparen_types_js.size())
+                    )
+                )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
                 || LA(1) == JS_AS
                 || LA(1) == EQUAL

@@ -281,6 +281,16 @@ class <name>BugReport</name> <block>{<block_content>
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
 </unit>
 
+<!-- Types (in catch conditions) -->
+
+<unit revision="1.0.0" language="TypeScript">
+<try>try <block>{<block_content>
+  <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</block_content>}</block> <catch>catch (<name>error</name>: <type><name>any</name></type>) <block>{<block_content>
+  <throw>throw <expr><name>error</name></expr></throw>
+</block_content>}</block></catch></try>
+</unit>
+
 <!-- Type Cast ("as") -->
 
 <unit revision="1.0.0" language="TypeScript">

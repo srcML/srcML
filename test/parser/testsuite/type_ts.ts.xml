@@ -167,6 +167,24 @@
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Catch Conditions -->
+
+<unit revision="1.0.0" language="TypeScript">
+<try>try <block>{<block_content>
+  <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</block_content>}</block> <catch>catch (<name>error</name>: <type><name>any</name></type>) <block>{<block_content>
+  <throw>throw <expr><name>error</name></expr></throw>
+</block_content>}</block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<try>try <block>{<block_content>
+  <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</block_content>}</block> <catch>catch (<name>error</name>: <type><operator>(</operator><name>any</name> <operator>|</operator> <name>unknown</name><operator>)</operator></type>) <block>{<block_content>
+  <throw>throw <expr><name>error</name></expr></throw>
+</block_content>}</block></catch></try>
+</unit>
+
 <!-- Edge Cases -->
 
 <unit revision="1.0.0" language="TypeScript">
