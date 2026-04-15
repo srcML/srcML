@@ -20262,8 +20262,11 @@ lambda_js[bool is_list = false] { CompleteElement element(this); size_t lparen_t
         }
 
         (options { greedy = true; } :
-            // do not consume right parentheses outside the scope of the lambda
-            { LA(1) == RPAREN && lparen_types_size == lparen_types_js.size() }?
+            // do not consume right parentheses or ">" outside the scope of the lambda
+            {
+                (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
+                || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
+            }?
             {
                 break;
             } |
