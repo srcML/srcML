@@ -72,4 +72,31 @@
 </block_content>}</block></function></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>parsedPragmaOptions</name> <init>= <expr><call><name>parseConfigPragmaForTests</name><argument_list>(
+  <argument><expr><ternary><condition><expr><name>mode</name> <operator>===</operator> <literal type="string">'linter'</literal></expr>
+    ?</condition><then> <expr><object>{
+      <property><expr><name>validateRefAccessDuringRender</name></expr>: <expr><literal type="boolean">false</literal></expr></property>,
+    }</object></expr>
+    </then><else>: <expr><object>{
+      <comment type="block">/* use defaults for compiler mode */</comment>
+    }</object></expr></else></ternary></expr></argument>,
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>parsedPragmaOptions</name> <init>= <expr><call><name>parseConfigPragmaForTests</name><argument_list>(
+  <argument><expr><object>{
+    <property><expr><name>environment</name></expr>:
+      <expr><ternary><condition><expr><name>mode</name> <operator>===</operator> <literal type="string">'linter'</literal></expr>
+        ?</condition><then> <expr><object>{
+          <property><expr><name>validateRefAccessDuringRender</name></expr>: <expr><literal type="boolean">false</literal></expr></property>,
+        }</object></expr>
+        </then><else>: <expr><object>{
+          <comment type="block">/* use defaults for compiler mode */</comment>
+        }</object></expr></else></ternary></expr></property>,
+  }</object></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

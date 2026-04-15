@@ -20457,8 +20457,8 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             { inMode(MODE_ARGUMENT) }?
             argument |
 
-            // allow JavaScript ternaries to use existing "else" logic
-            { inTransparentMode(MODE_TERNARY) }?
+            // allow JavaScript ternaries to use existing "else" logic (but do not confuse with a property COLON)
+            { inTransparentMode(MODE_TERNARY) && (!inTransparentMode(MODE_OBJECT_JS) || last_consumed == RCURLY) }?
             colon_marked |
 
             // allow colon separators for properties
