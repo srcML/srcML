@@ -211,14 +211,14 @@ OPERATORS options { testLiterals = true; } {
                     commenttoken = '\000';
             } |
 
-            // ignore strings
+            // ignore strings (including those in comments)
             { prevchar = (char)LA(1); } ('"' | '\'' | '`') {
                 // found closing character for a string
-                if (!wasescape && prevchar == stringtoken) {
+                if (!wasescape && prevchar == stringtoken && commenttoken == '\000') {
                     stringtoken = '\000';
                 }
                 // found starting character for a string
-                else if (!wasescape && stringtoken == '\000') {
+                else if (!wasescape && stringtoken == '\000' && commenttoken == '\000') {
                     stringtoken = prevchar;
                 }
 
@@ -408,8 +408,8 @@ OPERATORS options { testLiterals = true; } {
                         break;
                 } |
 
-                // start a string
-                { stringtoken == '\000' }? { prevchar = (char)LA(1); } ('"' | '\'' | '`') { stringtoken = prevchar; } |
+                // start a string (not in a comment)
+                { stringtoken == '\000' && commenttoken == '\000' }? { prevchar = (char)LA(1); } ('"' | '\'' | '`') { stringtoken = prevchar; } |
 
                 // end a string
                 { LA(1) == stringtoken }? ('"' | '\'' | '`') { stringtoken = '\000'; } |

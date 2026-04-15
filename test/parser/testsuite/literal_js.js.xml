@@ -890,4 +890,26 @@
 </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>editorContent</name> <init>= <expr><operator>(</operator>
+  <literal type="jsx">&lt;MonacoEditor
+    /**
+     * TS language features don't work.
+     */
+    language={'javascript'}
+  /&gt;</literal>
+<operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>content</name> <init>= <expr><operator>(</operator>
+  <literal type="jsx">&lt;h1&gt;
+    /**
+     * Single ' and " characters
+     */
+    JavaScript
+  &lt;/h1&gt;</literal>
+<operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
