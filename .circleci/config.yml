@@ -3,8 +3,6 @@ jobs:
     build_ubuntu:
       docker:
         - image: srcml/ubuntu:latest
-      environment:
-        SRCML_TEST_IGNORE_FAILURE: "OFF"
       steps:
         - run: apt-get update
         - run: apt-get install -y ssh
@@ -16,8 +14,6 @@ jobs:
     build_fedora:
       docker:
         - image: srcml/fedora:latest
-      environment:
-        SRCML_TEST_IGNORE_FAILURE: "OFF"
       steps:
         - checkout
         - run: cmake --workflow --preset ci-rpm
