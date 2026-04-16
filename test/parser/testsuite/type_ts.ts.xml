@@ -153,6 +153,12 @@
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><function><specifier>static</specifier> <name><name>#getOrCreateRoot</name><argument_list type="generic">&lt;<argument><expr><name>T</name> <extends>extends <type><name>string</name></type></extends></expr></argument>&gt;</argument_list></name><parameter_list>(
+  <parameter><decl><name>identifier</name>: <type><name>Identifier</name></type></decl></parameter>,
+)</parameter_list>: <type><name><name>TreeNode</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+</unit>
+
 <!-- Lambdas -->
 
 <unit revision="1.0.0" language="TypeScript">

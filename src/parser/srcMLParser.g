@@ -20194,6 +20194,30 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                 found_name = true;
             }
 
+            // match optional TypeScript generic argument list
+            if (LA(1) == TEMPOPS) {
+                int tempops_count = 0;
+
+                while (true) {
+                    if (LA(1) == TEMPOPS)
+                        ++tempops_count;
+
+                    if (LA(1) == TEMPOPE) {
+                        --tempops_count;
+
+                        if (tempops_count == 0) {
+                            consume();
+                            break;
+                        }
+                    }
+
+                    consume();
+
+                    if (tempops_count < 0 || LA(1) == 1 /* EOF */)
+                        break;
+                }
+            }
+
             // match "("
             if (found_name && LA(1) == LPAREN) {
                 int paren_count = 0;
