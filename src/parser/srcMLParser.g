@@ -21763,6 +21763,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             // do not confuse LCURLY with the start of a block
             {
                 last_consumed == COLON
+                || last_consumed == OPERATORS
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
                 || inTransparentMode(MODE_MIXINS_TS)
                 || inTransparentMode(MODE_TYPEDEF)

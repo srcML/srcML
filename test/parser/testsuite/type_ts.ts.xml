@@ -49,6 +49,12 @@
 <decl_stmt><decl type="const">const <name>genNewArgs</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>t</name><operator>.</operator><name>Identifier</name></name></expr></lambda></expr></argument>&gt;</argument_list></name></type> <init>= <expr><array>[]</array></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>callee</name>:
+  <type><operator>|</operator> <object>{<property><expr><name>kind</name></expr>: <expr><literal type="string">'CallExpression'</literal></expr></property>; <property><expr><name>callee</name></expr>: <expr><name>Place</name></expr></property>}</object>
+  <operator>|</operator> <object>{<property><expr><name>kind</name></expr>: <expr><literal type="string">'MethodCall'</literal></expr></property>; <property><expr><name>receiver</name></expr>: <expr><name>Place</name></expr></property>; <property><expr><name>property</name></expr>: <expr><name>Place</name></expr></property>}</object></type></decl></decl_stmt>
+</unit>
+
 <!-- Functions (with "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">
