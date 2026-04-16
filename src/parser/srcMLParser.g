@@ -12832,6 +12832,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_DECL_INIT_JS) }?
         (declaration_cast_ts type_ts) |
 
+        // looking for "as" in TypeScript (operator)
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+        declaration_cast_ts |
+
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_keyword_iife_check_js() }?
         keyword_iife_js |
