@@ -1495,6 +1495,9 @@ catch[...] {
 start_javascript[] {
         ++start_count;
 
+        ENTRY_DEBUG_START
+        ENTRY_DEBUG
+
         // check for potential statement-start tokens before anything else
         javascript_statements();
 
@@ -1504,9 +1507,6 @@ start_javascript[] {
             processed_statement = false;
             return;
         }
-
-        ENTRY_DEBUG_START
-        ENTRY_DEBUG
 } :
         javascript_rules
 ;
@@ -1529,6 +1529,8 @@ catch[...] {
   Also includes specifier handling (e.g., "let", "var", "const", "static").
 */
 javascript_statements[] {
+        ENTRY_DEBUG
+
         // get const references to the static arrays (no stack allocation)
         const auto& duplexKeywords = getStaticJavaScriptDuplexKeywords();
         const auto& javascriptRules = getStaticJavaScriptRules();
@@ -1718,8 +1720,6 @@ javascript_statements[] {
                 return;
             }
         }
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -18759,6 +18759,8 @@ check_valid_specifier_js[] returns [int isspecifier] {
   If there are multiple specifiers in a row, returns the next token after the last specifier.
 */
 perform_post_specifier_check_js[] returns [std::array<int, 2> keywords] {
+        ENTRY_DEBUG
+
         keywords[0] = -1;
         keywords[1] = -1;
         last_consumed_guessing_mode = -1;
@@ -18782,8 +18784,6 @@ perform_post_specifier_check_js[] returns [std::array<int, 2> keywords] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -19917,6 +19917,8 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
   Checks for object destructuring with colons (e.g., "const {a: a1} = obj;") in JavaScript.
 */
 perform_decl_with_colon_check_js[] returns [bool hascolon] {
+        ENTRY_DEBUG
+
         hascolon = false;
         int bracket_count = 0;
         bool internary = false;
@@ -19973,8 +19975,6 @@ perform_decl_with_colon_check_js[] returns [bool hascolon] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -20164,6 +20164,8 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
   Specifically, functions of the form "NAME(){...}".
 */
 perform_keywordless_function_check_js[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
         isfunction = false;
         bool found_name = false;
         bool found_type = false;
@@ -20236,8 +20238,6 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -20329,6 +20329,8 @@ arrow_operator_js[] { SingleElement element(this); ENTRY_DEBUG } :
   Checks to see if an arrow (`=>`) follows a parameter in JavaScript.
 */
 perform_lone_parameter_lambda_check_js[] returns [bool islambda] {
+        ENTRY_DEBUG
+
         islambda = false;
         last_consumed_guessing_mode = -1;
         int start = mark();
@@ -20350,8 +20352,6 @@ perform_lone_parameter_lambda_check_js[] returns [bool islambda] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -20360,6 +20360,8 @@ perform_lone_parameter_lambda_check_js[] returns [bool islambda] {
   Checks to see if an arrow (`=>`) follows a parameter list in JavaScript.
 */
 perform_parameter_list_lambda_check_js[] returns [bool islambda] {
+        ENTRY_DEBUG
+
         islambda = false;
         int bracket_count = 0;  // for TypeScript types
         int paren_count = 0;  // for parameter list
@@ -20415,8 +20417,6 @@ perform_parameter_list_lambda_check_js[] returns [bool islambda] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -20637,6 +20637,8 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
   Checks to see if a colon (`:`) follows square brackets in an object in JavaScript.
 */
 perform_computed_property_check_js[] returns [bool iscomputed] {
+        ENTRY_DEBUG
+
         iscomputed = false;
         int square_bracket_count = 0;
         last_consumed_guessing_mode = -1;
@@ -20671,8 +20673,6 @@ perform_computed_property_check_js[] returns [bool iscomputed] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -20720,6 +20720,8 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
   Specifically, generator functions of the form "*[...](){}".
 */
 perform_generator_function_computed_property_check_js[] returns [bool iscomputed] {
+        ENTRY_DEBUG
+
         iscomputed = false;
         int square_bracket_count = 0;
         bool found_multops = false;
@@ -20797,8 +20799,6 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -20846,6 +20846,8 @@ computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG 
   Specifically, functions of the form "[...](){}".
 */
 perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
+        ENTRY_DEBUG
+
         iscomputed = false;
         int square_bracket_count = 0;
         bool found_start = false;
@@ -20921,8 +20923,6 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -21006,6 +21006,8 @@ yield_expression_js[] { CompleteElement element(this); bool consume_multops = fa
   Also checks for any JavaScript tagged template variations (e.g., a`b`(c) or a`b``c`).
 */
 perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
+        ENTRY_DEBUG
+
         istagged = false;
         call_count = 0;
 
@@ -21062,8 +21064,6 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -21107,6 +21107,8 @@ tagged_template_js[int call_count = 1] { ENTRY_DEBUG } :
   For example, "(function (){})()".
 */
 perform_keyword_iife_check_js[] returns [bool isiife] {
+        ENTRY_DEBUG
+
         isiife = false;
         int curly_count = 0;
         last_consumed_guessing_mode = -1;
@@ -21173,8 +21175,6 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -21265,6 +21265,8 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
   For example, "(() => {})()".
 */
 perform_keywordless_iife_check_js[] returns [bool isiife] {
+        ENTRY_DEBUG
+
         isiife = false;
         int curly_count = 0;
         last_consumed_guessing_mode = -1;
@@ -21332,8 +21334,6 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -21425,6 +21425,8 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
   For example, "a?.b?.(c)".
 */
 perform_optional_call_chaining_check_js[] returns [bool iscall] {
+        ENTRY_DEBUG
+
         iscall = false;
         int optional_call_chain_count = 0;
         int paren_count = 0;
@@ -21467,8 +21469,6 @@ perform_optional_call_chaining_check_js[] returns [bool iscall] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -21834,6 +21834,8 @@ declaration_cast_ts[] { LightweightElement element(this); setTypeScript(); ENTRY
   Checks if an expression statement should be a TypeScript-declaration statement marked with bare declarations.
 */
 perform_declaration_statement_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
         isdecl = false;
         last_consumed_guessing_mode = -1;
         int start = mark();
@@ -21858,8 +21860,6 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -21975,6 +21975,8 @@ constraint_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } 
   Checks if an index is a constraint (TypeScript) or a computed property (JavaScript/TypeScript).
 */
 perform_constraint_check_ts[] returns [bool isconstraint] {
+        ENTRY_DEBUG
+
         isconstraint = false;
         last_consumed_guessing_mode = -1;
         int bracket_count = 0;
@@ -22011,8 +22013,6 @@ perform_constraint_check_ts[] returns [bool isconstraint] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -22048,6 +22048,8 @@ declaration_specifiers_ts[] { LightweightElement element(this); setTypeScript();
   If there are multiple decorators in a row, returns the next token after the last decorator.
 */
 perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
+        ENTRY_DEBUG
+
         keywords[0] = -1;
         keywords[1] = -1;
         last_consumed_guessing_mode = -1;
@@ -22078,8 +22080,6 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -22150,6 +22150,8 @@ attribute_ts[] { setTypeScript(); ENTRY_DEBUG } :
   These include "function", "function*", "get", and "set" keywords.
 */
 perform_decorator_function_expression_check_ts[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
         isfunction = false;
         last_consumed_guessing_mode = -1;
         int start = mark();
@@ -22185,8 +22187,6 @@ perform_decorator_function_expression_check_ts[] returns [bool isfunction] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
 
 /*
@@ -22195,6 +22195,8 @@ perform_decorator_function_expression_check_ts[] returns [bool isfunction] {
   Returns the next token that occurs after a series of TypeScript decorators/specifiers.
 */
 perform_post_decorator_check_ts[] returns [std::array<int, 2> keywords] {
+        ENTRY_DEBUG
+
         keywords[0] = -1;
         keywords[1] = -1;
         last_consumed_guessing_mode = -1;
@@ -22232,6 +22234,4 @@ perform_post_decorator_check_ts[] returns [std::array<int, 2> keywords] {
 
         inputState->guessing--;
         rewind(start);
-
-        ENTRY_DEBUG
 } :;
