@@ -19344,6 +19344,10 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inMode(MODE_ARGUMENT) }?
             argument |
 
+            // consume TypeScript types
+            { !inTransparentMode(MODE_TERNARY) }?
+            (COLON type_ts) |
+
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
             colon_marked |

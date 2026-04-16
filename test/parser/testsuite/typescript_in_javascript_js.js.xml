@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="typescript_in_javascript">
 
+<!-- Array Destructuring -->
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const [<decl><name>x</name> <init>= <expr><operator>(</operator><array>[]</array>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>number</name></expr></argument>&gt;</argument_list></name></type><operator>)</operator></expr></init></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>y</name></name></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Constraints -->
 
 <unit revision="1.0.0" language="TypeScript">
