@@ -12848,9 +12848,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         {
             inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
             && (
-                (LA(1) == NAME && next_token() == JS_ARROW)
-                || (LA(1) == JS_ASYNC && next_token() == NAME && next_token_two() == JS_ARROW)
+                !(inTransparentMode(MODE_TYPE_TS) && last_consumed == COLON)
+                || inTransparentMode(MODE_TERNARY)
             )
+            && perform_lone_parameter_lambda_check_js()
         }?
         lambda_js[false] |
 
@@ -12858,7 +12859,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         {
             inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
             && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
-            && perform_lambda_check_js()
+            && perform_parameter_list_lambda_check_js()
         }?
         lambda_js[true] |
 
@@ -20323,13 +20324,45 @@ arrow_operator_js[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
-  perform_lambda_check_js
+  perform_lone_parameter_lambda_check_js
+
+  Checks to see if an arrow (`=>`) follows a parameter in JavaScript.
+*/
+perform_lone_parameter_lambda_check_js[] returns [bool islambda] {
+        islambda = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // consume lone name (however, it could be longer than 1 token)
+            if (LA(1) == NAME)
+                compound_name();
+
+            if (LA(1) == JS_ARROW)
+                islambda = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        ENTRY_DEBUG
+} :;
+
+/*
+  perform_parameter_list_lambda_check_js
 
   Checks to see if an arrow (`=>`) follows a parameter list in JavaScript.
 */
-perform_lambda_check_js[] returns [bool islambda] {
+perform_parameter_list_lambda_check_js[] returns [bool islambda] {
         islambda = false;
-        int paren_count = 0;
+        int bracket_count = 0;  // for TypeScript types
+        int paren_count = 0;  // for parameter list
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
@@ -20355,10 +20388,27 @@ perform_lambda_check_js[] returns [bool islambda] {
             // consume optional TypeScript type
             if (LA(1) == COLON) {
                 consume();  // ":"
-                type_ts();
+
+                while (true) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    consume();
+
+                    if (
+                        bracket_count < 0
+                        || (
+                            bracket_count == 0
+                            && (LA(1) == JS_ARROW || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        )
+                    )
+                        break;
+                }
             }
 
-            if (paren_count == 0 && LA(1) == JS_ARROW)
+            if (paren_count == 0 && bracket_count == 0 && LA(1) == JS_ARROW)
                 islambda = true;
         }
         catch (...) {}

@@ -167,6 +167,12 @@
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>t</name>: <type><name>ResolvedType</name></type></decl></parameter>)</parameter_list>: <type><name>ResolvedType</name></type> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><name>t</name></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
+</unit>
+
 <!-- Catch Conditions -->
 
 <unit revision="1.0.0" language="TypeScript">
