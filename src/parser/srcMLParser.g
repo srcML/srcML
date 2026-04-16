@@ -725,7 +725,7 @@ tokens {
     SYIELD_STATEMENT;
     SYIELD_FROM_STATEMENT;
 
-    // JavaScript
+    // JavaScript and TypeScript
     SCOMPUTED_PROPERTY;
     SDEBUGGER_STATEMENT;
     SDECLARATION_CONST;
@@ -21745,8 +21745,8 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             }?
             object_js |
 
-            // marks "is" as an operator
-            type_predicate_operator_ts |
+            // marks "asserts" and "is" as operators
+            assertion_function_operator_ts | type_predicate_operator_ts |
 
             // allow certain expression, but do not consume LCURLY (could be a block)
             { LA(1) != LCURLY || (LA(1) == LCURLY && inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)) }?
@@ -21778,7 +21778,7 @@ mixins_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
   type_predicate_operator_ts
 
   Handles the "is" portion of a type predicate in TypeScript.
-  The entire type predicate looks something like "NAME is TYPE".
+  The entire type predicate looks something like "NAME is NAME".
 */
 type_predicate_operator_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
         {
@@ -21786,6 +21786,20 @@ type_predicate_operator_ts[] { LightweightElement element(this); setTypeScript()
         }
 
         TS_IS
+;
+
+/*
+  assertion_function_operator_ts
+
+  Handles the "asserts" portion of an assertion function in TypeScript.
+  The entire assertion looks something like "asserts NAME".
+*/
+assertion_function_operator_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startElement(SOPERATOR);
+        }
+
+        TS_ASSERTS
 ;
 
 /*

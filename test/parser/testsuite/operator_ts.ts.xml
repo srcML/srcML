@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="operator">
 
+<!-- Assertion Function ("asserts") -->
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list>: <type><operator>asserts</operator> <name>condition</name></type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list>: <type><operator>asserts</operator> <name>condition</name> <operator>is</operator> <name>string</name></type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+</unit>
+
 <!-- Type Cast ("as") -->
 
 <unit revision="1.0.0" language="TypeScript">
