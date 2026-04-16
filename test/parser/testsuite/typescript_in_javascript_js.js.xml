@@ -273,6 +273,14 @@ class <name>BugReport</name> <block>{<block_content>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(
+  <parameter><decl><name>options</name>: <type><object>{
+    <property><expr><name>reason</name></expr>: <expr><name>CompilerDiagnosticOptions</name></expr></property>;
+  }</object></type></decl></parameter>,
+)</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+</unit>
+
 <!-- Types (in lambdas) -->
 
 <unit revision="1.0.0" language="TypeScript">
