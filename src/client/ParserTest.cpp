@@ -123,19 +123,19 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
             // find where the strings are different at the end
             const auto endoff = std::mismatch(sxml.rbegin(), sxml.rend(), ssout.rbegin());
 
-            // backup to right before the previous newline
-            while (off.first != sxml.begin() && *off.first != '\n') {
-                off.first = std::prev(off.first);
-                off.second = std::prev(off.second);
+            auto sxml_cut  = endoff.first.base();
+            auto ssout_cut = endoff.second.base();
+            while (sxml_cut != sxml.end() && *sxml_cut != '\n') {
+                sxml_cut  = std::next(sxml_cut);
+                ssout_cut = std::next(ssout_cut);
             }
-            if (*off.first == '\n') {
-                off.first = std::next(off.first);
-                off.second = std::next(off.second);
+            if (sxml_cut != sxml.end()) {
+                sxml_cut  = std::next(sxml_cut);
+                ssout_cut = std::next(ssout_cut);
             }
 
-            // remove the common end of the strings
-            sxml.resize(sxml.size() - std::distance(sxml.rbegin(), endoff.first));
-            ssout.resize(ssout.size() - std::distance(ssout.rbegin(), endoff.second));
+            sxml.erase(sxml_cut, sxml.end());
+            ssout.erase(ssout_cut, ssout.end());
         }
 
         // record for the error report
