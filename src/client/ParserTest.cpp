@@ -28,16 +28,20 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
     if (request->url)
         url = *request->url;
 
-    if (previous_filename.empty() || (request->parsertest_filename != previous_filename)) {
+    const char* language = srcml_unit_get_language(unit);
+    if (!language) 
+        return;
 
+    bool new_archive = previous_filename.empty() || (request->parsertest_filename != previous_filename);
+
+    if (new_archive) {
         previous_filename = request->parsertest_filename;
         count = 0;
+        unit_language.clear();
+    }
 
-        if (!srcml_unit_get_language(unit))
-            return;
-
-        unit_language = srcml_unit_get_language(unit);
-
+    if (unit_language != language) {
+        unit_language = language;
         std::ostringstream sout;
         sout << '\n' << std::setw(FIELD_WIDTH_LANGUAGE) << std::left << unit_language;
         sout << std::setw(FIELD_WIDTH_URL) << std::left << url;
