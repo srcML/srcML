@@ -104,7 +104,7 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
             std::count(ssout.begin(), ssout.end(), '\n') > CUTOFF) {
 
             // find where the strings are different
-            auto off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin());
+            auto off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin(), ssout.end());
 
             // backup to right after the previous newline
             while (off.first != sxml.begin() && *off.first != '\n') {
@@ -121,7 +121,7 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
             ssout.erase(ssout.begin(), off.second);
 
             // find where the strings are different at the end
-            const auto endoff = std::mismatch(sxml.rbegin(), sxml.rend(), ssout.rbegin());
+            const auto endoff = std::mismatch(sxml.rbegin(), sxml.rend(), ssout.rbegin(), ssout.rend());
 
             auto sxml_cut  = endoff.first.base();
             auto ssout_cut = endoff.second.base();
