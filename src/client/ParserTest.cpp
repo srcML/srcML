@@ -107,11 +107,11 @@ void ParserTest::entry(const ParseRequest* request, srcml_archive* archive, srcm
             auto off = std::mismatch(sxml.begin(), sxml.end(), ssout.begin(), ssout.end());
 
             // backup to right after the previous newline
-            while (off.first != sxml.begin() && *off.first != '\n') {
+            while (off.first != sxml.begin() && (off.first == sxml.end() || *off.first != '\n')) {
                 off.first = std::prev(off.first);
                 off.second = std::prev(off.second);
             }
-            if (*off.first == '\n') {
+            if (off.first != sxml.end() && *off.first == '\n') {
                 off.first = std::next(off.first);
                 off.second = std::next(off.second);
             }
