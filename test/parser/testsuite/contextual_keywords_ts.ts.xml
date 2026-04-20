@@ -11,4 +11,11 @@
 )</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- Note: Do NOT adjust unit tags for this test -->
+<unit revision="1.0.0" language="TypeScript"><decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl></decl_stmt></unit>
+
 </unit>
