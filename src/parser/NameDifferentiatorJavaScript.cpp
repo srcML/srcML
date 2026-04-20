@@ -198,7 +198,20 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || nextToken->getType() == srcMLParser::RBRACKET
             )
         )
-        || (token->getType() == srcMLParser::TS_TYPE && nextToken->getType() == srcMLParser::EQUAL)
+        || (
+            token->getType() == srcMLParser::TS_TYPE
+            && (
+                nextToken->getType() == srcMLParser::EQUAL
+                || (
+                    (bracketBuffer.front() == "(" || bracketBuffer.front() == "[")
+                    && (
+                        nextToken->getType() == srcMLParser::COMMA
+                        || nextToken->getType() == srcMLParser::RPAREN
+                        || nextToken->getType() == srcMLParser::RBRACKET
+                    )
+                )
+            )
+        )
         || (
             srcMLParser::name_differentiator_subset_js_token_set.member(token->getType())
             && (

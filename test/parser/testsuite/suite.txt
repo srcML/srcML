@@ -340,6 +340,7 @@ LANGUAGE_JAVASCRIPT yield_js
 # TypeScript
 LANGUAGE_TYPESCRIPT attribute_ts
 LANGUAGE_TYPESCRIPT constraint_ts
+LANGUAGE_TYPESCRIPT contextual_keywords_ts
 LANGUAGE_TYPESCRIPT implements_ts
 LANGUAGE_TYPESCRIPT import_ts
 LANGUAGE_TYPESCRIPT interface_ts
