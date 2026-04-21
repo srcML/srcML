@@ -463,7 +463,9 @@ OPERATORS options { testLiterals = true; } {
 
     // names can start with a @ in C#
     '@' (
-
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+          '@' { $setType(TS_DATSIGN); }
+        |
         { inLanguage(LANGUAGE_PYTHON) }?
           '='
         |

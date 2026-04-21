@@ -789,6 +789,7 @@ public:
     bool in_template_param = false;
     bool processed_statement = false;
     bool is_typescript = false;
+    int tempops_count_ts = 0;
     int current_decl_type_js = 0;
     int start_count = 0;
 
@@ -1575,23 +1576,21 @@ javascript_statements[] {
             return;
         }
 
-        // [TypeScript] looking for a declaration in an interface block
+        // [TypeScript] looking for function declarations at the statement-level
         if (
-            (is_typescript || inLanguage(LANGUAGE_TYPESCRIPT))
-            && inTransparentMode(MODE_INTERFACE_TS)
-            && inMode(MODE_STATEMENT)
+            inMode(MODE_STATEMENT)
+            && (
+                inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+            )
             && (
                 LA(1) == NAME
-                || (LA(1) == LBRACKET && next_token() == NAME)
+                || LA(1) == TS_DATSIGN
                 || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
             )
-            && (
-                last_consumed == LCURLY
-                || last_consumed == TERMINATE
-                || last_consumed == COMMA
-            )
+            && perform_function_declaration_check_ts()
         ) {
-            declaration_statement_ts();
+            function_declaration_ts();
             processed_statement = true;
             return;
         }
@@ -1600,10 +1599,29 @@ javascript_statements[] {
         if (
             inMode(MODE_STATEMENT)
             && (
-                inTransparentMode(MODE_LCURLY_BLOCK_JS)
-                || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+                // type declaration statement in non-interface blocks
+                (
+                    (
+                        inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                        || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+                    )
+                    && perform_declaration_statement_check_ts()
+                )
+                // type declaration statement in interface blocks
+                || (
+                    inTransparentMode(MODE_INTERFACE_TS)
+                    && (
+                        LA(1) == NAME
+                        || ((LA(1) == LBRACKET || LA(1) == TS_DATSIGN) && next_token() == NAME)
+                        || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    )
+                    && (
+                        last_consumed == LCURLY
+                        || last_consumed == TERMINATE
+                        || last_consumed == COMMA
+                    )
+                )
             )
-            && perform_declaration_statement_check_ts()
         ) {
             declaration_statement_ts();
             processed_statement = true;
@@ -14932,6 +14950,9 @@ tempops[] { ENTRY_DEBUG } :
             // ensure we are in a list mode so that we can end correctly; some uses of tempope will have their own mode
             if (!inMode(MODE_LIST))
                 startNewMode(MODE_LIST);
+
+            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
+                ++tempops_count_ts;
         }
 
         TEMPOPS
@@ -14951,6 +14972,9 @@ tempope[] { ENTRY_DEBUG } :
         TEMPOPE
 
         {
+            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
+                --tempops_count_ts;
+
             // end the mode created by the start template operator
             while (inMode(MODE_LIST))
                 endMode(MODE_LIST);
@@ -18804,7 +18828,7 @@ specifier_js[] { ENTRY_DEBUG } :
         (
             JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT | JS_STATIC |
 
-            TS_DECLARE { setTypeScript(); }
+            (TS_ABSTRACT | TS_DECLARE) { setTypeScript(); }
         )
 
         {
@@ -21733,6 +21757,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             // do not include the following as part of a type:
             // - a parameter list or catch condition closing RPAREN
             // - an argument list closing ">"
+            // - after an argument list closing ">" with no generated TERMINATE
             // - "as" or "=" (start of next type/expression)
             {
                 (
@@ -21743,6 +21768,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                     )
                 )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
+                || (last_consumed == TEMPOPE && tempops_count_ts == 0)
                 || LA(1) == JS_AS
                 || LA(1) == EQUAL
             }?
@@ -21862,15 +21888,113 @@ declaration_cast_ts[] { LightweightElement element(this); setTypeScript(); ENTRY
 ;
 
 /*
+  perform_function_declaration_check_ts
+
+  Checks if an expression statement should be a TypeScript function declaration.
+*/
+perform_function_declaration_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try { 
+            // consume optional specifiers
+            while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
+                declaration_specifiers_ts();
+
+            // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
+            if (LA(1) == TS_DATSIGN)
+                consume();
+
+            compound_name();
+            paren_pair();
+
+            // consume optional modifiers
+            while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+                declaration_modifiers_ts();
+
+            // found "NAME() :"
+            if (LA(1) == COLON)
+                isdecl = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  function_declaration_ts
+
+  Handles a TypeScript function declaration.
+*/
+function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
+        {
+            // do not nest function declarations
+            if (!inMode(MODE_FUNCTION_DECL_TS)) {
+                startNewMode(MODE_FUNCTION_DECL_TS);
+                startElement(SFUNCTION_DECLARATION);
+            }
+        }
+
+        (
+            (declaration_specifiers_ts)*
+
+            // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
+            (datsign_ts)*
+
+            compound_name
+            javascript_parameter_list
+        )
+
+        (options { greedy = true; } :
+            // special syntax: function declarations end at a terminate token or a comma
+            {
+                LA(1) == TERMINATE
+                || LA(1) == COMMA
+                || (last_consumed == TEMPOPE && tempops_count_ts == 0)
+            }?
+            {
+                if (LA(1) == TERMINATE || LA(1) == COMMA)
+                    consume();
+
+                break;
+            } |
+
+            // currently, "?" and "!" are the only valid modifiers
+            { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+            declaration_modifiers_ts |
+
+            declaration_init_js | (COLON type_ts)
+        )*
+
+        {
+            if (inTransparentMode(MODE_FUNCTION_DECL_TS)) {
+                endDownToMode(MODE_FUNCTION_DECL_TS);
+
+                // manually consume statement-ending token
+                if (LA(1) == TERMINATE || LA(1) == COMMA)
+                    consume();
+
+                endMode(MODE_FUNCTION_DECL_TS);
+            }
+        }
+;
+
+/*
   perform_declaration_statement_check_ts
 
-  Checks if an expression statement should be a TypeScript-declaration statement marked with bare declarations.
+  Checks if an expression statement should be a TypeScript declaration statement marked with bare declarations.
 */
 perform_declaration_statement_check_ts[] returns [bool isdecl] {
         ENTRY_DEBUG
 
         isdecl = false;
         last_consumed_guessing_mode = -1;
+        bool continue_guessing = false;
         int start = mark();
         inputState->guessing++;
 
@@ -21879,14 +22003,43 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
             while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
                 declaration_specifiers_ts();
 
-            compound_name();
+            // consume a name
+            if (LA(1) == NAME) {
+                compound_name();
+                continue_guessing = true;
+            }
+            // or, consume a constraint
+            else if (LA(1) == LBRACKET) {
+                int bracket_count = 0;
+
+                while (true) {
+                    if (LA(1) == LBRACKET)
+                        ++bracket_count;
+
+                    if (LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    if (bracket_count < 0)
+                        break;
+
+                    consume();
+
+                    if (
+                        (bracket_count == 0 && last_consumed_guessing_mode == RBRACKET)
+                        || LA(1) == 1 /* EOF */
+                    ) {
+                        continue_guessing = true;
+                        break;
+                    }
+                }
+            }
 
             // consume optional modifiers
             while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
                 declaration_modifiers_ts();
 
             // found "NAME:" or "[NAME]:"
-            if (LA(1) == COLON)
+            if (continue_guessing && LA(1) == COLON)
                 isdecl = true;
         }
         catch (...) {}
@@ -21898,9 +22051,9 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
 /*
   declaration_statement_ts
 
-  Handles a TypeScript-declaration statement marked with bare declarations.
+  Handles a TypeScript declaration statement marked with bare declarations.
 */
-declaration_statement_ts[int post_specifier_token = -1] { setTypeScript(); ENTRY_DEBUG } :
+declaration_statement_ts[] { setTypeScript(); ENTRY_DEBUG } :
         {
             // do not nest declaration statements
             if (!inMode(MODE_DECL_STATEMENT_TS)) {
@@ -21944,7 +22097,17 @@ declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
             startElement(SDECLARATION);
         }
 
-        ((declaration_specifiers_ts)* (constraint_ts | compound_name))
+        (
+            (declaration_specifiers_ts)*
+
+            // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
+            (datsign_ts)*
+
+            (constraint_ts | compound_name)
+
+            // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
+            (javascript_parameter_list)*
+        )
 
         (options { greedy = true; } :
             // ensure the declaration ends before a termination token or comma
@@ -22071,7 +22234,20 @@ declaration_specifiers_ts[] { LightweightElement element(this); setTypeScript();
             startElement(SFUNCTION_SPECIFIER);
         }
 
-        (TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
+        (TS_ABSTRACT | TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
+;
+
+/*
+  datsign_ts
+
+  Handles "@@" in JavaScript/TypeScript.  Invalid syntax, but must be handled to avoid crashes.
+*/
+datsign_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SOPERATOR);
+        }
+
+        TS_DATSIGN
 ;
 
 /*

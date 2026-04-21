@@ -281,6 +281,14 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
 
             // an EOL separates a JSX literal (e.g., "<div/>") and any non-skip token
             || (containsEOL && token->getType() == srcMLParser::JS_JSX_LITERAL)
+
+            // an EOL separates a name and a constraint in TypeScript declaration statements
+            || (
+                containsEOL
+                && bracketTokenTracker.front() == "{"
+                && token->getType() == srcMLParser::NAME
+                && nextNonSkipToken->getType() == srcMLParser::LBRACKET
+            )
         )
     );
 }

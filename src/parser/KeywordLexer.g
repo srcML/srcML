@@ -392,8 +392,10 @@ tokens {
     QMARK_PERIOD;
 
     // TypeScript only (but can technically appear in JavaScript)
+    TS_ABSTRACT;
     TS_ASSERTS;
     TS_ATSIGN;
+    TS_DATSIGN;
     TS_DECLARE;
     TS_IMPLEMENTS;
     TS_INTERFACE;
@@ -936,6 +938,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "keyof"        , TS_KEYOF          , LANGUAGE_JAVASCRIPT_FAMILY },
 
         // TypeScript only (but can technically appear in JavaScript)
+        { "abstract"     , TS_ABSTRACT       , LANGUAGE_JAVASCRIPT_FAMILY },
         { "asserts"      , TS_ASSERTS        , LANGUAGE_JAVASCRIPT_FAMILY },
         { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT_FAMILY },
         { "implements"   , TS_IMPLEMENTS     , LANGUAGE_JAVASCRIPT_FAMILY },

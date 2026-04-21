@@ -387,6 +387,8 @@ const static srcMLState::MODE_TYPE MODE_TEMPLATE_ARGUMENT_TS;
 
 const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_TS;
 
+const static srcMLState::MODE_TYPE MODE_FUNCTION_DECL_TS;
+
 const static srcMLState::MODE_TYPE MODE_DECORATOR_TS;
 
 const static srcMLState::MODE_TYPE MODE_INTERFACE_TS;
