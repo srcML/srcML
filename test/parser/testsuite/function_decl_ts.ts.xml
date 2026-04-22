@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="function_decl">
 
+<!-- Without specifiers -->
+
 <unit revision="1.0.0" language="TypeScript">
 <class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{<block_content>
   <function_decl><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
@@ -9,11 +11,20 @@
 </block_content>}</block></class>
 </unit>
 
+<!-- With specifiers -->
+
 <unit revision="1.0.0" language="TypeScript">
 <class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{<block_content>
   <function_decl><specifier>abstract</specifier> <name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl>;</decl_stmt>
+</block_content>}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>URL</name> <block>{<block_content>
+  <function_decl><specifier>static</specifier> <name>canParse</name><parameter_list>(<parameter><decl><name>url</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>base</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>boolean</name></type></function_decl>
+  <function_decl><specifier>static</specifier> <name>createObjectURL</name><parameter_list>(<parameter><decl><name>blob</name>: <type><name>Blob</name></type></decl></parameter>)</parameter_list>: <type><name>string</name></type></function_decl>
 </block_content>}</block></class>
 </unit>
 

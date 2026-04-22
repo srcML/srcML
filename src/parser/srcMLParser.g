@@ -823,6 +823,7 @@ public:
     static const antlr::BitSet insert_terminate_eol_js_token_set;
     static const antlr::BitSet keyword_expression_pair_js_token_set;
     static const antlr::BitSet declaration_specifiers_ts_token_set;
+    static const antlr::BitSet function_declaration_specifiers_ts_token_set;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -1588,6 +1589,7 @@ javascript_statements[] {
                 LA(1) == NAME
                 || LA(1) == TS_DATSIGN
                 || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
             )
             && perform_function_declaration_check_ts()
         ) {
@@ -21939,7 +21941,11 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
         int start = mark();
         inputState->guessing++;
 
-        try { 
+        try {
+            // consume optional specifiers
+            while (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
+                function_declaration_specifiers_ts();
+
             // consume optional specifiers
             while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
                 declaration_specifiers_ts();
@@ -21956,8 +21962,34 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                 declaration_modifiers_ts();
 
             // found "NAME() :"
-            if (LA(1) == COLON)
+            if (LA(1) == COLON) {
+                int tempops_count = 0;
                 isdecl = true;
+
+                while (true) {
+                    if (LA(1) == TEMPOPS)
+                        ++tempops_count;
+
+                    if (LA(1) == TEMPOPE) {
+                        --tempops_count;
+
+                        if (tempops_count == 0) {
+                            break;
+                        }
+                    }
+
+                    if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */)
+                        break;
+
+                    // "NAME() : TYPE {}" is a function expression, not function declaration
+                    if (LA(1) == LCURLY) {
+                        isdecl = false;
+                        break;
+                    }
+
+                    consume();
+                }
+            }
         }
         catch (...) {}
 
@@ -21980,7 +22012,7 @@ function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
         }
 
         (
-            (declaration_specifiers_ts)*
+            (function_declaration_specifiers_ts | declaration_specifiers_ts)*
 
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             (datsign_ts)*
@@ -22022,6 +22054,20 @@ function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
             }
         }
 ;
+
+/*
+  function_declaration_specifiers_ts
+
+  Handles specifiers that can only appear in a TypeScript function declaration.
+*/
+function_declaration_specifiers_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+        {
+            startElement(SFUNCTION_SPECIFIER);
+        }
+
+        (JS_STATIC | TS_ABSTRACT)
+;
+
 
 /*
   perform_declaration_statement_check_ts
@@ -22308,7 +22354,7 @@ declaration_specifiers_ts[] { LightweightElement element(this); setTypeScript();
             startElement(SFUNCTION_SPECIFIER);
         }
 
-        (TS_ABSTRACT | TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
+        (TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
 ;
 
 /*

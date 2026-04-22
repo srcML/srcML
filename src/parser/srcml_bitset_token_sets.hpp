@@ -244,7 +244,7 @@ token_set(srcMLParser, specifier_js_token_set,
     srcMLParser::JS_STATIC,
 
     // TypeScript keywords that could be specifiers
-    srcMLParser::TS_ABSTRACT, srcMLParser::TS_DECLARE
+    srcMLParser::TS_DECLARE
 )
 
 token_set(srcMLParser, post_specifier_js_token_set,
@@ -330,8 +330,13 @@ token_set(srcMLParser, keyword_expression_pair_js_token_set,
 
 token_set(srcMLParser, declaration_specifiers_ts_token_set,
     // TypeScript specifiers on a declaration
-    srcMLParser::TS_ABSTRACT, srcMLParser::TS_DECLARE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
+    srcMLParser::TS_DECLARE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
     srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY
+)
+
+token_set(srcMLParser, function_declaration_specifiers_ts_token_set,
+    // TypeScript specifiers on a function declaration
+    srcMLParser::JS_STATIC, srcMLParser::TS_ABSTRACT
 )
 
 #endif
