@@ -789,6 +789,7 @@ public:
     bool in_template_param = false;
     bool processed_statement = false;
     bool is_typescript = false;
+    bool is_pseudo_terminate = false;
     int tempops_count_ts = 0;
     int current_decl_type_js = 0;
     int start_count = 0;
@@ -1595,7 +1596,11 @@ javascript_statements[] {
             return;
         }
 
-        // [TypeScript] looking for types at the statement-level
+        // [TypeScript] types at the statement-level can start with:
+        // - a name
+        // - a constraint (i.e., "[NAME]")
+        // - a specifier (i.e., "abstract NAME")
+        // - a "+", "-", or "~" followed by a NAME
         if (
             inMode(MODE_STATEMENT)
             && (
@@ -1614,6 +1619,13 @@ javascript_statements[] {
                         LA(1) == NAME
                         || ((LA(1) == LBRACKET || LA(1) == TS_DATSIGN) && next_token() == NAME)
                         || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        || (
+                            (
+                                (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                                || (LA(1) == DESTOP)
+                            )
+                            && next_token() == NAME
+                        )
                     )
                     && (
                         last_consumed == LCURLY
@@ -18771,7 +18783,11 @@ check_valid_specifier_js[] returns [int isspecifier] {
                 specifier_js_token_set.member(LA(1))
                 && (LA(1) != JS_DEFAULT || (LA(1) == JS_DEFAULT && next_token() != COLON))
                 && (LA(1) != JS_AWAIT || (LA(1) == JS_AWAIT && next_token() == JS_USING))
-                && (LA(1) != JS_STATIC || (LA(1) == JS_STATIC && perform_keywordless_function_check_js()))
+                && (
+                    LA(1) != JS_STATIC
+                    || (LA(1) == JS_STATIC && perform_keywordless_function_check_js())
+                    || (LA(1) == JS_STATIC && (next_token() == OPERATORS || next_token() == DESTOP))
+                )
             )
             || declaration_specifiers_ts_token_set.member(LA(1))
         )
@@ -18927,6 +18943,10 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
             while (check_valid_specifier_js()) {
                 specifier_js();
             }
+
+            // consume optional unary operators
+            if ((LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-")) || (LA(1) == DESTOP))
+                general_operators();
         }
 
         (JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)
@@ -21750,12 +21770,14 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             startNewMode(MODE_TYPE_TS);
             startElement(STYPE);
 
+            is_pseudo_terminate = false;
             lparen_types_size = lparen_types_js.size();
         }
 
         (options { greedy = true; } :
             // do not include the following as part of a type:
             // - a parameter list or catch condition closing RPAREN
+            // - a unary operator that should start a new declaration statement
             // - an argument list closing ">"
             // - after an argument list closing ">" with no generated TERMINATE
             // - "as" or "=" (start of next type/expression)
@@ -21767,12 +21789,29 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                         || (inTransparentMode(MODE_CATCH_LPAREN_JS) && lparen_types_size == lparen_types_js.size())
                     )
                 )
+                || (
+                    last_consumed == NAME
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
                 || (last_consumed == TEMPOPE && tempops_count_ts == 0)
                 || LA(1) == JS_AS
                 || LA(1) == EQUAL
             }?
             {
+                // special case: "NAME + unary operator" denotes the end of a TypeScript declaration
+                if (
+                    last_consumed == NAME
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+                    is_pseudo_terminate = true;
+
                 break;
             } |
 
@@ -22003,6 +22042,10 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
             while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
                 declaration_specifiers_ts();
 
+            // consume optional unary operators
+            if ((LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-")) || (LA(1) == DESTOP))
+                consume();
+
             // consume a name
             if (LA(1) == NAME) {
                 compound_name();
@@ -22063,10 +22106,25 @@ declaration_statement_ts[] { setTypeScript(); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            // special syntax: declaration statements end at a terminate token or a comma
-            { LA(1) == TERMINATE || LA(1) == COMMA }?
+            // ensure the declaration ends before a specified token
             {
-                consume();
+                LA(1) == TERMINATE
+                || LA(1) == COMMA
+                || (
+                    is_pseudo_terminate
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+            }?
+            {
+                if (LA(1) == TERMINATE || LA(1) == COMMA)
+                    consume();
+
+                if (is_pseudo_terminate)
+                    is_pseudo_terminate = false;
+
                 break;
             } |
 
@@ -22100,6 +22158,12 @@ declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
         (
             (declaration_specifiers_ts)*
 
+            // optional declaration unary operators
+            (options { greedy = true; } :
+                { LT(1)->getText() == "+" || LT(1)->getText() == "-" || LT(1)->getText() == "~" }?
+                general_operators
+            )*
+
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             (datsign_ts)*
 
@@ -22110,8 +22174,18 @@ declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
         )
 
         (options { greedy = true; } :
-            // ensure the declaration ends before a termination token or comma
-            { LA(1) == TERMINATE || LA(1) == COMMA }?
+            // ensure the declaration ends before a specified token
+            {
+                LA(1) == TERMINATE
+                || LA(1) == COMMA
+                || (
+                    is_pseudo_terminate
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+            }?
             {
                 break;
             } |
