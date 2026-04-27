@@ -279,8 +279,8 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_IMPORT, srcMLParser::JS_RANGE_IN, srcMLParser::JS_INSTANCEOF, srcMLParser::JS_LET, srcMLParser::NEW,
     srcMLParser::JS_NULL, srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::JS_SET, srcMLParser::JS_STATIC,
     srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::LITERAL_TRUE, srcMLParser::TRY, srcMLParser::JS_TYPEOF,
-    srcMLParser::JS_UNDEFINED, srcMLParser::JS_VAR, srcMLParser::JS_VOID, srcMLParser::WHILE, srcMLParser::JS_WITH,
-    srcMLParser::JS_YIELD,
+    srcMLParser::JS_UNDEFINED, srcMLParser::JS_USING, srcMLParser::JS_VAR, srcMLParser::JS_VOID, srcMLParser::WHILE,
+    srcMLParser::JS_WITH, srcMLParser::JS_YIELD,
 
     // TypeScript keywords
     srcMLParser::TS_ABSTRACT, srcMLParser::TS_ASSERTS, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS,

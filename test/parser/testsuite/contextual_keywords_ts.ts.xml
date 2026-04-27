@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="contextual_keywords">
 
+<!-- "const" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+  <function_decl><name>const</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
+</block_content>}</block></class>
+</unit>
+
+<!-- "let" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+  <function_decl><name>let</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
+</block_content>}</block></class>
+</unit>
+
+<!-- "static" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+  <function_decl><name>static</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
+</block_content>}</block></class>
+</unit>
+
 <!-- "type" -->
 
 <unit revision="1.0.0" language="TypeScript">
@@ -15,7 +39,26 @@
 <decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl>;</decl_stmt>
 </unit>
 
-<!-- Note: Do NOT adjust unit tags for this test -->
+<!-- "using" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+  <function_decl><name>using</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
+</block_content>}</block></class>
+</unit>
+
+<!-- "var" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+  <function_decl><name>var</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
+</block_content>}</block></class>
+</unit>
+
+<!--
+"type" (again)
+Note: Do NOT adjust the unit tags or position of this test
+-->
 <unit revision="1.0.0" language="TypeScript"><decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl></decl_stmt></unit>
 
 </unit>
