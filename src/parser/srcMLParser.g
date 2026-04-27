@@ -21826,8 +21826,8 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             // do not include the following as part of a type:
             // - a parameter list or catch condition closing RPAREN
             // - a unary operator that should start a new declaration statement
-            // - an argument list closing ">"
             // - after an argument list closing ">" with no generated TERMINATE
+            // - an argument list closing ">" in mixins or template arguments
             // - "as" or "=" (start of next type/expression)
             {
                 (
@@ -21844,8 +21844,12 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                         || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
                     )
                 )
+                || (
+                    last_consumed == TEMPOPE
+                    && tempops_count_ts == 0
+                    && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
+                )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
-                || (last_consumed == TEMPOPE && tempops_count_ts == 0)
                 || LA(1) == JS_AS
                 || LA(1) == EQUAL
             }?

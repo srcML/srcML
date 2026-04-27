@@ -242,4 +242,8 @@
 </block_content>}</block></class>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl><name>labels</name>: <type><name><name>NodeList</name><argument_list type="generic">&lt;<argument><expr><name>HTMLLabelElement</name></expr></argument>&gt;</argument_list></name> <operator>|</operator> <literal type="null">null</literal></type></decl></decl_stmt>
+</unit>
+
 </unit>
