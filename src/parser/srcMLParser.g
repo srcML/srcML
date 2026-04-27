@@ -790,6 +790,7 @@ public:
     bool processed_statement = false;
     bool is_typescript = false;
     bool is_pseudo_terminate = false;
+    bool skip_pseudoblock_terminate = false;
     int tempops_count_ts = 0;
     int current_decl_type_js = 0;
     int start_count = 0;
@@ -1836,24 +1837,27 @@ javascript_rules[] {
 
         terminate |
 
-        // do not confuse with expression block
+        // do not confuse with expression block or object
         {
             (
                 (
-                    inTransparentMode(MODE_CONDITION)
-                    || (
-                        !inMode(MODE_EXPRESSION)
-                        && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)
+                    (
+                        inTransparentMode(MODE_CONDITION)
+                        || (
+                            !inMode(MODE_EXPRESSION)
+                            && !inMode(MODE_EXPRESSION_BLOCK | MODE_EXPECT)
+                        )
                     )
+                    && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
+                    && !inTransparentMode(MODE_INTERNAL_END_CURLY)
+                    && !inTransparentMode(MODE_INIT | MODE_EXPECT)
+                    && !inTransparentMode(MODE_ARGUMENT | MODE_EXPECT)
                 )
-                && !inTransparentMode(MODE_CALL | MODE_INTERNAL_END_PAREN)
-                && !inTransparentMode(MODE_INTERNAL_END_CURLY)
-                && !inTransparentMode(MODE_INIT | MODE_EXPECT)
-                && !inTransparentMode(MODE_ARGUMENT | MODE_EXPECT)
+                || inTransparentMode(MODE_ANONYMOUS)
+                || inMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP)
             )
-            || inTransparentMode(MODE_ANONYMOUS)
-            || inMode(MODE_LCURLY_BLOCK_JS)
-            || inMode(MODE_TOP)
+            && perform_lcurly_differentiator_check_js()
         }?
         lcurly |
 
@@ -5819,8 +5823,21 @@ terminate_pre[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the statement (non-JavaScript languages)
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)) {
-                if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
-                    endDownToMode(MODE_STATEMENT);
+                if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+
+                    // a block begins on the next line, so do not end the current statement
+                    if (
+                        inMode(MODE_LCURLY_BLOCK_JS)
+                        && next_token() != LCURLY
+                        && perform_lookahead_lcurly_differentiator_check_js()
+                    ) {
+                        skip_pseudoblock_terminate = true;
+                    }
+                    // otherwise, the statement should end at the TERMINATE
+                    else {
+                        endDownToMode(MODE_STATEMENT);
+                    }
+                }
                 else
                     endDownToModeSet(MODE_STATEMENT | MODE_EXPRESSION_BLOCK | MODE_INTERNAL_END_CURLY | MODE_INTERNAL_END_PAREN);
             }
@@ -5839,6 +5856,27 @@ terminate_pre[] { ENTRY_DEBUG } :
 */
 terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         {
+            // do not accidentally end a statement requiring a block in JavaScript/TypeScript
+            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && skip_pseudoblock_terminate) {
+                skip_pseudoblock_terminate = false;
+                return;
+            }
+
+            // determine if "{" starts a block or an object in JavaScript/TypeScript
+            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inMode(MODE_LCURLY_BLOCK_JS) && LA(1) == LCURLY) {
+                // "{" denotes the start of a block
+                if (perform_lcurly_differentiator_check_js()) {
+                    lcurly();
+                }
+                // "{" denotes the start of an object
+                else {
+                    startNoSkipElement(SPSEUDO_BLOCK);
+                    startNoSkipElement(SCONTENT);
+
+                    expression_statement();
+                }
+            }
+
             // end all the statements this statement is nested in; special case when ending then of if statement
             if (
                 (
@@ -12518,6 +12556,10 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     // start the then element
                     // startNoSkipElement(STHEN);
 
+                    // for JavaScript/TypeScript, do not check for pseudoblocks here
+                    if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && LA(1) == TERMINATE && next_token() == LCURLY)
+                        return;
+
                     if (LA(1) != LCURLY && LA(1) != INDENT) {
                         startNoSkipElement(SPSEUDO_BLOCK);
                         startNoSkipElement(SCONTENT);
@@ -12541,6 +12583,10 @@ rparen[bool markup = true, bool end_control_incr = false] {
                 // end while condition, etc. and output pseudo block
                 if (inMode(MODE_LIST | MODE_CONDITION) && inPrevMode(MODE_STATEMENT | MODE_NEST)) {
                     endMode(MODE_LIST);
+
+                    // for JavaScript/TypeScript, do not check for pseudoblocks here
+                    if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && LA(1) == TERMINATE && next_token() == LCURLY)
+                        return;
 
                     if (LA(1) != LCURLY && LA(1) != INDENT) {
                         startNoSkipElement(SPSEUDO_BLOCK);
@@ -22558,6 +22604,119 @@ perform_post_decorator_check_ts[] returns [std::array<int, 2> keywords] {
                 keywords[0] = LA(1);
                 keywords[1] = next_token();
             }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_lcurly_differentiator_check_js
+
+  Checks if "{" denotes the start of a block or an object in JavaScript/TypeScript.
+  Assumes that "{" starts a block until proven otherwise.
+*/
+perform_lcurly_differentiator_check_js[] returns [bool isblock] {
+        ENTRY_DEBUG
+
+        isblock = true;
+        last_consumed_guessing_mode = -1;
+        int token_before_lcurly = last_consumed;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // only process "{" that could start objects; everything else starts a block
+            if (
+                LA(1) == LCURLY
+                && (
+                    !perform_statement_has_block_check_js()
+                    || token_before_lcurly == TERMINATE
+                    || token_before_lcurly == LCURLY
+                )
+            ) {
+                consume();  // "{"
+
+                // case 1: "{" is being assigned to something, so it must be an object
+                if (token_before_lcurly == EQUAL) {
+                    isblock = false;
+                }
+                // case 2: the first token in the block or object is a name
+                else if (LA(1) == NAME) {
+                    compound_name();
+
+                    // match properties (not labels)
+                    if (LA(1) == COLON && !table_keywords_js_token_set.member(next_token()))
+                        isblock = false;
+                }
+                // case 3: the first token in the block or object is a square bracket
+                else if (LA(1) == LBRACKET) {
+                    computed_property_js();
+
+                    // match computed properties (not arrays)
+                    if (LA(1) == COLON)
+                        isblock = false;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_statement_has_block_check_js
+
+  Checks if the current statement should have a block in JavaScript/TypeScript.
+  Note that "MODE_NEST" is used to denote this.
+*/
+perform_statement_has_block_check_js[] returns [bool hasblock] {
+        ENTRY_DEBUG
+
+        hasblock = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end the current statement down to its original mode
+            if (inTransparentMode(MODE_STATEMENT))
+                endDownToMode(MODE_STATEMENT);
+
+            // record if the statement is supposed to contain a block
+            if (inMode(MODE_NEST))
+                hasblock = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_lookahead_lcurly_differentiator_check_js
+
+  Checks if the current statement should really end at a terminate token in JavaScript/TypeScript.
+  If a statement requires a block, ignore the terminate so the pseudo-block persists.
+*/
+perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] {
+        ENTRY_DEBUG
+
+        skipterminate = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end the current statement down to its original mode
+            if (inTransparentMode(MODE_STATEMENT))
+                endDownToMode(MODE_STATEMENT);
+
+            // if the statement is supposed to have a block, skip TERMINATE
+            if (inMode(MODE_LCURLY_BLOCK_JS))
+                skipterminate = true;
         }
         catch (...) {}
 
