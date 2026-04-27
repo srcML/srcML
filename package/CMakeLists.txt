@@ -84,7 +84,7 @@ configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPY
 set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
 # Test targets for workflows
-set(SRCML_TEST_TIMEOUT 100 CACHE STRING "ctest timeout in seconds")
+set(SRCML_TEST_TIMEOUT 5 CACHE STRING "ctest timeout in seconds")
 function(add_workflow_test_targets binary_dir output_directory package_file_name)
 
     # Target for test_client
