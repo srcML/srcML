@@ -104,7 +104,6 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     */
     if (srcMLParser::whitespace_token_set.member(nextToken->getType()) || nextToken->getType() == srcMLParser::EOL) {
         auto newPrevToken = prevToken;
-        bool foundTerminate = false;
 
         // Find the next non-whitespace token
         while (srcMLParser::whitespace_token_set.member(nextToken->getType()) || nextToken->getType() == srcMLParser::EOL) {
