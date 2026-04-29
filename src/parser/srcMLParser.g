@@ -1559,6 +1559,7 @@ javascript_statements[] {
         if (
             !inMode(MODE_IGNORE_LABEL_JS)
             && next_token() == COLON
+            && (next_token_two() != LCURLY || perform_label_with_block_check_js())
             && (table_keywords_js_token_set.member(next_token_two()) || next_token_two() == LCURLY)
             && !(LA(1) == CASE || LA(1) == JS_DEFAULT || inMode(MODE_PROPERTY_JS) || inMode(MODE_TERNARY))
         )
@@ -20650,6 +20651,14 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             }?
             constraint_ts |
 
+            // special case: TypeScript nameless function declarations in an object
+            { inTransparentMode(MODE_OBJECT_JS) && perform_nameless_function_declaration_check_ts() }?
+            nameless_function_declaration_ts |
+
+            // special case: TypeScript function declarations in an object
+            { inTransparentMode(MODE_OBJECT_JS) && perform_function_declaration_check_ts() }?
+            function_declaration_ts |
+
             // special case: "default:" is a property name, not a statement
             { inMode(MODE_PROPERTY_JS) && next_token() == COLON }?
             default_property_js |
@@ -22036,7 +22045,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                         break;
 
                     // "NAME() : TYPE {}" is a function expression, not function declaration
-                    if (LA(1) == LCURLY) {
+                    if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js()) {
                         isdecl = false;
                         break;
                     }
@@ -22083,7 +22092,8 @@ function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
                 || (last_consumed == TEMPOPE && tempops_count_ts == 0)
             }?
             {
-                if (LA(1) == TERMINATE || LA(1) == COMMA)
+                // do not consume the comma if the function declaration is in a property
+                if (!inTransparentMode(MODE_PROPERTY_JS) && (LA(1) == TERMINATE || LA(1) == COMMA))
                     consume();
 
                 break;
@@ -22100,8 +22110,8 @@ function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
             if (inTransparentMode(MODE_FUNCTION_DECL_TS)) {
                 endDownToMode(MODE_FUNCTION_DECL_TS);
 
-                // manually consume statement-ending token
-                if (LA(1) == TERMINATE || LA(1) == COMMA)
+                // manually consume statement-ending token (except if in a property)
+                if (!inTransparentMode(MODE_PROPERTY_JS) && (LA(1) == TERMINATE || LA(1) == COMMA))
                     consume();
 
                 endMode(MODE_FUNCTION_DECL_TS);
@@ -22122,6 +22132,123 @@ function_declaration_specifiers_ts[] { LightweightElement element(this); setType
         (JS_STATIC | TS_ABSTRACT)
 ;
 
+/*
+  perform_nameless_function_declaration_check_ts
+
+  Checks if an expression statement should be a TypeScript function declaration without a name.
+*/
+perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional specifiers
+            while (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
+                function_declaration_specifiers_ts();
+
+            // consume optional specifiers
+            while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
+                declaration_specifiers_ts();
+
+            paren_pair();
+
+            // consume optional modifiers
+            while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+                declaration_modifiers_ts();
+
+            // found "() :"
+            if (LA(1) == COLON) {
+                int tempops_count = 0;
+                isdecl = true;
+
+                while (true) {
+                    if (LA(1) == TEMPOPS)
+                        ++tempops_count;
+
+                    if (LA(1) == TEMPOPE) {
+                        --tempops_count;
+
+                        if (tempops_count == 0) {
+                            break;
+                        }
+                    }
+
+                    if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */)
+                        break;
+
+                    // "() : TYPE {}" is not a function declaration
+                    if (LA(1) == LCURLY) {
+                        isdecl = false;
+                        break;
+                    }
+
+                    consume();
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  nameless_function_declaration_ts
+
+  Handles a TypeScript function declaration without a name.
+*/
+nameless_function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
+        {
+            // do not nest function declarations
+            if (!inMode(MODE_FUNCTION_DECL_TS)) {
+                startNewMode(MODE_FUNCTION_DECL_TS);
+                startElement(SFUNCTION_DECLARATION);
+            }
+        }
+
+        (
+            (function_declaration_specifiers_ts | declaration_specifiers_ts)*
+            javascript_parameter_list
+        )
+
+        (options { greedy = true; } :
+            // special syntax: function declarations end at a terminate token or a comma
+            {
+                LA(1) == TERMINATE
+                || LA(1) == COMMA
+                || (last_consumed == TEMPOPE && tempops_count_ts == 0)
+            }?
+            {
+                // do not consume the comma if the function declaration is in a property
+                if (!inTransparentMode(MODE_PROPERTY_JS) && (LA(1) == TERMINATE || LA(1) == COMMA))
+                    consume();
+
+                break;
+            } |
+
+            // currently, "?" and "!" are the only valid modifiers
+            { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+            declaration_modifiers_ts |
+
+            declaration_init_js | (COLON type_ts)
+        )*
+
+        {
+            if (inTransparentMode(MODE_FUNCTION_DECL_TS)) {
+                endDownToMode(MODE_FUNCTION_DECL_TS);
+
+                // manually consume statement-ending token (except if in a property)
+                if (!inTransparentMode(MODE_PROPERTY_JS) && (LA(1) == TERMINATE || LA(1) == COMMA))
+                    consume();
+
+                endMode(MODE_FUNCTION_DECL_TS);
+            }
+        }
+;
 
 /*
   perform_declaration_statement_check_ts
@@ -22757,3 +22884,34 @@ declare_statement_ts[] { ENTRY_DEBUG } :
             }
         }
 ;
+
+/*
+  perform_label_with_block_check_js
+
+  Checks if a labeled block (e.g., "NAME: {}") is a labeled block or a TypeScript type.
+*/
+perform_label_with_block_check_js[] returns [bool islabel] {
+        ENTRY_DEBUG
+
+        islabel = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume what is likely a name
+            while (LA(1) != COLON && LA(1) != LCURLY && LA(1) != 1 /* EOF */)
+                consume();
+
+            if (LA(1) == COLON)
+                consume();
+
+            // found "NAME: {}", where "{}" is a block
+            if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
+                islabel = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;

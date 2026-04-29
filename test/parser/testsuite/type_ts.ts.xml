@@ -246,4 +246,10 @@
 <decl_stmt><decl><name>labels</name>: <type><name><name>NodeList</name><argument_list type="generic">&lt;<argument><expr><name>HTMLLabelElement</name></expr></argument>&gt;</argument_list></name> <operator>|</operator> <literal type="null">null</literal></type></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name> <operator>=</operator></expr></super></extends></super_list> <block>{<block_content>
+  <decl_stmt><decl><name>env</name>: <type><object>{<property><constraint><index>[<name>key</name>: <type><name>string</name></type>]</index>: <type><name>string</name> <operator>|</operator> <name>void</name></type></constraint></property>, <property><expr><operator>...</operator></expr></property>}</object></type></decl></decl_stmt>
+</block_content>}</block></class>
+</unit>
+
 </unit>

@@ -46,4 +46,35 @@
 </block_content>}</block></interface>
 </unit>
 
+<!-- Function declarations in objects -->
+
+<unit revision="1.0.0" language="TypeScript">
+<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><object>{
+  <property><function_decl><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type></function_decl></property>,
+}</object></type></typedef>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><object>{
+  <property><function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type></function_decl></property>,
+}</object></type></typedef>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><object>{
+  <property><function_decl><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type></function_decl></property>,
+  <property><function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type></function_decl></property>,
+}</object></type></typedef>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name> <operator>=</operator></expr></super></extends></super_list> <block>{<block_content>
+  <function_decl><name>memoryUsage</name><parameter_list>()</parameter_list>: <type><object>{
+    <property><expr><name>heapTotal</name></expr>: <expr><name>number</name></expr></property>,
+    <property><expr><name>heapUsed</name></expr>: <expr><name>number</name></expr></property>,
+    <property><expr><operator>...</operator></expr></property>
+  }</object></type></function_decl>
+</block_content>}</block></class>
+</unit>
+
 </unit>
