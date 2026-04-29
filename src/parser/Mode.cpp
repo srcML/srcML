@@ -164,6 +164,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_DECL_TS           (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_DECORATOR_TS               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_INTERFACE_TS               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_NAMESPACE_TS               (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECLARE_TS                 (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_MIXINS_TS                  (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_INDEX_TS                   (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_TYPE_TS                    (bit(__COUNTER__));

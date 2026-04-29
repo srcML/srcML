@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="declare">
+
+<!-- Ambient Declarations ("declare" statement) -->
+
+<unit revision="1.0.0" language="TypeScript">
+<declare>declare <name>global</name> <block>{<block_content>
+  <interface>interface <name>Window</name> <block>{<block_content>
+    <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl></decl_stmt>
+  </block_content>}</block></interface>
+</block_content>}</block></declare>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<declare>declare <name>module</name> <literal type="string">'zlib'</literal> <block>{<block_content>
+  <decl_stmt><decl type="var"><specifier>declare</specifier> var <name>Z_NO_FLUSH</name>: <type><name>number</name></type></decl></decl_stmt>
+</block_content>}</block></declare>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<declare>declare <name>module</name> <literal type="string">"zlib"</literal> <block>{<block_content>
+  <declare>declare <name>global</name> <block>{<block_content>
+    <interface>interface <name>Window</name> <block>{<block_content>
+      <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl></decl_stmt>
+    </block_content>}</block></interface>
+  </block_content>}</block></declare>
+</block_content>}</block></declare>
+</unit>
+
+</unit>

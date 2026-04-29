@@ -395,6 +395,8 @@ const static srcMLState::MODE_TYPE MODE_INTERFACE_TS;
 
 const static srcMLState::MODE_TYPE MODE_NAMESPACE_TS;
 
+const static srcMLState::MODE_TYPE MODE_DECLARE_TS;
+
 const static srcMLState::MODE_TYPE MODE_MIXINS_TS;
 
 const static srcMLState::MODE_TYPE MODE_INDEX_TS;

@@ -733,6 +733,7 @@ tokens {
     SDECLARATION_STATIC;
     SDECLARATION_USING;
     SDECLARATION_VAR;
+    SDECLARE_STATEMENT;
     SEXPORT_STATEMENT;
     SFUNCTION_GENERATOR_STATEMENT;
     SFUNCTION_GET_STATEMENT;
@@ -1011,9 +1012,11 @@ public:
             specifier_py();
         }
 
-        // handle multiple pre-keyword JavaScript/TypeScript specifiers in a row (ignore "export" statements)
+        // handle multiple pre-keyword JavaScript/TypeScript specifiers in a row
+        // Note: ignore "declare" and "export" statements
         while (
             inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            && !inMode(MODE_DECLARE_TS)
             && !inTransparentMode(MODE_EXPORT_JS)
             && check_valid_specifier_js()
         ) {
@@ -1128,6 +1131,7 @@ public:
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* TYPESCRIPT STATEMENTS */
+        temp_array[TS_DECLARE]   = { SDECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, &srcMLParser::setTypeScript, &srcMLParser::declare_statement_ts };
         temp_array[TS_INTERFACE] = { SINTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
         temp_array[TS_NAMESPACE] = { SNAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
         temp_array[TS_TYPE]      = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::setTypeScript, nullptr };
@@ -22727,3 +22731,29 @@ perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] 
         inputState->guessing--;
         rewind(start);
 } :;
+
+/*
+  declare_statement_ts
+
+  Used to handle any tokens that appear after a "declare" statement keyword in TypeScript.
+  If in this rule, then setTypeScript() is already set by the table.
+*/
+declare_statement_ts[] { ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            // "{" will always denote the start of a block in a "declare" statement
+            { LA(1) == LCURLY }?
+            {
+                break;
+            } |
+
+            compound_name | literals | TERMINATE
+        )*
+
+        {
+            // ensures that the parser is in MODE_STATEMENT before processing the block
+            if (inTransparentMode(MODE_DECLARE_TS)) {
+                endDownToMode(MODE_DECLARE_TS);
+                endMode(MODE_DECLARE_TS);
+            }
+        }
+;
