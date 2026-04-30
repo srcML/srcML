@@ -7,6 +7,8 @@ jobs:
       matrix:
         os: [macos-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      DEVELOPER_DIR: /Library/Developer/CommandLineTools
     steps:
 
       - name: Checkout Repository
@@ -22,11 +24,16 @@ jobs:
         with:
           workflowPreset: ci-macos
 
+      - name: Stage installer artifacts
+        run: |
+          mkdir -p dist
+          cp ../srcML-build/dist/*.pkg ../srcML-build/dist/*.tar.gz ../srcML-build/dist/*.tar.bz2 dist/
+
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: macOS Package
           path: |
-            ../srcML-build/dist/*.pkg
-            ../srcML-build/dist/*.tar.gz
-            ../srcML-build/dist/*.tar.bz2
+            dist/*.pkg
+            dist/*.tar.gz
+            dist/*.tar.bz2
