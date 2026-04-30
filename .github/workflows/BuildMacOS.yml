@@ -7,6 +7,8 @@ jobs:
       matrix:
         os: [macos-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      DEVELOPER_DIR: /Library/Developer/CommandLineTools
     steps:
 
       - name: Checkout Repository
