@@ -103,7 +103,7 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/${{ matrix.arch }} \
-            --output "type=image,name=srcml/ubuntu_26_04,push-by-digest=true,name-canonical=true,push=true" \
+            --output "type=image,name=srcml/ubuntu,push-by-digest=true,name-canonical=true,push=true" \
             --metadata-file metadata.json \
             client-ctx
           mkdir -p digests
@@ -143,5 +143,5 @@ jobs:
         working-directory: digests
         run: |
           docker buildx imagetools create \
-            --tag srcml/ubuntu_26_04:v1.1.0 \
-            $(printf 'srcml/ubuntu_26_04@sha256:%s ' *)
+            --tag srcml/ubuntu:srcml-v1.1.0-26.04 \
+            $(printf 'srcml/ubuntu@sha256:%s ' *)
