@@ -26,7 +26,6 @@ variable "distributions" {
     { id = "ubuntu",   version_id = "26.04",  java_version_id="22.04", name = "Ubuntu 26.04", workflow = "ubuntu", java = "latest", tag = "latest" },
     { id = "ubuntu",   version_id = "25.10",  java_version_id="22.04", name = "Ubuntu 25.10", workflow = "ubuntu", java = "latest" },
     { id = "ubuntu",   version_id = "25.04",  java_version_id="22.04", name = "Ubuntu 25.04", workflow = "ubuntu", java = "latest" },
-    { id = "ubuntu",   version_id = "24.10",  java_version_id="22.04", name = "Ubuntu 24.10", workflow = "ubuntu", java = "latest" },
     { id = "ubuntu",   version_id = "24.04",  java_version_id="22.04", name = "Ubuntu 24.04", workflow = "ubuntu", java = "latest" },
     { id = "ubuntu",   version_id = "22.04",  java_version_id="22.04", name = "Ubuntu 22.04", workflow = "ubuntu" },
     { id = "ubuntu",   version_id = "20.04",  java_version_id="20.04", name = "Ubuntu 20.04", workflow = "ubuntu", cmake = "ON", tag = "earliest" },
