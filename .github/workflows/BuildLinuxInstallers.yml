@@ -3,6 +3,11 @@ name: Build Linux Installers
 
 on:
   workflow_dispatch:
+    inputs:
+      srcml_bake_src:
+        description: 'Override SRCML_BAKE_SRC (e.g. https://github.com/srcML/srcML.git#develop). Leave blank to use the default from docker-bake.hcl.'
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -42,11 +47,15 @@ jobs:
 
       - name: Bake ${{ matrix.family }} package targets
         run: |
+          if [[ -n "$INPUT_SRCML_BAKE_SRC" ]]; then
+            export SRCML_BAKE_SRC="$INPUT_SRCML_BAKE_SRC"
+          fi
           docker buildx bake \
             --set "*.push=false" \
             ${{ matrix.family }}_package
         env:
           SRCML_BAKE_ARCHITECTURE: linux/${{ matrix.arch }}
+          INPUT_SRCML_BAKE_SRC: ${{ inputs.srcml_bake_src }}
 
       - name: Upload installers
         uses: actions/upload-artifact@v4
