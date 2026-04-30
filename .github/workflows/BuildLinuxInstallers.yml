@@ -143,5 +143,5 @@ jobs:
         working-directory: digests
         run: |
           docker buildx imagetools create \
-            --tag srcml/ubuntu_26_04:client \
+            --tag srcml/ubuntu_26_04:v1.1.0 \
             $(printf 'srcml/ubuntu_26_04@sha256:%s ' *)
