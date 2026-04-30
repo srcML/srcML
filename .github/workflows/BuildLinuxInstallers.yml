@@ -25,18 +25,6 @@ jobs:
           - family: ubuntu
             arch: arm64
             runner: ubuntu-24.04-arm
-          - family: fedora
-            arch: amd64
-            runner: ubuntu-24.04
-          - family: fedora
-            arch: arm64
-            runner: ubuntu-24.04-arm
-          - family: opensuse
-            arch: amd64
-            runner: ubuntu-24.04
-          - family: opensuse
-            arch: arm64
-            runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
     steps:
       - name: Checkout Repository
@@ -52,7 +40,7 @@ jobs:
           fi
           docker buildx bake \
             --set "*.push=false" \
-            ${{ matrix.family }}_package
+            ubuntu_26_04_package
         env:
           SRCML_BAKE_ARCHITECTURE: linux/${{ matrix.arch }}
           INPUT_SRCML_BAKE_SRC: ${{ inputs.srcml_bake_src }}
