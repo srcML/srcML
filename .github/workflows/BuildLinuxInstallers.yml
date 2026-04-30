@@ -1,0 +1,60 @@
+---
+name: Build Linux Installers
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bake:
+    name: bake-${{ matrix.family }}-${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - family: ubuntu
+            arch: amd64
+            runner: ubuntu-24.04
+          - family: ubuntu
+            arch: arm64
+            runner: ubuntu-24.04-arm
+          - family: fedora
+            arch: amd64
+            runner: ubuntu-24.04
+          - family: fedora
+            arch: arm64
+            runner: ubuntu-24.04-arm
+          - family: opensuse
+            arch: amd64
+            runner: ubuntu-24.04
+          - family: opensuse
+            arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Bake ${{ matrix.family }} package targets
+        run: |
+          docker buildx bake \
+            --set "*.push=false" \
+            ${{ matrix.family }}_package
+        env:
+          SRCML_BAKE_ARCHITECTURE: linux/${{ matrix.arch }}
+
+      - name: Upload installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-installers-${{ matrix.family }}-${{ matrix.arch }}
+          path: |
+            dist_packages/*.deb
+            dist_packages/*.rpm
+            dist_packages/*.tar.gz
+            dist_packages/*.bz2
+          if-no-files-found: error
