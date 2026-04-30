@@ -12931,7 +12931,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_tagged_template_check_js(call_count) }?
         tagged_template_js[call_count] |
 
-        // special case: JavaScript lambda starts with (optional "async" with) a lone parameter
+        // special case: JavaScript lambda starts with a lone parameter (optional "async")
         {
             inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
             && (
@@ -12942,7 +12942,15 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         lambda_js[false] |
 
-        // special case: JavaScript lambda starts with (optional "async" with) a parameter list
+        // special case: TypeScript generic lambdas (e.g., "<TYPE>() => ...") [optional "async"]
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            && (LA(1) == TEMPOPS || (LA(1) == JS_ASYNC && next_token() == TEMPOPS))
+            && perform_generic_lambda_check_ts()
+        }?
+        generic_lambda_ts |
+
+        // special case: JavaScript lambda starts with a parameter list (optional "async")
         {
             inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
             && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
@@ -22915,3 +22923,155 @@ perform_label_with_block_check_js[] returns [bool islabel] {
         inputState->guessing--;
         rewind(start);
 } :;
+
+/*
+  perform_generic_lambda_check_ts
+
+  Checks to see if an arrow (`=>`) follows a generic argument list and a parameter list in JavaScript/TypeScript.
+*/
+perform_generic_lambda_check_ts[] returns [bool islambda] {
+        ENTRY_DEBUG
+
+        islambda = false;
+        int bracket_count = 0;  // for TypeScript types
+        int tempops_count = 0;  // for generic argument list
+        int paren_count = 0;  // for parameter list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // match generic argument list
+            while (true) {
+                if (LA(1) == TEMPOPS)
+                    ++tempops_count;
+
+                if (LA(1) == TEMPOPE) {
+                    --tempops_count;
+
+                    if (tempops_count == 0) {
+                        consume();
+                        break;
+                    }
+                }
+
+                consume();
+
+                if (tempops_count < 0 || LA(1) == 1 /* EOF */)
+                    break;
+            }
+
+            // match parameter list
+            while (true) {
+                if (LA(1) == LPAREN)
+                    ++paren_count;
+
+                if (LA(1) == RPAREN)
+                    --paren_count;
+
+                consume();
+
+                if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                    break;
+            }
+
+            // consume optional TypeScript type
+            if (LA(1) == COLON) {
+                consume();  // ":"
+
+                while (true) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
+                    consume();
+
+                    if (
+                        bracket_count < 0
+                        || (
+                            bracket_count == 0
+                            && (LA(1) == JS_ARROW || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        )
+                    )
+                        break;
+                }
+            }
+
+            if (paren_count == 0 && bracket_count == 0 && LA(1) == JS_ARROW)
+                islambda = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  generic_lambda_ts
+
+  Handles a generic lambda in JavaScript/TypeScript (e.g., "<TYPE>() => ...").
+*/
+generic_lambda_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LAMBDA_JS);
+            startElement(SFUNCTION_LAMBDA);
+        }
+
+        (
+            // optional "async" specifier
+            (options { greedy = true; } : specifier_js)*
+
+            (
+                generic_argument_list_js
+                javascript_parameter_list
+            )
+
+            // consume TypeScript types
+            (options { greedy = true; } : (COLON type_ts))*
+
+            arrow_operator_js
+        )
+
+        {
+            // end the parameter list lambda after the block
+            if (LA(1) == LCURLY) {
+                expression_block_js();
+                return;
+            }
+
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            // do not consume right parentheses or ">" outside the scope of the lambda
+            {
+                (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
+                || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma
+        )*
+;

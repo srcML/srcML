@@ -185,6 +185,28 @@
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>identity</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>arg</name>: <type><name>T</name></type></decl></parameter>)</parameter_list>: <type><name>T</name></type> <operator>=&gt;</operator> <expr><name>arg</name></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>wrapData</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name> <extends>extends <type><name>unknown</name></type></extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>value</name>: <type><name>T</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><object>{ <property><expr><name>data</name></expr>: <expr><name>value</name></expr></property> }</object></expr></return>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>getFirst</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>items</name>: <type><name><name>T</name><index>[]</index></name></type></decl></parameter>)</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><name><name>items</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></return>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name> <operator>=</operator></expr></super></extends></super_list> <block>{<block_content>
+  <decl_stmt><decl><name>nextTick</name>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>cb</name>: <type><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>T</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></type></decl></parameter>, <parameter><decl><modifier>...</modifier><name>T</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt>
+</block_content>}</block></class>
+</unit>
+
 <!-- Catch Conditions -->
 
 <unit revision="1.0.0" language="TypeScript">

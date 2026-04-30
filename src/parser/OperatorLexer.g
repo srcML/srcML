@@ -192,7 +192,6 @@ OPERATORS options { testLiterals = true; } {
                 || lookaheadMinusTwo == '['                                  // case: first expression in an array
                 || lookaheadMinusTwo == '{'                                  // case: first expression in an object
                 || lookaheadMinusTwo == '?'                                  // case: first expression in a ternary
-                || lookaheadMinusTwo == ':'                                  // case: additional expressions in properties and ternaries
                 || (lookaheadMinusThree == '=' && lookaheadMinusTwo == '>')  // case: first expression in a lambda
             )
         }?
