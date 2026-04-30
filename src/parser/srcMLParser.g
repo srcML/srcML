@@ -21818,6 +21818,10 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 break;
             } |
 
+            // consume TypeScript types if not in an object
+            { lcurly_types_js.back() != 'o' && bracket_types_js.back() != "oLCURLY" }?
+            (COLON type_ts) |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
