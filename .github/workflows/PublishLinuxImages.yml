@@ -1,5 +1,5 @@
 ---
-name: Build Linux Images
+name: Publish Linux Images
 
 on:
   workflow_dispatch:
