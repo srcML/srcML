@@ -16,9 +16,9 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef><specifier>export</specifier> type <name>Paths</name> = <type><object>{
-  <property><constraint><index>[<name>path</name>: <type><name>string</name></type>]</index>: <type><name>string</name></type></constraint></property>
-}</object></type></typedef>
+<typedef><specifier>export</specifier> type <name>Paths</name> = <type><block>{<block_content>
+  <decl_stmt><decl><constraint><index>[<name>path</name>: <type><name>string</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
+</block_content>}</block></type></typedef>
 </unit>
 
 <!-- Decorators -->
@@ -99,7 +99,7 @@ class <name>BugReport</name> <block>{<block_content>
 
 <unit revision="1.0.0" language="TypeScript">
 <interface>interface <name>Home</name> <block>{<block_content>
-  <decl_stmt><decl><specifier>readonly</specifier> <name>resident</name>: <type><object>{ <property><expr><name>name</name></expr>: <expr><name>string</name></expr></property>, <property><expr><name>age</name></expr>: <expr><name>number</name></expr></property> }</object></type></decl></decl_stmt>
+  <decl_stmt><decl><specifier>readonly</specifier> <name>resident</name>: <type><block>{<block_content> <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt> </block_content>}</block></type></decl></decl_stmt>
 </block_content>}</block></interface>
 </unit>
 
@@ -192,7 +192,7 @@ class <name>BugReport</name> <block>{<block_content>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<decl_stmt><decl type="const">const <name>paper</name>: <type><object>{ <property><expr><name>title</name></expr>: <expr><name>string</name></expr></property>, <property><expr><name>year</name></expr>: <expr><name>number</name></expr></property> }</object></type> <init>= <expr><object>{
+<decl_stmt><decl type="const">const <name>paper</name>: <type><block>{<block_content> <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name>: <type><name>number</name></type></decl></decl_stmt> </block_content>}</block></type> <init>= <expr><object>{
   <property><expr><name>title</name></expr>: <expr><literal type="string">"An XML-Based Lightweight C++ Fact Extractor"</literal></expr></property>,
   <property><expr><name>year</name></expr>: <expr><literal type="number">2003</literal></expr></property>
 }</object></expr></init></decl></decl_stmt>
@@ -281,20 +281,20 @@ class <name>BugReport</name> <block>{<block_content>
 
 <unit revision="1.0.0" language="TypeScript">
 <expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(
-  <parameter><decl><name>options</name>: <type><object>{
-    <property><expr><name>reason</name></expr>: <expr><name>CompilerDiagnosticOptions</name></expr></property>;
-  }</object></type></decl></parameter>,
+  <parameter><decl><name>options</name>: <type><block>{<block_content>
+    <decl_stmt><decl><name>reason</name>: <type><name>CompilerDiagnosticOptions</name></type></decl>;</decl_stmt>
+  </block_content>}</block></type></decl></parameter>,
 )</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
 <expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(
   <parameter><decl><name>condition</name>: <type><name>unknown</name></type></decl></parameter>,
-  <parameter><decl><name>options</name>: <type><object>{
-    <property><expr><name>reason</name></expr>: <expr><name><name>CompilerDiagnosticOptions</name><index>[<expr><literal type="string">'reason'</literal></expr>]</index></name></expr></property>;
-    <property><expr><name>description</name><modifier>?</modifier></expr>: <expr><name><name>CompilerDiagnosticOptions</name><index>[<expr><literal type="string">'description'</literal></expr>]</index></name></expr></property>;
-    <property><expr><name>loc</name></expr>: <expr><name>SourceLocation</name></expr></property>;
-  }</object></type></decl></parameter>,
+  <parameter><decl><name>options</name>: <type><block>{<block_content>
+    <decl_stmt><decl><name>reason</name>: <type><name><name>CompilerDiagnosticOptions</name><index>[<expr><literal type="string">'reason'</literal></expr>]</index></name></type></decl>;</decl_stmt>
+    <decl_stmt><decl><name>description</name><modifier>?</modifier>: <type><name><name>CompilerDiagnosticOptions</name><index>[<expr><literal type="string">'description'</literal></expr>]</index></name></type></decl>;</decl_stmt>
+    <decl_stmt><decl><name>loc</name>: <type><name>SourceLocation</name></type></decl>;</decl_stmt>
+  </block_content>}</block></type></decl></parameter>,
 )</parameter_list>: <type><operator>asserts</operator> <name>condition</name></type> <block>{<block_content/>}</block></function></expr></expr_stmt>
 </unit>
 
@@ -351,14 +351,14 @@ class <name>BugReport</name> <block>{<block_content>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef>type <name>Language</name> = <type><object>{
-  <property><expr><name>name</name></expr>: <expr><name>string</name></expr></property>,
-  <property><expr><name>release</name></expr>: <expr><name>string</name></expr></property>
-}</object></type></typedef>
+<typedef>type <name>Language</name> = <type><block>{<block_content>
+  <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt>
+  <decl_stmt><decl><name>release</name>: <type><name>string</name></type></decl></decl_stmt>
+</block_content>}</block></type></typedef>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef>type <name>Printable</name> = <type><object>{ <property><expr><name>print</name></expr>: <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></expr></property> }</object></type></typedef>
+<typedef>type <name>Printable</name> = <type><block>{<block_content> <decl_stmt><decl><name>print</name>: <type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt> </block_content>}</block></type></typedef>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">

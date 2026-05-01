@@ -1584,6 +1584,25 @@ javascript_statements[] {
             return;
         }
 
+        // [TypeScript] looking for nameless function declarations at the statement-level
+        if (
+            inMode(MODE_STATEMENT)
+            && (
+                inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+            )
+            && (
+                LA(1) == LPAREN
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            )
+            && perform_nameless_function_declaration_check_ts()
+        ) {
+            nameless_function_declaration_ts();
+            processed_statement = true;
+            return;
+        }
+
         // [TypeScript] looking for function declarations at the statement-level
         if (
             inMode(MODE_STATEMENT)
@@ -5751,14 +5770,17 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
             }
             // end the mode unless (except for JavaScript lambdas that are inside a call or at the end of an object)
             else if (
-                !inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
-                || (
-                    LA(1) != COMMA
-                    && (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c')
-                    && (!inMode(MODE_EXPRESSION_BLOCK) || lcurly_types_js.back() != 'o' || bracket_types_js.back() != "oLCURLY")
+                (inMode(MODE_TOP) || inMode(MODE_BLOCK))
+                && (
+                    !inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                    || (
+                        LA(1) != COMMA
+                        && (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c')
+                        && (!inMode(MODE_EXPRESSION_BLOCK) || lcurly_types_js.back() != 'o' || bracket_types_js.back() != "oLCURLY")
+                    )
                 )
             ) {
-                endMode(MODE_TOP);
+                endMode();
             }
 
             // special case to close RPAREN for JavaScript lambdas that are inside a call
@@ -20659,14 +20681,6 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             }?
             constraint_ts |
 
-            // special case: TypeScript nameless function declarations in an object
-            { inTransparentMode(MODE_OBJECT_JS) && perform_nameless_function_declaration_check_ts() }?
-            nameless_function_declaration_ts |
-
-            // special case: TypeScript function declarations in an object
-            { inTransparentMode(MODE_OBJECT_JS) && perform_function_declaration_check_ts() }?
-            function_declaration_ts |
-
             // special case: "default:" is a property name, not a statement
             { inMode(MODE_PROPERTY_JS) && next_token() == COLON }?
             default_property_js |
@@ -21918,7 +21932,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                 || inTransparentMode(MODE_MIXINS_TS)
                 || inTransparentMode(MODE_TYPEDEF)
             }?
-            object_js |
+            expression_block_js |
 
             // marks "asserts" and "is" as operators
             assertion_function_operator_ts | type_predicate_operator_ts |

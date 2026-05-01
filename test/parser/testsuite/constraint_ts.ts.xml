@@ -14,9 +14,9 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef><specifier>export</specifier> type <name>Paths</name> = <type><object>{
-  <property><constraint><index>[<name>path</name>: <type><name>string</name></type>]</index>: <type><name>string</name></type></constraint></property>
-}</object></type></typedef>
+<typedef><specifier>export</specifier> type <name>Paths</name> = <type><block>{<block_content>
+  <decl_stmt><decl><constraint><index>[<name>path</name>: <type><name>string</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
+</block_content>}</block></type></typedef>
 </unit>
 
 <!-- The following should NOT be marked as constraints, although they look similar -->
