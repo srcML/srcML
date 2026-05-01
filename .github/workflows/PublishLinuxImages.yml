@@ -51,6 +51,7 @@ jobs:
               --metadata-file metadata-${{ matrix.arch }}.json
           else
             docker buildx bake \
+              --set "*.tags=" \
               --set "*.output=type=image,push-by-digest=true,name-canonical=true,push=true" \
               --metadata-file metadata-${{ matrix.arch }}.json
           fi
