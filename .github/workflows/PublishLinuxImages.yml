@@ -50,8 +50,17 @@ jobs:
               --set "*.output=type=cacheonly" \
               --metadata-file metadata-${{ matrix.arch }}.json
           else
+            tag_overrides=()
+            while IFS=$'\t' read -r target tag; do
+              [[ -z "$tag" ]] && continue
+              repo="${tag%%:*}"
+              tag_overrides+=(--set "${target}.tags=${repo}")
+            done < <(
+              docker buildx bake --print 2>/dev/null \
+                | jq -r '.target | to_entries[] | "\(.key)\t\(.value.tags[0] // "")"'
+            )
             docker buildx bake \
-              --set "*.tags=" \
+              "${tag_overrides[@]}" \
               --set "*.output=type=image,push-by-digest=true,name-canonical=true,push=true" \
               --metadata-file metadata-${{ matrix.arch }}.json
           fi
