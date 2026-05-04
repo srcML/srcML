@@ -139,6 +139,19 @@
 <function><specifier>declare</specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt; <argument><expr><name>void</name></expr></argument> , <argument><expr><name>void</name></expr></argument> &gt;</argument_list></name></type></function>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<function>function <name>addProperty</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <decl_stmt><decl type="const">const <name>proxy</name>: <type><name>PropertyDescriptor</name> <operator>&amp;</operator> <block>{<block_content><function type="get">get<parameter_list>()</parameter_list>: <type><name>unknown</name></type></function></block_content>}</block></type> <init>= <expr><object>{
+    <property><expr><function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
+      <return>return <expr><name>key</name></expr></return>
+    </block_content>}</block></function></expr></property>,
+    <property><expr><function type="set">set<parameter_list>(<parameter><decl><name>newVal</name>: <type><name>unknown</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
+      <expr_stmt><expr><call><name><name>entries</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call><operator>.</operator><name>val</name> <operator>=</operator> <name>newVal</name></expr></expr_stmt>
+    </block_content>}</block></function></expr></property>,
+  }</object></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
 <!-- Functions (without "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">

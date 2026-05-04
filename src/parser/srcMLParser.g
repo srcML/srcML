@@ -21925,9 +21925,9 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
 
             // only allow a subset of all operators
             {
-                LT(1)->getText() == "-"
+                LA(1) == REFOPS
+                || LT(1)->getText() == "-"
                 || LT(1)->getText() == "|"
-                || LT(1)->getText() == "&"
                 || LT(1)->getText() == "keyof"
                 || LT(1)->getText() == "typeof"
             }?
@@ -21940,6 +21940,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             // do not confuse LCURLY with the start of a block
             {
                 last_consumed == COLON
+                || last_consumed == REFOPS
                 || last_consumed == OPERATORS
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
                 || inTransparentMode(MODE_MIXINS_TS)
