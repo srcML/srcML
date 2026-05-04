@@ -240,6 +240,7 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
+        || (prevToken->getType() == srcMLParser::QMARK_PERIOD || nextToken->getType() == srcMLParser::QMARK_PERIOD)
         || (
             bracketBuffer.front() == "*"
             && (

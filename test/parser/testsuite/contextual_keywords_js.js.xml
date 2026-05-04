@@ -597,6 +597,14 @@
 <decl_stmt><decl type="const">const <name>get</name> <init>= <expr><name>get</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>currentPropGetter</name> <init>= <expr><name><name>currentProp</name><operator>?.</operator><name>get</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>currentPropGetter</name> <init>= <expr><call><name><name>currentProp</name><operator>?.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "if" -->
 
 <unit revision="1.0.0" language="JavaScript">
