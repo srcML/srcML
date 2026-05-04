@@ -23048,7 +23048,13 @@ perform_generic_lambda_check_ts[] returns [bool islambda] {
 
   Handles a generic lambda in JavaScript/TypeScript (e.g., "<TYPE>() => ...").
 */
-generic_lambda_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+generic_lambda_ts[] {
+        CompleteElement element(this);
+        size_t lparen_types_size = 0;
+        bool was_colon_type = (last_consumed == COLON);
+
+        ENTRY_DEBUG
+} :
         {
             startNewMode(MODE_LAMBDA_JS);
             startElement(SFUNCTION_LAMBDA);
@@ -23070,6 +23076,12 @@ generic_lambda_ts[] { CompleteElement element(this); size_t lparen_types_size = 
         )
 
         {
+            // if the generic lambda started with a ":", what follows the arrow is a type
+            if (was_colon_type) {
+                type_ts();
+                return;
+            }
+
             // end the parameter list lambda after the block
             if (LA(1) == LCURLY) {
                 expression_block_js();

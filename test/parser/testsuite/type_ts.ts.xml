@@ -216,14 +216,23 @@
 
 <unit revision="1.0.0" language="TypeScript">
 <class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
-  <decl_stmt><decl><name>nextTick</name>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>cb</name>: <type><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>T</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></type></decl></parameter>, <parameter><decl><modifier>...</modifier><name>T</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt>
+  <decl_stmt><decl><name>nextTick</name>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>cb</name>: <type><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>T</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></type></decl></parameter>, <parameter><decl><modifier>...</modifier><name>T</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <type><name>void</name></type></lambda></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
 <class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
-  <decl_stmt><decl><name>setgroups</name><modifier>?</modifier>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>Group</name>: <type><name>string</name> <operator>|</operator> <name>number</name></type></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>groups</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>Group</name></expr></argument>&gt;</argument_list></name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt>
+  <decl_stmt><decl><name>setgroups</name><modifier>?</modifier>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>Group</name>: <type><name>string</name> <operator>|</operator> <name>number</name></type></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>groups</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>Group</name></expr></argument>&gt;</argument_list></name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <type><name>void</name></type></lambda></type></decl></decl_stmt>
 }</block></class>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<function>function <name>buildMakeReadOnly</name><parameter_list>(
+  <parameter><decl><name>logger</name>: <type><name>ViolationLogger</name></type></decl></parameter>,
+  <parameter><decl><name>skippedClasses</name>: <type><name><name>string</name><index>[]</index></name></type></decl></parameter>,
+)</parameter_list>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>val</name>: <type><name>T</name></type></decl></parameter>, <parameter><decl><name>source</name>: <type><name>string</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <type><name>T</name></type></lambda></type> <block>{<block_content>
+  <decl_stmt><decl type="const">const <name>savedObjects</name>: <type><name>SavedObjects</name></type> <init>= <expr><operator>new</operator> <call><name>WeakMap</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
 </unit>
 
 <!-- Catch Conditions -->
