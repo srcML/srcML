@@ -37,44 +37,44 @@
 <!-- TypeScript Declaration Statement Unary Operators ("+", "-", and "~") -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name>: <type><literal type="number">0x00</literal></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name>: <type><literal type="number">0x01</literal></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name>: <type><literal type="number">0x02</literal></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>+</operator><name>deltaX</name>: <type><name>number</name></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>-</operator><name>deltaY</name>: <type><name>number</name></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>~</operator><name>deltaZ</name>: <type><name>number</name></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
-<!-- Semicolon usage is intentional; invalid otherwise -->
+<!-- Semicolon usage is intentional; the code becomes invalid without them -->
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name>: <type><literal type="number">0x00</literal></type></decl>;</decl_stmt>
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name>: <type><literal type="number">0x01</literal></type></decl>;</decl_stmt>
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name>: <type><literal type="number">0x02</literal></type></decl>;</decl_stmt>
@@ -82,48 +82,48 @@
   <decl_stmt><decl><operator>+</operator><name>deltaX</name>: <type><name>number</name></type></decl>;</decl_stmt>
   <decl_stmt><decl><operator>-</operator><name>deltaY</name>: <type><name>number</name></type></decl>;</decl_stmt>
   <decl_stmt><decl><operator>~</operator><name>deltaZ</name>: <type><name>number</name></type></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name>: <type><literal type="number">0x00</literal></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name>: <type><literal type="number">0x01</literal></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name>: <type><literal type="number">0x02</literal></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>+</operator><name>deltaX</name>: <type><name>number</name></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>-</operator><name>deltaY</name>: <type><name>number</name></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>~</operator><name>deltaZ</name>: <type><name>number</name></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
-<!-- Semicolon usage is intentional; invalid otherwise -->
+<!-- Semicolon usage is intentional; the code becomes invalid without them -->
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name>: <type><literal type="number">0x00</literal></type></decl>;</decl_stmt>
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name>: <type><literal type="number">0x01</literal></type></decl>;</decl_stmt>
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name>: <type><literal type="number">0x02</literal></type></decl>;</decl_stmt>
@@ -131,7 +131,7 @@
   <decl_stmt><decl><operator>+</operator><name>deltaX</name>: <type><name>number</name></type></decl>;</decl_stmt>
   <decl_stmt><decl><operator>-</operator><name>deltaY</name>: <type><name>number</name></type></decl>;</decl_stmt>
   <decl_stmt><decl><operator>~</operator><name>deltaZ</name>: <type><name>number</name></type></decl>;</decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <!-- Type Predicate ("is") -->

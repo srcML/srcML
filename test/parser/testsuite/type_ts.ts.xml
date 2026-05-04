@@ -24,7 +24,7 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<decl_stmt><decl type="const">const <name>paper</name>: <type><block>{<block_content> <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name>: <type><name>number</name></type></decl></decl_stmt> </block_content>}</block></type> <init>= <expr><object>{
+<decl_stmt><decl type="const">const <name>paper</name>: <type><block>{ <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name>: <type><name>number</name></type></decl></decl_stmt> }</block></type> <init>= <expr><object>{
   <property><expr><name>title</name></expr>: <expr><literal type="string">"An XML-Based Lightweight C++ Fact Extractor"</literal></expr></property>,
   <property><expr><name>year</name></expr>: <expr><literal type="number">2003</literal></expr></property>
 }</object></expr></init></decl></decl_stmt>
@@ -51,8 +51,8 @@
 
 <unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>callee</name>:
-  <type><operator>|</operator> <block>{<block_content><decl_stmt><decl><name>kind</name>: <type><literal type="string">'CallExpression'</literal></type></decl>;</decl_stmt> <decl_stmt><decl><name>callee</name>: <type><name>Place</name></type></decl></decl_stmt></block_content>}</block>
-  <operator>|</operator> <block>{<block_content><decl_stmt><decl><name>kind</name>: <type><literal type="string">'MethodCall'</literal></type></decl>;</decl_stmt> <decl_stmt><decl><name>receiver</name>: <type><name>Place</name></type></decl>;</decl_stmt> <decl_stmt><decl><name>property</name>: <type><name>Place</name></type></decl></decl_stmt></block_content>}</block></type></decl></decl_stmt>
+  <type><operator>|</operator> <block>{<decl_stmt><decl><name>kind</name>: <type><literal type="string">'CallExpression'</literal></type></decl>;</decl_stmt> <decl_stmt><decl><name>callee</name>: <type><name>Place</name></type></decl></decl_stmt>}</block>
+  <operator>|</operator> <block>{<decl_stmt><decl><name>kind</name>: <type><literal type="string">'MethodCall'</literal></type></decl>;</decl_stmt> <decl_stmt><decl><name>receiver</name>: <type><name>Place</name></type></decl>;</decl_stmt> <decl_stmt><decl><name>property</name>: <type><name>Place</name></type></decl></decl_stmt>}</block></type></decl></decl_stmt>
 </unit>
 
 <!-- Functions (with "function" keyword) -->
@@ -202,15 +202,15 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>nextTick</name>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>cb</name>: <type><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>T</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></type></decl></parameter>, <parameter><decl><modifier>...</modifier><name>T</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>setgroups</name><modifier>?</modifier>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>Group</name>: <type><name>string</name> <operator>|</operator> <name>number</name></type></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>groups</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>Group</name></expr></argument>&gt;</argument_list></name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- Catch Conditions -->
@@ -234,7 +234,7 @@
 <!-- Edge Cases -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{<block_content>
+<class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{
   <decl_stmt><decl><name>blockInfos</name>: <type><name><name>Map</name><argument_list type="generic">&lt;
     <argument><expr><name>BlockId</name></expr></argument>,
     <argument><expr><operator>|</operator> <object>{
@@ -249,11 +249,11 @@
         <property><expr><name>fallthrough</name></expr>: <expr><name>BlockId</name></expr></property>;
       }</object></expr></argument>
   &gt;</argument_list></name></type> <init>= <expr><operator>new</operator> <call><name>Map</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{<block_content>
+<class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{
   <decl_stmt><decl><name>blockInfos</name>: <type><name><name>Map</name><argument_list type="generic">&lt;
     <argument><expr><operator>|</operator> <object>{
         <property><expr><name>kind</name></expr>: <expr><literal type="string">'end'</literal></expr></property>;
@@ -267,7 +267,7 @@
         <property><expr><name>fallthrough</name></expr>: <expr><name>BlockId</name></expr></property>;
       }</object></expr></argument>
   &gt;</argument_list></name></type> <init>= <expr><operator>new</operator> <call><name>Map</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
@@ -275,9 +275,9 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{<block_content>
-  <decl_stmt><decl><name>env</name>: <type><block>{<block_content><decl_stmt><decl><constraint><index>[<name>key</name>: <type><name>string</name></type>]</index>: <type><name>string</name> <operator>|</operator> <name>void</name></type></constraint></decl>,</decl_stmt> <expr_stmt><expr><operator>...</operator></expr></expr_stmt></block_content>}</block></type></decl></decl_stmt>
-</block_content>}</block></class>
+<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><name>env</name>: <type><block>{<decl_stmt><decl><constraint><index>[<name>key</name>: <type><name>string</name></type>]</index>: <type><name>string</name> <operator>|</operator> <name>void</name></type></constraint></decl>,</decl_stmt> <expr_stmt><expr><operator>...</operator></expr></expr_stmt>}</block></type></decl></decl_stmt>
+}</block></class>
 </unit>
 
 </unit>

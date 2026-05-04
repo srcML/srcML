@@ -25,25 +25,25 @@
 <!-- "class" -->
 
 <unit revision="1.0.0" language="JavaScript">
-<label><name>customLabel</name>:</label> <class>class <name>Rectangle</name> <block>{<block_content>
+<label><name>customLabel</name>:</label> <class>class <name>Rectangle</name> <block>{
   <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Rectangle"</literal></expr></expr_stmt>
     <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
     <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
   </block_content>}</block></constructor>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "constructor" -->
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>Rectangle</name> <block>{<block_content>
+<class>class <name>Rectangle</name> <block>{
     <label><name>customLabel</name>:</label> <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Rectangle"</literal></expr></expr_stmt>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
     </block_content>}</block></constructor>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "continue" -->
@@ -113,23 +113,23 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ClassWithGet</name> <block>{<block_content>
+<class>class <name>ClassWithGet</name> <block>{
     <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
 
     <label><name>customLabel</name>:</label> <function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
     </block_content>}</block></function>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ClassWithSet</name> <block>{<block_content>
+<class>class <name>ClassWithSet</name> <block>{
     <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
 
     <label><name>customLabel</name>:</label> <function type="set">set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <operator>=</operator> <literal type="string">`hello ${x}`</literal></expr></expr_stmt>
     </block_content>}</block></function>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "if"/"else if"/"else" -->
@@ -163,13 +163,13 @@
 <!-- "static" block -->
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ClassWithStaticMethod</name> <block>{<block_content>
+<class>class <name>ClassWithStaticMethod</name> <block>{
     <decl_stmt><decl type="static">static <name>staticProperty</name> <init>= <expr><literal type="string">"someValue"</literal></expr></init></decl></decl_stmt>
 
     <label><name>customLabel</name>:</label> <static>static <block>{<block_content>
         <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Class static initialization block called"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
     </block_content>}</block></static>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "switch" -->

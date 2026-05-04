@@ -177,7 +177,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>Person</name> <block>{<block_content>
+<class>class <name>Person</name> <block>{
     <constructor>constructor<parameter_list>(<parameter><decl><name>firstName</name></decl></parameter>, <parameter><decl><name>lastName</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>firstName</name></name> <operator>=</operator> <name>firstName</name></expr></expr_stmt>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>lastName</name></name> <operator>=</operator> <name>lastName</name></expr></expr_stmt>
@@ -186,11 +186,11 @@
     <function type="get">get <name type="computed">[<expr><name>name</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><literal type="string">`${this.firstName} ${this.lastName}`</literal></expr></return>
     </block_content>}</block></function>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>Person</name> <block>{<block_content>
+<class>class <name>Person</name> <block>{
     <constructor>constructor<parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>name</name></expr></expr_stmt>
     </block_content>}</block></constructor>
@@ -198,7 +198,7 @@
     <function type="set">set <name type="computed">[<expr><name>name</name></expr>]</name><parameter_list>(<parameter><decl><name>input</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>input</name></expr></expr_stmt>
     </block_content>}</block></function>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

@@ -140,43 +140,43 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name></decl>;</decl_stmt>
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
     <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "static" (without semicolons) -->
@@ -186,43 +186,43 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ExampleClass</name> <block>{<block_content>
+<class>class <name>ExampleClass</name> <block>{
     <decl_stmt><decl type="static">static <name>name1</name></decl></decl_stmt>
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
     <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
     <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "using" (with semicolons) -->

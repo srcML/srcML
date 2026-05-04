@@ -4,77 +4,77 @@
 <!-- Without specifiers -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{
   <function_decl><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- With specifiers -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{
   <function_decl><specifier>abstract</specifier> <name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>URL</name> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>URL</name> <block>{
   <function_decl><specifier>static</specifier> <name>canParse</name><parameter_list>(<parameter><decl><name>url</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>base</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>boolean</name></type></function_decl>
   <function_decl><specifier>static</specifier> <name>createObjectURL</name><parameter_list>(<parameter><decl><name>blob</name>: <type><name>Blob</name></type></decl></parameter>)</parameter_list>: <type><name>string</name></type></function_decl>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- Well-known symbols ("@@") syntax is technically invalid, but is handled anyways to avoid crashes -->
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>StyleSheetList</name> <block>{<block_content>
+<interface>interface <name>StyleSheetList</name> <block>{
   <function_decl><operator>@@</operator><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>StyleSheetList</name> <block>{<block_content>
+<interface>interface <name>StyleSheetList</name> <block>{
   <function_decl><specifier>abstract</specifier> <operator>@@</operator><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <!-- Function declarations in blocks -->
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{<block_content>
+<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
   <function_decl><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
-</block_content>}</block></type></typedef>
+}</block></type></typedef>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{<block_content>
+<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
   <function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
-</block_content>}</block></type></typedef>
+}</block></type></typedef>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{<block_content>
+<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
   <function_decl><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
   <function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
-</block_content>}</block></type></typedef>
+}</block></type></typedef>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{<block_content>
-  <function_decl><name>memoryUsage</name><parameter_list>()</parameter_list>: <type><block>{<block_content>
+<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
+  <function_decl><name>memoryUsage</name><parameter_list>()</parameter_list>: <type><block>{
     <decl_stmt><decl><name>heapTotal</name>: <type><name>number</name></type></decl>,</decl_stmt>
     <decl_stmt><decl><name>heapUsed</name>: <type><name>number</name></type></decl>,</decl_stmt>
     <expr_stmt><expr><operator>...</operator></expr></expr_stmt>
-  </block_content>}</block></type></function_decl>
-</block_content>}</block></class>
+  }</block></type></function_decl>
+}</block></class>
 </unit>
 
 </unit>

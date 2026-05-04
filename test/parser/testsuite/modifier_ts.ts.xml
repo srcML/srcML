@@ -9,10 +9,10 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>FetchEvent</name> <super_list><extends>extends <super><expr><name>ExtendableEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>FetchEvent</name> <super_list><extends>extends <super><expr><name>ExtendableEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>preloadOne</name><modifier>?</modifier>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><modifier>?</modifier><name>Response</name></expr></argument>, <argument><expr><modifier>?</modifier><name>Response</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
   <decl_stmt><decl><name>preloadTwo</name><modifier>!</modifier>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><modifier>!</modifier><name>Response</name></expr></argument>, <argument><expr><modifier>!</modifier><name>Response</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">

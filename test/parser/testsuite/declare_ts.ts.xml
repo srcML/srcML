@@ -5,9 +5,9 @@
 
 <unit revision="1.0.0" language="TypeScript">
 <declare>declare <name>global</name> <block>{<block_content>
-  <interface>interface <name>Window</name> <block>{<block_content>
+  <interface>interface <name>Window</name> <block>{
     <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl></decl_stmt>
-  </block_content>}</block></interface>
+  }</block></interface>
 </block_content>}</block></declare>
 </unit>
 
@@ -20,9 +20,9 @@
 <unit revision="1.0.0" language="TypeScript">
 <declare>declare <name>module</name> <literal type="string">"zlib"</literal> <block>{<block_content>
   <declare>declare <name>global</name> <block>{<block_content>
-    <interface>interface <name>Window</name> <block>{<block_content>
+    <interface>interface <name>Window</name> <block>{
       <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl></decl_stmt>
-    </block_content>}</block></interface>
+    }</block></interface>
   </block_content>}</block></declare>
 </block_content>}</block></declare>
 </unit>

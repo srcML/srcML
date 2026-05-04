@@ -164,9 +164,9 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>Car</name> <block>{<block_content>
+<class>class <name>Car</name> <block>{
   <expr_stmt><expr><function><name>c</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 </unit>

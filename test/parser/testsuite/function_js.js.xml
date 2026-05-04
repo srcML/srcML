@@ -85,14 +85,14 @@
 
 <!-- Note: The semicolon is required after the first declaration or else the code is invalid -->
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>Foo</name> <block>{<block_content>
+<class>class <name>Foo</name> <block>{
     <decl_stmt><decl type="static">static <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
     <function type="generator">*<name type="computed">[<expr><name><name>Symbol</name><operator>.</operator><name>iterator</name></name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><literal type="number">1</literal></expr></yield>
         <yield>yield <expr><literal type="number">2</literal></expr></yield>
     </block_content>}</block></function>
     <decl_stmt><decl type="static">static <name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -109,45 +109,45 @@
 <!-- Getters ("get") -->
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ClassWithGet</name> <block>{<block_content>
+<class>class <name>ClassWithGet</name> <block>{
     <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
 
     <function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
     </block_content>}</block></function>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ClassWithGet</name> <block>{<block_content>
+<class>class <name>ClassWithGet</name> <block>{
     <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
 
     <function type="get">get <name>msg</name><parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
     </block_content>}</block></function>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- Setters ("set") -->
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ClassWithSet</name> <block>{<block_content>
+<class>class <name>ClassWithSet</name> <block>{
     <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
 
     <function type="set">set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <operator>=</operator> <literal type="string">`hello ${x}`</literal></expr></expr_stmt>
     </block_content>}</block></function>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>ClassWithSet</name> <block>{<block_content>
+<class>class <name>ClassWithSet</name> <block>{
     <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
 
     <function type="set">set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <operator>=</operator> <literal type="string">`hello ${x}`</literal></expr></expr_stmt>
     </block_content>}</block></function>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- Functions in Expressions (i.e., lambdas in other languages) -->

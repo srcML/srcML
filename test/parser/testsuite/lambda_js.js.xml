@@ -93,9 +93,9 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
-  <class>class <name>App</name> <block>{<block_content>
+  <class>class <name>App</name> <block>{
     <comment type="line">// ...</comment>
-  </block_content>}</block></class>
+  }</block></class>
 </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
@@ -202,12 +202,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
-  <class>class <name>Rectangle</name> <block>{<block_content>
+  <class>class <name>Rectangle</name> <block>{
     <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
       <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
       <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
     </block_content>}</block></constructor>
-  </block_content>}</block></class>
+  }</block></class>
 </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
@@ -261,11 +261,11 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
-  <class>class <name>Rectangle</name> <block>{<block_content>
+  <class>class <name>Rectangle</name> <block>{
     <static>static <block>{<block_content>
       <comment type="line">// ...</comment>
     </block_content>}</block></static>
-  </block_content>}</block></class>
+  }</block></class>
 </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 

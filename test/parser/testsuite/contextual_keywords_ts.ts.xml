@@ -4,25 +4,25 @@
 <!-- "const" -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <function_decl><name>const</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "let" -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <function_decl><name>let</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "static" -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <function_decl><name>static</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "type" -->
@@ -42,17 +42,17 @@
 <!-- "using" -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <function_decl><name>using</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- "var" -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <function_decl><name>var</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!--

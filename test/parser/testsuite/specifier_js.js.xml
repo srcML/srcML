@@ -106,19 +106,19 @@
 <!-- Classes ("class" )-->
 
 <unit revision="1.0.0" language="JavaScript">
-<class><specifier>export</specifier> class <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></class>
+<class><specifier>export</specifier> class <block>{ <comment type="block">/* ... */</comment> }</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class><specifier>export</specifier> <specifier>default</specifier> class <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></class>
+<class><specifier>export</specifier> <specifier>default</specifier> class <block>{ <comment type="block">/* ... */</comment> }</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class><specifier>export</specifier> class <name>ClassName</name> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></class>
+<class><specifier>export</specifier> class <name>ClassName</name> <block>{ <comment type="block">/* ... */</comment> }</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class><specifier>export</specifier> <specifier>default</specifier> class <name>ClassName</name> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></class>
+<class><specifier>export</specifier> <specifier>default</specifier> class <name>ClassName</name> <block>{ <comment type="block">/* ... */</comment> }</block></class>
 </unit>
 
 </unit>

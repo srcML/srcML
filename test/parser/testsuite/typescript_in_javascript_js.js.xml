@@ -10,64 +10,64 @@
 <!-- Constraints -->
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>Foo</name> <block>{<block_content>
+<interface>interface <name>Foo</name> <block>{
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef><specifier>export</specifier> type <name>Paths</name> = <type><block>{<block_content>
+<typedef><specifier>export</specifier> type <name>Paths</name> = <type><block>{
   <decl_stmt><decl><constraint><index>[<name>path</name>: <type><name>string</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
-</block_content>}</block></type></typedef>
+}</block></type></typedef>
 </unit>
 
 <!-- Decorators -->
 
 <unit revision="1.0.0" language="TypeScript">
 <class><attribute>@<expr><call><name>sealed</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></attribute>
-class <name>BugReport</name> <block>{<block_content>
+class <name>BugReport</name> <block>{
   <expr_stmt><expr><name>type</name> <operator>=</operator> <literal type="string">"report"</literal></expr></expr_stmt>
   <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class>class <name>Greeter</name> <block>{<block_content>
+<class>class <name>Greeter</name> <block>{
   <decl_stmt><decl><name>greeting</name>: <type><name>string</name></type></decl></decl_stmt>
 
   <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function type="set"><attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></attribute>
   set <name>greet</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>string</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
     <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
   </block_content>}</block></function></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class>class <name>Greeter</name> <block>{<block_content>
+<class>class <name>Greeter</name> <block>{
   <decl_stmt><decl><name>greeting</name>: <type><name>string</name></type></decl></decl_stmt>
 
   <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function type="set"><attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></attribute> set <name>greet</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>string</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
     <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
   </block_content>}</block></function></expr></init></decl></decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- Implements -->
 
 <unit revision="1.0.0" language="TypeScript">
-<class>class <name>Bird</name> <super_list><implements>implements <super><expr><name>Flyable</name></expr></super></implements></super_list> <block>{<block_content>
+<class>class <name>Bird</name> <super_list><implements>implements <super><expr><name>Flyable</name></expr></super></implements></super_list> <block>{
   <expr_stmt><expr><function><name>fly</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Take to the skies!"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
   </block_content>}</block></function></expr></expr_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class>class <name>Bird</name> <super_list><extends>extends <super><expr><name>Animal</name></expr></super></extends> <implements>implements <super><expr><name>Flyable</name></expr></super></implements></super_list> <block>{<block_content>
+<class>class <name>Bird</name> <super_list><extends>extends <super><expr><name>Animal</name></expr></super></extends> <implements>implements <super><expr><name>Flyable</name></expr></super></implements></super_list> <block>{
   <expr_stmt><expr><function><name>fly</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Take to the skies!"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
   </block_content>}</block></function></expr></expr_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- Import -->
@@ -83,54 +83,54 @@ class <name>BugReport</name> <block>{<block_content>
 <!-- Interfaces -->
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>Person</name> <block>{<block_content>
+<interface>interface <name>Person</name> <block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl></decl_stmt>
   <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>PaintOptions</name> <block>{<block_content>
+<interface>interface <name>PaintOptions</name> <block>{
   <decl_stmt><decl><name>shape</name><modifier>!</modifier>: <type><name>Shape</name></type></decl></decl_stmt>
   <decl_stmt><decl><name>xPos</name><modifier>?</modifier>: <type><name>number</name></type></decl></decl_stmt>
   <decl_stmt><decl><name>yPos</name><modifier>?</modifier>: <type><name>number</name></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>Home</name> <block>{<block_content>
-  <decl_stmt><decl><specifier>readonly</specifier> <name>resident</name>: <type><block>{<block_content> <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt> </block_content>}</block></type></decl></decl_stmt>
-</block_content>}</block></interface>
+<interface>interface <name>Home</name> <block>{
+  <decl_stmt><decl><specifier>readonly</specifier> <name>resident</name>: <type><block>{ <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt> }</block></type></decl></decl_stmt>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>StringArray</name> <block>{<block_content>
+<interface>interface <name>StringArray</name> <block>{
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>ReadonlyStringArray</name> <block>{<block_content>
+<interface>interface <name>ReadonlyStringArray</name> <block>{
   <decl_stmt><decl><specifier>readonly</specifier> <constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>AddressWithUnit</name> <super_list><extends>extends <super><expr><name>BasicAddress</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>AddressWithUnit</name> <super_list><extends>extends <super><expr><name>BasicAddress</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>unit</name>: <type><name>string</name></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name>ColorfulCircle</name> <super_list><extends>extends <super><expr><name>Colorful</name></expr></super>, <super><expr><name>Circle</name></expr></super></extends></super_list> <block>{<block_content>
+<interface>interface <name>ColorfulCircle</name> <super_list><extends>extends <super><expr><name>Colorful</name></expr></super>, <super><expr><name>Circle</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>example</name>: <type><name>any</name></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{<block_content>
+<interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{
   <decl_stmt><decl><name>contents</name>: <type><name>Type</name></type></decl></decl_stmt>
-</block_content>}</block></interface>
+}</block></interface>
 </unit>
 
 <!-- Modifiers -->
@@ -143,10 +143,10 @@ class <name>BugReport</name> <block>{<block_content>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<class><specifier>declare</specifier> class <name>FetchEvent</name> <super_list><extends>extends <super><expr><name>ExtendableEvent</name></expr></super></extends></super_list> <block>{<block_content>
+<class><specifier>declare</specifier> class <name>FetchEvent</name> <super_list><extends>extends <super><expr><name>ExtendableEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>preloadOne</name><modifier>?</modifier>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><modifier>?</modifier><name>Response</name></expr></argument>, <argument><expr><modifier>?</modifier><name>Response</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
   <decl_stmt><decl><name>preloadTwo</name><modifier>!</modifier>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><modifier>!</modifier><name>Response</name></expr></argument>, <argument><expr><modifier>!</modifier><name>Response</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
-</block_content>}</block></class>
+}</block></class>
 </unit>
 
 <!-- Namespaces -->
@@ -154,9 +154,9 @@ class <name>BugReport</name> <block>{<block_content>
 <unit revision="1.0.0" language="TypeScript">
 <namespace>namespace <name>$</name> <block>{<block_content>
   <typedef><specifier>export</specifier> type <name>$</name> = <type><operator>typeof</operator> <name>$$</name></type></typedef>
-  <class><specifier>export</specifier> <specifier>declare</specifier> class <name>$$</name> <super_list><extends>extends <super><expr><name>$</name></expr></super></extends></super_list> <block>{<block_content>
+  <class><specifier>export</specifier> <specifier>declare</specifier> class <name>$$</name> <super_list><extends>extends <super><expr><name>$</name></expr></super></extends></super_list> <block>{
     <decl_stmt><decl type="static">static <name>$</name>: <type><name>$</name></type></decl></decl_stmt>
-  </block_content>}</block></class>
+  }</block></class>
   <namespace>namespace <name>$$</name> <block>{<block_content>
     <typedef><specifier>export</specifier> type <name>$$</name> = <type><name>$</name></type></typedef>
   </block_content>}</block></namespace>
@@ -192,7 +192,7 @@ class <name>BugReport</name> <block>{<block_content>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<decl_stmt><decl type="const">const <name>paper</name>: <type><block>{<block_content> <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name>: <type><name>number</name></type></decl></decl_stmt> </block_content>}</block></type> <init>= <expr><object>{
+<decl_stmt><decl type="const">const <name>paper</name>: <type><block>{ <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name>: <type><name>number</name></type></decl></decl_stmt> }</block></type> <init>= <expr><object>{
   <property><expr><name>title</name></expr>: <expr><literal type="string">"An XML-Based Lightweight C++ Fact Extractor"</literal></expr></property>,
   <property><expr><name>year</name></expr>: <expr><literal type="number">2003</literal></expr></property>
 }</object></expr></init></decl></decl_stmt>
@@ -281,20 +281,20 @@ class <name>BugReport</name> <block>{<block_content>
 
 <unit revision="1.0.0" language="TypeScript">
 <expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(
-  <parameter><decl><name>options</name>: <type><block>{<block_content>
+  <parameter><decl><name>options</name>: <type><block>{
     <decl_stmt><decl><name>reason</name>: <type><name>CompilerDiagnosticOptions</name></type></decl>;</decl_stmt>
-  </block_content>}</block></type></decl></parameter>,
+  }</block></type></decl></parameter>,
 )</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
 <expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(
   <parameter><decl><name>condition</name>: <type><name>unknown</name></type></decl></parameter>,
-  <parameter><decl><name>options</name>: <type><block>{<block_content>
+  <parameter><decl><name>options</name>: <type><block>{
     <decl_stmt><decl><name>reason</name>: <type><name><name>CompilerDiagnosticOptions</name><index>[<expr><literal type="string">'reason'</literal></expr>]</index></name></type></decl>;</decl_stmt>
     <decl_stmt><decl><name>description</name><modifier>?</modifier>: <type><name><name>CompilerDiagnosticOptions</name><index>[<expr><literal type="string">'description'</literal></expr>]</index></name></type></decl>;</decl_stmt>
     <decl_stmt><decl><name>loc</name>: <type><name>SourceLocation</name></type></decl>;</decl_stmt>
-  </block_content>}</block></type></decl></parameter>,
+  }</block></type></decl></parameter>,
 )</parameter_list>: <type><operator>asserts</operator> <name>condition</name></type> <block>{<block_content/>}</block></function></expr></expr_stmt>
 </unit>
 
@@ -351,14 +351,14 @@ class <name>BugReport</name> <block>{<block_content>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef>type <name>Language</name> = <type><block>{<block_content>
+<typedef>type <name>Language</name> = <type><block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt>
   <decl_stmt><decl><name>release</name>: <type><name>string</name></type></decl></decl_stmt>
-</block_content>}</block></type></typedef>
+}</block></type></typedef>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<typedef>type <name>Printable</name> = <type><block>{<block_content> <decl_stmt><decl><name>print</name>: <type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt> </block_content>}</block></type></typedef>
+<typedef>type <name>Printable</name> = <type><block>{ <decl_stmt><decl><name>print</name>: <type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt> }</block></type></typedef>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">

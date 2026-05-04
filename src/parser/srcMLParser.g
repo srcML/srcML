@@ -1106,7 +1106,7 @@ public:
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT | MODE_IGNORE_LABEL_JS, nullptr, nullptr };
         temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
-        temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS | MODE_NO_BLOCK_CONTENT, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
@@ -1132,7 +1132,7 @@ public:
 
         /* TYPESCRIPT STATEMENTS */
         temp_array[TS_DECLARE]   = { SDECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, &srcMLParser::setTypeScript, &srcMLParser::declare_statement_ts };
-        temp_array[TS_INTERFACE] = { SINTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
+        temp_array[TS_INTERFACE] = { SINTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS | MODE_NO_BLOCK_CONTENT, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
         temp_array[TS_NAMESPACE] = { SNAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
         temp_array[TS_TYPE]      = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::setTypeScript, nullptr };
 
@@ -5592,6 +5592,10 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
                 startNewMode(MODE_BLOCK_CONTENT);
                 startNoSkipElement(SCONTENT);
             }
+            // special case: JavaScript/TypeScript blocks that do not contain a block content tag
+            else if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !content) {
+                startNewMode(MODE_BLOCK_CONTENT);  // mode is still required
+            }
         }
 
         set_bool[skip_ternary, false]
@@ -5768,7 +5772,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
                 endMode(MODE_FUNCTION_EXPRESSION_JS);
                 rparen(true);
             }
-            // end the mode unless (except for JavaScript lambdas that are inside a call or at the end of an object)
+            // end the mode (except for JavaScript lambdas that are inside a call or at the end of an object)
             else if (
                 (inMode(MODE_TOP) || inMode(MODE_BLOCK))
                 && (
@@ -20212,7 +20216,13 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
 
   Handles a complete block inside an expression-level class or function in JavaScript.
 */
-expression_block_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY_DEBUG } :
+expression_block_js[] {
+        CompleteElement element(this);
+        size_t lcurly_types_size = 0;
+        bool has_content = !inMode(MODE_NO_BLOCK_CONTENT);
+
+        ENTRY_DEBUG
+} :
         {
             startNewMode(MODE_BLOCK | MODE_EXPRESSION_BLOCK);
             startElement(SBLOCK);
@@ -20226,7 +20236,10 @@ expression_block_js[] { CompleteElement element(this); size_t lcurly_types_size 
 
         {
             startNewMode(MODE_BLOCK_CONTENT);
-            startNoSkipElement(SCONTENT);
+
+            // do not start block content tag for classes, interfaces, and type blocks
+            if (has_content)
+                startNoSkipElement(SCONTENT);
 
             startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
         }
@@ -21092,7 +21105,7 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
 */
 class_expression_js[] { ENTRY_DEBUG } :
         {
-            startNewMode(MODE_NEST | MODE_BLOCK | MODE_CLASS_EXPRESSION_JS);
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_CLASS_EXPRESSION_JS | MODE_NO_BLOCK_CONTENT);
             startElement(SCLASS);
         }
 
@@ -21854,7 +21867,7 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 */
 type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_size = 0; ENTRY_DEBUG } :
         {
-            startNewMode(MODE_TYPE_TS);
+            startNewMode(MODE_TYPE_TS | MODE_NO_BLOCK_CONTENT);
             startElement(STYPE);
 
             is_pseudo_terminate = false;
