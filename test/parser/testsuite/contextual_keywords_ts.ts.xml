@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="contextual_keywords">
 
+<!-- "async" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>declare</specifier> class <name>XMLHttpRequest</name> <block>{
+  <function_decl><name>open</name><parameter_list>(
+    <parameter><decl><name>method</name>: <type><name>string</name></type></decl></parameter>,
+    <parameter><decl><name>url</name>: <type><name>string</name></type></decl></parameter>,
+    <parameter><decl><name>async</name><modifier>?</modifier>: <type><name>boolean</name></type></decl></parameter>,
+    <parameter><decl><name>user</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>,
+    <parameter><decl><name>password</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>
+  )</parameter_list>: <type><name>void</name></type></function_decl>
+}</block></class>
+</unit>
+
+
 <!-- "const" -->
 
 <unit revision="1.0.0" language="TypeScript">
