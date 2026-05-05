@@ -20456,7 +20456,11 @@ lambda_js[bool is_list = false] { CompleteElement element(this); size_t lparen_t
             // consume TypeScript types
             (options { greedy = true; } : (COLON type_ts))*
 
-            arrow_operator_js
+            {
+                // shorthand computed property with a string does not use "=>"
+                if (LA(1) == JS_ARROW)
+                    arrow_operator_js();
+            }
         )
 
         {
@@ -20716,6 +20720,47 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
                 && perform_constraint_check_ts()
             }?
             constraint_ts |
+
+            // special case: shorthand computed property with a string
+            {
+                (
+                    LA(1) == STRING_START
+                    || LA(1) == CHAR_START
+                    || (
+                        LA(1) == JS_ASYNC
+                        && (
+                            next_token() == STRING_START
+                            || next_token() == CHAR_START
+                        )
+                    )
+                )
+                && perform_shorthand_computed_property_check_js()
+            }?
+            (
+                (specifier_js)*
+
+                {
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    startElement(SEXPRESSION);
+                }
+
+                (string_literal | char_literal)
+
+                {
+                    if (inMode(MODE_EXPRESSION))
+                        endMode(MODE_EXPRESSION);
+
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    startElement(SEXPRESSION);
+                }
+
+                lambda_js[true]
+
+                {
+                    if (inMode(MODE_EXPRESSION))
+                        endMode(MODE_EXPRESSION);
+                }
+            ) |
 
             // special case: "default:" is a property name, not a statement
             { inMode(MODE_PROPERTY_JS) && next_token() == COLON }?
@@ -23151,3 +23196,52 @@ generic_lambda_ts[] {
             comma
         )*
 ;
+
+/*
+  perform_shorthand_computed_property_check_js
+
+  Checks to find a shorthand computed property lambda in JavaScript/TypeScript.
+  Typically of the form "'STRING'(){}".
+*/
+perform_shorthand_computed_property_check_js[] returns [bool islambda] {
+        ENTRY_DEBUG
+
+        islambda = false;
+        int paren_count = 0;  // for parameter list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "async" before checking
+            if (LA(1) == JS_ASYNC)
+                consume();
+
+            // consume either "..." or '...'
+            while (LA(1) == STRING_START || LA(1) == STRING_END || LA(1) == CHAR_START || LA(1) == CHAR_END)
+                consume();
+
+            // match parameter list
+            if (LA(1) == LPAREN) {
+                while (true) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    consume();
+
+                    if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                        break;
+                }
+
+                if (paren_count == 0 && LA(1) == LCURLY)
+                    islambda = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;

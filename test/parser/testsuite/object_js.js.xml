@@ -260,4 +260,62 @@
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
+  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><object>{
+      <property><expr><literal type="string">"CallExpression:exit"</literal></expr><expr><lambda><parameter_list>(<parameter><decl><name>node</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name>node</name> <operator>===</operator> <name>lastEffect</name></expr>)</condition> <block>{<block_content>
+          <expr_stmt><expr><name>lastEffect</name> <operator>=</operator> <literal type="null">null</literal></expr></expr_stmt>
+        </block_content>}</block></if></if_stmt>
+      </block_content>}</block></lambda></expr></property>,
+    }</object></expr></return>
+  </block_content>}</block></function></expr></property>,
+}</object> <operator>satisfies</operator> <name><name>Rule</name><operator>.</operator><name>RuleModule</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
+  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><object>{
+      <property><specifier>async</specifier> <expr><literal type="string">"CallExpression:exit"</literal></expr><expr><lambda><parameter_list>(<parameter><decl><name>node</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name>node</name> <operator>===</operator> <name>lastEffect</name></expr>)</condition> <block>{<block_content>
+          <expr_stmt><expr><name>lastEffect</name> <operator>=</operator> <literal type="null">null</literal></expr></expr_stmt>
+        </block_content>}</block></if></if_stmt>
+      </block_content>}</block></lambda></expr></property>,
+    }</object></expr></return>
+  </block_content>}</block></function></expr></property>,
+}</object> <operator>satisfies</operator> <name><name>Rule</name><operator>.</operator><name>RuleModule</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
+  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><object>{
+      <property><expr><literal type="string">'CallExpression:exit'</literal></expr><expr><lambda><parameter_list>(<parameter><decl><name>node</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name>node</name> <operator>===</operator> <name>lastEffect</name></expr>)</condition> <block>{<block_content>
+          <expr_stmt><expr><name>lastEffect</name> <operator>=</operator> <literal type="null">null</literal></expr></expr_stmt>
+        </block_content>}</block></if></if_stmt>
+      </block_content>}</block></lambda></expr></property>,
+    }</object></expr></return>
+  </block_content>}</block></function></expr></property>,
+}</object> <operator>satisfies</operator> <name><name>Rule</name><operator>.</operator><name>RuleModule</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
+  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><object>{
+      <property><specifier>async</specifier> <expr><literal type="string">'CallExpression:exit'</literal></expr><expr><lambda><parameter_list>(<parameter><decl><name>node</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <if_stmt><if>if <condition>(<expr><name>node</name> <operator>===</operator> <name>lastEffect</name></expr>)</condition> <block>{<block_content>
+          <expr_stmt><expr><name>lastEffect</name> <operator>=</operator> <literal type="null">null</literal></expr></expr_stmt>
+        </block_content>}</block></if></if_stmt>
+      </block_content>}</block></lambda></expr></property>,
+    }</object></expr></return>
+  </block_content>}</block></function></expr></property>,
+}</object> <operator>satisfies</operator> <name><name>Rule</name><operator>.</operator><name>RuleModule</name></name></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
