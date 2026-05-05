@@ -71,34 +71,55 @@ int src_input_filelist(ParseQueue& queue,
     }
 
 
-    std::string data(vbuffer.begin(), vbuffer.end());
-    std::istringstream iss(data);
-    std::string sline;
-    while (std::getline(iss, sline)) {
-        // trim from both ends
-        const std::string WHITESPACE = " \n\r\t\f\v";
-        auto start = sline.find_first_not_of(WHITESPACE);
-        sline = (start == std::string::npos) ? "" : sline.substr(start);
-        auto end = sline.find_last_not_of(WHITESPACE);
-        sline = (end == std::string::npos) ? "" : sline.substr(0, end + 1);
+    // Process the buffer line by line using string_view to avoid extra copies
+    std::string_view data(vbuffer.data(), vbuffer.size());
+    size_t start_pos = 0;
+    size_t end_pos;
 
-        // skip empty or comment lines
-        if (sline.empty() || sline[0] == '#')
+    while (start_pos < data.size()) {
+        // Find the next newline character
+        end_pos = data.find_first_of("\n\r", start_pos);
+        std::string_view sline;
+        
+        if (end_pos != std::string_view::npos) {
+            sline = data.substr(start_pos, end_pos - start_pos);
+            // Advance start_pos past the newline
+            start_pos = end_pos + 1;
+            // Handle CRLF sequence
+            if (start_pos < data.size() && data[end_pos] == '\r' && data[start_pos] == '\n') {
+                start_pos++;
+            }
+        } else {
+            // Last line without a trailing newline
+            sline = data.substr(start_pos);
+            start_pos = data.size();
+        }
+
+        // Trim whitespace from both ends
+        const std::string_view WHITESPACE = " \n\r\t\f\v";
+        auto first = sline.find_first_not_of(WHITESPACE);
+        if (first == std::string_view::npos) continue; // Skip empty/whitespace-only lines
+        
+        auto last = sline.find_last_not_of(WHITESPACE);
+        sline = sline.substr(first, last - first + 1);
+
+        // Skip comment lines
+        if (sline[0] == '#')
             continue;
 
         srcml_input_src input(sline);
 
-        // verify that the file entry is not the same as the file list
+        // Verify that the file entry is not the same as the file list itself
         std::error_code ec;
         if (std::filesystem::equivalent(input.resource, input_file, ec)) {
             SRCMLstatus(WARNING_MSG, "srcml: WARNING Filelist entry duplicate of filelist: " + std::string(input_file));
             continue;
         }
 
-        // process this file
+        // Dispatch the file for processing
         auto fileStatus = srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
         if (fileStatus == -1) {
-            // Ensure failure inside the list propagates a non-zero exit
+            // Failure inside the list propagates a non-zero exit status
             return -1;
         }
     }

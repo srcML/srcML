@@ -98,12 +98,14 @@ extern "C" {
 int input_curl(srcml_input_src& input) {
 
 #if (defined(_WIN32) || defined(WIN32))
+    // On Windows, we download the URL content to a temporary file instead of using pipes.
+    // This avoids issues with pipe management and libarchive's fd handling on Windows.
     std::string url = input.filename;
 
+    // Initialize libcurl
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
-    CURL* curl_handle{ 0 };
-    curl_handle = curl_easy_init();
+    CURL* curl_handle = curl_easy_init();
     if (!curl_handle) {
         curl_global_cleanup();
         return 0;
@@ -111,13 +113,14 @@ int input_curl(srcml_input_src& input) {
 
     FILE* temp_file = nullptr;
 #if defined(_MSC_VER)
+    // Securely create a temporary file using MSVC-specific function
     if (tmpfile_s(&temp_file) != 0 || !temp_file) {
-        curl_easy_cleanup(curl_handle);
         curl_easy_cleanup(curl_handle);
         curl_global_cleanup();
         return 0;
     }
 #else
+    // Create a temporary file using standard C
     temp_file = tmpfile();
     if (!temp_file) {
         curl_easy_cleanup(curl_handle);
@@ -126,6 +129,7 @@ int input_curl(srcml_input_src& input) {
     }
 #endif
 
+    // Configure curl handle
     curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
     curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
     curl_easy_setopt(curl_handle, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
@@ -138,6 +142,7 @@ int input_curl(srcml_input_src& input) {
     curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, 5L);
     curl_easy_setopt(curl_handle, CURLOPT_FAILONERROR, 1L);
 
+    // Perform the download
     CURLcode response = curl_easy_perform(curl_handle);
 
     if (response != CURLE_OK) {
@@ -149,9 +154,11 @@ int input_curl(srcml_input_src& input) {
         return 0;
     }
 
+    // Ensure all data is flushed and reset file pointer for reading
     fflush(temp_file);
     rewind(temp_file);
 
+    // Assign the temporary file to the input source
     input.fileptr = temp_file;
     input.fd = std::nullopt;
 

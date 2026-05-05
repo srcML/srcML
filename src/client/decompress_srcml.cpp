@@ -70,8 +70,10 @@ void decompress_srcml(const srcml_request_t& /* srcml_request */,
             exit(1);
 
         if (contains<FILE*>(uninput)) {
+            // Use FILE* if available (typically on Windows after input_curl)
             status = archive_read_open_FILE(libarchive_srcml.get(), uninput);
         } else {
+            // Fall back to file descriptor
             status = archive_read_open_fd(libarchive_srcml.get(), *(uninput.fd), buffer_size);
         }
 

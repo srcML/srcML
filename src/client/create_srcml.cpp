@@ -52,8 +52,9 @@ int srcml_handler_dispatch(ParseQueue& queue,
         if (!uninput.compressions.empty() || !uninput.archives.empty()) {
 
         #if (defined(_WIN32) || defined(WIN32))
+            // On Windows, archive_read_open_fd() is unreliable for certain stream types (like curl pipes).
+            // Converting the file descriptor to a binary FILE* is a safer workaround.
             if (contains<int>(uninput)) {
-                // Fall back to a binary FILE* wrapper only for fd-backed Windows inputs.
                 uninput.fileptr = fdopen(*(uninput.fd), "rb");
                 uninput.fd = std::nullopt;
             }
