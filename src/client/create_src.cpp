@@ -159,7 +159,10 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
             return 0;
 
         isCurl = true;
-        curinput.fd = *uninput.fd;
+        if (contains<FILE*>(uninput))
+            curinput.fileptr = *uninput.fileptr;
+        else
+            curinput.fd = *uninput.fd;
     }
 
     // compressed files
@@ -167,11 +170,10 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
         srcml_input_src uninput = curinput;
 
 #if true //WIN32
-        // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
-        // or cut short. 
-        // So for Windows, convert to a FILE*. Note sure when to close the FILE*
-        if (isCurl) {
-            uninput.fileptr = fdopen(*(uninput.fd), "r");
+        // In Windows, the archive_read_open_fd() does not seem to work correctly with pipes/fds.
+        // As a workaround, convert the fd to a FILE* in binary mode.
+        if (isCurl && contains<int>(uninput)) {
+            uninput.fileptr = fdopen(*(uninput.fd), "rb");
             uninput.fd = std::nullopt;
         }
 #endif
@@ -184,11 +186,10 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
     else if (!curinput.archives.empty()) {
 
 #if true //WIN32
-        if (isCurl) {
-            // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
-            // or cut short. 
-            // So for Windows, convert to a FILE*. Note sure when to close the FILE*
-            curinput.fileptr = fdopen(*(curinput.fd), "r");
+        if (isCurl && contains<int>(curinput)) {
+            // In Windows, the archive_read_open_fd() does not seem to work correctly with pipes/fds.
+            // As a workaround, convert the fd to a FILE* in binary mode.
+            curinput.fileptr = fdopen(*(curinput.fd), "rb");
             curinput.fd = std::nullopt;
         }
 #endif
@@ -197,11 +198,7 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
     }
 
     // open input source
-    if (curinput.fd) {
-        status = srcml_archive_read_open_fd(arch.get(), *curinput.fd);
-    } else {
-        status = srcml_archive_read_open(arch.get(), input_source);
-    }
+    status = srcml_archive_read_open(arch.get(), curinput);
     if (status != SRCML_STATUS_OK) {
         SRCMLstatus(WARNING_MSG, "srcml: Unable to open srcml file " + std::string(src_prefix_resource(input_source.filename)));
         return 0;
