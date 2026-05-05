@@ -115,7 +115,7 @@ check_srcml_health() {
     local exit_code=$?
 
     if [ $exit_code -ne 0 ]; then
-        echo "❌ CRITICAL ERROR: srcML crashed immediately! Exit code: $exit_code" >&2
+        echo "CRITICAL ERROR: srcML crashed immediately! Exit code: $exit_code" >&2
         echo "Possible causes: Missing DLLs (libarchive, libxml2) or architecture mismatch." >&2
         echo "Stderr from health check:" >&2
         cat health_check.err >&2
@@ -127,7 +127,7 @@ check_srcml_health() {
         rm -f health_check.err
         exit 1
     else
-        echo "✅ srcML started successfully." >&2
+        echo "srcML started successfully." >&2
         rm -f health_check.err
     fi
     echo "=================================" >&2
@@ -303,7 +303,7 @@ check() {
     set +e
 
     if [[ $exit_status -ne 0 ]]; then
-        echo "❌ Command failed with exit status $exit_status" >&2
+        echo "Command failed with exit status $exit_status" >&2
         if [[ -s "$STDERR" ]]; then
              echo "--- STDERR Output (failure cause) ---" >&2
              cat "$STDERR" >&2
@@ -332,7 +332,7 @@ check_file() {
     [[ ! -s "$STDERR" ]]
 
     if [[ $exit_status -ne 0 ]]; then
-        echo "❌ Command failed with exit status $exit_status" >&2
+        echo " Command failed with exit status $exit_status" >&2
         cat "$STDERR" >&2
         exit 1
     fi
