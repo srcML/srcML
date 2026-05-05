@@ -269,4 +269,14 @@
 </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>pointerCaptureFn</name> <init>= <expr><lambda><parameter><decl><name>name</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><parameter><decl><name>id</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><operator>typeof</operator> <name>id</name> <operator>!==</operator> <literal type="string">'number'</literal></expr>)</condition> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><name>__DEV__</name></expr>)</condition> <block>{<block_content>
+      <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">'A pointerId must be passed to "%s"'</literal></expr></argument>, <argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></if></if_stmt>
+  </block_content>}</block></if></if_stmt>
+</block_content>}</block></lambda></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

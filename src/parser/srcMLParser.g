@@ -12962,8 +12962,17 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // special case: JavaScript lambda starts with a lone parameter (optional "async")
         {
             inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
-            && (lambda_depth == 0 || last_consumed != JS_ARROW)
             && !skip_lone_lambda_js
+            && (
+                !inTransparentMode(MODE_TYPE_TS)
+                || (
+                    inTransparentMode(MODE_TYPE_TS)
+                    && (
+                        lambda_depth == 0
+                        || last_consumed != JS_ARROW
+                    )
+                )
+            )
             && perform_lone_parameter_lambda_check_js()
         }?
         lambda_js[false] |
