@@ -15,6 +15,7 @@
 #include <condition_variable>
 #include <atomic>
 #include <limits.h>
+#include <cstdio>
 #include <string>
 #include <string_view>
 
@@ -96,6 +97,70 @@ extern "C" {
 // downloads URL into file descriptor
 int input_curl(srcml_input_src& input) {
 
+#if (defined(_WIN32) || defined(WIN32))
+    std::string url = input.filename;
+
+    curl_global_init(CURL_GLOBAL_DEFAULT);
+
+    CURL* curl_handle{ 0 };
+    curl_handle = curl_easy_init();
+    if (!curl_handle) {
+        curl_global_cleanup();
+        return 0;
+    }
+
+    FILE* temp_file = nullptr;
+#if defined(_MSC_VER)
+    if (tmpfile_s(&temp_file) != 0 || !temp_file) {
+        curl_easy_cleanup(curl_handle);
+        curl_easy_cleanup(curl_handle);
+        curl_global_cleanup();
+        return 0;
+    }
+#else
+    temp_file = tmpfile();
+    if (!temp_file) {
+        curl_easy_cleanup(curl_handle);
+        curl_global_cleanup();
+        return 0;
+    }
+#endif
+
+    curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYPEER, 0L);
+    curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
+    curl_easy_setopt(curl_handle, CURLOPT_HTTPAUTH, (long)CURLAUTH_ANY);
+    curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl_handle, CURLOPT_VERBOSE, 0L);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, temp_file);
+    curl_easy_setopt(curl_handle, CURLOPT_URL, url.data());
+    curl_easy_setopt(curl_handle, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+    curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_LIMIT, 1L);
+    curl_easy_setopt(curl_handle, CURLOPT_LOW_SPEED_TIME, 5L);
+    curl_easy_setopt(curl_handle, CURLOPT_FAILONERROR, 1L);
+
+    CURLcode response = curl_easy_perform(curl_handle);
+
+    if (response != CURLE_OK) {
+        SRCMLstatus(WARNING_MSG, "srcml: Unable to access URL " + url);
+        fclose(temp_file);
+        curl_easy_cleanup(curl_handle);
+        curl_global_cleanup();
+        setCurlErrors(true);
+        return 0;
+    }
+
+    fflush(temp_file);
+    rewind(temp_file);
+
+    input.fileptr = temp_file;
+    input.fd = std::nullopt;
+
+    setCurlErrors(false);
+    curl_easy_cleanup(curl_handle);
+    curl_global_cleanup();
+    return 1;
+#else
+
     srcml_pipe(input, [](const srcml_request_t& /* srcml_request */, const srcml_input_t& input_sources, const srcml_output_dest& destination) {
 
         // input comes from URL
@@ -154,4 +219,5 @@ int input_curl(srcml_input_src& input) {
 
     // wait to see if curl is able to download the url at all
     return waitCurl();
+#endif
 }

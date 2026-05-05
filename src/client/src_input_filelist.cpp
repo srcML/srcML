@@ -17,6 +17,8 @@
 #include <archive.h>
 #include <archive_entry.h>
 #include <SRCMLStatus.hpp>
+#include <filesystem>
+#include <sstream>
 
 int src_input_filelist(ParseQueue& queue,
                         srcml_archive* srcml_arch,
@@ -25,8 +27,10 @@ int src_input_filelist(ParseQueue& queue,
                         const srcml_output_dest& destination) {
 
     std::unique_ptr<archive> arch(libarchive_input_file(srcml_input_src(input_file)));
-    if (!arch)
+    if (!arch) {
+        SRCMLstatus(ERROR_MSG, "srcml: Unable to open file " + std::string(input_file));
         return -1;
+    }
 
     archive_entry *entry = 0;
     int status = archive_read_next_header(arch.get(), &entry);
@@ -66,20 +70,11 @@ int src_input_filelist(ParseQueue& queue,
            vbuffer.insert(vbuffer.end(), buffer, buffer + size);
     }
 
-    struct stat listFile;
-    stat(input_file.data(), &listFile);
 
-    char* line = &vbuffer[0];
-    while (line < &vbuffer[vbuffer.size() - 1]) {
-
-        // find the line
-        char* startline = line;
-        while (*line != '\n' && line != &vbuffer[vbuffer.size() - 1])
-            ++line;
-        ++line;
-
-        std::string sline(startline, static_cast<std::size_t>(line - startline));
-
+    std::string data(vbuffer.begin(), vbuffer.end());
+    std::istringstream iss(data);
+    std::string sline;
+    while (std::getline(iss, sline)) {
         // trim from both ends
         const std::string WHITESPACE = " \n\r\t\f\v";
         auto start = sline.find_first_not_of(WHITESPACE);
@@ -87,30 +82,25 @@ int src_input_filelist(ParseQueue& queue,
         auto end = sline.find_last_not_of(WHITESPACE);
         sline = (end == std::string::npos) ? "" : sline.substr(0, end + 1);
 
-        // skip empty lines
-        if (sline[0] == 0)
-            continue;
-
-        // skip comment lines
-        if (sline[0] == '#')
+        // skip empty or comment lines
+        if (sline.empty() || sline[0] == '#')
             continue;
 
         srcml_input_src input(sline);
 
-        // verify that the filee ntry is not the same as the file list
-        struct stat fileEntry;
-        stat(input.resource.data(), &fileEntry);
-        if ((listFile.st_ino == fileEntry.st_ino) && (listFile.st_dev == fileEntry.st_dev)) {
-            std::string s = "srcml: WARNING Filelist entry duplicate of filelist: ";
-            s += input_file;
-            SRCMLstatus(WARNING_MSG, s);
+        // verify that the file entry is not the same as the file list
+        std::error_code ec;
+        if (std::filesystem::equivalent(input.resource, input_file, ec)) {
+            SRCMLstatus(WARNING_MSG, "srcml: WARNING Filelist entry duplicate of filelist: " + std::string(input_file));
             continue;
         }
 
         // process this file
         auto fileStatus = srcml_handler_dispatch(queue, srcml_arch, srcml_request, input, destination);
-        if (fileStatus == -1)
+        if (fileStatus == -1) {
+            // Ensure failure inside the list propagates a non-zero exit
             return -1;
+        }
     }
 
     return 1;

@@ -51,13 +51,13 @@ int srcml_handler_dispatch(ParseQueue& queue,
         // may have some compressions/archives
         if (!uninput.compressions.empty() || !uninput.archives.empty()) {
 
-#if WIN32
-            // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
-            // or cut short. 
-            // So for Windows, convert to a FILE*. Note sure when to close the FILE*
-            uninput.fileptr = fdopen(*(uninput.fd), "r");
-            uninput.fd = std::nullopt;
-#endif
+        #if (defined(_WIN32) || defined(WIN32))
+            if (contains<int>(uninput)) {
+                // Fall back to a binary FILE* wrapper only for fd-backed Windows inputs.
+                uninput.fileptr = fdopen(*(uninput.fd), "rb");
+                uninput.fd = std::nullopt;
+            }
+        #endif
 
             uninput.fd = input_archive(uninput);
         }
