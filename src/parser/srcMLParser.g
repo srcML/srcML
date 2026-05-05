@@ -1799,6 +1799,7 @@ javascript_rules[] {
         // - "default" is a valid specifier [export only]
         // - bare literals can appear (no expression)
         // - curly braces begin/end name lists
+        // - "as" denotes special markup
         // - "from" denotes special markup
         // - multops ('*') should be treated as a name
         { in_export_statement || in_import_statement }?
@@ -1809,7 +1810,7 @@ javascript_rules[] {
             { in_import_statement }?
             type_as_specifier_ts |
 
-            literals | name_list_js | from_js | multops_as_name
+            literals | name_list_js | alias_js | from_js | multops_as_name
         ) |
 
         // looking for lparen to start a parameter list
@@ -1834,10 +1835,6 @@ javascript_rules[] {
         // looking for lparen to start control portion of a for-loop
         { inMode(MODE_FOR_CONTROL_JS) }?
         for_control_js |
-
-        // looking for "as" used in a type alias (different from TypeScript "as" for type casting)
-        { !inTransparentMode(MODE_DECL_INIT_JS) }?
-        alias_js |
 
         // looking for "extends" (JavaScript) or "implements" (TypeScript) for a derivation list
         super_list_js |
@@ -12426,7 +12423,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             EXPONENTIATION | PY_AND | PY_ATSIGN | PY_AWAIT | PY_COLON | PY_IN | PY_IS | PY_NOT | PY_OR |
 
             // JavaScript
-            JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID |
+            JS_AS | JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID |
 
             // TypeScript
             TS_ATSIGN | TS_KEYOF
@@ -12938,14 +12935,6 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             )
         }?
         declaration_modifiers_ts |
-
-        // looking for "as" for type casting in TypeScript
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_DECL_INIT_JS) }?
-        (declaration_cast_ts type_ts) |
-
-        // looking for "as" in TypeScript (operator)
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
-        declaration_cast_ts |
 
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_keyword_iife_check_js() }?
@@ -22084,19 +22073,6 @@ type_as_specifier_ts[] { LightweightElement element(this); setTypeScript(); ENTR
         }
 
         TS_TYPE
-;
-
-/*
-  declaration_cast_ts
-
-  Handles the "as" portion of a type cast in TypeScript.
-*/
-declaration_cast_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
-        {
-            startElement(SOPERATOR);
-        }
-
-        JS_AS
 ;
 
 /*

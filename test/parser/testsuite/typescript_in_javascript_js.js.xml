@@ -319,18 +319,18 @@ class <name>BugReport</name> <block>{
 <!-- Type Cast ("as") -->
 
 <unit revision="1.0.0" language="TypeScript">
-<decl_stmt><decl type="let">let <name>fishPet</name> <init>= <expr><name>pet</name> <operator>as</operator> <type><name>Fish</name></type></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>fishPet</name> <init>= <expr><name>pet</name> <operator>as</operator> <name>Fish</name></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<decl_stmt><decl type="let">let <name>x</name> <init>= <expr><name>y</name> <operator>as</operator> <type><name>any</name></type> <operator>as</operator> <type><name>T</name></type></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>x</name> <init>= <expr><name>y</name> <operator>as</operator> <name>any</name> <operator>as</operator> <name>T</name></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Type Predicate ("is") -->
 
 <unit revision="1.0.0" language="TypeScript">
 <function>function <name>isFish</name><parameter_list>(<parameter><decl><name>pet</name>: <type><name>Fish</name> <operator>|</operator> <name>Bird</name></type></decl></parameter>)</parameter_list>: <type><name>pet</name> <operator>is</operator> <name>Fish</name></type> <block>{<block_content>
-  <return>return <expr><operator>(</operator><name>pet</name> <alias>as <expr><name>Fish</name></expr></alias><operator>)</operator><operator>.</operator><name>swim</name> <operator>!==</operator> <literal type="undefined">undefined</literal></expr></return>
+  <return>return <expr><operator>(</operator><name>pet</name> <operator>as</operator> <name>Fish</name><operator>)</operator><operator>.</operator><name>swim</name> <operator>!==</operator> <literal type="undefined">undefined</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
