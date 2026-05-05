@@ -55,6 +55,10 @@
   <operator>|</operator> <block>{<decl_stmt><decl><name>kind</name>: <type><literal type="string">'MethodCall'</literal></type></decl>;</decl_stmt> <decl_stmt><decl><name>receiver</name>: <type><name>Place</name></type></decl>;</decl_stmt> <decl_stmt><decl><name>property</name>: <type><name>Place</name></type></decl></decl_stmt>}</block></type></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="var"><specifier>declare</specifier> var <name>matchMedia</name>: <type><lambda><parameter><decl><name>string</name></decl></parameter> <operator>=&gt;</operator> <expr><name>MediaQueryList</name></expr></lambda></type></decl></decl_stmt>
+</unit>
+
 <!-- Functions (with "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">
@@ -300,6 +304,18 @@
 <class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>env</name>: <type><block>{<decl_stmt><decl><constraint><index>[<name>key</name>: <type><name>string</name></type>]</index>: <type><name>string</name> <operator>|</operator> <name>void</name></type></constraint></decl>,</decl_stmt> <expr_stmt><expr><operator>...</operator></expr></expr_stmt>}</block></type></decl></decl_stmt>
 }</block></class>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name>: <type><name>foo</name></type></decl></parameter>)</parameter_list>: <type><lambda><parameter_list>(<parameter><decl><name>b</name>: <type><name>bar</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>baz</name></expr></lambda></type> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><name>a</name></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name>: <type><name>foo</name></type></decl></parameter>)</parameter_list>: <type><lambda><parameter_list>(<parameter><decl><name>b</name>: <type><name>bar</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>(<parameter><decl><name>c</name>: <type><name>baz</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>quux</name></expr></lambda></expr></lambda></type> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><name>a</name></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
 </unit>

@@ -792,6 +792,8 @@ public:
     bool is_typescript = false;
     bool is_pseudo_terminate = false;
     bool skip_pseudoblock_terminate = false;
+    bool skip_lone_lambda_js = false;
+    int lambda_depth = 0;
     int tempops_count_ts = 0;
     int current_decl_type_js = 0;
     int start_count = 0;
@@ -12960,10 +12962,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // special case: JavaScript lambda starts with a lone parameter (optional "async")
         {
             inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
-            && (
-                !(inTransparentMode(MODE_TYPE_TS) && last_consumed == COLON)
-                || inTransparentMode(MODE_TERNARY)
-            )
+            && (lambda_depth == 0 || last_consumed != JS_ARROW)
+            && !skip_lone_lambda_js
             && perform_lone_parameter_lambda_check_js()
         }?
         lambda_js[false] |
@@ -20422,6 +20422,8 @@ lambda_js[bool is_list = false] { CompleteElement element(this); size_t lparen_t
         {
             startNewMode(MODE_LAMBDA_JS);
             startElement(SFUNCTION_LAMBDA);
+
+            ++lambda_depth;
         }
 
         (
@@ -20437,6 +20439,11 @@ lambda_js[bool is_list = false] { CompleteElement element(this); size_t lparen_t
                 complete_javascript_parameter
             )
 
+            {
+                // a lone parameter lambda cannot appear here
+                skip_lone_lambda_js = true;
+            }
+
             // consume TypeScript types
             (options { greedy = true; } : (COLON type_ts))*
 
@@ -20444,6 +20451,8 @@ lambda_js[bool is_list = false] { CompleteElement element(this); size_t lparen_t
         )
 
         {
+            skip_lone_lambda_js = false;
+
             // end the parameter list lambda after the block
             if (LA(1) == LCURLY) {
                 expression_block_js();
@@ -20458,6 +20467,11 @@ lambda_js[bool is_list = false] { CompleteElement element(this); size_t lparen_t
             {
                 (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
                 || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
+                || (
+                    LA(1) == JS_ARROW
+                    && lparen_types_size == lparen_types_js.size()
+                    && lambda_depth != 0
+                )
             }?
             {
                 break;
@@ -23058,6 +23072,8 @@ generic_lambda_ts[] {
         {
             startNewMode(MODE_LAMBDA_JS);
             startElement(SFUNCTION_LAMBDA);
+
+            ++lambda_depth;
         }
 
         (
@@ -23069,6 +23085,11 @@ generic_lambda_ts[] {
                 javascript_parameter_list
             )
 
+            {
+                // a lone parameter lambda cannot appear here
+                skip_lone_lambda_js = true;
+            }
+
             // consume TypeScript types
             (options { greedy = true; } : (COLON type_ts))*
 
@@ -23076,6 +23097,8 @@ generic_lambda_ts[] {
         )
 
         {
+            skip_lone_lambda_js = false;
+
             // if the generic lambda started with a ":", what follows the arrow is a type
             if (was_colon_type) {
                 type_ts();
