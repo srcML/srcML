@@ -326,4 +326,8 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>node</name>: <type><name>HTMLElement</name></type> <init>= <expr><operator>(</operator><operator>(</operator><name>null</name>: <type><name>any</name></type><operator>)</operator>: <type><name>HTMLElement</name></type><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

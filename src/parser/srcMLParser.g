@@ -21938,6 +21938,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
         (options { greedy = true; } :
             // do not include the following as part of a type:
             // - a parameter list or catch condition closing RPAREN
+            //   - or, a closing operator RPAREN where the next token starts a type
             // - a unary operator that should start a new declaration statement
             // - after an argument list closing ">" with no generated TERMINATE
             // - an argument list closing ">" in mixins or template arguments
@@ -21948,6 +21949,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                     && (
                         (lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
                         || (inTransparentMode(MODE_CATCH_LPAREN_JS) && lparen_types_size == lparen_types_js.size())
+                        || (lparen_types_size == lparen_types_js.size() && next_token() == COLON)
                     )
                 )
                 || (
