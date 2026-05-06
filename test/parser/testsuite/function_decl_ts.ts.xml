@@ -77,4 +77,14 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const"><specifier>declare</specifier> const <name>it</name>: <type><block>{
+  <function_decl><name>only</name><parameter_list>()</parameter_list>: <type><block>{
+    <function_decl><name>each</name><parameter_list>()</parameter_list>: <type><lambda><parameter_list>(
+      <parameter><decl><name>fn</name>: <type><lambda><parameter_list>(<parameter><decl><name>args</name>: <type><name>Array</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>Promise</name></expr></lambda></type></decl></parameter>,
+    )</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type>,</function_decl>
+  }</block></type>,</function_decl>
+}</block></type></decl></decl_stmt>
+</unit>
+
 </unit>

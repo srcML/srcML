@@ -22101,6 +22101,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
 
         isdecl = false;
         last_consumed_guessing_mode = -1;
+        bool found_colon_assert = false;
         int start = mark();
         inputState->guessing++;
 
@@ -22144,8 +22145,12 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                     if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */)
                         break;
 
-                    // "NAME() : TYPE {}" is a function expression, not function declaration
-                    if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js()) {
+                    // found ": asserts"
+                    if (LA(1) == COLON && next_token() == TS_ASSERTS)
+                        found_colon_assert = true;
+
+                    // "NAME() : asserts TYPE {}" is a function expression, not a function declaration
+                    if (found_colon_assert && LA(1) == LCURLY && perform_lcurly_differentiator_check_js()) {
                         isdecl = false;
                         break;
                     }
