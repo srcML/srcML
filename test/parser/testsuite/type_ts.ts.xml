@@ -330,4 +330,8 @@
 <decl_stmt><decl type="let">let <name>node</name>: <type><name>HTMLElement</name></type> <init>= <expr><operator>(</operator><operator>(</operator><name>null</name>: <type><name>any</name></type><operator>)</operator>: <type><name>HTMLElement</name></type><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>rootStack</name> <init>= <expr><ternary><condition><expr><name>ancestorStackError</name> <operator>===</operator> <literal type="undefined">undefined</literal></expr> ?</condition><then> <expr><operator>(</operator><name>foo</name>: <type><name>any</name></type><operator>)</operator></expr> </then><else>: <expr><call><name>bar</name><argument_list>(<argument><expr><name>ancestorStackError</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

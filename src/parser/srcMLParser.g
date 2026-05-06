@@ -793,6 +793,7 @@ public:
     bool is_pseudo_terminate = false;
     bool skip_pseudoblock_terminate = false;
     bool skip_lone_lambda_js = false;
+    bool is_ternary_colon = true;
     int lambda_depth = 0;
     int tempops_count_ts = 0;
     int current_decl_type_js = 0;
@@ -8062,6 +8063,11 @@ qmark[] { is_qmark = true; ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_TERNARY | MODE_CONDITION))
                 endDownToMode(MODE_CONDITION);
+
+            // record if "?" is nested in "()" or "{}" for JavaScript/TypeScript 
+            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_TERNARY)) {
+                is_ternary_colon = perform_colon_differentiator_check_ts();
+            }
         }
 
         qmark_marked
@@ -19474,7 +19480,10 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             argument |
 
             // consume TypeScript types
-            { !inTransparentMode(MODE_TERNARY) }?
+            {
+                !inTransparentMode(MODE_TERNARY)
+                || (inTransparentMode(MODE_TERNARY) && !is_ternary_colon)
+            }?
             (COLON type_ts) |
 
             // allow JavaScript ternaries to use existing "else" logic
@@ -21932,6 +21941,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             startElement(STYPE);
 
             is_pseudo_terminate = false;
+            is_ternary_colon = true;
             lparen_types_size = lparen_types_js.size();
         }
 
@@ -23220,6 +23230,57 @@ perform_shorthand_computed_property_check_js[] returns [bool islambda] {
 
                 if (paren_count == 0 && LA(1) == LCURLY)
                     islambda = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_colon_differentiator_check_ts
+
+  Checks to see if a ":" belongs to a ternary or a TypeScript type.
+*/
+perform_colon_differentiator_check_ts[] returns [bool isternary] {
+        ENTRY_DEBUG
+
+        isternary = true;
+        int paren_count = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == QMARK) {
+                consume();  // "?"
+
+                // "?" must be followed by "(" to warrant checking
+                if (LA(1) == LPAREN) {
+                    while (true) {
+                        if (LA(1) == LPAREN)
+                            ++paren_count;
+
+                        if (LA(1) == RPAREN)
+                            --paren_count;
+
+                        // found instance where ":" belongs to a ternary
+                        if (paren_count == 1 && LA(1) == QMARK)
+                            break;
+
+                        // found instance where ":" belongs to a type
+                        if (paren_count == 1 && LA(1) == COLON) {
+                            isternary = false;
+                            break;
+                        }
+
+                        if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                            break;
+
+                        consume();
+                    }
+                }
             }
         }
         catch (...) {}
