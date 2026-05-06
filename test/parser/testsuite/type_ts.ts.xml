@@ -318,4 +318,12 @@
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>HostTransitionContext</name> <init>= <expr><object>{
+  <property><expr><name>$$typeof</name></expr>: <expr><name>REACT_CONTEXT_TYPE</name></expr></property>,
+  <property><expr><name>Provider</name></expr>: <expr><operator>(</operator><name>null</name>: <type><name>any</name></type><operator>)</operator></expr></property>,
+  <property><expr><name>_threadCount</name></expr>: <expr><literal type="number">0</literal></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

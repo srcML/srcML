@@ -20762,6 +20762,10 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             { inTransparentMode(MODE_TERNARY) && (!inTransparentMode(MODE_OBJECT_JS) || last_consumed == RCURLY) }?
             colon_marked |
 
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            (COLON type_ts) |
+
             // allow colon separators for properties
             { inTransparentMode(MODE_PROPERTY_JS) }?
             colon_property_js |
