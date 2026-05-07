@@ -343,10 +343,20 @@
 </unit>
 
 <unit revision="1.0.0" language="TypeScript">
-<decl_stmt><decl type="const"><specifier>export</specifier> const <name>registerEventLogger</name>: <type><lambda><parameter_list>(<parameter><decl><name>foo</name>: <type><name>Foo</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator> <operator>=</operator>
-  <ternary><condition><expr><name>enableLogger</name> <operator>===</operator> <literal type="boolean">true</literal></expr>
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>registerEventLogger</name>: <type><lambda><parameter_list>(<parameter><decl><name>foo</name>: <type><name>Foo</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></expr></lambda></type> <init>=
+  <expr><ternary><condition><expr><name>enableLogger</name> <operator>===</operator> <literal type="boolean">true</literal></expr>
     ?</condition><then> <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>bar</name>: <type><name>Bar</name></type></decl></parameter>)</parameter_list>: <type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type> <block>{<block_content/>}</block></function></expr>
-    </then><else>:</else> <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>baz</name>: <type><name>Baz</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></ternary></expr></lambda></expr></lambda></type></decl></decl_stmt>
+    </then><else>: <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>baz</name>: <type><name>Baz</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<class>class <name>Agent</name> <block>{
+  <decl_stmt><decl><name>clearErrorsAndWarnings</name>: <type><lambda><parameter_list>(<parameter><decl><type><block>{<decl_stmt><decl><name>rendererID</name>: <type><name>RendererID</name></type></decl></decl_stmt>}</block></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type> <init>= <expr><lambda><parameter_list>(<parameter><decl><object>{
+    <property><expr><name>rendererID</name></expr></property>,
+  }</object></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>renderer</name> <init>= <expr><name><name>this</name><operator>.</operator><name>_rendererInterfaces</name><index>[<expr><name>rendererID</name></expr>]</index></name></expr></init></decl></decl_stmt>
+  </block_content>}</block></lambda></expr></init></decl></decl_stmt>
+}</block></class>
 </unit>
 
 </unit>

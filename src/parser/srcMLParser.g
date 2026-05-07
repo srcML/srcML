@@ -19253,7 +19253,7 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 // ensure ";" is not consumed here
@@ -19286,7 +19286,7 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 // ensure non-call ")" is not consumed here
@@ -19363,7 +19363,7 @@ with_lparen_js[] { ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 // ensure non-call ")" is not consumed here
@@ -19407,7 +19407,7 @@ alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 // ensure the "}" (for name lists) is not consumed here
@@ -19488,7 +19488,7 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -19524,7 +19524,7 @@ declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 // ensure non-call ")" is not consumed here
@@ -19658,7 +19658,7 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -19844,7 +19844,7 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -20191,7 +20191,7 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -20526,7 +20526,7 @@ lambda_js[bool is_list = false] {
                 || (LA(1) == LCURLY && bracket_types_size == bracket_types_js.size())
                 || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
                 || (
-                    LA(1) == JS_ARROW
+                    (LA(1) == JS_ARROW || LA(1) == EQUAL)
                     && lparen_types_size == lparen_types_js.size()
                     && lambda_depth != 0
                 )
@@ -20540,7 +20540,7 @@ lambda_js[bool is_list = false] {
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -20816,7 +20816,7 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
 
             // allow JavaScript ternaries to use existing "else" logic (but do not confuse with a property COLON)
             { inTransparentMode(MODE_TERNARY) && (!inTransparentMode(MODE_OBJECT_JS) || last_consumed == RCURLY) }?
-            colon_marked |
+            colon_marked_js |
 
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
@@ -20897,7 +20897,7 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             // consume TypeScript types
             { is_typescript || inLanguage(LANGUAGE_TYPESCRIPT) }?
@@ -21274,7 +21274,7 @@ yield_expression_js[] { CompleteElement element(this); bool consume_multops = fa
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -21533,7 +21533,7 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -21693,7 +21693,7 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -21978,6 +21978,38 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  colon_marked_js
+
+  Used to mark a colon (":") in JavaScript/TypeScript.
+*/
+colon_marked_js[] {
+        bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN);
+        bool markup_colon = true;
+        ENTRY_DEBUG
+} :
+        {
+            if (in_ternary) {
+                endDownToMode(MODE_THEN);
+
+                flushSkip();
+
+                endMode(MODE_THEN);
+
+                startNewMode(MODE_ELSE | MODE_EXPRESSION | MODE_EXPECT);
+
+                startElement(SELSE);
+
+                markup_colon = false;
+            }
+
+            if (markup_colon)
+                startElement(SOPERATOR);
+        }
+
+        COLON
+;
+
+/*
   type_ts
 
   Handles a type in TypeScript.
@@ -22062,6 +22094,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                 last_consumed == COLON
                 || last_consumed == REFOPS
                 || last_consumed == OPERATORS
+                || last_consumed == LPAREN
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
                 || inTransparentMode(MODE_MIXINS_TS)
                 || inTransparentMode(MODE_TYPEDEF)
@@ -22781,7 +22814,7 @@ attribute_ts[] { setTypeScript(); ENTRY_DEBUG } :
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -23227,7 +23260,7 @@ generic_lambda_ts[] {
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
-            colon_marked |
+            colon_marked_js |
 
             {
                 if (!inMode(MODE_EXPRESSION))
