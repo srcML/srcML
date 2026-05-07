@@ -19677,24 +19677,38 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
   Handles a parameter list in JavaScript.
 */
-javascript_parameter_list[] { CompleteElement element(this); ENTRY_DEBUG } :
+javascript_parameter_list[] { CompleteElement element(this); size_t bracket_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT);
             startElement(SPARAMETER_LIST);
 
             lparen_types_js.emplace_back('p');  // parameter list LPAREN
             bracket_types_js.emplace_back("pLPAREN");
+
+            bracket_types_size = bracket_types_js.size();
         }
 
         LPAREN
 
-        (
+        (options { greedy = true; } :
+            { LA(1) == RPAREN && bracket_types_size == bracket_types_js.size() }?
+            {
+                break;
+            } |
+
+            { LA(1) == COMMA }?
             {
                 // we are in a parameter list; we must end the current parameter
                 if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                     endMode();
             }
             comma |
+
+            (compound_name COLON) => complete_javascript_parameter |
+
+            // parameter that only contains a type (i.e., not "COLON type")
+            { inTransparentMode(MODE_TYPE_TS) && inTransparentMode(MODE_LAMBDA_JS) }?
+            complete_typescript_parameter |
 
             complete_javascript_parameter
         )*
@@ -19767,6 +19781,41 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
                 if (LA(1) == TERMINATE)
                     consume();
             }
+        }
+;
+
+/*
+  complete_typescript_parameter
+
+  Handles a type parameter in TypeScript.
+*/
+complete_typescript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            // start the parameter
+            startNewMode(MODE_PARAMETER);
+            startElement(SPARAMETER);
+
+            // start the declaration
+            startNewMode(MODE_DECL);
+            startElement(SDECLARATION);
+        }
+
+        (
+            // "...", "?", and "!" are valid modifiers before the type
+            {
+                LA(1) == DOTDOTDOT
+                || LA(1) == QMARK
+                || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+            }?
+            ((declaration_modifiers_ts | tripledotop) type_ts) |
+
+            type_ts
+        )
+
+        {
+            // ignore auto-inserted terminate, if applicable
+            if (LA(1) == TERMINATE)
+                consume();
         }
 ;
 
@@ -20322,6 +20371,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
         ENTRY_DEBUG
 
         isfunction = false;
+        int bracket_count = 0;  // for TypeScript types
         bool found_name = false;
         bool found_type = false;
         last_consumed_guessing_mode = -1;
@@ -20397,19 +20447,8 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     consume();
                 }
 
-                // match optional TypeScript type, consuming RPAREN first
-                if (LA(1) == RPAREN && next_token() == COLON) {
-                    consume();  // ")"
-                    consume();  // ":"
-                    type_ts();
-                    found_type = true;
-                }
-
                 // found "NAME(){" or "NAME(): TYPE {"
-                if (
-                    (LA(1) == RPAREN && next_token() == LCURLY)
-                    || (found_type && LA(1) == LCURLY)
-                )
+                if (LA(1) == RPAREN && (next_token() == LCURLY || next_token() == COLON))
                     isfunction = true;
             }
         }
@@ -21955,8 +21994,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
 
         (options { greedy = true; } :
             // do not include the following as part of a type:
-            // - a parameter list or catch condition closing RPAREN
-            //   - or, a closing operator RPAREN where the next token starts a type
+            // - do not consume the closing RPAREN for certain constructs
             // - a unary operator that should start a new declaration statement
             // - after an argument list closing ">" with no generated TERMINATE
             // - an argument list closing ">" in mixins or template arguments
@@ -21968,6 +22006,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                         (lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
                         || (inTransparentMode(MODE_CATCH_LPAREN_JS) && lparen_types_size == lparen_types_js.size())
                         || (lparen_types_size == lparen_types_js.size() && next_token() == COLON)
+                        || (inTransparentMode(MODE_LAMBDA_JS) && next_token() == JS_ARROW)
                     )
                 )
                 || (
