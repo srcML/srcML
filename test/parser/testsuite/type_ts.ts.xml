@@ -359,4 +359,9 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>rootsSuspendedBy</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>mixed</name></expr></argument>&gt;</argument_list></name></type> <init>=
+  <expr><operator>(</operator><call><name><name>renderer</name><operator>.</operator><name>getElementAttributeByPath</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><array>[<expr><literal type="string">'suspendedBy'</literal></expr>]</array></expr></argument>)</argument_list></call>: <type><name>any</name></type><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

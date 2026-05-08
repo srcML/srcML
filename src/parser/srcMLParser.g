@@ -20447,9 +20447,42 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     consume();
                 }
 
-                // found "NAME(){" or "NAME(): TYPE {"
-                if (LA(1) == RPAREN && (next_token() == LCURLY || next_token() == COLON))
+                // found "NAME() {", a keywordless function
+                if (LA(1) == RPAREN && next_token() == LCURLY)
                     isfunction = true;
+
+                // looking for "NAME(): TYPE {", also a keywordless function
+                if (LA(1) == RPAREN && next_token() == COLON) {
+                    consume();  // ")"
+
+                    // consume optional TypeScript type
+                    if (LA(1) == COLON) {
+                        consume();  // ":"
+
+                        while (true) {
+                            // found a statement-level LCURLY, indicating a block
+                            if (bracket_count == 0 && LA(1) == LCURLY)
+                                break;
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (
+                                bracket_count < 0
+                                || LA(1) == 1 /* EOF */
+                                || (bracket_count == 0 && LA(1) == TERMINATE)
+                            )
+                                break;
+
+                            consume();
+                        }
+
+                        if (LA(1) == LCURLY)
+                            isfunction = true;
+                    }
+                }
             }
         }
         catch (...) {}
