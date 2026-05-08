@@ -70,6 +70,14 @@
 }</block></class>
 </unit>
 
+<!-- "satisfies" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><call><name>originalTest</name><argument_list>(<argument><expr><name>testName</name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>args</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <expr_stmt><expr><name>shouldPass</name> <operator>=</operator> <operator>!</operator><operator>!</operator><call><name><name>semver</name><operator>.</operator><name>satisfies</name></name><argument_list>(<argument><expr><literal type="string">'18.0.0'</literal></expr></argument>, <argument><expr><name>range</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
 <!--
 "type" (again)
 Note: Do NOT adjust the unit tags or position of this test

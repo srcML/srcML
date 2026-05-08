@@ -286,7 +286,7 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::TS_ABSTRACT, srcMLParser::TS_ASSERTS, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS,
     srcMLParser::TS_INTERFACE, srcMLParser::TS_IS, srcMLParser::TS_KEYOF, srcMLParser::TS_NAMESPACE,
     srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC,
-    srcMLParser::TS_READONLY, srcMLParser::TS_TYPE
+    srcMLParser::TS_READONLY, srcMLParser::TS_SATISFIES, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,

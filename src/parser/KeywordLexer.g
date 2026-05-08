@@ -407,6 +407,7 @@ tokens {
     TS_PROTECTED;
     TS_PUBLIC;
     TS_READONLY;
+    TS_SATISFIES;
     TS_TYPE;
 }
 
@@ -922,7 +923,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT_FAMILY },
         { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT_FAMILY },
         { "of"           , JS_RANGE_OF       , LANGUAGE_JAVASCRIPT_FAMILY },
-        { "satisfies"    , OPERATORS         , LANGUAGE_JAVASCRIPT_FAMILY },
         { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT_FAMILY },
         { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT_FAMILY },
         { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT_FAMILY },
@@ -950,6 +950,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "protected"    , TS_PROTECTED      , LANGUAGE_JAVASCRIPT_FAMILY },
         { "public"       , TS_PUBLIC         , LANGUAGE_JAVASCRIPT_FAMILY },
         { "readonly"     , TS_READONLY       , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "satisfies"    , TS_SATISFIES      , LANGUAGE_JAVASCRIPT_FAMILY },
         { "type"         , TS_TYPE           , LANGUAGE_JAVASCRIPT_FAMILY },
    };
 

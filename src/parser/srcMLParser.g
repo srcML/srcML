@@ -12435,7 +12435,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             JS_AS | JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID |
 
             // TypeScript
-            TS_ATSIGN | TS_KEYOF
+            TS_ATSIGN | TS_KEYOF | TS_SATISFIES
         )
 ;
 
