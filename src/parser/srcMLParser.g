@@ -6358,6 +6358,9 @@ statement_part[] {
         // sometimes end up here if a control group ends early or with a for-each
         rparen |
 
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+        colon_marked_js |
+
         // seem to end up here for colon in ternary operator
         colon_marked |
 
@@ -13017,8 +13020,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
         computed_property_js |
 
-        // looking for lbracket to start an array in JavaScript
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+        // looking for lbracket to start an array in JavaScript (note that ")[" starts an index)
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && last_consumed != RPAREN }?
         array_js |
 
         // looking for "class" to start a class in an expression in JavaScript
@@ -22021,7 +22024,7 @@ colon_marked_js[] {
         ENTRY_DEBUG
 } :
         {
-            if (in_ternary) {
+            if (in_ternary && is_ternary_colon) {
                 endDownToMode(MODE_THEN);
 
                 flushSkip();
@@ -22035,11 +22038,21 @@ colon_marked_js[] {
                 markup_colon = false;
             }
 
+            if (!is_ternary_colon) {
+                startNewMode(MODE_EXPRESSION_COLON_TS);
+                is_ternary_colon = true;
+            }
+
             if (markup_colon)
                 startElement(SOPERATOR);
         }
 
         COLON
+
+        {
+            if (inMode(MODE_EXPRESSION_COLON_TS))
+                endMode(MODE_EXPRESSION_COLON_TS);
+        }
 ;
 
 /*
