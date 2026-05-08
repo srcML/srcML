@@ -22137,6 +22137,10 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             // marks "asserts" and "is" as operators
             assertion_function_operator_ts | type_predicate_operator_ts |
 
+            // allow nested types (e.g., in lambdas)
+            { lparen_types_js.size() > 0 }?
+            (COLON type_ts) |
+
             // allow certain expression, but do not consume LCURLY (could be a block)
             { LA(1) != LCURLY || (LA(1) == LCURLY && inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)) }?
             {
