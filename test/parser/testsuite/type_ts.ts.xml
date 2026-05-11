@@ -67,6 +67,10 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="let">let <name>lastMouseEvent</name>: <type><modifier>?</modifier><block>{<decl_stmt><decl><constraint><index>[<name>propName</name>: <type><name>string</name></type>]</index>: <type><name>mixed</name></type></constraint></decl></decl_stmt>}</block></type></decl></decl_stmt>
+</unit>
+
 <!-- Functions (with "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">

@@ -22190,6 +22190,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             {
                 last_consumed == COLON
                 || last_consumed == REFOPS
+                || last_consumed == QMARK
                 || last_consumed == OPERATORS
                 || last_consumed == LPAREN
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
