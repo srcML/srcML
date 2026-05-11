@@ -20866,7 +20866,14 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             argument |
 
             // allow JavaScript ternaries to use existing "else" logic (but do not confuse with a property COLON)
-            { inTransparentMode(MODE_TERNARY) && (!inTransparentMode(MODE_OBJECT_JS) || last_consumed == RCURLY) }?
+            {
+                inTransparentMode(MODE_TERNARY)
+                && (
+                    !inTransparentMode(MODE_OBJECT_JS)
+                    || bracket_types_js.back() == "cLPAREN"
+                    || last_consumed == RCURLY
+                )
+            }?
             colon_marked_js |
 
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")

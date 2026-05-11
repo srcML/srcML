@@ -274,7 +274,6 @@
 }</object> <operator>satisfies</operator> <name><name>Rule</name><operator>.</operator><name>RuleModule</name></name></expr></init></decl></decl_stmt>
 </unit>
 
-
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
   <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></type></decl></parameter>)</parameter_list> <block>{<block_content>
@@ -303,7 +302,6 @@
 }</object> <operator>satisfies</operator> <name><name>Rule</name><operator>.</operator><name>RuleModule</name></name></expr></init></decl></decl_stmt>
 </unit>
 
-
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
   <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></type></decl></parameter>)</parameter_list> <block>{<block_content>
@@ -316,6 +314,12 @@
     }</object></expr></return>
   </block_content>}</block></function></expr></property>,
 }</object> <operator>satisfies</operator> <name><name>Rule</name><operator>.</operator><name>RuleModule</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>itemData</name> <init>= <expr><object>{
+  <property><expr><name>scaleX</name></expr>: <expr><call><name>scale</name><argument_list>(<argument><expr><ternary><condition><expr><name>foo</name> <operator>!==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name>bar</name></expr> </then><else>: <expr><name>baz</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 </unit>
