@@ -20596,8 +20596,11 @@ lambda_js[bool is_list = false] {
             }
             expression |
 
-            // consume commas only if directly inside a call
-            { bracket_types_js.back() == "cLPAREN" }?
+            // consume commas only if directly inside a call or in operator parentheses (lambdas only)
+            {
+                bracket_types_js.back() == "cLPAREN"
+                || (bracket_types_js.back() == "oLPAREN" && inTransparentMode(MODE_LAMBDA_JS))
+            }?
             comma
         )*
 ;
