@@ -20586,6 +20586,10 @@ lambda_js[bool is_list = false] {
             { inTransparentMode(MODE_TERNARY) }?
             colon_marked_js |
 
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            (COLON type_ts) |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);

@@ -273,6 +273,19 @@
 </block_content>}</block></catch></try>
 </unit>
 
+<!-- Types in Operator Parentheses -->
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>rootsSuspendedBy</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>mixed</name></expr></argument>&gt;</argument_list></name></type> <init>=
+  <expr><operator>(</operator><call><name><name>renderer</name><operator>.</operator><name>getElementAttributeByPath</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><array>[<expr><literal type="string">'suspendedBy'</literal></expr>]</array></expr></argument>)</argument_list></call>: <type><name>any</name></type><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>wake</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <expr_stmt><expr><lambda><parameter><decl><name>callback</name></decl></parameter> <operator>=&gt;</operator> <expr><call><name>callback</name><argument_list>(<argument><expr><operator>(</operator><name>thenable</name>: <type><name>any</name></type><operator>)</operator><operator>.</operator><name>value</name></expr></argument>)</argument_list></call></expr></lambda></expr></expr_stmt>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Edge Cases -->
 
 <unit revision="1.0.0" language="TypeScript">
@@ -365,11 +378,6 @@
     <decl_stmt><decl type="const">const <name>renderer</name> <init>= <expr><name><name>this</name><operator>.</operator><name>_rendererInterfaces</name><index>[<expr><name>rendererID</name></expr>]</index></name></expr></init></decl></decl_stmt>
   </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 }</block></class>
-</unit>
-
-<unit revision="1.0.0" language="TypeScript">
-<decl_stmt><decl type="const">const <name>rootsSuspendedBy</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>mixed</name></expr></argument>&gt;</argument_list></name></type> <init>=
-  <expr><operator>(</operator><call><name><name>renderer</name><operator>.</operator><name>getElementAttributeByPath</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><array>[<expr><literal type="string">'suspendedBy'</literal></expr>]</array></expr></argument>)</argument_list></call>: <type><name>any</name></type><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 </unit>
