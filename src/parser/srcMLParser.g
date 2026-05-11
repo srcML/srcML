@@ -20870,6 +20870,7 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
                 inTransparentMode(MODE_TERNARY)
                 && (
                     !inTransparentMode(MODE_OBJECT_JS)
+                    || (is_ternary_colon && bracket_types_js.back() == "oLPAREN")
                     || bracket_types_js.back() == "cLPAREN"
                     || last_consumed == RCURLY
                 )

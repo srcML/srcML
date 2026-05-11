@@ -117,4 +117,16 @@
 <decl_stmt><decl type="const">const <name>updated</name> <init>= <expr><ternary><condition><expr><call><name>isArray</name><argument_list>(<argument><expr><name>obj</name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><call><name><name>obj</name><operator>.</operator><name>slice</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><object>{<property><expr><operator>...</operator><name>obj</name></expr></property>}</object></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>headers</name> <init>= <expr><ternary><condition><expr><name>onHeaders</name></expr>
+  ?</condition><then> <expr><object>{
+      <property><expr><name>remainingCapacity</name></expr>:
+        <expr><literal type="number">2</literal> <operator>+</operator>
+        <operator>(</operator><ternary><condition><expr><name>foo</name></expr>
+          ?</condition><then> <expr><name>bar</name></expr>
+          </then><else>: <expr><name>baz</name></expr></else></ternary><operator>)</operator></expr></property>,
+    }</object></expr>
+  </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
