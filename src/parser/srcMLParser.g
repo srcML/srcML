@@ -20398,7 +20398,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
 
             // match "NAME"
             if (LA(1) == NAME) {
-                compound_name();
+                consume();
                 found_name = true;
             }
 
@@ -20458,8 +20458,16 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                 if (LA(1) == RPAREN && next_token() == COLON) {
                     consume();  // ")"
 
+                    // consume optional TypeScript type, followed by a typical block
+                    if (
+                        LA(1) == COLON
+                        && next_token() == LCURLY
+                        && perform_colon_lcurly_differentiator_check_js() == 3
+                    ) {
+                        isfunction = true;
+                    }
                     // consume optional TypeScript type
-                    if (LA(1) == COLON) {
+                    else if (LA(1) == COLON && next_token() != LCURLY) {
                         consume();  // ":"
 
                         while (true) {
@@ -22021,6 +22029,8 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 colon_marked_js[] {
         bool in_ternary = inTransparentMode(MODE_TERNARY | MODE_THEN);
         bool markup_colon = true;
+        size_t lcurly_type = 0;
+
         ENTRY_DEBUG
 } :
         {
@@ -22045,6 +22055,10 @@ colon_marked_js[] {
 
             if (markup_colon)
                 startElement(SOPERATOR);
+
+            // determine if "{" starts an object or a kind of block
+            if (LA(1) == COLON && next_token() == LCURLY)
+                lcurly_type = perform_colon_lcurly_differentiator_check_js();
         }
 
         COLON
@@ -22052,6 +22066,29 @@ colon_marked_js[] {
         {
             if (inMode(MODE_EXPRESSION_COLON_TS))
                 endMode(MODE_EXPRESSION_COLON_TS);
+
+            switch (lcurly_type) {
+                // found JavaScript object
+                case 1:
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    startElement(SEXPRESSION);
+                    object_js();
+                    break;
+
+                // found TypeScript "type" block
+                case 2:
+                    type_ts();
+                    break;
+
+                // found TypeScript "type" block followed by a traditional block
+                case 3:
+                    type_ts();
+                    expression_block_js();
+                    break;
+
+                default:
+                    break;
+            }
         }
 ;
 
@@ -22274,6 +22311,16 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
 
                     if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */)
                         break;
+
+                    // determine if "{" starts an object or a kind of block
+                    if (LA(1) == COLON && next_token() == LCURLY) {
+                        if (perform_colon_lcurly_differentiator_check_js() == 2)
+                            isdecl = true;
+                        else
+                            isdecl = false;
+
+                        break;
+                    }
 
                     // found ": asserts"
                     if (LA(1) == COLON && next_token() == TS_ASSERTS)
@@ -23414,6 +23461,91 @@ perform_colon_differentiator_check_ts[] returns [bool isternary] {
                             break;
 
                         consume();
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_colon_lcurly_differentiator_check_js
+
+  Checks to see if a ": {" begins an object or a kind of block in JavaScript/TypeScript.
+*/
+perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
+        ENTRY_DEBUG
+
+        curlytype = 0;  // unknown
+        int curly_count = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == COLON && next_token() == LCURLY) {
+                consume();  // ":"
+
+                /*
+                    CASE 1: "{" in a ternary
+                */
+                if (inTransparentMode(MODE_TERNARY)) {
+                    curlytype = 1;  // object
+                }
+                else {
+                    // consume the first pair of curly braces
+                    while (true) {
+                        if (LA(1) == LCURLY)
+                            ++curly_count;
+
+                        if (LA(1) == RCURLY) {
+                            --curly_count;
+
+                            if (curly_count == 0)
+                                break;
+                        }
+
+                        if (curly_count < 1 || LA(1) == 1 /* EOF */)
+                            break;
+
+                        consume();
+                    }
+
+                    /*
+                        CASE 2: "{}" followed by a TERMINATE or "," indicates a function declaration
+                    */
+                    if (LA(1) == RCURLY && (next_token() == TERMINATE || next_token() == COMMA)) {
+                        curlytype = 2;  // TypeScript "type" block
+                    }
+                    else if (LA(1) == RCURLY && next_token() == LCURLY) {
+                        consume();  // "}"
+                        curly_count = 0;
+
+                        // consume the second pair of curly braces
+                        while (true) {
+                            if (LA(1) == LCURLY)
+                                ++curly_count;
+
+                            if (LA(1) == RCURLY) {
+                                --curly_count;
+
+                                /*
+                                    CASE 3: "{}" followed by "{}" indicates a function expression
+                                */
+                                if (curly_count == 0) {
+                                    curlytype = 3;  // TypeScript "type" block + traditional block
+                                    break;
+                                }
+                            }
+
+                            if (curly_count < 1 || LA(1) == 1 /* EOF */)
+                                break;
+
+                            consume();
+                        }
                     }
                 }
             }
