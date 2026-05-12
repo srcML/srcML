@@ -21206,6 +21206,7 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
         ENTRY_DEBUG
 
         iscomputed = false;
+        int bracket_count = 0;  // for TypeScript types
         int square_bracket_count = 0;
         bool found_start = false;
         bool found_type = false;
@@ -21263,9 +21264,42 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
                 // match optional TypeScript type, consuming RPAREN first
                 if (LA(1) == RPAREN && next_token() == COLON) {
                     consume();  // ")"
-                    consume();  // ":"
-                    type_ts();
-                    found_type = true;
+
+                    // consume optional TypeScript type, followed by a typical block
+                    if (
+                        LA(1) == COLON
+                        && next_token() == LCURLY
+                        && perform_colon_lcurly_differentiator_check_js() == 3
+                    ) {
+                        iscomputed = true;
+                    }
+                    // consume optional TypeScript type
+                    else if (LA(1) == COLON && next_token() != LCURLY) {
+                        consume();  // ":"
+
+                        while (true) {
+                            // found a statement-level LCURLY, indicating a block
+                            if (bracket_count == 0 && LA(1) == LCURLY)
+                                break;
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (
+                                bracket_count < 0
+                                || LA(1) == 1 /* EOF */
+                                || (bracket_count == 0 && LA(1) == TERMINATE)
+                            )
+                                break;
+
+                            consume();
+                        }
+
+                        if (LA(1) == LCURLY)
+                            iscomputed = true;
+                    }
                 }
 
                 // found "*[...](){" or "*[...](): TYPE {"

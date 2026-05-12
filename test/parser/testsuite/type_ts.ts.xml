@@ -214,6 +214,14 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>iterable</name>: <type><name><name>$AsyncIterable</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></type> <init>= <expr><object>{
+  <property><expr><function><name type="computed">[<expr><name>ASYNC_ITERATOR</name></expr>]</name><parameter_list>()</parameter_list>: <type><name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><operator>void</operator></expr></argument>&gt;</argument_list></name></type> <block>{<block_content>
+    <return>return <expr><call><name>createIterator</name><argument_list>(<argument><expr><lambda><parameter><decl><name>arg</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></argument>)</argument_list></call></expr></return>
+  </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Lambdas -->
 
 <unit revision="1.0.0" language="TypeScript">
