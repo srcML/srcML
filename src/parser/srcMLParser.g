@@ -20251,8 +20251,13 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
                 consume();
 
             // consume the name for named expression-level functions
-            if (LA(1) == NAME)
+            if (LA(1) == NAME) {
                 compound_name();
+            }
+            // consume the generic argument list for TypeScript nameless functions
+            else if (LA(1) == TEMPOPS) {
+                generic_argument_list_js();
+            }
 
             startNewMode(MODE_PARAMETER_LIST_JS);
         }

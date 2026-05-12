@@ -168,6 +168,18 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>callComponent</name> <init>= <expr><object>{
+  <property><expr><name>react_stack_bottom_frame</name></expr>: <expr><function>function <argument_list type="generic">&lt;<argument><expr><name>Props</name></expr></argument>, <argument><expr><name>R</name></expr></argument>&gt;</argument_list><parameter_list>(
+    <parameter><decl><name>Component</name>: <type><name>R</name></type></decl></parameter>,
+    <parameter><decl><name>props</name>: <type><name>Props</name></type></decl></parameter>,
+    <parameter><decl><name>secondArg</name>: <type><name>Arg</name></type></decl></parameter>,
+  )</parameter_list>: <type><name>R</name></type> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>result</name> <init>= <expr><call><name>Component</name><argument_list>(<argument><expr><name>props</name></expr></argument>, <argument><expr><name>secondArg</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+  </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Functions (without "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">
