@@ -15,7 +15,6 @@
 }</block></class>
 </unit>
 
-
 <!-- "const" -->
 
 <unit revision="1.0.0" language="TypeScript">
@@ -30,6 +29,14 @@
 <class><specifier>declare</specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <function_decl><name>let</name> <parameter_list>(<parameter><decl><name>text</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>options</name><modifier>?</modifier>: <type><name>writableStreamOptions</name></type></decl></parameter>)</parameter_list>: <type><name>content</name></type></function_decl>
 }</block></class>
+</unit>
+
+<!-- "satisfies" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><call><name>originalTest</name><argument_list>(<argument><expr><name>testName</name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>args</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <expr_stmt><expr><name>shouldPass</name> <operator>=</operator> <operator>!</operator><operator>!</operator><call><name><name>semver</name><operator>.</operator><name>satisfies</name></name><argument_list>(<argument><expr><literal type="string">'18.0.0'</literal></expr></argument>, <argument><expr><name>range</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
 <!-- "static" -->
@@ -70,12 +77,14 @@
 }</block></class>
 </unit>
 
-<!-- "satisfies" -->
+<!-- "void" -->
 
 <unit revision="1.0.0" language="TypeScript">
-<expr_stmt><expr><call><name>originalTest</name><argument_list>(<argument><expr><name>testName</name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>args</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
-  <expr_stmt><expr><name>shouldPass</name> <operator>=</operator> <operator>!</operator><operator>!</operator><call><name><name>semver</name><operator>.</operator><name>satisfies</name></name><argument_list>(<argument><expr><literal type="string">'18.0.0'</literal></expr></argument>, <argument><expr><name>range</name></expr></argument>)</argument_list></call></expr></expr_stmt>
-</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+<decl_stmt><decl type="const">const <name>entangledThenable</name>: <type><name><name>Thenable</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></type> <init>= <expr><object>{
+  <property><expr><function><name>then</name><parameter_list>(<parameter><decl><name>resolve</name>: <type><lambda><parameter><decl><name>void</name></decl></parameter> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>entangledListeners</name><operator>.</operator><name>push</name></name><argument_list>(<argument><expr><name>resolve</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!--

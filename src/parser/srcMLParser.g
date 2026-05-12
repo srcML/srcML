@@ -21712,6 +21712,9 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         javascript_parameter_list
 
         {
+            // a lone parameter lambda cannot appear here
+            skip_lone_lambda_js = true;
+
             // consume TypeScript types, if applicable
             if (LA(1) == COLON) {
                 consume();  // ":"
@@ -21720,6 +21723,11 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         }
 
         arrow_operator_js
+
+        {
+            skip_lone_lambda_js = false;
+        }
+
         expression_block_js
 
         {
