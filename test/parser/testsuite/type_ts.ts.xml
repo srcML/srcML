@@ -396,4 +396,10 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>fallbackReplayNode</name>: <type><name>ReplayNode</name></type> <init>= <expr><array>[
+  <expr><operator>(</operator><array>[]</array>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>ReplayNode</name></expr></argument>&gt;</argument_list></name></type><operator>)</operator></expr>,
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

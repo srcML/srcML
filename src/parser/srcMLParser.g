@@ -20192,6 +20192,10 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inMode(MODE_ARGUMENT) }?
             argument |
 
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            (COLON type_ts) |
+
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
             colon_marked_js |
