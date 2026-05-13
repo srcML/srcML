@@ -12945,8 +12945,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         declaration_modifiers_ts |
 
-        // special case: mark "readonly" as a specifier in certain TypeScript instances
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+        // special case: mark "readonly" as a specifier in TypeScript types
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_TYPE_TS) }?
         declaration_specifiers_ts |
 
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword

@@ -420,4 +420,10 @@
 ]</array></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<interface><specifier>export</specifier> interface <name>EmitOutput</name> <block>{
+  <decl_stmt><decl><name>diagnostics</name>: <type><specifier>readonly</specifier> <name>Diagnostic</name></type></decl></decl_stmt>
+}</block></interface>
+</unit>
+
 </unit>
