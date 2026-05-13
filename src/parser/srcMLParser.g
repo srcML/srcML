@@ -19711,9 +19711,14 @@ javascript_parameter_list[] { CompleteElement element(this); size_t bracket_type
             }
             comma |
 
-            (compound_name COLON) => complete_javascript_parameter |
+            // parameter that contains a name and a type (e.g., "NAME : TYPE")
+            (
+                compound_name
+                (declaration_modifiers_ts)*
+                COLON
+            ) => complete_javascript_parameter |
 
-            // parameter that only contains a type (i.e., not "COLON type")
+            // parameter that only contains a type (i.e., not ": TYPE")
             { inTransparentMode(MODE_TYPE_TS) && inTransparentMode(MODE_LAMBDA_JS) }?
             complete_typescript_parameter |
 
