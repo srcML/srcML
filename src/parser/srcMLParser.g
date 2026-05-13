@@ -22210,6 +22210,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                     last_consumed == TEMPOPE
                     && tempops_count_ts == 0
                     && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
+                    && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
                 )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
                 || LA(1) == JS_AS

@@ -71,6 +71,10 @@
 <decl_stmt><decl type="let">let <name>lastMouseEvent</name>: <type><modifier>?</modifier><block>{<decl_stmt><decl><constraint><index>[<name>propName</name>: <type><name>string</name></type>]</index>: <type><name>mixed</name></type></constraint></decl></decl_stmt>}</block></type></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>getAsyncIterator</name>: <type><name>void</name> <operator>|</operator> <operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></expr></lambda><operator>)</operator></type> <init>= <expr><name>ASYNC_ITERATOR</name></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Functions (with "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">
