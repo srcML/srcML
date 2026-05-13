@@ -11,6 +11,10 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<function_decl><name>getFile</name><parameter_list>()</parameter_list>: <type><name><name>File</name><argument_list type="generic">&lt;<argument><expr><specifier>readonly</specifier> <name><name>File</name><index>[]</index></name></expr></argument>&gt;</argument_list></name></type></function_decl>
+</unit>
+
 <!-- With specifiers -->
 
 <unit revision="1.0.0" language="TypeScript">
