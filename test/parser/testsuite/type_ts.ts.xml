@@ -75,6 +75,12 @@
 <decl_stmt><decl type="const">const <name>getAsyncIterator</name>: <type><name>void</name> <operator>|</operator> <operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></expr></lambda><operator>)</operator></type> <init>= <expr><name>ASYNC_ITERATOR</name></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>iterableChildren</name>: <type><name><name>Iterable</name><argument_list type="generic">&lt;<argument><expr><name>React$Node</name></expr></argument>&gt;</argument_list></name> <operator>&amp;</operator> <block>{<block_content>
+  <decl_stmt><decl><name>entries</name>: <type><name>any</name></type></decl>,</decl_stmt>
+</block_content>}</block></type> <init>= <expr><operator>(</operator><name>children</name>: <type><name>any</name></type><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Functions (with "function" keyword) -->
 
 <unit revision="1.0.0" language="TypeScript">
