@@ -291,7 +291,7 @@ token_set(srcMLParser, name_differentiator_js_token_set,
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,
     // A subset of JavaScript and TypeScript keywords from "name_differentiator_js_token_set"
-    // Notable exclusions include literals (e.g., true), operators (e.g., await), async, functions, and classes
+    // Exclusions: literals (e.g., true), operators (e.g., await), async, readonly, function, and class
     srcMLParser::JS_AS, srcMLParser::BREAK, srcMLParser::CASE, srcMLParser::JS_CATCH,
     srcMLParser::JS_CONST, srcMLParser::JS_CONSTRUCTOR, srcMLParser::CONTINUE, srcMLParser::JS_DEBUGGER,
     srcMLParser::JS_DEFAULT, srcMLParser::JS_DELETE, srcMLParser::DO, srcMLParser::JS_EACH, srcMLParser::JS_ELSE,
@@ -304,7 +304,7 @@ token_set(srcMLParser, name_differentiator_subset_js_token_set,
     // TypeScript keywords
     srcMLParser::TS_ABSTRACT, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE,
     srcMLParser::TS_NAMESPACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED,
-    srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY, srcMLParser::TS_TYPE
+    srcMLParser::TS_PUBLIC, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, insert_terminate_js_token_set,
