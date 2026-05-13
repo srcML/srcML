@@ -69,6 +69,14 @@
 <decl_stmt><decl type="const">const <name>regexUnicode</name> <init>= <expr><literal type="regex">/\u{1F600}/u</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>filter</name> <init>= <expr><literal type="regex">/]/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>filter</name> <init>= <expr><literal type="regex">/src[\\/]typescript[\\/]typescript\.ts$/</literal></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Regular expression following '(' -->
 
 <unit revision="1.0.0" language="JavaScript">

@@ -193,7 +193,11 @@ NAME options { testLiterals = true; } :
 ;
 
 // Single-line comments (no EOL); also processes potential regular expression literals in JavaScript/TypeScript
-LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnonspacetoken = this->getLastToken(); } : '/'
+LINE_COMMENT_START options { testLiterals = true; } {
+    int mode = 0;
+    int squarebracketcount = 0;
+    int lastnonspacetoken = this->getLastToken();
+} : '/'
     (
         // for this conditional, lastnonspacetoken must refer to the token before the first '/'
         {
@@ -211,9 +215,21 @@ LINE_COMMENT_START options { testLiterals = true; } { int mode = 0; int lastnons
             )
         }?
         (options { greedy = true; } :
+            { LA(1) == '/' }?
+            {
+                if (squarebracketcount != 0)
+                    consume();
+                else
+                    break;
+            } |
+
+            ('[') { ++squarebracketcount; } |
+
+            (']') { if (squarebracketcount > 0) --squarebracketcount; } |
+
             ('\\') { if (LA(1) == '\\' || LA(1) == '/') consume(); } |
 
-            ~('/' | '\\')
+            ~('/' | '[' | ']' | '\\')
         )*
         ('/') (NAME)?
         { $setType(JS_REGEX); }
