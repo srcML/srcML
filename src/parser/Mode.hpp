@@ -328,6 +328,8 @@ const static srcMLState::MODE_TYPE MODE_SET_PY;
 // JavaScript modes
 const static srcMLState::MODE_TYPE MODE_FUNCTION_EXPRESSION_JS;
 
+const static srcMLState::MODE_TYPE MODE_GLOBAL_CONTEXT_CALL_JS;
+
 const static srcMLState::MODE_TYPE MODE_OBJECT_DESTRUCTURE_JS;
 
 const static srcMLState::MODE_TYPE MODE_ARRAY_DESTRUCTURE_JS;

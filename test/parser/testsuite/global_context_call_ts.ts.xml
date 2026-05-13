@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="global_context_call">
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>math</name><operator>.</operator><name>double</name></name>)</expr><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<expr_stmt><expr><call><expr><operator>(</operator><literal type="string">"ignored"</literal><operator>,</operator> <name><name>Math</name><operator>.</operator><name>max</name></name>)</expr><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>result</name> <init>= <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>math</name><operator>.</operator><name>double</name></name>)</expr><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>message</name> <init>= <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>api</name><operator>.</operator><name>greet</name></name>)</expr><argument_list>(<argument><expr><literal type="string">"srcML"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>componentDebugInfo</name>: <type><name>ReactComponentInfo</name></type> <init>= <expr><object>{
+  <property><expr><name>env</name></expr>: <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>request</name><operator>.</operator><name>environmentName</name></name>)</expr><argument_list>()</argument_list></call></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>version</name> <init>= <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>service</name><operator>?.</operator><name>getVersion</name></name>)</expr><operator>?.</operator><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

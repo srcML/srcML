@@ -12953,6 +12953,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_keywordless_iife_check_js() }?
         keywordless_iife_js |
 
+        // special case: JavaScript global context call (e.g., "(,)()")
+        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_global_context_call_check_js() }?
+        global_context_call_js |
+
         // special case: JavaScript tagged templates (e.g., a`b`)
         { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_tagged_template_check_js(call_count) }?
         tagged_template_js[call_count] |
@@ -23622,3 +23626,166 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
         inputState->guessing--;
         rewind(start);
 } :;
+
+/*
+  perform_global_context_call_check_js
+
+  Checks to see if pairs of consecutive parentheses are a call in JavaScript/TypeScript.
+  Typically of the form "(,)()".
+*/
+perform_global_context_call_check_js[] returns [bool iscall] {
+        ENTRY_DEBUG
+
+        iscall = false;
+        int paren_count = 0;
+        bool found_comma = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // match the first set of parentheses
+            if (LA(1) == LPAREN) {
+                while (true) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    if (paren_count == 1 && LA(1) == COMMA)
+                        found_comma = true;
+
+                    consume();
+
+                    if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                        break;
+                }
+            }
+
+            // match optional call chaining syntax (e.g., "?.")
+            if (LA(1) == QMARK_PERIOD)
+                qmark_period();
+
+            // match the second set of parentheses
+            if (found_comma && LA(1) == LPAREN) {
+                paren_count = 0;
+
+                while (true) {
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN) {
+                        --paren_count;
+
+                        if (paren_count == 0) {
+                            iscall = true;
+                            break;
+                        }
+                    }
+
+                    consume();
+
+                    if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                        break;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  global_context_call_js
+
+  Handles a global context call in JavaScript/TypeScript (e.g., "(,)()").
+*/
+global_context_call_js[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_GLOBAL_CONTEXT_CALL_JS);
+            startElement(SFUNCTION_CALL);
+
+            startNewMode(MODE_EXPRESSION);
+            startElement(SEXPRESSION);
+        }
+
+        lparen_marked
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            // ensure the first set of parentheses ends correctly
+            { LA(1) == RPAREN && lparen_types_size == lparen_types_js.size() }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume operator comma
+            { bracket_types_js.back() == "oLPAREN" && lparen_types_size == lparen_types_js.size() }?
+            comma_marked |
+
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma
+        )*
+
+        rparen[false]
+
+        {
+            if (inTransparentMode(MODE_GLOBAL_CONTEXT_CALL_JS))
+                endDownToMode(MODE_GLOBAL_CONTEXT_CALL_JS);
+
+            // match optional call chaining syntax (e.g., "?.")
+            if (LA(1) == QMARK_PERIOD)
+                qmark_period();
+
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+        }
+
+        call_argument_list
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+;
