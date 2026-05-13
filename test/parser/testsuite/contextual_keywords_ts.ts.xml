@@ -61,6 +61,12 @@
 <decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<decl_stmt><decl type="const">const <name>hasNonFBBundleTypes</name> <init>= <expr><call><name><name>bundle</name><operator>.</operator><name>bundleTypes</name><operator>.</operator><name>some</name></name><argument_list>(
+  <argument><expr><lambda><parameter><decl><name>type</name></decl></parameter> <operator>=&gt;</operator> <expr><name>type</name> <operator>!==</operator> <name>FB_WWW_DEV</name> <operator>&amp;&amp;</operator> <name>type</name> <operator>!==</operator> <name>FB_WWW_PROD</name></expr></lambda></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "using" -->
 
 <unit revision="1.0.0" language="TypeScript">
