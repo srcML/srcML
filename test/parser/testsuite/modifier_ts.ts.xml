@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="modifier">
 
+<!-- "?" and "!" Modifiers -->
+
 <unit revision="1.0.0" language="TypeScript">
 <decl_stmt><decl type="let">let <name>obj</name> <init>= <expr><object>{
   <property><expr><name>optional</name><modifier>?</modifier></expr>: <expr><literal type="string">"optional"</literal></expr></property>,
@@ -19,6 +21,20 @@
 <decl_stmt><decl><name>getNotifications</name><modifier>?</modifier>: <type><lambda><parameter_list>(
   <parameter><decl><name>filter</name><modifier>?</modifier>: <type><name>GetNotificationOptions</name></type></decl></parameter>
 )</parameter_list> <operator>=&gt;</operator> <expr><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name><name>$ReadOnlyArray</name><argument_list type="generic">&lt;<argument><expr><name>Notification</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></expr></lambda></type></decl></decl_stmt>
+</unit>
+
+<!-- "..." Modifier -->
+
+<unit revision="1.0.0" language="TypeScript">
+<interface>interface <name>Generator</name> <block>{
+    <function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><array>[<expr><name>value</name></expr>]</array>: <type><array>[]</array> <operator>|</operator> <array>[<expr><name>TNext</name></expr>]</array></type></decl></parameter>)</parameter_list>: <type><name>IteratorResult</name></type></function_decl>
+}</block></interface>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<interface>interface <name>Generator</name> <block>{
+    <function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><object>{<property><expr><name>value</name></expr>: <expr><literal type="number">10</literal></expr></property>}</object>: <type><array>[]</array> <operator>|</operator> <array>[<expr><name>TNext</name></expr>]</array></type></decl></parameter>)</parameter_list>: <type><name>IteratorResult</name></type></function_decl>
+}</block></interface>
 </unit>
 
 </unit>

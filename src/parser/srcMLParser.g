@@ -19763,7 +19763,10 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
             object_js |
 
             // rest parameter
-            (tripledotop compound_name) |
+            (
+                tripledotop
+                (compound_name | array_js | object_js)
+            ) |
 
             // decorator parameter (TypeScript)
             (attribute_ts compound_name COLON type_ts) |
