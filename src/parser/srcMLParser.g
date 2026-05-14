@@ -19041,9 +19041,12 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 situational_specifiers_js();
             }
 
-            // mark up any specifiers, if applicable
+            // mark up any JavaScript/TypeScript specifiers, if applicable
             while (check_valid_specifier_js()) {
-                specifier_js();
+                if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
+                    declaration_specifiers_ts();
+                else
+                    specifier_js();
             }
 
             // consume optional unary operators
@@ -19054,6 +19057,10 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
         (JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)
 
         {
+            // handle optional TypeScript specifiers that appear after the keyword
+            if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
+                declaration_specifiers_ts();
+
             // handle optional array destructuring syntax (e.g., "const [a, b]")
             if (LA(1) == LBRACKET)
                 decl_with_array_destructuring_js();

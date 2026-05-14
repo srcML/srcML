@@ -64,6 +64,7 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
         (
             srcMLParser::decl_start_js_token_set.member(prevNonWhitespaceToken->getType())
             && token->getType() != srcMLParser::NAME
+            && token->getType() != srcMLParser::TS_READONLY
         )
         || (
             bracketBuffer.front() == "*"
