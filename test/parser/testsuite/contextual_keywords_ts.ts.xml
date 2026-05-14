@@ -31,6 +31,22 @@
 }</block></class>
 </unit>
 
+<!-- "new" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<interface>interface <name>WeakSetConstructor</name> <block>{
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <extends>extends <type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></type></extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type></decl></decl_stmt>
+}</block></interface>
+</unit>
+
+<!-- Semicolon delimiters are required for validity -->
+<unit revision="1.0.0" language="TypeScript">
+<interface>interface <name>WeakSetConstructor</name> <block>{
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <extends>extends <type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></type></extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <extends>extends <type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></type></extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
+}</block></interface>
+</unit>
+
 <!-- "satisfies" -->
 
 <unit revision="1.0.0" language="TypeScript">

@@ -22258,8 +22258,8 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                     && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
                 )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
+                || (LA(1) == EQUAL && !inTransparentMode(MODE_MIXINS_TS) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
                 || LA(1) == JS_AS
-                || LA(1) == EQUAL
             }?
             {
                 // special case: "NAME + unary operator" denotes the end of a TypeScript declaration
