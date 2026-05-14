@@ -398,6 +398,7 @@ tokens {
     TS_DATSIGN;
     TS_DECLARE;
     TS_IMPLEMENTS;
+    TS_INFER;
     TS_INTERFACE;
     TS_IS;
     TS_KEYOF;
@@ -943,6 +944,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "asserts"      , TS_ASSERTS        , LANGUAGE_JAVASCRIPT_FAMILY },
         { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT_FAMILY },
         { "implements"   , TS_IMPLEMENTS     , LANGUAGE_JAVASCRIPT_FAMILY },
+        { "infer"        , TS_INFER          , LANGUAGE_JAVASCRIPT_FAMILY },
         { "interface"    , TS_INTERFACE      , LANGUAGE_JAVASCRIPT_FAMILY },
         { "namespace"    , TS_NAMESPACE      , LANGUAGE_JAVASCRIPT_FAMILY },
         { "override"     , TS_OVERRIDE       , LANGUAGE_JAVASCRIPT_FAMILY },

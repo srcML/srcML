@@ -24,4 +24,18 @@
 <typedef>type <name>ColorfulCircle</name> = <type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></type></typedef>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
+  <type><ternary><condition><expr><name>foo</name></expr>
+    ?</condition><then> <expr><name>bar</name></expr>
+    </then><else>: <expr><name>baz</name></expr></else></ternary></type></typedef>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
+  <type><ternary><condition><expr><name>T</name> <extends>extends <type><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><operator>infer</operator> <name>U</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></type></extends></expr>
+    ?</condition><then> <expr><name>U</name></expr>
+    </then><else>: <expr><ternary><condition><expr><name>T</name> <extends>extends <type><name><name>Set</name><argument_list type="generic">&lt;<argument><expr><operator>infer</operator> <name>U</name></expr></argument>&gt;</argument_list></name></type></extends></expr> ?</condition><then> <expr><name>U</name></expr> </then><else>: <expr><name>never</name></expr></else></ternary></expr></else></ternary></type></typedef>
+</unit>
+
 </unit>

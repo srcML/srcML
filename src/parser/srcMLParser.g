@@ -3636,6 +3636,9 @@ ternary_check[] { ENTRY_DEBUG } :
                 bracket_pair
                 (options { greedy = true; } : paren_pair | curly_pair)* |
 
+                { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+                angle_bracket_pair |
+
                 ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
             )
         )
@@ -3651,6 +3654,9 @@ ternary_check[] { ENTRY_DEBUG } :
 
                 bracket_pair
                 (options { greedy = true; } : paren_pair | curly_pair)* |
+
+                { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+                angle_bracket_pair |
 
                 ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
             )
@@ -12435,7 +12441,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             JS_AS | JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID |
 
             // TypeScript
-            TS_ATSIGN | TS_KEYOF | TS_SATISFIES
+            TS_ATSIGN | TS_INFER | TS_KEYOF | TS_SATISFIES
         )
 ;
 
@@ -13164,6 +13170,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             && (
                 !inLanguage(LANGUAGE_JAVA)
                 || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
+            )
+            && (
+                !inTransparentMode(MODE_TYPE_TS)
+                || !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
             )
             && perform_ternary_check()
         }?
@@ -15199,6 +15209,25 @@ bracket_pair[] { ENTRY_DEBUG } :
         )*
 
         RBRACKET
+;
+
+/*
+  angle_bracket_pair
+
+  Used to match a set of angle brackets.
+*/
+angle_bracket_pair[] { ENTRY_DEBUG } :
+        TEMPOPS
+
+        (
+            angle_bracket_pair |
+
+            qmark |
+
+            ~(QMARK | TEMPOPS | TEMPOPE)
+        )*
+
+        TEMPOPE
 ;
 
 /*
@@ -22226,6 +22255,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                     && LA(1) != REFOPS
                     && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
                     && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
+                    && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
                 )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
                 || LA(1) == JS_AS
@@ -22246,7 +22276,13 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             } |
 
             // "?" and "!" are valid TypeScript modifiers
-            { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+            {
+                !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
+                && (
+                    LA(1) == QMARK
+                    || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+                )
+            }?
             declaration_modifiers_ts |
 
             // only allow a subset of all operators
@@ -22279,9 +22315,17 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             // marks "asserts" and "is" as operators
             assertion_function_operator_ts | type_predicate_operator_ts |
 
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY | MODE_THEN) }?
+            colon_marked_js |
+
             // allow nested types (e.g., in lambdas)
-            { lparen_types_js.size() > 0 }?
+            { !inTransparentMode(MODE_TERNARY | MODE_THEN) && lparen_types_js.size() > 0 }?
             (COLON type_ts) |
+
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+            mixins_ts |
 
             // allow certain expression, but do not consume LCURLY (could be a block)
             { LA(1) != LCURLY || (LA(1) == LCURLY && inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)) }?
