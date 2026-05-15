@@ -23654,7 +23654,15 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
                     /*
                         CASE 2: "{}" followed by a TERMINATE or "," indicates a function declaration
                     */
-                    if (LA(1) == RCURLY && (next_token() == TERMINATE || next_token() == COMMA)) {
+                    if (
+                        LA(1) == RCURLY
+                        && (
+                            next_token() == TERMINATE
+                            || next_token() == COMMA
+                            || next_token() == REFOPS
+                            || next_token() == OPERATORS
+                        )
+                    ) {
                         curlytype = 2;  // TypeScript "type" block
                     }
                     else if (LA(1) == RCURLY && next_token() == LCURLY) {

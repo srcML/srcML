@@ -91,4 +91,16 @@
 }</block></type></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="TypeScript">
+<interface>interface <name>ANTLR</name> <block>{
+  <function_decl><specifier>static</specifier> <name>resolveModule</name><parameter_list>(<parameter><decl><name>moduleName</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><block>{}</block> <operator>|</operator> <literal type="undefined">undefined</literal></type></function_decl>
+}</block></interface>
+</unit>
+
+<unit revision="1.0.0" language="TypeScript">
+<interface>interface <name>ANTLR</name> <block>{
+  <function_decl><specifier>static</specifier> <name>resolveModule</name><parameter_list>(<parameter><decl><name>moduleName</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><block>{}</block> <operator>&amp;</operator> <literal type="undefined">undefined</literal></type></function_decl>
+}</block></interface>
+</unit>
+
 </unit>
