@@ -20136,7 +20136,7 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
             // nested destructuring
             decl_with_array_destructuring_js | decl_with_object_destructuring_js |
 
-            declaration_init_js | declaration_range_js | tripledotop | compound_name
+            declaration_init_js | declaration_range_js | tripledotop | compound_name | literals
         )*
 
         {
