@@ -18911,7 +18911,7 @@ check_valid_specifier_js[] returns [int isspecifier] {
 
         if (
             (
-                specifier_js_token_set.member(LA(1))
+                specifier_js_token_set.member((unsigned int) LA(1))
                 && (LA(1) != JS_DEFAULT || (LA(1) == JS_DEFAULT && next_token() != COLON))
                 && (LA(1) != JS_AWAIT || (LA(1) == JS_AWAIT && next_token() == JS_USING))
                 && (
@@ -18920,7 +18920,8 @@ check_valid_specifier_js[] returns [int isspecifier] {
                     || (LA(1) == JS_STATIC && (next_token() == OPERATORS || next_token() == DESTOP))
                 )
             )
-            || declaration_specifiers_ts_token_set.member(LA(1))
+            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            || LA(1) == TS_ABSTRACT
         )
             isspecifier = true;
 
@@ -18975,7 +18976,7 @@ specifier_js[] { ENTRY_DEBUG } :
         (
             JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT | JS_STATIC |
 
-            (TS_ABSTRACT | TS_DECLARE) { setTypeScript(); }
+            ((TS_ABSTRACT | TS_DECLARE) { setTypeScript(); })
         )
 
         {

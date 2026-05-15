@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="specifier">
 
+<!-- "abstract" -->
+
+<unit revision="1.0.0" language="TypeScript">
+<class><specifier>abstract</specifier> class <name>Project</name> <super_list><implements>implements <super><expr><name>LanguageServiceHost</name></expr></super>, <super><expr><name>ModuleResolutionHost</name></expr></super></implements></super_list> <block>{
+  <decl_stmt><decl><specifier>readonly</specifier> <name>projectKind</name>: <type><name>ProjectKind</name></type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<!-- "export" -->
+
 <unit revision="1.0.0" language="TypeScript">
 <class><specifier>export</specifier> class <name>Metadata</name> <block>{
   <decl_stmt><decl type="static"><specifier>private</specifier> static <specifier>readonly</specifier> <name>_undefinedValue</name> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
