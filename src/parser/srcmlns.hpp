@@ -70,6 +70,11 @@ constexpr inline auto SRCML_OPENMP_NS_URI = "http://www.srcML.org/srcML/openmp"s
 
 constexpr inline auto SRCML_OPENMP_NS_DEFAULT_PREFIX = "omp"sv;
 
+/** srcML TypeScript namespace uri and default prefix */
+constexpr inline auto SRCML_TYPESCRIPT_NS_URI = "http://www.srcML.org/srcML/TypeScript"sv;
+
+constexpr inline auto SRCML_TYPESCRIPT_NS_DEFAULT_PREFIX = "ts"sv;
+
 /** srcDiff namespace uri and default prefix */
 constexpr inline auto SRCML_DIFF_NS_URI = "http://www.srcML.org/srcDiff"sv;
 
@@ -77,11 +82,12 @@ constexpr inline auto SRCML_DIFF_NS_DEFAULT_PREFIX = "diff"sv;
 
 /** default namespaces */
 const Namespaces default_namespaces = {
-    Namespace(SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED),
-    Namespace(SRCML_CPP_NS_DEFAULT_PREFIX,      SRCML_CPP_NS_URI,      NS_STANDARD),
-    Namespace(SRCML_ERROR_NS_DEFAULT_PREFIX,    SRCML_ERROR_NS_URI,    NS_STANDARD | NS_ROOT),
-    Namespace(SRCML_POSITION_NS_DEFAULT_PREFIX, SRCML_POSITION_NS_URI, NS_STANDARD | NS_ROOT),
-    Namespace(SRCML_OPENMP_NS_DEFAULT_PREFIX,   SRCML_OPENMP_NS_URI,   NS_STANDARD),
+    Namespace(SRCML_SRC_NS_DEFAULT_PREFIX,        SRCML_SRC_NS_URI,        NS_STANDARD | NS_REQUIRED),
+    Namespace(SRCML_CPP_NS_DEFAULT_PREFIX,        SRCML_CPP_NS_URI,        NS_STANDARD),
+    Namespace(SRCML_ERROR_NS_DEFAULT_PREFIX,      SRCML_ERROR_NS_URI,      NS_STANDARD | NS_ROOT),
+    Namespace(SRCML_POSITION_NS_DEFAULT_PREFIX,   SRCML_POSITION_NS_URI,   NS_STANDARD | NS_ROOT),
+    Namespace(SRCML_OPENMP_NS_DEFAULT_PREFIX,     SRCML_OPENMP_NS_URI,     NS_STANDARD),
+    Namespace(SRCML_TYPESCRIPT_NS_DEFAULT_PREFIX, SRCML_TYPESCRIPT_NS_URI, NS_STANDARD),
 };
 
 const Namespaces starting_namespaces = {

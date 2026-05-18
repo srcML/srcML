@@ -3,38 +3,38 @@
 
 <!-- "?" and "!" Modifiers -->
 
-<unit revision="1.0.0" language="JavaScript">
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>obj</name> <init>= <expr><object>{
-  <property><expr><name>optional</name><modifier>?</modifier></expr>: <expr><literal type="string">"optional"</literal></expr></property>,
-  <property><expr><name>definite</name><modifier>!</modifier></expr>: <expr><literal type="string">"definite"</literal></expr></property>,
+  <property><expr><name>optional</name><ts:modifier>?</ts:modifier></expr>: <expr><literal type="string">"optional"</literal></expr></property>,
+  <property><expr><name>definite</name><ts:modifier>!</ts:modifier></expr>: <expr><literal type="string">"definite"</literal></expr></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<class><specifier>declare</specifier> class <name>FetchEvent</name> <super_list><extends>extends <super><expr><name>ExtendableEvent</name></expr></super></extends></super_list> <block>{
-  <decl_stmt><decl><name>preloadOne</name><modifier>?</modifier>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><modifier>?</modifier><name>Response</name></expr></argument>, <argument><expr><modifier>?</modifier><name>Response</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
-  <decl_stmt><decl><name>preloadTwo</name><modifier>!</modifier>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><modifier>!</modifier><name>Response</name></expr></argument>, <argument><expr><modifier>!</modifier><name>Response</name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>FetchEvent</name> <super_list><extends>extends <super><expr><name>ExtendableEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><name>preloadOne</name><ts:modifier>?</ts:modifier>: <ts:type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><ts:modifier>?</ts:modifier><name>Response</name></expr></argument>, <argument><expr><ts:modifier>?</ts:modifier><name>Response</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><name>preloadTwo</name><ts:modifier>!</ts:modifier>: <ts:type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><ts:modifier>!</ts:modifier><name>Response</name></expr></argument>, <argument><expr><ts:modifier>!</ts:modifier><name>Response</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl><name>getNotifications</name><modifier>?</modifier>: <type><lambda><parameter_list>(
-  <parameter><decl><name>filter</name><modifier>?</modifier>: <type><name>GetNotificationOptions</name></type></decl></parameter>
-)</parameter_list> <operator>=&gt;</operator> <expr><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name><name>$ReadOnlyArray</name><argument_list type="generic">&lt;<argument><expr><name>Notification</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></expr></lambda></type></decl></decl_stmt>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl><name>getNotifications</name><ts:modifier>?</ts:modifier>: <ts:type><lambda><parameter_list>(
+  <parameter><decl><name>filter</name><ts:modifier>?</ts:modifier>: <ts:type><name>GetNotificationOptions</name></ts:type></decl></parameter>
+)</parameter_list> <operator>=&gt;</operator> <expr><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name><name>$ReadOnlyArray</name><argument_list type="generic">&lt;<argument><expr><name>Notification</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></expr></lambda></ts:type></decl></decl_stmt>
 </unit>
 
 <!-- "..." Modifier -->
 
-<unit revision="1.0.0" language="JavaScript">
-<interface>interface <name>Generator</name> <block>{
-    <function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><array>[<expr><name>value</name></expr>]</array>: <type><array>[]</array> <operator>|</operator> <array>[<expr><name>TNext</name></expr>]</array></type></decl></parameter>)</parameter_list>: <type><name>IteratorResult</name></type></function_decl>
-}</block></interface>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>Generator</name> <block>{
+    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><array>[<expr><name>value</name></expr>]</array>: <ts:type><array>[]</array> <operator>|</operator> <array>[<expr><name>TNext</name></expr>]</array></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>IteratorResult</name></ts:type></ts:function_decl>
+}</block></ts:interface>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<interface>interface <name>Generator</name> <block>{
-    <function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><object>{<property><expr><name>value</name></expr>: <expr><literal type="number">10</literal></expr></property>}</object>: <type><array>[]</array> <operator>|</operator> <array>[<expr><name>TNext</name></expr>]</array></type></decl></parameter>)</parameter_list>: <type><name>IteratorResult</name></type></function_decl>
-}</block></interface>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>Generator</name> <block>{
+    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><object>{<property><expr><name>value</name></expr>: <expr><literal type="number">10</literal></expr></property>}</object>: <ts:type><array>[]</array> <operator>|</operator> <array>[<expr><name>TNext</name></expr>]</array></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>IteratorResult</name></ts:type></ts:function_decl>
+}</block></ts:interface>
 </unit>
 
 </unit>

@@ -725,7 +725,7 @@ tokens {
     SYIELD_STATEMENT;
     SYIELD_FROM_STATEMENT;
 
-    // JavaScript and TypeScript
+    // JavaScript
     SCOMPUTED_PROPERTY;
     SDEBUGGER_STATEMENT;
     SDECLARATION_CONST;
@@ -733,7 +733,6 @@ tokens {
     SDECLARATION_STATIC;
     SDECLARATION_USING;
     SDECLARATION_VAR;
-    SDECLARE_STATEMENT;
     SEXPORT_STATEMENT;
     SFUNCTION_GENERATOR_STATEMENT;
     SFUNCTION_GET_STATEMENT;
@@ -745,6 +744,21 @@ tokens {
     SREGEX_JS;
     SUNDEFINED_JS;
     SYIELD_GENERATOR_STATEMENT;
+
+    // TypeScript
+    STS_ATTRIBUTE;
+    STS_CONSTRAINT;
+    STS_DECLARE_STATEMENT;
+    STS_EXTENDS;
+    STS_FUNCTION_DECLARATION;
+    STS_IMPLEMENTS;
+    STS_INTERFACE;
+    STS_MODIFIER;
+    STS_NAMESPACE;
+    STS_OPERATOR;
+    STS_SPECIFIER;
+    STS_TYPE;
+    STS_TYPEDEF;
 }
 
 /*
@@ -1129,10 +1143,10 @@ public:
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* TYPESCRIPT STATEMENTS */
-        temp_array[TS_DECLARE]   = { SDECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, nullptr, &srcMLParser::declare_statement_ts };
-        temp_array[TS_INTERFACE] = { SINTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS | MODE_NO_BLOCK_CONTENT, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
-        temp_array[TS_NAMESPACE] = { SNAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
-        temp_array[TS_TYPE]      = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[TS_DECLARE]   = { STS_DECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, nullptr, &srcMLParser::declare_statement_ts };
+        temp_array[TS_INTERFACE] = { STS_INTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS | MODE_NO_BLOCK_CONTENT, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[TS_NAMESPACE] = { STS_NAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[TS_TYPE]      = { STS_TYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
 
         /* DUPLEX KEYWORDS */
         temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
@@ -12389,11 +12403,25 @@ pure_expression_block[] { ENTRY_DEBUG } :
 */
 general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
+            // special tag for TypeScript operators
             if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && (
+                    LA(1) == TS_ATSIGN
+                    || LA(1) == TS_INFER
+                    || LA(1) == TS_KEYOF
+                    || LA(1) == TS_SATISFIES
+                )
+            ) {
+                startElement(STS_OPERATOR);
+            }
+
+            else if (
                 (LA(1) != IN || !inTransparentMode(MODE_CONTROL_CONDITION))
                 || (LA(1) == PY_IN && !inTransparentMode(MODE_FOR_CONTROL_PY))
-            )
+            ) {
                 startElement(SOPERATOR);
+            }
         }
 
         (
@@ -18960,12 +18988,17 @@ perform_post_specifier_check_js[] returns [std::array<int, 2> keywords] {
 /*
   specifier_js
 
-  Used to mark specifiers in JavaScript.
+  Used to mark specifiers in JavaScript/TypeScript.
 */
 specifier_js[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
-            startElement(SFUNCTION_SPECIFIER);
+
+            // special tag for TypeScript specifiers
+            if (LA(1) == TS_ABSTRACT || LA(1) == TS_DECLARE)
+                startElement(STS_SPECIFIER);
+            else
+                startElement(SFUNCTION_SPECIFIER);
         }
 
         (
@@ -19623,7 +19656,7 @@ extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 implements_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_EXTENDS_JS);
-            startElement(SIMPLEMENTS);
+            startElement(STS_IMPLEMENTS);
         }
 
         TS_IMPLEMENTS
@@ -22210,7 +22243,7 @@ colon_marked_js[] {
 type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_TYPE_TS | MODE_NO_BLOCK_CONTENT);
-            startElement(STYPE);
+            startElement(STS_TYPE);
 
             is_pseudo_terminate = false;
             is_ternary_colon = true;
@@ -22338,7 +22371,7 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
 mixins_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_MIXINS_TS);
-            startElement(SEXTENDS);
+            startElement(STS_EXTENDS);
         }
 
         JS_EXTENDS
@@ -22353,7 +22386,7 @@ mixins_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
 */
 type_predicate_operator_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SOPERATOR);
+            startElement(STS_OPERATOR);
         }
 
         TS_IS
@@ -22367,7 +22400,7 @@ type_predicate_operator_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 assertion_function_operator_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SOPERATOR);
+            startElement(STS_OPERATOR);
         }
 
         TS_ASSERTS
@@ -22380,7 +22413,7 @@ assertion_function_operator_ts[] { LightweightElement element(this); ENTRY_DEBUG
 */
 type_as_specifier_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SFUNCTION_SPECIFIER);
+            startElement(STS_SPECIFIER);
         }
 
         TS_TYPE
@@ -22480,7 +22513,7 @@ function_declaration_ts[] { ENTRY_DEBUG } :
             // do not nest function declarations
             if (!inMode(MODE_FUNCTION_DECL_TS)) {
                 startNewMode(MODE_FUNCTION_DECL_TS);
-                startElement(SFUNCTION_DECLARATION);
+                startElement(STS_FUNCTION_DECLARATION);
             }
         }
 
@@ -22536,7 +22569,7 @@ function_declaration_ts[] { ENTRY_DEBUG } :
 */
 function_declaration_specifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SFUNCTION_SPECIFIER);
+            startElement(STS_SPECIFIER);
         }
 
         (JS_STATIC | TS_ABSTRACT)
@@ -22616,7 +22649,7 @@ nameless_function_declaration_ts[] { ENTRY_DEBUG } :
             // do not nest function declarations
             if (!inMode(MODE_FUNCTION_DECL_TS)) {
                 startNewMode(MODE_FUNCTION_DECL_TS);
-                startElement(SFUNCTION_DECLARATION);
+                startElement(STS_FUNCTION_DECLARATION);
             }
         }
 
@@ -22850,7 +22883,7 @@ declaration_ts[] { ENTRY_DEBUG } :
 constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
-            startElement(SCONSTRAINT);
+            startElement(STS_CONSTRAINT);
 
             startNewMode(MODE_INDEX_TS);
             startElement(SINDEX);
@@ -22929,7 +22962,7 @@ perform_constraint_check_ts[] returns [bool isconstraint] {
 */
 declaration_modifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SMODIFIER);
+            startElement(STS_MODIFIER);
         }
 
         (QMARK | { LT(1)->getText() == "!" }? OPERATORS)
@@ -22942,7 +22975,7 @@ declaration_modifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 declaration_specifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SFUNCTION_SPECIFIER);
+            startElement(STS_SPECIFIER);
         }
 
         (TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
@@ -22955,7 +22988,7 @@ declaration_specifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
 */
 datsign_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startElement(SOPERATOR);
+            startElement(STS_OPERATOR);
         }
 
         TS_DATSIGN
@@ -23010,7 +23043,7 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
 attribute_ts[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_DECORATOR_TS);
-            startElement(SATTRIBUTE);
+            startElement(STS_ATTRIBUTE);
         }
 
         TS_ATSIGN

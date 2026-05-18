@@ -3,104 +3,104 @@
 
 <!-- Without specifiers -->
 
-<unit revision="1.0.0" language="JavaScript">
-<class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{
-  <function_decl><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
-  <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
-  <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl>;</decl_stmt>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>StyleSheetList</name> <block>{
+  <ts:function_decl><name>iterator</name><parameter_list>()</parameter_list>: <ts:type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+  <decl_stmt><decl><name>length</name>: <ts:type><name>number</name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><ts:constraint><index>[<name>index</name>: <ts:type><name>number</name></ts:type>]</index>: <ts:type><name>StyleSheet</name></ts:type></ts:constraint></decl>;</decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<function_decl><name>getFile</name><parameter_list>()</parameter_list>: <type><name><name>File</name><argument_list type="generic">&lt;<argument><expr><specifier>readonly</specifier> <name><name>File</name><index>[]</index></name></expr></argument>&gt;</argument_list></name></type></function_decl>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:function_decl><name>getFile</name><parameter_list>()</parameter_list>: <ts:type><name><name>File</name><argument_list type="generic">&lt;<argument><expr><ts:specifier>readonly</ts:specifier> <name><name>File</name><index>[]</index></name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
 </unit>
 
 <!-- With specifiers -->
 
-<unit revision="1.0.0" language="JavaScript">
-<class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{
-  <function_decl><specifier>abstract</specifier> <name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
-  <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
-  <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl>;</decl_stmt>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>StyleSheetList</name> <block>{
+  <ts:function_decl><ts:specifier>abstract</ts:specifier> <name>iterator</name><parameter_list>()</parameter_list>: <ts:type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+  <decl_stmt><decl><name>length</name>: <ts:type><name>number</name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><ts:constraint><index>[<name>index</name>: <ts:type><name>number</name></ts:type>]</index>: <ts:type><name>StyleSheet</name></ts:type></ts:constraint></decl>;</decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<class><specifier>declare</specifier> class <name>URL</name> <block>{
-  <function_decl><specifier>static</specifier> <name>canParse</name><parameter_list>(<parameter><decl><name>url</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>base</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>boolean</name></type></function_decl>
-  <function_decl><specifier>static</specifier> <name>createObjectURL</name><parameter_list>(<parameter><decl><name>blob</name>: <type><name>Blob</name></type></decl></parameter>)</parameter_list>: <type><name>string</name></type></function_decl>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>URL</name> <block>{
+  <ts:function_decl><ts:specifier>static</ts:specifier> <name>canParse</name><parameter_list>(<parameter><decl><name>url</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>base</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>boolean</name></ts:type></ts:function_decl>
+  <ts:function_decl><ts:specifier>static</ts:specifier> <name>createObjectURL</name><parameter_list>(<parameter><decl><name>blob</name>: <ts:type><name>Blob</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>string</name></ts:type></ts:function_decl>
 }</block></class>
 </unit>
 
 <!-- Well-known symbols ("@@") syntax is technically invalid, but is handled anyways to avoid crashes -->
 
-<unit revision="1.0.0" language="JavaScript">
-<interface>interface <name>StyleSheetList</name> <block>{
-  <function_decl><operator>@@</operator><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
-  <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
-  <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl></decl_stmt>
-}</block></interface>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>StyleSheetList</name> <block>{
+  <ts:function_decl><ts:operator>@@</ts:operator><name>iterator</name><parameter_list>()</parameter_list>: <ts:type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+  <decl_stmt><decl><name>length</name>: <ts:type><name>number</name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><ts:constraint><index>[<name>index</name>: <ts:type><name>number</name></ts:type>]</index>: <ts:type><name>StyleSheet</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<interface>interface <name>StyleSheetList</name> <block>{
-  <function_decl><specifier>abstract</specifier> <operator>@@</operator><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
-  <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
-  <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>StyleSheet</name></type></constraint></decl></decl_stmt>
-}</block></interface>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>StyleSheetList</name> <block>{
+  <ts:function_decl><ts:specifier>abstract</ts:specifier> <ts:operator>@@</ts:operator><name>iterator</name><parameter_list>()</parameter_list>: <ts:type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+  <decl_stmt><decl><name>length</name>: <ts:type><name>number</name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><ts:constraint><index>[<name>index</name>: <ts:type><name>number</name></ts:type>]</index>: <ts:type><name>StyleSheet</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
 </unit>
 
 <!-- Function declarations in blocks -->
 
-<unit revision="1.0.0" language="JavaScript">
-<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
-  <function_decl><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
-}</block></type></typedef>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><ts:specifier>declare</ts:specifier> type <name>AssertStrict</name> = <ts:type><block>{
+  <ts:function_decl><parameter_list>(<parameter><decl><name>value</name>: <ts:type><name>any</name></ts:type></decl></parameter>, <parameter><decl><name>message</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>void</name></ts:type>,</ts:function_decl>
+}</block></ts:type></ts:typedef>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
-  <function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
-}</block></type></typedef>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><ts:specifier>declare</ts:specifier> type <name>AssertStrict</name> = <ts:type><block>{
+  <ts:function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <ts:type><name>any</name></ts:type></decl></parameter>, <parameter><decl><name>message</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>void</name></ts:type>,</ts:function_decl>
+}</block></ts:type></ts:typedef>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
-  <function_decl><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
-  <function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
-}</block></type></typedef>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><ts:specifier>declare</ts:specifier> type <name>AssertStrict</name> = <ts:type><block>{
+  <ts:function_decl><parameter_list>(<parameter><decl><name>value</name>: <ts:type><name>any</name></ts:type></decl></parameter>, <parameter><decl><name>message</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>void</name></ts:type>,</ts:function_decl>
+  <ts:function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <ts:type><name>any</name></ts:type></decl></parameter>, <parameter><decl><name>message</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>void</name></ts:type>,</ts:function_decl>
+}</block></ts:type></ts:typedef>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
-  <function_decl><name>memoryUsage</name><parameter_list>()</parameter_list>: <type><block>{
-    <decl_stmt><decl><name>heapTotal</name>: <type><name>number</name></type></decl>,</decl_stmt>
-    <decl_stmt><decl><name>heapUsed</name>: <type><name>number</name></type></decl>,</decl_stmt>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>memoryUsage</name><parameter_list>()</parameter_list>: <ts:type><block>{
+    <decl_stmt><decl><name>heapTotal</name>: <ts:type><name>number</name></ts:type></decl>,</decl_stmt>
+    <decl_stmt><decl><name>heapUsed</name>: <ts:type><name>number</name></ts:type></decl>,</decl_stmt>
     <expr_stmt><expr><operator>...</operator></expr></expr_stmt>
-  }</block></type></function_decl>
+  }</block></ts:type></ts:function_decl>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const"><specifier>declare</specifier> const <name>it</name>: <type><block>{
-  <function_decl><name>only</name><parameter_list>()</parameter_list>: <type><block>{
-    <function_decl><name>each</name><parameter_list>()</parameter_list>: <type><lambda><parameter_list>(
-      <parameter><decl><name>fn</name>: <type><lambda><parameter_list>(<parameter><decl><name>args</name>: <type><name>Array</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>Promise</name></expr></lambda></type></decl></parameter>,
-    )</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type>,</function_decl>
-  }</block></type>,</function_decl>
-}</block></type></decl></decl_stmt>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><ts:specifier>declare</ts:specifier> const <name>it</name>: <ts:type><block>{
+  <ts:function_decl><name>only</name><parameter_list>()</parameter_list>: <ts:type><block>{
+    <ts:function_decl><name>each</name><parameter_list>()</parameter_list>: <ts:type><lambda><parameter_list>(
+      <parameter><decl><name>fn</name>: <ts:type><lambda><parameter_list>(<parameter><decl><name>args</name>: <ts:type><name>Array</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>Promise</name></expr></lambda></ts:type></decl></parameter>,
+    )</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type>,</ts:function_decl>
+  }</block></ts:type>,</ts:function_decl>
+}</block></ts:type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<interface>interface <name>ANTLR</name> <block>{
-  <function_decl><specifier>static</specifier> <name>resolveModule</name><parameter_list>(<parameter><decl><name>moduleName</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><block>{}</block> <operator>|</operator> <literal type="undefined">undefined</literal></type></function_decl>
-}</block></interface>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>ANTLR</name> <block>{
+  <ts:function_decl><ts:specifier>static</ts:specifier> <name>resolveModule</name><parameter_list>(<parameter><decl><name>moduleName</name>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><block>{}</block> <operator>|</operator> <literal type="undefined">undefined</literal></ts:type></ts:function_decl>
+}</block></ts:interface>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<interface>interface <name>ANTLR</name> <block>{
-  <function_decl><specifier>static</specifier> <name>resolveModule</name><parameter_list>(<parameter><decl><name>moduleName</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><block>{}</block> <operator>&amp;</operator> <literal type="undefined">undefined</literal></type></function_decl>
-}</block></interface>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>ANTLR</name> <block>{
+  <ts:function_decl><ts:specifier>static</ts:specifier> <name>resolveModule</name><parameter_list>(<parameter><decl><name>moduleName</name>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><block>{}</block> <operator>&amp;</operator> <literal type="undefined">undefined</literal></ts:type></ts:function_decl>
+}</block></ts:interface>
 </unit>
 
 </unit>

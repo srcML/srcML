@@ -339,7 +339,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SYIELD_STATEMENT,              { "yield",             SRC,      0,           0,        0,                   0 }},
     { TOKEN::SYIELD_FROM_STATEMENT,         { "yield",             SRC, "type",      "from",        0,                   0 }},
 
-    // JavaScript and TypeScript
+    // JavaScript
     { TOKEN::SCOMPUTED_PROPERTY,            { "name",              SRC, "type",  "computed",        0,                   0 }},
     { TOKEN::SDEBUGGER_STATEMENT,           { "debugger",          SRC,      0,           0,        0,                   0 }},
     { TOKEN::SDECLARATION_CONST,            { "decl",              SRC, "type",     "const",        0,                   0 }},
@@ -347,7 +347,6 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SDECLARATION_STATIC,           { "decl",              SRC, "type",    "static",        0,                   0 }},
     { TOKEN::SDECLARATION_USING,            { "decl",              SRC, "type",     "using",        0,                   0 }},
     { TOKEN::SDECLARATION_VAR,              { "decl",              SRC, "type",       "var",        0,                   0 }},
-    { TOKEN::SDECLARE_STATEMENT,            { "declare",           SRC,      0,           0,        0,                   0 }},
     { TOKEN::SEXPORT_STATEMENT,             { "export",            SRC,      0,           0,        0,                   0 }},
     { TOKEN::SFUNCTION_GENERATOR_STATEMENT, { "function",          SRC, "type", "generator",        0,                   0 }},
     { TOKEN::SFUNCTION_GET_STATEMENT,       { "function",          SRC, "type",       "get",        0,                   0 }},
@@ -359,4 +358,19 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SREGEX_JS,                     { "literal",           SRC, "type",     "regex",        0,                   0 }},
     { TOKEN::SUNDEFINED_JS,                 { "literal",           SRC, "type", "undefined",        0,                   0 }},
     { TOKEN::SYIELD_GENERATOR_STATEMENT,    { "yield",             SRC, "type", "generator",        0,                   0 }},
+
+    // TypeScript
+    { TOKEN::STS_ATTRIBUTE,                 { "attribute",          TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_CONSTRAINT,                { "constraint",         TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_DECLARE_STATEMENT,         { "declare",            TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_EXTENDS,                   { "extends",            TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_FUNCTION_DECLARATION,      { "function_decl",      TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_IMPLEMENTS,                { "implements",         TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_INTERFACE,                 { "interface",          TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_MODIFIER,                  { "modifier",           TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_NAMESPACE,                 { "namespace",          TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_OPERATOR,                  { "operator",           TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_SPECIFIER,                 { "specifier",          TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_TYPE,                      { "type",               TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_TYPEDEF,                   { "typedef",            TS,      0,           0,        0,                   0 }},
 };

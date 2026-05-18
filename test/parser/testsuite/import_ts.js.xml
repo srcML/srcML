@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="import">
 
-<unit revision="1.0.0" language="JavaScript">
-<import>import <specifier>type</specifier> <name_list>{ <name>Something</name> }</name_list></import>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <ts:specifier>type</ts:specifier> <name_list>{ <name>Something</name> }</name_list></import>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<import>import <specifier>type</specifier> <name_list>{ <name>Component</name> }</name_list> <from>from <literal type="string">"react"</literal></from></import>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <ts:specifier>type</ts:specifier> <name_list>{ <name>Component</name> }</name_list> <from>from <literal type="string">"react"</literal></from></import>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<import>import <specifier>type</specifier> <name_list>{ <name>Handler</name>, <name>HandlerMapping</name> }</name_list> <from>from <literal type="string">"handler"</literal></from></import>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <ts:specifier>type</ts:specifier> <name_list>{ <name>Handler</name>, <name>HandlerMapping</name> }</name_list> <from>from <literal type="string">"handler"</literal></from></import>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<import>import <name_list>{ <name>createUser</name>, <specifier>type</specifier> <name>User</name> }</name_list> <from>from <literal type="string">"./user"</literal></from></import>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>createUser</name>, <ts:specifier>type</ts:specifier> <name>User</name> }</name_list> <from>from <literal type="string">"./user"</literal></from></import>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<import>import <specifier>type</specifier> <name>*</name> <alias>as <expr><name>ModuleName</name></expr></alias> <from>from <literal type="string">"./module-path"</literal></from></import>
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <ts:specifier>type</ts:specifier> <name>*</name> <alias>as <expr><name>ModuleName</name></expr></alias> <from>from <literal type="string">"./module-path"</literal></from></import>
 </unit>
 
 </unit>
