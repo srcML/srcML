@@ -339,17 +339,13 @@ LANGUAGE_JAVASCRIPT yield_js
 # TypeScript (appears as a namespace prefix)
 LANGUAGE_JAVASCRIPT attribute_ts
 LANGUAGE_JAVASCRIPT constraint_ts
-LANGUAGE_JAVASCRIPT contextual_keywords_ts
 LANGUAGE_JAVASCRIPT declare_ts
 LANGUAGE_JAVASCRIPT function_decl_ts
 LANGUAGE_JAVASCRIPT global_context_call_ts
 LANGUAGE_JAVASCRIPT implements_ts
-LANGUAGE_JAVASCRIPT import_ts
 LANGUAGE_JAVASCRIPT interface_ts
 LANGUAGE_JAVASCRIPT modifier_ts
 LANGUAGE_JAVASCRIPT namespace_ts
-LANGUAGE_JAVASCRIPT operator_ts
-LANGUAGE_JAVASCRIPT specifier_ts
 LANGUAGE_JAVASCRIPT type_ts
 LANGUAGE_JAVASCRIPT typedef_ts
 

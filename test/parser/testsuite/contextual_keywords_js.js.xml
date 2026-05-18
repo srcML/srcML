@@ -45,6 +45,18 @@
 <expr_stmt><expr><call><name><name>async</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>XMLHttpRequest</name> <block>{
+  <ts:function_decl><name>open</name><parameter_list>(
+    <parameter><decl><name>method</name>: <ts:type><name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>url</name>: <ts:type><name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>async</name><ts:modifier>?</ts:modifier>: <ts:type><name>boolean</name></ts:type></decl></parameter>,
+    <parameter><decl><name>user</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>password</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>
+  )</parameter_list>: <ts:type><name>void</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
 <!-- "await"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -179,6 +191,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>const</name> <init>= <expr><name>const</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>const</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+}</block></class>
 </unit>
 
 <!-- "constructor" -->
@@ -735,6 +753,12 @@
 <decl_stmt><decl type="const">const <name>let</name> <init>= <expr><name>let</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>let</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
 <!-- "new"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -755,6 +779,20 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>new</name> <init>= <expr><operator>new</operator> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WeakSetConstructor</name> <block>{
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <ts:type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<!-- Semicolon delimiters are required for validity -->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WeakSetConstructor</name> <block>{
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <ts:type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <ts:type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+}</block></ts:interface>
 </unit>
 
 <!-- "null" -->
@@ -835,6 +873,14 @@
 <decl_stmt><decl type="const">const <name>return</name> <init>= <expr><name>return</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "satisfies" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>originalTest</name><argument_list>(<argument><expr><name>testName</name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>args</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <expr_stmt><expr><name>shouldPass</name> <operator>=</operator> <operator>!</operator><operator>!</operator><call><name><name>semver</name><operator>.</operator><name>satisfies</name></name><argument_list>(<argument><expr><literal type="string">'18.0.0'</literal></expr></argument>, <argument><expr><name>range</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
 <!-- "set" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -893,6 +939,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>static</name> <init>= <expr><name>static</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>static</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+}</block></class>
 </unit>
 
 <!-- "switch" -->
@@ -999,6 +1051,26 @@
 <decl_stmt><decl type="const">const <name>try</name> <init>= <expr><name>try</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "type" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>reactStableValue</name> <init>= <expr><operator>await</operator> <call><name>getRenderedAttributeValue</name><argument_list>(
+  <argument><expr><name>ReactStable</name></expr></argument>,
+  <argument><expr><name>attribute</name></expr></argument>,
+  <argument><expr><name>type</name></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>hasNonFBBundleTypes</name> <init>= <expr><call><name><name>bundle</name><operator>.</operator><name>bundleTypes</name><operator>.</operator><name>some</name></name><argument_list>(
+  <argument><expr><lambda><parameter><decl><name>type</name></decl></parameter> <operator>=&gt;</operator> <expr><name>type</name> <operator>!==</operator> <name>FB_WWW_DEV</name> <operator>&amp;&amp;</operator> <name>type</name> <operator>!==</operator> <name>FB_WWW_PROD</name></expr></lambda></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "typeof"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1047,6 +1119,14 @@
 <decl_stmt><decl type="const">const <name>undefined</name> <init>= <expr><literal type="undefined">undefined</literal> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "using" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>using</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
 <!-- "var" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1073,6 +1153,12 @@
 <decl_stmt><decl type="const">const <name>var</name> <init>= <expr><name>var</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>var</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
 <!-- "void"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1093,6 +1179,14 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>void</name> <init>= <expr><operator>void</operator> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>entangledThenable</name>: <ts:type><name><name>Thenable</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
+  <property><expr><function><name>then</name><parameter_list>(<parameter><decl><name>resolve</name>: <ts:type><lambda><parameter><decl><name>void</name></decl></parameter> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>entangledListeners</name><operator>.</operator><name>push</name></name><argument_list>(<argument><expr><name>resolve</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "while" -->
@@ -1172,5 +1266,11 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>yield</name> <init>= <expr><yield>yield <expr><operator>+</operator> <literal type="number">1</literal></expr></yield></expr></init></decl></decl_stmt>
 </unit>
+
+<!--
+"type" (again)
+Note: Do NOT adjust the unit tags or position of this test
+-->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript"><decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl></decl_stmt></unit>
 
 </unit>
