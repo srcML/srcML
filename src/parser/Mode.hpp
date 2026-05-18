@@ -384,7 +384,7 @@ const static srcMLState::MODE_TYPE MODE_DECL_JS;
 
 const static srcMLState::MODE_TYPE MODE_WITH_JS;
 
-// TypeScript modes
+// TypeScript modes (appears as a namespace prefix)
 const static srcMLState::MODE_TYPE MODE_TEMPLATE_ARGUMENT_TS;
 
 const static srcMLState::MODE_TYPE MODE_EXPRESSION_COLON_TS;

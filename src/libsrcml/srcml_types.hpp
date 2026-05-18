@@ -186,9 +186,6 @@ struct srcml_unit {
     /** error reporting */
     std::string error_string;
     int error_number = 0;
-
-    /** TypeScript detection */
-    bool is_typescript = false;
 };
 
 /** Set the hash attribute for the srcml unit

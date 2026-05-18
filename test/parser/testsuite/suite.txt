@@ -332,27 +332,26 @@ LANGUAGE_JAVASCRIPT tagged_template_js
 LANGUAGE_JAVASCRIPT ternary_js
 LANGUAGE_JAVASCRIPT throw_js
 LANGUAGE_JAVASCRIPT try_js
-LANGUAGE_JAVASCRIPT typescript_in_javascript_js
 LANGUAGE_JAVASCRIPT while_js
 LANGUAGE_JAVASCRIPT with_js
 LANGUAGE_JAVASCRIPT yield_js
 
-# TypeScript
-LANGUAGE_TYPESCRIPT attribute_ts
-LANGUAGE_TYPESCRIPT constraint_ts
-LANGUAGE_TYPESCRIPT contextual_keywords_ts
-LANGUAGE_TYPESCRIPT declare_ts
-LANGUAGE_TYPESCRIPT function_decl_ts
-LANGUAGE_TYPESCRIPT global_context_call_ts
-LANGUAGE_TYPESCRIPT implements_ts
-LANGUAGE_TYPESCRIPT import_ts
-LANGUAGE_TYPESCRIPT interface_ts
-LANGUAGE_TYPESCRIPT modifier_ts
-LANGUAGE_TYPESCRIPT namespace_ts
-LANGUAGE_TYPESCRIPT operator_ts
-LANGUAGE_TYPESCRIPT specifier_ts
-LANGUAGE_TYPESCRIPT type_ts
-LANGUAGE_TYPESCRIPT typedef_ts
+# TypeScript (appears as a namespace prefix)
+LANGUAGE_JAVASCRIPT attribute_ts
+LANGUAGE_JAVASCRIPT constraint_ts
+LANGUAGE_JAVASCRIPT contextual_keywords_ts
+LANGUAGE_JAVASCRIPT declare_ts
+LANGUAGE_JAVASCRIPT function_decl_ts
+LANGUAGE_JAVASCRIPT global_context_call_ts
+LANGUAGE_JAVASCRIPT implements_ts
+LANGUAGE_JAVASCRIPT import_ts
+LANGUAGE_JAVASCRIPT interface_ts
+LANGUAGE_JAVASCRIPT modifier_ts
+LANGUAGE_JAVASCRIPT namespace_ts
+LANGUAGE_JAVASCRIPT operator_ts
+LANGUAGE_JAVASCRIPT specifier_ts
+LANGUAGE_JAVASCRIPT type_ts
+LANGUAGE_JAVASCRIPT typedef_ts
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

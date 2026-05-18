@@ -47,10 +47,10 @@ language_extension_registry::language_extension_registry() : registered_language
     { "js",   Language::LANGUAGE_JAVASCRIPT },
     { "cjs",  Language::LANGUAGE_JAVASCRIPT },
     { "mjs",  Language::LANGUAGE_JAVASCRIPT },
-    { "ts",   Language::LANGUAGE_TYPESCRIPT },
-    { "tsx",  Language::LANGUAGE_TYPESCRIPT },
-    { "mts",  Language::LANGUAGE_TYPESCRIPT },
-    { "cts",  Language::LANGUAGE_TYPESCRIPT },
+    { "ts",   Language::LANGUAGE_JAVASCRIPT },
+    { "tsx",  Language::LANGUAGE_JAVASCRIPT },
+    { "mts",  Language::LANGUAGE_JAVASCRIPT },
+    { "cts",  Language::LANGUAGE_JAVASCRIPT },
     /* { "m",    Language::LANGUAGE_OBJECTIVE_C | Language::LANGUAGE_C } */ }), use_cpp_for_c(false)
     {}
 
@@ -200,11 +200,10 @@ void language_extension_registry::register_standard_file_extensions() {
     register_user_ext("js",   Language::LANGUAGE_JAVASCRIPT);
     register_user_ext("cjs",  Language::LANGUAGE_JAVASCRIPT);
     register_user_ext("mjs",  Language::LANGUAGE_JAVASCRIPT);
-
-    register_user_ext("ts",   Language::LANGUAGE_TYPESCRIPT);
-    register_user_ext("tsx",  Language::LANGUAGE_TYPESCRIPT);
-    register_user_ext("mts",  Language::LANGUAGE_TYPESCRIPT);
-    register_user_ext("cts",  Language::LANGUAGE_TYPESCRIPT);
+    register_user_ext("ts",   Language::LANGUAGE_JAVASCRIPT);
+    register_user_ext("tsx",  Language::LANGUAGE_JAVASCRIPT);
+    register_user_ext("mts",  Language::LANGUAGE_JAVASCRIPT);
+    register_user_ext("cts",  Language::LANGUAGE_JAVASCRIPT);
 }
 
 /**

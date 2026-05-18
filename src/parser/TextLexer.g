@@ -128,9 +128,9 @@ CHAR_START :
 BACKTICK_START :
     { startline = false; }
 
-    // backtick begins a string literal in JavaScript/TypeScript; otherwise, it is an operator
+    // backtick begins a string literal in JavaScript; otherwise, it is an operator
     '`' {
-        if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+        if (inLanguage(LANGUAGE_JAVASCRIPT)) {
             $setType(BACKTICK_START); changetotextlexer(BACKTICK_END);
         }
         else {
@@ -192,7 +192,7 @@ NAME options { testLiterals = true; } :
     )?
 ;
 
-// Single-line comments (no EOL); also processes potential regular expression literals in JavaScript/TypeScript
+// Single-line comments (no EOL); also processes potential regular expression literals in JavaScript
 LINE_COMMENT_START options { testLiterals = true; } {
     int mode = 0;
     int squarebracketcount = 0;
@@ -201,7 +201,7 @@ LINE_COMMENT_START options { testLiterals = true; } {
     (
         // for this conditional, lastnonspacetoken must refer to the token before the first '/'
         {
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && LA(1) != '/'
             && LA(1) != '*'
             && (

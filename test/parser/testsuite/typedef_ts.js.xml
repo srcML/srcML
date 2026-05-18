@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="typedef">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="typedef">
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef>type <name>Example</name> = <type><name>number</name></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef>type <name>Union</name> = <type><name>number</name> <operator>|</operator> <name>string</name></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef>type <name>Language</name> = <type><block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt>
   <decl_stmt><decl><name>release</name>: <type><name>string</name></type></decl></decl_stmt>
 }</block></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef>type <name>Printable</name> = <type><block>{ <decl_stmt><decl><name>print</name>: <type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type></decl></decl_stmt> }</block></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef>type <name>ColorfulCircle</name> = <type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
   <type><ternary><condition><expr><name>foo</name></expr>
     ?</condition><then> <expr><name>bar</name></expr>
     </then><else>: <expr><name>baz</name></expr></else></ternary></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
   <type><ternary><condition><expr><name>T</name> <extends>extends <type><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><operator>infer</operator> <name>U</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></type></extends></expr>
     ?</condition><then> <expr><name>U</name></expr>

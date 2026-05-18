@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="type">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="type">
 
 <!-- Declarations -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>name</name>: <type><name>string</name></type> <init>= <expr><literal type="string">"srcML"</literal></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>title</name>: <type><literal type="string">"srcML"</literal></type> <init>= <expr><literal type="string">"srcML"</literal></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>result</name>: <type><name>string</name> <operator>|</operator> <name>boolean</name> <operator>|</operator> <name>number</name></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>result</name>: <type><name><name>string</name><index>[]</index></name></type> <init>= <expr><array>[<expr><literal type="string">"hello"</literal></expr>, <expr><literal type="string">"world"</literal></expr>]</array></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>result</name>: <type><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></type> <init>= <expr><array>[<expr><literal type="string">"red"</literal></expr>, <expr><literal type="string">"green"</literal></expr>, <expr><literal type="string">"blue"</literal></expr>]</array></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>paper</name>: <type><block>{ <decl_stmt><decl><name>title</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name>: <type><name>number</name></type></decl></decl_stmt> }</block></type> <init>= <expr><object>{
   <property><expr><name>title</name></expr>: <expr><literal type="string">"An XML-Based Lightweight C++ Fact Extractor"</literal></expr></property>,
   <property><expr><name>year</name></expr>: <expr><literal type="number">2003</literal></expr></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>cc</name>: <type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></type> <init>= <expr><object>{
   <property><expr><name>color</name></expr>: <expr><literal type="string">"red"</literal></expr></property>,
   <property><expr><name>radius</name></expr>: <expr><literal type="number">42</literal></expr></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var"><specifier>declare</specifier> var <name>clients</name>: <type><name>Clients</name></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var"><specifier>declare</specifier> var <name>onactivate</name>: <type><modifier>?</modifier><name>EventHandler</name></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>genNewArgs</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>t</name><operator>.</operator><name>Identifier</name></name></expr></lambda></expr></argument>&gt;</argument_list></name></type> <init>= <expr><array>[]</array></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>callee</name>:
   <type><operator>|</operator> <block>{<decl_stmt><decl><name>kind</name>: <type><literal type="string">'CallExpression'</literal></type></decl>;</decl_stmt> <decl_stmt><decl><name>callee</name>: <type><name>Place</name></type></decl></decl_stmt>}</block>
   <operator>|</operator> <block>{<decl_stmt><decl><name>kind</name>: <type><literal type="string">'MethodCall'</literal></type></decl>;</decl_stmt> <decl_stmt><decl><name>receiver</name>: <type><name>Place</name></type></decl>;</decl_stmt> <decl_stmt><decl><name>property</name>: <type><name>Place</name></type></decl></decl_stmt>}</block></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var"><specifier>declare</specifier> var <name>matchMedia</name>: <type><lambda><parameter><decl><name>string</name></decl></parameter> <operator>=&gt;</operator> <expr><name>MediaQueryList</name></expr></lambda></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>HooksDispatcher</name>: <type><name>Dispatcher</name></type> <init>= <expr><object>{
   <property><expr><function><name>useCacheRefresh</name><parameter_list>()</parameter_list>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><modifier>?</modifier><type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name>T</name></expr></lambda></type></decl></parameter>, <parameter><decl><modifier>?</modifier><type><name>T</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <type><name>void</name></type></lambda></type> <block>{<block_content>
     <return>return <expr><name>unsupportedRefresh</name></expr></return>
@@ -67,15 +67,15 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>lastMouseEvent</name>: <type><modifier>?</modifier><block>{<decl_stmt><decl><constraint><index>[<name>propName</name>: <type><name>string</name></type>]</index>: <type><name>mixed</name></type></constraint></decl></decl_stmt>}</block></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>getAsyncIterator</name>: <type><name>void</name> <operator>|</operator> <operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></expr></lambda><operator>)</operator></type> <init>= <expr><name>ASYNC_ITERATOR</name></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>iterableChildren</name>: <type><name><name>Iterable</name><argument_list type="generic">&lt;<argument><expr><name>React$Node</name></expr></argument>&gt;</argument_list></name> <operator>&amp;</operator> <block>{<block_content>
   <decl_stmt><decl><name>entries</name>: <type><name>any</name></type></decl>,</decl_stmt>
 </block_content>}</block></type> <init>= <expr><operator>(</operator><name>children</name>: <type><name>any</name></type><operator>)</operator></expr></init></decl></decl_stmt>
@@ -83,19 +83,19 @@
 
 <!-- Functions (with "function" keyword) -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name>: <type><name>number</name> <operator>|</operator> <name>string</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
   <return>return <expr><name>bar</name></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name>: <type><name>number</name> <operator>|</operator> <name>string</name></type></decl></parameter>, <parameter><decl><name>baz</name>: <type><name>boolean</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
   <return>return <expr><name>bar</name></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>printTextOrNumber</name><parameter_list>(
   <parameter><decl><name>textOrNumber</name>:
     <type><operator>|</operator> <name>string</name>
@@ -105,67 +105,67 @@
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>getString</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"srcML"</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function><specifier>async</specifier> function <name>getString</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"srcML"</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>compare</name><parameter_list>(<parameter><decl><name>a</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><operator>-</operator><literal type="number">1</literal> <operator>|</operator> <literal type="number">0</literal> <operator>|</operator> <literal type="number">1</literal></type> <block>{<block_content>
   <return>return <expr><ternary><condition><expr><name>a</name> <operator>===</operator> <name>b</name></expr> ?</condition><then> <expr><literal type="number">0</literal></expr> </then><else>: <expr><ternary><condition><expr><name>a</name> <operator>&gt;</operator> <name>b</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><operator>-</operator><literal type="number">1</literal></expr></else></ternary></expr></else></ternary></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function>function <name>foo</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>foo</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>bar</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type> <block>{<block_content>
   <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`${foo}, ${bar}!`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></function><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function><specifier>export</specifier> function <name>mapTerminalSuccessors</name><parameter_list>(
   <parameter><decl><name>terminal</name>: <type><name>Terminal</name></type></decl></parameter>,
   <parameter><decl><name>fn</name>: <type><lambda><parameter_list>(<parameter><decl><name>block</name>: <type><name>BlockId</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>BlockId</name></expr></lambda></type></decl></parameter>,
 )</parameter_list>: <type><name>Terminal</name></type> <block>{<block_content/>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name><name>Scale</name><argument_list type="generic">&lt;<argument><expr><name>TBase</name> <extends>extends <type><name>Constructor</name></type></extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>Base</name>: <type><name>TBase</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function><specifier>export</specifier> function <name><name>terminalHasFallthrough</name><argument_list type="generic">&lt;
   <argument><expr><name>T</name> <extends>extends <type><name>Terminal</name></type></extends></expr></argument>,
   <argument><expr><name>U</name> <extends>extends <type><name>T</name> <operator>&amp;</operator> <block>{<block_content><decl_stmt><decl><name>fallthrough</name>: <type><name>BlockId</name></type></decl></decl_stmt></block_content>}</block></type></extends></expr></argument>,
 &gt;</argument_list></name><parameter_list>(<parameter><decl><name>terminal</name>: <type><name>T</name></type></decl></parameter>)</parameter_list>: <type><name>terminal</name> <operator>is</operator> <name>U</name></type> <block>{<block_content/>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function><specifier>declare</specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></type></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function><specifier>declare</specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>,<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></type></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function><specifier>declare</specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt; <argument><expr><name>void</name></expr></argument> , <argument><expr><name>void</name></expr></argument> &gt;</argument_list></name></type></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>addProperty</name><parameter_list>()</parameter_list> <block>{<block_content>
   <decl_stmt><decl type="const">const <name>proxy</name>: <type><name>PropertyDescriptor</name> <operator>&amp;</operator> <block>{<block_content><function type="get">get<parameter_list>()</parameter_list>: <type><name>unknown</name></type></function></block_content>}</block></type> <init>= <expr><object>{
     <property><expr><function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
@@ -178,7 +178,7 @@
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>callComponent</name> <init>= <expr><object>{
   <property><expr><name>react_stack_bottom_frame</name></expr>: <expr><function>function <argument_list type="generic">&lt;<argument><expr><name>Props</name></expr></argument>, <argument><expr><name>R</name></expr></argument>&gt;</argument_list><parameter_list>(
     <parameter><decl><name>Component</name>: <type><name>R</name></type></decl></parameter>,
@@ -192,31 +192,31 @@
 
 <!-- Functions (without "function" keyword) -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function><name>foo</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function type="generator">*<name type="computed">[<expr><name>FOO</name></expr>]</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function><name type="computed">[<expr><name>FOO</name></expr>]</name><parameter_list>()</parameter_list>: <type><name>string</name></type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><function><specifier>static</specifier> <name><name>#getOrCreateRoot</name><argument_list type="generic">&lt;<argument><expr><name>T</name> <extends>extends <type><name>string</name></type></extends></expr></argument>&gt;</argument_list></name><parameter_list>(
   <parameter><decl><name>identifier</name>: <type><name>Identifier</name></type></decl></parameter>,
 )</parameter_list>: <type><name><name>TreeNode</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type> <block>{<block_content/>}</block></function></expr></expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class>class <name>A</name> <block>{
   <expr_stmt><expr><function><name>name</name><parameter_list>()</parameter_list> : <type><block>{<decl_stmt><decl><name>type</name>: <type><name>a</name></type></decl></decl_stmt>}</block></type> <block>{<block_content>
     <comment type="line">//</comment>
@@ -224,7 +224,7 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>iterable</name>: <type><name><name>$AsyncIterable</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></type> <init>= <expr><object>{
   <property><expr><function><name type="computed">[<expr><name>ASYNC_ITERATOR</name></expr>]</name><parameter_list>()</parameter_list>: <type><name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><operator>void</operator></expr></argument>&gt;</argument_list></name></type> <block>{<block_content>
     <return>return <expr><call><name>createIterator</name><argument_list>(<argument><expr><lambda><parameter><decl><name>arg</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></argument>)</argument_list></call></expr></return>
@@ -234,53 +234,53 @@
 
 <!-- Lambdas -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>foo</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>bar</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type> <operator>=&gt;</operator> <block>{<block_content>
   <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`${foo}, ${bar}!`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>handleTabChange</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>tab</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type> <operator>=&gt;</operator> <block>{<block_content>
   <expr_stmt><expr><call><name>startTransition</name><argument_list>()</argument_list></call></expr></expr_stmt>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>t</name>: <type><name>ResolvedType</name></type></decl></parameter>)</parameter_list>: <type><name>ResolvedType</name></type> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><name>t</name></expr></return>
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>identity</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>arg</name>: <type><name>T</name></type></decl></parameter>)</parameter_list>: <type><name>T</name></type> <operator>=&gt;</operator> <expr><name>arg</name></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>wrapData</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name> <extends>extends <type><name>unknown</name></type></extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>value</name>: <type><name>T</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><object>{ <property><expr><name>data</name></expr>: <expr><name>value</name></expr></property> }</object></expr></return>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>getFirst</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>items</name>: <type><name><name>T</name><index>[]</index></name></type></decl></parameter>)</parameter_list>: <type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></type> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><name><name>items</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></return>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>nextTick</name>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>cb</name>: <type><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><type><name>T</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></type></decl></parameter>, <parameter><decl><modifier>...</modifier><type><name>T</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <type><name>void</name></type></lambda></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>setgroups</name><modifier>?</modifier>: <type><lambda><argument_list type="generic">&lt;<argument><expr><name>Group</name>: <type><name>string</name> <operator>|</operator> <name>number</name></type></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>groups</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>Group</name></expr></argument>&gt;</argument_list></name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <type><name>void</name></type></lambda></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>buildMakeReadOnly</name><parameter_list>(
   <parameter><decl><name>logger</name>: <type><name>ViolationLogger</name></type></decl></parameter>,
   <parameter><decl><name>skippedClasses</name>: <type><name><name>string</name><index>[]</index></name></type></decl></parameter>,
@@ -291,7 +291,7 @@
 
 <!-- Catch Conditions -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <try>try <block>{<block_content>
   <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
 </block_content>}</block> <catch>catch (<name>error</name>: <type><name>any</name></type>) <block>{<block_content>
@@ -299,7 +299,7 @@
 </block_content>}</block></catch></try>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <try>try <block>{<block_content>
   <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
 </block_content>}</block> <catch>catch (<name>error</name>: <type><operator>(</operator><name>any</name> <operator>|</operator> <name>unknown</name><operator>)</operator></type>) <block>{<block_content>
@@ -309,12 +309,12 @@
 
 <!-- Types in Operator Parentheses -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>rootsSuspendedBy</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>mixed</name></expr></argument>&gt;</argument_list></name></type> <init>=
   <expr><operator>(</operator><call><name><name>renderer</name><operator>.</operator><name>getElementAttributeByPath</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><array>[<expr><literal type="string">'suspendedBy'</literal></expr>]</array></expr></argument>)</argument_list></call>: <type><name>any</name></type><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>wake</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
   <expr_stmt><expr><lambda><parameter><decl><name>callback</name></decl></parameter> <operator>=&gt;</operator> <expr><call><name>callback</name><argument_list>(<argument><expr><operator>(</operator><name>thenable</name>: <type><name>any</name></type><operator>)</operator><operator>.</operator><name>value</name></expr></argument>)</argument_list></call></expr></lambda></expr></expr_stmt>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
@@ -322,7 +322,7 @@
 
 <!-- Edge Cases -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{
   <decl_stmt><decl><name>blockInfos</name>: <type><name><name>Map</name><argument_list type="generic">&lt;
     <argument><expr><name>BlockId</name></expr></argument>,
@@ -341,7 +341,7 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{
   <decl_stmt><decl><name>blockInfos</name>: <type><name><name>Map</name><argument_list type="generic">&lt;
     <argument><expr><operator>|</operator> <object>{
@@ -359,29 +359,29 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl><name>labels</name>: <type><name><name>NodeList</name><argument_list type="generic">&lt;<argument><expr><name>HTMLLabelElement</name></expr></argument>&gt;</argument_list></name> <operator>|</operator> <literal type="null">null</literal></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>env</name>: <type><block>{<decl_stmt><decl><constraint><index>[<name>key</name>: <type><name>string</name></type>]</index>: <type><name>string</name> <operator>|</operator> <name>void</name></type></constraint></decl>,</decl_stmt> <expr_stmt><expr><operator>...</operator></expr></expr_stmt>}</block></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name>: <type><name>foo</name></type></decl></parameter>)</parameter_list>: <type><lambda><parameter_list>(<parameter><decl><name>b</name>: <type><name>bar</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>baz</name></expr></lambda></type> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><name>a</name></expr></return>
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name>: <type><name>foo</name></type></decl></parameter>)</parameter_list>: <type><lambda><parameter_list>(<parameter><decl><name>b</name>: <type><name>bar</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>(<parameter><decl><name>c</name>: <type><name>baz</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>quux</name></expr></lambda></expr></lambda></type> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><name>a</name></expr></return>
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>HostTransitionContext</name> <init>= <expr><object>{
   <property><expr><name>$$typeof</name></expr>: <expr><name>REACT_CONTEXT_TYPE</name></expr></property>,
   <property><expr><name>Provider</name></expr>: <expr><operator>(</operator><name>null</name>: <type><name>any</name></type><operator>)</operator></expr></property>,
@@ -389,22 +389,22 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>node</name>: <type><name>HTMLElement</name></type> <init>= <expr><operator>(</operator><operator>(</operator><name>null</name>: <type><name>any</name></type><operator>)</operator>: <type><name>HTMLElement</name></type><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>rootStack</name> <init>= <expr><ternary><condition><expr><name>ancestorStackError</name> <operator>===</operator> <literal type="undefined">undefined</literal></expr> ?</condition><then> <expr><operator>(</operator><name>foo</name>: <type><name>any</name></type><operator>)</operator></expr> </then><else>: <expr><call><name>bar</name><argument_list>(<argument><expr><name>ancestorStackError</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>registerEventLogger</name>: <type><lambda><parameter_list>(<parameter><decl><name>foo</name>: <type><name>Foo</name></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></expr></lambda></type> <init>=
   <expr><ternary><condition><expr><name>enableLogger</name> <operator>===</operator> <literal type="boolean">true</literal></expr>
     ?</condition><then> <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>bar</name>: <type><name>Bar</name></type></decl></parameter>)</parameter_list>: <type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type> <block>{<block_content/>}</block></function></expr>
     </then><else>: <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>baz</name>: <type><name>Baz</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class>class <name>Agent</name> <block>{
   <decl_stmt><decl><name>clearErrorsAndWarnings</name>: <type><lambda><parameter_list>(<parameter><decl><type><block>{<decl_stmt><decl><name>rendererID</name>: <type><name>RendererID</name></type></decl></decl_stmt>}</block></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></type> <init>= <expr><lambda><parameter_list>(<parameter><decl><object>{
     <property><expr><name>rendererID</name></expr></property>,
@@ -414,19 +414,19 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>fallbackReplayNode</name>: <type><name>ReplayNode</name></type> <init>= <expr><array>[
   <expr><operator>(</operator><array>[]</array>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>ReplayNode</name></expr></argument>&gt;</argument_list></name></type><operator>)</operator></expr>,
 ]</array></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface><specifier>export</specifier> interface <name>EmitOutput</name> <block>{
   <decl_stmt><decl><name>diagnostics</name>: <type><specifier>readonly</specifier> <name>Diagnostic</name></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface><specifier>export</specifier> interface <name>ReusableBuilderProgramState</name> <super_list><extends>extends <super><expr><name>BuilderState</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>diagnostics</name>: <type><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><name>Path</name></expr></argument>, <argument><expr><specifier>readonly</specifier> <name><name>ReusableDiagnostic</name><index>[]</index></name> <operator>|</operator> <specifier>readonly</specifier> <name><name>Diagnostic</name><index>[]</index></name></expr></argument>&gt;</argument_list></name></type></decl>;</decl_stmt>
 }</block></interface>

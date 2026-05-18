@@ -132,9 +132,6 @@ private:
 public:
     /** track depth for by element writing */
     int output_unit_depth = 0;
-
-    /** TypeScript detection */
-    bool is_typescript = false;
 };
 
 #endif

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="interface">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="interface">
 
 <!-- No Delimiters -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>Person</name> <block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl></decl_stmt>
   <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>PaintOptions</name> <block>{
   <decl_stmt><decl><name>shape</name><modifier>!</modifier>: <type><name>Shape</name></type></decl></decl_stmt>
   <decl_stmt><decl><name>xPos</name><modifier>?</modifier>: <type><name>number</name></type></decl></decl_stmt>
@@ -18,43 +18,43 @@
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>Home</name> <block>{
   <decl_stmt><decl><specifier>readonly</specifier> <name>resident</name>: <type><block>{ <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt> }</block></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>StringArray</name> <block>{
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>ReadonlyStringArray</name> <block>{
   <decl_stmt><decl><specifier>readonly</specifier> <constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>AddressWithUnit</name> <super_list><extends>extends <super><expr><name>BasicAddress</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>unit</name>: <type><name>string</name></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>ColorfulCircle</name> <super_list><extends>extends <super><expr><name>Colorful</name></expr></super>, <super><expr><name>Circle</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>example</name>: <type><name>any</name></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{
   <decl_stmt><decl><name>contents</name>: <type><name>Type</name></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface><specifier>export</specifier> interface <name>Person</name> <block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl></decl_stmt>
   <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt>
@@ -63,14 +63,14 @@
 
 <!-- Semicolon Delimiters -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>Person</name> <block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>;</decl_stmt>
   <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl>;</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>PaintOptions</name> <block>{
   <decl_stmt><decl><name>shape</name><modifier>!</modifier>: <type><name>Shape</name></type></decl>;</decl_stmt>
   <decl_stmt><decl><name>xPos</name><modifier>?</modifier>: <type><name>number</name></type></decl>;</decl_stmt>
@@ -78,43 +78,43 @@
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>Home</name> <block>{
   <decl_stmt><decl><specifier>readonly</specifier> <name>resident</name>: <type><block>{ <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt> }</block></type></decl>;</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>StringArray</name> <block>{
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl>;</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>ReadonlyStringArray</name> <block>{
   <decl_stmt><decl><specifier>readonly</specifier> <constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl>;</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>AddressWithUnit</name> <super_list><extends>extends <super><expr><name>BasicAddress</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>unit</name>: <type><name>string</name></type></decl>;</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>ColorfulCircle</name> <super_list><extends>extends <super><expr><name>Colorful</name></expr></super>, <super><expr><name>Circle</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>example</name>: <type><name>any</name></type></decl>;</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{
   <decl_stmt><decl><name>contents</name>: <type><name>Type</name></type></decl>;</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface><specifier>export</specifier> interface <name>Person</name> <block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>;</decl_stmt>
   <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl>;</decl_stmt>
@@ -123,14 +123,14 @@
 
 <!-- Comma Delimiters -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>Person</name> <block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt>
   <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl>,</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>PaintOptions</name> <block>{
   <decl_stmt><decl><name>shape</name><modifier>!</modifier>: <type><name>Shape</name></type></decl>,</decl_stmt>
   <decl_stmt><decl><name>xPos</name><modifier>?</modifier>: <type><name>number</name></type></decl>,</decl_stmt>
@@ -138,43 +138,43 @@
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>Home</name> <block>{
   <decl_stmt><decl><specifier>readonly</specifier> <name>resident</name>: <type><block>{ <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt> <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl></decl_stmt> }</block></type></decl>,</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>StringArray</name> <block>{
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl>,</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>ReadonlyStringArray</name> <block>{
   <decl_stmt><decl><specifier>readonly</specifier> <constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl>,</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>AddressWithUnit</name> <super_list><extends>extends <super><expr><name>BasicAddress</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>unit</name>: <type><name>string</name></type></decl>,</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>ColorfulCircle</name> <super_list><extends>extends <super><expr><name>Colorful</name></expr></super>, <super><expr><name>Circle</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><name>example</name>: <type><name>any</name></type></decl>,</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name><name>Box</name><argument_list type="generic">&lt;<argument><expr><name>Type</name></expr></argument>&gt;</argument_list></name> <block>{
   <decl_stmt><decl><name>contents</name>: <type><name>Type</name></type></decl>,</decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface><specifier>export</specifier> interface <name>Person</name> <block>{
   <decl_stmt><decl><name>name</name>: <type><name>string</name></type></decl>,</decl_stmt>
   <decl_stmt><decl><name>age</name>: <type><name>number</name></type></decl>,</decl_stmt>

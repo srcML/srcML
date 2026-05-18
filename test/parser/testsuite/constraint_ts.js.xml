@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="constraint">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="constraint">
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>Foo</name> <block>{
   <decl_stmt><decl><constraint><index>[<name>index</name>: <type><name>number</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface><specifier>export</specifier> interface <name>KeyMap</name> <block>{
   <decl_stmt><decl><constraint><index>[<name>key</name>: <type><name>string</name></type>]</index>: <type><name>KeyMap</name> <operator>|</operator> <name>Action</name></type></constraint></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef><specifier>export</specifier> type <name>Paths</name> = <type><block>{
   <decl_stmt><decl><constraint><index>[<name>path</name>: <type><name>string</name></type>]</index>: <type><name>string</name></type></constraint></decl></decl_stmt>
 }</block></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>LazyGuardDispatcher</name>: <type><block>{<decl_stmt><decl><constraint><index>[<name>key</name>: <type><name>string</name></type>]</index>: <type><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><type><name>args</name>: <type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></type></type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>any</name></expr></lambda></type></constraint></decl></decl_stmt>}</block></type> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- The following should NOT be marked as constraints, although they look similar -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name><name>CompilerError</name><operator>.</operator><name>invariant</name></name><argument_list>(<argument><expr><object>{
   <property><expr><name>details</name></expr>: <expr><array>[
     <expr><object>{

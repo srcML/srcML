@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="function_decl">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="function_decl">
 
 <!-- Without specifiers -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{
   <function_decl><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
@@ -11,13 +11,13 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function_decl><name>getFile</name><parameter_list>()</parameter_list>: <type><name><name>File</name><argument_list type="generic">&lt;<argument><expr><specifier>readonly</specifier> <name><name>File</name><index>[]</index></name></expr></argument>&gt;</argument_list></name></type></function_decl>
 </unit>
 
 <!-- With specifiers -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>StyleSheetList</name> <block>{
   <function_decl><specifier>abstract</specifier> <name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
@@ -25,7 +25,7 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>URL</name> <block>{
   <function_decl><specifier>static</specifier> <name>canParse</name><parameter_list>(<parameter><decl><name>url</name>: <type><name>string</name></type></decl></parameter>, <parameter><decl><name>base</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>boolean</name></type></function_decl>
   <function_decl><specifier>static</specifier> <name>createObjectURL</name><parameter_list>(<parameter><decl><name>blob</name>: <type><name>Blob</name></type></decl></parameter>)</parameter_list>: <type><name>string</name></type></function_decl>
@@ -34,7 +34,7 @@
 
 <!-- Well-known symbols ("@@") syntax is technically invalid, but is handled anyways to avoid crashes -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>StyleSheetList</name> <block>{
   <function_decl><operator>@@</operator><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
@@ -42,7 +42,7 @@
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>StyleSheetList</name> <block>{
   <function_decl><specifier>abstract</specifier> <operator>@@</operator><name>iterator</name><parameter_list>()</parameter_list>: <type><name><name>Iterator</name><argument_list type="generic">&lt;<argument><expr><name>StyleSheet</name></expr></argument>&gt;</argument_list></name></type></function_decl>
   <decl_stmt><decl><name>length</name>: <type><name>number</name></type></decl></decl_stmt>
@@ -52,26 +52,26 @@
 
 <!-- Function declarations in blocks -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
   <function_decl><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
 }</block></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
   <function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
 }</block></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <typedef><specifier>declare</specifier> type <name>AssertStrict</name> = <type><block>{
   <function_decl><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
   <function_decl><name>ok</name><parameter_list>(<parameter><decl><name>value</name>: <type><name>any</name></type></decl></parameter>, <parameter><decl><name>message</name><modifier>?</modifier>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><name>void</name></type>,</function_decl>
 }</block></type></typedef>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
   <function_decl><name>memoryUsage</name><parameter_list>()</parameter_list>: <type><block>{
     <decl_stmt><decl><name>heapTotal</name>: <type><name>number</name></type></decl>,</decl_stmt>
@@ -81,7 +81,7 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>declare</specifier> const <name>it</name>: <type><block>{
   <function_decl><name>only</name><parameter_list>()</parameter_list>: <type><block>{
     <function_decl><name>each</name><parameter_list>()</parameter_list>: <type><lambda><parameter_list>(
@@ -91,13 +91,13 @@
 }</block></type></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>ANTLR</name> <block>{
   <function_decl><specifier>static</specifier> <name>resolveModule</name><parameter_list>(<parameter><decl><name>moduleName</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><block>{}</block> <operator>|</operator> <literal type="undefined">undefined</literal></type></function_decl>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>ANTLR</name> <block>{
   <function_decl><specifier>static</specifier> <name>resolveModule</name><parameter_list>(<parameter><decl><name>moduleName</name>: <type><name>string</name></type></decl></parameter>)</parameter_list>: <type><block>{}</block> <operator>&amp;</operator> <literal type="undefined">undefined</literal></type></function_decl>
 }</block></interface>

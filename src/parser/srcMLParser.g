@@ -789,7 +789,6 @@ public:
     std::deque<std::string> bracket_types_js;  // '(' and '{'
     bool in_template_param = false;
     bool processed_statement = false;
-    bool is_typescript = false;
     bool is_pseudo_terminate = false;
     bool skip_pseudoblock_terminate = false;
     bool skip_lone_lambda_js = false;
@@ -863,8 +862,8 @@ public:
     void endAllModes();
 
     virtual void consume() {
-        // use a separate variable when in guessing mode for Python/JavaScript/TypeScript
-        if ((inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) && inputState->guessing!=0) {
+        // use a separate variable when in guessing mode for Python/JavaScript
+        if ((inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && inputState->guessing!=0) {
             last_consumed_guessing_mode = LA(1);
         }
         // do not update last_consumed if the token is in the skip_tokens_set
@@ -874,10 +873,6 @@ public:
 
         LLkParser::consume();
     }
-
-    void setTypeScript() { if (!is_typescript && !inLanguage(LANGUAGE_TYPESCRIPT)) is_typescript = true; }
-
-    bool isTypeScript() const { return is_typescript; }
 
     struct Rule {
         // Token for start element
@@ -1004,7 +999,7 @@ public:
         }
 
         // handle multiple pre-keyword TypeScript decorators in a row
-        while (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && LA(1) == TS_ATSIGN) {
+        while (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TS_ATSIGN) {
             attribute_ts();
         }
     }
@@ -1018,7 +1013,7 @@ public:
         // handle multiple pre-keyword JavaScript/TypeScript specifiers in a row
         // Note: ignore "declare" and "export" statements
         while (
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && !inMode(MODE_DECLARE_TS)
             && !inTransparentMode(MODE_EXPORT_JS)
             && check_valid_specifier_js()
@@ -1134,10 +1129,10 @@ public:
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* TYPESCRIPT STATEMENTS */
-        temp_array[TS_DECLARE]   = { SDECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, &srcMLParser::setTypeScript, &srcMLParser::declare_statement_ts };
-        temp_array[TS_INTERFACE] = { SINTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS | MODE_NO_BLOCK_CONTENT, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
-        temp_array[TS_NAMESPACE] = { SNAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, &srcMLParser::setTypeScript, nullptr };
-        temp_array[TS_TYPE]      = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, &srcMLParser::setTypeScript, nullptr };
+        temp_array[TS_DECLARE]   = { SDECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, nullptr, &srcMLParser::declare_statement_ts };
+        temp_array[TS_INTERFACE] = { SINTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS | MODE_NO_BLOCK_CONTENT, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[TS_NAMESPACE] = { SNAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[TS_TYPE]      = { STYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
 
         /* DUPLEX KEYWORDS */
         temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
@@ -2148,7 +2143,7 @@ pattern_statements[] {
 next_token[] returns [unsigned int token] {
         // ignore caching the next token if the current token is a JavaScript TERMINATE
         if (
-            !(inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && LA(1) == TERMINATE)
+            !(inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE)
             && LT(1)->getColumn() == current_column
             && LT(1)->getLine() == current_line
         ) {
@@ -3607,11 +3602,11 @@ perform_ternary_check[] returns [bool is_ternary] {
                 is_ternary = true;
         } catch(...) {}
 
-        // "?:" should not be marked as a ternary in JavaScript/TypeScript
-        if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && is_ternary && next_token() == COLON)
+        // "?:" should not be marked as a ternary in JavaScript
+        if (inLanguage(LANGUAGE_JAVASCRIPT) && is_ternary && next_token() == COLON)
             is_ternary = false;
 
-        if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY) && !inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
+        if (!is_qmark && (LA(1) == TERMINATE || LA(1) == LCURLY) && !inLanguage(LANGUAGE_JAVASCRIPT))
             skip_ternary = true;
 
         inputState->guessing--;
@@ -3636,7 +3631,7 @@ ternary_check[] { ENTRY_DEBUG } :
                 bracket_pair
                 (options { greedy = true; } : paren_pair | curly_pair)* |
 
-                { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
                 angle_bracket_pair |
 
                 ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
@@ -3655,7 +3650,7 @@ ternary_check[] { ENTRY_DEBUG } :
                 bracket_pair
                 (options { greedy = true; } : paren_pair | curly_pair)* |
 
-                { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
                 angle_bracket_pair |
 
                 ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
@@ -5585,7 +5580,7 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
             startElement(SBLOCK);
 
             // lcurly starts a block
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                 lcurly_types_js.emplace_back('b');  // block LCURLY
                 bracket_types_js.emplace_back("bLCURLY");
             }
@@ -5599,7 +5594,7 @@ lcurly_base[bool content = true] { ENTRY_DEBUG } :
                 startNoSkipElement(SCONTENT);
             }
             // special case: JavaScript/TypeScript blocks that do not contain a block content tag
-            else if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !content) {
+            else if (inLanguage(LANGUAGE_JAVASCRIPT) && !content) {
                 startNewMode(MODE_BLOCK_CONTENT);  // mode is still required
             }
         }
@@ -5629,7 +5624,7 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
 
             // ignore auto-inserted terminate, if applicable
             if (
-                inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                inLanguage(LANGUAGE_JAVASCRIPT)
                 && LA(1) == TERMINATE
                 && (
                     next_token() == FINALLY
@@ -5692,7 +5687,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
             }
 
             // found JavaScript rcurly
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !lcurly_types_js.empty()) {
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && !lcurly_types_js.empty()) {
                 switch (lcurly_types_js.back()) {
                     // found JavaScript rcurly that ends a block
                     case 'b':
@@ -5755,7 +5750,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
         {
             // ensure JavaScript expression blocks end here (except at the end of objects)
             if (
-                inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                inLanguage(LANGUAGE_JAVASCRIPT)
                 && inMode(MODE_EXPRESSION_BLOCK)
                 && lcurly_types_js.back() != 'o'
                 && bracket_types_js.back() != "oLCURLY"
@@ -5763,12 +5758,12 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
                 endMode(MODE_EXPRESSION_BLOCK);
 
             // end the current mode for the block; do not end more than one since they may be nested
-            if (!inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+            if (!inLanguage(LANGUAGE_JAVASCRIPT)) {
                 endMode(MODE_TOP);
             }
             // special case for JavaScript function expressions enclosed in operator or call parentheses
             else if (
-                inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                inLanguage(LANGUAGE_JAVASCRIPT)
                 && !inMode(MODE_LAMBDA_JS)
                 && inTransparentMode(MODE_FUNCTION_EXPRESSION_JS)
                 && (LA(1) == RPAREN && next_token() != LPAREN)
@@ -5782,7 +5777,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
             else if (
                 (inMode(MODE_TOP) || inMode(MODE_BLOCK))
                 && (
-                    !inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                    !inLanguage(LANGUAGE_JAVASCRIPT)
                     || (
                         LA(1) != COMMA
                         && (!waslambda || LA(1) != RPAREN || lparen_types_js.back() != 'c')
@@ -5795,7 +5790,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
 
             // special case to close RPAREN for JavaScript lambdas that are inside a call
             if (
-                inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                inLanguage(LANGUAGE_JAVASCRIPT)
                 && waslambda
                 && LA(1) == RPAREN
                 && lparen_types_js.back() == 'c'
@@ -5860,7 +5855,7 @@ terminate_pre[] { ENTRY_DEBUG } :
         {
             // end any elements inside of the statement (non-JavaScript languages)
             if (!inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)) {
-                if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+                if (inLanguage(LANGUAGE_JAVASCRIPT)) {
 
                     // a block begins on the next line, so do not end the current statement
                     if (
@@ -5893,14 +5888,14 @@ terminate_pre[] { ENTRY_DEBUG } :
 */
 terminate_post[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); ENTRY_DEBUG } :
         {
-            // do not accidentally end a statement requiring a block in JavaScript/TypeScript
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && skip_pseudoblock_terminate) {
+            // do not accidentally end a statement requiring a block in JavaScript
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && skip_pseudoblock_terminate) {
                 skip_pseudoblock_terminate = false;
                 return;
             }
 
-            // determine if "{" starts a block or an object in JavaScript/TypeScript
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inMode(MODE_LCURLY_BLOCK_JS) && LA(1) == LCURLY) {
+            // determine if "{" starts a block or an object in JavaScript
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inMode(MODE_LCURLY_BLOCK_JS) && LA(1) == LCURLY) {
                 // "{" denotes the start of a block
                 if (perform_lcurly_differentiator_check_js()) {
                     lcurly();
@@ -6364,7 +6359,7 @@ statement_part[] {
         // sometimes end up here if a control group ends early or with a for-each
         rparen |
 
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
         colon_marked_js |
 
         // seem to end up here for colon in ternary operator
@@ -6385,7 +6380,7 @@ lparen_marked[] { LightweightElement element(this); ENTRY_DEBUG } :
 
             startElement(SOPERATOR);
 
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                 lparen_types_js.emplace_back('o');  // operator LPAREN
                 bracket_types_js.emplace_back("oLPAREN");
             }
@@ -6421,7 +6416,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                 || inTransparentMode(MODE_EXPORT_JS)
                 || inTransparentMode(MODE_ARRAY_JS)
                 || (
-                    inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                    inLanguage(LANGUAGE_JAVASCRIPT)
                     && (
                         inTransparentMode(MODE_CONTROL_INCREMENT)
                         || inTransparentMode(MODE_CONTROL_CONDITION)
@@ -6611,7 +6606,7 @@ condition[] { ENTRY_DEBUG } :
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
 
             // lparen starts a condition
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                 lparen_types_js.emplace_back('n');  // condition LPAREN
                 bracket_types_js.emplace_back("nLPAREN");
             }
@@ -8074,7 +8069,7 @@ qmark[] { is_qmark = true; ENTRY_DEBUG } :
                 endDownToMode(MODE_CONDITION);
 
             // record if "?" is nested in "()" or "{}" for JavaScript/TypeScript 
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_TERNARY)) {
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TERNARY)) {
                 is_ternary_colon = perform_colon_differentiator_check_ts();
             }
         }
@@ -9040,7 +9035,7 @@ simple_name_optional_template_destop[bool push = true] { CompleteElement element
                 inLanguage(LANGUAGE_CXX_FAMILY)
                 || inLanguage(LANGUAGE_OBJECTIVE_C)
                 || inLanguage(LANGUAGE_JAVA_FAMILY)
-                || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+                || inLanguage(LANGUAGE_JAVASCRIPT)
             }?
             { generic_argument_list_check() }?
             generic_argument_list |
@@ -9434,7 +9429,7 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             (
-                ({ inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }? qmark_period | period)
+                ({ inLanguage(LANGUAGE_JAVASCRIPT) }? qmark_period | period)
 
                 {
                     iscompound = true;
@@ -9442,7 +9437,7 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
 
                 (
                     // optional computed access in JavaScript
-                    { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && last_consumed == QMARK_PERIOD }?
+                    { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed == QMARK_PERIOD }?
                     computed_property_js |
 
                     keyword_name |
@@ -10207,7 +10202,7 @@ call[int call_count = 1] { ENTRY_DEBUG } :
             { inLanguage(LANGUAGE_OBJECTIVE_C) }?
             objective_c_call |
 
-            { inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+            { inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) }?
             compound_name
             call_argument_list |
 
@@ -10234,7 +10229,7 @@ call_argument_list[] { ENTRY_DEBUG } :
                 lparen_types_py.emplace_back('c');  // call LPAREN
 
             // lparen starts a call
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                 lparen_types_js.emplace_back('c');  // call LPAREN
                 bracket_types_js.emplace_back("cLPAREN");
             }
@@ -10524,7 +10519,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
                     startElement(SBLOCK);
 
                     // lcurly starts a block
-                    if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+                    if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                         lcurly_types_js.emplace_back('b');  // block LCURLY
                         bracket_types_js.emplace_back("bLCURLY");
                     }
@@ -12517,7 +12512,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
             }
 
             // found JavaScript rparen that ends a call
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !lparen_types_js.empty()) {
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && !lparen_types_js.empty()) {
                 switch (lparen_types_js.back()) {
                     // found JavaScript rparen that ends a call
                     case 'c':
@@ -12592,7 +12587,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     endMode(MODE_CONDITION);
 
                     // then part of the if statement (after the condition)
-                    if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
+                    if (inLanguage(LANGUAGE_JAVASCRIPT))
                         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN | MODE_LCURLY_BLOCK_JS);
                     else
                         startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN);
@@ -12602,7 +12597,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     // startNoSkipElement(STHEN);
 
                     // for JavaScript/TypeScript, do not check for pseudoblocks here
-                    if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && LA(1) == TERMINATE && next_token() == LCURLY)
+                    if (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE && next_token() == LCURLY)
                         return;
 
                     if (LA(1) != LCURLY && LA(1) != INDENT) {
@@ -12630,7 +12625,7 @@ rparen[bool markup = true, bool end_control_incr = false] {
                     endMode(MODE_LIST);
 
                     // for JavaScript/TypeScript, do not check for pseudoblocks here
-                    if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && LA(1) == TERMINATE && next_token() == LCURLY)
+                    if (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE && next_token() == LCURLY)
                         return;
 
                     if (LA(1) != LCURLY && LA(1) != INDENT) {
@@ -12938,7 +12933,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 } :
         // special case: mark "?" and "!" as modifiers in certain TypeScript instances
         {
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && (
                 LA(1) == QMARK
                 || (LA(1) == OPERATORS && LT(1)->getText() == "!")
@@ -12952,28 +12947,28 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         declaration_modifiers_ts |
 
         // special case: mark "readonly" as a specifier in TypeScript types
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_TYPE_TS) }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TYPE_TS) }?
         declaration_specifiers_ts |
 
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_keyword_iife_check_js() }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
         keyword_iife_js |
 
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) with no keyword
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_keywordless_iife_check_js() }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_iife_check_js() }?
         keywordless_iife_js |
 
         // special case: JavaScript global context call (e.g., "(,)()")
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_global_context_call_check_js() }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_global_context_call_check_js() }?
         global_context_call_js |
 
         // special case: JavaScript tagged templates (e.g., a`b`)
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_tagged_template_check_js(call_count) }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_tagged_template_check_js(call_count) }?
         tagged_template_js[call_count] |
 
         // special case: JavaScript lambda starts with a lone parameter (optional "async")
         {
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && !skip_lone_lambda_js
             && (
                 !inTransparentMode(MODE_TYPE_TS)
@@ -12991,7 +12986,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // special case: TypeScript generic lambdas (e.g., "<TYPE>() => ...") [optional "async"]
         {
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && (LA(1) == TEMPOPS || (LA(1) == JS_ASYNC && next_token() == TEMPOPS))
             && perform_generic_lambda_check_ts()
         }?
@@ -12999,7 +12994,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // special case: JavaScript lambda starts with a parameter list (optional "async")
         {
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
             && perform_parameter_list_lambda_check_js()
         }?
@@ -13007,7 +13002,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // special case: JavaScript optional chaining with function calls
         {
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && last_consumed != PERIOD
             && last_consumed != QMARK_PERIOD
             && perform_optional_call_chaining_check_js()
@@ -13016,7 +13011,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // looking for "*[...](){}" to start a generator function computed property
         {
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
             && perform_generator_function_computed_property_check_js()
         }?
@@ -13024,27 +13019,27 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // looking for "[...](){}" to start a computed property function
         {
-            inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)
+            inLanguage(LANGUAGE_JAVASCRIPT)
             && (LA(1) == LBRACKET || LA(1) == JS_ASYNC && next_token() == LBRACKET)
             && perform_computed_property_as_function_check_js()
         }?
         computed_property_as_function_js |
 
         // looking for "[...]:" to start a computed property in an object in JavaScript
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
         computed_property_js |
 
         // looking for lbracket to start an array in JavaScript (note that ")[" starts an index)
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && last_consumed != RPAREN }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != RPAREN }?
         array_js |
 
         // looking for "class" to start a class in an expression in JavaScript
         // Note that "class:" is a property name in an object
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
         class_expression_js |
 
         // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_keywordless_function_check_js() }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_function_check_js() }?
         {
             startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
             startElement(SFUNCTION_DEFINITION);
@@ -13053,11 +13048,11 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // looking for "NAME(){...}" to start a keywordless function in JavaScript
         // Note: do not confuse a call in a class super list for a keywordless function
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !inTransparentMode(MODE_SUPER_LIST_JS) && perform_keywordless_function_check_js() }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_SUPER_LIST_JS) && perform_keywordless_function_check_js() }?
         keywordless_function_expression_js[true] |
 
         // looking for "@decorator function" to start a function (with a decorator) in an expression in TypeScript
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && perform_decorator_function_expression_check_ts() }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_decorator_function_expression_check_ts() }?
         {
             std::array<int, 2> post_specifier_tokens = perform_post_decorator_check_ts();
 
@@ -13080,15 +13075,15 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // looking for "function" to start a function in an expression in JavaScript
         // Note that "function:" is a property name in an object
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
         function_expression_js[true] |
 
         // looking for lcurly to start an object in JavaScript
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
         object_js |
 
         // looking for "yield" or "yield*" to start a yield expression in JavaScript
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
         yield_expression_js |
 
         // looking for a Python indexable function call (e.g., "a()[]", "b()[][]", etc.)
@@ -13101,7 +13096,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // looking for name to start a Python or JavaScript subscriptable function call (e.g., "a[]()" or "a.b[]()")
         {
-            (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
+            (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT))
             && LA(1) == NAME
             && (next_token() == LBRACKET || (next_token() == PERIOD && perform_member_access_function_call_check_py()))
             && perform_subscriptable_function_call_check_py()
@@ -13276,7 +13271,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             dot_dereference |
             /* Commented-out code: newop | */
 
-            { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
             qmark_period |
 
             // left parentheses
@@ -13314,7 +13309,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
                 startElement(SBLOCK);
 
                 // lcurly starts a block
-                if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+                if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                     lcurly_types_js.emplace_back('b');  // block LCURLY
                     bracket_types_js.emplace_back("bLCURLY");
                 }
@@ -13407,7 +13402,7 @@ rparen_expression[] { bool end_control_incr = false; ENTRY_DEBUG } :
   Handles various rules for literals.
 */
 literals[] { ENTRY_DEBUG } :
-        { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
         (backtick_literal_js | undefined_literal_js | regex_literal_js | jsx_literal_js) |
 
         { inLanguage(LANGUAGE_PYTHON) }?
@@ -13552,7 +13547,7 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
 char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             if (markup) {
-                if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
+                if (inLanguage(LANGUAGE_JAVASCRIPT))
                     startElement(SSTRING);
                 else
                     startElement(SCHAR);
@@ -14964,7 +14959,7 @@ template_argument[bool in_function_type = false] { CompleteElement element(this)
             ) |
 
             // optional generic types (mixins) using the "extends" keyword in TypeScript
-            { inLanguage(LANGUAGE_JAVASCRIPT_FAMILY) }?
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
             mixins_ts |
 
             template_extends_java |
@@ -15075,7 +15070,7 @@ tempops[] { ENTRY_DEBUG } :
             if (!inMode(MODE_LIST))
                 startNewMode(MODE_LIST);
 
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
+            if (inLanguage(LANGUAGE_JAVASCRIPT))
                 ++tempops_count_ts;
         }
 
@@ -15096,7 +15091,7 @@ tempope[] { ENTRY_DEBUG } :
         TEMPOPE
 
         {
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY))
+            if (inLanguage(LANGUAGE_JAVASCRIPT))
                 --tempops_count_ts;
 
             // end the mode created by the start template operator
@@ -18976,7 +18971,7 @@ specifier_js[] { ENTRY_DEBUG } :
         (
             JS_ASYNC | JS_DEFAULT | JS_EACH | JS_EXPORT | JS_STATIC |
 
-            ((TS_ABSTRACT | TS_DECLARE) { setTypeScript(); })
+            TS_ABSTRACT | TS_DECLARE
         )
 
         {
@@ -19158,7 +19153,7 @@ for_control_js[] { ENTRY_DEBUG } :
             startElement(SCONTROL);
 
             // lparen starts a condition
-            if (inLanguage(LANGUAGE_JAVASCRIPT_FAMILY)) {
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
                 lparen_types_js.emplace_back('n');  // condition LPAREN
                 bracket_types_js.emplace_back("nLPAREN");
             }
@@ -19625,7 +19620,7 @@ extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
   Handles an "implements" derivation list in TypeScript.
 */
-implements_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
+implements_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_EXTENDS_JS);
             startElement(SIMPLEMENTS);
@@ -20872,11 +20867,7 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             } |
 
             // special case: index signatures in TypeScript
-            {
-                (is_typescript || inLanguage(LANGUAGE_TYPESCRIPT))
-                && last_consumed != COLON
-                && perform_constraint_check_ts()
-            }?
+            { last_consumed != COLON && perform_constraint_check_ts() }?
             constraint_ts |
 
             // special case: shorthand computed property with a string
@@ -21021,7 +21012,7 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             colon_marked_js |
 
             // consume TypeScript types
-            { is_typescript || inLanguage(LANGUAGE_TYPESCRIPT) }?
+            { !inTransparentMode(MODE_TERNARY | MODE_THEN) }?
             (COLON type_ts) |
 
             {
@@ -22216,7 +22207,7 @@ colon_marked_js[] {
 
   Handles a type in TypeScript.
 */
-type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_TYPE_TS | MODE_NO_BLOCK_CONTENT);
             startElement(STYPE);
@@ -22296,10 +22287,6 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
             }?
             general_operators |
 
-            // "void" is a valid TypeScript type
-            { is_typescript || inLanguage(LANGUAGE_TYPESCRIPT) }?
-            void_as_name |
-
             // do not confuse LCURLY with the start of a block
             {
                 last_consumed == COLON
@@ -22312,6 +22299,10 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
                 || inTransparentMode(MODE_TYPEDEF)
             }?
             expression_block_js |
+
+            // "void" is a valid TypeScript type name
+            { inTransparentMode(MODE_TYPE_TS) }?
+            void_as_name |
 
             // marks "asserts" and "is" as operators
             assertion_function_operator_ts | type_predicate_operator_ts |
@@ -22344,7 +22335,7 @@ type_ts[] { CompleteElement element(this); setTypeScript(); size_t lparen_types_
 
   Handles generic types (also called mixins) in TypeScript (e.g., "<A extends B>").
 */
-mixins_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
+mixins_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_MIXINS_TS);
             startElement(SEXTENDS);
@@ -22360,7 +22351,7 @@ mixins_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
   Handles the "is" portion of a type predicate in TypeScript.
   The entire type predicate looks something like "NAME is NAME".
 */
-type_predicate_operator_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+type_predicate_operator_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
@@ -22374,7 +22365,7 @@ type_predicate_operator_ts[] { LightweightElement element(this); setTypeScript()
   Handles the "asserts" portion of an assertion function in TypeScript.
   The entire assertion looks something like "asserts NAME".
 */
-assertion_function_operator_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+assertion_function_operator_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
@@ -22387,7 +22378,7 @@ assertion_function_operator_ts[] { LightweightElement element(this); setTypeScri
 
   Marks "type" as a specifier in TypeScript "import" statements.
 */
-type_as_specifier_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+type_as_specifier_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
@@ -22484,7 +22475,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
 
   Handles a TypeScript function declaration.
 */
-function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
+function_declaration_ts[] { ENTRY_DEBUG } :
         {
             // do not nest function declarations
             if (!inMode(MODE_FUNCTION_DECL_TS)) {
@@ -22543,7 +22534,7 @@ function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
 
   Handles specifiers that can only appear in a TypeScript function declaration.
 */
-function_declaration_specifiers_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+function_declaration_specifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
@@ -22620,7 +22611,7 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
 
   Handles a TypeScript function declaration without a name.
 */
-nameless_function_declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
+nameless_function_declaration_ts[] { ENTRY_DEBUG } :
         {
             // do not nest function declarations
             if (!inMode(MODE_FUNCTION_DECL_TS)) {
@@ -22742,7 +22733,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
 
   Handles a TypeScript declaration statement marked with bare declarations.
 */
-declaration_statement_ts[] { setTypeScript(); ENTRY_DEBUG } :
+declaration_statement_ts[] { ENTRY_DEBUG } :
         {
             // do not nest declaration statements
             if (!inMode(MODE_DECL_STATEMENT_TS)) {
@@ -22795,7 +22786,7 @@ declaration_statement_ts[] { setTypeScript(); ENTRY_DEBUG } :
 
   Handles a declaration in TypeScript.  These do not begin with a keyword (only a name or a specifier).
 */
-declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
+declaration_ts[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_DECL_JS);
             startElement(SDECLARATION);
@@ -22856,7 +22847,7 @@ declaration_ts[] { setTypeScript(); ENTRY_DEBUG } :
 
   Handles index signatures (e.g., "[NAME : TYPE]: TYPE") in TypeScript.
 */
-constraint_ts[] { CompleteElement element(this); setTypeScript(); ENTRY_DEBUG } :
+constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
             startElement(SCONSTRAINT);
@@ -22936,7 +22927,7 @@ perform_constraint_check_ts[] returns [bool isconstraint] {
 
   Handles modifiers (e.g., "?" and "!") that can occur on a name in a TypeScript declaration.
 */
-declaration_modifiers_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+declaration_modifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SMODIFIER);
         }
@@ -22949,7 +22940,7 @@ declaration_modifiers_ts[] { LightweightElement element(this); setTypeScript(); 
 
   Handles specifiers that can appear in a TypeScript declaration.
 */
-declaration_specifiers_ts[] { LightweightElement element(this); setTypeScript(); ENTRY_DEBUG } :
+declaration_specifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SFUNCTION_SPECIFIER);
         }
@@ -23016,7 +23007,7 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
 
   Used to mark decorators (e.g., "@decorator") as attributes in TypeScript.
 */
-attribute_ts[] { setTypeScript(); ENTRY_DEBUG } :
+attribute_ts[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_DECORATOR_TS);
             startElement(SATTRIBUTE);
@@ -23282,7 +23273,6 @@ perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] 
   declare_statement_ts
 
   Used to handle any tokens that appear after a "declare" statement keyword in TypeScript.
-  If in this rule, then setTypeScript() is already set by the table.
 */
 declare_statement_ts[] { ENTRY_DEBUG } :
         (options { greedy = true; } :

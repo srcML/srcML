@@ -22,6 +22,5 @@ language_pair Language::lang2int[] = {
     language_pair( LanguageName::LANGUAGE_OBJECTIVE_C, LANGUAGE_OBJECTIVE_C | LANGUAGE_C ),
     language_pair( LanguageName::LANGUAGE_PYTHON, LANGUAGE_PYTHON ),
     language_pair( LanguageName::LANGUAGE_JAVASCRIPT, LANGUAGE_JAVASCRIPT ),
-    language_pair( LanguageName::LANGUAGE_TYPESCRIPT, LANGUAGE_TYPESCRIPT ),
     language_pair( LanguageName::LANGUAGE_NONE, LANGUAGE_NONE ),
 };

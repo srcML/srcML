@@ -60,7 +60,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        dassert(srcml_get_language_list_size(), 8);
+        dassert(srcml_get_language_list_size(), 7);
     }
 
     /*
@@ -92,15 +92,11 @@ int main(int, char* argv[]) {
     }
 
     {
-        dassert(srcml_get_language_list(6), std::string("TypeScript"));
+        dassert(srcml_get_language_list(6), std::string("Objective-C"));
     }
 
     {
-        dassert(srcml_get_language_list(7), std::string("Objective-C"));
-    }
-
-    {
-        dassert(srcml_get_language_list(8), 0);
+        dassert(srcml_get_language_list(7), 0);
     }
 
     /*

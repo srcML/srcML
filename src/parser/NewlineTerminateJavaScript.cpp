@@ -11,7 +11,7 @@
 
 #include <NewlineTerminateJavaScript.hpp>
 
-// insert TERMINATE tokens to JavaScript/TypeScript code without semicolon delimiters
+// insert TERMINATE tokens to JavaScript code without semicolon delimiters
 antlr::RefToken NewlineTerminateJavaScript::nextToken() {
     // determine the first non-skip token in the file before doing anything else
     if (firstToken) {

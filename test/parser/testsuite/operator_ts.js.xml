@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="operator">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="operator">
 
 <!-- Assertion Function ("asserts") -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list>: <type><operator>asserts</operator> <name>condition</name></type> <block>{<block_content/>}</block></function></expr></expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list>: <type><operator>asserts</operator> <name>condition</name> <operator>is</operator> <name>string</name></type> <block>{<block_content/>}</block></function></expr></expr_stmt>
 </unit>
 
 <!-- Type Cast ("as") -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>x</name> <init>= <expr><literal type="string">"hello"</literal> <operator>as</operator> <name>const</name></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>fishPet</name> <init>= <expr><name>pet</name> <operator>as</operator> <name>Fish</name></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>x</name> <init>= <expr><name>y</name> <operator>as</operator> <name>any</name> <operator>as</operator> <name>T</name></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name><name>followups</name><operator>.</operator><name>push</name></name><argument_list>(
   <argument><expr><object>{
     <property><expr><name>place</name></expr>: <expr><name>temp</name></expr></property>,
@@ -34,46 +34,46 @@
 )</argument_list></call></expr></expr_stmt>
 </unit>
 
-<!-- TypeScript Declaration Statement Unary Operators ("+", "-", and "~") -->
+<!-- JavaScript Declaration Statement Unary Operators ("+", "-", and "~") -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name>: <type><literal type="number">0x00</literal></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name>: <type><literal type="number">0x01</literal></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name>: <type><literal type="number">0x02</literal></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>+</operator><name>deltaX</name>: <type><name>number</name></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>-</operator><name>deltaY</name>: <type><name>number</name></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>~</operator><name>deltaZ</name>: <type><name>number</name></type></decl></decl_stmt>
 }</block></class>
 </unit>
 
 <!-- Semicolon usage is intentional; the code becomes invalid without them -->
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class><specifier>declare</specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name>: <type><literal type="number">0x00</literal></type></decl>;</decl_stmt>
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name>: <type><literal type="number">0x01</literal></type></decl>;</decl_stmt>
@@ -85,44 +85,44 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name>: <type><literal type="number">0x00</literal></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name>: <type><literal type="number">0x01</literal></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name>: <type><literal type="number">0x02</literal></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>+</operator><name>deltaX</name>: <type><name>number</name></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>-</operator><name>deltaY</name>: <type><name>number</name></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl><operator>~</operator><name>deltaZ</name>: <type><name>number</name></type></decl></decl_stmt>
 }</block></interface>
 </unit>
 
 <!-- Semicolon usage is intentional; the code becomes invalid without them -->
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name>: <type><literal type="number">0x00</literal></type></decl>;</decl_stmt>
   <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name>: <type><literal type="number">0x01</literal></type></decl>;</decl_stmt>
@@ -136,19 +136,19 @@
 
 <!-- Type Predicate ("is") -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>isFish</name><parameter_list>(<parameter><decl><name>pet</name>: <type><name>Fish</name> <operator>|</operator> <name>Bird</name></type></decl></parameter>)</parameter_list>: <type><name>pet</name> <operator>is</operator> <name>Fish</name></type> <block>{<block_content>
   <return>return <expr><operator>(</operator><name>pet</name> <operator>as</operator> <name>Fish</name><operator>)</operator><operator>.</operator><name>swim</name> <operator>!==</operator> <literal type="undefined">undefined</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function><specifier>export</specifier> function <name>isNullOrFalse</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>any</name></type></decl></parameter>)</parameter_list>: <type><name>x</name> <operator>is</operator> <literal type="boolean">false</literal> <operator>|</operator> <literal type="null">null</literal></type> <block>{<block_content>
   <return>return <expr><name>x</name> <operator>===</operator> <literal type="boolean">false</literal> <operator>||</operator> <name>x</name> <operator>===</operator> <literal type="null">null</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>isPromise</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>any</name></type></decl></parameter>)</parameter_list>: <type><name>x</name> <operator>is</operator> <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></type> <block>{<block_content>
   <return>return <expr><literal type="string">'then'</literal> <operator>in</operator> <name>x</name></expr></return>
 </block_content>}</block></function>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="TypeScript" url="implements">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="implements">
 
 <!-- Classes -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class>class <name>Bird</name> <super_list><implements>implements <super><expr><name>Flyable</name></expr></super></implements></super_list> <block>{
   <expr_stmt><expr><function><name>fly</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Take to the skies!"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
@@ -11,7 +11,7 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class>class <name>Bird</name> <super_list><extends>extends <super><expr><name>Animal</name></expr></super></extends> <implements>implements <super><expr><name>Flyable</name></expr></super></implements></super_list> <block>{
   <expr_stmt><expr><function><name>fly</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Take to the skies!"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
@@ -19,7 +19,7 @@
 }</block></class>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <class>class <name>Bird</name> <super_list><implements>implements <super><expr><name>Flyable</name></expr></super>, <super><expr><name>Cry</name></expr></super></implements></super_list> <block>{
   <expr_stmt><expr><function><name>fly</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Take to the skies!"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
@@ -33,7 +33,7 @@
 
 <!-- Class Expressions -->
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>birdClass</name> <init>= <expr><class>class <name>Bird</name> <super_list><implements>implements <super><expr><name>Flyable</name></expr></super></implements></super_list> <block>{
   <expr_stmt><expr><function><name>fly</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Take to the skies!"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
@@ -41,7 +41,7 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>birdClass</name> <init>= <expr><class>class <name>Bird</name> <super_list><extends>extends <super><expr><name>Animal</name></expr></super></extends> <implements>implements <super><expr><name>Flyable</name></expr></super></implements></super_list> <block>{
   <expr_stmt><expr><function><name>fly</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Take to the skies!"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
@@ -49,7 +49,7 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="TypeScript">
+<unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>birdClass</name> <init>= <expr><class>class <name>Bird</name> <super_list><implements>implements <super><expr><name>Flyable</name></expr></super>, <super><expr><name>Cry</name></expr></super></implements></super_list> <block>{
   <expr_stmt><expr><function><name>fly</name><parameter_list>()</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Take to the skies!"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>

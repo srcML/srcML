@@ -20,7 +20,6 @@ define output <<- 'STDOUT'
 	  C#: 1.0.0
 	  Java: 1.0.0
 	  JavaScript: 1.0.0
-	  TypeScript: 1.0.0
 	  Objective-C: 1.0.0
 STDOUT
 
