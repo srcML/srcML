@@ -38,27 +38,27 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><string>"Autoversioning"</string></expr></argument> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><string>"Autoversioning"</string></expr></argument> <argument><expr><literal type="boolean" value="false">Off</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">Off</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><string>"Autoversioning"</string></expr></argument> <argument><expr><literal type="boolean" value="false">off</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">off</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><string>"Build shared libraries by default"</string></expr></argument> <argument><expr><literal type="boolean" value="true">YES</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><literal type="boolean" value="true">YES</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><string>"Build shared libraries by default"</string></expr></argument> <argument><expr><literal type="boolean" value="true">Yes</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><literal type="boolean" value="true">Yes</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><string>"Build shared libraries by default"</string></expr></argument> <argument><expr><literal type="boolean" value="true">yes</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><literal type="boolean" value="true">yes</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -75,25 +75,25 @@
 
 <unit revision="1.0.0" language="CMake">
 <if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">Y</literal></expr>)</condition><block>
-    <command><name>message</name><argument_list>(<argument><expr><string>"Success."</string></expr></argument>)</argument_list></command>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"Success."</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">y</literal></expr>)</condition><block>
-    <command><name>message</name><argument_list>(<argument><expr><string>"Success."</string></expr></argument>)</argument_list></command>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"Success."</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">N</literal></expr>)</condition><block>
-    <command><name>message</name><argument_list>(<argument><expr><string>"Failed."</string></expr></argument>)</argument_list></command>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"Failed."</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">n</literal></expr>)</condition><block>
-    <command><name>message</name><argument_list>(<argument><expr><string>"Failed."</string></expr></argument>)</argument_list></command>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"Failed."</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
@@ -110,19 +110,19 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><string>"Autoversioning"</string></expr></argument> <argument><expr><literal type="boolean" value="false">NOTFOUND</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">NOTFOUND</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><string>"Autoversioning"</string></expr></argument> <argument><expr><literal type="boolean" value="false">NotFound</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">NotFound</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><string>"Autoversioning"</string></expr></argument> <argument><expr><literal type="boolean" value="false">Notfound</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">Notfound</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><string>"Autoversioning"</string></expr></argument> <argument><expr><literal type="boolean" value="false">notfound</literal></expr></argument>)</argument_list></command>
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">notfound</literal></expr></argument>)</argument_list></command>
 </unit>
 
 </unit>

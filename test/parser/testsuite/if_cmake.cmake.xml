@@ -2,13 +2,13 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="if">
 
 <unit revision="1.0.0" language="CMake">
-<if_stmt><if>if<condition>(<expr><string>${<name>CMAKE_CXX_COMPILER_ID</name>}</string> <operator>STREQUAL</operator> <string>"Clang"</string></expr>)</condition><block>
+<if_stmt><if>if<condition>(<expr><literal type="string">${<name>CMAKE_CXX_COMPILER_ID</name>}</literal> <operator>STREQUAL</operator> <literal type="string">"Clang"</literal></expr>)</condition><block>
     <command><name>set</name><argument_list>(<argument><expr><name>CLANG</name></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<if_stmt><if>if<condition>(<expr><string>${<name>PROJECT_SOURCE_DIR</name>}</string> <operator>STREQUAL</operator> <name>${CMAKE_SOURCE_DIR}</name></expr>)</condition><block>
+<if_stmt><if>if<condition>(<expr><literal type="string">${<name>PROJECT_SOURCE_DIR</name>}</literal> <operator>STREQUAL</operator> <name>${CMAKE_SOURCE_DIR}</name></expr>)</condition><block>
     <command><name>set</name><argument_list>(<argument><expr><name>main_project</name></expr></argument> <argument><expr><name>TRUE</name></expr></argument>)</argument_list></command>
 </block></if><else>else()<block>
     <command><name>set</name><argument_list>(<argument><expr><name>main_project</name></expr></argument> <argument><expr><name>FALSE</name></expr></argument>)</argument_list></command>
@@ -16,17 +16,17 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<if_stmt><if>if <condition>(<expr><string>${<name>RANDOMIZATION</name>}</string> <operator>EQUAL</operator> <literal type="number">0</literal></expr>)</condition><block>
+<if_stmt><if>if <condition>(<expr><literal type="string">${<name>RANDOMIZATION</name>}</literal> <operator>EQUAL</operator> <literal type="number">0</literal></expr>)</condition><block>
     <command><name>add_definitions</name><argument_list>(<argument><expr><flag>-<name>DSHUFFLE_ON_INIT</name><init>=<expr><literal type="number">0</literal></expr></init></flag></expr></argument>)</argument_list></command>
     <command><name>add_definitions</name><argument_list>(<argument><expr><flag>-<name>DSHUFFLE_ON_FREE</name><init>=<expr><literal type="number">0</literal></expr></init></flag></expr></argument>)</argument_list></command>
-</block></if><if type="elseif">elseif<condition>(<expr><string>${<name>RANDOMIZATION</name>}</string> <operator>EQUAL</operator> <literal type="number">1</literal></expr>)</condition><block>
+</block></if><if type="elseif">elseif<condition>(<expr><literal type="string">${<name>RANDOMIZATION</name>}</literal> <operator>EQUAL</operator> <literal type="number">1</literal></expr>)</condition><block>
     <command><name>add_definitions</name><argument_list>(<argument><expr><flag>-<name>DSHUFFLE_ON_INIT</name><init>=<expr><literal type="number">1</literal></expr></init></flag></expr></argument>)</argument_list></command>
     <command><name>add_definitions</name><argument_list>(<argument><expr><flag>-<name>DSHUFFLE_ON_FREE</name><init>=<expr><literal type="number">0</literal></expr></init></flag></expr></argument>)</argument_list></command>
-</block></if><if type="elseif">elseif<condition>(<expr><string>${<name>RANDOMIZATION</name>}</string> <operator>EQUAL</operator> <literal type="number">2</literal></expr>)</condition><block>
+</block></if><if type="elseif">elseif<condition>(<expr><literal type="string">${<name>RANDOMIZATION</name>}</literal> <operator>EQUAL</operator> <literal type="number">2</literal></expr>)</condition><block>
     <command><name>add_definitions</name><argument_list>(<argument><expr><flag>-<name>DSHUFFLE_ON_INIT</name><init>=<expr><literal type="number">1</literal></expr></init></flag></expr></argument>)</argument_list></command>
     <command><name>add_definitions</name><argument_list>(<argument><expr><flag>-<name>DSHUFFLE_ON_FREE</name><init>=<expr><literal type="number">1</literal></expr></init></flag></expr></argument>)</argument_list></command>
 </block></if><else>else()<block>
-    <command><name>message</name><argument_list>(<option><name>FATAL_ERROR</name> <argument><expr><string>"Unknown option"</string></expr></argument></option>)</argument_list></command>
+    <command><name>message</name><argument_list>(<option><name>FATAL_ERROR</name> <argument><expr><literal type="string">"Unknown option"</literal></expr></argument></option>)</argument_list></command>
 </block></else>endif()</if_stmt>
 </unit>
 

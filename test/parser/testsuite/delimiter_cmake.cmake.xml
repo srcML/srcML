@@ -41,7 +41,7 @@
     <expr><name>This</name></expr>;<expr><name>Divides</name></expr>;<expr><name>Into</name></expr>;<expr><name>Five</name></expr>;<expr><name>Arguments</name></expr>
     <expr><name>Escaped\;Semicolon</name></expr></range>
     )</control><block>
-  <command><name>message</name><argument_list>(<argument><expr><string>"${<name>arg</name>}"</string></expr></argument>)</argument_list></command>
+  <command><name>message</name><argument_list>(<argument><expr><literal type="string">"${<name>arg</name>}"</literal></expr></argument>)</argument_list></command>
 </block>endforeach()</foreach>
 </unit>
 

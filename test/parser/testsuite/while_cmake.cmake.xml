@@ -2,17 +2,17 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="while">
 
 <unit revision="1.0.0" language="CMake">
-<while>while<condition>(<expr><string>${<name>i</name>}</string> <operator>GREATER</operator> <literal type="number">2</literal></expr>)</condition><block>
-    <command><name>set</name><argument_list>(<argument><expr><name>module_install_rpath</name></expr></argument> <argument><expr><string>"${<name>module_install_rpath</name>}/.."</string></expr></argument>)</argument_list></command>
-    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>i</name></expr></argument> <argument><expr><string>"${<name>i</name>} - 1"</string></expr></argument></option>)</argument_list></command>
+<while>while<condition>(<expr><literal type="string">${<name>i</name>}</literal> <operator>GREATER</operator> <literal type="number">2</literal></expr>)</condition><block>
+    <command><name>set</name><argument_list>(<argument><expr><name>module_install_rpath</name></expr></argument> <argument><expr><literal type="string">"${<name>module_install_rpath</name>}/.."</literal></expr></argument>)</argument_list></command>
+    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>i</name></expr></argument> <argument><expr><literal type="string">"${<name>i</name>} - 1"</literal></expr></argument></option>)</argument_list></command>
 </block>endwhile()</while>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<while>while<condition>(<expr><operator>(</operator><name>MaxNumNodes</name> <operator>GREATER</operator> <string>${<name>nodes</name>}</string><operator>)</operator> <operator>OR</operator> <operator>(</operator><name>MaxNumNodes</name> <operator>EQUAL</operator> <string>${<name>nodes</name>}</string><operator>)</operator></expr>)</condition><block>
-    <command><name>set</name><argument_list>(<argument><expr><name>NumNodes</name></expr></argument> <argument><expr><string>"${<name>NumNodes</name>} ${<name>nodes</name>}"</string></expr></argument>)</argument_list></command>
-    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>index</name></expr></argument> <argument><expr><string>"${<name>index</name>}+1"</string></expr></argument></option>)</argument_list></command>
-    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>nodes</name></expr></argument> <argument><expr><string>"1 &lt;&lt; ${<name>index</name>}"</string></expr></argument></option>)</argument_list></command>
+<while>while<condition>(<expr><operator>(</operator><name>MaxNumNodes</name> <operator>GREATER</operator> <literal type="string">${<name>nodes</name>}</literal><operator>)</operator> <operator>OR</operator> <operator>(</operator><name>MaxNumNodes</name> <operator>EQUAL</operator> <literal type="string">${<name>nodes</name>}</literal><operator>)</operator></expr>)</condition><block>
+    <command><name>set</name><argument_list>(<argument><expr><name>NumNodes</name></expr></argument> <argument><expr><literal type="string">"${<name>NumNodes</name>} ${<name>nodes</name>}"</literal></expr></argument>)</argument_list></command>
+    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>index</name></expr></argument> <argument><expr><literal type="string">"${<name>index</name>}+1"</literal></expr></argument></option>)</argument_list></command>
+    <command><name>math</name><argument_list>(<option><name>EXPR</name> <argument><expr><name>nodes</name></expr></argument> <argument><expr><literal type="string">"1 &lt;&lt; ${<name>index</name>}"</literal></expr></argument></option>)</argument_list></command>
 </block>endwhile()</while>
 </unit>
 
