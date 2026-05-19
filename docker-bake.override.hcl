@@ -23,12 +23,14 @@
 variable "distributions" {
   description = "Table of supported Linux distributions"
   default = [
-    { id = "ubuntu",   version_id = "25.04",  java_version_id="22.04", name = "Ubuntu 25.04", workflow = "ubuntu", java = "latest", tag = "latest" },
-    { id = "ubuntu",   version_id = "24.10",  java_version_id="22.04", name = "Ubuntu 24.10", workflow = "ubuntu", java = "latest"},
-    { id = "ubuntu",   version_id = "24.04",  java_version_id="22.04", name = "Ubuntu 24.04", workflow = "ubuntu", java = "latest"},
+    { id = "ubuntu",   version_id = "26.04",  java_version_id="22.04", name = "Ubuntu 26.04", workflow = "ubuntu", java = "latest", tag = "latest" },
+    { id = "ubuntu",   version_id = "25.10",  java_version_id="22.04", name = "Ubuntu 25.10", workflow = "ubuntu", java = "latest" },
+    { id = "ubuntu",   version_id = "25.04",  java_version_id="22.04", name = "Ubuntu 25.04", workflow = "ubuntu", java = "latest" },
+    { id = "ubuntu",   version_id = "24.04",  java_version_id="22.04", name = "Ubuntu 24.04", workflow = "ubuntu", java = "latest" },
     { id = "ubuntu",   version_id = "22.04",  java_version_id="22.04", name = "Ubuntu 22.04", workflow = "ubuntu" },
     { id = "ubuntu",   version_id = "20.04",  java_version_id="20.04", name = "Ubuntu 20.04", workflow = "ubuntu", cmake = "ON", tag = "earliest" },
-    { id = "fedora",   version_id = "43",     java_version_id="38",    name = "Fedora 43", workflow = "rpm",    java = "latest", tag = "latest" },
+    { id = "fedora",   version_id = "44",     java_version_id="38",    name = "Fedora 44", workflow = "rpm",    java = "latest", tag = "latest" },
+    { id = "fedora",   version_id = "43",     java_version_id="38",    name = "Fedora 43", workflow = "rpm",    java = "latest" },
     { id = "fedora",   version_id = "42",     java_version_id="38",    name = "Fedora 42", workflow = "rpm",    java = "latest" },
     { id = "fedora",   version_id = "41",     java_version_id="38",    name = "Fedora 41", workflow = "rpm",    java = "17" },
     { id = "fedora",   version_id = "40",     java_version_id="38",    name = "Fedora 40", workflow = "rpm",    java = "17" },
@@ -41,7 +43,7 @@ variable "distributions" {
     { id = "opensuse", version_id = "15.2",   java_version_id="15.6",  name = "OpenSUSE 15.2", workflow = "rpm",    opensuse="leap" },
     { id = "opensuse", version_id = "15.1",   java_version_id="15.6",  name = "OpenSUSE 15.1", workflow = "rpm",    opensuse="leap", tag = "earliest" },
     { id = "opensuse", version_id = "15",     java_version_id="15.6",  name = "OpenSUSE 15", workflow = "rpm",    opensuse="leap" },
-    { id = "opensuse", version_id = "latest", java_version_id="latest",  name = "OpenSUSE Tumbleweed", workflow = "rpm",    opensuse="tumbleweed", tag = "latest" }
+    { id = "opensuse", version_id = "latest", java_version_id="latest",  name = "OpenSUSE Tumbleweed", workflow = "rpm",    opensuse="tumbleweed", tag = "tumbleweed" }
   ]
 }
 
@@ -94,6 +96,14 @@ group "ubuntu_image" { targets = categoryDistributionTarget("ubuntu", "image") }
 # Ubuntu package package
 # Example target name: ubuntu_24_04_package Example tag: srcml/ubuntu_package:24.04
 group "ubuntu_package" { targets = categoryDistributionTarget("ubuntu", "package") }
+
+# Fedora package files
+# Example target name: fedora_42_package Example tag: srcml/fedora_package:42
+group "fedora_package" { targets = categoryDistributionTarget("fedora", "package") }
+
+# OpenSUSE package files
+# Example target name: opensuse_15_6_package Example tag: srcml/opensuse_package:15.6
+group "opensuse_package" { targets = categoryDistributionTarget("opensuse", "package") }
 
 # Ubuntu log images
 # Example target name: ubuntu_24_04_log Example tag: srcml/ubuntu_log:24.04

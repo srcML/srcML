@@ -16,13 +16,15 @@ include(InstallRequiredSystemLibraries)
 # Build options
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(BUILD_LIBSRCML "Build (and potentially install) libsrcml" ON)
+option(BUILD_CLIENT "Build srcML client" ON)
 
-# Exeternally defined compile and link options
+# Externally defined compile and link options
 add_compile_options(${SRCML_GLOBAL_COMPILE_OPTIONS})
 add_link_options("${SRCML_GLOBAL_LINK_OPTIONS}")
 
-# if(BUILD_LIBSRCML)
-    add_subdirectory(parser)
-    add_subdirectory(libsrcml)
-# endif()
-add_subdirectory(client)
+add_subdirectory(parser)
+add_subdirectory(libsrcml)
+
+if(BUILD_CLIENT)
+    add_subdirectory(client)
+endif()

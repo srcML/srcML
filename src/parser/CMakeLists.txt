@@ -66,6 +66,11 @@ target_sources(antlr PRIVATE "${ANTLR_SOURCE}")
 target_include_directories(antlr SYSTEM PUBLIC "${antlrsrc_SOURCE_DIR}/lib/cpp/" SYSTEM PRIVATE "${antlrsrc_SOURCE_DIR}/lib/cpp/")
 target_compile_options(antlr PRIVATE ${SRCML_ANTLR_COMPILE_FLAGS})
 
+# Enable proper exception catching when building for wasm
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Emscripten")
+    add_compile_options(-fwasm-exceptions)
+endif()
+
 # Generated source from antlr and the parser
 set(CMAKE_GENERATED_SOURCE_DIR ${CMAKE_BINARY_DIR}/parser)
 

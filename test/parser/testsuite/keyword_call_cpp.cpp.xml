@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C++" url="keyword_call_cpp">
+
+<!-- Invalid syntax on its own, but possible in srcQL -->
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr><sizeof>sizeof<argument_list>()</argument_list></sizeof></expr>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr><alignof>alignof<argument_list>()</argument_list></alignof></expr>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr><typeid>typeid<argument_list>()</argument_list></typeid></expr>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr><cast type="const">const_cast<argument_list>()</argument_list></cast></expr>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr><cast type="dynamic">dynamic_cast<argument_list>()</argument_list></cast></expr>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr><cast type="reinterpret">reinterpret_cast<argument_list>()</argument_list></cast></expr>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr><cast type="static">static_cast<argument_list>()</argument_list></cast></expr>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+<expr><decltype>decltype<argument_list>()</argument_list></decltype></expr>
+</unit>
+
+</unit>

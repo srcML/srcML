@@ -1,0 +1,41 @@
+name: Build Wasm
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Emscripten SDK
+        uses: mymindstorm/setup-emsdk@v14
+
+      - name: Verify
+        run: emcc -v
+
+      - name: Install Mono
+        run: sudo apt-get install -y mono-complete
+
+      - name: Setup vcpkg
+        uses: ./.github/actions/vcpkg
+        with:
+          triplet: 'wasm32-emscripten'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure
+        run: |
+          emcmake cmake --preset ci-ubuntu-wasm
+
+      - name: Build
+        continue-on-error: true
+        run: |
+          cmake --build build --target libsrcml_js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: "Libsrcml Wasm Artifacts"
+          path: |
+            build/bin/libsrcml*

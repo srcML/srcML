@@ -21,16 +21,24 @@ x-utilities: &UTILITIES
 
 services:
 
-  ubuntu_25_04:
-    image: srcml/ubuntu:25.04
+  ubuntu_26_04:
+    image: srcml/ubuntu:26.04
     platform: ${PLATFORM}
     profiles: [ubuntu, package, latest]
     environment:
       - WORKFLOW=ubuntu
     <<: *CONFIGURATION
 
-  ubuntu_24_10:
-    image: srcml/ubuntu:24.10
+  ubuntu_25_10:
+    image: srcml/ubuntu:25.10
+    platform: ${PLATFORM}
+    profiles: [ubuntu, package]
+    environment:
+      - WORKFLOW=ubuntu
+    <<: *CONFIGURATION
+
+  ubuntu_25_04:
+    image: srcml/ubuntu:25.04
     platform: ${PLATFORM}
     profiles: [ubuntu, package]
     environment:
@@ -61,10 +69,18 @@ services:
       - WORKFLOW=ubuntu
     <<: *CONFIGURATION
 
+  fedora_44:
+    image: srcml/fedora:44
+    platform: ${PLATFORM}
+    profiles: [fedora, package, latest]
+    environment:
+      - WORKFLOW=rpm
+    <<: *CONFIGURATION
+
   fedora_43:
     image: srcml/fedora:43
     platform: ${PLATFORM}
-    profiles: [fedora, package, latest]
+    profiles: [fedora, package]
     environment:
       - WORKFLOW=rpm
     <<: *CONFIGURATION
