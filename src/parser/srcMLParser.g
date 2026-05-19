@@ -1828,10 +1828,8 @@ javascript_rules[] {
         javascript_parameter_list
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON) {
-                consume();  // ":"
-                type_ts();
-            }
+            if (LA(1) == COLON)
+                colon_type_ts();
         } |
 
         // looking for the type (e.g., "= TYPE") in a TypeScript type definition
@@ -19134,7 +19132,7 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 break;
             } |
 
-            declaration_init_js | declaration_range_js | (COLON type_ts) | compound_name
+            declaration_init_js | declaration_range_js | colon_type_ts | compound_name
         )*
 
         {
@@ -19391,7 +19389,7 @@ catch_lparen_js[] { ENTRY_DEBUG } :
         LPAREN
 
         compound_name
-        (COLON type_ts)*
+        (colon_type_ts)*
 
         {
             if (inTransparentMode(MODE_CATCH_LPAREN_JS))
@@ -19560,7 +19558,7 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 !inTransparentMode(MODE_TERNARY)
                 || (inTransparentMode(MODE_TERNARY) && !is_ternary_colon)
             }?
-            (COLON type_ts) |
+            colon_type_ts |
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
@@ -19827,10 +19825,10 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
             ) |
 
             // decorator parameter (TypeScript)
-            (attribute_ts compound_name COLON type_ts) |
+            (attribute_ts compound_name colon_type_ts) |
 
             // typed parameter (TypeScript)
-            (COLON type_ts) |
+            colon_type_ts |
 
             // regular parameter
             compound_name
@@ -19848,10 +19846,8 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
                 declaration_modifiers_ts();
 
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON) {
-                consume();  // ":"
-                type_ts();
-            }
+            if (LA(1) == COLON)
+                colon_type_ts();
 
             // ignore auto-inserted terminate, if applicable
             if (LA(1) == TERMINATE)
@@ -20275,7 +20271,7 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
-            (COLON type_ts) |
+            colon_type_ts |
 
             // allow JavaScript ternaries to use existing "else" logic
             { inTransparentMode(MODE_TERNARY) }?
@@ -20351,10 +20347,8 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON) {
-                consume();  // ":"
-                type_ts();
-            }
+            if (LA(1) == COLON)
+                colon_type_ts();
         }
 
         expression_block_js
@@ -20445,10 +20439,8 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON) {
-                consume();  // ":"
-                type_ts();
-            }
+            if (LA(1) == COLON)
+                colon_type_ts();
         }
 
         expression_block_js
@@ -20631,7 +20623,7 @@ lambda_js[bool is_list = false] {
             }
 
             // consume TypeScript types
-            (options { greedy = true; } : (COLON type_ts))*
+            (options { greedy = true; } : colon_type_ts)*
 
             {
                 // shorthand computed property with a string does not use "=>"
@@ -20678,7 +20670,7 @@ lambda_js[bool is_list = false] {
 
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
-            (COLON type_ts) |
+            colon_type_ts |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -20965,7 +20957,7 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
 
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
-            (COLON type_ts) |
+            colon_type_ts |
 
             // allow colon separators for properties
             { inTransparentMode(MODE_PROPERTY_JS) }?
@@ -21046,7 +21038,7 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // consume TypeScript types
             { !inTransparentMode(MODE_TERNARY | MODE_THEN) }?
-            (COLON type_ts) |
+            colon_type_ts |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -21138,10 +21130,8 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON) {
-                consume();  // ":"
-                type_ts();
-            }
+            if (LA(1) == COLON)
+                colon_type_ts();
         }
 
         expression_block_js
@@ -21264,10 +21254,8 @@ computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG 
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON) {
-                consume();  // ":"
-                type_ts();
-            }
+            if (LA(1) == COLON)
+                colon_type_ts();
         }
 
         expression_block_js
@@ -21674,10 +21662,8 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         {
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON) {
-                consume();  // ":"
-                type_ts();
-            }
+            if (LA(1) == COLON)
+                colon_type_ts();
         }
 
         expression_block_js
@@ -21836,10 +21822,8 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
             skip_lone_lambda_js = true;
 
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON) {
-                consume();  // ":"
-                type_ts();
-            }
+            if (LA(1) == COLON)
+                colon_type_ts();
         }
 
         arrow_operator_js
@@ -22151,7 +22135,7 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             // consume TypeScript types if not in an object
             { lcurly_types_js.back() != 'o' && bracket_types_js.back() != "oLCURLY" }?
-            (COLON type_ts) |
+            colon_type_ts |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -22202,6 +22186,18 @@ colon_marked_js[] {
             // determine if "{" starts an object or a kind of block
             if (LA(1) == COLON && next_token() == LCURLY)
                 lcurly_type = perform_colon_lcurly_differentiator_check_js();
+
+            // consume the entire type (with the colon)
+            if (lcurly_type == 2 || lcurly_type == 3) {
+                // found TypeScript "type" block
+                colon_type_ts();
+
+                // found TypeScript "type" block followed by a traditional block
+                if (lcurly_type == 3)
+                    expression_block_js();
+
+                return;
+            }
         }
 
         COLON
@@ -22209,29 +22205,6 @@ colon_marked_js[] {
         {
             if (inMode(MODE_EXPRESSION_COLON_TS))
                 endMode(MODE_EXPRESSION_COLON_TS);
-
-            switch (lcurly_type) {
-                // found JavaScript object
-                case 1:
-                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-                    startElement(SEXPRESSION);
-                    object_js();
-                    break;
-
-                // found TypeScript "type" block
-                case 2:
-                    type_ts();
-                    break;
-
-                // found TypeScript "type" block followed by a traditional block
-                case 3:
-                    type_ts();
-                    expression_block_js();
-                    break;
-
-                default:
-                    break;
-            }
         }
 ;
 
@@ -22346,7 +22319,138 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
 
             // allow nested types (e.g., in lambdas)
             { !inTransparentMode(MODE_TERNARY | MODE_THEN) && lparen_types_js.size() > 0 }?
-            (COLON type_ts) |
+            colon_type_ts |
+
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+            mixins_ts |
+
+            // allow certain expression, but do not consume LCURLY (could be a block)
+            { LA(1) != LCURLY || (LA(1) == LCURLY && inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)) }?
+            {
+                // no expression tag
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION);
+            }
+            expression
+        )*
+;
+
+/*
+  colon_type_ts
+
+  Handles a type preceded by a colon (":") in TypeScript.
+  Differs from type_ts[] so the entire snippet gets wrapped in a type tag.
+*/
+colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TYPE_TS | MODE_NO_BLOCK_CONTENT);
+            startElement(STS_TYPE);
+
+            is_pseudo_terminate = false;
+            is_ternary_colon = true;
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        COLON
+
+        (options { greedy = true; } :
+            // do not include the following as part of a type:
+            // - do not consume the closing RPAREN for certain constructs
+            // - a unary operator that should start a new declaration statement
+            // - after an argument list closing ">" with no generated TERMINATE
+            // - an argument list closing ">" in mixins or template arguments
+            // - "as" or "=" (start of next type/expression)
+            {
+                (
+                    LA(1) == RPAREN
+                    && (
+                        (lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
+                        || (inTransparentMode(MODE_CATCH_LPAREN_JS) && lparen_types_size == lparen_types_js.size())
+                        || (lparen_types_size == lparen_types_js.size() && next_token() == COLON)
+                        || (inTransparentMode(MODE_LAMBDA_JS) && next_token() == JS_ARROW)
+                    )
+                )
+                || (
+                    last_consumed == NAME
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+                || (
+                    last_consumed == TEMPOPE
+                    && tempops_count_ts == 0
+                    && LA(1) != REFOPS
+                    && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
+                    && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
+                    && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
+                )
+                || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
+                || (LA(1) == EQUAL && !inTransparentMode(MODE_MIXINS_TS) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
+                || LA(1) == JS_AS
+            }?
+            {
+                // special case: "NAME + unary operator" denotes the end of a TypeScript declaration
+                if (
+                    last_consumed == NAME
+                    && (
+                        LA(1) == DESTOP
+                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    )
+                )
+                    is_pseudo_terminate = true;
+
+                break;
+            } |
+
+            // "?" and "!" are valid TypeScript modifiers
+            {
+                !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
+                && (
+                    LA(1) == QMARK
+                    || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+                )
+            }?
+            declaration_modifiers_ts |
+
+            // only allow a subset of all operators
+            {
+                LA(1) == REFOPS
+                || LT(1)->getText() == "-"
+                || LT(1)->getText() == "|"
+                || LT(1)->getText() == "keyof"
+                || LT(1)->getText() == "typeof"
+            }?
+            general_operators |
+
+            // do not confuse LCURLY with the start of a block
+            {
+                last_consumed == COLON
+                || last_consumed == REFOPS
+                || last_consumed == QMARK
+                || last_consumed == OPERATORS
+                || last_consumed == LPAREN
+                || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                || inTransparentMode(MODE_MIXINS_TS)
+                || inTransparentMode(MODE_TYPEDEF)
+            }?
+            expression_block_js |
+
+            // "void" is a valid TypeScript type name
+            { inTransparentMode(MODE_TYPE_TS) }?
+            void_as_name |
+
+            // marks "asserts" and "is" as operators
+            assertion_function_operator_ts | type_predicate_operator_ts |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY | MODE_THEN) }?
+            colon_marked_js |
+
+            // allow nested types (e.g., in lambdas)
+            { !inTransparentMode(MODE_TERNARY | MODE_THEN) && lparen_types_js.size() > 0 }?
+            colon_type_ts |
 
             // optional generic types (mixins) using the "extends" keyword in TypeScript
             { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
@@ -22546,7 +22650,7 @@ function_declaration_ts[] { ENTRY_DEBUG } :
             { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
             declaration_modifiers_ts |
 
-            declaration_init_js | (COLON type_ts)
+            declaration_init_js | colon_type_ts
         )*
 
         {
@@ -22677,7 +22781,7 @@ nameless_function_declaration_ts[] { ENTRY_DEBUG } :
             { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
             declaration_modifiers_ts |
 
-            declaration_init_js | (COLON type_ts)
+            declaration_init_js | colon_type_ts
         )*
 
         {
@@ -22864,7 +22968,7 @@ declaration_ts[] { ENTRY_DEBUG } :
             { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
             declaration_modifiers_ts |
 
-            declaration_init_js | (COLON type_ts)
+            declaration_init_js | colon_type_ts
         )*
 
         {
@@ -22891,7 +22995,7 @@ constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         LBRACKET
 
-        (options { greedy = true; } : compound_name | (COLON type_ts))*
+        (options { greedy = true; } : compound_name | colon_type_ts)*
 
         {
             if (inTransparentMode(MODE_INDEX_TS))
@@ -22905,8 +23009,7 @@ constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
                 endMode(MODE_INDEX_TS);
         }
 
-        COLON
-        type_ts
+        colon_type_ts
 ;
 
 /*
@@ -23479,7 +23582,7 @@ generic_lambda_ts[] {
             }
 
             // consume TypeScript types
-            (options { greedy = true; } : (COLON type_ts))*
+            (options { greedy = true; } : colon_type_ts)*
 
             arrow_operator_js
         )

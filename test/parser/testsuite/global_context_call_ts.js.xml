@@ -18,7 +18,7 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>componentDebugInfo</name>: <ts:type><name>ReactComponentInfo</name></ts:type> <init>= <expr><object>{
+<decl_stmt><decl type="const">const <name>componentDebugInfo</name><ts:type>: <name>ReactComponentInfo</name></ts:type> <init>= <expr><object>{
   <property><expr><name>env</name></expr>: <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>request</name><operator>.</operator><name>environmentName</name></name>)</expr><argument_list>()</argument_list></call></expr></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>

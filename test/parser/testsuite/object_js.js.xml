@@ -262,7 +262,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
-  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <ts:type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name><ts:type>: <name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
     <return>return <expr><object>{
       <property><expr><literal type="string">"CallExpression:exit"</literal></expr><expr><lambda><parameter_list>(<parameter><decl><name>node</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <if_stmt><if>if <condition>(<expr><name>node</name> <operator>===</operator> <name>lastEffect</name></expr>)</condition> <block>{<block_content>
@@ -276,7 +276,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
-  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <ts:type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name><ts:type>: <name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
     <return>return <expr><object>{
       <property><specifier>async</specifier> <expr><literal type="string">"CallExpression:exit"</literal></expr><expr><lambda><parameter_list>(<parameter><decl><name>node</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <if_stmt><if>if <condition>(<expr><name>node</name> <operator>===</operator> <name>lastEffect</name></expr>)</condition> <block>{<block_content>
@@ -290,7 +290,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
-  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <ts:type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name><ts:type>: <name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
     <return>return <expr><object>{
       <property><expr><literal type="string">'CallExpression:exit'</literal></expr><expr><lambda><parameter_list>(<parameter><decl><name>node</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <if_stmt><if>if <condition>(<expr><name>node</name> <operator>===</operator> <name>lastEffect</name></expr>)</condition> <block>{<block_content>
@@ -304,7 +304,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>rule</name> <init>= <expr><object>{
-  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name>: <ts:type><name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+  <property><expr><function><name>create</name><parameter_list>(<parameter><decl><name>context</name><ts:type>: <name><name>Rule</name><operator>.</operator><name>RuleContext</name></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
     <return>return <expr><object>{
       <property><specifier>async</specifier> <expr><literal type="string">'CallExpression:exit'</literal></expr><expr><lambda><parameter_list>(<parameter><decl><name>node</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <if_stmt><if>if <condition>(<expr><name>node</name> <operator>===</operator> <name>lastEffect</name></expr>)</condition> <block>{<block_content>

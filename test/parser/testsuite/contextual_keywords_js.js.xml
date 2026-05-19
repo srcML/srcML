@@ -48,12 +48,12 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>XMLHttpRequest</name> <block>{
   <ts:function_decl><name>open</name><parameter_list>(
-    <parameter><decl><name>method</name>: <ts:type><name>string</name></ts:type></decl></parameter>,
-    <parameter><decl><name>url</name>: <ts:type><name>string</name></ts:type></decl></parameter>,
-    <parameter><decl><name>async</name><ts:modifier>?</ts:modifier>: <ts:type><name>boolean</name></ts:type></decl></parameter>,
-    <parameter><decl><name>user</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>,
-    <parameter><decl><name>password</name><ts:modifier>?</ts:modifier>: <ts:type><name>string</name></ts:type></decl></parameter>
-  )</parameter_list>: <ts:type><name>void</name></ts:type></ts:function_decl>
+    <parameter><decl><name>method</name><ts:type>: <name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>url</name><ts:type>: <name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>async</name><ts:modifier>?</ts:modifier><ts:type>: <name>boolean</name></ts:type></decl></parameter>,
+    <parameter><decl><name>user</name><ts:modifier>?</ts:modifier><ts:type>: <name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>password</name><ts:modifier>?</ts:modifier><ts:type>: <name>string</name></ts:type></decl></parameter>
+  )</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl>
 }</block></class>
 </unit>
 
@@ -195,7 +195,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
-  <ts:function_decl><name>const</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+  <ts:function_decl><name>const</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
 }</block></class>
 </unit>
 
@@ -755,7 +755,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
-  <ts:function_decl><name>let</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+  <ts:function_decl><name>let</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
 }</block></class>
 </unit>
 
@@ -783,15 +783,15 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface>interface <name>WeakSetConstructor</name> <block>{
-  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <ts:type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list><ts:type>: <name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl></decl_stmt>
 }</block></ts:interface>
 </unit>
 
 <!-- Semicolon delimiters are required for validity -->
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface>interface <name>WeakSetConstructor</name> <block>{
-  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <ts:type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
-  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list>: <ts:type><name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list><ts:type>: <name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list><ts:type>: <name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
 }</block></ts:interface>
 </unit>
 
@@ -943,7 +943,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
-  <ts:function_decl><name>static</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+  <ts:function_decl><name>static</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
 }</block></class>
 </unit>
 
@@ -1123,7 +1123,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
-  <ts:function_decl><name>using</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+  <ts:function_decl><name>using</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
 }</block></class>
 </unit>
 
@@ -1155,7 +1155,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
-  <ts:function_decl><name>var</name> <parameter_list>(<parameter><decl><name>text</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier>: <ts:type><name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>content</name></ts:type></ts:function_decl>
+  <ts:function_decl><name>var</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
 }</block></class>
 </unit>
 
@@ -1182,8 +1182,8 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>entangledThenable</name>: <ts:type><name><name>Thenable</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
-  <property><expr><function><name>then</name><parameter_list>(<parameter><decl><name>resolve</name>: <ts:type><lambda><parameter><decl><name>void</name></decl></parameter> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+<decl_stmt><decl type="const">const <name>entangledThenable</name><ts:type>: <name><name>Thenable</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
+  <property><expr><function><name>then</name><parameter_list>(<parameter><decl><name>resolve</name><ts:type>: <lambda><parameter><decl><name>void</name></decl></parameter> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
     <expr_stmt><expr><call><name><name>entangledListeners</name><operator>.</operator><name>push</name></name><argument_list>(<argument><expr><name>resolve</name></expr></argument>)</argument_list></call></expr></expr_stmt>
   </block_content>}</block></function></expr></property>,
 }</object></expr></init></decl></decl_stmt>

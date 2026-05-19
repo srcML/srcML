@@ -3,24 +3,24 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface>interface <name>Foo</name> <block>{
-  <decl_stmt><decl><ts:constraint><index>[<name>index</name>: <ts:type><name>number</name></ts:type>]</index>: <ts:type><name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+  <decl_stmt><decl><ts:constraint><index>[<name>index</name><ts:type>: <name>number</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
 }</block></ts:interface>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface><specifier>export</specifier> interface <name>KeyMap</name> <block>{
-  <decl_stmt><decl><ts:constraint><index>[<name>key</name>: <ts:type><name>string</name></ts:type>]</index>: <ts:type><name>KeyMap</name> <operator>|</operator> <name>Action</name></ts:type></ts:constraint></decl></decl_stmt>
+  <decl_stmt><decl><ts:constraint><index>[<name>key</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>KeyMap</name> <operator>|</operator> <name>Action</name></ts:type></ts:constraint></decl></decl_stmt>
 }</block></ts:interface>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:typedef><specifier>export</specifier> type <name>Paths</name> = <ts:type><block>{
-  <decl_stmt><decl><ts:constraint><index>[<name>path</name>: <ts:type><name>string</name></ts:type>]</index>: <ts:type><name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+  <decl_stmt><decl><ts:constraint><index>[<name>path</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
 }</block></ts:type></ts:typedef>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>LazyGuardDispatcher</name>: <ts:type><block>{<decl_stmt><decl><ts:constraint><index>[<name>key</name>: <ts:type><name>string</name></ts:type>]</index>: <ts:type><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><ts:type><name>args</name>: <ts:type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>any</name></expr></lambda></ts:type></ts:constraint></decl></decl_stmt>}</block></ts:type> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const <name>LazyGuardDispatcher</name><ts:type>: <block>{<decl_stmt><decl><ts:constraint><index>[<name>key</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <lambda><parameter_list>(<parameter><decl><modifier>...</modifier><ts:type><name>args</name><ts:type>: <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>any</name></expr></lambda></ts:type></ts:constraint></decl></decl_stmt>}</block></ts:type> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- The following should NOT be marked as constraints, although they look similar -->

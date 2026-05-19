@@ -4,101 +4,101 @@
 <!-- Declarations -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>name</name>: <ts:type><name>string</name></ts:type> <init>= <expr><literal type="string">"srcML"</literal></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>name</name><ts:type>: <name>string</name></ts:type> <init>= <expr><literal type="string">"srcML"</literal></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>title</name>: <ts:type><literal type="string">"srcML"</literal></ts:type> <init>= <expr><literal type="string">"srcML"</literal></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>title</name><ts:type>: <literal type="string">"srcML"</literal></ts:type> <init>= <expr><literal type="string">"srcML"</literal></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>result</name>: <ts:type><name>string</name> <operator>|</operator> <name>boolean</name> <operator>|</operator> <name>number</name></ts:type></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>result</name><ts:type>: <name>string</name> <operator>|</operator> <name>boolean</name> <operator>|</operator> <name>number</name></ts:type></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>result</name>: <ts:type><name><name>string</name><index>[]</index></name></ts:type> <init>= <expr><array>[<expr><literal type="string">"hello"</literal></expr>, <expr><literal type="string">"world"</literal></expr>]</array></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>result</name><ts:type>: <name><name>string</name><index>[]</index></name></ts:type> <init>= <expr><array>[<expr><literal type="string">"hello"</literal></expr>, <expr><literal type="string">"world"</literal></expr>]</array></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>result</name>: <ts:type><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><array>[<expr><literal type="string">"red"</literal></expr>, <expr><literal type="string">"green"</literal></expr>, <expr><literal type="string">"blue"</literal></expr>]</array></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>result</name><ts:type>: <name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><array>[<expr><literal type="string">"red"</literal></expr>, <expr><literal type="string">"green"</literal></expr>, <expr><literal type="string">"blue"</literal></expr>]</array></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>paper</name>: <ts:type><block>{ <decl_stmt><decl><name>title</name>: <ts:type><name>string</name></ts:type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name>: <ts:type><name>number</name></ts:type></decl></decl_stmt> }</block></ts:type> <init>= <expr><object>{
+<decl_stmt><decl type="const">const <name>paper</name><ts:type>: <block>{ <decl_stmt><decl><name>title</name><ts:type>: <name>string</name></ts:type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt> }</block></ts:type> <init>= <expr><object>{
   <property><expr><name>title</name></expr>: <expr><literal type="string">"An XML-Based Lightweight C++ Fact Extractor"</literal></expr></property>,
   <property><expr><name>year</name></expr>: <expr><literal type="number">2003</literal></expr></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>cc</name>: <ts:type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></ts:type> <init>= <expr><object>{
+<decl_stmt><decl type="const">const <name>cc</name><ts:type>: <name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></ts:type> <init>= <expr><object>{
   <property><expr><name>color</name></expr>: <expr><literal type="string">"red"</literal></expr></property>,
   <property><expr><name>radius</name></expr>: <expr><literal type="number">42</literal></expr></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>clients</name>: <ts:type><name>Clients</name></ts:type></decl></decl_stmt>
+<decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>clients</name><ts:type>: <name>Clients</name></ts:type></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>onactivate</name>: <ts:type><ts:modifier>?</ts:modifier><name>EventHandler</name></ts:type></decl></decl_stmt>
+<decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>onactivate</name><ts:type>: <ts:modifier>?</ts:modifier><name>EventHandler</name></ts:type></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>genNewArgs</name>: <ts:type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>t</name><operator>.</operator><name>Identifier</name></name></expr></lambda></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><array>[]</array></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const <name>genNewArgs</name><ts:type>: <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>t</name><operator>.</operator><name>Identifier</name></name></expr></lambda></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><array>[]</array></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>callee</name>:
-  <ts:type><operator>|</operator> <block>{<decl_stmt><decl><name>kind</name>: <ts:type><literal type="string">'CallExpression'</literal></ts:type></decl>;</decl_stmt> <decl_stmt><decl><name>callee</name>: <ts:type><name>Place</name></ts:type></decl></decl_stmt>}</block>
-  <operator>|</operator> <block>{<decl_stmt><decl><name>kind</name>: <ts:type><literal type="string">'MethodCall'</literal></ts:type></decl>;</decl_stmt> <decl_stmt><decl><name>receiver</name>: <ts:type><name>Place</name></ts:type></decl>;</decl_stmt> <decl_stmt><decl><name>property</name>: <ts:type><name>Place</name></ts:type></decl></decl_stmt>}</block></ts:type></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>callee</name><ts:type>:
+  <operator>|</operator> <block>{<decl_stmt><decl><name>kind</name><ts:type>: <literal type="string">'CallExpression'</literal></ts:type></decl>;</decl_stmt> <decl_stmt><decl><name>callee</name><ts:type>: <name>Place</name></ts:type></decl></decl_stmt>}</block>
+  <operator>|</operator> <block>{<decl_stmt><decl><name>kind</name><ts:type>: <literal type="string">'MethodCall'</literal></ts:type></decl>;</decl_stmt> <decl_stmt><decl><name>receiver</name><ts:type>: <name>Place</name></ts:type></decl>;</decl_stmt> <decl_stmt><decl><name>property</name><ts:type>: <name>Place</name></ts:type></decl></decl_stmt>}</block></ts:type></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>matchMedia</name>: <ts:type><lambda><parameter><decl><name>string</name></decl></parameter> <operator>=&gt;</operator> <expr><name>MediaQueryList</name></expr></lambda></ts:type></decl></decl_stmt>
+<decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>matchMedia</name><ts:type>: <lambda><parameter><decl><name>string</name></decl></parameter> <operator>=&gt;</operator> <expr><name>MediaQueryList</name></expr></lambda></ts:type></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const"><specifier>export</specifier> const <name>HooksDispatcher</name>: <ts:type><name>Dispatcher</name></ts:type> <init>= <expr><object>{
-  <property><expr><function><name>useCacheRefresh</name><parameter_list>()</parameter_list>: <ts:type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><ts:modifier>?</ts:modifier><ts:type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name>T</name></expr></lambda></ts:type></decl></parameter>, <parameter><decl><ts:modifier>?</ts:modifier><ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>void</name></ts:type></lambda></ts:type> <block>{<block_content>
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>HooksDispatcher</name><ts:type>: <name>Dispatcher</name></ts:type> <init>= <expr><object>{
+  <property><expr><function><name>useCacheRefresh</name><parameter_list>()</parameter_list><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><ts:modifier>?</ts:modifier><ts:type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name>T</name></expr></lambda></ts:type></decl></parameter>, <parameter><decl><ts:modifier>?</ts:modifier><ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>void</name></ts:type></lambda></ts:type> <block>{<block_content>
     <return>return <expr><name>unsupportedRefresh</name></expr></return>
   </block_content>}</block></function></expr></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>lastMouseEvent</name>: <ts:type><ts:modifier>?</ts:modifier><block>{<decl_stmt><decl><ts:constraint><index>[<name>propName</name>: <ts:type><name>string</name></ts:type>]</index>: <ts:type><name>mixed</name></ts:type></ts:constraint></decl></decl_stmt>}</block></ts:type></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>lastMouseEvent</name><ts:type>: <ts:modifier>?</ts:modifier><block>{<decl_stmt><decl><ts:constraint><index>[<name>propName</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>mixed</name></ts:type></ts:constraint></decl></decl_stmt>}</block></ts:type></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>getAsyncIterator</name>: <ts:type><name>void</name> <operator>|</operator> <operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></expr></lambda><operator>)</operator></ts:type> <init>= <expr><name>ASYNC_ITERATOR</name></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const <name>getAsyncIterator</name><ts:type>: <name>void</name> <operator>|</operator> <operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></expr></lambda><operator>)</operator></ts:type> <init>= <expr><name>ASYNC_ITERATOR</name></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>iterableChildren</name>: <ts:type><name><name>Iterable</name><argument_list type="generic">&lt;<argument><expr><name>React$Node</name></expr></argument>&gt;</argument_list></name> <operator>&amp;</operator> <block>{<block_content>
-  <decl_stmt><decl><name>entries</name>: <ts:type><name>any</name></ts:type></decl>,</decl_stmt>
-</block_content>}</block></ts:type> <init>= <expr><operator>(</operator><name>children</name>: <ts:type><name>any</name></ts:type><operator>)</operator></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const <name>iterableChildren</name><ts:type>: <name><name>Iterable</name><argument_list type="generic">&lt;<argument><expr><name>React$Node</name></expr></argument>&gt;</argument_list></name> <operator>&amp;</operator> <block>{<block_content>
+  <decl_stmt><decl><name>entries</name><ts:type>: <name>any</name></ts:type></decl>,</decl_stmt>
+</block_content>}</block></ts:type> <init>= <expr><operator>(</operator><name>children</name><ts:type>: <name>any</name></ts:type><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Functions (with "function" keyword) -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name>: <ts:type><name>number</name> <operator>|</operator> <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name><ts:type>: <name>number</name> <operator>|</operator> <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
   <return>return <expr><name>bar</name></expr></return>
 </block_content>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name>: <ts:type><name>number</name> <operator>|</operator> <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>baz</name>: <ts:type><name>boolean</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name><ts:type>: <name>number</name> <operator>|</operator> <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>baz</name><ts:type>: <name>boolean</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
   <return>return <expr><name>bar</name></expr></return>
 </block_content>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <function>function <name>printTextOrNumber</name><parameter_list>(
-  <parameter><decl><name>textOrNumber</name>:
-    <ts:type><operator>|</operator> <name>string</name>
+  <parameter><decl><name>textOrNumber</name><ts:type>:
+    <operator>|</operator> <name>string</name>
     <operator>|</operator> <name>boolean</name></ts:type></decl></parameter>
 )</parameter_list> <block>{<block_content>
   <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>textOrNumber</name></expr></argument>)</argument_list></call></expr></expr_stmt>
@@ -106,72 +106,72 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function>function <name>getString</name><parameter_list>()</parameter_list>: <ts:type><name>string</name></ts:type> <block>{<block_content>
+<function>function <name>getString</name><parameter_list>()</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
   <return>return <expr><literal type="string">"srcML"</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function><specifier>async</specifier> function <name>getString</name><parameter_list>()</parameter_list>: <ts:type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
+<function><specifier>async</specifier> function <name>getString</name><parameter_list>()</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
   <return>return <expr><literal type="string">"srcML"</literal></expr></return>
 </block_content>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function>function <name>compare</name><parameter_list>(<parameter><decl><name>a</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>b</name>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><operator>-</operator><literal type="number">1</literal> <operator>|</operator> <literal type="number">0</literal> <operator>|</operator> <literal type="number">1</literal></ts:type> <block>{<block_content>
+<function>function <name>compare</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>b</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <operator>-</operator><literal type="number">1</literal> <operator>|</operator> <literal type="number">0</literal> <operator>|</operator> <literal type="number">1</literal></ts:type> <block>{<block_content>
   <return>return <expr><ternary><condition><expr><name>a</name> <operator>===</operator> <name>b</name></expr> ?</condition><then> <expr><literal type="number">0</literal></expr> </then><else>: <expr><ternary><condition><expr><name>a</name> <operator>&gt;</operator> <name>b</name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><operator>-</operator><literal type="number">1</literal></expr></else></ternary></expr></else></ternary></expr></return>
 </block_content>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function>function <name>foo</name><parameter_list>()</parameter_list>: <ts:type><name>string</name></ts:type> <block>{<block_content>
+<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function>function <name>foo</name><parameter_list>()</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>foo</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>bar</name>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>void</name></ts:type> <block>{<block_content>
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>foo</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>bar</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type> <block>{<block_content>
   <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`${foo}, ${bar}!`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></function><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <function><specifier>export</specifier> function <name>mapTerminalSuccessors</name><parameter_list>(
-  <parameter><decl><name>terminal</name>: <ts:type><name>Terminal</name></ts:type></decl></parameter>,
-  <parameter><decl><name>fn</name>: <ts:type><lambda><parameter_list>(<parameter><decl><name>block</name>: <ts:type><name>BlockId</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>BlockId</name></expr></lambda></ts:type></decl></parameter>,
-)</parameter_list>: <ts:type><name>Terminal</name></ts:type> <block>{<block_content/>}</block></function>
+  <parameter><decl><name>terminal</name><ts:type>: <name>Terminal</name></ts:type></decl></parameter>,
+  <parameter><decl><name>fn</name><ts:type>: <lambda><parameter_list>(<parameter><decl><name>block</name><ts:type>: <name>BlockId</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>BlockId</name></expr></lambda></ts:type></decl></parameter>,
+)</parameter_list><ts:type>: <name>Terminal</name></ts:type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function>function <name><name>Scale</name><argument_list type="generic">&lt;<argument><expr><name>TBase</name> <ts:extends>extends <ts:type><name>Constructor</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>Base</name>: <ts:type><name>TBase</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>function <name><name>Scale</name><argument_list type="generic">&lt;<argument><expr><name>TBase</name> <ts:extends>extends <ts:type><name>Constructor</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>Base</name><ts:type>: <name>TBase</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <function><specifier>export</specifier> function <name><name>terminalHasFallthrough</name><argument_list type="generic">&lt;
   <argument><expr><name>T</name> <ts:extends>extends <ts:type><name>Terminal</name></ts:type></ts:extends></expr></argument>,
-  <argument><expr><name>U</name> <ts:extends>extends <ts:type><name>T</name> <operator>&amp;</operator> <block>{<block_content><decl_stmt><decl><name>fallthrough</name>: <ts:type><name>BlockId</name></ts:type></decl></decl_stmt></block_content>}</block></ts:type></ts:extends></expr></argument>,
-&gt;</argument_list></name><parameter_list>(<parameter><decl><name>terminal</name>: <ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>terminal</name> <ts:operator>is</ts:operator> <name>U</name></ts:type> <block>{<block_content/>}</block></function>
+  <argument><expr><name>U</name> <ts:extends>extends <ts:type><name>T</name> <operator>&amp;</operator> <block>{<block_content><decl_stmt><decl><name>fallthrough</name><ts:type>: <name>BlockId</name></ts:type></decl></decl_stmt></block_content>}</block></ts:type></ts:extends></expr></argument>,
+&gt;</argument_list></name><parameter_list>(<parameter><decl><name>terminal</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>terminal</name> <ts:operator>is</ts:operator> <name>U</name></ts:type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <ts:type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type></function>
+<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <ts:type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>,<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type></function>
+<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>,<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list>: <ts:type><name><name>Promise</name><argument_list type="generic">&lt; <argument><expr><name>void</name></expr></argument> , <argument><expr><name>void</name></expr></argument> &gt;</argument_list></name></ts:type></function>
+<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt; <argument><expr><name>void</name></expr></argument> , <argument><expr><name>void</name></expr></argument> &gt;</argument_list></name></ts:type></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <function>function <name>addProperty</name><parameter_list>()</parameter_list> <block>{<block_content>
-  <decl_stmt><decl type="const">const <name>proxy</name>: <ts:type><name>PropertyDescriptor</name> <operator>&amp;</operator> <block>{<block_content><function type="get">get<parameter_list>()</parameter_list>: <ts:type><name>unknown</name></ts:type></function></block_content>}</block></ts:type> <init>= <expr><object>{
+  <decl_stmt><decl type="const">const <name>proxy</name><ts:type>: <name>PropertyDescriptor</name> <operator>&amp;</operator> <block>{<block_content><function type="get">get<parameter_list>()</parameter_list><ts:type>: <name>unknown</name></ts:type></function></block_content>}</block></ts:type> <init>= <expr><object>{
     <property><expr><function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
       <return>return <expr><name>key</name></expr></return>
     </block_content>}</block></function></expr></property>,
-    <property><expr><function type="set">set<parameter_list>(<parameter><decl><name>newVal</name>: <ts:type><name>unknown</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <property><expr><function type="set">set<parameter_list>(<parameter><decl><name>newVal</name><ts:type>: <name>unknown</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
       <expr_stmt><expr><call><name><name>entries</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call><operator>.</operator><name>val</name> <operator>=</operator> <name>newVal</name></expr></expr_stmt>
     </block_content>}</block></function></expr></property>,
   }</object></expr></init></decl></decl_stmt>
@@ -181,10 +181,10 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>callComponent</name> <init>= <expr><object>{
   <property><expr><name>react_stack_bottom_frame</name></expr>: <expr><function>function <argument_list type="generic">&lt;<argument><expr><name>Props</name></expr></argument>, <argument><expr><name>R</name></expr></argument>&gt;</argument_list><parameter_list>(
-    <parameter><decl><name>Component</name>: <ts:type><name>R</name></ts:type></decl></parameter>,
-    <parameter><decl><name>props</name>: <ts:type><name>Props</name></ts:type></decl></parameter>,
-    <parameter><decl><name>secondArg</name>: <ts:type><name>Arg</name></ts:type></decl></parameter>,
-  )</parameter_list>: <ts:type><name>R</name></ts:type> <block>{<block_content>
+    <parameter><decl><name>Component</name><ts:type>: <name>R</name></ts:type></decl></parameter>,
+    <parameter><decl><name>props</name><ts:type>: <name>Props</name></ts:type></decl></parameter>,
+    <parameter><decl><name>secondArg</name><ts:type>: <name>Arg</name></ts:type></decl></parameter>,
+  )</parameter_list><ts:type>: <name>R</name></ts:type> <block>{<block_content>
     <decl_stmt><decl type="const">const <name>result</name> <init>= <expr><call><name>Component</name><argument_list>(<argument><expr><name>props</name></expr></argument>, <argument><expr><name>secondArg</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
   </block_content>}</block></function></expr></property>,
 }</object></expr></init></decl></decl_stmt>
@@ -193,40 +193,40 @@
 <!-- Functions (without "function" keyword) -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function><name>foo</name><parameter_list>()</parameter_list>: <ts:type><name>string</name></ts:type> <block>{<block_content>
+<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function><name>foo</name><parameter_list>()</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function type="generator">*<name type="computed">[<expr><name>FOO</name></expr>]</name><parameter_list>()</parameter_list>: <ts:type><name>string</name></ts:type> <block>{<block_content>
+<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function type="generator">*<name type="computed">[<expr><name>FOO</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function><name type="computed">[<expr><name>FOO</name></expr>]</name><parameter_list>()</parameter_list>: <ts:type><name>string</name></ts:type> <block>{<block_content>
+<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><function><name type="computed">[<expr><name>FOO</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
   <return>return <expr><literal type="string">"bar"</literal></expr></return>
 </block_content>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><function><specifier>static</specifier> <name><name>#getOrCreateRoot</name><argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>string</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(
-  <parameter><decl><name>identifier</name>: <ts:type><name>Identifier</name></ts:type></decl></parameter>,
-)</parameter_list>: <ts:type><name><name>TreeNode</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+  <parameter><decl><name>identifier</name><ts:type>: <name>Identifier</name></ts:type></decl></parameter>,
+)</parameter_list><ts:type>: <name><name>TreeNode</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content/>}</block></function></expr></expr_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class>class <name>A</name> <block>{
-  <expr_stmt><expr><function><name>name</name><parameter_list>()</parameter_list> : <ts:type><block>{<decl_stmt><decl><name>type</name>: <ts:type><name>a</name></ts:type></decl></decl_stmt>}</block></ts:type> <block>{<block_content>
+  <expr_stmt><expr><function><name>name</name><parameter_list>()</parameter_list> <ts:type>: <block>{<decl_stmt><decl><name>type</name><ts:type>: <name>a</name></ts:type></decl></decl_stmt>}</block></ts:type> <block>{<block_content>
     <comment type="line">//</comment>
   </block_content>}</block></function></expr></expr_stmt>
 }</block></class>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>iterable</name>: <ts:type><name><name>$AsyncIterable</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
-  <property><expr><function><name type="computed">[<expr><name>ASYNC_ITERATOR</name></expr>]</name><parameter_list>()</parameter_list>: <ts:type><name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><operator>void</operator></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
+<decl_stmt><decl type="const">const <name>iterable</name><ts:type>: <name><name>$AsyncIterable</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
+  <property><expr><function><name type="computed">[<expr><name>ASYNC_ITERATOR</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><operator>void</operator></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
     <return>return <expr><call><name>createIterator</name><argument_list>(<argument><expr><lambda><parameter><decl><name>arg</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></argument>)</argument_list></call></expr></return>
   </block_content>}</block></function></expr></property>,
 }</object></expr></init></decl></decl_stmt>
@@ -235,57 +235,57 @@
 <!-- Lambdas -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>foo</name>: <ts:type><name>string</name></ts:type></decl></parameter>, <parameter><decl><name>bar</name>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>void</name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>foo</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>bar</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
   <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`${foo}, ${bar}!`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>(<expr><literal type="string">"Hello"</literal></expr>, <expr><literal type="string">"World"</literal></expr>)</argument_list></expr></expr_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>handleTabChange</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>tab</name>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>void</name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+<decl_stmt><decl type="const">const <name>handleTabChange</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>tab</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
   <expr_stmt><expr><call><name>startTransition</name><argument_list>()</argument_list></call></expr></expr_stmt>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>t</name>: <ts:type><name>ResolvedType</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>ResolvedType</name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>t</name><ts:type>: <name>ResolvedType</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>ResolvedType</name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><name>t</name></expr></return>
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>identity</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>arg</name>: <ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name>T</name></ts:type> <operator>=&gt;</operator> <expr><name>arg</name></expr></lambda></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const <name>identity</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>arg</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>T</name></ts:type> <operator>=&gt;</operator> <expr><name>arg</name></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>wrapData</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>unknown</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>value</name>: <ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+<decl_stmt><decl type="const">const <name>wrapData</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>unknown</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><object>{ <property><expr><name>data</name></expr>: <expr><name>value</name></expr></property> }</object></expr></return>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>getFirst</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>items</name>: <ts:type><name><name>T</name><index>[]</index></name></ts:type></decl></parameter>)</parameter_list>: <ts:type><name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+<decl_stmt><decl type="const">const <name>getFirst</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>items</name><ts:type>: <name><name>T</name><index>[]</index></name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><name><name>items</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></return>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
-  <decl_stmt><decl><name>nextTick</name>: <ts:type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>cb</name>: <ts:type><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></ts:type></decl></parameter>, <parameter><decl><modifier>...</modifier><ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>void</name></ts:type></lambda></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><name>nextTick</name><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>cb</name><ts:type>: <lambda><parameter_list>(<parameter><decl><modifier>...</modifier><ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></ts:type></decl></parameter>, <parameter><decl><modifier>...</modifier><ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>void</name></ts:type></lambda></ts:type></decl></decl_stmt>
 }</block></class>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
-  <decl_stmt><decl><name>setgroups</name><ts:modifier>?</ts:modifier>: <ts:type><lambda><argument_list type="generic">&lt;<argument><expr><name>Group</name>: <ts:type><name>string</name> <operator>|</operator> <name>number</name></ts:type></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>groups</name>: <ts:type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>Group</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>void</name></ts:type></lambda></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><name>setgroups</name><ts:modifier>?</ts:modifier><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>Group</name><ts:type>: <name>string</name> <operator>|</operator> <name>number</name></ts:type></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>groups</name><ts:type>: <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>Group</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>void</name></ts:type></lambda></ts:type></decl></decl_stmt>
 }</block></class>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <function>function <name>buildMakeReadOnly</name><parameter_list>(
-  <parameter><decl><name>logger</name>: <ts:type><name>ViolationLogger</name></ts:type></decl></parameter>,
-  <parameter><decl><name>skippedClasses</name>: <ts:type><name><name>string</name><index>[]</index></name></ts:type></decl></parameter>,
-)</parameter_list>: <ts:type><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>val</name>: <ts:type><name>T</name></ts:type></decl></parameter>, <parameter><decl><name>source</name>: <ts:type><name>string</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>T</name></ts:type></lambda></ts:type> <block>{<block_content>
-  <decl_stmt><decl type="const">const <name>savedObjects</name>: <ts:type><name>SavedObjects</name></ts:type> <init>= <expr><operator>new</operator> <call><name>WeakMap</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+  <parameter><decl><name>logger</name><ts:type>: <name>ViolationLogger</name></ts:type></decl></parameter>,
+  <parameter><decl><name>skippedClasses</name><ts:type>: <name><name>string</name><index>[]</index></name></ts:type></decl></parameter>,
+)</parameter_list><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>val</name><ts:type>: <name>T</name></ts:type></decl></parameter>, <parameter><decl><name>source</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>T</name></ts:type></lambda></ts:type> <block>{<block_content>
+  <decl_stmt><decl type="const">const <name>savedObjects</name><ts:type>: <name>SavedObjects</name></ts:type> <init>= <expr><operator>new</operator> <call><name>WeakMap</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
 </block_content>}</block></function>
 </unit>
 
@@ -294,7 +294,7 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <try>try <block>{<block_content>
   <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
-</block_content>}</block> <catch>catch (<name>error</name>: <ts:type><name>any</name></ts:type>) <block>{<block_content>
+</block_content>}</block> <catch>catch (<name>error</name><ts:type>: <name>any</name></ts:type>) <block>{<block_content>
   <throw>throw <expr><name>error</name></expr></throw>
 </block_content>}</block></catch></try>
 </unit>
@@ -302,7 +302,7 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <try>try <block>{<block_content>
   <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
-</block_content>}</block> <catch>catch (<name>error</name>: <ts:type><operator>(</operator><name>any</name> <operator>|</operator> <name>unknown</name><operator>)</operator></ts:type>) <block>{<block_content>
+</block_content>}</block> <catch>catch (<name>error</name><ts:type>: <operator>(</operator><name>any</name> <operator>|</operator> <name>unknown</name><operator>)</operator></ts:type>) <block>{<block_content>
   <throw>throw <expr><name>error</name></expr></throw>
 </block_content>}</block></catch></try>
 </unit>
@@ -310,13 +310,13 @@
 <!-- Types in Operator Parentheses -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>rootsSuspendedBy</name>: <ts:type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>mixed</name></expr></argument>&gt;</argument_list></name></ts:type> <init>=
-  <expr><operator>(</operator><call><name><name>renderer</name><operator>.</operator><name>getElementAttributeByPath</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><array>[<expr><literal type="string">'suspendedBy'</literal></expr>]</array></expr></argument>)</argument_list></call>: <ts:type><name>any</name></ts:type><operator>)</operator></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const <name>rootsSuspendedBy</name><ts:type>: <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>mixed</name></expr></argument>&gt;</argument_list></name></ts:type> <init>=
+  <expr><operator>(</operator><call><name><name>renderer</name><operator>.</operator><name>getElementAttributeByPath</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>, <argument><expr><array>[<expr><literal type="string">'suspendedBy'</literal></expr>]</array></expr></argument>)</argument_list></call><ts:type>: <name>any</name></ts:type><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>wake</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
-  <expr_stmt><expr><lambda><parameter><decl><name>callback</name></decl></parameter> <operator>=&gt;</operator> <expr><call><name>callback</name><argument_list>(<argument><expr><operator>(</operator><name>thenable</name>: <ts:type><name>any</name></ts:type><operator>)</operator><operator>.</operator><name>value</name></expr></argument>)</argument_list></call></expr></lambda></expr></expr_stmt>
+  <expr_stmt><expr><lambda><parameter><decl><name>callback</name></decl></parameter> <operator>=&gt;</operator> <expr><call><name>callback</name><argument_list>(<argument><expr><operator>(</operator><name>thenable</name><ts:type>: <name>any</name></ts:type><operator>)</operator><operator>.</operator><name>value</name></expr></argument>)</argument_list></call></expr></lambda></expr></expr_stmt>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
@@ -324,7 +324,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{
-  <decl_stmt><decl><name>blockInfos</name>: <ts:type><name><name>Map</name><argument_list type="generic">&lt;
+  <decl_stmt><decl><name>blockInfos</name><ts:type>: <name><name>Map</name><argument_list type="generic">&lt;
     <argument><expr><name>BlockId</name></expr></argument>,
     <argument><expr><operator>|</operator> <object>{
         <property><expr><name>kind</name></expr>: <expr><literal type="string">'end'</literal></expr></property>;
@@ -343,7 +343,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{
-  <decl_stmt><decl><name>blockInfos</name>: <ts:type><name><name>Map</name><argument_list type="generic">&lt;
+  <decl_stmt><decl><name>blockInfos</name><ts:type>: <name><name>Map</name><argument_list type="generic">&lt;
     <argument><expr><operator>|</operator> <object>{
         <property><expr><name>kind</name></expr>: <expr><literal type="string">'end'</literal></expr></property>;
         <property><expr><name>scope</name></expr>: <expr><name>ReactiveScope</name></expr></property>;
@@ -360,23 +360,23 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl><name>labels</name>: <ts:type><name><name>NodeList</name><argument_list type="generic">&lt;<argument><expr><name>HTMLLabelElement</name></expr></argument>&gt;</argument_list></name> <operator>|</operator> <literal type="null">null</literal></ts:type></decl></decl_stmt>
+<decl_stmt><decl><name>labels</name><ts:type>: <name><name>NodeList</name><argument_list type="generic">&lt;<argument><expr><name>HTMLLabelElement</name></expr></argument>&gt;</argument_list></name> <operator>|</operator> <literal type="null">null</literal></ts:type></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Process</name> <super_list><extends>extends <super><expr><name>eventEmitter</name></expr></super></extends></super_list> <block>{
-  <decl_stmt><decl><name>env</name>: <ts:type><block>{<decl_stmt><decl><ts:constraint><index>[<name>key</name>: <ts:type><name>string</name></ts:type>]</index>: <ts:type><name>string</name> <operator>|</operator> <name>void</name></ts:type></ts:constraint></decl>,</decl_stmt> <expr_stmt><expr><operator>...</operator></expr></expr_stmt>}</block></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><name>env</name><ts:type>: <block>{<decl_stmt><decl><ts:constraint><index>[<name>key</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name> <operator>|</operator> <name>void</name></ts:type></ts:constraint></decl>,</decl_stmt> <expr_stmt><expr><operator>...</operator></expr></expr_stmt>}</block></ts:type></decl></decl_stmt>
 }</block></class>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name>: <ts:type><name>foo</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><lambda><parameter_list>(<parameter><decl><name>b</name>: <ts:type><name>bar</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>baz</name></expr></lambda></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>foo</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <lambda><parameter_list>(<parameter><decl><name>b</name><ts:type>: <name>bar</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>baz</name></expr></lambda></ts:type> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><name>a</name></expr></return>
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name>: <ts:type><name>foo</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><lambda><parameter_list>(<parameter><decl><name>b</name>: <ts:type><name>bar</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>(<parameter><decl><name>c</name>: <ts:type><name>baz</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>quux</name></expr></lambda></expr></lambda></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>foo</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <lambda><parameter_list>(<parameter><decl><name>b</name><ts:type>: <name>bar</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>(<parameter><decl><name>c</name><ts:type>: <name>baz</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>quux</name></expr></lambda></expr></lambda></ts:type> <operator>=&gt;</operator> <block>{<block_content>
   <return>return <expr><name>a</name></expr></return>
 </block_content>}</block></lambda></expr></expr_stmt>
 </unit>
@@ -384,29 +384,29 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>HostTransitionContext</name> <init>= <expr><object>{
   <property><expr><name>$$typeof</name></expr>: <expr><name>REACT_CONTEXT_TYPE</name></expr></property>,
-  <property><expr><name>Provider</name></expr>: <expr><operator>(</operator><name>null</name>: <ts:type><name>any</name></ts:type><operator>)</operator></expr></property>,
+  <property><expr><name>Provider</name></expr>: <expr><operator>(</operator><name>null</name><ts:type>: <name>any</name></ts:type><operator>)</operator></expr></property>,
   <property><expr><name>_threadCount</name></expr>: <expr><literal type="number">0</literal></expr></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>node</name>: <ts:type><name>HTMLElement</name></ts:type> <init>= <expr><operator>(</operator><operator>(</operator><name>null</name>: <ts:type><name>any</name></ts:type><operator>)</operator>: <ts:type><name>HTMLElement</name></ts:type><operator>)</operator></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>node</name><ts:type>: <name>HTMLElement</name></ts:type> <init>= <expr><operator>(</operator><operator>(</operator><name>null</name><ts:type>: <name>any</name></ts:type><operator>)</operator><ts:type>: <name>HTMLElement</name></ts:type><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>rootStack</name> <init>= <expr><ternary><condition><expr><name>ancestorStackError</name> <operator>===</operator> <literal type="undefined">undefined</literal></expr> ?</condition><then> <expr><operator>(</operator><name>foo</name>: <ts:type><name>any</name></ts:type><operator>)</operator></expr> </then><else>: <expr><call><name>bar</name><argument_list>(<argument><expr><name>ancestorStackError</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="const">const <name>rootStack</name> <init>= <expr><ternary><condition><expr><name>ancestorStackError</name> <operator>===</operator> <literal type="undefined">undefined</literal></expr> ?</condition><then> <expr><operator>(</operator><name>foo</name><ts:type>: <name>any</name></ts:type><operator>)</operator></expr> </then><else>: <expr><call><name>bar</name><argument_list>(<argument><expr><name>ancestorStackError</name></expr></argument>)</argument_list></call></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const"><specifier>export</specifier> const <name>registerEventLogger</name>: <ts:type><lambda><parameter_list>(<parameter><decl><name>foo</name>: <ts:type><name>Foo</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></expr></lambda></ts:type> <init>=
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>registerEventLogger</name><ts:type>: <lambda><parameter_list>(<parameter><decl><name>foo</name><ts:type>: <name>Foo</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></expr></lambda></ts:type> <init>=
   <expr><ternary><condition><expr><name>enableLogger</name> <operator>===</operator> <literal type="boolean">true</literal></expr>
-    ?</condition><then> <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>bar</name>: <ts:type><name>Bar</name></ts:type></decl></parameter>)</parameter_list>: <ts:type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type> <block>{<block_content/>}</block></function></expr>
-    </then><else>: <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>baz</name>: <ts:type><name>Baz</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></else></ternary></expr></init></decl></decl_stmt>
+    ?</condition><then> <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>bar</name><ts:type>: <name>Bar</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type> <block>{<block_content/>}</block></function></expr>
+    </then><else>: <expr><function>function <name>registerEventLogger</name><parameter_list>(<parameter><decl><name>baz</name><ts:type>: <name>Baz</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class>class <name>Agent</name> <block>{
-  <decl_stmt><decl><name>clearErrorsAndWarnings</name>: <ts:type><lambda><parameter_list>(<parameter><decl><ts:type><block>{<decl_stmt><decl><name>rendererID</name>: <ts:type><name>RendererID</name></ts:type></decl></decl_stmt>}</block></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type> <init>= <expr><lambda><parameter_list>(<parameter><decl><object>{
+  <decl_stmt><decl><name>clearErrorsAndWarnings</name><ts:type>: <lambda><parameter_list>(<parameter><decl><ts:type><block>{<decl_stmt><decl><name>rendererID</name><ts:type>: <name>RendererID</name></ts:type></decl></decl_stmt>}</block></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type> <init>= <expr><lambda><parameter_list>(<parameter><decl><object>{
     <property><expr><name>rendererID</name></expr></property>,
   }</object></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
     <decl_stmt><decl type="const">const <name>renderer</name> <init>= <expr><name><name>this</name><operator>.</operator><name>_rendererInterfaces</name><index>[<expr><name>rendererID</name></expr>]</index></name></expr></init></decl></decl_stmt>
@@ -415,20 +415,20 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>fallbackReplayNode</name>: <ts:type><name>ReplayNode</name></ts:type> <init>= <expr><array>[
-  <expr><operator>(</operator><array>[]</array>: <ts:type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>ReplayNode</name></expr></argument>&gt;</argument_list></name></ts:type><operator>)</operator></expr>,
+<decl_stmt><decl type="const">const <name>fallbackReplayNode</name><ts:type>: <name>ReplayNode</name></ts:type> <init>= <expr><array>[
+  <expr><operator>(</operator><array>[]</array><ts:type>: <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>ReplayNode</name></expr></argument>&gt;</argument_list></name></ts:type><operator>)</operator></expr>,
 ]</array></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface><specifier>export</specifier> interface <name>EmitOutput</name> <block>{
-  <decl_stmt><decl><name>diagnostics</name>: <ts:type><ts:specifier>readonly</ts:specifier> <name>Diagnostic</name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><name>diagnostics</name><ts:type>: <ts:specifier>readonly</ts:specifier> <name>Diagnostic</name></ts:type></decl></decl_stmt>
 }</block></ts:interface>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface><specifier>export</specifier> interface <name>ReusableBuilderProgramState</name> <super_list><extends>extends <super><expr><name>BuilderState</name></expr></super></extends></super_list> <block>{
-  <decl_stmt><decl><name>diagnostics</name>: <ts:type><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><name>Path</name></expr></argument>, <argument><expr><ts:specifier>readonly</ts:specifier> <name><name>ReusableDiagnostic</name><index>[]</index></name> <operator>|</operator> <ts:specifier>readonly</ts:specifier> <name><name>Diagnostic</name><index>[]</index></name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><name>diagnostics</name><ts:type>: <name><name>Map</name><argument_list type="generic">&lt;<argument><expr><name>Path</name></expr></argument>, <argument><expr><ts:specifier>readonly</ts:specifier> <name><name>ReusableDiagnostic</name><index>[]</index></name> <operator>|</operator> <ts:specifier>readonly</ts:specifier> <name><name>Diagnostic</name><index>[]</index></name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
 }</block></ts:interface>
 </unit>
 

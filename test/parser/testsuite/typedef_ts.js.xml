@@ -11,13 +11,13 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:typedef>type <name>Language</name> = <ts:type><block>{
-  <decl_stmt><decl><name>name</name>: <ts:type><name>string</name></ts:type></decl>,</decl_stmt>
-  <decl_stmt><decl><name>release</name>: <ts:type><name>string</name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl>,</decl_stmt>
+  <decl_stmt><decl><name>release</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
 }</block></ts:type></ts:typedef>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<ts:typedef>type <name>Printable</name> = <ts:type><block>{ <decl_stmt><decl><name>print</name>: <ts:type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt> }</block></ts:type></ts:typedef>
+<ts:typedef>type <name>Printable</name> = <ts:type><block>{ <decl_stmt><decl><name>print</name><ts:type>: <lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt> }</block></ts:type></ts:typedef>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

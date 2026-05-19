@@ -3,7 +3,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:namespace>namespace <name><name>robot</name><operator>.</operator><name>robots</name></name> <block>{<block_content>
-  <function><specifier>export</specifier> function <name>i2cReadRegU8</name><parameter_list>(<parameter><decl><name>addr</name>: <ts:type><name>number</name></ts:type></decl></parameter>, <parameter><decl><name>reg</name>: <ts:type><name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+  <function><specifier>export</specifier> function <name>i2cReadRegU8</name><parameter_list>(<parameter><decl><name>addr</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>reg</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
     <decl_stmt><decl type="const">const <name>req</name> <init>= <expr><call><name><name>pins</name><operator>.</operator><name>createBuffer</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
     <expr_stmt><expr><name><name>req</name><index>[<expr><literal type="number">0</literal></expr>]</index></name> <operator>=</operator> <name>reg</name></expr></expr_stmt>
     <expr_stmt><expr><call><name><name>pins</name><operator>.</operator><name>i2cWriteBuffer</name></name><argument_list>(<argument><expr><name>addr</name></expr></argument>, <argument><expr><name>req</name></expr></argument>)</argument_list></call></expr></expr_stmt>
@@ -16,7 +16,7 @@
 <ts:namespace>namespace <name>$</name> <block>{<block_content>
   <ts:typedef><specifier>export</specifier> type <name>$</name> = <ts:type><operator>typeof</operator> <name>$$</name></ts:type></ts:typedef>
   <class><specifier>export</specifier> <ts:specifier>declare</ts:specifier> class <name>$$</name> <super_list><extends>extends <super><expr><name>$</name></expr></super></extends></super_list> <block>{
-    <decl_stmt><decl type="static">static <name>$</name>: <ts:type><name>$</name></ts:type></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>$</name><ts:type>: <name>$</name></ts:type></decl></decl_stmt>
   }</block></class>
   <ts:namespace>namespace <name>$$</name> <block>{<block_content>
     <ts:typedef><specifier>export</specifier> type <name>$$</name> = <ts:type><name>$</name></ts:type></ts:typedef>
