@@ -100,7 +100,7 @@ token_set(srcMLParser, modifier_tokens_set,
 token_set(srcMLParser, skip_tokens_set,
     srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::BLOCK_COMMENT_START, srcMLParser::BLOCK_COMMENT_END, srcMLParser::LINE_COMMENT_END, srcMLParser::COMMENT_TEXT,
     srcMLParser::LINE_COMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL, srcMLParser::WHOLE_COMMENT,
-    srcMLParser::HASHTAG_COMMENT_START, srcMLParser::HASHTAG_COMMENT_END, srcMLParser::HASHBANG_COMMENT_START, srcMLParser::HASHBANG_COMMENT_END, srcMLParser::JSX_COMMENT_START, srcMLParser::JSX_COMMENT_END,
+    srcMLParser::HASHTAG_COMMENT_START, srcMLParser::HASHTAG_COMMENT_END, srcMLParser::HASHBANG_COMMENT_START, srcMLParser::HASHBANG_COMMENT_END, srcMLParser::HTML_COMMENT_START, srcMLParser::HTML_COMMENT_END,
     srcMLParser::WS_EOL
 )
 
@@ -171,8 +171,8 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::HASHBANG_COMMENT_END,
     srcMLParser::HASHTAG_COMMENT_START,
     srcMLParser::HASHTAG_COMMENT_END,
-    srcMLParser::JSX_COMMENT_START,
-    srcMLParser::JSX_COMMENT_END
+    srcMLParser::HTML_COMMENT_START,
+    srcMLParser::HTML_COMMENT_END
 )
 
 token_set(srcMLParser, duplex_keyword_set,

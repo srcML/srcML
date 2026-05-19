@@ -75,6 +75,11 @@ constexpr inline auto SRCML_TYPESCRIPT_NS_URI = "http://www.srcML.org/srcML/Type
 
 constexpr inline auto SRCML_TYPESCRIPT_NS_DEFAULT_PREFIX = "ts"sv;
 
+/** srcML JavaScript XML (JSX) namespace uri and default prefix */
+constexpr inline auto SRCML_JSX_NS_URI = "http://www.srcML.org/srcML/JSX"sv;
+
+constexpr inline auto SRCML_JSX_NS_DEFAULT_PREFIX = "jsx"sv;
+
 /** srcDiff namespace uri and default prefix */
 constexpr inline auto SRCML_DIFF_NS_URI = "http://www.srcML.org/srcDiff"sv;
 
@@ -88,6 +93,7 @@ const Namespaces default_namespaces = {
     Namespace(SRCML_POSITION_NS_DEFAULT_PREFIX,   SRCML_POSITION_NS_URI,   NS_STANDARD | NS_ROOT),
     Namespace(SRCML_OPENMP_NS_DEFAULT_PREFIX,     SRCML_OPENMP_NS_URI,     NS_STANDARD),
     Namespace(SRCML_TYPESCRIPT_NS_DEFAULT_PREFIX, SRCML_TYPESCRIPT_NS_URI, NS_STANDARD),
+    Namespace(SRCML_JSX_NS_DEFAULT_PREFIX,        SRCML_JSX_NS_URI,        NS_STANDARD),
 };
 
 const Namespaces starting_namespaces = {

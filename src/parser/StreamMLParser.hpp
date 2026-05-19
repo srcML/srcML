@@ -489,23 +489,23 @@ private:
 
                 break;
 
-            case srcMLParser::JSX_COMMENT_START:
+            case srcMLParser::HTML_COMMENT_START:
 
-                pushSSkipToken(srcMLParser::SJSX_COMMENT);
+                pushSSkipToken(srcMLParser::SHTML_COMMENT);
                 pushSkipToken();
                 srcMLParser::consume();
 
-                open_comments.push(srcMLParser::SJSX_COMMENT);
+                open_comments.push(srcMLParser::SHTML_COMMENT);
 
                 break;
 
-            case srcMLParser::JSX_COMMENT_END:
+            case srcMLParser::HTML_COMMENT_END:
 
                 open_comments.pop();
 
                 pushSkipToken();
                 srcMLParser::consume();
-                pushESkipToken(srcMLParser::SJSX_COMMENT);
+                pushESkipToken(srcMLParser::SHTML_COMMENT);
 
                 break;
 

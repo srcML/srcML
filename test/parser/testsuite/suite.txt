@@ -336,6 +336,9 @@ LANGUAGE_JAVASCRIPT while_js
 LANGUAGE_JAVASCRIPT with_js
 LANGUAGE_JAVASCRIPT yield_js
 
+# JavaScript XML (JSX; appears as a namespace prefix)
+LANGUAGE_JAVASCRIPT literal_jsx
+
 # TypeScript (appears as a namespace prefix)
 LANGUAGE_JAVASCRIPT attribute_ts
 LANGUAGE_JAVASCRIPT constraint_ts

@@ -448,7 +448,7 @@ OPERATORS options { testLiterals = true; } {
         )?
         { $setType(JS_JSX_LITERAL); } |
 
-        { inLanguage(LANGUAGE_JAVASCRIPT) }? ('!' '-' '-') => '!' '-' '-' { $setType(JSX_COMMENT_START); changetotextlexer(JSX_COMMENT_END); } |
+        { inLanguage(LANGUAGE_JAVASCRIPT) }? ('!' '-' '-') => '!' '-' '-' { $setType(HTML_COMMENT_START); changetotextlexer(HTML_COMMENT_END); } |
 
         { inLanguage(LANGUAGE_PYTHON) }? '>' |
 

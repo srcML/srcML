@@ -72,7 +72,7 @@ tokens {
     DOXYGEN_COMMENT_END;
     HASHBANG_COMMENT_END;
     HASHTAG_COMMENT_END;
-    JSX_COMMENT_END;
+    HTML_COMMENT_END;
     PY_DQUOTE_STRING_START;
     PY_SIMPLE_DQUOTE_STRING_END;
     PY_SQUOTE_STRING_START;
@@ -431,8 +431,8 @@ COMMENT_TEXT {
     '=' |
 
     '>' {
-        // looking for the end of a JSX comment in JavaScript (e.g., "-->")
-        if (lookaheadMinusThree == '-' && lookaheadMinusTwo == '-' && mode == JSX_COMMENT_END) {
+        // looking for the end of an HTML comment in JavaScript (e.g., "-->")
+        if (lookaheadMinusThree == '-' && lookaheadMinusTwo == '-' && mode == HTML_COMMENT_END) {
             $setType(mode); selector->pop();
         }
     } |
