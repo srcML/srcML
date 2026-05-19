@@ -21178,6 +21178,7 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
 
         iscomputed = false;
         int square_bracket_count = 0;
+        int bracket_count = 0;  // for TypeScript types
         bool found_multops = false;
         bool found_type = false;
         last_consumed_guessing_mode = -1;
@@ -21236,9 +21237,42 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
                 // match optional TypeScript type, consuming RPAREN first
                 if (LA(1) == RPAREN && next_token() == COLON) {
                     consume();  // ")"
-                    consume();  // ":"
-                    type_ts();
-                    found_type = true;
+
+                    // consume optional TypeScript type, followed by a typical block
+                    if (
+                        LA(1) == COLON
+                        && next_token() == LCURLY
+                        && perform_colon_lcurly_differentiator_check_js() == 3
+                    ) {
+                        found_type = true;
+                    }
+                    // consume optional TypeScript type
+                    else if (LA(1) == COLON && next_token() != LCURLY) {
+                        consume();  // ":"
+
+                        while (true) {
+                            // found a statement-level LCURLY, indicating a block
+                            if (bracket_count == 0 && LA(1) == LCURLY)
+                                break;
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (
+                                bracket_count < 0
+                                || LA(1) == 1 /* EOF */
+                                || (bracket_count == 0 && LA(1) == TERMINATE)
+                            )
+                                break;
+
+                            consume();
+                        }
+
+                        if (LA(1) == LCURLY)
+                            found_type = true;
+                    }
                 }
 
                 // found "*[...](){" or "*[...](): TYPE {"
@@ -21601,6 +21635,8 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
 
         isiife = false;
         int curly_count = 0;
+        int bracket_count = 0;  // for TypeScript types
+        size_t lcurly_type = 0;
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
@@ -21621,10 +21657,46 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                     // consume parameter list
                     paren_pair();
 
+                    // determine the type of block that "{" starts
+                    if (LA(1) == COLON && next_token() == LCURLY)
+                        lcurly_type = perform_colon_lcurly_differentiator_check_js();
+
                     // match optional TypeScript type
-                    if (LA(1) == COLON) {
-                        consume();  // ":"
-                        type_ts();
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() != LCURLY
+                            || (
+                                next_token() == LCURLY
+                                && lcurly_type == 3
+                            )
+                        )
+                    ) {
+                        while (true) {
+                            // found a statement-level LCURLY
+                            if (bracket_count == 0 && LA(1) == LCURLY) {
+                                // LCURLY indicates a type block, so keep going
+                                if (lcurly_type == 3)
+                                    lcurly_type = 0;
+                                // LCURLY indicates a block, so break
+                                else
+                                    break;
+                            }
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (
+                                bracket_count < 0
+                                || LA(1) == 1 /* EOF */
+                                || (bracket_count == 0 && LA(1) == TERMINATE)
+                            )
+                                break;
+
+                            consume();
+                        }
                     }
 
                     // consume block
@@ -21761,6 +21833,8 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
 
         isiife = false;
         int curly_count = 0;
+        int bracket_count = 0;  // for TypeScript types
+        size_t lcurly_type = 0;
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
@@ -21777,10 +21851,50 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
                 // consume parameter list
                 paren_pair();
 
+                // determine the type of block that "{" starts
+                if (LA(1) == COLON && next_token() == LCURLY)
+                    lcurly_type = perform_colon_lcurly_differentiator_check_js();
+
                 // match optional TypeScript type
-                if (LA(1) == COLON) {
-                    consume();  // ":"
-                    type_ts();
+                if (
+                    LA(1) == COLON
+                    && (
+                        next_token() != LCURLY
+                        || (
+                            next_token() == LCURLY
+                            && lcurly_type == 3
+                        )
+                    )
+                ) {
+                    while (true) {
+                        // found arrow ("=>") before IIFE lambda block
+                        if (LA(1) == JS_ARROW && bracket_count == 0 && lcurly_type != 3)
+                            break;
+
+                        // found a statement-level LCURLY
+                        if (bracket_count == 0 && LA(1) == LCURLY) {
+                            // LCURLY indicates a type block, so keep going
+                            if (lcurly_type == 3)
+                                lcurly_type = 0;
+                            // LCURLY indicates a block, so break
+                            else
+                                break;
+                        }
+
+                        if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                            ++bracket_count;
+                        if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                            --bracket_count;
+
+                        if (
+                            bracket_count < 0
+                            || LA(1) == 1 /* EOF */
+                            || (bracket_count == 0 && LA(1) == TERMINATE)
+                        )
+                            break;
+
+                        consume();
+                    }
                 }
 
                 // consume "=>"
