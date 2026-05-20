@@ -457,6 +457,77 @@ public:
         }
     }
 
+    // determine if "<" starts a JSX literal in JavaScript by looking ahead
+    bool isJSXLiteral() {
+        size_t index = 1;
+        size_t angle_bracket_count = 0;
+
+        while (true) {
+            // ignore JavaScript code found in blocks (e.g., "{...}")
+            if (LA(index) == '{') {
+                size_t curly_count = 0;
+
+                while (true) {
+                    if (LA(index) == '{')
+                        ++curly_count;
+
+                    if (LA(index) == '}' && curly_count > 0) {
+                        --curly_count;
+
+                        if (curly_count == 0)
+                            break;
+                    }
+
+                    if (LA(index) == -1 /* EOF */)
+                        break;
+
+                    ++index;
+                }
+            }
+
+            // process HTML comments separately (e.g., "<!-- ... -->")
+            if (LA(index) == '<' && LA(index + 1) == '!' && LA(index + 2) == '-' && LA(index + 3) == '-') {
+                while (true) {
+                    // found end of HTML comment (e.g., "-->")
+                    if (LA(index) == '-' && LA(index + 1) == '-' && LA(index + 2) == '>') {
+                        index += 3;  // "consume" the end of the comment
+                        break;
+                    }
+
+                    if (LA(1) == -1 /* EOF */)
+                        break;
+
+                    ++index;
+                }
+            }
+            // potential start of an opening/closing JSX tag (e.g., "<h1>" or "</h1>")
+            else if (LA(index) == '<') {
+                ++angle_bracket_count;
+                ++index;
+
+                // found a closing JSX tag (e.g., "</h1>")
+                if (LA(index) == '/' && angle_bracket_count == 1)
+                    return true;
+            }
+
+            // found a self-closing JSX tag (e.g., "<h1/>")
+            if (LA(index) == '/' && LA(index + 1) == '>' && angle_bracket_count == 1)
+                return true;
+
+            // found the ">" to end the current opening/closing JSX tag
+            if (LA(index) == '>' && angle_bracket_count > 0)
+                --angle_bracket_count;
+
+            // stop searching at TERMINATE or EOF
+            if (LA(index) == ';' || LA(index) == -1 /* EOF */)
+                break;
+
+            ++index;
+        }
+
+        return false;
+    }
+
 // map from text of literal to token number, adjusted to language
 struct keyword { std::string_view text; int token; int language; };
 

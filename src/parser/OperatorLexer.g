@@ -117,14 +117,20 @@ OPERATORS options { testLiterals = true; } {
     // update the previous two non-whitespace characters
     this->updateNonWhitespaceCharacters();
 
-    // if the previous token is a keyword that can contain one or more expressions
-    // afterward (e.g., "as", "return", etc.), then '<' starts a JSX literal
-    if (
-        inLanguage(LANGUAGE_JAVASCRIPT)
-        && start == '<'
-        && srcMLParser::keyword_expression_pair_js_token_set.member(TokenLookbackJavaScript::lastTokenType())
-    ) {
-        isjsx = true;
+    // determine if "<" starts a JSX literal in JavaScript
+    if (inLanguage(LANGUAGE_JAVASCRIPT) && start == '<') {
+        // if the prior token is a keyword that can contain many expressions afterward (e.g., "as", "return", etc.)
+        // or the prior token is a MULTOPS (e.g., "*"), then '<' starts a JSX literal
+        if (
+            srcMLParser::keyword_expression_pair_js_token_set.member(TokenLookbackJavaScript::lastTokenType())
+            || TokenLookbackJavaScript::lastTokenType() == srcMLParser::MULTOPS  // case: "yield *" syntax
+        ) {
+            isjsx = true;
+        }
+        // handle all other cases by looking ahead
+        else {
+            isjsx = this->isJSXLiteral();
+        }
     }
 } : (
     // # (C++/Python/JavaScript), #! (Python/JavaScript)
@@ -178,23 +184,7 @@ OPERATORS options { testLiterals = true; } {
 
     // <, << (C/C++), <=, <<< (CUDA), <> (Python), <!-- (JavaScript), JSX (JavaScript)
     '<' (
-        {
-            inLanguage(LANGUAGE_JAVASCRIPT)
-            && LA(1) != '!'                                                  // do not mark JSX comments (e.g., "<!--") as JSX literals
-            && (
-                isjsx                                                        // case: keyword + '<'
-                || lookaheadMinusTwo == '*'                                  // case: "yield *" syntax
-                || lookaheadMinusTwo == '('                                  // case: parenthesized JSX tags
-                || lookaheadMinusTwo == '#'                                  // case: the prior code was a hashbang comment
-                || lookaheadMinusTwo == '<'                                  // case: the prior code was a JSX comment
-                || lookaheadMinusTwo == '='                                  // case: initialization
-                || lookaheadMinusTwo == ','                                  // case: JSX tags in a list (e.g., argument list)
-                || lookaheadMinusTwo == '['                                  // case: first expression in an array
-                || lookaheadMinusTwo == '{'                                  // case: first expression in an object
-                || lookaheadMinusTwo == '?'                                  // case: first expression in a ternary
-                || (lookaheadMinusThree == '=' && lookaheadMinusTwo == '>')  // case: first expression in a lambda
-            )
-        }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && isjsx }?
         // add characters to starttag to create the starting tag
         (options { greedy = true; } :
 
