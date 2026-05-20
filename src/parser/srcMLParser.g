@@ -1120,7 +1120,7 @@ public:
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT | MODE_IGNORE_LABEL_JS, nullptr, nullptr };
         temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
-        temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS | MODE_NO_BLOCK_CONTENT, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
@@ -1146,7 +1146,7 @@ public:
 
         /* TYPESCRIPT STATEMENTS */
         temp_array[TS_DECLARE]   = { STS_DECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, nullptr, &srcMLParser::declare_statement_ts };
-        temp_array[TS_INTERFACE] = { STS_INTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS | MODE_NO_BLOCK_CONTENT, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[TS_INTERFACE] = { STS_INTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[TS_NAMESPACE] = { STS_NAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[TS_TYPE]      = { STS_TYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
 
@@ -1753,6 +1753,18 @@ javascript_statements[] {
                     return;
                 }
             }
+        }
+
+        // special case: declaration statement with no specifiers in a class
+        if (
+            inMode(MODE_STATEMENT)
+            && (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS))
+            && (LA(1) == NAME || LA(1) == LBRACKET)
+            && perform_declaration_in_class_check_js()
+        ) {
+            declaration_statement_js(LA(1));
+            processed_statement = true;
+            return;
         }
 
         // invoke the table to handle keywords
@@ -19042,6 +19054,13 @@ declaration_statement_js[int post_specifier_token = -1] { CompleteElement elemen
                 else if (decl_start_js_token_set.member(post_specifier_token)) {
                     declaration_js(false, post_specifier_token);
                 }
+                // special case: declaration statement with no specifiers in a class
+                else if (
+                    (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS))
+                    && (post_specifier_token == NAME || post_specifier_token == LBRACKET)
+                ) {
+                    declaration_js(false, post_specifier_token);
+                }
                 else {
                     break;
                 }
@@ -19112,15 +19131,19 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 general_operators();
         }
 
-        (JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)
+        // note: "*" is only here to exclude declarations that start with computed properties (special case)
+        (options { greedy = true; } : JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)*
 
         {
             // handle optional TypeScript specifiers that appear after the keyword
             if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
                 declaration_specifiers_ts();
 
+            // do not confuse computed property with array destructuring syntax
+            if (LA(1) == LBRACKET && perform_top_level_class_check_js())
+                computed_property_js();
             // handle optional array destructuring syntax (e.g., "const [a, b]")
-            if (LA(1) == LBRACKET)
+            else if (LA(1) == LBRACKET)
                 decl_with_array_destructuring_js();
             // handle optional object destructuring syntax (e.g., "const {'key': value}")
             else if (LA(1) == LCURLY)
@@ -21453,13 +21476,15 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
 */
 class_expression_js[] { ENTRY_DEBUG } :
         {
-            startNewMode(MODE_NEST | MODE_BLOCK | MODE_CLASS_EXPRESSION_JS | MODE_NO_BLOCK_CONTENT);
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_CLASS_EXPRESSION_JS);
             startElement(SCLASS);
         }
 
         CLASS
 
         {
+            startNewMode(MODE_LCURLY_BLOCK_JS | MODE_NO_BLOCK_CONTENT | MODE_VARIABLE_NAME);
+
             // consume the name for expression-level classes, if applicable
             if (LA(1) == NAME)
                 compound_name();
@@ -23518,6 +23543,7 @@ perform_statement_has_block_check_js[] returns [bool hasblock] {
 
         hasblock = false;
         last_consumed_guessing_mode = -1;
+        std::list<srcMLState> temp_st = st;
         int start = mark();
         inputState->guessing++;
 
@@ -23534,6 +23560,7 @@ perform_statement_has_block_check_js[] returns [bool hasblock] {
 
         inputState->guessing--;
         rewind(start);
+        st = temp_st;
 } :;
 
 /*
@@ -23547,6 +23574,7 @@ perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] 
 
         skipterminate = false;
         last_consumed_guessing_mode = -1;
+        std::list<srcMLState> temp_st = st;
         int start = mark();
         inputState->guessing++;
 
@@ -23563,6 +23591,7 @@ perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] 
 
         inputState->guessing--;
         rewind(start);
+        st = temp_st;
 } :;
 
 /*
@@ -24161,3 +24190,93 @@ global_context_call_js[] { CompleteElement element(this); size_t lparen_types_si
 
         rparen[false]
 ;
+
+/*
+  perform_top_level_class_check_js
+
+  Checks if currently at the top-level of a class (i.e., looking for statements) in JavaScript/TypeScript.
+*/
+perform_top_level_class_check_js[] returns [bool istop] {
+        ENTRY_DEBUG
+
+        istop = false;
+        last_consumed_guessing_mode = -1;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // must be in a class, otherwise the check is pointless
+            if (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS)) {
+                // end the current block down to its associated statement
+                if (inTransparentMode(MODE_LCURLY_BLOCK_JS)) {
+                    endDownToMode(MODE_LCURLY_BLOCK_JS);
+                    endMode(MODE_LCURLY_BLOCK_JS);
+                }
+
+                // found the class
+                if (inMode(MODE_CLASS) || inMode(MODE_CLASS_EXPRESSION_JS))
+                    istop = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+/*
+  perform_declaration_in_class_check_js
+
+  Checks to see if an expression statement is really a declaration statement in JavaScript/TypeScript.
+  Looking for "NAME =" or "[...] =" at the top-level of a class block.
+*/
+perform_declaration_in_class_check_js[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        int square_bracket_count = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // must be in a class, otherwise the check is pointless
+            if (perform_top_level_class_check_js()) {
+                // case 1: first token is a name
+                if (LA(1) == NAME && next_token() == EQUAL) {
+                    isdecl = true;
+                }
+                // case 2: first token is a computed property
+                else if (LA(1) == LBRACKET) {
+                    while (true) {
+                        if (LA(1) == LBRACKET)
+                            ++square_bracket_count;
+
+                        if (LA(1) == RBRACKET)
+                            --square_bracket_count;
+
+                        if (square_bracket_count < 0)
+                            break;
+
+                        if (
+                            (LA(1) == RBRACKET && square_bracket_count == 0)
+                            || (LA(1) == TERMINATE && square_bracket_count == 0)
+                            || LA(1) == 1 /* EOF */
+                        )
+                            break;
+
+                        consume();
+                    }
+
+                    if (LA(1) == RBRACKET && next_token() == EQUAL)
+                        isdecl = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;

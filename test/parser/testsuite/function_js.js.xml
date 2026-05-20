@@ -110,7 +110,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>ClassWithGet</name> <block>{
-    <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
+    <decl_stmt><decl><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></decl></decl_stmt>
 
     <function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
@@ -120,7 +120,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>ClassWithGet</name> <block>{
-    <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
+    <decl_stmt><decl><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></decl></decl_stmt>
 
     <function type="get">get <name>msg</name><parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
@@ -132,7 +132,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>ClassWithSet</name> <block>{
-    <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
+    <decl_stmt><decl><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></decl></decl_stmt>
 
     <function type="set">set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <operator>=</operator> <literal type="string">`hello ${x}`</literal></expr></expr_stmt>
@@ -142,7 +142,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>ClassWithSet</name> <block>{
-    <expr_stmt><expr><name>#msg</name> <operator>=</operator> <literal type="string">"Hello, World!"</literal></expr></expr_stmt>
+    <decl_stmt><decl><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></decl></decl_stmt>
 
     <function type="set">set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <operator>=</operator> <literal type="string">`hello ${x}`</literal></expr></expr_stmt>
