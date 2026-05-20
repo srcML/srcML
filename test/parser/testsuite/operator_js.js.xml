@@ -388,7 +388,18 @@
 <!-- Operator Comma (",") -->
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><name>a</name></expr><operator>,</operator> <expr><name>b</name></expr></expr_stmt>
+<expr_stmt><expr><name>a</name><operator>,</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator"><specifier>async</specifier> function* <name>test</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>_j</name> <operator>=</operator> <name>_e</name> <operator>=</operator> <operator>await</operator> <name>x</name><operator>,</operator>
+      <name>_f</name> <operator>=</operator> <operator>await</operator> <name>x</name><operator>,</operator>
+      <name>_h</name> <operator>=</operator> <yield>yield <expr><literal type="number">3</literal></expr></yield><operator>,</operator>
+      <name><name>_j</name><index>[<expr><name>_f</name></expr>]</index></name> <operator>=</operator> <operator>await</operator> <name>x</name><operator>,</operator>
+      <name><name>_j</name><index>[<expr><name>_h</name></expr>]</index></name> <operator>=</operator> <yield>yield <expr><literal type="number">4</literal></expr></yield><operator>,</operator>
+      <name>_j</name></expr></return>
+</block_content>}</block></function>
 </unit>
 
 <!-- Spread Operator ("...") -->

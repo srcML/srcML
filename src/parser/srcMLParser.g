@@ -6473,7 +6473,18 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
 
             // comma ends the current item in a list or ends the current expression
             if (
-                !inTransparentMode(MODE_PARSE_EOL)
+                (
+                    !inLanguage(LANGUAGE_JAVASCRIPT)
+                    || (
+                        inLanguage(LANGUAGE_JAVASCRIPT)
+                        && (
+                            inTransparentMode(MODE_ARGUMENT)
+                            || inTransparentMode(MODE_ARRAY_JS)
+                            || inTransparentMode(MODE_LAMBDA_JS)
+                        )
+                    )
+                )
+                && !inTransparentMode(MODE_PARSE_EOL)
                 && (
                     inTransparentMode(MODE_LIST)
                     || inTransparentMode(MODE_STATEMENT)
@@ -21815,6 +21826,7 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         call_argument_list
 
         {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
             lparen_types_size = lparen_types_js.size();
         }
 
@@ -22027,6 +22039,7 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         call_argument_list
 
         {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
             lparen_types_size = lparen_types_js.size();
         }
 
