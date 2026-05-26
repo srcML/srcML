@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="for">
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>x</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <expr_stmt><expr><name>b</name></expr></expr_stmt>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>x</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>x</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name></expr></expr_stmt>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>x</name></expr> <range>in <expr><name>items</name></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>x</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <for>for <control><expr><name>y</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></for>
+</block_content></block></for>
+</unit>
+
+</unit>
