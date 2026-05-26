@@ -20517,7 +20517,17 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
             }
         }
 
-        ((options { greedy = true; } : specifier_js)* compound_name)
+        (
+            // only allow a certain subset of specifiers
+            (options { greedy = true; } :
+                { LA(1) != TS_DECLARE }?
+                specifier_js |
+
+                { LA(1) == TS_PRIVATE || LA(1) == TS_PROTECTED || LA(1) == TS_PUBLIC }?
+                declaration_specifiers_ts
+            )*
+            compound_name
+        )
 
         {
             startNewMode(MODE_PARAMETER_LIST_JS);
@@ -20562,8 +20572,14 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                 }
             }
 
-            // consume optional "async" or "static" before checking
-            if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
+            // consume optional specifiers before checking
+            while (
+                LA(1) == JS_ASYNC
+                || LA(1) == TS_PRIVATE
+                || LA(1) == TS_PROTECTED
+                || LA(1) == TS_PUBLIC
+                || LA(1) == JS_STATIC
+            )
                 consume();
 
             // match "NAME"
@@ -24144,42 +24160,60 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
                     /*
                         CASE 2: "{}" followed by a TERMINATE or "," indicates a function declaration
                     */
-                    if (
+                    if (LA(1) == RCURLY && (next_token() == TERMINATE || next_token() == COMMA)) {
+                        curlytype = 2;  // TypeScript "type" block
+                    }
+                    // could be "{} | TYPE {}", "{} & TYPE {}", or "{} {}"
+                    else if (
                         LA(1) == RCURLY
                         && (
-                            next_token() == TERMINATE
-                            || next_token() == COMMA
+                            next_token() == LCURLY
                             || next_token() == REFOPS
                             || next_token() == OPERATORS
                         )
                     ) {
-                        curlytype = 2;  // TypeScript "type" block
-                    }
-                    else if (LA(1) == RCURLY && next_token() == LCURLY) {
                         consume();  // "}"
                         curly_count = 0;
 
-                        // consume the second pair of curly braces
-                        while (true) {
-                            if (LA(1) == LCURLY)
-                                ++curly_count;
-
-                            if (LA(1) == RCURLY) {
-                                --curly_count;
-
-                                /*
-                                    CASE 3: "{}" followed by "{}" indicates a function expression
-                                */
-                                if (curly_count == 0) {
-                                    curlytype = 3;  // TypeScript "type" block + traditional block
+                        // consume additional TypeScript types, if applicable
+                        if (LA(1) != LCURLY) {
+                            while (true) {
+                                if (LA(1) == LCURLY || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
                                     break;
-                                }
+
+                                consume();
                             }
+                        }
 
-                            if (curly_count < 1 || LA(1) == 1 /* EOF */)
-                                break;
+                        // consume the second pair of curly braces
+                        if (LA(1) == LCURLY) {
+                            while (true) {
+                                if (LA(1) == LCURLY)
+                                    ++curly_count;
 
-                            consume();
+                                if (LA(1) == RCURLY) {
+                                    --curly_count;
+
+                                    /*
+                                        CASE 3: "{}" followed by "{}" indicates a function expression
+                                    */
+                                    if (curly_count == 0) {
+                                        curlytype = 3;  // TypeScript "type" block + traditional block
+                                        break;
+                                    }
+                                }
+
+                                if (curly_count < 1 || LA(1) == 1 /* EOF */)
+                                    break;
+
+                                consume();
+                            }
+                        }
+                        /*
+                            CASE 2: "{} TYPE" with no "{" at the end indicates a function declaration
+                        */
+                        else {
+                            curlytype = 2;  // TypeScript "type" block
                         }
                     }
                 }
