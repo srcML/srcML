@@ -89,18 +89,6 @@
   }</object></expr></return>
 </unit>
 
-<unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="const">const <name>itemData</name> <init>= <expr><name><name>useMemo</name><argument_list type="generic">&lt;<argument><expr><name>ItemData</name></expr></argument>&gt;</argument_list></name><operator>(</operator>
-  <lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>(</operator>
-    <call><name>scale</name><argument_list>(
-      <argument><expr><ternary><condition><expr><name>foo</name> <operator>!==</operator> <literal type="null">null</literal></expr>
-        ?</condition><then> <expr><name>bar</name></expr>
-        </then><else>: <expr><name>baz</name></expr></else></ternary></expr></argument>,
-    )</argument_list></call><operator>,</operator>
-  <operator>)</operator></expr></lambda><operator>,</operator>
-<operator>)</operator></expr></init></decl></decl_stmt>
-</unit>
-
 <!-- Lambdas containing statements with blocks -->
 
 <unit revision="1.0.0" language="JavaScript">

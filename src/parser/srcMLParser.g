@@ -1126,7 +1126,7 @@ public:
         temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
         temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };
-        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::situational_specifiers_js };  // check for "await" or "each" following the "for"
+        temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::for_control_situational_specifiers_js };  // check for "await" or "each" following the "for"
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
@@ -13060,6 +13060,14 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         optional_call_chain_js |
 
+        // looking for "NAME<>()" to start a generic function call
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
+            && perform_generic_function_check_ts()
+        }?
+        generic_function_call_ts |
+
         // looking for "*[...](){}" to start a generator function computed property
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
@@ -19449,23 +19457,30 @@ catch_lparen_js[] { ENTRY_DEBUG } :
 ;
 
 /*
+  for_control_situational_specifiers_js
+
+  Handles optional "await" or "each" specifiers that can follow a "for" in JavaScript.
+*/
+for_control_situational_specifiers_js[] {
+        ENTRY_DEBUG
+
+        if (LA(1) == JS_AWAIT || LA(1) == JS_EACH)
+            situational_specifiers_js();
+} :;
+
+/*
   situational_specifiers_js
 
-  Handles the optional "await" or "each" specifiers that follow "for" in JavaScript.
-  Also marks up "await" as a specifier in "using" declarations.
+  Handles instances where "await" and "each" are marked as specifiers in JavaScript/TypeScript.
+  These include for-loops, "using" declarations, and generic function calls.
 */
-situational_specifiers_js[] {
-        if (LA(1) == JS_AWAIT || LA(1) == JS_EACH) {
-            startNewMode(MODE_LOCAL);
+situational_specifiers_js[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
             startElement(SFUNCTION_SPECIFIER);
-
-            consume();  // "await" or "each"
-
-            endMode(MODE_LOCAL);
         }
 
-        ENTRY_DEBUG
-} :;
+        (JS_AWAIT | JS_EACH)
+;
 
 /*
   with_lparen_js
@@ -23838,6 +23853,140 @@ generic_lambda_ts[] {
             { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
+;
+
+/*
+  perform_generic_function_check_ts
+
+  Checks to see if a call contains a generic argument list in JavaScript/TypeScript.
+  Typically of the form "NAME<...>(...)".
+*/
+perform_generic_function_check_ts[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
+        isfunction = false;
+        int tempops_count = 0;  // for generic argument list
+        int paren_count = 0;  // for parameter list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "await" before checking
+            if (LA(1) == JS_AWAIT)
+                consume();
+
+            // consume "NAME"
+            if (LA(1) == NAME) {
+                compound_name();
+
+                // match generic argument list
+                if (LA(1) == TEMPOPS) {
+                    while (true) {
+                        if (LA(1) == TEMPOPS)
+                            ++tempops_count;
+
+                        if (LA(1) == TEMPOPE) {
+                            --tempops_count;
+
+                            if (tempops_count == 0) {
+                                consume();
+                                break;
+                            }
+                        }
+
+                        consume();
+
+                        if (tempops_count < 0 || LA(1) == 1 /* EOF */)
+                            break;
+                    }
+
+                    // match parameter list
+                    if (LA(1) == LPAREN) {
+                        while (true) {
+                            if (LA(1) == LPAREN)
+                                ++paren_count;
+
+                            if (LA(1) == RPAREN) {
+                                --paren_count;
+
+                                if (paren_count == 0) {
+                                    consume();  // ")"
+
+                                    // function call does not have a block
+                                    if (LA(1) != LCURLY)
+                                        isfunction = true;
+
+                                    break;
+                                }
+                            }
+
+                            consume();
+
+                            if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  generic_function_call_ts
+
+  Handles a generic function call in JavaScript/TypeScript (e.g., "NAME<...>(...)").
+*/
+generic_function_call_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_FUNCTION_CALL);
+            startElement(SFUNCTION_CALL);
+        }
+
+        // generic argument list is paired with the name
+        ((situational_specifiers_js)* compound_name)
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+        }
+
+        call_argument_list
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
 ;
 
 /*

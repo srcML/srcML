@@ -320,6 +320,16 @@
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Angle Bracket Type Assertion -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>canvas</name> <init>= <expr><operator>&lt;</operator><name>HTMLCanvasElement</name><operator>&gt;</operator><call><name><name>document</name><operator>.</operator><name>getElementById</name></name><argument_list>(<argument><expr><literal type="string">"MyCanvas"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>getJSDocPrimaryTypeCreateFunction</name> <init>= <expr><call><name>memoizeOne</name><argument_list>(<argument><expr><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>JSDocType</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>kind</name><ts:type>: <name><name>T</name><index>[<expr><literal type="string">"kind"</literal></expr>]</index></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><call><name>createJSDocPrimaryTypeWorker</name><argument_list>(<argument><expr><name>kind</name></expr></argument>)</argument_list></call></expr></lambda></expr></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Edge Cases -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

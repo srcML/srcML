@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="global_context_call">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="call">
+
+<!-- Generic Function Calls -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>factory</name><ts:type>: <name>NodeFactory</name></ts:type> <init>= <expr><object>{
+    <property><expr><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><call><name><name>getJSDocPrimaryTypeCreateFunction</name><argument_list type="generic">&lt;<argument><expr><name>JSDocAllType</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name><name>SyntaxKind</name><operator>.</operator><name>JSDocAllType</name></name></expr></argument>)</argument_list></call></expr></return>
+    </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>itemData</name> <init>= <expr><call><name><name>useMemo</name><argument_list type="generic">&lt;<argument><expr><name>ItemData</name></expr></argument>&gt;</argument_list></name><argument_list>(
+  <argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>(</operator>
+    <call><name>scale</name><argument_list>(
+      <argument><expr><ternary><condition><expr><name>foo</name> <operator>!==</operator> <literal type="null">null</literal></expr>
+        ?</condition><then> <expr><name>bar</name></expr>
+        </then><else>: <expr><name>baz</name></expr></else></ternary></expr></argument>,
+    )</argument_list></call><operator>,</operator>
+  <operator>)</operator></expr></lambda></expr></argument>,
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Global Context Calls -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>math</name><operator>.</operator><name>double</name></name>)</expr><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
