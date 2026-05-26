@@ -19159,6 +19159,10 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
         (options { greedy = true; } : JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)*
 
         {
+            // handle optional "?" and "!" TypeScript modifiers that appear after the name
+            if (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+                declaration_modifiers_ts();
+
             // handle optional TypeScript specifiers that appear after the keyword
             if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
                 declaration_specifiers_ts();
