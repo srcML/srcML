@@ -13106,8 +13106,13 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         ((attribute_ts)+ keywordless_function_expression_js[false]) |
 
         // looking for "NAME(){...}" to start a keywordless function in JavaScript
-        // Note: do not confuse a call in a class super list for a keywordless function
-        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_SUPER_LIST_JS) && perform_keywordless_function_check_js() }?
+        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !inTransparentMode(MODE_SUPER_LIST_JS)
+            && last_consumed != JS_ARROW
+            && perform_keywordless_function_check_js()
+        }?
         keywordless_function_expression_js[true] |
 
         // looking for "@decorator function" to start a function (with a decorator) in an expression in TypeScript

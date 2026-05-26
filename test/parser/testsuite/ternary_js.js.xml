@@ -129,4 +129,13 @@
   </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>factory</name><ts:type>: <name>NodeFactory</name></ts:type> <init>= <expr><object>{
+    <property><expr><name>foo</name></expr>: <expr><ternary><condition><expr><name>bar</name></expr> ?</condition><then> <expr><lambda><parameter_list>(<parameter><decl><name>expression</name></decl></parameter>, <parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><call><name>setEmitFlags</name><argument_list>(<argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></lambda></expr> </then><else>: <expr><name>quux</name></expr></else></ternary></expr></property>,
+    <property><expr><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name>a</name></expr></return>
+    </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
