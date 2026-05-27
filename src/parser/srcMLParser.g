@@ -19209,7 +19209,7 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 break;
             } |
 
-            declaration_init_js | declaration_range_js | colon_type_ts | compound_name
+            declaration_init_js | declaration_range_js | colon_type_ts | compound_name | literals
         )*
 
         {
