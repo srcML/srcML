@@ -133,4 +133,82 @@
 }</block></class>
 </unit>
 
+<!-- "static private" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <decl_stmt><decl type="static">static <ts:specifier>private</ts:specifier> <name>privateProperty</name></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <ts:specifier>private</ts:specifier> <name>privateMethod</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="get"><specifier>static</specifier> <ts:specifier>private</ts:specifier> get <name>privateGetter</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="set"><specifier>static</specifier> <ts:specifier>private</ts:specifier> set <name>privateSetter</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<!-- "static protected" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <decl_stmt><decl type="static">static <ts:specifier>protected</ts:specifier> <name>protectedProperty</name></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <ts:specifier>protected</ts:specifier> <name>protectedMethod</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="get"><specifier>static</specifier> <ts:specifier>protected</ts:specifier> get <name>protectedGetter</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="set"><specifier>static</specifier> <ts:specifier>protected</ts:specifier> set <name>protectedSetter</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<!-- "static public" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="set"><specifier>static</specifier> <ts:specifier>public</ts:specifier> set <name>publicSetter</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <ts:specifier>public</ts:specifier> <name>publicMethod</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="get"><specifier>static</specifier> <ts:specifier>public</ts:specifier> get <name>publicGetter</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="set"><specifier>static</specifier> <ts:specifier>public</ts:specifier> set <name>publicSetter</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
 </unit>

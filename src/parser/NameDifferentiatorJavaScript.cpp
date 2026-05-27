@@ -63,7 +63,12 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     if (
         (
             srcMLParser::decl_start_js_token_set.member(prevNonWhitespaceToken->getType())
+            && token->getType() != srcMLParser::JS_GET
+            && token->getType() != srcMLParser::JS_SET
             && token->getType() != srcMLParser::NAME
+            && token->getType() != srcMLParser::TS_PRIVATE
+            && token->getType() != srcMLParser::TS_PROTECTED
+            && token->getType() != srcMLParser::TS_PUBLIC
             && token->getType() != srcMLParser::TS_READONLY
         )
         || (
@@ -264,6 +269,22 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 prevNonWhitespaceToken->getType() == srcMLParser::LCURLY
                 || prevNonWhitespaceToken->getType() == srcMLParser::RCURLY
                 || prevNonWhitespaceToken->getType() == srcMLParser::TERMINATE
+            )
+        )
+        || (
+            srcMLParser::decl_start_js_token_set.member(prevNonWhitespaceToken->getType())
+            && (
+                token->getType() == srcMLParser::JS_GET
+                || token->getType() == srcMLParser::JS_SET
+                || token->getType() == srcMLParser::TS_PRIVATE
+                || token->getType() == srcMLParser::TS_PROTECTED
+                || token->getType() == srcMLParser::TS_PUBLIC
+            )
+            && (
+                nextToken->getType() == srcMLParser::EQUAL
+                || nextToken->getType() == srcMLParser::TERMINATE
+                || nextToken->getType() == srcMLParser::EOF_
+                || nextToken->getLine() > token->getLine()
             )
         )
     );

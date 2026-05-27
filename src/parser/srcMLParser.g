@@ -1726,12 +1726,22 @@ javascript_statements[] {
 
         // check if the current non-comment token is a specifier that occurs before a statement keyword
         if (LA(1) != SNOP && inMode(MODE_STATEMENT) && check_valid_specifier_js()) {
-            std::array<int, 2> post_specifier_tokens = perform_post_specifier_check_js();
+            std::array<int, 3> post_specifier_tokens = perform_post_specifier_check_js();
 
             // looking for "let", "var", "const", "static", or "using"
             if (
                 decl_start_js_token_set.member(post_specifier_tokens[0])
-                && (post_specifier_tokens[0] != JS_STATIC || (post_specifier_tokens[0] == JS_STATIC && post_specifier_tokens[1] != LCURLY))
+                && (
+                    post_specifier_tokens[0] != JS_STATIC
+                    || (
+                        post_specifier_tokens[0] == JS_STATIC
+                        && post_specifier_tokens[1] != LCURLY
+                        && post_specifier_tokens[1] != JS_GET
+                        && post_specifier_tokens[1] != JS_SET
+                        && post_specifier_tokens[2] != JS_GET
+                        && post_specifier_tokens[2] != JS_SET
+                    )
+                )
             ) {
                 declaration_statement_js(post_specifier_tokens[0]);
                 processed_statement = true;
@@ -1780,6 +1790,10 @@ javascript_statements[] {
                     || (
                         LA(1) == JS_STATIC
                         && next_token() != LCURLY
+                        && next_token() != JS_GET
+                        && next_token() != JS_SET
+                        && next_token_two() != JS_GET
+                        && next_token_two() != JS_SET
                         && !perform_keywordless_function_check_js()
                     )
                 )
@@ -18993,11 +19007,12 @@ check_valid_specifier_js[] returns [int isspecifier] {
   Returns the next token that occur after a JavaScript specifier.
   If there are multiple specifiers in a row, returns the next token after the last specifier.
 */
-perform_post_specifier_check_js[] returns [std::array<int, 2> keywords] {
+perform_post_specifier_check_js[] returns [std::array<int, 3> keywords] {
         ENTRY_DEBUG
 
         keywords[0] = -1;
         keywords[1] = -1;
+        keywords[2] = -1;
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
@@ -19012,7 +19027,12 @@ perform_post_specifier_check_js[] returns [std::array<int, 2> keywords] {
 
             if (post_specifier_js_token_set.member(LA(1))) {
                 keywords[0] = LA(1);
-                keywords[1] = next_token();
+                consume();
+
+                keywords[1] = LA(1);
+                consume();
+
+                keywords[2] = LA(1);
             }
         }
         catch (...) {}
@@ -19334,7 +19354,7 @@ for_control_js[] { ENTRY_DEBUG } :
 */
 control_initialization_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            std::array<int, 2> post_specifier_tokens = perform_post_specifier_check_js();
+            std::array<int, 3> post_specifier_tokens = perform_post_specifier_check_js();
 
             startNewMode(MODE_CONTROL_INITIALIZATION);
             startElement(SCONTROL_INITIALIZATION);
@@ -20393,17 +20413,20 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
         {
             if (markup) {
                 startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+                int first_token = LA(1);
+                int second_token = next_token();
+                int third_token = next_token_two();
 
                 // found a getter
-                if (LA(1) == JS_GET || (check_valid_specifier_js() && next_token() == JS_GET))
+                if (first_token == JS_GET || second_token == JS_GET || third_token == JS_GET)
                     startElement(SFUNCTION_GET_STATEMENT);
                 // found a setter
-                else if (LA(1) == JS_SET || (check_valid_specifier_js() && next_token() == JS_SET))
+                else if (first_token == JS_SET || second_token == JS_SET || third_token == JS_SET)
                     startElement(SFUNCTION_SET_STATEMENT);
                 // found a generator function
                 else if (
-                    (LA(1) == JS_FUNCTION && next_token() == MULTOPS)
-                    || (check_valid_specifier_js() && next_token() == JS_FUNCTION && next_token_two() == MULTOPS)
+                    (first_token == JS_FUNCTION && second_token == MULTOPS)
+                    || (second_token == JS_FUNCTION && third_token == MULTOPS)
                 )
                     startElement(SFUNCTION_GENERATOR_STATEMENT);
                 // found a function
@@ -20412,7 +20435,18 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
             }
         }
 
-        ((specifier_js)* (JS_FUNCTION | JS_GET | JS_SET))
+        (
+            // only allow a certain subset of specifiers
+            (options { greedy = true; } :
+                { LA(1) != TS_DECLARE }?
+                specifier_js |
+
+                { LA(1) == TS_PRIVATE || LA(1) == TS_PROTECTED || LA(1) == TS_PUBLIC }?
+                declaration_specifiers_ts
+            )*
+
+            (JS_FUNCTION | JS_GET | JS_SET)
+        )
 
         {
             // consume "*" for generator functions
