@@ -22622,6 +22622,14 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
 
         COLON
 
+        {
+            // ": =>" is invalid syntax, so end the type after the arrow
+            if (LA(1) == JS_ARROW) {
+                consume();  // "=>"
+                return;
+            }
+        }
+
         (options { greedy = true; } :
             // do not include the following as part of a type:
             // - do not consume the closing RPAREN for certain constructs
