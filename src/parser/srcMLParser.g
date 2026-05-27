@@ -19082,8 +19082,12 @@ declaration_statement_js[int post_specifier_token = -1] { CompleteElement elemen
             }
 
             while (true) {
+                // declaration should not be of the form "NAME ()"
+                if (LA(1) == LPAREN && last_consumed == NAME) {
+                    break;
+                }
                 // termination token signifies the end of the declaration statement
-                if (LA(1) == TERMINATE) {
+                else if (LA(1) == TERMINATE) {
                     consume();  // TERMINATE
                     break;
                 }
