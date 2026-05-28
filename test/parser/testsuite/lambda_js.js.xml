@@ -89,6 +89,10 @@
   }</object></expr></return>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>r2</name> <init>= <expr><operator>&lt;</operator> <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>T</name></expr></lambda><operator>&gt;</operator><name>f</name></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Lambdas containing statements with blocks -->
 
 <unit revision="1.0.0" language="JavaScript">

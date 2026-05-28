@@ -3407,6 +3407,14 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
         call_count = 0;
 
         try {
+            // do not mark "< <" as a call in JavaScript
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && LA(1) == TEMPOPS
+                && next_token() == TEMPOPS
+            )
+                throw antlr::RecognitionException();
+
             call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
 
             // call syntax succeeded
@@ -23845,6 +23853,7 @@ generic_lambda_ts[] {
         CompleteElement element(this);
         size_t lparen_types_size = 0;
         bool was_colon_type = (last_consumed == COLON);
+        bool was_tempops = (last_consumed == TEMPOPS);
 
         ENTRY_DEBUG
 } :
@@ -23897,7 +23906,10 @@ generic_lambda_ts[] {
             // do not consume right parentheses or ">" outside the scope of the lambda
             {
                 (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
-                || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
+                || (
+                    LA(1) == TEMPOPE
+                    && (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) || was_tempops)
+                )
             }?
             {
                 break;
