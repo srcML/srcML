@@ -19909,7 +19909,11 @@ javascript_parameter_list[] { CompleteElement element(this); size_t bracket_type
             ) => complete_javascript_parameter |
 
             // parameter that only contains a type (i.e., not ": TYPE")
-            { inTransparentMode(MODE_TYPE_TS) && inTransparentMode(MODE_LAMBDA_JS) }?
+            {
+                inTransparentMode(MODE_TYPE_TS)
+                && inTransparentMode(MODE_LAMBDA_JS)
+                && next_token() != EQUAL
+            }?
             complete_typescript_parameter |
 
             complete_javascript_parameter
