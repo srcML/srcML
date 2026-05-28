@@ -22839,6 +22839,11 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                 consume();
 
             compound_name();
+
+            // handle optional argument list since compound_name will not in guessing mode
+            if (LA(1) == TEMPOPS)
+                angle_bracket_pair();
+
             paren_pair();
 
             // consume optional modifiers
@@ -22858,6 +22863,12 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                         --tempops_count;
 
                         if (tempops_count == 0) {
+                            consume();  // ">"
+
+                            // "NAME() : TYPE<TYPE> {}" cannot be a function declaration
+                            if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
+                                isdecl = false;
+
                             break;
                         }
                     }

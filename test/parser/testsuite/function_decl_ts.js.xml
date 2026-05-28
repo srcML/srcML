@@ -103,4 +103,12 @@
 }</block></ts:interface>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:declare>declare <name>module</name> <literal type="string">"deps/BaseClass"</literal> <block>{<block_content>
+    <class>class <name>BaseClass</name> <block>{
+        <ts:function_decl><ts:specifier>static</ts:specifier> <name><name>extends</name><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>A</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <operator>new</operator> <lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name>A</name> <operator>&amp;</operator> <name>BaseClass</name></expr></lambda></ts:type></ts:function_decl>
+    }</block></class>
+</block_content>}</block></ts:declare>
+</unit>
+
 </unit>
