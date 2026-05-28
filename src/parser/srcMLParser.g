@@ -19099,8 +19099,15 @@ declaration_statement_js[int post_specifier_token = -1] { CompleteElement elemen
                     consume();  // TERMINATE
                     break;
                 }
-                // "," followed by a name should continue the declaration statement
-                else if (LA(1) == COMMA && next_token() == NAME) {
+                // "," followed by a name, "[", or "{" should continue the declaration statement
+                else if (
+                    LA(1) == COMMA
+                    && (
+                        next_token() == NAME
+                        || next_token() == LBRACKET
+                        || next_token() == LCURLY
+                    )
+                ) {
                     consume();  // COMMA
                     declaration_js(true, post_specifier_token);
                 }

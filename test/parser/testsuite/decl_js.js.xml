@@ -313,6 +313,10 @@
 <decl_stmt><decl type="const">const {<decl/>, <expr><literal type="string">"s"</literal></expr>: <decl><name>setState</name></decl>} <init>= <expr><call><name>useState</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using"><specifier>await</specifier> using <name>a</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using">{<decl><name>b</name></decl>} <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using"><name>c</name> <init>= <expr><literal type="null">null</literal></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Array Destructuring -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -341,6 +345,10 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const [<decl/>, <decl><name>setState</name></decl>] <init>= <expr><call><name>useState</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using"><specifier>await</specifier> using <name>a</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using">[<decl><name>b</name></decl>] <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using"><name>c</name> <init>= <expr><literal type="null">null</literal></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Nested Destructuring -->
