@@ -496,7 +496,12 @@ private:
             return true;
         }
 
+        // if we are handling a preprocessor element already, don't start nested handling
         if (inskip)
+            return false;
+
+        // if we are in an attribute, finish then handle the preprocessor
+        if (inAttribute)
             return false;
 
         // preprocessor (unless we already are in one)
