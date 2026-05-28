@@ -174,6 +174,7 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
                 && token->getType() != srcMLParser::JS_GET
                 && token->getType() != srcMLParser::JS_SET
                 && token->getType() != srcMLParser::JS_WITH
+                && token->getType() != srcMLParser::NEW
                 && token->getType() != srcMLParser::WHILE
             )
         )
