@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="unicode">
+
+<!-- Unicode Letters -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>a\u0062</name></decl></decl_stmt> <comment type="line">// ab</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>\u0062a</name></decl></decl_stmt> <comment type="line">// ba</comment>
+</unit>
+
+<!-- Unicode Numbers -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>a\u0031</name></decl></decl_stmt> <comment type="line">// a1</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>\u0031a</name></decl></decl_stmt> <comment type="line">// 1a</comment>
+</unit>
+
+<!-- Unicode Emoji -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>a\u1F642</name></decl></decl_stmt> <comment type="line">// a(slightly smiling face)</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>\u1F642a</name></decl></decl_stmt> <comment type="line">// (slightly smiling face)a</comment>
+</unit>
+
+</unit>

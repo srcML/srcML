@@ -164,7 +164,13 @@ NAME options { testLiterals = true; } :
     ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
     (
         (options { greedy = true; } :
-            { this->updateNonWhitespaceCharacters(); } ('0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+            { this->updateNonWhitespaceCharacters(); }
+            (
+                '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$' |
+
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
+                ('\\' 'u') => '\\' 'u'
+            )
         )*
     )
     (

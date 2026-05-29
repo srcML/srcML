@@ -9484,7 +9484,7 @@ multops_star[] { ENTRY_DEBUG } :
   Handles a compound name for keyword-based languages (e.g., Python and JavaScript).
 */
 compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
-        generic_argument_list | simple_name_optional_template_js
+        generic_argument_list | simple_name_optional_template_keyword
 
         (options { greedy = true; } :
             (
@@ -9501,7 +9501,7 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
 
                     keyword_name |
 
-                    simple_name_optional_template_js |
+                    simple_name_optional_template_keyword |
 
                     { next_token() == TERMINATE }?
                     multop_name
@@ -22351,11 +22351,11 @@ perform_chained_call_count_js[] returns [int numchainedcalls] {
 } :;
 
 /*
-  simple_name_optional_template_js
+  simple_name_optional_template_keyword
 
-  Handles a name (including a template argument list) in JavaScript/TypeScript differently from other languages.
+  Handles a name (including a template argument list) in keyword-based languages (e.g., Python, JavaScript/TypeScript).
 */
-simple_name_optional_template_js[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
+simple_name_optional_template_keyword[bool push = true] { CompleteElement element(this); TokenPosition tp; ENTRY_DEBUG } :
         {
             // local mode that is automatically ended by leaving this function
             startNewMode(MODE_LOCAL);
@@ -22368,16 +22368,46 @@ simple_name_optional_template_js[bool push = true] { CompleteElement element(thi
         }
 
         push_namestack[push]
-        identifier
+        identifier_keyword
 
         {
-            // consume generic argument list, if applicable
-            if (LA(1) == TEMPOPS && generic_argument_list_check())
+            // consume a JavaScript/TypeScript generic argument list, if applicable
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TEMPOPS && generic_argument_list_check())
                 generic_argument_list_js();
             // set the token to NOP since we did not find a template argument list
             else
                 tp.setType(SNOP);
+
+            // consume TypeScript declaration modifiers now that the name is finished
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && (LT(1)->getText() == "!"))
+                declaration_modifiers_ts();
         }
+;
+
+/*
+  identifier_keyword
+
+  Handles an identifier in keyword-based languages (e.g., Python, JavaScript/TypeScript).
+*/
+identifier_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            // do not combine TypeScript declaration modifiers with the name
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && LT(1)->getText() == "!")
+                return;
+
+            startElement(SNAME);
+        }
+
+        (
+            // a JavaScript/TypeScript name can start with a backslash (i.e., unicode)
+            { inLanguage(LANGUAGE_JAVASCRIPT) && LT(1)->getText() == "\\" && next_token() == NAME }?
+            (OPERATORS NAME) |
+
+            NAME | VOID |
+
+            // Python
+            PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE
+        )
 ;
 
 /*
