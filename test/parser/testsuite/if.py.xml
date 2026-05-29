@@ -6,55 +6,55 @@
     <expr_stmt><expr><name>b</name></expr></expr_stmt>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
     <pass>pass</pass>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition><block>:<block_content>
     <expr_stmt><expr><literal type="number">2</literal></expr></expr_stmt>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition><block>:<block_content>
     <pass>pass</pass>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><name>a</name> <operator>==</operator> <name>b</name></expr></condition><block>:<block_content>
     <expr_stmt><expr><name>c</name></expr></expr_stmt>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><name>a</name> <operator>==</operator> <name>b</name></expr></condition><block>:<block_content>
     <pass>pass</pass>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
-<if_stmt><if>if <condition><expr><name>a</name></expr></condition> <block>:<block_content>
-    <expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name></expr></expr_stmt> 
+<if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name></expr></expr_stmt>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
-<if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition> <block>:<block_content>
-    <expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name></expr></expr_stmt> 
+<if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name></expr></expr_stmt>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
-<if_stmt><if>if <condition><expr><name>a</name> <operator>==</operator> <name>d</name></expr></condition> <block>:<block_content>
-    <expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name></expr></expr_stmt> 
+<if_stmt><if>if <condition><expr><name>a</name> <operator>==</operator> <name>d</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name></expr></expr_stmt>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
     <pass>pass</pass>
@@ -62,47 +62,47 @@
     <pass>pass</pass>
 </block_content></block></else></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
-    <pass>pass</pass>
-</block_content></block></if><else>else <block>:<block_content>
-    <pass>pass</pass>
-</block_content></block></else></if_stmt>
-</unit>
-
-<unit revision="1.0.0" language="Python">
-<if_stmt><if>if <condition><expr><name>a</name></expr></condition> <block>:<block_content>
     <pass>pass</pass>
 </block_content></block></if><else>else<block>:<block_content>
     <pass>pass</pass>
 </block_content></block></else></if_stmt>
 </unit>
-
+ 
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></if><else>else<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></else></if_stmt>
+</unit>
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><name>c</name></expr></condition><block>:<block_content>
-    <expr_stmt><expr><name>a</name></expr><expr><name>b</name></expr></expr_stmt>
+    <expr_stmt><expr><name>a</name><operator>,</operator> <name>b</name></expr></expr_stmt>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call> <operator>&lt;</operator> <name>t</name></expr></condition><block>:<block_content>
     <pass>pass</pass>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><operator>(</operator><call><name>a</name><argument_list>(<argument><expr><name>b</name></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call><operator>)</operator></expr></condition><block>:<block_content>
     <pass>pass</pass>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><name><name>upper</name><operator>.</operator><name>x</name></name> <operator>&lt;</operator> <call><name>qMin</name><argument_list>(<argument><expr><name><name>l</name><operator>.</operator><name>x</name></name></expr></argument>, <argument><expr><name><name>u</name><operator>.</operator><name>x</name></name></expr></argument>)</argument_list></call></expr></condition><block>:<block_content>
     <return>return <expr><literal type="number">0</literal></expr></return>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition><block>:<block_content>
     <while>while <condition><expr><literal type="number">2</literal></expr></condition><block>:<block_content>
@@ -110,7 +110,7 @@
 </block_content></block></while>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition><block>:<block_content>
     <if_stmt><if>if <condition><expr><literal type="number">2</literal></expr></condition><block>:<block_content>
@@ -124,7 +124,7 @@
     <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">4</literal></expr></expr_stmt>
 </block_content></block></else></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition><block>:<block_content>
     <if_stmt><if>if <condition><expr><literal type="number">2</literal></expr></condition><block>:<block_content>
@@ -136,7 +136,7 @@
 </block_content></block></else></if_stmt>
 </block_content></block></if></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition><block>:<block_content>
     <if_stmt><if>if <condition><expr><literal type="number">2</literal></expr></condition><block>:<block_content>
@@ -162,7 +162,7 @@
     <break>break</break>
 </block_content></block></else></if_stmt>
 </unit>
-
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><literal type="number">1</literal></expr></condition><block>:<block_content>
     <if_stmt><if>if <condition><expr><literal type="number">2</literal></expr></condition><block>:<block_content>
@@ -188,10 +188,34 @@
     <continue>continue</continue>
 </block_content></block></else></if_stmt>
 </unit>
-
+ 
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>a</name> <operator>:=</operator> <literal type="number">0</literal></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></if></if_stmt>
+</unit>
+ 
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>a</name> <operator>:=</operator> <literal type="number">0</literal></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block></if></if_stmt>
+</unit>
+ 
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>a</name> <operator>:=</operator> <literal type="number">0</literal></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></if></if_stmt>
+</unit>
+ 
 <unit revision="1.0.0" language="Python">
 <if_stmt><if>if <condition><expr><name>a</name><operator>&amp;</operator><literal type="number">1</literal></expr></condition><block>:<block_content>
     <expr_stmt><expr><name>b</name></expr></expr_stmt>
+</block_content></block></if></if_stmt>
+</unit>
+ 
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>emit</name></expr></condition><block>:<block_content>
+    <pass>pass</pass>
 </block_content></block></if></if_stmt>
 </unit>
 
