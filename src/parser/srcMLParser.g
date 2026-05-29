@@ -1607,6 +1607,7 @@ javascript_statements[] {
             )
             && (
                 LA(1) == LPAREN
+                || LA(1) == TEMPOPS
                 || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
                 || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
             )
@@ -13321,11 +13322,15 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // call
         // need to distinguish between a call and a macro
+        // also, do not confuse with a TypeScript nameless function declaration
         {
-            type == CALL
-            || (
-                perform_call_check(type, isempty, call_count, -1)
-                && type == CALL
+            (!inLanguage(LANGUAGE_JAVASCRIPT) || LA(1) != TEMPOPS)
+            && (
+                type == CALL
+                || (
+                    perform_call_check(type, isempty, call_count, -1)
+                    && type == CALL
+                )
             )
         }?
         // added argument to correct markup of default parameters using a call
@@ -23041,6 +23046,10 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
             while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
                 declaration_specifiers_ts();
 
+            // consume optional generic argument list
+            if (LA(1) == TEMPOPS)
+                angle_bracket_pair();
+
             paren_pair();
 
             // consume optional modifiers
@@ -23099,6 +23108,7 @@ nameless_function_declaration_ts[] { ENTRY_DEBUG } :
 
         (
             (function_declaration_specifiers_ts | declaration_specifiers_ts)*
+            (generic_argument_list_js)*
             javascript_parameter_list
         )
 

@@ -111,4 +111,12 @@
 </block_content>}</block></ts:declare>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>_internal_ComponentTabGroup</name> <block>{
+  <ts:function_decl><argument_list type="generic">&lt;<argument><expr><name>TTag</name> <ts:extends>extends <ts:type><name>ElementType</name> <operator>=</operator> <operator>typeof</operator> <name>DEFAULT_TABS_TAG</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(
+    <parameter><decl><name>props</name><ts:type>: <name><name>TabGroupProps</name><argument_list type="generic">&lt;<argument><expr><name>TTag</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>,
+  )</parameter_list><ts:type>: <literal type="null">null</literal></ts:type></ts:function_decl>
+}</block></ts:interface>
+</unit>
+
 </unit>
