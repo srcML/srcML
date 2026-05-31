@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="while">
+
+<unit revision="1.0.0" language="Rust">
+<while>while <condition><expr><name>x</name> <operator>&lt;</operator> <literal type="number">16</literal></expr></condition> <block>{<block_content>
+  <expr_stmt><expr><name>n</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+  <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>n</name></expr>;</expr_stmt>
+</block_content>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<while>while <condition><expr><name>n</name> <operator>&lt;</operator> <literal type="number">4</literal></expr></condition> <block>{<block_content>
+  <while>while <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">8</literal></expr></condition> <block>{<block_content>
+    <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+    <expr_stmt><expr><name>result</name> <operator>-=</operator> <name>i</name></expr>;</expr_stmt>
+  </block_content>}</block></while>
+
+  <expr_stmt><expr><name>n</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+</block_content>}</block></while>
+</unit>
+
+</unit>
+
