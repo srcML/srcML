@@ -529,7 +529,7 @@ public:
                 ++index;
 
                 // found a closing JSX tag (e.g., "</h1>")
-                if (LA(index) == '/' && angle_bracket_count == 1)
+                if (LA(index) == '/' && LA(index + 1) != '*' && angle_bracket_count == 1)
                     return true;
             }
 

@@ -820,4 +820,16 @@
 )</argument_list></call></expr></return>
 </unit>
 
+<!-- "Mistaken" JSX Literals (do NOT mark these as JSX literals) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<class>class <name><name>C</name><argument_list type="generic">&lt;<comment type="block">/**docComment for type parameter*/</comment> <argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<class>class <name><name>C</name><argument_list type="generic">&lt;<comment type="block">/**docComment for type parameter*/</comment> <argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <expr_stmt><expr><function><name><name>method</name><argument_list type="generic">&lt;<comment type="block">/**docComment of method type parameter */</comment> <argument><expr><name>U</name> <ts:extends>extends <ts:type><name>T</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>U</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
 </unit>
