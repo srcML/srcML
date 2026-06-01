@@ -369,6 +369,23 @@
 <decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl>{<expr><name>b</name></expr>: <decl><name>b1</name></decl>}</decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator>
+    <lambda><parameter_list>(<parameter><decl><name>_a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+        <decl_stmt><decl type="var">var <name>_b</name></decl></decl_stmt>
+        <decl_stmt><decl type="var">var {
+            <decl>[
+                <decl><operator>(</operator>
+                    <name>_b</name> <init>= <expr><class>class <block>{}</block></class></expr></init><operator>,</operator>
+                    <name><name>_b</name><operator>.</operator><name>x</name></name> <operator>=</operator> <literal type="number">1</literal><operator>,</operator>
+                    <name>_b</name>
+                <operator>)</operator><expr><operator>.</operator><name>x</name></expr></decl>
+            ]: <decl><name>b</name> <init>= <expr><literal type="string">""</literal></expr></init></decl></decl>
+        } <init>= <expr><name>_a</name></expr></init></decl></decl_stmt>
+    </block_content>}</block></lambda>
+<operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
 <!-- Subscriptable Function Call -->
 
 <unit revision="1.0.0" language="JavaScript">

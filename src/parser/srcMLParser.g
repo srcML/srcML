@@ -20283,13 +20283,17 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // ensure the declaration ends before a termination token or comma
-            { LA(1) == COMMA }?
+            {
+                (LA(1) == COMMA && bracket_types_js.back() != "oLPAREN")
+                || (LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET")
+                || (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY")
+            }?
             {
                 break;
             } |
 
-            // "expression: declaration" syntax for object destructuring
-            { LA(1) != LCURLY && LA(1) != LBRACKET && perform_decl_with_colon_check_js() }?
+            // "expression: declaration" syntax in destructuring
+            { LA(1) != LCURLY && LA(1) != LBRACKET && LA(1) != COLON && perform_decl_with_colon_check_js() }?
             (
                 {
                     if (!inMode(MODE_EXPRESSION))
@@ -20311,13 +20315,52 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
                 }
             ) |
 
-            // nested destructuring
-            decl_with_array_destructuring_js | decl_with_object_destructuring_js |
+            // "[...]: declaration" or "{...}: declaration" syntax in destructuring
+            { perform_decl_with_colon_check_js() }?
+            (
+                COLON
+                declaration_destructure_js[true]
 
-            declaration_init_js | declaration_range_js | tripledotop | compound_name |
+                {
+                    endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
+                    break;
+                }
+            ) |
 
-            // special edge cases for invalid syntax
-            literals | await_as_name
+            // nested array destructuring
+            { LA(1) == LBRACKET }?
+            decl_with_array_destructuring_js |
+
+            // nested object destructuring
+            { LA(1) == LCURLY }?
+            decl_with_object_destructuring_js |
+
+            // initialization with "="
+            { LA(1) == EQUAL }?
+            declaration_init_js |
+
+            // range with "in"
+            { LA(1) == JS_RANGE_IN }?
+            declaration_range_js |
+
+            // process "..." separately
+            { LA(1) == DOTDOTDOT }?
+            tripledotop |
+
+            // process names separately
+            { LA(1) == NAME }?
+            compound_name |
+
+            // special case: "await" is a name, not an operator
+            { LA(1) == JS_AWAIT }?
+            await_as_name |
+
+            // catch-all for misc. invalid syntax
+            expression |
+
+            // only process commas if enclosed in operator parentheses
+            { bracket_types_js.back() == "oLPAREN" }?
+            comma
         )*
 
         {
