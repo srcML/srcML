@@ -3702,7 +3702,7 @@ ternary_check[] { ENTRY_DEBUG } :
                 { inLanguage(LANGUAGE_JAVASCRIPT) }?
                 angle_bracket_pair |
 
-                ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT)
+                ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT | JS_EXTENDS)
             )
         )*
 ;

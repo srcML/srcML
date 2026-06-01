@@ -138,4 +138,8 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>SplitAC</name><argument_list type="generic">&lt;<argument><expr><name>K</name></expr></argument>&gt;</argument_list></name> = <ts:type><name><name>foo</name><argument_list type="generic">&lt;<argument><expr><name>K</name> <ts:extends>extends <ts:type><ternary><condition><expr><name>string</name></expr> ?</condition><then> <expr><name>K</name></expr> </then><else>: <expr><literal type="string">''</literal></expr></else></ternary></ts:type></ts:extends></expr></argument>, <argument><expr><literal type="string">'.'</literal></expr></argument>&gt;</argument_list></name></ts:type> <super_list><extends>extends <super><expr><ternary><condition><expr><name>Ko</name></expr> ?</condition><then> <expr><name>Ko</name></expr> </then><else>: <expr><literal type="string">''</literal></expr></else></ternary></expr></super></extends></super_list></ts:typedef>
+</unit>
+
 </unit>

@@ -33,9 +33,9 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
-  <ts:type><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr>
+  <ts:type><name>T</name> <ts:extends>extends <ts:type><ternary><condition><expr><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></expr>
     ?</condition><then> <expr><name>U</name></expr>
-    </then><else>: <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Set</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><name>U</name></expr> </then><else>: <expr><name>never</name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
+    </then><else>: <expr><name>T</name> <ts:extends>extends <ts:type><ternary><condition><expr><name><name>Set</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>&gt;</argument_list></name></expr> ?</condition><then> <expr><name>U</name></expr> </then><else>: <expr><name>never</name></expr></else></ternary></ts:type></ts:extends></expr></else></ternary></ts:type></ts:extends></ts:type></ts:typedef>
 </unit>
 
 </unit>
