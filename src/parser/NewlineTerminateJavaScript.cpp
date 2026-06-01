@@ -268,6 +268,7 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                     || token->getType() == srcMLParser::JS_NULL
                     || token->getType() == srcMLParser::JS_UNDEFINED
                     || token->getType() == srcMLParser::JS_REGEX
+                    || token->getType() == srcMLParser::JS_VOID
                 )
                 && srcMLParser::name_differentiator_js_token_set.member(nextNonSkipToken->getType())
             )

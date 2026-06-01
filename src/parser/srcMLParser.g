@@ -22722,6 +22722,7 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
             // do not confuse LCURLY with the start of a block
             {
                 last_consumed == COLON
+                || last_consumed == COMMA
                 || last_consumed == REFOPS
                 || last_consumed == QMARK
                 || last_consumed == OPERATORS
@@ -22862,6 +22863,7 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
             // do not confuse LCURLY with the start of a block
             {
                 last_consumed == COLON
+                || last_consumed == COMMA
                 || last_consumed == REFOPS
                 || last_consumed == QMARK
                 || last_consumed == OPERATORS

@@ -299,6 +299,14 @@
 <decl_stmt><decl type="var">var <name>f</name><ts:type>: <lambda><parameter_list>(<parameter><decl><name>a</name> <init>= <expr><literal type="number">3</literal></expr></init></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>number</name></expr></lambda></ts:type></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><ts:specifier>declare</ts:specifier> const <name>duplicateIndetifiers2</name><ts:type>: <lambda><parameter_list>(<parameter><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><ts:type><block>{ <decl_stmt><decl><name>name</name><ts:type>: <name>alias</name></ts:type></decl></decl_stmt> }</block><ts:type>: <name>Named</name></ts:type></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><ts:specifier>declare</ts:specifier> const <name>duplicateIndetifiers3</name><ts:type>: <lambda><parameter_list>(<parameter><decl><ts:type><block>{ <decl_stmt><decl><name>name</name><ts:type>: <name>alias</name></ts:type></decl></decl_stmt> }</block><ts:type>: <name>Named</name></ts:type></ts:type></decl></parameter>, <parameter><decl><ts:type><block>{ <decl_stmt><decl><name>name</name><ts:type>: <name>alias2</name></ts:type></decl></decl_stmt> }</block><ts:type>: <name>Named</name></ts:type></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt>
+</unit>
+
 <!-- Catch Conditions -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
