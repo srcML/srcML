@@ -485,6 +485,29 @@ public:
                 }
             }
 
+            // process line comments (e.g., "// ...") or hashbang comments (e.g., "#! ...")
+            if (
+                (LA(index) == '/' && LA(index + 1) == '/')
+                || (LA(index) == '#' && LA(index + 1) == '!')
+            ) {
+                while (true) {
+                    if (LA(index) == '\n' || LA(index) == -1 /* EOF */)
+                        break;
+                    else
+                        ++index;
+                }
+            }
+
+            // process block comments (e.g., "/* ... */")
+            if (LA(index) == '/' && LA(index + 1) == '*') {
+                while (true) {
+                    if ((LA(index) == '*' && LA(index + 1) == '/') || LA(index) == -1 /* EOF */)
+                        break;
+                    else
+                        ++index;
+                }
+            }
+
             // process HTML comments separately (e.g., "<!-- ... -->")
             if (LA(index) == '<' && LA(index + 1) == '!' && LA(index + 2) == '-' && LA(index + 3) == '-') {
                 while (true) {
