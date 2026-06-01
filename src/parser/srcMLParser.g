@@ -22549,6 +22549,20 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { lcurly_types_js.back() != 'o' && bracket_types_js.back() != "oLCURLY" }?
             colon_type_ts |
 
+            // do not confuse LCURLY with the start of a block
+            { last_consumed == TEMPOPS || last_consumed == COMMA }?
+            {
+                startNewMode(MODE_LOCAL);
+                startElement(SEXPRESSION);
+            }
+            expression_block_js
+            {
+                if (inTransparentMode(MODE_LOCAL)) {
+                    endDownToMode(MODE_LOCAL);
+                    endMode(MODE_LOCAL);
+                }
+            } |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -22712,6 +22726,7 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
                 || last_consumed == QMARK
                 || last_consumed == OPERATORS
                 || last_consumed == LPAREN
+                || last_consumed == TS_KEYOF
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
                 || inTransparentMode(MODE_MIXINS_TS)
                 || inTransparentMode(MODE_TYPEDEF)
@@ -22851,6 +22866,7 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
                 || last_consumed == QMARK
                 || last_consumed == OPERATORS
                 || last_consumed == LPAREN
+                || last_consumed == TS_KEYOF
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
                 || inTransparentMode(MODE_MIXINS_TS)
                 || inTransparentMode(MODE_TYPEDEF)

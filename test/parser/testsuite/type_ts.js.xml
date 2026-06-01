@@ -472,4 +472,17 @@
 <decl_stmt><decl type="var">var <name>d</name><ts:type>: <operator>new</operator><lambda><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> <ts:specifier>declare</ts:specifier> const <name>f</name><ts:type>: <lambda><parameter_list>(<parameter><decl><name>v</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>p</name><ts:type>: <name><name>Omit</name><argument_list type="generic">&lt;<argument><expr><block>{<block_content>
+    <decl_stmt><decl><name>prop</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+    <decl_stmt><decl><name>prop2</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+</block_content>}</block></expr></argument>, <argument><expr><literal type="string">"prop"</literal></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>, <parameter><decl><name>key</name><ts:type>: <ts:operator>keyof</ts:operator> <block>{
+    <decl_stmt><decl><name>prop</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+    <decl_stmt><decl><name>prop2</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></ts:type></decl></parameter>, <parameter><decl><name>p2</name><ts:type>: <name><name>Omit</name><argument_list type="generic">&lt;<argument><expr><block>{<block_content>
+    <decl_stmt><decl><name>prop</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+    <decl_stmt><decl><name>prop2</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+</block_content>}</block></expr></argument>, <argument><expr><literal type="string">"prop"</literal></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt>
+</unit>
+
 </unit>
