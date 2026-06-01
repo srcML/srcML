@@ -79,6 +79,14 @@
 <decl_stmt><decl type="const">const <name>await</name> <init>= <expr><operator>await</operator> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>await</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>await</name> <block>{ }</block></class>
+</unit>
+
 <!-- "break" -->
 
 <unit revision="1.0.0" language="JavaScript">

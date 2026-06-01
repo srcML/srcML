@@ -18988,6 +18988,19 @@ void_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  await_as_name
+
+  Handles cases where "await" is a name in JavaScript.
+*/
+await_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        JS_AWAIT
+;
+
+/*
   check_valid_specifier_js
 
   Checks to see if the current token is a specifier in JavaScript or TypeScript (namespaces).
@@ -20301,7 +20314,10 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
             // nested destructuring
             decl_with_array_destructuring_js | decl_with_object_destructuring_js |
 
-            declaration_init_js | declaration_range_js | tripledotop | compound_name | literals
+            declaration_init_js | declaration_range_js | tripledotop | compound_name |
+
+            // special edge cases for invalid syntax
+            literals | await_as_name
         )*
 
         {

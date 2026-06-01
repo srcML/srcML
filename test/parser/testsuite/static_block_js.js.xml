@@ -11,5 +11,21 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+  <static>static <block>{<block_content>
+    <decl_stmt><decl type="let">let { <decl><name>await</name></decl> } <init>= <expr><object>{}</object> <operator>as</operator> <name>any</name></expr></init></decl></decl_stmt>
+  </block_content>}</block></static>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+  <static>static <block>{<block_content>
+    <decl_stmt><decl type="let">let { <expr><name>await</name></expr>: <decl><name>other</name></decl> } <init>= <expr><object>{}</object> <operator>as</operator> <name>any</name></expr></init></decl></decl_stmt>
+  </block_content>}</block></static>
+}</block></class>
+</unit>
+
 </unit>
 
