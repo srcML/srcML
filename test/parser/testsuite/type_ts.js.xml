@@ -232,6 +232,12 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>A</name> <block>{
+    <function><specifier>static</specifier> <name type="computed">[<expr><name><name>A</name><operator>.</operator><name>p2</name></name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function>
+}</block></class>
+</unit>
+
 <!-- Lambdas -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

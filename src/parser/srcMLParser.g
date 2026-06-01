@@ -1717,7 +1717,7 @@ javascript_statements[] {
         // looking for "[...](){}" to start a statement-level computed property function
         if (
             inMode(MODE_STATEMENT)
-            && (LA(1) == LBRACKET || LA(1) == JS_ASYNC && next_token() == LBRACKET)
+            && (LA(1) == LBRACKET || (LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET)
             && perform_computed_property_as_function_check_js()
         ) {
             computed_property_as_function_js();
@@ -13102,7 +13102,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // looking for "[...](){}" to start a computed property function
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
-            && (LA(1) == LBRACKET || LA(1) == JS_ASYNC && next_token() == LBRACKET)
+            && (LA(1) == LBRACKET || (LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET)
             && perform_computed_property_as_function_check_js()
         }?
         computed_property_as_function_js |
@@ -21480,8 +21480,8 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
         inputState->guessing++;
 
         try {
-            // consume optional "async" before checking
-            if (LA(1) == JS_ASYNC)
+            // consume optional "async" or "static" before checking
+            if (LA(1) == JS_ASYNC || LA(1) == JS_STATIC)
                 consume();
 
             // identify that the first token is "["; if not found, exit
