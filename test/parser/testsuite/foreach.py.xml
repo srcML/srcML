@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="foreach">
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><name>b</name></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><name>b</name></expr></range></control><block>:<block_content>
+    <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><name>b</name></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><name>b</name></expr></range></control><block>:<block_content>
+    <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block></for>
+</unit>
+
+</unit>
