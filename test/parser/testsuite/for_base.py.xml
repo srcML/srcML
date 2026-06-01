@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="for">
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><array>[]</array></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><array>[]</array></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><array>[]</array></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><array>[]</array></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><tuple><expr><name>i</name></expr>, <expr><name>s</name></expr></tuple></expr> <range>in <expr><call><name>zip</name><argument_list>(<argument><expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">5</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><tuple>(<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>)</tuple></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>iter</name><argument_list>(<argument><expr><name>get_next</name></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+</unit>
