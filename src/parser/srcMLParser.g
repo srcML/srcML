@@ -20608,7 +20608,8 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
                 { LA(1) == TS_PRIVATE || LA(1) == TS_PROTECTED || LA(1) == TS_PUBLIC }?
                 declaration_specifiers_ts
             )*
-            compound_name
+
+            (compound_name | bracketless_computed_property_js)
         )
 
         {
@@ -20667,6 +20668,11 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
             // match "NAME"
             if (LA(1) == NAME) {
                 consume();
+                found_name = true;
+            }
+            else {
+                // match a literal, which can be a name in this case
+                literals();
                 found_name = true;
             }
 
@@ -21199,6 +21205,23 @@ colon_property_js[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
         }
+;
+
+/*
+  bracketless_computed_property_js
+
+  Handles computed properties without brackets in JavaScript.  Used for keywordless function names.
+*/
+bracketless_computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
+            startElement(SCOMPUTED_PROPERTY);
+
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            startElement(SEXPRESSION);
+        }
+
+        literals
 ;
 
 /*

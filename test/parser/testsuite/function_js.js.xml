@@ -209,4 +209,24 @@
 <decl_stmt><decl type="const">const <name>j</name> <init>= <expr><function>function <name>bar</name><parameter_list>(<parameter><decl><array>[<expr><name>quz</name></expr>, <expr><name>qux</name></expr>]</array></decl></parameter>, <parameter><decl><name>args</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Literals as Function Names -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>A</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="string">"\""</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>A</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="string">'foo'</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>A</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="number">1</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
 </unit>
