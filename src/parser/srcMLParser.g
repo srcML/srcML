@@ -19116,6 +19116,10 @@ declaration_statement_js[int post_specifier_token = -1] { CompleteElement elemen
                     consume();  // COMMA
                     declaration_js(true, post_specifier_token);
                 }
+                // "," at this point indicates invalid syntax, so break early
+                else if (LA(1) == COMMA) {
+                    break;
+                }
                 else if (decl_start_js_token_set.member(LA(1))) {
                     declaration_js(false, LA(1));
                 }
