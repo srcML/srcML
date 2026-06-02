@@ -22727,6 +22727,16 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
             }?
             declaration_modifiers_ts |
 
+            // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")
+            {
+                LT(1)->getText() == "typeof"
+                && (
+                    last_consumed == JS_ARROW
+                    || (last_consumed == COLON && inMode(MODE_ELSE))
+                )
+            }?
+            typeof_expression_ts |
+
             // only allow a subset of all operators
             {
                 LA(1) == REFOPS
@@ -22868,6 +22878,16 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
             }?
             declaration_modifiers_ts |
 
+            // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")
+            {
+                LT(1)->getText() == "typeof"
+                && (
+                    last_consumed == JS_ARROW
+                    || (last_consumed == COLON && inMode(MODE_ELSE))
+                )
+            }?
+            typeof_expression_ts |
+
             // only allow a subset of all operators
             {
                 LA(1) == REFOPS
@@ -22920,6 +22940,26 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
                     startNewMode(MODE_EXPRESSION);
             }
             expression
+        )*
+;
+
+/*
+  typeof_expression_ts
+
+  Handles TypeScript cases where "typeof" is part of a larger expression, not just an operator.
+  For instance, starting the content after an arrow ("=>") or a ternary else (":").
+*/
+typeof_expression_ts[] { ENTRY_DEBUG } :
+        {
+            // start ternary "else" expression tag before consuming "typeof"
+            if (inMode(MODE_EXPRESSION | MODE_EXPECT))
+                startElement(SEXPRESSION);
+        }
+
+        general_operators  // "typeof"
+
+        (options { greedy = true; } :
+            { LA(1) == EQUAL }? declaration_init_js | expression_part
         )*
 ;
 
