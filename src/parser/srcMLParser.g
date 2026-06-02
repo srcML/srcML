@@ -13006,6 +13006,16 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // special case: "<<", "<<<", etc. that should start a TypeScript generic argument list
+        // note: this is invalid code, but must be handled to avoid crashes and/or infinite loops
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) == OPERATORS
+            && LT(1)->getText().find("<<") != std::string::npos
+            && perform_pseudo_generic_argument_list_check_ts()
+        }?
+        pseudo_generic_argument_list |
+
         // special case: mark "?" and "!" as modifiers in certain TypeScript instances
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
@@ -24931,4 +24941,86 @@ dynamic_module_import_ts[] { CompleteElement element(this); size_t lparen_types_
 
         // either "<...>" or "NAME<...>" after the call argument list
         ({ LA(1) == TEMPOPS }? generic_argument_list_js | compound_name)
+;
+
+/*
+  perform_pseudo_generic_argument_list_check_ts
+
+  Checks to see if "<<", "<<<", etc. are supposed to start a generic argument list in JavaScript/TypeScript.
+  That code will be invalid, but must be handled to avoid crashes and/or infinite loops.
+*/
+perform_pseudo_generic_argument_list_check_ts[] returns [bool islist] {
+        ENTRY_DEBUG
+
+        islist = false;
+        int tempops_count = 0;  // for generic argument list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // suppose each "<" was separate; handle a generic argument list as if this were true
+            std::string token_text = LT(1)->getText();
+            tempops_count = std::count(token_text.begin(), token_text.end(), '<');
+
+            consume();  // "<<" or "<<<" or ... etc.
+
+            // match generic argument list
+            while (true) {
+                if (LA(1) == TEMPOPS)
+                    ++tempops_count;
+
+                if (LA(1) == TEMPOPE) {
+                    --tempops_count;
+
+                    if (tempops_count == 0) {
+                        islist = true;
+                        break;
+                    }
+                }
+
+                consume();
+
+                if (tempops_count < 0 || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    break;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  pseudo_generic_argument_list
+
+  Handles a special case where a generic argument list starts with many "<" in JavaScript/TypeScript.
+  That code will be invalid, but must be handled to avoid crashes and/or infinite loops.
+*/
+pseudo_generic_argument_list[] { CompleteElement element(this); int tempops_count = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_ARGUMENT_LIST);
+            startElement(SGENERIC_ARGUMENT_LIST);
+
+            // suppose each "<" was separate; handle a generic argument list as if this were true
+            std::string token_text = LT(1)->getText();
+            tempops_count = std::count(token_text.begin(), token_text.end(), '<');
+        }
+
+        OPERATORS  // "<<" or "<<<" or ... etc.
+
+        {
+            while (tempops_count > 0) {
+                if (LA(1) == TEMPOPS)
+                    ++tempops_count;
+
+                if (LA(1) == TEMPOPE)
+                    --tempops_count;
+
+                if (LA(1) == 1 /* EOF */)
+                    break;
+
+                consume();
+            }
+        }
 ;

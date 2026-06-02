@@ -442,7 +442,7 @@ OPERATORS options { testLiterals = true; } {
 
         { inLanguage(LANGUAGE_PYTHON) }? '>' |
 
-        '<' ({ inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) }? '<' | '=')? |
+        '<' ({ inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) }? '<' | '=')? ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '<')* |
 
         '='
     )? |
