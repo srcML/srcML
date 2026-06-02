@@ -19249,8 +19249,13 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
 
             declaration_init_js | declaration_range_js | colon_type_ts | compound_name | literals |
 
-            // this logic is only here to handle invalid code and avoid a crash
-            (JS_ARROW (expression_block_js)*)
+            /*
+                these rules are only here to handle invalid code and avoid a crash and/or infinite loop
+            */
+            (
+                (JS_ARROW (expression_block_js)*) |
+                (from_js)
+            )
         )*
 
         {
