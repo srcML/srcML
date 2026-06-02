@@ -23547,7 +23547,14 @@ constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         LBRACKET
 
         (options { greedy = true; } :
-            { LT(1)->getText() == "in" }?
+            {
+                LA(1) == REFOPS
+                || LT(1)->getText() == "-"
+                || LT(1)->getText() == "|"
+                || LT(1)->getText() == "in"
+                || LT(1)->getText() == "keyof"
+                || LT(1)->getText() == "typeof"
+            }?
             general_operators |
 
             compound_name | colon_type_ts
