@@ -23,6 +23,12 @@
 <decl_stmt><decl type="const">const <name>LazyGuardDispatcher</name><ts:type>: <block>{<decl_stmt><decl><ts:constraint><index>[<name>key</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <lambda><parameter_list>(<parameter><decl><modifier>...</modifier><ts:type><name>args</name><ts:type>: <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>any</name></expr></lambda></ts:type></ts:constraint></decl></decl_stmt>}</block></ts:type> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name><name>sum</name><argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><block>{ <decl_stmt><decl><ts:constraint><index>[<name>P</name> <operator>in</operator> <name>T</name>]</index><ts:type>: <name>number</name></ts:type></ts:constraint></decl></decl_stmt> }</block></ts:type></ts:extends></expr></argument>, <argument><expr><name>K</name> <ts:extends>extends <ts:type><ts:operator>keyof</ts:operator> <name>T</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>n</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>v</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name>n</name> <operator>+=</operator> <name><name>v</name><index>[<expr><name>k</name></expr>]</index></name></expr></expr_stmt>
+</block_content>}</block></function>
+</unit>
+
 <!-- The following should NOT be marked as constraints, although they look similar -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

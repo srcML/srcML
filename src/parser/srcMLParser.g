@@ -23546,7 +23546,12 @@ constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         LBRACKET
 
-        (options { greedy = true; } : compound_name | colon_type_ts)*
+        (options { greedy = true; } :
+            { LT(1)->getText() == "in" }?
+            general_operators |
+
+            compound_name | colon_type_ts
+        )*
 
         {
             if (inTransparentMode(MODE_INDEX_TS))
