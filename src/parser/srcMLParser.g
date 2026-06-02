@@ -19924,9 +19924,21 @@ javascript_parameter_list[] { CompleteElement element(this); size_t bracket_type
             }
             comma |
 
-            // parameter that contains a name and a type (e.g., "NAME : TYPE")
+            // parameter that contains an object with a type (e.g., "{}: TYPE")
             (
-                compound_name
+                (declaration_specifiers_ts)*
+                { !perform_lcurly_differentiator_check_js() }?
+                (
+                    (curly_pair)
+                    (declaration_modifiers_ts)*
+                    COLON
+                )
+            ) => complete_javascript_parameter |
+
+            // parameter that contains a name or array with a type (e.g., "NAME: TYPE" or "[]: TYPE")
+            (
+                (declaration_specifiers_ts)*
+                (compound_name | bracket_pair)
                 (declaration_modifiers_ts)*
                 COLON
             ) => complete_javascript_parameter |
@@ -19962,26 +19974,31 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (
-            // array parameter
-            array_js |
+            // consume optional specifiers
+            (declaration_specifiers_ts)*
 
-            // object parameter
-            object_js |
-
-            // rest parameter
             (
-                tripledotop
-                (compound_name | array_js | object_js)
-            ) |
+                // array parameter
+                array_js |
 
-            // decorator parameter (TypeScript)
-            (attribute_ts compound_name colon_type_ts) |
+                // object parameter
+                object_js |
 
-            // typed parameter (TypeScript)
-            colon_type_ts |
+                // rest parameter
+                (
+                    tripledotop
+                    (compound_name | array_js | object_js)
+                ) |
 
-            // regular parameter
-            compound_name
+                // decorator parameter (TypeScript)
+                (attribute_ts compound_name colon_type_ts) |
+
+                // typed parameter (TypeScript)
+                colon_type_ts |
+
+                // regular parameter
+                compound_name
+            )
         )
 
         {
