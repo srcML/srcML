@@ -50,6 +50,27 @@
 }</block></ts:interface>
 </unit>
 
+<!-- Function declarations with Computed Properties -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Foo</name> <block>{
+    <ts:function_decl><ts:specifier>static</ts:specifier> <name type="computed">[<expr><name>k1</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name>number</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Foo</name> <block>{
+    <ts:function_decl><name type="computed">[<expr><name>k1</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name>string</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Foo</name> <block>{
+    <ts:function_decl><ts:specifier>static</ts:specifier> <name type="computed">[<expr><name>k1</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name>number</name></ts:type></ts:function_decl>
+    <ts:function_decl><name type="computed">[<expr><name>k1</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name>string</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
 <!-- Function declarations in blocks -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

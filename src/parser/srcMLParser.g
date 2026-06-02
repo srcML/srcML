@@ -1627,6 +1627,7 @@ javascript_statements[] {
             )
             && (
                 LA(1) == NAME
+                || LA(1) == LBRACKET
                 || LA(1) == TS_DATSIGN
                 || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
                 || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
@@ -22988,7 +22989,11 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
             if (LA(1) == TS_DATSIGN)
                 consume();
 
-            compound_name();
+            // consume a computed property or a NAME
+            if (LA(1) == LBRACKET)
+                bracket_pair();
+            else
+                compound_name();
 
             // handle optional argument list since compound_name will not in guessing mode
             if (LA(1) == TEMPOPS)
@@ -23076,7 +23081,8 @@ function_declaration_ts[] { ENTRY_DEBUG } :
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             (datsign_ts)*
 
-            compound_name
+            (compound_name | computed_property_js)
+
             javascript_parameter_list
         )
 
