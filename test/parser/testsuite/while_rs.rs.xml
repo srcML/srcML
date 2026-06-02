@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="while">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="while_rs">
 
 <unit revision="1.0.0" language="Rust">
 <while>while <condition><expr><name>x</name> <operator>&lt;</operator> <literal type="number">16</literal></expr></condition> <block>{<block_content>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="for">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="for_rs">
 
 <unit revision="1.0.0" language="Rust">
 <for>for <control><name>_</name> <range>in <expr><literal type="number">0</literal><operator>..</operator><name>n</name></expr></range></control> <block>{<block_content>
