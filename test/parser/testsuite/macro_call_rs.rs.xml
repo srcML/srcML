@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="macro_call_rs">
+
+<!-- parentheses -->
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>()</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>(<argument><name>b</name></argument>)</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>(<argument><name>b</name></argument>, <argument><name>c</name></argument>)</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<!-- curly braces -->
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>{}</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>{<argument><expr><literal type="number">0</literal></expr></argument>}</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>{<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>}</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>{<argument><name>b</name></argument>}</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>{<argument><name>b</name></argument>, <argument><name>c</name></argument>}</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<!-- square brackets -->
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>[]</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>[<argument><expr><literal type="number">0</literal></expr></argument>]</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>[<argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>]</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>[<argument><name>b</name></argument>]</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><macro><name>a</name>!<argument_list>[<argument><name>b</name></argument>, <argument><name>c</name></argument>]</argument_list></macro></expr>;</expr_stmt>
+</unit>
+
+</unit>
