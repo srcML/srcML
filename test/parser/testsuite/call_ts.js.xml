@@ -51,4 +51,18 @@
 <decl_stmt><decl type="const">const <name>version</name> <init>= <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>service</name><operator>?.</operator><name>getVersion</name></name>)</expr><operator>?.</operator><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Dynamic Module Import Calls -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> <ts:specifier>declare</ts:specifier> const <name>x</name><ts:type>: <call><name>import</name><argument_list>(<argument><expr><literal type="string">"./foo"</literal></expr></argument>)</argument_list><argument_list type="generic">&lt;<argument><expr><block>{<block_content>
+    <decl_stmt><decl><name>x</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></expr></argument>&gt;</argument_list></call></ts:type></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let"><specifier>export</specifier> <ts:specifier>declare</ts:specifier> let <name>y</name><ts:type>: <call><name>import</name><argument_list>(<argument><expr><literal type="string">"./foo2"</literal></expr></argument>)</argument_list></call><operator>.</operator><name><name>Bar</name><operator>.</operator><name><name>I</name><argument_list type="generic">&lt;<argument><expr><block>{<block_content>
+    <decl_stmt><decl><name>x</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></expr></argument>&gt;</argument_list></name></name></ts:type></decl></decl_stmt>
+</unit>
+
 </unit>

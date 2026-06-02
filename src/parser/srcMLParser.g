@@ -22735,6 +22735,14 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
             }?
             declaration_modifiers_ts |
 
+            // looking for "NAME()<>" to start a dynamic module import
+            {
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
+                && perform_dynamic_module_import_check_ts()
+            }?
+            dynamic_module_import_ts |
+
             // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")
             {
                 LT(1)->getText() == "typeof"
@@ -22885,6 +22893,14 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
                 )
             }?
             declaration_modifiers_ts |
+
+            // looking for "NAME()<>" to start a dynamic module import
+            {
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
+                && perform_dynamic_module_import_check_ts()
+            }?
+            dynamic_module_import_ts |
 
             // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")
             {
@@ -24780,3 +24796,139 @@ perform_declaration_in_class_check_js[] returns [bool isdecl] {
         inputState->guessing--;
         rewind(start);
 } :;
+
+/*
+  perform_dynamic_module_import_check_ts
+
+  Checks to see if a generic argument list follows a call in JavaScript/TypeScript.
+  Typically of the form "NAME(...)<...>".
+*/
+perform_dynamic_module_import_check_ts[] returns [bool isimport] {
+        ENTRY_DEBUG
+
+        isimport = false;
+        int tempops_count = 0;  // for generic argument list
+        int paren_count = 0;  // for parameter list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional "await" before checking
+            if (LA(1) == JS_AWAIT)
+                consume();
+
+            // consume "NAME"
+            if (LA(1) == NAME) {
+                compound_name();
+
+                // match parameter list
+                if (LA(1) == LPAREN) {
+                    while (true) {
+                        if (LA(1) == LPAREN)
+                            ++paren_count;
+
+                        if (LA(1) == RPAREN) {
+                            --paren_count;
+
+                            if (paren_count == 0) {
+                                consume();  // ")"
+                                break;
+                            }
+                        }
+
+                        consume();
+
+                        if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                            break;
+                    }
+
+                    // match generic argument list
+                    if (LA(1) == TEMPOPS) {
+                        while (true) {
+                            if (LA(1) == TEMPOPS)
+                                ++tempops_count;
+
+                            if (LA(1) == TEMPOPE) {
+                                --tempops_count;
+
+                                if (tempops_count == 0) {
+                                    consume();
+
+                                    // dynamic import does not have a block
+                                    if (LA(1) != LCURLY)
+                                        isimport = true;
+
+                                    break;
+                                }
+                            }
+
+                            consume();
+
+                            if (tempops_count < 0 || LA(1) == 1 /* EOF */)
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  dynamic_module_import_ts
+
+  Handles a dynamic module import in JavaScript/TypeScript (e.g., "NAME(...)<...>").
+*/
+dynamic_module_import_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_FUNCTION_CALL);
+            startElement(SFUNCTION_CALL);
+        }
+
+        ((situational_specifiers_js)* compound_name)
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+        }
+
+        call_argument_list
+
+        {
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+
+        // either "<...>" or "NAME<...>" after the call argument list
+        ({ LA(1) == TEMPOPS }? generic_argument_list_js | compound_name)
+;
