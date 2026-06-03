@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="tuple_decl_rs">
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <tuple>(<name>r</name>, <name>g</name>, <name>b</name>)</tuple></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <tuple>(<name>a</name>, <name>b</name>)</tuple> <init>= <expr><tuple>(<expr><literal type="char">'a'</literal></expr>, <expr><literal type="number">98</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <tuple>(<name>a</name>, <name>b</name>)</tuple>: <type><tuple>(<type><name>char</name></type>, <type><name>i32</name></type>)</tuple></type> <init>= <expr><tuple>(<expr><literal type="char">'a'</literal></expr>, <expr><literal type="number">98</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <tuple>(<modifier>mut</modifier> <name>a</name>, <modifier>mut</modifier> <name>b</name>)</tuple>: <type><tuple>(<type><name>char</name></type>, <type><name>i32</name></type>)</tuple></type> <init>= <expr><tuple>(<expr><literal type="char">'a'</literal></expr>, <expr><literal type="number">98</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <tuple>(<name>a</name>, <name>b</name>)</tuple>: <type><tuple>(<type><modifier>&amp;</modifier><name>char</name></type>, <type><modifier>&amp;</modifier><name>i32</name></type>)</tuple></type> <init>= <expr><tuple>(<expr><operator>&amp;</operator><literal type="char">'a'</literal></expr>, <expr><operator>&amp;</operator><literal type="number">98</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <tuple>(<modifier>mut</modifier> <name>a</name>, <modifier>mut</modifier> <name>b</name>)</tuple>: <type><tuple>(<type><modifier>&amp;</modifier><name>char</name></type>, <type><modifier>&amp;</modifier><name>i32</name></type>)</tuple></type> <init>= <expr><tuple>(<expr><operator>&amp;</operator><literal type="char">'a'</literal></expr>, <expr><operator>&amp;</operator><literal type="number">98</literal></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- likely redundant -->
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="const">const <name>TUPLE</name>: <type><tuple>(<type><name>bool</name></type>, <type><name>u8</name></type>)</tuple></type> <init>= <expr><tuple>(<name>A</name>, <name>B</name>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="const">static <name>TUPLE</name>: <type><tuple>(<type><name>bool</name></type>, <type><name>u8</name></type>)</tuple></type> <init>= <expr><tuple>(<name>A</name>, <name>B</name>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>
