@@ -1572,10 +1572,12 @@ javascript_statements[] {
         // special case: detect labels that occur before a statement or a block
         if (
             !inMode(MODE_IGNORE_LABEL_JS)
+            && LA(1) == NAME
             && next_token() == COLON
+            && !inMode(MODE_PROPERTY_JS)
+            && !inMode(MODE_TERNARY)
             && (next_token_two() != LCURLY || perform_label_with_block_check_js())
             && (table_keywords_js_token_set.member(next_token_two()) || next_token_two() == LCURLY)
-            && !(LA(1) == CASE || LA(1) == JS_DEFAULT || inMode(MODE_PROPERTY_JS) || inMode(MODE_TERNARY))
         )
             label_js();
 
@@ -23306,9 +23308,20 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
                     if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */)
                         break;
 
-                    // "() : TYPE {}" is not a function declaration
-                    if (LA(1) == LCURLY) {
+                    // "(): TYPE => {}" is not a function declaration
+                    if (LA(1) == JS_ARROW) {
                         isdecl = false;
+                        break;
+                    }
+
+                    // consume optional TypeScript type
+                    if (LA(1) == COLON && next_token() == LCURLY) {
+                        int curly_type = perform_colon_lcurly_differentiator_check_js();
+
+                        // "() : TYPE {}" is not a function declaration
+                        if (curly_type != 2)
+                            isdecl = false;
+
                         break;
                     }
 
@@ -24044,9 +24057,8 @@ perform_label_with_block_check_js[] returns [bool islabel] {
         inputState->guessing++;
 
         try {
-            // consume what is likely a name
-            while (LA(1) != COLON && LA(1) != LCURLY && LA(1) != 1 /* EOF */)
-                consume();
+            // consume a name
+            compound_name();
 
             if (LA(1) == COLON)
                 consume();
