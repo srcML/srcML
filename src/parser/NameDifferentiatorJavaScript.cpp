@@ -249,6 +249,10 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || prevNonWhitespaceToken->getType() == srcMLParser::JS_AS
             )
         )
+        || (
+            (token->getType() == srcMLParser::CLASS || token->getType() == srcMLParser::JS_FUNCTION)
+            && prevNonWhitespaceToken->getType() == srcMLParser::JS_AS
+        )
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
         || (prevToken->getType() == srcMLParser::QMARK_PERIOD || nextToken->getType() == srcMLParser::QMARK_PERIOD)
         || (token->getType() == srcMLParser::JS_VOID && nextToken->getType() == srcMLParser::JS_ARROW)

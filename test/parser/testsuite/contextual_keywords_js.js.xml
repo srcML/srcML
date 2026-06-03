@@ -590,6 +590,10 @@
 <expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>function</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>_function</name> <alias>as <expr><name>function</name></expr></alias> }</name_list></export>
+</unit>
+
 <!-- "get" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -714,6 +718,14 @@
 <decl_stmt><decl type="const">const <name>in</name> <init>= <expr><name>in</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "infer" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> namespace <name>foo</name> <block>{<block_content>
+    <decl_stmt><decl type="let"><specifier>export</specifier> let <name>infer</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></ts:namespace>
+</unit>
+
 <!-- "instanceof" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -738,6 +750,22 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>instanceof</name> <init>= <expr><name>instanceof</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "is" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> namespace <name>foo</name> <block>{<block_content>
+    <decl_stmt><decl type="let"><specifier>export</specifier> let <name>is</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<!-- "keyof" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> namespace <name>foo</name> <block>{<block_content>
+    <decl_stmt><decl type="let"><specifier>export</specifier> let <name>keyof</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></ts:namespace>
 </unit>
 
 <!-- "let" -->

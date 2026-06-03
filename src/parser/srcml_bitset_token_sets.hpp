@@ -284,7 +284,7 @@ token_set(srcMLParser, name_differentiator_js_token_set,
 
     // TypeScript keywords
     srcMLParser::TS_ABSTRACT, srcMLParser::TS_ASSERTS, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS,
-    srcMLParser::TS_INTERFACE, srcMLParser::TS_IS, srcMLParser::TS_KEYOF, srcMLParser::TS_NAMESPACE,
+    srcMLParser::TS_INFER, srcMLParser::TS_INTERFACE, srcMLParser::TS_IS, srcMLParser::TS_KEYOF, srcMLParser::TS_NAMESPACE,
     srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC,
     srcMLParser::TS_READONLY, srcMLParser::TS_SATISFIES, srcMLParser::TS_TYPE
 )
