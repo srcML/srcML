@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="constructor">
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>B</name><block>:<block_content>
+    <class>class <name>A</name><block>:<block_content>
+        <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+            <pass>pass</pass>
+</block_content></block></function></block_content></block></class></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <expr_stmt><expr><name><name>self</name><operator>.</operator><name>a</name></name> <operator>=</operator> <name>a</name></expr></expr_stmt>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <expr_stmt><expr><name><name>self</name><operator>.</operator><name>a</name></name> <operator>=</operator> <name>a</name></expr></expr_stmt>
+        <expr_stmt><expr><name><name>self</name><operator>.</operator><name>b</name></name> <operator>=</operator> <name>c</name></expr></expr_stmt>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <expr_stmt><expr><name><name>self</name><operator>.</operator><name>a</name></name> <operator>=</operator> <name>a</name></expr></expr_stmt>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <expr_stmt><expr><name><name>self</name><operator>.</operator><name>a</name></name> <operator>=</operator> <name>a</name></expr></expr_stmt>
+        <expr_stmt><expr><name><name>self</name><operator>.</operator><name>b</name></name> <operator>=</operator> <name>c</name></expr></expr_stmt>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+</unit>
