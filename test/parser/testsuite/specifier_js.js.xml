@@ -211,4 +211,12 @@
 }</block></class>
 </unit>
 
+<!-- "public static" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name><name>ConflictTarget</name><argument_list type="generic">&lt;<argument><expr><name>Cols</name></expr></argument>&gt;</argument_list></name> <block>{
+    <ts:function_decl><ts:specifier>public</ts:specifier> <ts:specifier>static</ts:specifier> <name><name>tableColumns</name><argument_list type="generic">&lt;<argument><expr><name>Cols</name></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>cols</name><ts:type>: <operator>(</operator><ts:operator>keyof</ts:operator> <name>Cols</name><operator>)</operator><index>[]</index></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>ConflictTarget</name><argument_list type="generic">&lt;<argument><expr><name>Cols</name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
 </unit>

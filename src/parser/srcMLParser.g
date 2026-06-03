@@ -23087,12 +23087,17 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
 
         try {
             // consume optional specifiers
-            while (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
-                function_declaration_specifiers_ts();
-
-            // consume optional specifiers
-            while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
-                declaration_specifiers_ts();
+            while (true) {
+                if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
+                    function_declaration_specifiers_ts();
+                }
+                else if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
+                    declaration_specifiers_ts();
+                }
+                else {
+                    break;
+                }
+            }
 
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             if (LA(1) == TS_DATSIGN)
@@ -23271,12 +23276,17 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
 
         try {
             // consume optional specifiers
-            while (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
-                function_declaration_specifiers_ts();
-
-            // consume optional specifiers
-            while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
-                declaration_specifiers_ts();
+            while (true) {
+                if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
+                    function_declaration_specifiers_ts();
+                }
+                else if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
+                    declaration_specifiers_ts();
+                }
+                else {
+                    break;
+                }
+            }
 
             // consume optional generic argument list
             if (LA(1) == TEMPOPS)
