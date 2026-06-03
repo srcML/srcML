@@ -3703,7 +3703,14 @@ ternary_check[] { ENTRY_DEBUG } :
                 { inLanguage(LANGUAGE_JAVASCRIPT) }?
                 angle_bracket_pair |
 
-                ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT | JS_EXTENDS)
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
+                curly_pair |
+
+                // disallow ">" if it is the end of a generic argument list
+                { !inLanguage(LANGUAGE_JAVASCRIPT) || !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+                TEMPOPE |
+
+                ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT | TEMPOPE)
             )
         )*
 ;
@@ -13035,6 +13042,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TYPE_TS) }?
         declaration_specifiers_ts |
 
+        // special case: mark "abstract" as a specifier if in operator parentheses
+        { inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN" }?
+        function_declaration_specifiers_ts |
+
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
         keyword_iife_js |
@@ -13267,7 +13278,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             && (
                 !inTransparentMode(MODE_TYPE_TS)
                 || !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
+                || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                || (inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN")
             )
+            && (!inLanguage(LANGUAGE_JAVASCRIPT) || last_consumed != JS_EXTENDS)
             && perform_ternary_check()
         }?
         ternary_expression |
@@ -22713,6 +22727,7 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
                     last_consumed == TEMPOPE
                     && tempops_count_ts == 0
                     && LA(1) != REFOPS
+                    && LA(1) != JS_EXTENDS
                     && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
                     && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
                     && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
@@ -22795,13 +22810,13 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
             // marks "asserts" and "is" as operators
             assertion_function_operator_ts | type_predicate_operator_ts |
 
-            // allow JavaScript ternaries to use existing "else" logic
-            { inTransparentMode(MODE_TERNARY | MODE_THEN) }?
-            colon_marked_js |
-
-            // allow nested types (e.g., in lambdas)
-            { !inTransparentMode(MODE_TERNARY | MODE_THEN) && lparen_types_js.size() > 0 }?
+            // allow nested types (e.g., in lambda parameter lists)
+            { bracket_types_js.back() == "pLPAREN" }?
             colon_type_ts |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { LA(1) == COLON }?
+            colon_marked_js |
 
             // optional generic types (mixins) using the "extends" keyword in TypeScript
             { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
@@ -22872,6 +22887,7 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
                     last_consumed == TEMPOPE
                     && tempops_count_ts == 0
                     && LA(1) != REFOPS
+                    && LA(1) != JS_EXTENDS
                     && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
                     && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
                     && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
@@ -22954,13 +22970,13 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
             // marks "asserts" and "is" as operators
             assertion_function_operator_ts | type_predicate_operator_ts |
 
-            // allow JavaScript ternaries to use existing "else" logic
-            { inTransparentMode(MODE_TERNARY | MODE_THEN) }?
-            colon_marked_js |
-
-            // allow nested types (e.g., in lambdas)
-            { !inTransparentMode(MODE_TERNARY | MODE_THEN) && lparen_types_js.size() > 0 }?
+            // allow nested types (e.g., in lambda parameter lists)
+            { bracket_types_js.back() == "pLPAREN" }?
             colon_type_ts |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { LA(1) == COLON }?
+            colon_marked_js |
 
             // optional generic types (mixins) using the "extends" keyword in TypeScript
             { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
@@ -23099,6 +23115,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
             // found "NAME() :"
             if (LA(1) == COLON) {
                 int tempops_count = 0;
+                int paren_count = 0;
                 isdecl = true;
 
                 while (true) {
@@ -23119,11 +23136,21 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                         }
                     }
 
-                    if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */)
+                    if (LA(1) == LPAREN)
+                        ++paren_count;
+
+                    if (LA(1) == RPAREN)
+                        --paren_count;
+
+                    if (
+                        (LA(1) == TERMINATE && next_token() != RCURLY)
+                        || LA(1) == 1 /* EOF */
+                        || paren_count < 0
+                    )
                         break;
 
                     // determine if "{" starts an object or a kind of block
-                    if (LA(1) == COLON && next_token() == LCURLY) {
+                    if (paren_count == 0 && LA(1) == COLON && next_token() == LCURLY) {
                         if (perform_colon_lcurly_differentiator_check_js() == 2)
                             isdecl = true;
                         else
@@ -23173,6 +23200,8 @@ function_declaration_ts[] { ENTRY_DEBUG } :
             (datsign_ts)*
 
             (compound_name | computed_property_js)
+
+            (generic_argument_list)*
 
             javascript_parameter_list
         )
