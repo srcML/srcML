@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="tuple_rs">
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>()</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>()</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><literal type="number">0</literal></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><literal type="number">0</literal></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="char">'a'</literal></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="char">'a'</literal></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="char">'a'</literal></expr>, <expr><literal type="bool">true</literal></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="char">'a'</literal></expr>, <expr><literal type="bool">true</literal></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><call><name>a</name><argument_list>()</argument_list></call></expr>, <expr><call><name>b</name><argument_list>()</argument_list></call></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><call><name>a</name><argument_list>()</argument_list></call></expr>, <expr><call><name>b</name><argument_list>()</argument_list></call></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><macro><name>a</name>!<argument_list>()</argument_list></macro></expr>, <expr><macro><name>b</name>!<argument_list>()</argument_list></macro></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><macro><name>a</name>!<argument_list>()</argument_list></macro></expr>, <expr><macro><name>b</name>!<argument_list>()</argument_list></macro></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><tuple>()</tuple></expr>, <expr><tuple>()</tuple></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><tuple>()</tuple></expr>, <expr><tuple>()</tuple></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+</unit>
