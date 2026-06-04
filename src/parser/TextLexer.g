@@ -238,44 +238,44 @@ LINE_COMMENT_START options { testLiterals = true; } {
             ~('/' | '[' | ']' | '\\')
         )*
         ('/') (NAME)?
-        { $setType(JS_REGEX); }
-    )?
+        { $setType(JS_REGEX); } |
 
-    ('/' 
-        {
-            // '//' is an operator in Python
-            if (inLanguage(LANGUAGE_PYTHON)) {
-                $setType(OPERATORS);
-                mode = 0;
+        '/'
+            {
+                // '//' is an operator in Python
+                if (inLanguage(LANGUAGE_PYTHON)) {
+                    $setType(OPERATORS);
+                    mode = 0;
+                }
+                else
+                    mode = LINE_COMMENT_END;
             }
-            else
-                mode = LINE_COMMENT_END;
-        }
-        (
-            ('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); mode = LINE_DOXYGEN_COMMENT_END; } |
-            // '//=' is an operator in Python
-            { inLanguage(LANGUAGE_PYTHON) }? ('=')
-        )? |
-    '*'
-        { 
-            $setType(BLOCK_COMMENT_START);
-            mode = BLOCK_COMMENT_END;
-        }
-        (
-            { inLanguage(LANGUAGE_JAVA) }? '*'
-            {
-                $setType(JAVADOC_COMMENT_START);
-                mode = JAVADOC_COMMENT_END;
-            } ('/' { $setType(WHOLE_COMMENT); mode = 0; })? |
-            { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CSHARP) }? ('*' | '!')
-            {
-                $setType(DOXYGEN_COMMENT_START);
-                mode = DOXYGEN_COMMENT_END;
-            } ('/' { $setType(WHOLE_COMMENT); mode = 0; })?
-        )? |
+            (
+                ('/' | '!') { $setType(LINE_DOXYGEN_COMMENT_START); mode = LINE_DOXYGEN_COMMENT_END; } |
+                // '//=' is an operator in Python
+                { inLanguage(LANGUAGE_PYTHON) }? ('=')
+            )? |
+        '*'
+            { 
+                $setType(BLOCK_COMMENT_START);
+                mode = BLOCK_COMMENT_END;
+            }
+            (
+                { inLanguage(LANGUAGE_JAVA) }? '*'
+                {
+                    $setType(JAVADOC_COMMENT_START);
+                    mode = JAVADOC_COMMENT_END;
+                } ('/' { $setType(WHOLE_COMMENT); mode = 0; })? |
+                { inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CSHARP) }? ('*' | '!')
+                {
+                    $setType(DOXYGEN_COMMENT_START);
+                    mode = DOXYGEN_COMMENT_END;
+                } ('/' { $setType(WHOLE_COMMENT); mode = 0; })?
+            )? |
 
-    // /= is an operator
-    '=' )?
+        // /= is an operator
+        '='
+    )?
 
     {
         if (mode != 0) {
