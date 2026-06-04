@@ -22691,10 +22691,12 @@ colon_marked_js[] {
 
   Handles a type in TypeScript.
 */
-type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
+type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_DEBUG } :
         {
-            startNewMode(MODE_TYPE_TS | MODE_NO_BLOCK_CONTENT);
-            startElement(STS_TYPE);
+            if (markup) {
+                startNewMode(MODE_TYPE_TS | MODE_NO_BLOCK_CONTENT);
+                startElement(STS_TYPE);
+            }
 
             is_pseudo_terminate = false;
             is_ternary_colon = true;
@@ -22790,6 +22792,10 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
             }?
             general_operators |
 
+            // allow arguments in a call
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
             // do not confuse LCURLY with the start of a block
             {
                 last_consumed == COLON
@@ -22831,7 +22837,11 @@ type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_D
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION);
             }
-            expression
+            expression |
+
+            // consume commas only if directly inside a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma
         )*
 ;
 
@@ -22861,138 +22871,7 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
             }
         }
 
-        (options { greedy = true; } :
-            // do not include the following as part of a type:
-            // - do not consume the closing RPAREN for certain constructs
-            // - a unary operator that should start a new declaration statement
-            // - after an argument list closing ">" with no generated TERMINATE
-            // - an argument list closing ">" in mixins or template arguments
-            // - "as" or "=" (start of next type/expression)
-            {
-                (
-                    LA(1) == RPAREN
-                    && (
-                        (lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
-                        || (inTransparentMode(MODE_CATCH_LPAREN_JS) && lparen_types_size == lparen_types_js.size())
-                        || (lparen_types_size == lparen_types_js.size() && next_token() == COLON)
-                        || (inTransparentMode(MODE_LAMBDA_JS) && next_token() == JS_ARROW)
-                    )
-                )
-                || (
-                    last_consumed == NAME
-                    && (
-                        LA(1) == DESTOP
-                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
-                    )
-                )
-                || (
-                    last_consumed == TEMPOPE
-                    && tempops_count_ts == 0
-                    && LA(1) != REFOPS
-                    && LA(1) != JS_EXTENDS
-                    && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
-                    && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
-                    && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
-                )
-                || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
-                || (LA(1) == EQUAL && !inTransparentMode(MODE_MIXINS_TS) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
-                || LA(1) == JS_AS
-            }?
-            {
-                // special case: "NAME + unary operator" denotes the end of a TypeScript declaration
-                if (
-                    last_consumed == NAME
-                    && (
-                        LA(1) == DESTOP
-                        || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
-                    )
-                )
-                    is_pseudo_terminate = true;
-
-                break;
-            } |
-
-            // "?" and "!" are valid TypeScript modifiers
-            {
-                !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
-                && (
-                    LA(1) == QMARK
-                    || (LA(1) == OPERATORS && LT(1)->getText() == "!")
-                )
-            }?
-            declaration_modifiers_ts |
-
-            // looking for "NAME()<>" to start a dynamic module import
-            {
-                inLanguage(LANGUAGE_JAVASCRIPT)
-                && (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
-                && perform_dynamic_module_import_check_ts()
-            }?
-            dynamic_module_import_ts |
-
-            // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")
-            {
-                LT(1)->getText() == "typeof"
-                && (
-                    last_consumed == JS_ARROW
-                    || (last_consumed == COLON && inMode(MODE_ELSE))
-                )
-            }?
-            typeof_expression_ts |
-
-            // only allow a subset of all operators
-            {
-                LA(1) == REFOPS
-                || LT(1)->getText() == "-"
-                || LT(1)->getText() == "|"
-                || LT(1)->getText() == "keyof"
-                || LT(1)->getText() == "typeof"
-            }?
-            general_operators |
-
-            // do not confuse LCURLY with the start of a block
-            {
-                last_consumed == COLON
-                || last_consumed == COMMA
-                || last_consumed == REFOPS
-                || last_consumed == QMARK
-                || last_consumed == OPERATORS
-                || last_consumed == LPAREN
-                || last_consumed == TS_KEYOF
-                || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
-                || inTransparentMode(MODE_MIXINS_TS)
-                || inTransparentMode(MODE_TYPEDEF)
-            }?
-            expression_block_js |
-
-            // "void" is a valid TypeScript type name
-            { inTransparentMode(MODE_TYPE_TS) }?
-            void_as_name |
-
-            // marks "asserts" and "is" as operators
-            assertion_function_operator_ts | type_predicate_operator_ts |
-
-            // allow nested types (e.g., in lambda parameter lists)
-            { bracket_types_js.back() == "pLPAREN" }?
-            colon_type_ts |
-
-            // allow JavaScript ternaries to use existing "else" logic
-            { LA(1) == COLON }?
-            colon_marked_js |
-
-            // optional generic types (mixins) using the "extends" keyword in TypeScript
-            { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
-            mixins_ts |
-
-            // allow certain expression, but do not consume LCURLY (could be a block)
-            { LA(1) != LCURLY || (LA(1) == LCURLY && inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)) }?
-            {
-                // no expression tag
-                if (!inMode(MODE_EXPRESSION))
-                    startNewMode(MODE_EXPRESSION);
-            }
-            expression
-        )*
+        type_ts[false]
 ;
 
 /*
