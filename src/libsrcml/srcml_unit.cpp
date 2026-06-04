@@ -311,6 +311,22 @@ LIBSRCML_DECL const char* srcml_unit_get_attribute_value(const struct srcml_unit
  ******************************************************************************/
 
 /**
+ * srcml_unit_get_archive
+ * @param unit a srcml unit
+ *
+ * Get the archive this srcml unit belongs to.
+ *
+ * @returns archive on success and NULL on failure.
+ */
+srcml_archive* srcml_unit_get_archive(const struct srcml_unit* unit) {
+
+    if (unit == nullptr)
+        return 0;
+
+    return unit->archive;
+}
+
+/**
  * srcml_unit_get_src_encoding
  * @param unit a srcml unit
  *
