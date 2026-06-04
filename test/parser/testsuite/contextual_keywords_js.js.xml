@@ -692,6 +692,12 @@
 <decl_stmt><decl type="const">const <name>import</name> <init>= <expr><name>import</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> <specifier>async</specifier> function <name>f</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>mod3</name> <init>= <expr><operator>await</operator> <call><name>import</name> <argument_list>(<argument><expr><literal type="string">"../index.js"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
 <!-- "in" -->
 
 <unit revision="1.0.0" language="JavaScript">

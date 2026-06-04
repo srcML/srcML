@@ -250,6 +250,11 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
         || (
+            prevNonWhitespaceToken->getType() == srcMLParser::JS_AWAIT
+            && srcMLParser::name_differentiator_js_token_set.member(token->getType())
+            && nextToken->getType() == srcMLParser::LPAREN
+        )
+        || (
             (token->getType() == srcMLParser::CLASS || token->getType() == srcMLParser::JS_FUNCTION)
             && prevNonWhitespaceToken->getType() == srcMLParser::JS_AS
         )
