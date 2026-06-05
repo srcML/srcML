@@ -221,6 +221,11 @@ LINE_COMMENT_START options { testLiterals = true; } {
             )
         }?
         (options { greedy = true; } :
+            { LA(1) == '\000' }?
+            {
+                break;
+            } |
+
             { LA(1) == '/' }?
             {
                 if (squarebracketcount != 0)
@@ -235,10 +240,13 @@ LINE_COMMENT_START options { testLiterals = true; } {
 
             ('\\') { if (LA(1) == '\\' || LA(1) == '/') consume(); } |
 
-            ~('/' | '[' | ']' | '\\')
+            ~('/' | '[' | ']' | '\\' | '\000')
         )*
-        ('/') (NAME)?
-        { $setType(JS_REGEX); } |
+        (
+            ('/') (NAME)? { $setType(JS_REGEX); } |
+
+            { $setType(OPERATORS); }
+        ) |
 
         '/'
             {

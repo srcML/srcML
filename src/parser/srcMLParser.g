@@ -19126,58 +19126,56 @@ specifier_js[] { ENTRY_DEBUG } :
 
   Handles a declaration statement in JavaScript.
 */
-declaration_statement_js[int post_specifier_token = -1] { CompleteElement element(this); ENTRY_DEBUG } :
+declaration_statement_js[int post_specifier_token = -1] { CompleteElement element(this); int decl_token = -1; ENTRY_DEBUG } :
         {
             // do not nest declaration statements
             if (!inMode(MODE_DECL_STATEMENT_JS)) {
                 startNewMode(MODE_DECL_STATEMENT_JS);
                 startElement(SDECLARATION_STATEMENT);
             }
+        }
 
-            while (true) {
-                // declaration should not be of the form "NAME ()"
-                if (LA(1) == LPAREN && last_consumed == NAME) {
-                    break;
-                }
-                // termination token signifies the end of the declaration statement
-                else if (LA(1) == TERMINATE) {
-                    consume();  // TERMINATE
-                    break;
-                }
-                // "," followed by a name, "[", or "{" should continue the declaration statement
-                else if (
-                    LA(1) == COMMA
-                    && (
-                        next_token() == NAME
-                        || next_token() == LBRACKET
-                        || next_token() == LCURLY
-                    )
-                ) {
-                    consume();  // COMMA
-                    declaration_js(true, post_specifier_token);
-                }
-                // "," at this point indicates invalid syntax, so break early
-                else if (LA(1) == COMMA) {
-                    break;
-                }
-                else if (decl_start_js_token_set.member(LA(1))) {
-                    declaration_js(false, LA(1));
-                }
-                else if (decl_start_js_token_set.member(post_specifier_token)) {
-                    declaration_js(false, post_specifier_token);
-                }
-                // special case: declaration statement with no specifiers in a class
-                else if (
+        (options { greedy = true; } :
+            // declaration should not be of the form "NAME ()"
+            { LA(1) == LPAREN && last_consumed == NAME }?
+            {
+                break;
+            } |
+
+            // termination token signifies the end of the declaration statement
+            { LA(1) == TERMINATE }?
+            TERMINATE
+            {
+                break;
+            } |
+
+            // "," followed by a name, "[", or "{" should continue the declaration statement
+            { next_token() == NAME || next_token() == LBRACKET || next_token() == LCURLY }?
+            COMMA
+            declaration_js[true, post_specifier_token] |
+
+            // "," at this point indicates invalid syntax, so break early
+            { LA(1) == COMMA }?
+            {
+                break;
+            } |
+
+            {
+                decl_start_js_token_set.member(LA(1))
+                || decl_start_js_token_set.member(post_specifier_token)
+                || (
                     (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS))
                     && (post_specifier_token == NAME || post_specifier_token == LBRACKET)
-                ) {
-                    declaration_js(false, post_specifier_token);
-                }
-                else {
-                    break;
-                }
+                )
+            }?
+            {
+                if (decl_start_js_token_set.member(LA(1)))
+                    decl_token = LA(1);
+                else
+                    decl_token = post_specifier_token;
             }
-        }
+            declaration_js[false, decl_token]
+        )*
 ;
 
 /*
@@ -19224,47 +19222,44 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                     startElement(SDECLARATION);
                     break;
             }
-
-            // "await" is a specifier on a declaration (not an operator)
-            while (LA(1) == JS_AWAIT) {
-                situational_specifiers_js();
-            }
-
-            // mark up any JavaScript/TypeScript specifiers, if applicable
-            while (check_valid_specifier_js()) {
-                if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
-                    declaration_specifiers_ts();
-                else
-                    specifier_js();
-            }
-
-            // consume optional unary operators
-            if ((LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-")) || (LA(1) == DESTOP))
-                general_operators();
         }
 
-        // note: "*" is only here to exclude declarations that start with computed properties (special case)
-        (options { greedy = true; } : JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name)*
+        (
+            (options { greedy = true; } :
+                { LA(1) == JS_AWAIT }?
+                situational_specifiers_js |
 
-        {
-            // handle optional "?" and "!" TypeScript modifiers that appear after the name
-            if (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
-                declaration_modifiers_ts();
+                { check_valid_specifier_js() }?
+                (
+                    {declaration_specifiers_ts_token_set.member((unsigned int) LA(1))}?
+                    declaration_specifiers_ts |
 
-            // handle optional TypeScript specifiers that appear after the keyword
-            if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
-                declaration_specifiers_ts();
+                    specifier_js
+                ) |
 
-            // do not confuse computed property with array destructuring syntax
-            if (LA(1) == LBRACKET && perform_top_level_class_check_js())
-                computed_property_js();
-            // handle optional array destructuring syntax (e.g., "const [a, b]")
-            else if (LA(1) == LBRACKET)
-                decl_with_array_destructuring_js();
-            // handle optional object destructuring syntax (e.g., "const {'key': value}")
-            else if (LA(1) == LCURLY)
-                decl_with_object_destructuring_js();
-        }
+                { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+                declaration_modifiers_ts |
+
+                { (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-")) || LA(1) == DESTOP }?
+                general_operators |
+
+                JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING | compound_name |
+
+                // do not confuse computed property with array destructuring syntax
+                (
+                    { perform_top_level_class_check_js() }?
+                    computed_property_js |
+
+                    // handle optional array destructuring syntax (e.g., "const [a, b]")
+                    { LA(1) == LBRACKET }?
+                    decl_with_array_destructuring_js |
+
+                    // handle optional object destructuring syntax (e.g., "const {'key': value}")
+                    { LA(1) == LCURLY }?
+                    decl_with_object_destructuring_js
+                )
+            )*
+        )
 
         (options { greedy = true; } :
             // ensure the declaration ends before a termination token or comma
@@ -19279,7 +19274,7 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 these rules are only here to handle invalid code and avoid a crash and/or infinite loop
             */
             (
-                (JS_ARROW (expression_block_js)*) |
+                (JS_ARROW (options { greedy = true; } : expression_block_js)*) |
                 (from_js)
             )
         )*
