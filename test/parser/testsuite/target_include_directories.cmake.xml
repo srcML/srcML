@@ -241,4 +241,36 @@
 <command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PUBLIC</name></option> <option><name>PRIVATE</name></option> <option><name>INTERFACE</name></option>)</argument_list></command>
 </unit>
 
+<unit revision="1.0.0" language="CMake">
+<command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PUBLIC</name> <argument><expr><name>src</name></expr></argument></option> <option><name>PRIVATE</name> <argument><expr><name>src2</name></expr></argument></option> <option><name>INTERFACE</name> <argument><expr><name>src3</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>PUBLIC</name> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument></option> <option><name>PRIVATE</name> <argument><expr><name>src3</name></expr></argument> <argument><expr><name>src4</name></expr></argument></option> <option><name>INTERFACE</name> <argument><expr><name>src5</name></expr></argument> <argument><expr><name>src6</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>SYSTEM</name></option> <option><name>BEFORE</name></option> <option><name>PUBLIC</name></option> <option><name>PRIVATE</name></option> <option><name>INTERFACE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>SYSTEM</name></option> <option><name>BEFORE</name></option> <option><name>PUBLIC</name> <argument><expr><name>src</name></expr></argument></option> <option><name>PRIVATE</name> <argument><expr><name>src2</name></expr></argument></option> <option><name>INTERFACE</name> <argument><expr><name>src3</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>SYSTEM</name></option> <option><name>BEFORE</name></option> <option><name>PUBLIC</name> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument></option> <option><name>PRIVATE</name> <argument><expr><name>src3</name></expr></argument> <argument><expr><name>src4</name></expr></argument></option> <option><name>INTERFACE</name> <argument><expr><name>src5</name></expr></argument> <argument><expr><name>src6</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>SYSTEM</name></option> <option><name>BEFORE</name></option> <option><name>AFTER</name></option> <option><name>PUBLIC</name></option> <option><name>PRIVATE</name></option> <option><name>INTERFACE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>SYSTEM</name></option> <option><name>BEFORE</name></option> <option><name>AFTER</name></option> <option><name>PUBLIC</name> <argument><expr><name>src</name></expr></argument></option> <option><name>PRIVATE</name> <argument><expr><name>src2</name></expr></argument></option> <option><name>INTERFACE</name> <argument><expr><name>src3</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>target_include_directories</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>SYSTEM</name></option> <option><name>BEFORE</name></option> <option><name>AFTER</name></option> <option><name>PUBLIC</name> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument></option> <option><name>PRIVATE</name> <argument><expr><name>src3</name></expr></argument> <argument><expr><name>src4</name></expr></argument></option> <option><name>INTERFACE</name> <argument><expr><name>src5</name></expr></argument> <argument><expr><name>src6</name></expr></argument></option>)</argument_list></command>
+</unit>
+
 </unit>
