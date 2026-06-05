@@ -10,11 +10,11 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr><tuple>(<expr><literal type="number">0</literal></expr>)</tuple></expr>
+<expr><tuple>(<expr><literal type="number">0</literal></expr>,)</tuple></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr_stmt><expr><tuple>(<expr><literal type="number">0</literal></expr>)</tuple></expr>;</expr_stmt>
+<expr_stmt><expr><tuple>(<expr><literal type="number">0</literal></expr>,)</tuple></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
@@ -55,6 +55,80 @@
 
 <unit revision="1.0.0" language="Rust">
 <expr_stmt><expr><tuple>(<expr><tuple>()</tuple></expr>, <expr><tuple>()</tuple></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>x</name> <operator>=</operator> <tuple>(<expr><literal type="string">"hello"</literal></expr>, <expr><literal type="string">"world"</literal></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>x</name> <operator>=</operator> <tuple>(<expr><literal type="string">"hello"</literal></expr>, <expr><literal type="string">"world"</literal></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><operator>(</operator><name>a</name><operator>)</operator></expr>, <expr><operator>(</operator><name>b</name><operator>)</operator></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><operator>(</operator><name>a</name><operator>)</operator></expr>, <expr><operator>(</operator><name>b</name><operator>)</operator></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>null</name> <operator>=</operator> <tuple>()</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>null</name> <operator>=</operator> <tuple>()</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>null</name> <operator>=</operator> <operator>(</operator><tuple>()</tuple><operator>)</operator></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>null</name> <operator>=</operator> <operator>(</operator><tuple>()</tuple><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>null</name> <operator>=</operator> <operator>(</operator><operator>(</operator><tuple>()</tuple><operator>)</operator><operator>)</operator></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>null</name> <operator>=</operator> <operator>(</operator><operator>(</operator><tuple>()</tuple><operator>)</operator><operator>)</operator></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<tuple>(<literal type="number">0</literal>, <literal type="number">1</literal>)</tuple>, <tuple>(<name>a</name>, <name>b</name>)</tuple>, <tuple>()</tuple>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<tuple>(<literal type="number">0</literal>, <literal type="number">1</literal>)</tuple>, <tuple>(<name>a</name>, <name>b</name>)</tuple>, <tuple>()</tuple>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>tuple</name> <operator>=</operator> <tuple>(
+  <expr><ternary>if <condition><expr><name>a</name></expr></condition> <then><block>{<block_content> <return type="implicit"><expr><literal type="number">0</literal></expr></return> </block_content>}</block></then> <else>else <block>{<block_content> <return type="implicit"><expr><call><name>b</name><argument_list>()</argument_list></call></expr></return> </block_content>}</block></else></ternary></expr>,
+  <name>c</name>
+)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>tuple</name> <operator>=</operator> <tuple>(
+  <expr><ternary>if <condition><expr><name>a</name></expr></condition> <then><block>{<block_content> <return type="implicit"><expr><literal type="number">0</literal></expr></return> </block_content>}</block></then> <else>else <block>{<block_content> <return type="implicit"><expr><call><name>b</name><argument_list>()</argument_list></call></expr></return> </block_content>}</block></else></ternary></expr>,
+  <name>c</name>
+)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<name>a</name>, <name>b</name>)</tuple> <operator>=</operator> <tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<name>a</name>, <name>b</name>)</tuple> <operator>=</operator> <tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><call><name>a</name><argument_list>(<argument><expr><tuple>(<name>b</name>, <name>c</name>)</tuple></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>, <name>d</name>)</tuple></expr>;</expr_stmt>
 </unit>
 
 </unit>
