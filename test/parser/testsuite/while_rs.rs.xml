@@ -32,7 +32,7 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<while><label>'<name>outer</name>:</label> while <condition><expr><name>n</name> <operator>&lt;</operator> <literal type="number">4</literal></expr></condition> <block>{<block_content>
+<label>'<name>outer</name>:</label> <while>while <condition><expr><name>n</name> <operator>&lt;</operator> <literal type="number">4</literal></expr></condition> <block>{<block_content>
   <while>while <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">8</literal></expr></condition> <block>{<block_content>
     <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
     <expr_stmt><expr><name>result</name> <operator>-=</operator> <name>i</name></expr>;</expr_stmt>
@@ -44,6 +44,12 @@
   <expr_stmt><expr><name>n</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
 
 </block_content>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><label>'<name>label</name>:</label> <while>while <condition><expr><name>n</name> <operator>&lt;</operator> <literal type="number">8</literal></expr></condition> <block>{<block_content>
+  <break>break '<name>label</name>;</break>
+</block_content>}</block></while></expr></init></decl>;</decl_stmt>
 </unit>
 
 </unit>
