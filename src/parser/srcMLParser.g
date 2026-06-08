@@ -22687,15 +22687,29 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 }
             } |
 
+            // allow "const" to support constant type parameters
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            expression |
+            (const_as_specifier_ts | expression) |
 
             // optional generic types (mixins) using the "extends" keyword in TypeScript
             mixins_ts
         )+
+;
+
+/*
+  const_as_specifier_ts
+
+  Marks "const" as a specifier in TypeScript generic argument lists.
+*/
+const_as_specifier_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(STS_SPECIFIER);
+        }
+
+        JS_CONST
 ;
 
 /*

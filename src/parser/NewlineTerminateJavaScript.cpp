@@ -142,7 +142,7 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
             // the next non-skip token is the end of the file
             || (nextNonSkipToken->getType() == 1 /* EOF */)
 
-            // token is JS_DEBUGGER (always insert a terminate after a JS_DEBUGGER token) 
+            // token is JS_DEBUGGER (always insert a terminate after a JS_DEBUGGER token)
             || (token->getType() == srcMLParser::JS_DEBUGGER)
 
             // both token and the next non-skip token are any combination of the following:
@@ -270,7 +270,16 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                     || token->getType() == srcMLParser::JS_REGEX
                     || token->getType() == srcMLParser::JS_VOID
                 )
-                && srcMLParser::name_differentiator_js_token_set.member(nextNonSkipToken->getType())
+                && (
+                    (
+                        nextNonSkipToken->getType() != srcMLParser::JS_CONST
+                        && srcMLParser::name_differentiator_js_token_set.member(nextNonSkipToken->getType())
+                    )
+                    || (
+                        nextNonSkipToken->getType() == srcMLParser::JS_CONST
+                        && token->getType() != srcMLParser::TEMPOPS
+                    )
+                )
             )
 
             // an EOL separates RPAREN/RBRACKET and any non-skip token if top-level
