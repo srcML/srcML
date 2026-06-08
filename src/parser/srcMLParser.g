@@ -21079,7 +21079,7 @@ perform_lone_parameter_lambda_check_js[] returns [bool islambda] {
 
             // consume lone name (however, it could be longer than 1 token)
             if (LA(1) == NAME)
-                compound_name();
+                consume();
 
             if (LA(1) == JS_ARROW)
                 islambda = true;
@@ -24252,7 +24252,7 @@ perform_generic_function_check_ts[] returns [bool isfunction] {
 
             // consume "NAME"
             if (LA(1) == NAME) {
-                compound_name();
+                consume();  // "NAME"
 
                 // match generic argument list
                 if (LA(1) == TEMPOPS) {
