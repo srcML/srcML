@@ -19856,14 +19856,7 @@ derivation_list_js[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // ensure the super list ends before the start of the class or interface block
             {
-                (
-                    LA(1) == LCURLY
-                    && (
-                        inTransparentMode(MODE_CLASS)
-                        || inTransparentMode(MODE_CLASS_EXPRESSION_JS)
-                        || inTransparentMode(MODE_INTERFACE_TS)
-                    )
-                )
+                (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
                 || LA(1) == JS_EXTENDS
                 || LA(1) == TS_IMPLEMENTS
             }?
@@ -19872,11 +19865,7 @@ derivation_list_js[] { ENTRY_DEBUG } :
             } |
 
             // allow commas for implementing multiple interfaces in TypeScript
-            {
-                inTransparentMode(MODE_INTERFACE_TS)
-                || inTransparentMode(MODE_CLASS)
-                || inTransparentMode(MODE_CLASS_EXPRESSION_JS)
-            }?
+            { LA(1) == COMMA }?
             COMMA |
 
             super_js
@@ -19897,15 +19886,8 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         (options { greedy = true; } :
             // ensure the super ends before the start of a block or a comma
             {
-                (
-                    LA(1) == LCURLY
-                    && (
-                        inTransparentMode(MODE_CLASS)
-                        || inTransparentMode(MODE_CLASS_EXPRESSION_JS)
-                        || inTransparentMode(MODE_INTERFACE_TS)
-                    )
-                )
-                || (LA(1) == COMMA && inTransparentMode(MODE_INTERFACE_TS))
+                (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
+                || (LA(1) == COMMA && bracket_types_js.back() != "cLPAREN")
                 || LA(1) == JS_EXTENDS
                 || LA(1) == TS_IMPLEMENTS
             }?
@@ -20550,9 +20532,11 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_ARRAY_JS))
                 endDownToMode(MODE_ARRAY_JS);
-        }
 
-        RBRACKET
+            // consume array-ending bracket, if it exists
+            if (LA(1) == RBRACKET)
+                consume();  // "]"
+        }
 ;
 
 /*
