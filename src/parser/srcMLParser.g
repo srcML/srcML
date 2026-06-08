@@ -19142,8 +19142,11 @@ declaration_statement_js[int post_specifier_token = -1] { CompleteElement elemen
         }
 
         (options { greedy = true; } :
-            // declaration should not be of the form "NAME ()"
-            { LA(1) == LPAREN && last_consumed == NAME }?
+            // declaration should not be of the form "NAME ()" or contain "as"
+            {
+                (LA(1) == LPAREN && last_consumed == NAME)
+                || LA(1) == JS_AS
+            }?
             {
                 break;
             } |
