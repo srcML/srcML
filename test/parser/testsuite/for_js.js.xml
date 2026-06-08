@@ -84,6 +84,11 @@
 </block_content>}</block></for>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>async</name></decl></decl_stmt>
+<for>for <control>(<init><decl><name>async</name> <range>of <expr><array>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
 <!-- "for await...of" -->
 
 <unit revision="1.0.0" language="JavaScript">

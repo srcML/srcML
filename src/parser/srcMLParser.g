@@ -19423,35 +19423,44 @@ for_control_js[] { ENTRY_DEBUG } :
 
   Handles the first portion of a control in JavaScript.
 */
-control_initialization_js[] { CompleteElement element(this); ENTRY_DEBUG } :
-        {
-            std::array<int, 3> post_specifier_tokens = perform_post_specifier_check_js();
+control_initialization_js[] {
+        CompleteElement element(this);
+        std::array<int, 3> post_specifier_tokens = perform_post_specifier_check_js();
+        int decl_token = -1;
 
+        ENTRY_DEBUG
+} :
+        {
             startNewMode(MODE_CONTROL_INITIALIZATION);
             startElement(SCONTROL_INITIALIZATION);
-
-            while (true) {
-                // termination token or right parenthesis signifiy the end of the initialization
-                if (LA(1) == TERMINATE || LA(1) == RPAREN) {
-                    break;
-                }
-                // allow "," followed by a name as an additional declaration
-                else if (LA(1) == COMMA && next_token() == NAME) {
-                    consume();  // COMMA
-                    declaration_js(true, post_specifier_tokens[0]);
-                }
-                // allow names in "for await...of" and "for each...in" loops
-                else if (decl_start_js_token_set.member(LA(1)) || LA(1) == NAME) {
-                    declaration_js(false, LA(1));
-                }
-                else if (decl_start_js_token_set.member(post_specifier_tokens[0])) {
-                    declaration_js(false, post_specifier_tokens[0]);
-                }
-                else {
-                    break;
-                }
-            }
         }
+
+        (options { greedy = true; } :
+            // termination token or right parenthesis signifiy the end of the initialization
+            { LA(1) == TERMINATE || LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            // allow "," followed by a name as an additional declaration
+            { next_token() == NAME }?
+            (COMMA declaration_js[true, post_specifier_tokens[0]]) |
+
+            {
+                LA(1) == NAME
+                || decl_start_js_token_set.member(LA(1))
+                || decl_start_js_token_set.member(post_specifier_tokens[0])
+            }?
+            {
+                // allow names in "for await...of" and "for each...in" loops
+                if (decl_start_js_token_set.member(LA(1)) || LA(1) == NAME)
+                    decl_token = LA(1);
+                // allow keywords that follow one or more specifiers
+                else if (decl_start_js_token_set.member(post_specifier_tokens[0]))
+                    decl_token = post_specifier_tokens[0];
+            }
+            declaration_js[false, decl_token]
+        )*
 ;
 
 /*
