@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="tuple_rs">
 
+<!-- tuple expressions -->
+
 <unit revision="1.0.0" language="Rust">
 <expr><tuple>()</tuple></expr>
 </unit>
@@ -31,6 +33,14 @@
 
 <unit revision="1.0.0" language="Rust">
 <expr_stmt><expr><tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="char">'a'</literal></expr>, <expr><literal type="bool">true</literal></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><call><name>a</name><argument_list>()</argument_list></call></expr>,)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><call><name>a</name><argument_list>()</argument_list></call></expr>,)</tuple></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
@@ -98,37 +108,67 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr><tuple>(<tuple>(<literal type="number">0</literal>, <literal type="number">1</literal>)</tuple>, <tuple>(<name>a</name>, <name>b</name>)</tuple>, <tuple>()</tuple>)</tuple></expr>
+<expr><tuple>(<tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>)</tuple>, <tuple>(<expr><name>a</name></expr>, <expr><name>b</name></expr>)</tuple>, <tuple>()</tuple>)</tuple></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr_stmt><expr><tuple>(<tuple>(<literal type="number">0</literal>, <literal type="number">1</literal>)</tuple>, <tuple>(<name>a</name>, <name>b</name>)</tuple>, <tuple>()</tuple>)</tuple></expr>;</expr_stmt>
+<expr_stmt><expr><tuple>(<tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>)</tuple>, <tuple>(<expr><name>a</name></expr>, <expr><name>b</name></expr>)</tuple>, <tuple>()</tuple>)</tuple></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
 <expr><name>tuple</name> <operator>=</operator> <tuple>(
   <expr><ternary>if <condition><expr><name>a</name></expr></condition> <then><block>{<block_content> <return type="implicit"><expr><literal type="number">0</literal></expr></return> </block_content>}</block></then> <else>else <block>{<block_content> <return type="implicit"><expr><call><name>b</name><argument_list>()</argument_list></call></expr></return> </block_content>}</block></else></ternary></expr>,
-  <name>c</name>
+  <expr><name>c</name></expr>
 )</tuple></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
 <expr_stmt><expr><name>tuple</name> <operator>=</operator> <tuple>(
   <expr><ternary>if <condition><expr><name>a</name></expr></condition> <then><block>{<block_content> <return type="implicit"><expr><literal type="number">0</literal></expr></return> </block_content>}</block></then> <else>else <block>{<block_content> <return type="implicit"><expr><call><name>b</name><argument_list>()</argument_list></call></expr></return> </block_content>}</block></else></ternary></expr>,
-  <name>c</name>
+  <expr><name>c</name></expr>
 )</tuple></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr><tuple>(<name>a</name>, <name>b</name>)</tuple> <operator>=</operator> <tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>)</tuple></expr>
+<expr><tuple>(<expr><name>a</name></expr>, <expr><name>b</name></expr>)</tuple> <operator>=</operator> <tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>)</tuple></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr_stmt><expr><tuple>(<name>a</name>, <name>b</name>)</tuple> <operator>=</operator> <tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>)</tuple></expr>;</expr_stmt>
+<expr_stmt><expr><tuple>(<expr><name>a</name></expr>, <expr><name>b</name></expr>)</tuple> <operator>=</operator> <tuple>(<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>)</tuple></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr_stmt><expr><tuple>(<expr><call><name>a</name><argument_list>(<argument><expr><tuple>(<name>b</name>, <name>c</name>)</tuple></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>, <name>d</name>)</tuple></expr>;</expr_stmt>
+<expr_stmt><expr><tuple>(<expr><call><name>a</name><argument_list>(<argument><expr><tuple>(<expr><name>b</name></expr>, <expr><name>c</name></expr>)</tuple></expr></argument>, <argument><expr><name>c</name></expr></argument>)</argument_list></call></expr>, <expr><name>d</name></expr>)</tuple></expr>;</expr_stmt>
+</unit>
+
+<!-- tuple types -->
+
+<unit revision="1.0.0" language="Rust">
+<type><tuple>(<type><name>i32</name></type>,)</tuple></type>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<type><tuple>(<type><name>i32</name></type>, <type><name>char</name></type>)</tuple></type>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<type><tuple>(<type><name>i32</name></type>, <type><name>char</name></type>, <type><name>bool</name></type>)</tuple></type>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<type><tuple>(<type><modifier>mut</modifier> <name>i32</name></type>,)</tuple></type>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<type><tuple>(<type><modifier>mut</modifier> <name>i32</name></type>, <type><modifier>mut</modifier> <name>char</name></type>, <type><modifier>mut</modifier> <name>bool</name></type>)</tuple></type>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<type><tuple>(<type><modifier>&amp;</modifier><specifier>mut</specifier> <name>i32</name></type>,)</tuple></type>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<type><tuple>(<type><modifier>&amp;</modifier><specifier>mut</specifier> <name>i32</name></type>, <type><modifier>&amp;</modifier><specifier>mut</specifier> <name>char</name></type>, <type><modifier>&amp;</modifier><specifier>mut</specifier> <name>bool</name></type>)</tuple></type>
 </unit>
 
 </unit>
