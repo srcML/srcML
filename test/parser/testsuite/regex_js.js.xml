@@ -127,6 +127,25 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexes</name> <init>= <expr><array>[
+    <expr><literal type="regex">/[[]/</literal></expr> <comment type="line">// Valid</comment>
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexes</name> <init>= <expr><array>[
+    <expr><literal type="regex">/[[]/u</literal></expr> <comment type="line">// Valid</comment>
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexes</name> <init>= <expr><array>[
+    <expr><literal type="regex">/[[]/</literal></expr>, <comment type="line">// Valid</comment>
+    <expr><literal type="regex">/[[]/u</literal></expr>, <comment type="line">// Valid</comment>
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Regular expressions following ':' -->
 
 <unit revision="1.0.0" language="JavaScript">

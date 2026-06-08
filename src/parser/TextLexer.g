@@ -236,7 +236,10 @@ LINE_COMMENT_START options { testLiterals = true; } {
 
             ('[') { ++squarebracketcount; } |
 
-            (']') { if (squarebracketcount > 0) --squarebracketcount; } |
+            (']') {
+                if (squarebracketcount > 0 && LA(1) == '/') squarebracketcount = 0;
+                else if (squarebracketcount > 0) --squarebracketcount;
+            } |
 
             ('\\') { if (LA(1) == '\\' || LA(1) == '/') consume(); } |
 
