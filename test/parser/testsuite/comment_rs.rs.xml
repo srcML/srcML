@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="comment_rs">
+
+<!-- standard line comments -->
+
+<unit revision="1.0.0" language="Rust"><comment type="line">//</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="line">// !"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="line">//a</comment></unit>
+
+<!-- this is a standard comment, despite the 3 leading slashes -->
+<unit revision="1.0.0" language="Rust"><comment type="line">////</comment></unit>
+
+<!-- standard block comments -->
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block">/**/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block">/*
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block">/*
+a
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block">/*
+!"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+*/</comment>
+</unit>
+
+<!-- empty 2-asterisk block are NOT documentation blocks, they are standard blocks -->
+<unit revision="1.0.0" language="Rust">
+<comment type="block">/***/</comment>
+</unit>
+
+<!-- this is a standard comment, despite the 2 leading asterisks -->
+<unit revision="1.0.0" language="Rust">
+<comment type="block">/***
+*/</comment>
+</unit>
+
+<!-- inner documentation line comments -->
+
+<unit revision="1.0.0" language="Rust"><comment type="line inner">//!</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="line inner">//!!</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="line inner">//! !"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="line inner">//!a</comment></unit>
+
+<!-- outer documentation line comments -->
+
+<unit revision="1.0.0" language="Rust"><comment type="line outer">///</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="line outer">/// !"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="line outer">///a</comment></unit>
+
+<!-- inner documentation block comments -->
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block inner">/*!*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block inner">/*!!*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block inner">/*!
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block inner">/*!
+a
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block inner">/*!
+!"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+*/</comment>
+</unit>
+
+<!-- outer documentation block comments -->
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block outer">/**
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block outer">/**
+a
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block outer">/**
+!"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+*/</comment>
+</unit>
+
+<!-- comment block nesting -->
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block">/* <comment type="block">/* */</comment>  <comment type="block inner">/*! */</comment> <comment type="block outer">/** */</comment> */</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block inner">/*! <comment type="block">/* */</comment>  <comment type="block inner">/*! */</comment> <comment type="block outer">/** */</comment> */</comment>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<comment type="block outer">/** <comment type="block">/* */</comment>  <comment type="block inner">/*! */</comment> <comment type="block outer">/** */</comment> */</comment>
+</unit>
+
+</unit>
