@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="function_rs">
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>hello</name><parameter_list>(<parameter><decl><name>string</name>: <type><modifier>&amp;</modifier><name>str</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><literal type="string">"Hello "</literal></expr>;</expr_stmt>
+  <expr_stmt><expr><name>string</name></expr>;</expr_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>is_even</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> -&gt; <type><name>bool</name></type> <block>{<block_content>
+  <return>return <expr><operator>(</operator><name>x</name> <operator>%</operator> <literal type="number">2</literal><operator>)</operator> <operator>==</operator> <literal type="number">0</literal></expr>;</return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub</specifier> fn <name>get_rectangle_area</name><parameter_list>(<parameter><decl><modifier>mut</modifier> <name>width</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><modifier>mut</modifier> <name>height</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return type="implicit"><expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub</specifier> fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;&gt;</parameter_list><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub</specifier> fn <name>a</name><parameter_list type="generic">&lt;&gt;</parameter_list><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub</specifier> fn <name>a</name><parameter_list type="generic">&lt;&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub</specifier> fn <name>a</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub</specifier> fn <name>a</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub</specifier> fn <name>function</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>, <parameter><name>S</name></parameter>, <parameter><name>U</name></parameter>, <parameter><name>V</name></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name>: <type><modifier>&amp;</modifier><name>T</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><modifier>&amp;</modifier><name>S</name></type></decl></parameter>, <parameter><decl><name>c</name>: <type><modifier>&amp;</modifier><name>U</name></type></decl></parameter>)</parameter_list> -&gt; <type><tuple>()</tuple></type>
+<where>where <name>T</name><constraint>: <name>A</name></constraint>,
+  <name>S</name><constraint>: <name>B</name></constraint>,
+  <name>U</name><constraint>: <name>C</name></constraint></where>
+<block>{<block_content/>}</block></function>
+</unit>
+
+<type><modifier>&amp;</modifier><name>char</name></type>
+
+</unit>
