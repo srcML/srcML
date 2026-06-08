@@ -209,6 +209,60 @@
 <decl_stmt><decl type="const">const <name>j</name> <init>= <expr><function>function <name>bar</name><parameter_list>(<parameter><decl><array>[<expr><name>quz</name></expr>, <expr><name>qux</name></expr>]</array></decl></parameter>, <parameter><decl><name>args</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Keywordless Functions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
+    <specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>logged</name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></ts:attribute>
+    <specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function type="generator"><specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function type="generator"><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
+    <specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function type="generator"><ts:attribute>@<expr><call><name>logged</name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></ts:attribute>
+    <specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Literals as Function Names -->
 
 <unit revision="1.0.0" language="JavaScript">

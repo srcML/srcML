@@ -13148,7 +13148,13 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_function_check_js() }?
         {
             startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
-            startElement(SFUNCTION_DEFINITION);
+
+            // generator keywordless function
+            if (perform_generator_function_check_js())
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            // regular keywordless function
+            else
+                startElement(SFUNCTION_DEFINITION);
         }
         ((attribute_ts)+ keywordless_function_expression_js[false]) |
 
@@ -20694,7 +20700,13 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
             // tag would be created already if TypeScript attributes precede the function
             if (markup) {
                 startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
-                startElement(SFUNCTION_DEFINITION);
+
+                // generator keywordless function
+                if (perform_generator_function_check_js())
+                    startElement(SFUNCTION_GENERATOR_STATEMENT);
+                // regular keywordless function
+                else
+                    startElement(SFUNCTION_DEFINITION);
             }
         }
 
@@ -20707,6 +20719,9 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
                 { LA(1) == TS_PRIVATE || LA(1) == TS_PROTECTED || LA(1) == TS_PUBLIC }?
                 declaration_specifiers_ts
             )*
+
+            // optional "*" for generator functions
+            (MULTOPS)*
 
             (compound_name | bracketless_computed_property_js)
         )
@@ -20762,6 +20777,10 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                 || LA(1) == TS_PUBLIC
                 || LA(1) == JS_STATIC
             )
+                consume();
+
+            // match optional "*" for generator functions
+            if (LA(1) == MULTOPS)
                 consume();
 
             // match "NAME"
@@ -20867,6 +20886,55 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                             isfunction = true;
                     }
                 }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_generator_function_check_js
+
+  Checks to see if a keywordless function is a generator (i.e., has "*") or not in JavaScript/TypeScript.
+*/
+perform_generator_function_check_js[] returns [bool isgenerator] {
+        ENTRY_DEBUG
+
+        isgenerator = false;
+        bool in_decorator = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (true) {
+                if (!in_decorator && LA(1) == MULTOPS) {
+                    consume();  // "*"
+
+                    // found "*NAME"
+                    if (LA(1) == NAME)
+                        isgenerator = true;
+
+                    break;
+                }
+
+                // decorators can have parentheses, so ignore them
+                if (LA(1) == TS_ATSIGN)
+                    in_decorator = true;
+
+                if (
+                    (!in_decorator && (LA(1) == LPAREN || LA(1) == TERMINATE))
+                    || LA(1) == 1 /* EOF */
+                )
+                    break;
+
+                // no longer in a decorator
+                if (LA(1) == TERMINATE && in_decorator)
+                    in_decorator = false;
+
+                consume();
             }
         }
         catch (...) {}

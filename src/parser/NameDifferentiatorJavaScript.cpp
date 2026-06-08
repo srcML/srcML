@@ -63,6 +63,7 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     if (
         (
             srcMLParser::decl_start_js_token_set.member(prevNonWhitespaceToken->getType())
+            && token->getType() != srcMLParser::JS_ASYNC
             && token->getType() != srcMLParser::JS_GET
             && token->getType() != srcMLParser::JS_SET
             && token->getType() != srcMLParser::NAME
@@ -302,6 +303,16 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || token->getType() == srcMLParser::TS_PRIVATE
                 || token->getType() == srcMLParser::TS_PROTECTED
                 || token->getType() == srcMLParser::TS_PUBLIC
+                || (
+                    token->getType() != srcMLParser::JS_ASYNC
+                    || (
+                        token->getType() == srcMLParser::JS_ASYNC
+                        && (
+                            nextToken->getType() != srcMLParser::MULTOPS
+                            || nextToken->getType() != srcMLParser::NAME
+                        )
+                    )
+                )
             )
             && (
                 nextToken->getType() == srcMLParser::EQUAL
