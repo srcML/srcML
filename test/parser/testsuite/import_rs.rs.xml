@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="import_rs">
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name><name>std</name><operator>::</operator><name>io</name></name>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name><name>std</name><operator>::</operator><name>io</name><operator>::</operator><name>Result</name></name> <alias>as <name>IoResult</name></alias>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using><specifier>pub</specifier> use <name><name>std</name><operator>::</operator><name>fmt</name><operator>::</operator><name>Result</name></name> <alias>as <name>FmtResult</name></alias>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name><name>std</name><operator>::</operator><name_list>{<name>io</name>}</name_list></name>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name><name>std</name><operator>::</operator><name_list>{<name>io</name>, <name>fmt</name>}</name_list></name>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name><name>std</name><operator>::</operator><name_list>{<name>io</name> <alias>as <name>Io</name></alias>, <name>fmt</name> <alias>as <name>Fmt</name></alias>}</name_list></name>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name><name>std</name><operator>::</operator><name_list>{<name>io</name><operator>::</operator><name_list>{<name>Stdin</name>, <name>Stdout</name>}</name_list>}</name_list></name>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name><name>std</name><operator>::</operator><name_list>{<name>io</name><operator>::</operator><name_list>{<name>Stdin</name> <alias>as <name>In</name></alias>, <name>Stdout</name> <alias>as <name>Out</name></alias>}</name_list>, <name>fmt</name>}</name_list></name>;</using>
+</unit>
+
+</unit>
