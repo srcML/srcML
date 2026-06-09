@@ -186,6 +186,7 @@ NAME options { testLiterals = true; } :
             || text == "B"sv || text == "F"sv || text == "R"sv || text == "U"sv
             || text == "rf"sv || text == "rb"sv || text == "Rf"sv || text == "Rb"sv
             || text == "rF"sv || text == "rB"sv || text == "RF"sv || text == "RB"sv
+            || text == "fr"sv || text == "fR"sv || text == "Fr"sv || text == "FR"sv
             || text == "ur"sv || text == "Ur"sv || text == "uR"sv || text == "UR"sv)
         }?
         (

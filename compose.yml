@@ -45,14 +45,6 @@ services:
       - WORKFLOW=ubuntu
     <<: *CONFIGURATION
 
-  ubuntu_24_10:
-    image: srcml/ubuntu:24.10
-    platform: ${PLATFORM}
-    profiles: [ubuntu, package]
-    environment:
-      - WORKFLOW=ubuntu
-    <<: *CONFIGURATION
-
   ubuntu_24_04:
     image: srcml/ubuntu:24.04
     platform: ${PLATFORM}

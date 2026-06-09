@@ -1,0 +1,123 @@
+---
+name: Publish Linux Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run: build images but do not push to Docker Hub or create manifest lists'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+env:
+  SRCML_BAKE_REGISTRY: ""
+
+jobs:
+  bake:
+    name: bake-${{ matrix.arch }}
+    if: ${{ github.repository == 'srcML/srcML' }}
+    environment: build
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: ${{ !inputs.dry_run }}
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Bake images for ${{ matrix.arch }}${{ inputs.dry_run && ' (dry run)' || '' }}
+        run: |
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            docker buildx bake \
+              --set "*.output=type=cacheonly" \
+              --metadata-file metadata-${{ matrix.arch }}.json
+          else
+            tag_overrides=()
+            while IFS=$'\t' read -r target tag; do
+              [[ -z "$tag" ]] && continue
+              repo="${tag%%:*}"
+              tag_overrides+=(--set "${target}.tags=${repo}")
+            done < <(
+              docker buildx bake --print 2>/dev/null \
+                | jq -r '.target | to_entries[] | "\(.key)\t\(.value.tags[0] // "")"'
+            )
+            docker buildx bake \
+              "${tag_overrides[@]}" \
+              --set "*.output=type=image,push-by-digest=true,name-canonical=true,push=true" \
+              --metadata-file metadata-${{ matrix.arch }}.json
+          fi
+        env:
+          SRCML_BAKE_ARCHITECTURE: linux/${{ matrix.arch }}
+
+      - name: Upload bake metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: bake-metadata-${{ matrix.arch }}
+          path: metadata-${{ matrix.arch }}.json
+          if-no-files-found: error
+
+  merge:
+    name: merge-manifests
+    needs: bake
+    if: ${{ !inputs.dry_run && github.repository == 'srcML/srcML' }}
+    environment: build
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Download all bake metadata
+        uses: actions/download-artifact@v4
+        with:
+          pattern: bake-metadata-*
+          merge-multiple: true
+
+      - name: Create multi-arch manifest lists
+        run: |
+          docker buildx bake --print > bake-plan.json
+          jq -r '
+            .target | to_entries[] |
+            .key as $target |
+            .value.tags[] |
+            . as $tag |
+            split(":")[0] as $repo |
+            "\($tag) \($repo) \($target)"
+          ' bake-plan.json | while read -r tag repo target; do
+            amd64_digest=$(jq -r --arg t "$target" '.[$t]."containerimage.digest" // empty' metadata-amd64.json)
+            arm64_digest=$(jq -r --arg t "$target" '.[$t]."containerimage.digest" // empty' metadata-arm64.json)
+            if [[ -z "$amd64_digest" || -z "$arm64_digest" ]]; then
+              echo "Missing digest for target $target (amd64='$amd64_digest' arm64='$arm64_digest')" >&2
+              exit 1
+            fi
+            echo "Creating manifest $tag from $repo@$amd64_digest + $repo@$arm64_digest"
+            docker buildx imagetools create -t "$tag" \
+              "${repo}@${amd64_digest}" \
+              "${repo}@${arm64_digest}"
+          done
