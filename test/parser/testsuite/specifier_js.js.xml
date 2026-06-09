@@ -103,7 +103,7 @@
 <function type="set"><specifier>export</specifier> <specifier>default</specifier> set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
 </unit>
 
-<!-- Classes ("class" )-->
+<!-- Classes ("class")-->
 
 <unit revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <block>{ <comment type="block">/* ... */</comment> }</block></class>
@@ -131,6 +131,14 @@
 <class><ts:specifier>abstract</ts:specifier> class <name>Project</name> <super_list><ts:implements>implements <super><expr><name>LanguageServiceHost</name></expr></super>, <super><expr><name>ModuleResolutionHost</name></expr></super></ts:implements></super_list> <block>{
   <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <name>projectKind</name><ts:type>: <name>ProjectKind</name></ts:type></decl></decl_stmt>
 }</block></class>
+</unit>
+
+<!-- Specifiers in Generic Argument Lists (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>diagnostics</name> <init>= <expr><operator>new</operator> <call><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><name>Path</name></expr></argument>, <argument><expr><ts:specifier>readonly</ts:specifier> <name><name>Diagnostic</name><index>[]</index></name></expr></argument>&gt;</argument_list></name><argument_list>(
+  <argument><expr><name>foo</name></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "static private" (TypeScript) -->
