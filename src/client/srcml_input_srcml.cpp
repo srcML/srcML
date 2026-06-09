@@ -23,8 +23,7 @@ using namespace ::std::literals::string_view_literals;
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_request_t& srcml_request,
-                       const srcml_input_src& srcml_input,
-                       const std::optional<size_t> & revision) {
+                       const srcml_input_src& srcml_input) {
 
     // open the srcml input archive
     OpenFileLimiter::open();
@@ -35,8 +34,6 @@ int srcml_input_srcml(ParseQueue& queue,
     }
 
     int open_status = SRCML_STATUS_OK;
-    if (revision)
-        open_status = srcml_archive_set_srcdiff_revision(srcml_input_archive.get(), *revision);
     open_status |= srcml_archive_read_open(srcml_input_archive.get(), srcml_input);
 
     if (open_status != SRCML_STATUS_OK) {
@@ -56,10 +53,6 @@ int srcml_input_srcml(ParseQueue& queue,
 
         size_t nsSize = srcml_archive_get_namespace_size(srcml_input_archive.get());
         for (size_t i = 0; i < nsSize; ++i) {
-
-            // ignore srcDiff URL, since it will not be on the output
-            if (revision && srcml_archive_get_namespace_uri(srcml_input_archive.get(), i) == "http://www.srcML.org/srcDiff"sv)
-                continue;
 
             // register the input srcml archive namespace
             srcml_archive_register_namespace(srcml_output_archive,

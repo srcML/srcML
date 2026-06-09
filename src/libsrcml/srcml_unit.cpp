@@ -475,12 +475,6 @@ const char* srcml_unit_get_srcml(struct srcml_unit* unit) {
     if (!unit->read_body && (unit->archive->type == SRCML_ARCHIVE_READ || unit->archive->type == SRCML_ARCHIVE_RW))
         unit->archive->reader->read_body(unit);
 
-    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
-        if (!unit->srcml_revision || unit->currevision != (int) *unit->archive->revision_number)
-            unit->srcml_revision = extract_revision(unit->srcml.data(), (int) unit->srcml.size(), (int) *unit->archive->revision_number);
-        return unit->srcml_revision->data();
-    }
-
     return unit->srcml.data();
 }
 
@@ -541,13 +535,6 @@ const char* srcml_unit_get_srcml_outer(struct srcml_unit* unit) {
         }
     }
 
-    // if srcdiff versioned, then use that
-    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
-        if (!unit->srcml_fragment_revision || unit->currevision != (int) *unit->archive->revision_number)
-            unit->srcml_fragment_revision = extract_revision(unit->srcml_fragment->data(), (int) unit->srcml_fragment->size(), (int) *unit->archive->revision_number);
-        return unit->srcml_fragment_revision->data();
-    }
-
     return unit->srcml_fragment->data();
 }
 
@@ -577,13 +564,6 @@ const char* srcml_unit_get_srcml_inner(struct srcml_unit* unit) {
     int rawsize = unit->content_end - unit->content_begin - 1;
     if (rawsize <= 0)
         return "";
-
-    // if srcdiff versioned, then use that
-    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
-        if (!unit->srcml_raw_revision || unit->currevision != (int) *unit->archive->revision_number)
-            unit->srcml_raw_revision = extract_revision(unit->srcml.data() + start, rawsize, (int) *unit->archive->revision_number);
-        return unit->srcml_raw_revision->data();
-    }
 
     // raw version is cached
     if (unit->srcml_raw)

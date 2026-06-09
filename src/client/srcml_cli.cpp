@@ -731,10 +731,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Cat all the XML units into a single unit")
         ->group("");
 
-    app.add_flag("--revision", srcml_request.revision,
-        "Extract the given revision (0 = original, 1 = modified)")
-        ->group("");
-
     app.add_flag_callback("--update",       [&]() { srcml_request.command |= SRCML_COMMAND_UPDATE; },
         "Output and update existing srcml")
         ->group("");

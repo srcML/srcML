@@ -46,7 +46,6 @@ LIBSRCML_1.0 {
         srcml_archive_get_src_encoding;
         srcml_archive_get_tabstop;
         srcml_archive_get_version;
-        srcml_archive_get_srcdiff_revision;
         srcml_archive_register_file_extension;
         srcml_archive_register_namespace;
         srcml_archive_set_url;
@@ -57,7 +56,6 @@ LIBSRCML_1.0 {
         srcml_archive_set_src_encoding;
         srcml_archive_set_tabstop;
         srcml_archive_set_version;
-        srcml_archive_set_srcdiff_revision;
         srcml_check_encoding;
         srcml_check_exslt;
         srcml_check_extension;
@@ -101,7 +99,6 @@ LIBSRCML_1.0 {
         srcml_get_language_list;
         srcml_get_language_list_size;
         srcml_get_revision;
-        srcml_get_srcdiff_revision;
         srcml_unit_parse_fd;
         srcml_unit_parse_filename;
         srcml_unit_parse_io;
@@ -126,7 +123,6 @@ LIBSRCML_1.0 {
         srcml_set_tabstop;
         srcml_set_version;
         srcml_set_timestamp;
-        srcml_set_srcdiff_revision;
         srcml_set_eol;
         srcml_unit_get_src_encoding;
         srcml_unit_get_filename;

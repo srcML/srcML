@@ -633,26 +633,6 @@ int srcml_archive_register_macro(struct srcml_archive* archive, const char* toke
     return SRCML_STATUS_OK;
 }
 
-/**
- * srcml_archive_set_srcdiff_revision
- * @param archive a srcml_archive
- * @param revision_number
- *
- * Set what revision (0 = original, 1 = modified) in a srcDiff archive to operate with.
- *
- * @returns SRCML_STATUS_OK on success and a status error code on failure.
- */
-int srcml_archive_set_srcdiff_revision(struct srcml_archive* archive, size_t revision_number) {
-
-    if (archive == nullptr
-        || (revision_number != SRCDIFF_REVISION_ORIGINAL && revision_number != SRCDIFF_REVISION_MODIFIED))
-            return SRCML_STATUS_INVALID_ARGUMENT;
-
-    archive->revision_number = revision_number;
-
-    return SRCML_STATUS_OK;
-}
-
 /******************************************************************************
  *                                                                            *
  *                           Accessor Functions                               *
@@ -925,22 +905,6 @@ const char* srcml_archive_get_macro_type(const struct srcml_archive* archive, si
         return 0;
 
     return archive->user_macro_list[pos * 2 + 1].data();
-}
-
-/**
- * srcml_archive_get_srcdiff_revision
- * @param archive a srcml_archive
- *
- * Gets the srcdiff revision number that the archive is using for processing.
- *
- * @returns the srcdiff revision number the archive is using.
- */
-size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive) {
-
-    if (archive == nullptr)
-        return SRCDIFF_REVISION_INVALID;
-
-    return archive->revision_number ? *archive->revision_number : SRCDIFF_REVISION_INVALID;
 }
 
 /******************************************************************************
