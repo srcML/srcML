@@ -13041,11 +13041,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         declaration_modifiers_ts |
 
-        // special case: mark "readonly" as a specifier in TypeScript types and template arguments
-        {
-            inLanguage(LANGUAGE_JAVASCRIPT)
-            && (inTransparentMode(MODE_TYPE_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
-        }?
+        // special case: mark "readonly" as a specifier
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TS_READONLY }?
         declaration_specifiers_ts |
 
         // special case: mark "abstract" as a specifier if in operator parentheses
