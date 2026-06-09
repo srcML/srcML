@@ -23499,7 +23499,7 @@ declaration_ts[] { ENTRY_DEBUG } :
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             (datsign_ts)*
 
-            (constraint_ts | compound_name)
+            ({ perform_constraint_check_ts() }? constraint_ts | computed_property_js | compound_name)
 
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             (javascript_parameter_list)*
@@ -23611,7 +23611,10 @@ perform_constraint_check_ts[] returns [bool isconstraint] {
                     } else if (LA(1) == RBRACKET) {
                         --bracket_count;
                         consume();
-                    } else if (LA(1) == COLON && bracket_count == 1) {
+                    } else if (
+                        (LA(1) == COLON || LA(1) == JS_RANGE_IN || LA(1) == TS_KEYOF)
+                        && bracket_count == 1
+                    ) {
                         isconstraint = true;
                         break;
                     } else if ((LA(1) == RBRACKET && bracket_count == 1) || LA(1) == 1 /* EOF */) {

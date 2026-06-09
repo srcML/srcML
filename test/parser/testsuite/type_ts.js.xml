@@ -493,4 +493,10 @@
 </block_content>}</block></expr></argument>, <argument><expr><literal type="string">"prop"</literal></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface><specifier>export</specifier> interface <name><name>Validator</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <decl_stmt><decl><name type="computed">[<expr><name>nominalTypeHack</name></expr>]</name><ts:modifier>?</ts:modifier><ts:type>: <name>T</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
 </unit>
