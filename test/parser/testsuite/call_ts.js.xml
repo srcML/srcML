@@ -4,6 +4,10 @@
 <!-- Generic Function Calls -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>entries</name> <init>= <expr><call><name><name>mapDefined</name><argument_list type="generic">&lt;<argument><expr><name>CompletionEntry</name></expr></argument>, <argument><expr><name><name>protocol</name><operator>.</operator><name>CompletionEntry</name></name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name><name>completions</name><operator>.</operator><name>entries</name></name></expr></argument>, <argument><expr><lambda><parameter><decl><name>entry</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>factory</name><ts:type>: <name>NodeFactory</name></ts:type> <init>= <expr><object>{
     <property><expr><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><call><name><name>getJSDocPrimaryTypeCreateFunction</name><argument_list type="generic">&lt;<argument><expr><name>JSDocAllType</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name><name>SyntaxKind</name><operator>.</operator><name>JSDocAllType</name></name></expr></argument>)</argument_list></call></expr></return>

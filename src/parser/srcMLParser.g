@@ -5847,15 +5847,6 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
             ) {
                 endMode();
             }
-
-            // special case to close RPAREN for JavaScript lambdas that are inside a call
-            if (
-                inLanguage(LANGUAGE_JAVASCRIPT)
-                && waslambda
-                && LA(1) == RPAREN
-                && lparen_types_js.back() == 'c'
-            )
-                rparen(true);
         }
 ;
 
