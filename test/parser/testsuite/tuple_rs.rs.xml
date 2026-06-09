@@ -171,4 +171,30 @@
 <type><tuple>(<type><modifier>&amp;</modifier><specifier>mut</specifier> <name>i32</name></type>, <type><modifier>&amp;</modifier><specifier>mut</specifier> <name>char</name></type>, <type><modifier>&amp;</modifier><specifier>mut</specifier> <name>bool</name></type>)</tuple></type>
 </unit>
 
+<!-- tuple indexing -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><literal type="number">2</literal></expr>,)</tuple><operator>.</operator><literal type="number">0</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><literal type="number">2</literal></expr>,)</tuple><operator>.</operator><literal type="number">0</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><literal type="number">2</literal></expr>, <expr><name>a</name></expr>)</tuple><operator>.</operator><literal type="number">1</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><literal type="number">2</literal></expr>, <expr><name>a</name></expr>)</tuple><operator>.</operator><literal type="number">1</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><literal type="number">2</literal></expr>, <expr><tuple>(<expr><literal type="char">'a'</literal></expr>,)</tuple></expr>)</tuple><operator>.</operator><literal type="number">1</literal><operator>.</operator><literal type="number">0</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><tuple>(<expr><literal type="number">2</literal></expr>, <expr><tuple>(<expr><literal type="char">'a'</literal></expr>,)</tuple></expr>)</tuple><operator>.</operator><literal type="number">1</literal><operator>.</operator><literal type="number">0</literal></expr>;</expr_stmt>
+</unit>
+
 </unit>
