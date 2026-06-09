@@ -22833,11 +22833,14 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
 
             // looking for "NAME()<>" to start a dynamic module import
             {
-                inLanguage(LANGUAGE_JAVASCRIPT)
-                && (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
+                (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
                 && perform_dynamic_module_import_check_ts()
             }?
             dynamic_module_import_ts |
+
+            // looking for arrays with a sibling index (e.g., "[NAME: TYPE][]")
+            { perform_named_array_with_index_check_ts() }?
+            named_array_with_index_ts |
 
             // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")
             {
@@ -25035,4 +25038,75 @@ pseudo_generic_argument_list[] { CompleteElement element(this); int tempops_coun
                 consume();
             }
         }
+;
+
+/*
+  perform_named_array_with_index_check_ts
+
+  Checks for the "[NAME: TYPE][]" syntax which represents a named array with an index in JavaScript/TypeScript.
+*/
+perform_named_array_with_index_check_ts[] returns [bool isarray] {
+        ENTRY_DEBUG
+
+        isarray = false;
+        int tempops_count = 0;  // for generic argument list
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == LBRACKET) {
+                bracket_pair();
+
+                // found "[...]["
+                if (LA(1) == LBRACKET)
+                    isarray = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  named_array_with_index_ts
+
+  Handles the "[NAME: TYPE][]" syntax which represents a named array with an index in JavaScript/TypeScript.
+*/
+named_array_with_index_ts[] { bool iscomplex = false; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_ARRAY_JS);
+            startElement(SARRAY);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            // ":" indicates a TypeScript type (no ternaries allowed here)
+            { LA(1) == COLON }?
+            colon_type_ts |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        {
+            if (inTransparentMode(MODE_ARRAY_JS))
+                endDownToMode(MODE_ARRAY_JS);
+
+            // consume array-ending bracket, if it exists
+            if (LA(1) == RBRACKET)
+                consume();  // "]"
+
+            if (inMode(MODE_ARRAY_JS))
+                endMode(MODE_ARRAY_JS);
+        }
+
+        variable_identifier_array_grammar_sub[iscomplex]
 ;

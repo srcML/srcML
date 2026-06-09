@@ -348,6 +348,12 @@
 <decl_stmt><decl type="const">const <name>getJSDocPrimaryTypeCreateFunction</name> <init>= <expr><call><name>memoizeOne</name><argument_list>(<argument><expr><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>JSDocType</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>kind</name><ts:type>: <name><name>T</name><index>[<expr><literal type="string">"kind"</literal></expr>]</index></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><call><name>createJSDocPrimaryTypeWorker</name><argument_list>(<argument><expr><name>kind</name></expr></argument>)</argument_list></call></expr></lambda></expr></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Array with Index (as a type) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>perfStats</name><ts:type>: <array>[<expr><name>name</name><ts:type>: <name>string</name></ts:type></expr>, <expr><name>reportThreshold</name><ts:type>: <name>number</name></ts:type></expr>]</array><index>[]</index></ts:type> <init>= <expr><array>[]</array></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Edge Cases -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
