@@ -117,6 +117,7 @@ header "pre_include_cpp" {
 header "post_include_hpp" {
 #include <string>
 #include <string_view>
+#include <algorithm>
 #include <deque>
 #include <array>
 #include <stack>
