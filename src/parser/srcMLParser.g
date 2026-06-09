@@ -23111,6 +23111,17 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                         break;
                     }
 
+                    // "NAME() : TYPE {}" is a function expression, not a function declaration
+                    if (
+                        LA(1) == LCURLY
+                        && paren_count == 0
+                        && last_consumed_guessing_mode != COLON
+                        && last_consumed_guessing_mode != RCURLY
+                    ) {
+                        isdecl = false;
+                        break;
+                    }
+
                     // found ": asserts"
                     if (LA(1) == COLON && next_token() == TS_ASSERTS)
                         found_colon_assert = true;
