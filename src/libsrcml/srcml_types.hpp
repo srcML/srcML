@@ -93,9 +93,6 @@ struct srcml_archive {
 
     std::vector<std::shared_ptr<Transformation>> transformations;
 
-    /** srcDiff revision number */
-    std::optional<size_t> revision_number;
-
     /** output buffer for io, filename, FILE*, and fd */
     xmlOutputBuffer* output_buffer = nullptr;
     xmlBuffer* xbuffer = nullptr;
