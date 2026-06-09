@@ -320,6 +320,42 @@
 <decl_stmt><decl type="const">const <name>default</name> <init>= <expr><name>default</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>declare</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>override</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>private</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>protected</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>public</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
 <!-- "delete" -->
 
 <unit revision="1.0.0" language="JavaScript">
