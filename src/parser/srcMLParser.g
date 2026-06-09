@@ -13091,12 +13091,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         lambda_js[true] |
 
         // special case: JavaScript optional chaining with function calls
-        {
-            inLanguage(LANGUAGE_JAVASCRIPT)
-            && last_consumed != PERIOD
-            && last_consumed != QMARK_PERIOD
-            && perform_optional_call_chaining_check_js()
-        }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_optional_call_chaining_check_js() }?
         optional_call_chain_js |
 
         // looking for "NAME<>()" to start a generic function call
@@ -22399,8 +22394,9 @@ perform_optional_call_chaining_check_js[] returns [bool iscall] {
 
                 // only break at EOL/EOF to avoid double-counting
                 if (
-                    (LA(1) == TERMINATE && next_token() != RCURLY)
-                    || (LA(1) == RPAREN && paren_count == 0 && next_token() != QMARK_PERIOD)
+                    (LA(1) == RPAREN && paren_count == 0 && next_token() != QMARK_PERIOD)
+                    || (LA(1) == LCURLY && paren_count == 0)
+                    || (LA(1) == TERMINATE && next_token() != RCURLY)
                     || LA(1) == 1 /* EOF */
                 ) {
                     break;

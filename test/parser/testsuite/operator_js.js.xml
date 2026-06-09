@@ -385,6 +385,18 @@
 <expr_stmt><expr><call><name><name>config</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>replaceAll</name><parameter_list>(<parameter><decl><name>source</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
+    <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><operator>(</operator><name>foo</name><operator>)</operator><operator>.</operator><call><name>replaceAll</name><operator>?.</operator><argument_list>(<argument><expr><name>bar</name></expr></argument>, <argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>replaceAll</name><parameter_list>(<parameter><decl><name>source</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
+    <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><operator>(</operator><name>foo</name><operator>)</operator><operator>?.</operator><call><name>replaceAll</name><operator>?.</operator><argument_list>(<argument><expr><name>bar</name></expr></argument>, <argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
 <!-- Operator Comma (",") -->
 
 <unit revision="1.0.0" language="JavaScript">
