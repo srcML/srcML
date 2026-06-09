@@ -204,6 +204,7 @@ LINE_COMMENT_START options { testLiterals = true; } {
     int mode = 0;
     int squarebracketcount = 0;
     int lastnonspacetoken = this->getLastToken();
+    std::string operatorends = "+-*/%&|^~<>=?!.,";
 } : '/'
     (
         // for this conditional, lastnonspacetoken must refer to the token before the first '/'
@@ -213,12 +214,10 @@ LINE_COMMENT_START options { testLiterals = true; } {
             && LA(1) != '*'
             && (
                 startline
-                || lastnonspacetoken == '='
                 || lastnonspacetoken == '('
                 || lastnonspacetoken == '['
-                || lastnonspacetoken == ','
                 || lastnonspacetoken == ':'
-                || lastnonspacetoken == '!'
+                || operatorends.find_first_of(lastnonspacetoken) != std::string::npos
             )
         }?
         (options { greedy = true; } :

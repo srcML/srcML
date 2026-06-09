@@ -77,6 +77,10 @@
 <decl_stmt><decl type="let">let <name>filter</name> <init>= <expr><literal type="regex">/src[\\/]typescript[\\/]typescript\.ts$/</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><literal type="regex">/ /</literal></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Regular expression following '(' -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -164,6 +168,18 @@
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><operator>!</operator><literal type="regex">/\s*javascript:/i</literal><operator>.</operator><call><name>test</name><argument_list>(<argument><expr><name>action</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
   <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">'Navigate to: '</literal> <operator>+</operator> <name>action</name></expr></argument>)</argument_list></call></expr></throw>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<!-- Regular expressions following an operator (e.g., '/') -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><literal type="number">1</literal> <operator>/</operator> <literal type="regex">/abc/</literal><operator>.</operator><name>length</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name><name>part</name><operator>.</operator><name>file</name></name> <operator>&amp;&amp;</operator> <literal type="regex">/lib.*\.d\.ts$/</literal><operator>.</operator><call><name>test</name><argument_list>(<argument><expr><name><name>part</name><operator>.</operator><name>file</name></name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name><name>part</name><operator>.</operator><name>span</name><ts:modifier>!</ts:modifier><operator>.</operator><name>start</name></name> <operator>=</operator> <operator>-</operator><literal type="number">1</literal></expr></expr_stmt>
 </block_content>}</block></if></if_stmt>
 </unit>
 
