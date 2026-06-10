@@ -20566,8 +20566,15 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inTransparentMode(MODE_TERNARY) }?
             colon_marked_js |
 
-            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
-            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            // allow TypeScript types in properties if enclosed in operator parentheses
+            // (e.g., "(NAME: TYPE)") or in a generic argument list (e.g., "<[NAME: TYPE]>")
+            {
+                !inTransparentMode(MODE_TERNARY)
+                && (
+                    inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                    || bracket_types_js.back() == "oLPAREN"
+                )
+            }?
             colon_type_ts |
 
             {

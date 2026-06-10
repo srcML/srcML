@@ -338,6 +338,12 @@
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- TypeScript Types in Arrays in Generic Argument Lists -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>memoizedReverseKeys</name> <init>= <expr><operator>new</operator> <call><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><name>ModeAwareCacheKey</name></expr></argument>, <argument><expr><array>[<expr><name>specifier</name><ts:type>: <name>string</name></ts:type></expr>]</array></expr></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Angle Bracket Type Assertion -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
