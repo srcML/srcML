@@ -3430,6 +3430,10 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
 
             call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
 
+            // do not mark "NAME() =>" as a call in JavaScript
+            if (inLanguage(LANGUAGE_JAVASCRIPT) && (postcalltoken == JS_ARROW || postcalltoken == LBRACKET))
+                throw antlr::RecognitionException();
+
             // call syntax succeeded
             type = CALL;
 
@@ -3519,6 +3523,16 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
 call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& isempty, int& call_count] { ENTRY_DEBUG } :
         // detect name, which may be the name of a macro or even an expression
         (
+            // allow "!" after a name in JavaScript/TypeScript
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            (
+                function_identifier
+                (
+                    { LA(1) == OPERATORS && LT(1)->getText() == "!" }?
+                    declaration_modifiers_ts
+                )*
+            ) |
+
             function_identifier |
 
             keyword_call_tokens
@@ -3545,6 +3559,11 @@ call_check[int& postnametoken, int& argumenttoken, int& postcalltoken, bool& ise
         ]
 
         (
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            paren_pair
+            set_int[call_count, 1]
+            markend[postcalltoken] |
+
             { isoption(parser_options, SRCML_PARSER_OPTION_CPP) || inLanguage(LANGUAGE_PYTHON) }?
             // check for proper form of argument list
             (call_check_paren_pair[argumenttoken] set_int[call_count, call_count + 1])*

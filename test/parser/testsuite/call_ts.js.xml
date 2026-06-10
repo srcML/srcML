@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="call">
 
+<!-- Function Calls with "!" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><call><name>readDirectory</name><ts:modifier>!</ts:modifier><argument_list>(<argument><expr><name>rootDir</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Generic Function Calls -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
