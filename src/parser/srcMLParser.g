@@ -1679,6 +1679,7 @@ javascript_statements[] {
                             )
                             && next_token() == NAME
                         )
+                        || ((LA(1) == STRING_START || LA(1) == CHAR_START) && next_token_two() == COLON)
                     )
                     && (
                         last_consumed == LCURLY
@@ -23426,7 +23427,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
                 compound_name();
                 continue_guessing = true;
             }
-            // or, consume a constraint
+            // or, consume a constraint (or computed property)
             else if (LA(1) == LBRACKET) {
                 int bracket_count = 0;
 
@@ -23450,6 +23451,11 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
                         break;
                     }
                 }
+            }
+            // or, consume a string-like literal
+            else if (LA(1) == STRING_START || LA(1) == CHAR_START) {
+                literals();
+                continue_guessing = true;
             }
 
             // consume optional modifiers
@@ -23542,7 +23548,7 @@ declaration_ts[] { ENTRY_DEBUG } :
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             (datsign_ts)*
 
-            ({ perform_constraint_check_ts() }? constraint_ts | computed_property_js | compound_name)
+            ({ perform_constraint_check_ts() }? constraint_ts | computed_property_js | compound_name | literals)
 
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             (javascript_parameter_list)*

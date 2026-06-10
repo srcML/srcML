@@ -458,4 +458,78 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Strings as Declaration Names -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
 </unit>
