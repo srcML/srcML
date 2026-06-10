@@ -13125,7 +13125,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
-            && perform_generic_function_check_ts()
+            && perform_generic_function_call_check_ts()
         }?
         generic_function_call_ts |
 
@@ -24323,15 +24323,15 @@ generic_lambda_ts[] {
 ;
 
 /*
-  perform_generic_function_check_ts
+  perform_generic_function_call_check_ts
 
   Checks to see if a call contains a generic argument list in JavaScript/TypeScript.
   Typically of the form "NAME<...>(...)".
 */
-perform_generic_function_check_ts[] returns [bool isfunction] {
+perform_generic_function_call_check_ts[] returns [bool iscall] {
         ENTRY_DEBUG
 
-        isfunction = false;
+        iscall = false;
         int tempops_count = 0;  // for generic argument list
         int paren_count = 0;  // for parameter list
         last_consumed_guessing_mode = -1;
@@ -24380,9 +24380,9 @@ perform_generic_function_check_ts[] returns [bool isfunction] {
                                 if (paren_count == 0) {
                                     consume();  // ")"
 
-                                    // function call does not have a block
-                                    if (LA(1) != LCURLY)
-                                        isfunction = true;
+                                    // function call does not have a block or type
+                                    if (LA(1) != COLON && LA(1) != LCURLY)
+                                        iscall = true;
 
                                     break;
                                 }
