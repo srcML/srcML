@@ -19030,6 +19030,19 @@ await_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  type_as_name
+
+  Handles cases where "type" is a name in JavaScript/TypeScript.
+*/
+type_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        TS_TYPE
+;
+
+/*
   check_valid_specifier_js
 
   Checks to see if the current token is a specifier in JavaScript or TypeScript (namespaces).
@@ -20431,6 +20444,10 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
             // special case: "await" is a name, not an operator
             { LA(1) == JS_AWAIT }?
             await_as_name |
+
+            // special case: "type" is a name, not the start of a 'type' statement
+            { LA(1) == TS_TYPE }?
+            type_as_name |
 
             // catch-all for misc. invalid syntax
             expression |

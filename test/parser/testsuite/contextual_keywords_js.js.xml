@@ -1154,6 +1154,12 @@
 )</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>checkAssertionDeferred</name><parameter_list>(<parameter><decl><name>node</name><ts:type>: <name>JSDocTypeAssertion</name> <operator>|</operator> <name>AssertionExpression</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="const">const { <decl><name>type</name></decl> } <init>= <expr><call><name>getAssertionTypeAndExpression</name><argument_list>(<argument><expr><name>node</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
 <!-- "typeof"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">
