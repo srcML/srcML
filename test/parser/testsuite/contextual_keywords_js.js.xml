@@ -1136,6 +1136,12 @@
 
 <!-- "type" -->
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>param</name> <init>= <expr><call><name><name>typeChecker</name><operator>.</operator><name>typeParameterToDeclaration</name></name><argument_list>(
+    <argument><expr><name>type</name> <operator>as</operator> <name>TypeParameter</name></expr></argument>,
+)</argument_list></call><operator>!</operator></expr></init></decl></decl_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>reactStableValue</name> <init>= <expr><operator>await</operator> <call><name>getRenderedAttributeValue</name><argument_list>(
   <argument><expr><name>ReactStable</name></expr></argument>,
