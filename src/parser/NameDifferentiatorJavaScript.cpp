@@ -217,6 +217,7 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || nextToken->getType() == srcMLParser::JS_ARROW
                 || nextToken->getType() == srcMLParser::TERMINATE
                 || nextToken->getType() == srcMLParser::EOF_
+                || prevNonWhitespaceToken->getType() == srcMLParser::COLON
                 || (
                     (bracketBuffer.front() == "(" || bracketBuffer.front() == "[")
                     && (
