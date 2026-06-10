@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="array_decl_rs">
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><array>[]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name>: <type><array>[<type>i32</type>; <expr><literal type="number">0</literal></expr>]</array></type> <init>= <expr><array>[]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name>: <type><array><modifier>&amp;</modifier>[<type>i32</type>; <expr><literal type="number">0</literal></expr>]</array></type> <init>= <expr><array><modifier>&amp;</modifier>[]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name>: <type><array><modifier>&amp;</modifier><specifier>mut</specifier>[<type>i32</type>; <expr><literal type="number">0</literal></expr>]</array></type> <init>= <expr><array><modifier>&amp;</modifier><specifier>mut</specifier>[]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name>: <type><array>[<type>i32</type>]</array></type> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name>: <type><array><modifier>&amp;</modifier>[<type>i32</type>]</array></type> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name>: <type><array><modifier>&amp;</modifier><specifier>mut</specifier>[<type>i32</type>]</array></type> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><array>[<expr><literal type="number">0</literal></expr>; <expr><literal type="number">8</literal></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><array><modifier>&amp;</modifier>[<expr><literal type="number">0</literal></expr>; <expr><literal type="number">8</literal></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><array><modifier>&amp;</modifier><specifier>mut</specifier>[<expr><literal type="number">0</literal></expr>; <expr><literal type="number">8</literal></expr>]</array></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>

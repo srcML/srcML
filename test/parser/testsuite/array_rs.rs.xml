@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="array_rs">
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><tuple>()</tuple></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><tuple>()</tuple></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><literal type="number">0</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><literal type="number">0</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><literal type="number">0</literal></expr>,]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><literal type="number">0</literal></expr>,]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>,]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>,]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <array>[]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><array>[]</array></expr>, <expr><array>[]</array></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><array>[]</array></expr>, <expr><array>[]</array></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><array>[<expr><literal type="number">0</literal></expr>,<expr><literal type="number">1</literal></expr>]</array></expr>, <expr><array>[<expr><literal type="number">2</literal></expr>,<expr><literal type="number">3</literal></expr>]</array></expr>, <expr><array>[<expr><literal type="number">4</literal></expr>,<expr><literal type="number">5</literal></expr>]</array></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><array>[<expr><literal type="number">0</literal></expr>,<expr><literal type="number">1</literal></expr>]</array></expr>, <expr><array>[<expr><literal type="number">2</literal></expr>,<expr><literal type="number">3</literal></expr>]</array></expr>, <expr><array>[<expr><literal type="number">4</literal></expr>,<expr><literal type="number">5</literal></expr>]</array></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><name>a</name></expr>, <expr><name>b</name></expr>, <expr><name>c</name></expr>]</array> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><expr><array>[<expr><name>a</name></expr>, <expr><name>b</name></expr>, <expr><name>c</name></expr>]</array> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr>;</expr_stmt>
+</unit>
+
+</unit>
