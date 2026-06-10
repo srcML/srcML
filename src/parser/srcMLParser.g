@@ -22454,40 +22454,20 @@ perform_optional_call_chaining_check_js[] returns [bool iscall] {
         ENTRY_DEBUG
 
         iscall = false;
-        int optional_call_chain_count = 0;
-        int paren_count = 0;
+        CALL_TYPE type = NOCALL;
+        bool isempty = false;
+        int call_count = 0;
+
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            while (true) {
-                if (LA(1) == LPAREN)
-                    ++paren_count;
+            // do not mark a regular function call as an optional chained function call
+            if (perform_call_check(type, isempty, call_count, -1) && type == CALL)
+                throw antlr::RecognitionException();
 
-                if (LA(1) == RPAREN)
-                    --paren_count;
-
-                if (paren_count < 0)
-                    break;
-
-                // looking for "?.("
-                if (last_consumed_guessing_mode == QMARK_PERIOD && LA(1) == LPAREN) {
-                    ++optional_call_chain_count;
-                }
-
-                // only break at EOL/EOF to avoid double-counting
-                if (
-                    (LA(1) == RPAREN && paren_count == 0 && next_token() != QMARK_PERIOD)
-                    || (LA(1) == LCURLY && paren_count == 0)
-                    || (LA(1) == TERMINATE && next_token() != RCURLY)
-                    || LA(1) == 1 /* EOF */
-                ) {
-                    break;
-                }
-
-                consume();
-            }
+            int optional_call_chain_count = perform_chained_call_count_js();
 
             if (optional_call_chain_count > 0)
                 iscall = true;
@@ -22561,6 +22541,9 @@ optional_call_chain_js[] {
 
                 qmark_period | period |
 
+                // regular function call (e.g., "a(b)")
+                complete_argument_list |
+
                 // found an inner name
                 {
                     startNewMode(MODE_INNER_NAME_JS);
@@ -22595,27 +22578,45 @@ optional_call_chain_js[] {
 /*
   perform_chained_call_count_js
 
-  Counts the number of chained calls in a JavaScript function call.
+  Counts the number of calls and chained calls in a JavaScript function call.
   For example, "a?.b?.(c)?.(d)" has two chained calls.
 */
-perform_chained_call_count_js[] returns [int numchainedcalls] {
-        numchainedcalls = 0;
+perform_chained_call_count_js[] returns [int numcalls] {
+        numcalls = 0;
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
             while (true) {
-                // looking for "?.("
-                if (last_consumed_guessing_mode == QMARK_PERIOD && LA(1) == LPAREN) {
-                    ++numchainedcalls;
+                // looking for "?.(" or "NAME("
+                if (
+                    (
+                        last_consumed_guessing_mode == QMARK_PERIOD
+                        || last_consumed_guessing_mode == NAME
+                    )
+                    && LA(1) == LPAREN
+                ) {
+                    ++numcalls;
+                    paren_pair();
                 }
-
-                if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */) {
+                // looking for "[]" as an index
+                else if (LA(1) == LBRACKET) {
+                    bracket_pair();
+                }
+                // only consume the following tokens
+                else if (
+                    LA(1) == NAME
+                    || LA(1) == PERIOD
+                    || LA(1) == QMARK_PERIOD
+                    || LT(1)->getText() == "!"
+                ) {
+                    consume();
+                }
+                // if not one of the expected tokens, break
+                else {
                     break;
                 }
-
-                consume();
             }
         }
         catch (...) {}

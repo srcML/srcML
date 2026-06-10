@@ -382,6 +382,14 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><call><name><name>host</name><operator>.</operator><name>getCompilerHost</name></name><operator>?.</operator><argument_list>()</argument_list></call><operator>?.</operator><name>getModuleResolutionCache</name><operator>?.</operator><argument_list>()</argument_list></call><operator>?.</operator><name>getPackageJsonInfoCache</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>getImpliedNodeFormatForFile</name><argument_list>(<argument><expr><name>path</name></expr></argument>, <argument><expr><call><call><call><name><name>host</name><operator>.</operator><name>getCompilerHost</name></name><operator>?.</operator><argument_list>()</argument_list></call><operator>?.</operator><name>getModuleResolutionCache</name><operator>?.</operator><argument_list>()</argument_list></call><operator>?.</operator><name>getPackageJsonInfoCache</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>host</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><name><name>config</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
