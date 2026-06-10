@@ -61,4 +61,10 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>SymbolLinks</name> <init>= <expr><class>class <super_list><ts:implements>implements <super><expr><name>SymbolLinks</name></expr></super></ts:implements></super_list> <block>{
+    <decl_stmt><decl><ts:specifier>declare</ts:specifier> <name>_symbolLinksBrand</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

@@ -273,6 +273,8 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && (
                 token->getType() != srcMLParser::NAME
                 && token->getType() != srcMLParser::LCURLY
+                && token->getType() != srcMLParser::JS_EXTENDS
+                && token->getType() != srcMLParser::TS_IMPLEMENTS
             )
         )
         || (
