@@ -1601,6 +1601,13 @@ javascript_statements[] {
             return;
         }
 
+        // special case: "with():" is a TypeScript function declaration
+        if (LA(1) == JS_WITH && next_token() == LPAREN && perform_with_as_function_decl_check_ts()) {
+            function_declaration_ts();
+            processed_statement = true;
+            return;
+        }
+
         // [TypeScript] looking for nameless function declarations at the statement-level
         if (
             inMode(MODE_STATEMENT)
@@ -19590,6 +19597,38 @@ situational_specifiers_js[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  perform_with_as_function_decl_check_ts
+
+  Checks if the "with" keyword starts a TypeScript function declaration.
+*/
+perform_with_as_function_decl_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == JS_WITH) {
+                consume();  // "with"
+
+                if (LA(1) == LPAREN) {
+                    paren_pair();
+
+                    // found "with():", indicating a TypeScript function declaration
+                    if (LA(1) == COLON)
+                        isdecl = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
   with_lparen_js
 
   Handles a parenthesized expression after a "with" statement in JavaScript.
@@ -22598,7 +22637,10 @@ identifier_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
             NAME | VOID |
 
             // Python
-            PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE
+            PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE |
+
+            // JavaScript
+            JS_WITH
         )
 ;
 
