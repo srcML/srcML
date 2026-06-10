@@ -1120,7 +1120,7 @@ public:
         /* GENERIC STATEMENTS */
         temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT | MODE_IGNORE_LABEL_JS, nullptr, nullptr };
-        temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, 0, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
+        temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
         temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
