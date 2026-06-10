@@ -35,6 +35,24 @@
 &gt;</argument_list></name><parameter_list>(<parameter><decl><name>obj</name><ts:type>: <name>T</name></ts:type></decl></parameter>, <parameter><decl><name>u</name><ts:type>: <name>U</name></ts:type></decl></parameter>, <parameter><decl><name>v</name><ts:type>: <name>V</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>T</name><index>[<expr><name>U</name> <operator>&amp;</operator> <name>V</name></expr>]</index></name></ts:type></function>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name><name>any</name><index>[]</index></name>]</index><ts:modifier>!</ts:modifier><ts:type>: <name>boolean</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name><name>any</name><index>[]</index></name>]</index><ts:modifier>?</ts:modifier><ts:type>: <name>boolean</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <ts:specifier>readonly</ts:specifier> <name><name>any</name><index>[]</index></name>]</index><ts:modifier>?</ts:modifier><ts:type>: <name>boolean</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
 <!-- The following should NOT be marked as constraints, although they look similar -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

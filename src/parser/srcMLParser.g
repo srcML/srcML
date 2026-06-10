@@ -23613,6 +23613,8 @@ constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
             }?
             general_operators |
 
+            declaration_specifiers_ts |
+
             compound_name | colon_type_ts
         )*
 
@@ -23626,6 +23628,10 @@ constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             if (inMode(MODE_INDEX_TS))
                 endMode(MODE_INDEX_TS);
+
+            // currently, "?" and "!" are the only valid modifiers
+            if (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+                declaration_modifiers_ts();
         }
 
         colon_type_ts
