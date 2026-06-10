@@ -163,4 +163,11 @@
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>checker</name><ts:type>: <name>TypeChecker</name></ts:type> <init>= <expr><object>{
+    <property><expr><name>getDefaultFromTypeParameter</name></expr>: <expr><lambda><parameter><decl><name>type</name></decl></parameter> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>type</name></expr> ?</condition><then> <expr><call><name>getDefaultFromTypeParameter</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="undefined">undefined</literal></expr></else></ternary></expr></lambda></expr></property>,
+    <property><expr><function><name>resolveName</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

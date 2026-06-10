@@ -13140,7 +13140,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         class_expression_js |
 
         // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
-        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_function_check_js() }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
         {
             startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
 
@@ -13159,6 +13159,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && !inTransparentMode(MODE_SUPER_LIST_JS)
             && last_consumed != JS_ARROW
+            && last_consumed != QMARK
             && perform_keywordless_function_check_js()
         }?
         keywordless_function_expression_js[true] |
