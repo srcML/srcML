@@ -20718,9 +20718,11 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
             // consume TypeScript types, if applicable
             if (LA(1) == COLON)
                 colon_type_ts();
-        }
 
-        expression_block_js
+            // this is required; conditional used to handle invalid syntax
+            if (LA(1) == LCURLY)
+                expression_block_js();
+        }
 ;
 
 /*
@@ -20830,9 +20832,11 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
             // consume TypeScript types, if applicable
             if (LA(1) == COLON)
                 colon_type_ts();
-        }
 
-        expression_block_js
+            // this is required; conditional used to handle invalid syntax
+            if (LA(1) == LCURLY)
+                expression_block_js();
+        }
 ;
 
 /*
@@ -21602,9 +21606,11 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
             // consume TypeScript types, if applicable
             if (LA(1) == COLON)
                 colon_type_ts();
-        }
 
-        expression_block_js
+            // this is required; conditional used to handle invalid syntax
+            if (LA(1) == LCURLY)
+                expression_block_js();
+        }
 ;
 
 /*
@@ -21760,9 +21766,11 @@ computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG 
             // consume TypeScript types, if applicable
             if (LA(1) == COLON)
                 colon_type_ts();
-        }
 
-        expression_block_js
+            // this is required; conditional used to handle invalid syntax
+            if (LA(1) == LCURLY)
+                expression_block_js();
+        }
 ;
 
 /*
@@ -21909,9 +21917,11 @@ class_expression_js[] { ENTRY_DEBUG } :
             // consume the "extends" or "implements" portion of an expression-level class, if applicable
             if (LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS)
                 super_list_js();
-        }
 
-        expression_block_js
+            // this is required; conditional used to handle invalid syntax
+            if (LA(1) == LCURLY)
+                expression_block_js();
+        }
 ;
 
 /*
@@ -25398,7 +25408,9 @@ nameless_keywordless_generator_function_expression_js[] { ENTRY_DEBUG } :
             // consume TypeScript types, if applicable
             if (LA(1) == COLON)
                 colon_type_ts();
-        }
 
-        expression_block_js
+            // this is required; conditional used to handle invalid syntax
+            if (LA(1) == LCURLY)
+                expression_block_js();
+        }
 ;
