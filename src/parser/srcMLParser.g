@@ -21460,10 +21460,6 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             { inTransparentMode(MODE_PROPERTY_JS) }?
             colon_property_js |
 
-            // handle all other instances of a colon
-            { LA(1) == COLON }?
-            colon_marked |
-
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -22039,7 +22035,6 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
         istagged = false;
         call_count = 0;
 
-        bool is_complex = false;
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
@@ -22069,7 +22064,7 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
 
                 // do not confuse array indexing (e.g., a[`${type}`]) with tagged templates
                 if (last_consumed_guessing_mode == NAME && LA(1) == LBRACKET)
-                    variable_identifier_array_grammar_sub(is_complex);
+                    bracket_pair();
 
                 if (
                     LA(1) == LCURLY /* start of a block, object, or name list */
@@ -23266,8 +23261,8 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
             // consume a computed property or a NAME
             if (LA(1) == LBRACKET)
                 bracket_pair();
-            else
-                compound_name();
+            else if (LA(1) == NAME)
+                consume();
 
             // handle optional argument list since compound_name will not in guessing mode
             if (LA(1) == TEMPOPS)
@@ -23596,7 +23591,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
 
             // consume a name
             if (LA(1) == NAME) {
-                compound_name();
+                consume();
                 continue_guessing = true;
             }
             // or, consume a constraint (or computed property)
