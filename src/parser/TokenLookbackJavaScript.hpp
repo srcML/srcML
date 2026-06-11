@@ -26,9 +26,12 @@ public:
 
     static int lastTokenType();
 
+    static int lastTokenTypeTwo();
+
 private:
     antlr::TokenStream& input;
-    static int tokenType;
+    static int lookaheadMinusOne;
+    static int lookaheadMinusTwo;
 };
 
 #endif

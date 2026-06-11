@@ -1608,6 +1608,31 @@ javascript_statements[] {
             return;
         }
 
+        // special case: "*(){...}" is a nameless, keywordless generator function in JavaScript
+        if (
+            inMode(MODE_STATEMENT)
+            && (
+                inTransparentMode(MODE_LCURLY_BLOCK_JS)
+                || inMode(MODE_TOP | MODE_STATEMENT | MODE_NEST)
+            )
+            && (
+                LA(1) == MULTOPS
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            )
+            && perform_nameless_keywordless_generator_function_check_js()
+        ) {
+            startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
+            startElement(SEXPRESSION_STATEMENT);
+
+            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            startElement(SEXPRESSION);
+
+            nameless_keywordless_generator_function_expression_js();
+            processed_statement = true;
+            return;
+        }
+
         // [TypeScript] looking for nameless function declarations at the statement-level
         if (
             inMode(MODE_STATEMENT)
@@ -13157,6 +13182,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // Note that "class:" is a property name in an object
         { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
         class_expression_js |
+
+        // looking for "*(){...}" to start a nameless, keywordless generator function in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_nameless_keywordless_generator_function_check_js() }?
+        nameless_keywordless_generator_function_expression_js |
 
         // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
         { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
@@ -25238,4 +25267,133 @@ named_array_with_index_ts[] { bool iscomplex = false; ENTRY_DEBUG } :
         }
 
         variable_identifier_array_grammar_sub[iscomplex]
+;
+
+/*
+  perform_nameless_keywordless_generator_function_check_js
+
+  Checks for special nameless, keywordless generator function syntax in JavaScript.
+  Specifically, functions of the form "*(){...}".
+*/
+perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
+        isfunction = false;
+        int bracket_count = 0;  // for TypeScript types
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional specifiers before checking
+            while (
+                LA(1) == JS_ASYNC
+                || LA(1) == TS_PRIVATE
+                || LA(1) == TS_PROTECTED
+                || LA(1) == TS_PUBLIC
+                || LA(1) == JS_STATIC
+            )
+                consume();
+
+            if (LA(1) == MULTOPS) {
+                consume();  // "*"
+
+                // handle optional TypeScript generic argument list
+                if (LA(1) == TEMPOPS)
+                    angle_bracket_pair();
+
+                // handle required parameter list
+                paren_pair();
+
+                // handle optional TypeScript type
+                if (LA(1) == COLON) {
+                    // consume optional TypeScript type, followed by a typical block
+                    if (
+                        next_token() == LCURLY
+                        && perform_colon_lcurly_differentiator_check_js() == 3
+                    ) {
+                        isfunction = true;
+                    }
+                    // consume optional TypeScript type
+                    else if (next_token() != LCURLY) {
+                        consume();  // ":"
+
+                        while (true) {
+                            // found a statement-level LCURLY, indicating a block
+                            if (bracket_count == 0 && LA(1) == LCURLY)
+                                break;
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (
+                                bracket_count < 0
+                                || LA(1) == 1 /* EOF */
+                                || (bracket_count == 0 && LA(1) == TERMINATE)
+                            )
+                                break;
+
+                            consume();
+                        }
+
+                        if (LA(1) == LCURLY)
+                            isfunction = true;
+                    }
+                }
+                // handle required block
+                else {
+                    curly_pair();
+                    isfunction = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  nameless_keywordless_generator_function_expression_js
+
+  Handles generator functions with no "function" keyword nor name that appear in expressions in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+nameless_keywordless_generator_function_expression_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            startElement(SFUNCTION_GENERATOR_STATEMENT);
+        }
+
+        (
+            // only allow a certain subset of specifiers
+            (options { greedy = true; } :
+                { LA(1) != TS_DECLARE }?
+                specifier_js |
+
+                { LA(1) == TS_PRIVATE || LA(1) == TS_PROTECTED || LA(1) == TS_PUBLIC }?
+                declaration_specifiers_ts
+            )*
+
+            MULTOPS
+
+            // optional TypeScript generic argument list
+            (generic_argument_list_js)*
+        )
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        {
+            // consume TypeScript types, if applicable
+            if (LA(1) == COLON)
+                colon_type_ts();
+        }
+
+        expression_block_js
 ;
