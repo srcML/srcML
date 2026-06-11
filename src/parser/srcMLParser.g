@@ -23785,7 +23785,7 @@ constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             declaration_specifiers_ts |
 
-            compound_name | colon_type_ts
+            compound_name | literals | colon_type_ts
         )*
 
         {

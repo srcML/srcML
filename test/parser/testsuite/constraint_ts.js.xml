@@ -53,6 +53,10 @@
 }</block></ts:interface>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>mappedObject</name><ts:type>: <block>{<decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <literal type="string">"foo"</literal>]</index><ts:type>: <literal type="null">null</literal> <operator>|</operator> <block>{<block_content><decl_stmt><decl><name>x</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt></block_content>}</block></ts:type></ts:constraint></decl></decl_stmt>}</block></ts:type> <init>= <expr><object>{<property><expr><name>foo</name></expr>: <expr><object>{<property><expr><name>x</name></expr>: <expr><literal type="string">"hello"</literal></expr></property>}</object></expr></property>}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- The following should NOT be marked as constraints, although they look similar -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
