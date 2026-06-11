@@ -13591,7 +13591,8 @@ backtick_literal_js[bool markup = true] { LightweightElement element(this); ENTR
                 startElement(SSTRING);
         }
 
-        (BACKTICK_START BACKTICK_END)
+        // if the literal has invalid markup, then it "ends" with a TERMINATE token
+        (BACKTICK_START (BACKTICK_END | TERMINATE))
 ;
 
 /*
@@ -13659,7 +13660,8 @@ dquote_literal_py[] {
 
         (
             (STRING_START | DQUOTE_DOCSTRING_START)
-            (STRING_END | RAW_STRING_END | DQUOTE_DOCSTRING_END | DQUOTE_DOXYGEN_END)
+            // if the literal has invalid markup, then it "ends" with a TERMINATE token
+            (STRING_END | RAW_STRING_END | DQUOTE_DOCSTRING_END | DQUOTE_DOXYGEN_END | TERMINATE)
         )
 ;
 
@@ -13691,7 +13693,8 @@ squote_literal_py[bool markup = true] {
 
         (
             (CHAR_START | SQUOTE_DOCSTRING_START)
-            (CHAR_END | SQUOTE_DOCSTRING_END | SQUOTE_DOXYGEN_END)
+            // if the literal has invalid markup, then it "ends" with a TERMINATE token
+            (CHAR_END | SQUOTE_DOCSTRING_END | SQUOTE_DOXYGEN_END | TERMINATE)
         )
 ;
 
@@ -13706,7 +13709,8 @@ string_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEB
                 startElement(SSTRING);
         }
 
-        (STRING_START (STRING_END | RAW_STRING_END))
+        // if the literal has invalid markup, then it "ends" with a TERMINATE token
+        (STRING_START (STRING_END | RAW_STRING_END | TERMINATE))
 ;
 
 /*
@@ -13722,7 +13726,8 @@ char_literal[bool markup = true] { LightweightElement element(this); ENTRY_DEBUG
             }
         }
 
-        (CHAR_START CHAR_END)
+        // if the literal has invalid markup, then it "ends" with a TERMINATE token
+        (CHAR_START (CHAR_END | TERMINATE))
 ;
 
 /*
