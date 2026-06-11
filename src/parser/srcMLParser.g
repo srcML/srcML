@@ -21957,6 +21957,9 @@ class_expression_js[] { ENTRY_DEBUG } :
             // consume the name for expression-level classes, if applicable
             if (LA(1) == NAME)
                 compound_name();
+            // handle optional generic argument list for nameless generic class expressions
+            else if (LA(1) == TEMPOPS)
+                generic_argument_list_js();
 
             // consume the "extends" or "implements" portion of an expression-level class, if applicable
             if (LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS)

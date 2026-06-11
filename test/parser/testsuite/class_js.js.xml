@@ -81,4 +81,10 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Nameless Generic Class Expression -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C2</name> <init>= <expr><class>class <argument_list type="generic">&lt;<argument><ts:specifier>const</ts:specifier> <expr><name>T</name></expr></argument>&gt;</argument_list> <block>{}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
