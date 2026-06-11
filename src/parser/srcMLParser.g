@@ -22583,14 +22583,20 @@ optional_call_chain_js[] {
 */
 perform_chained_call_count_js[] returns [int numcalls] {
         numcalls = 0;
+        bool is_optional_call = false;
+        int bracket_count = 0;  // "()" and "{}"
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
             while (true) {
+                // immediately exit if the bracket count is negative
+                if (bracket_count < 0) {
+                    break;
+                }
                 // looking for "?.(" or "NAME("
-                if (
+                else if (
                     (
                         last_consumed_guessing_mode == QMARK_PERIOD
                         || last_consumed_guessing_mode == NAME
@@ -22604,6 +22610,16 @@ perform_chained_call_count_js[] returns [int numcalls] {
                 else if (LA(1) == LBRACKET) {
                     bracket_pair();
                 }
+                // looking for the start of a bracket (e.g., "(" and "{")
+                else if (LA(1) == LPAREN || LA(1) == LCURLY) {
+                    ++bracket_count;
+                    consume();
+                }
+                // looking for the end of a bracket (e.g., ")" and "}")
+                else if (LA(1) == RPAREN || LA(1) == RCURLY) {
+                    --bracket_count;
+                    consume();
+                }
                 // only consume the following tokens
                 else if (
                     LA(1) == NAME
@@ -22611,6 +22627,9 @@ perform_chained_call_count_js[] returns [int numcalls] {
                     || LA(1) == QMARK_PERIOD
                     || LT(1)->getText() == "!"
                 ) {
+                    if (LA(1) == QMARK_PERIOD && bracket_count == 0)
+                        is_optional_call = true;
+
                     consume();
                 }
                 // if not one of the expected tokens, break
@@ -22618,6 +22637,10 @@ perform_chained_call_count_js[] returns [int numcalls] {
                     break;
                 }
             }
+
+            // only record call count if the call is an optional chained call
+            if (!is_optional_call)
+                numcalls = 0;
         }
         catch (...) {}
 
