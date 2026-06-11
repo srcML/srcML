@@ -1911,6 +1911,7 @@ javascript_rules[] {
         for_control_js |
 
         // looking for "extends" (JavaScript) or "implements" (TypeScript) for a derivation list
+        { LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS }?
         super_list_js |
 
         // end of file
@@ -13092,6 +13093,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN" }?
         function_declaration_specifiers_ts |
 
+        // special case: generic types (mixins) using the "extends" keyword in TypeScript
+        { inTransparentMode(MODE_TERNARY | MODE_CONDITION) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+        mixins_ts |
+
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
         keyword_iife_js |
@@ -22877,15 +22882,16 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 }
             } |
 
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { LA(1) == JS_EXTENDS }?
+            mixins_ts |
+
             // allow "const" to support constant type parameters
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            (const_as_specifier_ts | expression) |
-
-            // optional generic types (mixins) using the "extends" keyword in TypeScript
-            mixins_ts
+            (const_as_specifier_ts | expression)
         )+
 ;
 
@@ -24422,6 +24428,11 @@ generic_lambda_ts[] {
                 || (
                     LA(1) == TEMPOPE
                     && (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) || was_tempops)
+                )
+                || (
+                    LA(1) == EQUAL
+                    && !inTransparentMode(MODE_MIXINS_TS)
+                    && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
                 )
             }?
             {

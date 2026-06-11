@@ -174,4 +174,12 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>a</name><ts:type>: <operator>(</operator><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><literal type="string">`${'a' &amp; { a: 1 }}`</literal></ts:type></ts:extends></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">2</literal></expr></else></ternary></expr></lambda><operator>)</operator></ts:type> <init>= <expr><literal type="null">null</literal><operator>!</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>c</name><ts:type>: <operator>(</operator><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Uppercase</name><argument_list type="generic">&lt;<argument><expr><literal type="string">'a'</literal> <operator>&amp;</operator> <object>{ <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property> }</object></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">2</literal></expr></else></ternary></expr></lambda><operator>)</operator></ts:type> <init>= <expr><literal type="null">null</literal><operator>!</operator></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
