@@ -19559,6 +19559,10 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 // ensure ";" is not consumed here
                 if (LA(1) == TERMINATE)
@@ -19595,6 +19599,10 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 // ensure non-call ")" is not consumed here
@@ -19716,6 +19724,10 @@ with_lparen_js[] { ENTRY_DEBUG } :
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 // ensure non-call ")" is not consumed here
                 if (LA(1) == RPAREN && lparen_types_js.back() != 'c')
@@ -19763,6 +19775,10 @@ alias_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 // ensure the "}" (for name lists) is not consumed here
@@ -19845,6 +19861,10 @@ declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inTransparentMode(MODE_TERNARY) }?
             colon_marked_js |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -19884,6 +19904,10 @@ declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 // ensure non-call ")" is not consumed here
@@ -20004,6 +20028,10 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -20221,6 +20249,10 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -20629,6 +20661,10 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 )
             }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -21129,6 +21165,10 @@ lambda_js[bool is_list = false] {
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -21420,6 +21460,10 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             { inTransparentMode(MODE_PROPERTY_JS) }?
             colon_property_js |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -21513,6 +21557,10 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             // consume TypeScript types
             { !inTransparentMode(MODE_TERNARY | MODE_THEN) }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -21963,6 +22011,10 @@ yield_expression_js[] { CompleteElement element(this); bool consume_multops = fa
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -22263,6 +22315,10 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -22475,6 +22531,10 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -23921,6 +23981,10 @@ attribute_ts[] { ENTRY_DEBUG } :
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -24377,6 +24441,10 @@ generic_lambda_ts[] {
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -24510,6 +24578,10 @@ generic_function_call_ts[] { CompleteElement element(this); size_t lparen_types_
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -24842,6 +24914,10 @@ global_context_call_js[] { CompleteElement element(this); size_t lparen_types_si
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
 
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -24892,6 +24968,10 @@ global_context_call_js[] { CompleteElement element(this); size_t lparen_types_si
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
@@ -25115,6 +25195,10 @@ dynamic_module_import_ts[] { CompleteElement element(this); size_t lparen_types_
             // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
             { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
             colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             {
                 if (!inMode(MODE_EXPRESSION))
