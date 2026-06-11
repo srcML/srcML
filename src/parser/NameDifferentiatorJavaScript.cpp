@@ -266,15 +266,27 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         || (
             token->getType() == srcMLParser::JS_ASYNC
             && (
-                nextToken->getType() == srcMLParser::JS_ARROW
+                nextToken->getType() == srcMLParser::COLON
+                || nextToken->getType() == srcMLParser::COMMA
+                || nextToken->getType() == srcMLParser::JS_ARROW
                 || nextToken->getType() == srcMLParser::JS_RANGE_IN
                 || nextToken->getType() == srcMLParser::JS_RANGE_OF
                 || nextToken->getType() == srcMLParser::QMARK
+                || nextToken->getType() == srcMLParser::RPAREN
                 || prevNonWhitespaceToken->getType() == srcMLParser::JS_ASYNC
                 || (
                     prevNonWhitespaceToken->getType() == srcMLParser::JS_ARROW
                     && nextToken->getType() != srcMLParser::JS_ASYNC
+                    && nextToken->getType() != srcMLParser::JS_FUNCTION
                     && nextToken->getType() != srcMLParser::LPAREN
+                    && nextToken->getType() != srcMLParser::NAME
+                )
+                || (
+                    srcMLParser::name_differentiator_subset_js_token_set.member(prevNonWhitespaceToken->getType())
+                    && nextToken->getType() != srcMLParser::JS_ASYNC
+                    && nextToken->getType() != srcMLParser::JS_FUNCTION
+                    && nextToken->getType() != srcMLParser::LPAREN
+                    && nextToken->getType() != srcMLParser::MULTOPS
                     && nextToken->getType() != srcMLParser::NAME
                 )
             )

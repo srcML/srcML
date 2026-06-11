@@ -70,6 +70,22 @@
 <decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><specifier>async</specifier> <parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><name>foo</name></expr></lambda></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <name>async</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>async</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>async</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>async</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>async</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>async</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>async</name></decl></parameter>, <parameter><decl><name>async</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>async</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>XMLHttpRequest</name> <block>{
   <ts:function_decl><name>open</name><parameter_list>(
