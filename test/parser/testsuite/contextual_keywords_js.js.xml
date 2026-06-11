@@ -50,6 +50,26 @@
 <for>for <control>(<init><decl><name>async</name> <range>in <expr><object>{ <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property>, <property><expr><name>b</name></expr>: <expr><literal type="number">2</literal></expr></property> }</object></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><name>async</name></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><specifier>async</specifier> <parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><name>async</name></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><specifier>async</specifier> <parameter><decl><name>foo</name></decl></parameter> <operator>=&gt;</operator> <expr><name>foo</name></expr></lambda></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><specifier>async</specifier> <parameter_list>(<parameter><decl><name>foo</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>foo</name></expr></lambda></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><specifier>async</specifier> <parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><name>foo</name></expr></lambda></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>XMLHttpRequest</name> <block>{
   <ts:function_decl><name>open</name><parameter_list>(
