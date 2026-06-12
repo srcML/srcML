@@ -20860,7 +20860,7 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
             // optional "*" for generator functions
             (MULTOPS)*
 
-            (compound_name | bracketless_computed_property_js)
+            (compound_name | bracketless_computed_property_js | computed_property_js)
         )
 
         {
@@ -20925,6 +20925,10 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
             // match "NAME"
             if (LA(1) == NAME) {
                 consume();
+                found_name = true;
+            }
+            else if (LA(1) == LBRACKET) {
+                bracket_pair();
                 found_name = true;
             }
             else {
@@ -21054,6 +21058,9 @@ perform_generator_function_check_js[] returns [bool isgenerator] {
 
                     // found "*NAME"
                     if (LA(1) == NAME)
+                        isgenerator = true;
+                    // found "[". prior check guarantees that it is closed
+                    else if (LA(1) == LBRACKET)
                         isgenerator = true;
 
                     break;

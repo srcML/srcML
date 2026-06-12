@@ -321,6 +321,12 @@
 <decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C4</name> <block>{
+  <expr_stmt><expr><function type="generator"><specifier>static</specifier> *<name type="computed">[<expr><literal type="string">"prototype"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<parameter_list>()</parameter_list><ts:type>: <name>T</name></ts:type> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
 </unit>
