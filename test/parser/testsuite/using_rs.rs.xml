@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="import_rs">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="using_rs">
 
 <unit revision="1.0.0" language="Rust">
 <using>use <name><name>std</name><operator>::</operator><name>io</name></name>;</using>
