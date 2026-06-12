@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="enable_language">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>enable_language</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>enable_language</name><argument_list>(<argument><expr><name>C</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>enable_language</name><argument_list>(<argument><expr><name>C</name></expr></argument> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>enable_language</name><argument_list>(<argument><expr><name>C</name></expr></argument> <argument><expr><name>CXX</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>enable_language</name><argument_list>(<argument><expr><name>C</name></expr></argument> <argument><expr><name>CXX</name></expr></argument> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+</unit>
