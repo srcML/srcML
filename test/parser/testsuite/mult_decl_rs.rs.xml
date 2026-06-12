@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="tuple_decl_rs">
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="mult_decl_rs">
 
 <unit revision="1.0.0" language="Rust">
 <decl_stmt><decl type="let">let <operator>(</operator><name>a</name><operator>)</operator></decl>;</decl_stmt>
