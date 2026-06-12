@@ -195,7 +195,12 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
  */
 bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::RefToken nextToken) const {
     return (
+        // the current token is NOT "default" and the next token is ":"
         (token->getType() != srcMLParser::JS_DEFAULT && nextToken->getType() == srcMLParser::COLON)
+
+        // the current token is "default" and one of the following is true:
+        // - the next token is "as", ")", "}", or "]"
+        // - the previous token was a decl specifier (e.g., "public")
         || (token->getType() == srcMLParser::JS_DEFAULT
             && (
                 nextToken->getType() == srcMLParser::JS_AS
@@ -206,6 +211,11 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || srcMLParser::declaration_specifiers_ts_token_set.member(prevNonWhitespaceToken->getType())
             )
         )
+
+        // the current token is "type" and one of the following is true:
+        // - the next token is an operator, ":", "=", ".", "?", "=>", a terminate (";"), or end-of-file
+        // - the previous token was a ":"
+        // - currently in a "()" or "[]" pair and the next token is ",", ")", or "]"
         || (
             token->getType() == srcMLParser::TS_TYPE
             && (
@@ -228,6 +238,14 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 )
             )
         )
+
+        // the current token is a subset of all keywords and one of the following is true:
+        // - the previous token was on the same line as the current token and the previous token was "="
+        // - the current token is NOT a decl specifier, function specifier, "let", "var", "const", nor "static"
+        //   and the previous token was "("
+        // - the previous token was an operator and either [1.] the previous token was on the same line as the
+        //   current token or [2.] currently in a "()" pair
+        // - the previous token was "as"
         || (
             srcMLParser::name_differentiator_subset_js_token_set.member(token->getType())
             && (
@@ -251,18 +269,37 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || prevNonWhitespaceToken->getType() == srcMLParser::JS_AS
             )
         )
+
+        // the previous token was "await", the current token is a keyword, and the next token is "("
         || (
             prevNonWhitespaceToken->getType() == srcMLParser::JS_AWAIT
             && srcMLParser::name_differentiator_js_token_set.member(token->getType())
             && nextToken->getType() == srcMLParser::LPAREN
         )
+
+        // the previous token was "as" and one of the following is true:
+        // - the current token is "class"
+        // - the current token is "function"
         || (
             (token->getType() == srcMLParser::CLASS || token->getType() == srcMLParser::JS_FUNCTION)
             && prevNonWhitespaceToken->getType() == srcMLParser::JS_AS
         )
+
+        // the token directly before was a "." or the token directly after is also "."
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
+
+        // the token directly before was a "?." or the token directly after is also "?."
         || (prevToken->getType() == srcMLParser::QMARK_PERIOD || nextToken->getType() == srcMLParser::QMARK_PERIOD)
+
+        // the current token is "void" and the next token is "=>"
         || (token->getType() == srcMLParser::JS_VOID && nextToken->getType() == srcMLParser::JS_ARROW)
+
+        // the current token is "async" and one of the following is true:
+        // - the next token is ":", "=>", "in", "of", "?", or ")"
+        // - the previous token was "async"
+        // - the previous token was "=>" and the next token is NOT "async", "function", "(", nor a name
+        // - the previous token was a subset of all keywords and the next token is NOT "async", "function",
+        //   "(", "*", nor a name
         || (
             token->getType() == srcMLParser::JS_ASYNC
             && (
@@ -291,6 +328,9 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 )
             )
         )
+
+        // the previous token was "class" and ALL of the following are true:
+        // - the current token is NOT a name, "{", "extends", nor "implements"
         || (
             prevNonWhitespaceToken->getType() == srcMLParser::CLASS
             && (
@@ -300,6 +340,11 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 && token->getType() != srcMLParser::TS_IMPLEMENTS
             )
         )
+
+        // the code is NOT enclosed in any kind of bracket and ALL of the following are true:
+        // - the previous token was "<" or ","
+        // - the current token is a keyword
+        // - the next token is ">" or ","
         || (
             bracketBuffer.front() == "*"
             && (
@@ -312,7 +357,14 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || nextToken->getType() == srcMLParser::COMMA
             )
         )
+
+        // the current token starts a decl (e.g., "var") and the next token is "("
         || (srcMLParser::decl_start_js_token_set.member(token->getType()) && nextToken->getType() == srcMLParser::LPAREN)
+
+        // the current token is "new" and one of the following is true:
+        // - the previous token was "{"
+        // - the previous token was "}"
+        // - the previous token was a terminate (";")
         || (
             token->getType() == srcMLParser::NEW
             && (
@@ -321,6 +373,15 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || prevNonWhitespaceToken->getType() == srcMLParser::TERMINATE
             )
         )
+
+        // the current token starts a decl (e.g., "var") and both conditions are met:
+        // [condition 1]:
+        // - the current token is "get", "set", "private", "protected", or "public"
+        // - the current token is NOT "async"
+        // - the current token is "async" and the next token is NOT "*" nor a name
+        // [condition 2]:
+        // - the next token is "=", a terminate (";"), the end-of-file, or the next
+        //   token is on a line AFTER the current token
         || (
             srcMLParser::decl_start_js_token_set.member(prevNonWhitespaceToken->getType())
             && (
