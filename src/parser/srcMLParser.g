@@ -21988,7 +21988,13 @@ class_expression_js[] { ENTRY_DEBUG } :
 
   Handles "yield" and "yield*" that appear in expressions in JavaScript.
 */
-yield_expression_js[] { CompleteElement element(this); bool consume_multops = false; ENTRY_DEBUG } :
+yield_expression_js[] {
+        CompleteElement element(this);
+        bool consume_multops = false;
+        size_t lparen_types_size = 0;
+
+        ENTRY_DEBUG
+} :
         {
             startNewMode(MODE_LOCAL);
 
@@ -22008,9 +22014,17 @@ yield_expression_js[] { CompleteElement element(this); bool consume_multops = fa
             // leave a yield generator MULTOPS unmarked
             if (consume_multops && LA(1) == MULTOPS)
                 consume();  // '*'
+
+            lparen_types_size = lparen_types_js.size();
         }
 
         (options { greedy = true; } :
+            // do not consume top-level parameter list for a function
+            { LA(1) == RPAREN && lparen_types_js.back() == 'p' && lparen_types_size == lparen_types_js.size() }?
+            {
+                break;
+            } |
+
             { inMode(MODE_ARGUMENT) }?
             argument |
 

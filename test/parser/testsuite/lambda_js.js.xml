@@ -283,6 +283,11 @@
 </block_content>}</block></lambda></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>args_1</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><call><name>__awaiter</name><argument_list>(<argument><expr><operator>void</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><array>[<expr><operator>...</operator><name>args_1</name></expr>]</array></expr></argument>, <argument><expr><operator>void</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><function type="generator">function* <parameter_list>(<parameter><decl><name>a</name> <init>= <expr><yield>yield</yield></expr></init></decl></parameter> )</parameter_list> <block>{<block_content>
+</block_content>}</block></function></expr></argument>)</argument_list></call></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Edge Case ("typeof" after an arrow) -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
