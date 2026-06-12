@@ -6,6 +6,10 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<command><name>enable_language</name><argument_list>(<option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <command><name>enable_language</name><argument_list>(<argument><expr><name>C</name></expr></argument>)</argument_list></command>
 </unit>
 
