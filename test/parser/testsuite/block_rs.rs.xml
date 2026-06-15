@@ -24,6 +24,12 @@
 </unit>
 
 <unit revision="1.0.0" language="rust">
+<block>{<block_content>
+  <decl_stmt><decl type="let">let <name>x</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="rust">
 <expr_stmt><expr><name>a</name> <operator>=</operator> <expr><block>{<block_content/>}</block></expr></expr>;</expr_stmt>
 </unit>
 

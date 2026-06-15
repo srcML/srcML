@@ -41,4 +41,12 @@
 <decl_stmt><decl type="static">static <name>x</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>x</name>: <type><modifier>*</modifier><specifier>const</specifier> <name>i32</name></type> <init>= <expr><operator>&amp;</operator><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>x</name>: <type><modifier>*</modifier><modifier>mut</modifier> <name>i32</name></type> <init>= <expr><operator>&amp;</operator><operator>mut</operator> <literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>

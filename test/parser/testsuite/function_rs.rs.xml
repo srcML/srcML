@@ -64,6 +64,12 @@
 <block>{<block_content/>}</block></function>
 </unit>
 
-<type><modifier>&amp;</modifier><name>char</name></type>
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type>impl <name>Trait</name></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type>impl <name>FirstTrait</name> + <name>SecondTrait</name></type> <block>{<block_content/>}</block></function>
+</unit>
 
 </unit>
