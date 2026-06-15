@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="enum_rs">
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>ColorSpace</name> <block>{
+  <decl><name>Binary</name></decl>,
+  <struct type="tuple"><name>RGB</name><tuple>(<type><name>u8</name></type>, <type><name>u8</name></type>, <type><name>u8</name></type>)</tuple></struct>,
+  <struct><name>HSV</name> <block>{
+    <decl><name>hue</name>: <type><name>f32</name></type></decl>,
+    <decl><name>saturation</name>: <type><name>f32</name></type></decl>,
+    <decl><name>value</name>: <type><name>f32</name></type></decl>,
+  }</block></struct>
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum><specifier>pub</specifier> enum <name>Result</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>, <parameter><name>E</name></parameter>&gt;</parameter_list> <block>{
+  <struct type="tuple"><name>Ok</name><tuple>(<type><name>T</name></type>)</tuple></struct>,
+  <struct type="tuple"><name>Error</name><tuple>(<type><name>E</name></type>)</tuple></struct>,
+}</block></enum>
+</unit>
+
+</unit>
