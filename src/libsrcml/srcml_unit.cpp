@@ -1403,6 +1403,15 @@ int srcml_write_attribute(struct srcml_unit* unit, const char* prefix, const cha
     if (unit == nullptr || name == nullptr)
         return SRCML_STATUS_INVALID_ARGUMENT;
 
+    if (name && uri && uri == SRCML_SRC_NS_URI) {
+        if (name == "hash"sv) {
+            unit->hash = content;
+        } else if (name == "revision"sv) {
+            unit->revision = content;
+        }
+
+    }
+
     if (unit->unit_translator == nullptr || !unit->unit_translator->add_attribute(prefix, name, uri, content))
         return SRCML_STATUS_INVALID_INPUT;
 
