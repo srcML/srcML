@@ -375,4 +375,28 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::STS_SPECIFIER,                 { "specifier",          TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_TYPE,                      { "type",               TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_TYPEDEF,                   { "typedef",            TS,      0,           0,        0,                   0 }},
+
+    // CMake
+    { TOKEN::SBLOCK_STATEMENT,              { "block_stmt",        SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SBRACKET_ARGUMENT,             { "literal",           SRC, "type",             "string", "format",     "bracket" }},
+    { TOKEN::SBOOLEAN_VALUE_TRUE,           { "literal",           SRC, "type",            "boolean",  "value",        "true" }},
+    { TOKEN::SBOOLEAN_VALUE_FALSE,          { "literal",           SRC, "type",            "boolean",  "value",       "false" }},
+    { TOKEN::SCOMMAND,                      { "command",           SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SCOMPILER_FLAG_CMAKE,          { "flag",              SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SINCLUDE_CMAKE,                { "include",           SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SMACRO_DEFINITION,             { "macro_defn",        SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SOPTION,                       { "option",            SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SPROPAGATE,                    { "propagate",         SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SRANGE_IN_CMAKE,               { "range",             SRC, "type",                 "in",        0,             0 }},
+    { TOKEN::SRANGE_IN_ITEMS_CMAKE,         { "range",             SRC, "type",           "in items",        0,             0 }},
+    { TOKEN::SRANGE_IN_ITEMS_LISTS_CMAKE,   { "range",             SRC, "type",     "in items lists",        0,             0 }},
+    { TOKEN::SRANGE_IN_LISTS_CMAKE,         { "range",             SRC, "type",           "in lists",        0,             0 }},
+    { TOKEN::SRANGE_IN_LISTS_ITEMS_CMAKE,   { "range",             SRC, "type",     "in lists items",        0,             0 }},
+    { TOKEN::SRANGE_KEYWORD,                { "range",             SRC, "type",              "range",        0,             0 }},
+    { TOKEN::SSCOPE_POLICIES,               { "scope",             SRC, "type",           "policies",        0,             0 }},
+    { TOKEN::SSCOPE_POLICIES_VARIABLES,     { "scope",             SRC, "type", "policies variables",        0,             0 }},
+    { TOKEN::SSCOPE_VARIABLES,              { "scope",             SRC, "type",          "variables",        0,             0 }},
+    { TOKEN::SSCOPE_VARIABLES_POLICIES,     { "scope",             SRC, "type", "variables policies",        0,             0 }},
+    { TOKEN::SSTRING_CMAKE,                 { "string",            SRC,      0,                    0,        0,             0 }},
+
 };

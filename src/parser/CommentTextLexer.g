@@ -77,6 +77,8 @@ tokens {
     PY_SIMPLE_DQUOTE_STRING_END;
     PY_SQUOTE_STRING_START;
     PY_SIMPLE_SQUOTE_STRING_END;
+    BRACKET_ARGUMENT_END;
+    CMAKE_BLOCK_COMMENT_END;
 }
 
 {
@@ -209,7 +211,7 @@ COMMENT_TEXT {
 
             ;
 
-        } else if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || mode == HASHBANG_COMMENT_END || mode == HASHTAG_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END) && (onpreprocline /* || rawstring */))) {
+        } else if (mode == LINE_COMMENT_END || mode == LINE_DOXYGEN_COMMENT_END || mode == HASHBANG_COMMENT_END || mode == HASHTAG_COMMENT_END || (((mode == STRING_END || mode == RAW_STRING_END) || mode == CHAR_END || mode == BRACKET_ARGUMENT_END) && (onpreprocline /* || rawstring */))) {
           $setType(mode);
           selector->pop();
         }
@@ -446,7 +448,14 @@ COMMENT_TEXT {
         }
     } |
 
-    ']'..'_' |
+    ']' {
+        // detect the end of a CMake bracket argument or block comment (both end with '=]' or ']]')
+        if ((mode == BRACKET_ARGUMENT_END || mode == CMAKE_BLOCK_COMMENT_END) && (lookaheadMinusTwo == '=' || lookaheadMinusTwo == ']')) {
+            $setType(mode); selector->pop();
+        }
+    } |
+
+    '^'..'_' |
 
     '`' {
         if (scopeCount == 0 && lookaheadMinusTwo != '\\' && mode == BACKTICK_END) {

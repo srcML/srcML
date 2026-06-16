@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="macro">
+
+<unit revision="1.0.0" language="CMake">
+<macro_defn>macro(<name>BUILD_PLATFORM</name>)<block>
+    <command><name>set</name><argument_list>(<argument><expr><name>Example_VERSION_MAJOR</name></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></command>
+    <command><name>set</name><argument_list>(<argument><expr><name>Example_VERSION_MINOR</name></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></command>
+
+    <command><name>configure_file</name><argument_list>(
+        <argument><expr><literal type="string">"${<name>CMAKE_SOURCE_DIR</name>}/cmake.in/Example.h.in"</literal></expr></argument>
+        <argument><expr><literal type="string">"${<name>EXAMPLE_SOURCE_DIRECTORY</name>}/generated/Example.h"</literal></expr></argument>
+    )</argument_list></command>
+</block>endmacro()</macro_defn>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<macro_defn>macro(<name>_GLOB_SOURCES</name> <parameter><expr><name>LIBRARY_NAME</name></expr></parameter>)<block>
+    <command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CUDA_SOURCES</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><literal type="string">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>LIBRARY_NAME</name>}/*.cu</literal></expr></argument></option>)</argument_list></command>
+    <command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CUDA_HEADERS</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><literal type="string">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>LIBRARY_NAME</name>}/*.cuh</literal></expr></argument></option>)</argument_list></command>
+
+    <command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CPP_SOURCES</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><literal type="string">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>LIBRARY_NAME</name>}/*.cpp</literal></expr></argument></option>)</argument_list></command>
+    <command><name>file</name><argument_list>(<option><name>GLOB_RECURSE</name> <argument><expr><name>CPP_HEADERS</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><literal type="string">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>LIBRARY_NAME</name>}/*.h</literal></expr></argument> <argument><expr><literal type="string">${<name>LIBRARY_NAME</name>}/*.hpp</literal></expr></argument></option>)</argument_list></command>
+
+    <command><name>file</name><argument_list>(<option><name>GLOB</name> <argument><expr><name>UIS</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><literal type="string">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>LIBRARY_NAME</name>}/*.ui</literal></expr></argument></option>)</argument_list></command>
+    <command><name>file</name><argument_list>(<option><name>GLOB</name> <argument><expr><name>QT_SOURCES</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><literal type="string">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>LIBRARY_NAME</name>}/qt/*.cpp</literal></expr></argument>  <argument><expr><literal type="string">${<name>EXECUTABLE_NAME</name>}/qt/*.cu</literal></expr></argument></option>)</argument_list></command>
+    <command><name>file</name><argument_list>(<option><name>GLOB</name> <argument><expr><name>QT_HEADERS</name></expr></argument></option> <option><name>RELATIVE</name> <argument><expr><literal type="string">${<name>CMAKE_CURRENT_SOURCE_DIR</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>LIBRARY_NAME</name>}/qt/*.h</literal></expr></argument>  <argument><expr><literal type="string">${<name>EXECUTABLE_NAME</name>}/qt/*.cuh</literal></expr></argument></option>)</argument_list></command>
+</block>endmacro()</macro_defn>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<macro_defn>macro(<name>source_group_by_dir</name> <parameter><expr><name>proj_dir</name></expr></parameter> <parameter><expr><name>source_files</name></expr></parameter>)<block>
+    <if_stmt><if>if<condition>(MSVC <expr><operator>OR</operator> <name>APPLE</name></expr>)</condition><block>
+        <command><name>get_filename_component</name><argument_list>(<argument><expr><name>sgbd_cur_dir</name></expr></argument> <argument><expr><literal type="string">${<name>proj_dir</name>}</literal></expr></argument> <option><name>ABSOLUTE</name></option>)</argument_list></command>
+        <foreach>foreach<control>(<expr><name>sgbd_file</name></expr> <range><expr><literal type="string">${${<name>source_files</name>}}</literal></expr></range>)</control><block>
+            <command><name>get_filename_component</name><argument_list>(<argument><expr><name>sgbd_abs_file</name></expr></argument> <argument><expr><literal type="string">${<name>sgbd_file</name>}</literal></expr></argument> <option><name>ABSOLUTE</name></option>)</argument_list></command>
+            <command><name>file</name><argument_list>(<option><name>RELATIVE_PATH</name> <argument><expr><name>sgbd_fpath</name></expr></argument> <argument><expr><literal type="string">${<name>sgbd_cur_dir</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>sgbd_abs_file</name>}</literal></expr></argument></option>)</argument_list></command>
+            <command><name>string</name><argument_list>(<option><name>REGEX</name></option> <option><name>REPLACE</name> <argument><expr><literal type="string">"\(.*\)/.*"</literal></expr></argument> <argument><expr><operator>\</operator></expr></argument><argument><expr><operator>\</operator></expr></argument><argument><expr><literal type="number">1</literal></expr></argument> <argument><expr><name>sgbd_group_name</name></expr></argument> <argument><expr><literal type="string">${<name>sgbd_fpath</name>}</literal></expr></argument></option>)</argument_list></command>
+            <command><name>string</name><argument_list>(<option><name>COMPARE</name> <argument><expr><operator>EQUAL</operator></expr></argument> <argument><expr><literal type="string">${<name>sgbd_fpath</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>sgbd_group_name</name>}</literal></expr></argument> <argument><expr><name>sgbd_nogroup</name></expr></argument></option>)</argument_list></command>
+            <command><name>string</name><argument_list>(<option><name>REPLACE</name> <argument><expr><literal type="string">"/"</literal></expr></argument> <argument><expr><literal type="string">"\\"</literal></expr></argument> <argument><expr><name>sgbd_group_name</name></expr></argument> <argument><expr><literal type="string">${<name>sgbd_group_name</name>}</literal></expr></argument></option>)</argument_list></command>
+            <if_stmt><if>if<condition>(<expr><name>sgbd_nogroup</name></expr>)</condition><block>
+                <command><name>set</name><argument_list>(<argument><expr><name>sgbd_group_name</name></expr></argument> <argument><expr><literal type="string">"\\"</literal></expr></argument>)</argument_list></command>
+            </block></if>endif()</if_stmt>
+            <command><name>source_group</name><argument_list>(<argument><expr><literal type="string">${<name>sgbd_group_name</name>}</literal></expr></argument> <option><name>FILES</name> <argument><expr><literal type="string">${<name>sgbd_file</name>}</literal></expr></argument></option>)</argument_list></command>
+        </block>endforeach()</foreach>
+    </block></if>endif()</if_stmt>
+</block>endmacro()</macro_defn>
+</unit>
+
+</unit>

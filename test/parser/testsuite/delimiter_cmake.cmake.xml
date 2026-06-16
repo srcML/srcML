@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="delimiter">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<option><name>TOUCH</name>;<argument><expr><name>FILENAME</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<option><name>TOUCH</name> <argument><expr><name>FILENAME</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<option><name>READ</name>;<argument><expr><name>FILENAME</name></expr></argument>;<argument><expr><name>OUTPUT_VAR</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<option><name>READ</name> <argument><expr><name>FILENAME</name></expr></argument> <argument><expr><name>OUTPUT_VAR</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<option><name>CHMOD</name>;<argument><expr><name>SCRIPT</name></expr></argument></option>;<option><name>PERMISSIONS</name>;<argument><expr><name>OWNER_READ</name></expr></argument>;<argument><expr><name>OWNER_WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<option><name>CHMOD</name> <argument><expr><name>SCRIPT</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>OWNER_READ</name></expr></argument> <argument><expr><name>OWNER_WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<argument><expr><name>ARG_1</name></expr></argument>;<argument><expr><name>ARG_2</name></expr></argument>;<argument><expr><name>ARG_3</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>file</name><argument_list>(<argument><expr><name>ARG_1</name></expr></argument> <argument><expr><name>ARG_2</name></expr></argument> <argument><expr><name>ARG_3</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<foreach>foreach<control>(<expr><name>arg</name></expr>
+    <range><expr><name>NoSpace</name></expr>
+    <expr><name>Argument-Name-With-Dashes</name></expr>
+    <expr><name>Escaped\ Space</name></expr>
+    <expr><name>This</name></expr>;<expr><name>Divides</name></expr>;<expr><name>Into</name></expr>;<expr><name>Five</name></expr>;<expr><name>Arguments</name></expr>
+    <expr><name>Escaped\;Semicolon</name></expr></range>
+    )</control><block>
+  <command><name>message</name><argument_list>(<argument><expr><literal type="string">"${<name>arg</name>}"</literal></expr></argument>)</argument_list></command>
+</block>endforeach()</foreach>
+</unit>
+
+</unit>

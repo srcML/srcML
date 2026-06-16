@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="block_stmt">
+
+<unit revision="1.0.0" language="CMake">
+<block_stmt>block()<block/>endblock()</block_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<block_stmt>block()<block>
+    <command><name>add_subdirectory</name><argument_list>(<argument><expr><name>external/tests</name></expr></argument> <option><name>EXCLUDE_FROM_ALL</name></option> <option><name>SYSTEM</name></option>)</argument_list></command>
+</block>endblock()</block_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<block_stmt>block(<propagate>PROPAGATE <expr><name>TARGET_NAME</name></expr> <expr><name>TARGET_ALIASES</name></expr></propagate>)<block>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"srcML"</literal></expr></argument>)</argument_list></command>
+</block>endblock()</block_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<block_stmt>block(<scope type="policies">SCOPE_FOR POLICIES</scope>)<block>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"srcML"</literal></expr></argument>)</argument_list></command>
+</block>endblock()</block_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<block_stmt>block(<scope type="variables">SCOPE_FOR VARIABLES</scope>)<block>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"srcML"</literal></expr></argument>)</argument_list></command>
+</block>endblock()</block_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<block_stmt>block(<scope type="policies variables">SCOPE_FOR POLICIES VARIABLES</scope>)<block>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"srcML"</literal></expr></argument>)</argument_list></command>
+</block>endblock()</block_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<block_stmt>block(<scope type="variables policies">SCOPE_FOR VARIABLES POLICIES</scope>)<block>
+    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"srcML"</literal></expr></argument>)</argument_list></command>
+</block>endblock()</block_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<block_stmt>block(<scope type="variables">SCOPE_FOR VARIABLES</scope> <propagate>PROPAGATE <expr><name>MAJOR_VERSION</name></expr> <expr><name>MINOR_VERSION</name></expr></propagate>)<block>
+    <command><name>set</name><argument_list>(<argument><expr><name>VERSION_PATH</name></expr></argument> <argument><expr><literal type="string">"${<name>PROJECT_SOURCE_DIR</name>}/projects/version"</literal></expr></argument>)</argument_list></command>
+    <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <operator>EXISTS</operator> <literal type="string">"${<name>VERSION_PATH</name>}"</literal></expr>)</condition><block>
+        <command><name>message</name><argument_list>(<option><name>FATAL_ERROR</name></option> <argument><expr><literal type="string">"Could not find version file: ${<name>VERSION_PATH</name>}"</literal></expr></argument>)</argument_list></command>
+    </block></if>endif()</if_stmt>
+</block>endblock()</block_stmt>
+</unit>
+
+</unit>

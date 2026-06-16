@@ -139,10 +139,13 @@ OPERATORS options { testLiterals = true; } {
 } : (
     // # (C++/Python/JavaScript), #! (Python/JavaScript)
     '#' (
-        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) == '!' }?
+        { inLanguage(LANGUAGE_CMAKE) && LA(1) == '[' && (LA(2) == '[' || LA(2) == '=') }?
+            { $setType(CMAKE_BLOCK_COMMENT_START); changetotextlexer(CMAKE_BLOCK_COMMENT_END); } |
+
+        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_CMAKE)) && LA(1) == '!' }?
             { $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END); } |
 
-        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) != '!' }?
+        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_CMAKE)) && LA(1) != '!' }?
             { $setType(HASHTAG_COMMENT_START); changetotextlexer(HASHTAG_COMMENT_END); } |
 
         // Names can include '#' (JavaScript)
@@ -162,7 +165,21 @@ OPERATORS options { testLiterals = true; } {
     )? |
 
     '+' ('+' | '=')? |
-    '-' ('-' | '=' | '>' ('*')? )? |
+    
+    // Compiler flags can begin with '-' or '--' (CMake)
+    '-' (
+        { inLanguage(LANGUAGE_CMAKE) && LA(1) == '-' }?
+          '-' { inLanguage(LANGUAGE_CMAKE) }? (({ $setType(CMAKE_COMPILER_FLAG); } ~(' ' | '\t' | '\n' | ';' | ')'))*)
+        |
+        { inLanguage(LANGUAGE_CMAKE) }?
+          { $setType(CMAKE_COMPILER_FLAG); } (~(' ' | '\t' | '\n' | ';' | ')'))*
+        |
+          '-'
+        |
+          '='
+        |
+          '>' ('*')?
+    )? |
 
     // *, *=, ** (Python/JavaScript), **= (Python/JavaScript)
     '*' ({ inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) }? '*')? ('=')? |
@@ -452,7 +469,7 @@ OPERATORS options { testLiterals = true; } {
     )? |
 
     // match these as individual operators only
-    ',' | ';' | '('..')' | '[' | ']' | '{' | '}' | 
+    ',' | ';' | '('..')' | ']' | '{' | '}' | 
 
     // names can start with a @ in C#
     '@' (

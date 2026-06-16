@@ -55,12 +55,16 @@ int main(int, char* argv[]) {
         dassert(srcml_check_language("JavaScript"), 64);
     }
 
+    {
+        dassert(srcml_check_language("CMake"), 128);
+    }
+
     /*
       srcml_get_language_list_size
     */
 
     {
-        dassert(srcml_get_language_list_size(), 7);
+        dassert(srcml_get_language_list_size(), 9);
     }
 
     /*
@@ -92,11 +96,15 @@ int main(int, char* argv[]) {
     }
 
     {
-        dassert(srcml_get_language_list(6), std::string("Objective-C"));
+        dassert(srcml_get_language_list(6), std::string("CMake"));
     }
 
     {
-        dassert(srcml_get_language_list(7), 0);
+        dassert(srcml_get_language_list(7), std::string("Objective-C"));
+    }
+
+    {
+        dassert(srcml_get_language_list(8), 0);
     }
 
     /*

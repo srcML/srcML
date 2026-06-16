@@ -172,7 +172,9 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::HASHTAG_COMMENT_START,
     srcMLParser::HASHTAG_COMMENT_END,
     srcMLParser::HTML_COMMENT_START,
-    srcMLParser::HTML_COMMENT_END
+    srcMLParser::HASHTAG_COMMENT_END,
+    srcMLParser::CMAKE_BLOCK_COMMENT_START,
+    srcMLParser::CMAKE_BLOCK_COMMENT_END
 )
 
 token_set(srcMLParser, duplex_keyword_set,
