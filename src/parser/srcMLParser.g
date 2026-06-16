@@ -1286,23 +1286,25 @@ public:
         temp_array[BREAK]    = { SBREAK_STATEMENT, 0, MODE_STATEMENT | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CONTINUE] = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST, 0, &srcMLParser::if_statement_start_cmake, &srcMLParser::cmake_paren_pair_begin_statement };
-        temp_array[ENDIF]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[IF]       = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
         temp_array[INCLUDE]  = { SINCLUDE_CMAKE, 0, MODE_STATEMENT | MODE_INCLUDE_CMAKE | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[RETURN]   = { SRETURN_STATEMENT, 0, MODE_STATEMENT | MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[WHILE]    = { SWHILE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_WHILE_LOOP_CMAKE, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
 
         /* CMAKE STATEMENTS */
-        temp_array[CMAKE_BLOCK]       = { SBLOCK_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_BLOCK_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_block_statement };
+        temp_array[CMAKE_BLOCK]    = { SBLOCK_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_BLOCK_STATEMENT_CMAKE, 0, nullptr, &srcMLParser::cmake_block_statement };
+        temp_array[CMAKE_ELSEIF]   = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
+        temp_array[CMAKE_FOREACH]  = { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_FOREACH_CMAKE, 0, nullptr, &srcMLParser::cmake_control };
+        temp_array[CMAKE_FUNCTION] = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_FUNCTION_CMAKE, 0, nullptr, &srcMLParser::cmake_parameter_list };
+        temp_array[CMAKE_MACRO]    = { SMACRO_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_MACRO_CMAKE, 0, nullptr, &srcMLParser::cmake_parameter_list };
+
+        /* CMAKE END STATEMENTS */
         temp_array[CMAKE_ENDBLOCK]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CMAKE_ENDFOREACH]  = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CMAKE_ENDFUNCTION] = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
-        temp_array[CMAKE_ELSEIF]      = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_cmake, nullptr };
+        temp_array[CMAKE_ENDIF]       = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CMAKE_ENDMACRO]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
         temp_array[CMAKE_ENDWHILE]    = { SNOP, MODE_PAREN_ENDS_STATEMENT_CMAKE, 0, 0, &srcMLParser::end_down_to_end_token_cmake, &srcMLParser::cmake_paren_pair_end_statement };
-        temp_array[CMAKE_FOREACH]     = { SFOREACH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_FOREACH_CMAKE, 0, nullptr, &srcMLParser::cmake_control };
-        temp_array[CMAKE_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_FUNCTION_CMAKE, 0, nullptr, &srcMLParser::cmake_parameter_list };
-        temp_array[CMAKE_MACRO]       = { SMACRO_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_ENDTOKEN_CMAKE | MODE_MACRO_CMAKE, 0, nullptr, &srcMLParser::cmake_parameter_list };
 
         return temp_array;
     }
@@ -2132,22 +2134,16 @@ javascript_rules[] {
 
   Order of evaluation is important.
 */
-start_cmake[] {
+start_cmake[] { ENTRY_DEBUG_START ENTRY_DEBUG
         ++start_count;
 
         /*
           May need to increase these constants in the future as more tokens are added
         */
 
-        // The number of tokens is the next highest "hundred" in `srcMLParserTokenTypes.txt` in the build directory
-        const size_t TOKEN_TYPES_SIZE = 700;
-
-        // The CMake rule size must start at a value 100 greater than the token types size directly above
-        const size_t CMAKE_RULES_SIZE = TOKEN_TYPES_SIZE + 100;
-
         // CMake rules adhere to the following form:
         // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
-        static const std::array<Rule, CMAKE_RULES_SIZE> cmake_rules = getCMakeRules<CMAKE_RULES_SIZE>();
+        const auto& cmake_rules = getStaticCMakeRules();
 
         // invoke the table to handle keywords (if the next token is a left parenthesis)
         if (LA(1) != NAME && inMode(MODE_STATEMENT)) {
@@ -2165,8 +2161,7 @@ start_cmake[] {
         int command_count = 0;
         bool isempty = false;
 
-        ENTRY_DEBUG_START
-        ENTRY_DEBUG
+
 } :
         // mark up built-in and generic CMake commands
         { inMode(MODE_STATEMENT) }?

@@ -396,6 +396,7 @@ tokens {
     CMAKE_ENDBLOCK;
     CMAKE_ENDFOREACH;
     CMAKE_ENDFUNCTION;
+    CMAKE_ENDIF;
     CMAKE_ELSEIF;
     CMAKE_ENDMACRO;
     CMAKE_ENDWHILE;
@@ -1153,6 +1154,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "endblock"     , CMAKE_ENDBLOCK    , LANGUAGE_CMAKE },
         { "endforeach"   , CMAKE_ENDFOREACH  , LANGUAGE_CMAKE },
         { "endfunction"  , CMAKE_ENDFUNCTION , LANGUAGE_CMAKE },
+        { "endif"        , CMAKE_ENDIF ,       LANGUAGE_CMAKE },
         { "elseif"       , CMAKE_ELSEIF      , LANGUAGE_CMAKE },
         { "endmacro"     , CMAKE_ENDMACRO    , LANGUAGE_CMAKE },
         { "endwhile"     , CMAKE_ENDWHILE    , LANGUAGE_CMAKE },
