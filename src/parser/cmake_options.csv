@@ -189,7 +189,7 @@ string,JSON|1,ERROR_VARIABLE|1:GET|1:TYPE|1:MEMBER|1:LENGTH|1:REMOVE|1:SET|1:EQU
 subdir_depends,_
 subdirs,_,EXCLUDE_FROM_ALL|-1:PREORDER|0
 target_compile_definitions,_,INTERFACE|-1:PUBLIC|-1:PRIVATE|-1
-target_compile_features,_,INTERFACE|1:PUBLIC|1:PRIVATE|1
+target_compile_features,_,INTERFACE|-1:PUBLIC|-1:PRIVATE|-1
 target_compile_options,_,BEFORE|0:INTERFACE|-1:PUBLIC|-1:PRIVATE|-1
 target_include_directories,_,SYSTEM|0:AFTER|0:BEFORE|0:INTERFACE|1:PUBLIC|1:PRIVATE|1
 target_link_directories,_,BEFORE|0:INTERFACE|-1:PUBLIC|-1:PRIVATE|-1
