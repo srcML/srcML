@@ -126,10 +126,6 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr><array>[]</array></expr>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
 <expr><array>[<expr><name>a</name></expr>, <expr><name>b</name></expr>, <expr><name>c</name></expr>]</array> <operator>=</operator> <array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr>
 </unit>
 

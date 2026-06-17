@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="literal_rs">
+
+<!-- boolean values -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="boolean">true</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="boolean">false</literal></expr>
+</unit>
+
+<!-- decimal integers -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123456789</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0i8</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0u8</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0i16</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0u16</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0i32</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0u32</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0i64</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0u64</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0i128</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0u128</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123_456_789</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123_456_789_</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123________456________789________</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0_i32</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0________i32</literal></expr>
+</unit>
+
+<!-- hexadecimal integers -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0xff</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0xFF</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0xFfFf</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0xff_i64</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0xff_u64</literal></expr>
+</unit>
+
+<!-- octonary integers -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0o77</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0o77_i64</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0o77_u64</literal></expr>
+</unit>
+
+<!-- binary integers -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0b0</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0b00000000</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0b00000000i32</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0b11111111_00000000_11111111</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0b11111111________00000000________11111111</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0b11111111________00000000________11111111i________i64</literal></expr>
+</unit>
+
+<!-- pointer-sized integer -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0isize</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0usize</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123_456_789_isize</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123_456_789_usize</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123_456_789_usize</literal></expr>
+</unit>
+
+<!-- floating-point numbers -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0.</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0.0</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123456789.</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123456789.0</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">123_456_789_.0_</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0.0f32</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="number">0.0f64</literal></expr>
+</unit>
+
+<!-- strings -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">""</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">" "</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">"Hello, world!"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">"!\"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">"
+Hello, world!
+"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">"Hello, \
+world!"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">"Hello, \
+
+world!"</literal></expr>
+</unit>
+
+<!-- characters -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="char">''</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="char">' '</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="char">'a'</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="char">'\0'</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="char">'\x00'</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="char">'\u{00E6}'</literal></expr>
+</unit>
+
+<!-- raw strings -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">r""</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">r" "</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">r#""#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">r#""""""""#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">r#" " " " " " " "#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">r########""########</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">r"Hello, world!"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">r#"!"$#%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}"#</literal></expr>
+</unit>
+
+<!-- bytes and byte arrays -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b''</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b' '</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b""</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b" "</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b'0'</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b"0"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b'\0'</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b"\0"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b'\x00'</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b"\x00"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b"0A"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">b"!\"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}"</literal></expr>
+</unit>
+
+<!-- raw byte arrays-->
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">br""</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">br" "</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">br#""#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">br#""""""""#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">br#" " " " " " " "#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">br########""########</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">br#"!"$#%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}"#</literal></expr>
+</unit>
+
+<!-- c-strings -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">c""</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">c" "</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">c"Hello, world!"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">c"!\"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">c"
+Hello, world!
+"</literal></expr>
+</unit>
+
+<!-- raw c-strings -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">cr""</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">cr" "</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">cr#""#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">cr#""""""""#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">cr#" " " " " " " "#</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">cr########""########</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">cr"Hello, world!"</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><literal type="string">cr#"!"$#%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}"#</literal></expr>
+</unit>
+
+</unit>
