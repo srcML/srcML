@@ -1582,6 +1582,20 @@ javascript_statements[] {
         )
             label_js();
 
+        // special case: "global {}" is a global declaration in a TypeScript declaration file
+        if (
+            inMode(MODE_STATEMENT)
+            && LA(1) == NAME
+            && LT(1)->getText() == "global"
+            && next_token() == LCURLY
+        ) {
+            startNewMode(MODE_STATEMENT | MODE_NEST);
+            startElement(STS_DECLARE_STATEMENT);
+
+            startNewMode(MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION);
+            compound_name();
+        }
+
         // special case: consume TERMINATE separating "then" and "else" portions of multi-line ternary
         if (
             LA(1) == TERMINATE
