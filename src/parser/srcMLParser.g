@@ -20742,7 +20742,6 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
                 { LA(1) != TS_DECLARE }?
                 specifier_js |
 
-                { LA(1) == TS_PRIVATE || LA(1) == TS_PROTECTED || LA(1) == TS_PUBLIC }?
                 declaration_specifiers_ts
             )*
 
@@ -20867,7 +20866,6 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
                 { LA(1) != TS_DECLARE }?
                 specifier_js |
 
-                { LA(1) == TS_PRIVATE || LA(1) == TS_PROTECTED || LA(1) == TS_PUBLIC }?
                 declaration_specifiers_ts
             )*
 
@@ -20924,11 +20922,11 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
 
             // consume optional specifiers before checking
             while (
-                LA(1) == JS_ASYNC
-                || LA(1) == TS_PRIVATE
-                || LA(1) == TS_PROTECTED
-                || LA(1) == TS_PUBLIC
-                || LA(1) == JS_STATIC
+                LA(1) != TS_DECLARE
+                && (
+                    specifier_js_token_set.member((unsigned int) LA(1))
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
             )
                 consume();
 
@@ -25453,11 +25451,11 @@ perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunct
         try {
             // consume optional specifiers before checking
             while (
-                LA(1) == JS_ASYNC
-                || LA(1) == TS_PRIVATE
-                || LA(1) == TS_PROTECTED
-                || LA(1) == TS_PUBLIC
-                || LA(1) == JS_STATIC
+                LA(1) != TS_DECLARE
+                && (
+                    specifier_js_token_set.member((unsigned int) LA(1))
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
             )
                 consume();
 
@@ -25535,7 +25533,6 @@ nameless_keywordless_generator_function_expression_js[] { ENTRY_DEBUG } :
                 { LA(1) != TS_DECLARE }?
                 specifier_js |
 
-                { LA(1) == TS_PRIVATE || LA(1) == TS_PROTECTED || LA(1) == TS_PUBLIC }?
                 declaration_specifiers_ts
             )*
 
