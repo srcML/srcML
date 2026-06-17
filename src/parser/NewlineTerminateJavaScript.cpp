@@ -287,6 +287,7 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                 containsEOL
                 && (bracketTokenTracker.front() == "*" || bracketTokenTracker.front() == "{")
                 && (token->getType() == srcMLParser::RPAREN || token->getType() == srcMLParser::RBRACKET)
+                && nextNonSkipToken->getType() != srcMLParser::QMARK
             )
 
             // an EOL separates a JSX literal (e.g., "<div/>") and any non-skip token

@@ -23053,6 +23053,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                     && tempops_count_ts == 0
                     && LA(1) != REFOPS
                     && LA(1) != JS_EXTENDS
+                    && LA(1) != COLON
                     && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
                     && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
                     && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
@@ -23419,7 +23420,7 @@ function_declaration_ts[] { ENTRY_DEBUG } :
 
             (compound_name | computed_property_js)
 
-            (generic_argument_list)*
+            (generic_argument_list_js)*
 
             javascript_parameter_list
         )
