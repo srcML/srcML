@@ -1158,7 +1158,7 @@ public:
         temp_array[JS_GET_LBRACKET]     = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
         temp_array[JS_SET_LBRACKET]     = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
         temp_array[JS_STATIC_LCURLY]    = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a 'static' declaration from a 'static {}' block
-        temp_array[JS_WITH_LPAREN]      = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_WITH_JS, 0, nullptr, &srcMLParser::with_lparen_js };  // extra consume for '(' is in the provided rule
+        temp_array[JS_WITH_LPAREN]      = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_WITH_JS | MODE_LCURLY_BLOCK_JS | MODE_BLOCK | MODE_EXPECT, nullptr, &srcMLParser::with_lparen_js };  // extra consume for '(' is in the provided rule
         temp_array[JS_YIELD_MULTOPS]    = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
 
         return temp_array;
@@ -19705,9 +19705,20 @@ perform_with_as_function_decl_check_ts[] returns [bool isdecl] {
   Handles a parenthesized expression after a "with" statement in JavaScript.
 */
 with_lparen_js[] { ENTRY_DEBUG } :
+        {
+            lparen_types_js.emplace_back('w');  // with LPAREN
+            bracket_types_js.emplace_back("wLPAREN");
+        }
+
         LPAREN
 
         (options { greedy = true; } :
+            // ensure non-call RPAREN (")") is not consumed here
+            { LA(1) == RPAREN && lparen_types_js.back() != 'c' }?
+            {
+                break;
+            } |
+
             { inMode(MODE_ARGUMENT) }?
             argument |
 
@@ -19724,10 +19735,6 @@ with_lparen_js[] { ENTRY_DEBUG } :
             colon_marked |
 
             {
-                // ensure non-call ")" is not consumed here
-                if (LA(1) == RPAREN && lparen_types_js.back() != 'c')
-                    break;
-
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
@@ -19739,6 +19746,14 @@ with_lparen_js[] { ENTRY_DEBUG } :
         )*
 
         {
+            if (LA(1) == RPAREN) {
+                if (lparen_types_js.back() == 'w')
+                    lparen_types_js.pop_back();
+
+                if (bracket_types_js.back() == "wLPAREN")
+                    bracket_types_js.pop_back();
+            }
+
             if (inTransparentMode(MODE_WITH_JS))
                 endDownToMode(MODE_WITH_JS);
         }

@@ -25,4 +25,14 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><call><name>bar</name><argument_list>(
+    <argument><expr><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+        <with>with (<expr><object>{<property><expr><name>a</name></expr>: <expr><name>b</name></expr></property>}</object></expr>) <block>{<block_content>
+            <return>return <expr><name>quux</name></expr></return>
+        </block_content>}</block></with>
+    </block_content>}</block></function></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
