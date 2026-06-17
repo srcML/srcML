@@ -1754,7 +1754,7 @@ javascript_statements[] {
         // looking for "[...](){}" to start a statement-level computed property function
         if (
             inMode(MODE_STATEMENT)
-            && (LA(1) == LBRACKET || (LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET)
+            && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
             && perform_computed_property_as_function_check_js()
         ) {
             computed_property_as_function_js();
@@ -13155,7 +13155,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // looking for "NAME<>()" to start a generic function call
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
-            && (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
+            && (LA(1) == NAME || (LA(1) == JS_AWAIT && next_token() == NAME))
             && perform_generic_function_call_check_ts()
         }?
         generic_function_call_ts |
@@ -13171,7 +13171,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // looking for "[...](){}" to start a computed property function
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
-            && (LA(1) == LBRACKET || (LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET)
+            && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
             && perform_computed_property_as_function_check_js()
         }?
         computed_property_as_function_js |
@@ -18226,19 +18226,21 @@ tuple_py[] { CompleteElement element(this); ENTRY_DEBUG } :
             // - next token is a comment or non-alias keyword (e.g., "in" for comprehensions)
             // - at the end of the file
             {
-                LA(1) == RPAREN
-                && lparen_types_py.back() != 'c'
-                && (
-                    last_consumed == LPAREN  // empty tuple "()"
-                    || next_token() == COMMA
-                    || next_token() == EQUAL
-                    || next_token() == INDENT
-                    || next_token() == RPAREN
-                    || next_token() == SNOP
-                    || next_token() == TERMINATE
-                    || lparen_types_py.back() == 't'
-                    || whitespace_token_set.member((unsigned int) next_token())
-                    || (keyword_token_set.member((unsigned int) next_token()) && next_token() != PY_ALIAS)
+                (
+                    LA(1) == RPAREN
+                    && lparen_types_py.back() != 'c'
+                    && (
+                        last_consumed == LPAREN  // empty tuple "()"
+                        || next_token() == COMMA
+                        || next_token() == EQUAL
+                        || next_token() == INDENT
+                        || next_token() == RPAREN
+                        || next_token() == SNOP
+                        || next_token() == TERMINATE
+                        || lparen_types_py.back() == 't'
+                        || whitespace_token_set.member((unsigned int) next_token())
+                        || (keyword_token_set.member((unsigned int) next_token()) && next_token() != PY_ALIAS)
+                    )
                 )
                 || LA(1) == 1 /* EOF */
             }?
@@ -18536,19 +18538,21 @@ ternary_py[bool is_nested = false] { CompleteElement element(this); size_t lpare
             // 4. at FOR
             // 5. at the end of the file
             {
-                lparen_types_size == lparen_types_py.size()
-                && (
-                    (
-                        LA(1) == RPAREN
-                        && (
-                            next_token() != PERIOD
-                            || lparen_types_py.back() == 'o'
-                            || lparen_types_py.back() == 'c'
+                (
+                    lparen_types_size == lparen_types_py.size()
+                    && (
+                        (
+                            LA(1) == RPAREN
+                            && (
+                                next_token() != PERIOD
+                                || lparen_types_py.back() == 'o'
+                                || lparen_types_py.back() == 'c'
+                            )
                         )
+                        || (last_consumed == COMMA && inTransparentMode(MODE_TUPLE_PY))
+                        || (LA(1) == COMMA && lparen_types_py.back() == 'c')
+                        || LA(1) == FOR
                     )
-                    || (last_consumed == COMMA && inTransparentMode(MODE_TUPLE_PY))
-                    || (LA(1) == COMMA && lparen_types_py.back() == 'c')
-                    || LA(1) == FOR
                 )
                 || LA(1) == 1 /* EOF */
             }?
@@ -23055,7 +23059,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
 
             // looking for "NAME()<>" to start a dynamic module import
             {
-                (LA(1) == NAME || LA(1) == JS_AWAIT && next_token() == NAME)
+                (LA(1) == NAME || (LA(1) == JS_AWAIT && next_token() == NAME))
                 && perform_dynamic_module_import_check_ts()
             }?
             dynamic_module_import_ts |
