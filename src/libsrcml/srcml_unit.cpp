@@ -1400,11 +1400,19 @@ int srcml_write_namespace(struct srcml_unit* unit, const char* prefix, const cha
  */
 int srcml_write_attribute(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri, const char* content) {
 
-    if (unit == nullptr || name == nullptr)
+    if (unit == nullptr || name == nullptr) {
         return SRCML_STATUS_INVALID_ARGUMENT;
+    }
 
-    if (unit->unit_translator == nullptr || !unit->unit_translator->add_attribute(prefix, name, uri, content))
+    if (name && (name == "hash"sv || name == "revision"sv)) {
+        if (name == "hash"sv) {
+            unit->hash = content;
+        } else {
+            unit->revision = content;
+        }
+    } else if (unit->unit_translator == nullptr || !unit->unit_translator->add_attribute(prefix, name, uri, content)) {
         return SRCML_STATUS_INVALID_INPUT;
+    }
 
     return SRCML_STATUS_OK;
 }
