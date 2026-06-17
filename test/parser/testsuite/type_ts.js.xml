@@ -312,7 +312,7 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <try>try <block>{<block_content>
   <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
-</block_content>}</block> <catch>catch (<name>error</name><ts:type>: <name>any</name></ts:type>) <block>{<block_content>
+</block_content>}</block> <catch>catch <parameter_list>(<parameter><decl><name>error</name><ts:type>: <name>any</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
   <throw>throw <expr><name>error</name></expr></throw>
 </block_content>}</block></catch></try>
 </unit>
@@ -320,7 +320,7 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <try>try <block>{<block_content>
   <return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
-</block_content>}</block> <catch>catch (<name>error</name><ts:type>: <operator>(</operator><name>any</name> <operator>|</operator> <name>unknown</name><operator>)</operator></ts:type>) <block>{<block_content>
+</block_content>}</block> <catch>catch <parameter_list>(<parameter><decl><name>error</name><ts:type>: <operator>(</operator><name>any</name> <operator>|</operator> <name>unknown</name><operator>)</operator></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
   <throw>throw <expr><name>error</name></expr></throw>
 </block_content>}</block></catch></try>
 </unit>
@@ -509,6 +509,10 @@
 <ts:interface><specifier>export</specifier> interface <name><name>Validator</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
     <decl_stmt><decl><name type="computed">[<expr><name>nominalTypeHack</name></expr>]</name><ts:modifier>?</ts:modifier><ts:type>: <name>T</name></ts:type></decl></decl_stmt>
 }</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><specifier>export</specifier> type <name><name>RequiredKeys</name><argument_list type="generic">&lt;<argument><expr><name>V</name></expr></argument>&gt;</argument_list></name> = <ts:type><block>{ <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>V</name>]</index><ts:type>: <name><name>V</name><index>[<expr><name>K</name></expr>]</index></name> <ts:extends>extends <ts:type><name><name>Validator</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>T</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></ts:type></ts:constraint> <ts:modifier>?</ts:modifier></decl> <decl><name><name>IsOptional</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <ts:extends>extends <ts:type><literal type="boolean">true</literal> <ts:modifier>?</ts:modifier> <name>never</name> <operator>: <name>K</name> <operator>: <name>never</name></operator></operator></ts:type></ts:extends></decl></decl_stmt> }</block></ts:type></ts:typedef>
 </unit>
 
 </unit>

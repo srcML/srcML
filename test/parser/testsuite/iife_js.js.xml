@@ -79,7 +79,7 @@
         <decl_stmt><decl type="const">const <name>result</name> <init>= <expr><operator>await</operator> <call><name>program</name><argument_list>(<argument><expr><name>argv</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 
         <expr_stmt><expr><name>result</name> <operator>&amp;&amp;</operator> <call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>result</name></expr></argument>)</argument_list></call></expr></expr_stmt>
-    </block_content>}</block> <catch>catch (<name>error</name>) <block>{<block_content>
+    </block_content>}</block> <catch>catch <parameter_list>(<parameter><decl><name>error</name></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><name>error</name></expr></argument>)</argument_list></call></expr></expr_stmt>
         <expr_stmt><expr><call><name><name>process</name><operator>.</operator><name>exit</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
     </block_content>}</block></catch></try>

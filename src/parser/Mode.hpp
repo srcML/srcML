@@ -344,8 +344,6 @@ const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_JS;
 
 const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS;
 
-const static srcMLState::MODE_TYPE MODE_CATCH_LPAREN_JS;
-
 const static srcMLState::MODE_TYPE MODE_IGNORE_LABEL_JS;
 
 const static srcMLState::MODE_TYPE MODE_LCURLY_BLOCK_JS;

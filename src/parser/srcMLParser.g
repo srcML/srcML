@@ -1152,7 +1152,7 @@ public:
         temp_array[TS_TYPE]      = { STS_TYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
 
         /* DUPLEX KEYWORDS */
-        temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::catch_lparen_js };  // extra consume for '(' is in the provided rule
+        temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, &srcMLParser::javascript_parameter_list };  // extra consume for '(' is in the provided rule
         temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };  // extra consume for 'if'
         temp_array[JS_FUNCTION_MULTOPS] = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume for '*'
         temp_array[JS_GET_LBRACKET]     = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
@@ -1873,6 +1873,7 @@ javascript_rules[] {
 } :
         // special behavior for import/export statements:
         // - "default" is a valid specifier [export only]
+        // - "type" is a valid TypeScript specifier [import only]
         // - bare literals can appear (no expression)
         // - curly braces begin/end name lists
         // - "as" denotes special markup
@@ -16907,6 +16908,7 @@ alias_py[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_
             // - at the start of a block
             // - at RPAREN that is not part of the alias
             // - at IF that is not part of the alias (special case for "case")
+            // - at the end of the file
             {
                 LA(1) == INDENT
                 || (LA(1) == RPAREN && lparen_types_size == lparen_types_py.size())
@@ -16915,6 +16917,7 @@ alias_py[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY_
                     && lparen_types_size == lparen_types_py.size()
                     && inTransparentMode(MODE_CASE_PY)
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -17063,8 +17066,8 @@ perform_from_import_check[] returns [bool isimport] {
         inputState->guessing++;
 
         try {
-            while (true) {
-                if (LA(1) == PY_IMPORT || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == PY_IMPORT || LA(1) == TERMINATE)
                     break;
 
                 consume();
@@ -17142,6 +17145,7 @@ comprehension_range_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
                     && lparen_types_py.back() == 'c'
                     && lparen_types_py.size() == lparen_types_size
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -17201,7 +17205,10 @@ comprehension_if_py[] { bool multiple_ifs = false; size_t lparen_types_size = 0;
 
         (options { greedy = true; } :
             // do not accidentally consume the call-ending RPAREN that is not part of a list comp.
-            { LA(1) == RPAREN && lparen_types_py.back() == 'c' && lparen_types_py.size() == lparen_types_size }?
+            {
+                (LA(1) == RPAREN && lparen_types_py.back() == 'c' && lparen_types_py.size() == lparen_types_size)
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -17434,7 +17441,10 @@ parameter_annotation_py[] { size_t lparen_types_size = 0; bool found_init = fals
 
         (options { greedy = true; } :
             // do not consume the ending RPAREN for a parameter list or EQUAL for an init
-            { (LA(1) == RPAREN || LA(1) == EQUAL) && lparen_types_py.back() == 'p' }?
+            {
+                ((LA(1) == RPAREN || LA(1) == EQUAL) && lparen_types_py.back() == 'p')
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 if (LA(1) == EQUAL)
                     found_init = true;
@@ -17495,6 +17505,7 @@ parameter_init_py[] { SingleElement element(this); ENTRY_DEBUG } :
             {
                 (LA(1) == RPAREN && lparen_types_py.back() == 'p')
                 || (LA(1) == PY_COLON && inTransparentMode(MODE_LAMBDA_PY))
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -17530,7 +17541,7 @@ function_annotation_py[] { ENTRY_DEBUG } :
         PY_ARROW
 
         (options { greedy = true; } :
-            { LA(1) == INDENT }?
+            { LA(1) == INDENT || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -17583,7 +17594,7 @@ python_super_list[] { CompleteElement element(this); size_t lparen_types_size = 
         LPAREN
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN && lparen_types_py.back() == 's' }?
+            { (LA(1) == RPAREN && lparen_types_py.back() == 's') || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -17665,7 +17676,7 @@ perform_post_specifier_check_py[] returns [int keyword] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 consume();
 
                 if (!check_valid_specifier_py())
@@ -17719,10 +17730,10 @@ perform_post_attribute_check_py[] returns [int keyword] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 consume();
 
-                if (LA(1) == CLASS || LA(1) == PY_FUNCTION || LA(1) == INDENT || LA(1) == 1 /* EOF */)
+                if (LA(1) == CLASS || LA(1) == PY_FUNCTION || LA(1) == INDENT)
                     break;
             }
 
@@ -17911,7 +17922,7 @@ lambda_py[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY
         }
 
         (options { greedy = true; } :
-            { LA(1) == PY_COLON && inTransparentMode(MODE_LAMBDA_PY) }?
+            { (LA(1) == PY_COLON && inTransparentMode(MODE_LAMBDA_PY)) || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -17961,6 +17972,7 @@ lambda_py[] { CompleteElement element(this); size_t lparen_types_size = 0; ENTRY
                         )
                     )
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 // end the current expression(s)
@@ -18146,7 +18158,7 @@ perform_dictionary_check_py[] returns [int is_dictionary] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN || LA(1) == PY_LCURLY || LA(1) == LBRACKET)
                     ++num_brackets;
 
@@ -18167,7 +18179,6 @@ perform_dictionary_check_py[] returns [int is_dictionary] {
                         (LA(1) == PY_COLON && !is_lambda)
                         || LA(1) == PY_RCURLY
                         || LA(1) == COMMA
-                        || LA(1) == 1 /* EOF */
                     )
                 )
                     break;
@@ -18213,6 +18224,7 @@ tuple_py[] { CompleteElement element(this); ENTRY_DEBUG } :
             // - next token is COMMA, EQUAL, INDENT, RPAREN, SNOP, or TERMINATE
             // - LPAREN deque has a tuple parenthesis at the back
             // - next token is a comment or non-alias keyword (e.g., "in" for comprehensions)
+            // - at the end of the file
             {
                 LA(1) == RPAREN
                 && lparen_types_py.back() != 'c'
@@ -18228,6 +18240,7 @@ tuple_py[] { CompleteElement element(this); ENTRY_DEBUG } :
                     || whitespace_token_set.member((unsigned int) next_token())
                     || (keyword_token_set.member((unsigned int) next_token()) && next_token() != PY_ALIAS)
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -18286,7 +18299,7 @@ perform_tuple_check_py[] returns [bool is_tuple] {
             if (LA(1) == LPAREN && next_token() == RPAREN)
                 is_tuple = true;
             else {
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LPAREN || LA(1) == PY_LCURLY || LA(1) == LBRACKET)
                         ++num_brackets;
 
@@ -18311,7 +18324,7 @@ perform_tuple_check_py[] returns [bool is_tuple] {
                         break;
                     }
 
-                    if (LA(1) == TERMINATE || LA(1) == INDENT || LA(1) == 1 /* EOF */)
+                    if (LA(1) == TERMINATE || LA(1) == INDENT)
                         break;
 
                     // end of lambda parameter(s)
@@ -18353,6 +18366,7 @@ tuple_no_paren_py[] { CompleteElement element(this); size_t lparen_types_size = 
             // end the no-parenthesis tuple if:
             // - current token is INDENT or TERMINATE
             // - at the top level of the tuple and find EQUAL
+            // - at the end of the file
             {
                 LA(1) == INDENT
                 || LA(1) == TERMINATE
@@ -18361,6 +18375,7 @@ tuple_no_paren_py[] { CompleteElement element(this); size_t lparen_types_size = 
                     && lparen_types_size == lparen_types_py.size()
                     && inTransparentMode(MODE_TUPLE_NO_PAREN_PY)
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -18405,7 +18420,7 @@ perform_tuple_check_no_paren_py[] returns [bool is_tuple] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN || LA(1) == PY_LCURLY || LA(1) == LBRACKET)
                     ++num_brackets;
 
@@ -18426,7 +18441,6 @@ perform_tuple_check_no_paren_py[] returns [bool is_tuple] {
                     (LA(1) == EQUAL && num_brackets == 0)
                     || LA(1) == TERMINATE
                     || LA(1) == INDENT
-                    || LA(1) == 1 /* EOF */
                 )
                     break;
 
@@ -18462,7 +18476,7 @@ ternary_py[bool is_nested = false] { CompleteElement element(this); size_t lpare
 
         (options { greedy = true; } :
             // condition ends if ELSE is found
-            { LA(1) == ELSE }?
+            { LA(1) == ELSE || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -18510,7 +18524,7 @@ ternary_py[bool is_nested = false] { CompleteElement element(this); size_t lpare
         }
 
         (options { greedy = true; } :
-            // else clause ends if the current mode has no new parentheses and any one of these four:
+            // else clause ends if the current mode has no new parentheses and any one of these five:
             // 1. at RPAREN and...
             //     - the next token is not PERIOD or...
             //     - latest LPAREN is an operator parentheses or...
@@ -18520,6 +18534,7 @@ ternary_py[bool is_nested = false] { CompleteElement element(this); size_t lpare
             // 3. at COMMA and...
             //     - latest LPAREN is for a call
             // 4. at FOR
+            // 5. at the end of the file
             {
                 lparen_types_size == lparen_types_py.size()
                 && (
@@ -18535,6 +18550,7 @@ ternary_py[bool is_nested = false] { CompleteElement element(this); size_t lpare
                     || (LA(1) == COMMA && lparen_types_py.back() == 'c')
                     || LA(1) == FOR
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -18647,7 +18663,10 @@ operator_parenthesis_complete_py[] {
 
         (options { greedy = true; } :
             // found an operator rparen to close the starting operator lparen
-            { LA(1) == RPAREN && lparen_types_py.back() == 'o' && lparen_types_py.size() == lparen_types_size }?
+            {
+                (LA(1) == RPAREN && lparen_types_py.back() == 'o' && lparen_types_py.size() == lparen_types_size)
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -18714,7 +18733,7 @@ python_2_except_py[] { ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == COMMA && inMode(MODE_EXPRESSION) }?
+            { (LA(1) == COMMA && inMode(MODE_EXPRESSION)) || LA(1) == 1 /* EOF */ }?
             {
                 if (inTransparentMode(MODE_EXPRESSION)) {
                     endDownToMode(MODE_EXPRESSION);
@@ -18765,7 +18784,7 @@ perform_python_2_except_check returns [bool is_python_2] {
 
         // is there a comma at the top-level?
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN || LA(1) == PY_LCURLY || LA(1) == LBRACKET)
                     ++num_brackets;
 
@@ -18783,7 +18802,7 @@ perform_python_2_except_check returns [bool is_python_2] {
                     break;
                 }
 
-                if (LA(1) == INDENT || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                if (LA(1) == INDENT || LA(1) == TERMINATE)
                     break;
 
                 consume();
@@ -18794,14 +18813,14 @@ perform_python_2_except_check returns [bool is_python_2] {
         // are there any additional commas, besides the one at the top-level?
         if (is_python_2) {
             try {
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     // should not be a Python 2 "except" clause
                     if (LA(1) == COMMA) {
                         is_python_2 = false;
                         break;
                     }
 
-                    if (LA(1) == INDENT || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                    if (LA(1) == INDENT || LA(1) == TERMINATE)
                         break;
 
                     consume();
@@ -18828,7 +18847,7 @@ perform_member_access_function_call_check_py returns [bool is_call] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 // consume all content inside the index
                 if (LA(1) == LBRACKET) {
                     while (LA(1) != RBRACKET && LA(1) != INDENT && LA(1) != TERMINATE && LA(1) != 1 /* EOF */)
@@ -18874,7 +18893,7 @@ perform_subscriptable_function_call_check_py returns [bool is_call] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LBRACKET)
                     ++num_square_brackets;
 
@@ -18899,7 +18918,7 @@ perform_subscriptable_function_call_check_py returns [bool is_call] {
                         ++num_square_brackets;
                 }
 
-                if ((num_square_brackets == 0 && LA(1) == TERMINATE) || LA(1) == 1 /* EOF */)
+                if (num_square_brackets == 0 && LA(1) == TERMINATE)
                     break;
 
                 consume();
@@ -18931,7 +18950,7 @@ type_alias_annotation_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // the annotation ends before a top-level equal sign ("=")
-            { LA(1) == EQUAL && lparen_types_size == lparen_types_py.size() }?
+            { (LA(1) == EQUAL && lparen_types_size == lparen_types_py.size()) || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -18977,7 +18996,7 @@ control_initialization_py[] { ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == PY_IN }?
+            { LA(1) == PY_IN || LA(1) == 1 /* EOF */ }?
             {
                 if (inTransparentMode(MODE_EXPRESSION)) {
                     endDownToMode(MODE_EXPRESSION);
@@ -19030,7 +19049,7 @@ control_tuple_no_paren_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // the non-parenthesized tuple ends before a top-level 'in' keyword
-            { LA(1) == PY_IN && lparen_types_size == lparen_types_py.size() }?
+            { (LA(1) == PY_IN && lparen_types_size == lparen_types_py.size()) || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -19144,7 +19163,7 @@ perform_post_specifier_check_js[] returns [std::array<int, 3> keywords] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 consume();
 
                 if (!check_valid_specifier_js())
@@ -19172,10 +19191,8 @@ perform_post_specifier_check_js[] returns [std::array<int, 3> keywords] {
 
   Used to mark specifiers in JavaScript/TypeScript.
 */
-specifier_js[] { ENTRY_DEBUG } :
+specifier_js[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_LOCAL);
-
             // special tag for TypeScript specifiers
             if (LA(1) == TS_ABSTRACT || LA(1) == TS_DECLARE)
                 startElement(STS_SPECIFIER);
@@ -19188,10 +19205,6 @@ specifier_js[] { ENTRY_DEBUG } :
 
             TS_ABSTRACT | TS_DECLARE
         )
-
-        {
-            endMode(MODE_LOCAL);
-        }
 ;
 
 /*
@@ -19341,7 +19354,7 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
 
         (options { greedy = true; } :
             // ensure the declaration ends before a termination token or comma
-            { LA(1) == TERMINATE || LA(1) == COMMA }?
+            { LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -19352,8 +19365,17 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 these rules are only here to handle invalid code and avoid a crash and/or infinite loop
             */
             (
-                (JS_ARROW (options { greedy = true; } : expression_block_js)*) |
-                (from_js)
+                (
+                    JS_ARROW
+                    (options { greedy = true; } :
+                        { inputState->guessing == 0 }?
+                        expression_block_js |
+
+                        curly_pair
+                    )*
+                ) |
+
+                from_js
             )
         )*
 
@@ -19388,10 +19410,8 @@ empty_for_control_js[] { ENTRY_DEBUG } :
         RPAREN
 
         {
-            if (inTransparentMode(MODE_FOR_CONTROL_JS)) {
-                endDownToMode(MODE_FOR_CONTROL_JS);
-                endMode(MODE_FOR_CONTROL_JS);
-            }
+            if (inTransparentMode(MODE_FOR_CONTROL_JS))
+                endDownOverMode(MODE_FOR_CONTROL_JS);
         }
 ;
 
@@ -19414,21 +19434,17 @@ for_control_js[] { ENTRY_DEBUG } :
 
         LPAREN
 
-        {
-            // Initialization ends at ";" or ")".  Can be omitted.
-            while (true) {
-                if (LA(1) == TERMINATE || LA(1) == RPAREN) {
-                    break;
-                }
-                // allow names in "for await...of" and "for each...in" loops
-                else if (decl_start_js_token_set.member(LA(1)) || check_valid_specifier_js() || LA(1) == NAME) {
-                    control_initialization_js();
-                }
-                else {
-                    break;
-                }
-            }
-        }
+        // Initialization ends at ";" or ")".  Can be omitted.
+        (options { greedy = true; } :
+            { LA(1) == TERMINATE || LA(1) == RPAREN || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            // allow names in "for await...of" and "for each...in" loops
+            { decl_start_js_token_set.member(LA(1)) || check_valid_specifier_js() || LA(1) == NAME }?
+            control_initialization_js
+        )*
 
         {
             // "for...in" and "for...of" loops must end after the initialization
@@ -19456,7 +19472,7 @@ for_control_js[] { ENTRY_DEBUG } :
 
         // Condition ends at ";".  Can be omitted.
         (options { greedy = true; } :
-            { LA(1) == TERMINATE }?
+            { LA(1) == TERMINATE || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -19468,7 +19484,7 @@ for_control_js[] { ENTRY_DEBUG } :
 
         // Increment ends at ")".  Can be omitted.
         (options { greedy = true; } :
-            { LA(1) == RPAREN }?
+            { LA(1) == RPAREN || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -19489,10 +19505,8 @@ for_control_js[] { ENTRY_DEBUG } :
         RPAREN
 
         {
-            if (inTransparentMode(MODE_FOR_CONTROL_JS)) {
-                endDownToMode(MODE_FOR_CONTROL_JS);
-                endMode(MODE_FOR_CONTROL_JS);
-            }
+            if (inTransparentMode(MODE_FOR_CONTROL_JS))
+                endDownOverMode(MODE_FOR_CONTROL_JS);
         }
 ;
 
@@ -19515,7 +19529,7 @@ control_initialization_js[] {
 
         (options { greedy = true; } :
             // termination token or right parenthesis signifiy the end of the initialization
-            { LA(1) == TERMINATE || LA(1) == RPAREN }?
+            { LA(1) == TERMINATE || LA(1) == RPAREN || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -19621,34 +19635,6 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             comma
         )*
-;
-
-/*
-  catch_lparen_js
-
-  Handles the optional parenthesized name after a "catch" statement in JavaScript.
-*/
-catch_lparen_js[] { ENTRY_DEBUG } :
-        {
-            startNewMode(MODE_CATCH_LPAREN_JS);
-        }
-
-        LPAREN
-
-        compound_name
-        (colon_type_ts)*
-
-        {
-            if (inTransparentMode(MODE_CATCH_LPAREN_JS))
-                endDownToMode(MODE_CATCH_LPAREN_JS);
-        }
-
-        RPAREN
-
-        {
-            if (inTransparentMode(MODE_CATCH_LPAREN_JS))
-                endMode(MODE_CATCH_LPAREN_JS);
-        }
 ;
 
 /*
@@ -19987,6 +19973,7 @@ derivation_list_js[] { ENTRY_DEBUG } :
                 (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
                 || LA(1) == JS_EXTENDS
                 || LA(1) == TS_IMPLEMENTS
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -20018,6 +20005,7 @@ super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 || (LA(1) == COMMA && bracket_types_js.back() != "cLPAREN")
                 || LA(1) == JS_EXTENDS
                 || LA(1) == TS_IMPLEMENTS
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -20069,7 +20057,7 @@ javascript_parameter_list[] { CompleteElement element(this); size_t bracket_type
         LPAREN
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN && bracket_types_size == bracket_types_js.size() }?
+            { (LA(1) == RPAREN && bracket_types_size == bracket_types_js.size()) || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -20159,34 +20147,30 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
             )
         )
 
-        {
+        (options { greedy = true; } :
             // "?" and "!" are valid TypeScript modifiers if preceded by a name
-            if (
+            {
                 last_consumed == NAME
                 && (
                     LA(1) == QMARK
                     || (LA(1) == OPERATORS && LT(1)->getText() == "!")
                 )
-            )
-                declaration_modifiers_ts();
+            }?
+            declaration_modifiers_ts |
 
             // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
-                colon_type_ts();
+            { LA(1) == COLON }?
+            colon_type_ts |
 
             // ignore auto-inserted terminate, if applicable
-            if (LA(1) == TERMINATE)
-                consume();
+            { LA(1) == TERMINATE }?
+            TERMINATE |
 
             // initialization expression after a parameter is optional
-            if (LA(1) == EQUAL) {
-                parameter_init_js();
-
-                // ignore auto-inserted terminate, if applicable
-                if (LA(1) == TERMINATE)
-                    consume();
-            }
-        }
+            // also ignore auto-inserted terminate, if applicable
+            { LA(1) == EQUAL }?
+            (parameter_init_js ({ LA(1) == TERMINATE }? TERMINATE)?)
+        )*
 ;
 
 /*
@@ -20217,11 +20201,8 @@ complete_typescript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
             type_ts
         )
 
-        {
-            // ignore auto-inserted terminate, if applicable
-            if (LA(1) == TERMINATE)
-                consume();
-        }
+        // ignore auto-inserted terminate, if applicable
+        ({ LA(1) == TERMINATE }? TERMINATE)?
 ;
 
 /*
@@ -20239,7 +20220,7 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
 
         (options { greedy = true; } :
             // do not consume the ending RPAREN for a parameter list
-            { (LA(1) == RPAREN && lparen_types_js.back() == 'p') }?
+            { (LA(1) == RPAREN && lparen_types_js.back() == 'p') || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -20325,20 +20306,20 @@ decl_with_array_destructuring_js[] { ENTRY_DEBUG } :
 
         LBRACKET
 
-        {
-            // consume commas that separate empty declarations
-            while (LA(1) == COMMA) {
-                startNewMode(MODE_DECL_JS);
+        // consume commas that separate empty declarations
+        (options { greedy = true; } :
+            { LA(1) == COMMA }?
+            {
+                startNewMode(MODE_LOCAL);
                 startElement(SDECLARATION);
-                endMode(MODE_DECL_JS);
-
-                consume();
+                endMode(MODE_LOCAL);
             }
-        }
+            COMMA
+        )*
 
         (options { greedy = true; } :
             // end the array destructuring at the correct ']'
-            { LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET" }?
+            { (LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET") || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -20380,20 +20361,20 @@ decl_with_object_destructuring_js[] { ENTRY_DEBUG } :
 
         LCURLY
 
-        {
-            // consume commas that separate empty declarations
-            while (LA(1) == COMMA) {
-                startNewMode(MODE_DECL_JS);
+        // consume commas that separate empty declarations
+        (options { greedy = true; } :
+            { LA(1) == COMMA }?
+            {
+                startNewMode(MODE_LOCAL);
                 startElement(SDECLARATION);
-                endMode(MODE_DECL_JS);
-
-                consume();
+                endMode(MODE_LOCAL);
             }
-        }
+            COMMA
+        )*
 
         (options { greedy = true; } :
             // end the object destructuring at the correct '}'
-            { LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY" }?
+            { (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY") || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -20467,6 +20448,7 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
                 (LA(1) == COMMA && bracket_types_js.back() != "oLPAREN")
                 || (LA(1) == RBRACKET && bracket_types_js.back() == "dLBRACKET")
                 || (LA(1) == RCURLY && bracket_types_js.back() == "dLCURLY")
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -20547,26 +20529,28 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
             comma
         )*
 
-        {
-            if (inTransparentMode(MODE_DECL_DESTRUCTURE_JS) && LA(1) == COMMA) {
-                endDownToMode(MODE_DECL_DESTRUCTURE_JS);
-                endMode(MODE_DECL_DESTRUCTURE_JS);
-            }
+        (options { greedy = true; } :
+            { inTransparentMode(MODE_DECL_DESTRUCTURE_JS) }?
+            (
+                {
+                    endDownOverMode(MODE_DECL_DESTRUCTURE_JS);
+                }
 
-            // consume comma that ends the declaration
-            if (LA(1) == COMMA) {
-                consume();
+                // consume the comma that ends the declaration
+                COMMA
 
                 // consume commas that separate empty declarations
-                while (LA(1) == COMMA) {
-                    startNewMode(MODE_DECL_JS);
-                    startElement(SDECLARATION);
-                    endMode(MODE_DECL_JS);
+                (options { greedy = true; } :
+                    {
+                        startNewMode(MODE_LOCAL);
+                        startElement(SDECLARATION);
+                        endMode(MODE_LOCAL);
+                    }
 
-                    consume();
-                }
-            }
-        }
+                    COMMA
+                )*
+            )
+        )*
 ;
 
 /*
@@ -20586,7 +20570,7 @@ perform_decl_with_colon_check_js[] returns [bool hascolon] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN || LA(1) == LBRACKET || LA(1) == LCURLY)
                     ++bracket_count;
 
@@ -20613,16 +20597,13 @@ perform_decl_with_colon_check_js[] returns [bool hascolon] {
                 }
 
                 if (
-                    (
-                        bracket_count == 0
-                        && (
-                            LA(1) == RPAREN
-                            || LA(1) == RBRACKET
-                            || LA(1) == RCURLY
-                            || LA(1) == COMMA
-                        )
+                    bracket_count == 0
+                    && (
+                        LA(1) == RPAREN
+                        || LA(1) == RBRACKET
+                        || LA(1) == RCURLY
+                        || LA(1) == COMMA
                     )
-                    || LA(1) == 1 /* EOF */
                 )
                     break;
 
@@ -20683,11 +20664,10 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_ARRAY_JS))
                 endDownToMode(MODE_ARRAY_JS);
-
-            // consume array-ending bracket, if it exists
-            if (LA(1) == RBRACKET)
-                consume();  // "]"
         }
+
+        // consume array-ending bracket, if it exists
+        ({ LA(1) == RBRACKET }? RBRACKET)?
 ;
 
 /*
@@ -20736,34 +20716,35 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
             (JS_FUNCTION | JS_GET | JS_SET)
         )
 
-        {
-            // consume "*" for generator functions
-            if (LA(1) == MULTOPS)
-                consume();
+        // consume "*" for generator functions
+        ({ LA(1) == MULTOPS }? MULTOPS)*
+
+        // name or argument list is NOT always required
+        (options { greedy = true; } :
+            // consume the generic argument list for TypeScript nameless functions
+            { LA(1) == TEMPOPS }?
+            generic_argument_list_js |
 
             // consume the name for named expression-level functions
-            if (LA(1) == NAME) {
-                compound_name();
-            }
-            // consume the generic argument list for TypeScript nameless functions
-            else if (LA(1) == TEMPOPS) {
-                generic_argument_list_js();
-            }
+            compound_name
+        )*
 
+        {
             startNewMode(MODE_PARAMETER_LIST_JS);
         }
 
         javascript_parameter_list
 
-        {
-            // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
-                colon_type_ts();
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
 
-            // this is required; conditional used to handle invalid syntax
-            if (LA(1) == LCURLY)
-                expression_block_js();
-        }
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
 ;
 
 /*
@@ -20869,15 +20850,16 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
 
         javascript_parameter_list
 
-        {
-            // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
-                colon_type_ts();
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
 
-            // this is required; conditional used to handle invalid syntax
-            if (LA(1) == LCURLY)
-                expression_block_js();
-        }
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
 ;
 
 /*
@@ -20892,7 +20874,6 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
         isfunction = false;
         int bracket_count = 0;  // for TypeScript types
         bool found_name = false;
-        bool found_type = false;
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
@@ -20941,7 +20922,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
             if (LA(1) == TEMPOPS) {
                 int tempops_count = 0;
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == TEMPOPS)
                         ++tempops_count;
 
@@ -20956,7 +20937,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
 
                     consume();
 
-                    if (tempops_count < 0 || LA(1) == 1 /* EOF */)
+                    if (tempops_count < 0)
                         break;
                 }
             }
@@ -20965,7 +20946,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
             if (found_name && LA(1) == LPAREN) {
                 int paren_count = 0;
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LPAREN)
                         ++paren_count;
 
@@ -20975,11 +20956,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     if (paren_count < 0)
                         break;
 
-                    if (
-                        (LA(1) == RPAREN && paren_count == 0)
-                        || (LA(1) == LCURLY && paren_count == 0)
-                        || LA(1) == 1 /* EOF */
-                    )
+                    if ((LA(1) == RPAREN || LA(1) == LCURLY) && paren_count == 0)
                         break;
 
                     consume();
@@ -21005,7 +20982,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     else if (LA(1) == COLON && next_token() != LCURLY) {
                         consume();  // ":"
 
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             // found a statement-level LCURLY, indicating a block
                             if (bracket_count == 0 && LA(1) == LCURLY)
                                 break;
@@ -21015,11 +20992,7 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                             if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
                                 --bracket_count;
 
-                            if (
-                                bracket_count < 0
-                                || LA(1) == 1 /* EOF */
-                                || (bracket_count == 0 && LA(1) == TERMINATE)
-                            )
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
                                 break;
 
                             consume();
@@ -21052,7 +21025,7 @@ perform_generator_function_check_js[] returns [bool isgenerator] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (!in_decorator && LA(1) == MULTOPS) {
                     consume();  // "*"
 
@@ -21070,10 +21043,7 @@ perform_generator_function_check_js[] returns [bool isgenerator] {
                 if (LA(1) == TS_ATSIGN)
                     in_decorator = true;
 
-                if (
-                    (!in_decorator && (LA(1) == LPAREN || LA(1) == TERMINATE))
-                    || LA(1) == 1 /* EOF */
-                )
+                if (!in_decorator && (LA(1) == LPAREN || LA(1) == TERMINATE))
                     break;
 
                 // no longer in a decorator
@@ -21130,70 +21100,77 @@ lambda_js[bool is_list = false] {
             // consume TypeScript types
             (options { greedy = true; } : colon_type_ts)*
 
-            {
-                // shorthand computed property with a string does not use "=>"
-                if (LA(1) == JS_ARROW)
-                    arrow_operator_js();
-            }
+            // shorthand computed property with a string does not use "=>"
+            ({ LA(1) == JS_ARROW }? arrow_operator_js)?
         )
 
         {
             skip_lone_lambda_js = false;
-
-            // end the parameter list lambda after the block
-            if (LA(1) == LCURLY) {
-                expression_block_js();
-                return;
-            }
-
-            lparen_types_size = lparen_types_js.size();
-            bracket_types_size = bracket_types_js.size();
         }
 
-        (options { greedy = true; } :
-            // do not consume tokens that are outside the scope of the lambda
-            {
-                (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
-                || (LA(1) == LCURLY && bracket_types_size == bracket_types_js.size())
-                || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
-                || (
-                    (LA(1) == JS_ARROW || LA(1) == EQUAL)
-                    && lparen_types_size == lparen_types_js.size()
-                    && lambda_depth != 0
-                )
-            }?
-            {
-                break;
-            } |
+        (
+            // end the parameter list lambda after the block
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
 
-            { inMode(MODE_ARGUMENT) }?
-            argument |
+            // special logic for blocks in guessing mode
+            { LA(1) == LCURLY && inputState->guessing != 0 }?
+            curly_pair |
 
-            // allow JavaScript ternaries to use existing "else" logic
-            { inTransparentMode(MODE_TERNARY) }?
-            colon_marked_js |
+            // anything else continues the lambda
+            (
+                {
+                    lparen_types_size = lparen_types_js.size();
+                    bracket_types_size = bracket_types_js.size();
+                }
 
-            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
-            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
-            colon_type_ts |
+                (options { greedy = true; } :
+                    // do not consume tokens that are outside the scope of the lambda
+                    {
+                        (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
+                        || (LA(1) == LCURLY && bracket_types_size == bracket_types_js.size())
+                        || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
+                        || (
+                            (LA(1) == JS_ARROW || LA(1) == EQUAL)
+                            && lparen_types_size == lparen_types_js.size()
+                            && lambda_depth != 0
+                        )
+                        || LA(1) == 1 /* EOF */
+                    }?
+                    {
+                        break;
+                    } |
 
-            // handle all other instances of a colon
-            { LA(1) == COLON }?
-            colon_marked |
+                    { inMode(MODE_ARGUMENT) }?
+                    argument |
 
-            {
-                if (!inMode(MODE_EXPRESSION))
-                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-            }
-            expression |
+                    // allow JavaScript ternaries to use existing "else" logic
+                    { inTransparentMode(MODE_TERNARY) }?
+                    colon_marked_js |
 
-            // consume commas only if directly inside a call or in operator parentheses (lambdas only)
-            {
-                bracket_types_js.back() == "cLPAREN"
-                || (bracket_types_js.back() == "oLPAREN" && inTransparentMode(MODE_LAMBDA_JS))
-            }?
-            comma
-        )*
+                    // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+                    { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+                    colon_type_ts |
+
+                    // handle all other instances of a colon
+                    { LA(1) == COLON }?
+                    colon_marked |
+
+                    {
+                        if (!inMode(MODE_EXPRESSION))
+                            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    }
+                    expression |
+
+                    // consume commas only if directly inside a call or in operator parentheses (lambdas only)
+                    {
+                        bracket_types_js.back() == "cLPAREN"
+                        || (bracket_types_js.back() == "oLPAREN" && inTransparentMode(MODE_LAMBDA_JS))
+                    }?
+                    comma
+                )*
+            )
+        )
 ;
 
 /*
@@ -21201,7 +21178,7 @@ lambda_js[bool is_list = false] {
 
   Marks "=>" as an operator in JavaScript lambdas.
 */
-arrow_operator_js[] { SingleElement element(this); ENTRY_DEBUG } :
+arrow_operator_js[] { LightweightElement element(this); ENTRY_DEBUG } :
         {
             startElement(SOPERATOR);
         }
@@ -21260,7 +21237,7 @@ perform_parameter_list_lambda_check_js[] returns [bool islambda] {
             if (LA(1) == JS_ASYNC)
                 consume();
 
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN)
                     ++paren_count;
 
@@ -21269,7 +21246,7 @@ perform_parameter_list_lambda_check_js[] returns [bool islambda] {
 
                 consume();
 
-                if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                if (paren_count < 1)
                     break;
             }
 
@@ -21277,7 +21254,7 @@ perform_parameter_list_lambda_check_js[] returns [bool islambda] {
             if (LA(1) == COLON) {
                 consume();  // ":"
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
                         ++bracket_count;
                     if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
@@ -21289,7 +21266,7 @@ perform_parameter_list_lambda_check_js[] returns [bool islambda] {
                         bracket_count < 0
                         || (
                             bracket_count == 0
-                            && (LA(1) == JS_ARROW || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                            && (LA(1) == JS_ARROW || LA(1) == TERMINATE)
                         )
                     )
                         break;
@@ -21325,7 +21302,10 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
         LCURLY
 
         (options { greedy = true; } :
-            { LA(1) == RCURLY && lcurly_types_js.back() == 'o' && lcurly_types_size == lcurly_types_js.size() }?
+            {
+                (LA(1) == RCURLY && lcurly_types_js.back() == 'o' && lcurly_types_size == lcurly_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -21363,7 +21343,8 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
             }
         }
 
-        RCURLY
+        // consume object-ending curly brace, if it exists
+        ({ LA(1) == RCURLY}? RCURLY)?
 ;
 
 /*
@@ -21395,6 +21376,7 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
                     && lcurly_types_js.back() == 'o'
                     && lcurly_types_size == lcurly_types_js.size()
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -21583,8 +21565,8 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             if (inTransparentMode(MODE_LOCAL))
                 endDownToMode(MODE_LOCAL);
         }
-
-        RBRACKET
+        // consume property-ending bracket, if it exists
+        ({ LA(1) == RBRACKET }? RBRACKET)?
 ;
 
 /*
@@ -21606,7 +21588,7 @@ perform_computed_property_check_js[] returns [bool iscomputed] {
             if (LA(1) == JS_ASYNC)
                 consume();
 
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LBRACKET)
                     ++square_bracket_count;
 
@@ -21616,7 +21598,7 @@ perform_computed_property_check_js[] returns [bool iscomputed] {
                 if (square_bracket_count < 0)
                     break;
 
-                if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE)
                     break;
 
                 consume();
@@ -21658,15 +21640,16 @@ generator_function_computed_property_js[] { CompleteElement element(this); ENTRY
 
         javascript_parameter_list
 
-        {
-            // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
-                colon_type_ts();
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
 
-            // this is required; conditional used to handle invalid syntax
-            if (LA(1) == LCURLY)
-                expression_block_js();
-        }
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
 ;
 
 /*
@@ -21752,7 +21735,7 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
                     else if (LA(1) == COLON && next_token() != LCURLY) {
                         consume();  // ":"
 
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             // found a statement-level LCURLY, indicating a block
                             if (bracket_count == 0 && LA(1) == LCURLY)
                                 break;
@@ -21762,11 +21745,7 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
                             if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
                                 --bracket_count;
 
-                            if (
-                                bracket_count < 0
-                                || LA(1) == 1 /* EOF */
-                                || (bracket_count == 0 && LA(1) == TERMINATE)
-                            )
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
                                 break;
 
                             consume();
@@ -21818,15 +21797,16 @@ computed_property_as_function_js[] { CompleteElement element(this); ENTRY_DEBUG 
 
         javascript_parameter_list
 
-        {
-            // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
-                colon_type_ts();
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
 
-            // this is required; conditional used to handle invalid syntax
-            if (LA(1) == LCURLY)
-                expression_block_js();
-        }
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
 ;
 
 /*
@@ -21910,7 +21890,7 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
                     else if (LA(1) == COLON && next_token() != LCURLY) {
                         consume();  // ":"
 
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             // found a statement-level LCURLY, indicating a block
                             if (bracket_count == 0 && LA(1) == LCURLY)
                                 break;
@@ -21920,11 +21900,7 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
                             if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
                                 --bracket_count;
 
-                            if (
-                                bracket_count < 0
-                                || LA(1) == 1 /* EOF */
-                                || (bracket_count == 0 && LA(1) == TERMINATE)
-                            )
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
                                 break;
 
                             consume();
@@ -21965,22 +21941,27 @@ class_expression_js[] { ENTRY_DEBUG } :
 
         {
             startNewMode(MODE_LCURLY_BLOCK_JS | MODE_NO_BLOCK_CONTENT | MODE_VARIABLE_NAME);
-
-            // consume the name for expression-level classes, if applicable
-            if (LA(1) == NAME)
-                compound_name();
-            // handle optional generic argument list for nameless generic class expressions
-            else if (LA(1) == TEMPOPS)
-                generic_argument_list_js();
-
-            // consume the "extends" or "implements" portion of an expression-level class, if applicable
-            if (LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS)
-                super_list_js();
-
-            // this is required; conditional used to handle invalid syntax
-            if (LA(1) == LCURLY)
-                expression_block_js();
         }
+        // name or argument list is NOT always required
+        (options { greedy = true; } :
+            // consume the generic argument list for TypeScript nameless generic class expressions
+            { LA(1) == TEMPOPS }?
+            generic_argument_list_js |
+
+            // consume the name for named expression-level classes
+            compound_name
+        )*
+
+        // consume the "extends" or "implements" portion of an expression-level class, if applicable
+        (options { greedy = true; } : { LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS }? super_list_js)?
+
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
 ;
 
 /*
@@ -22010,17 +21991,19 @@ yield_expression_js[] {
 
         JS_YIELD
 
-        {
-            // leave a yield generator MULTOPS unmarked
-            if (consume_multops && LA(1) == MULTOPS)
-                consume();  // '*'
+        // leave a yield generator MULTOPS unmarked
+        (options { greedy = true; } : { consume_multops && LA(1) == MULTOPS }? MULTOPS)?
 
+        {
             lparen_types_size = lparen_types_js.size();
         }
 
         (options { greedy = true; } :
             // do not consume top-level parameter list for a function
-            { LA(1) == RPAREN && lparen_types_js.back() == 'p' && lparen_types_size == lparen_types_js.size() }?
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'p' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -22069,7 +22052,7 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 // process consecutive argument lists (before backticks)
                 while (LA(1) == LPAREN) {
                     paren_pair();
@@ -22102,7 +22085,6 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
                     || LA(1) == EQUAL /* LHS of assignment is not a tagged template */
                     || LA(1) == JS_ARROW /* LHS of lambda is not a tagged template */
                     || LA(1) == TERMINATE
-                    || LA(1) == 1 /* EOF */
                 )
                     break;
 
@@ -22200,7 +22182,7 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                             )
                         )
                     ) {
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             // found a statement-level LCURLY
                             if (bracket_count == 0 && LA(1) == LCURLY) {
                                 // LCURLY indicates a type block, so keep going
@@ -22216,11 +22198,7 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                             if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
                                 --bracket_count;
 
-                            if (
-                                bracket_count < 0
-                                || LA(1) == 1 /* EOF */
-                                || (bracket_count == 0 && LA(1) == TERMINATE)
-                            )
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
                                 break;
 
                             consume();
@@ -22229,16 +22207,12 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
 
                     // consume block
                     if (LA(1) == LCURLY) {
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             if (LA(1) == LCURLY)
                                 ++curly_count;
                             else if (LA(1) == RCURLY && curly_count > 1)
                                 --curly_count;
-                            else if (
-                                (LA(1) == RCURLY && curly_count == 1)
-                                || curly_count < 0
-                                || LA(1) == 1 /* EOF */
-                            )
+                            else if ((LA(1) == RCURLY && curly_count == 1) || curly_count < 0)
                                 break;
 
                             consume();
@@ -22294,13 +22268,15 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
         javascript_parameter_list
 
-        {
-            // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
-                colon_type_ts();
-        }
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
 
-        expression_block_js
+        (
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )
 
         {
             endDownToMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
@@ -22323,7 +22299,10 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -22399,7 +22378,7 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
                         )
                     )
                 ) {
-                    while (true) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
                         // found arrow ("=>") before IIFE lambda block
                         if (LA(1) == JS_ARROW && bracket_count == 0 && lcurly_type != 3)
                             break;
@@ -22419,11 +22398,7 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
                         if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
                             --bracket_count;
 
-                        if (
-                            bracket_count < 0
-                            || LA(1) == 1 /* EOF */
-                            || (bracket_count == 0 && LA(1) == TERMINATE)
-                        )
+                        if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
                             break;
 
                         consume();
@@ -22436,16 +22411,12 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
 
                     // consume block
                     if (LA(1) == LCURLY) {
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             if (LA(1) == LCURLY)
                                 ++curly_count;
                             else if (LA(1) == RCURLY && curly_count > 1)
                                 --curly_count;
-                            else if (
-                                (LA(1) == RCURLY && curly_count == 1)
-                                || curly_count < 0
-                                || LA(1) == 1 /* EOF */
-                            )
+                            else if ((LA(1) == RCURLY && curly_count == 1) || curly_count < 0)
                                 break;
 
                             consume();
@@ -22505,11 +22476,10 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         {
             // a lone parameter lambda cannot appear here
             skip_lone_lambda_js = true;
-
-            // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
-                colon_type_ts();
         }
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
 
         arrow_operator_js
 
@@ -22517,7 +22487,12 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
             skip_lone_lambda_js = false;
         }
 
-        expression_block_js
+        (
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )
 
         {
             endDownToMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
@@ -22540,7 +22515,10 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -22718,7 +22696,7 @@ perform_chained_call_count_js[] returns [int numcalls] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 // immediately exit if the bracket count is negative
                 if (bracket_count < 0) {
                     break;
@@ -22856,7 +22834,7 @@ generic_argument_list_js[] { CompleteElement element(this); decltype(namestack) 
 
         tempops
         (options { generateAmbigWarnings = false; } :
-            { LA(1) == TEMPOPE }?
+            { LA(1) == TEMPOPE || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -22880,7 +22858,7 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
-            { LA(1) == TEMPOPE || LA(1) == COMMA }?
+            { LA(1) == TEMPOPE || LA(1) == COMMA || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -22895,7 +22873,14 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 startNewMode(MODE_LOCAL);
                 startElement(SEXPRESSION);
             }
-            expression_block_js
+
+            (
+                { LA(1) == LCURLY && inputState->guessing == 0 }?
+                expression_block_js |
+
+                curly_pair
+            )
+
             {
                 if (inTransparentMode(MODE_LOCAL)) {
                     endDownToMode(MODE_LOCAL);
@@ -23013,12 +22998,12 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
             // - after an argument list closing ">" with no generated TERMINATE
             // - an argument list closing ">" in mixins or template arguments
             // - "as" or "=" (start of next type/expression)
+            // - at the end of the file
             {
                 (
                     LA(1) == RPAREN
                     && (
                         (lparen_types_js.back() == 'p' && bracket_types_js.back() == "pLPAREN")
-                        || (inTransparentMode(MODE_CATCH_LPAREN_JS) && lparen_types_size == lparen_types_js.size())
                         || (lparen_types_size == lparen_types_js.size() && next_token() == COLON)
                         || (inTransparentMode(MODE_LAMBDA_JS) && next_token() == JS_ARROW)
                     )
@@ -23042,6 +23027,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
                 || (LA(1) == EQUAL && !inTransparentMode(MODE_MIXINS_TS) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
                 || LA(1) == JS_AS
+                || LA(1) == 1 /* EOF */
             }?
             {
                 // special case: "NAME + unary operator" denotes the end of a TypeScript declaration
@@ -23272,7 +23258,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
 
         try {
             // consume optional specifiers
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
                     function_declaration_specifiers_ts();
                 }
@@ -23310,7 +23296,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                 int paren_count = 0;
                 isdecl = true;
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == TEMPOPS)
                         ++tempops_count;
 
@@ -23334,11 +23320,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                     if (LA(1) == RPAREN)
                         --paren_count;
 
-                    if (
-                        (LA(1) == TERMINATE && next_token() != RCURLY)
-                        || LA(1) == 1 /* EOF */
-                        || paren_count < 0
-                    )
+                    if ((LA(1) == TERMINATE && next_token() != RCURLY) || paren_count < 0)
                         break;
 
                     // determine if "{" starts an object or a kind of block
@@ -23414,6 +23396,7 @@ function_declaration_ts[] { ENTRY_DEBUG } :
             {
                 LA(1) == TERMINATE
                 || LA(1) == COMMA
+                || LA(1) == 1 /* EOF */
                 || (last_consumed == TEMPOPE && tempops_count_ts == 0)
             }?
             {
@@ -23472,7 +23455,7 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
 
         try {
             // consume optional specifiers
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
                     function_declaration_specifiers_ts();
                 }
@@ -23499,7 +23482,7 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
                 int tempops_count = 0;
                 isdecl = true;
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == TEMPOPS)
                         ++tempops_count;
 
@@ -23511,7 +23494,7 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
                         }
                     }
 
-                    if ((LA(1) == TERMINATE && next_token() != RCURLY) || LA(1) == 1 /* EOF */)
+                    if (LA(1) == TERMINATE && next_token() != RCURLY)
                         break;
 
                     // "(): TYPE => {}" is not a function declaration
@@ -23567,6 +23550,7 @@ nameless_function_declaration_ts[] { ENTRY_DEBUG } :
                 LA(1) == TERMINATE
                 || LA(1) == COMMA
                 || (last_consumed == TEMPOPE && tempops_count_ts == 0)
+                || LA(1) == 1 /* EOF */
             }?
             {
                 // do not consume the comma if the function declaration is in a property
@@ -23628,7 +23612,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
             else if (LA(1) == LBRACKET) {
                 int bracket_count = 0;
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LBRACKET)
                         ++bracket_count;
 
@@ -23640,10 +23624,7 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
 
                     consume();
 
-                    if (
-                        (bracket_count == 0 && last_consumed_guessing_mode == RBRACKET)
-                        || LA(1) == 1 /* EOF */
-                    ) {
+                    if (bracket_count == 0 && last_consumed_guessing_mode == RBRACKET) {
                         continue_guessing = true;
                         break;
                     }
@@ -23688,6 +23669,7 @@ declaration_statement_ts[] { ENTRY_DEBUG } :
             {
                 LA(1) == TERMINATE
                 || LA(1) == COMMA
+                || LA(1) == 1 /* EOF */
                 || (
                     is_pseudo_terminate
                     && (
@@ -23763,6 +23745,7 @@ declaration_ts[] { ENTRY_DEBUG } :
                         || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
                     )
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -23771,6 +23754,10 @@ declaration_ts[] { ENTRY_DEBUG } :
             // currently, "?" and "!" are the only valid modifiers
             { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
             declaration_modifiers_ts |
+
+            // optional generic types (mixins) using the "extends" keyword in TypeScript
+            { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+            mixins_ts |
 
             declaration_init_js | colon_type_ts
         )*
@@ -23853,7 +23840,7 @@ perform_constraint_check_ts[] returns [bool isconstraint] {
                 consume();
                 ++bracket_count;
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (bracket_count < 1)
                         break;
 
@@ -23869,7 +23856,7 @@ perform_constraint_check_ts[] returns [bool isconstraint] {
                     ) {
                         isconstraint = true;
                         break;
-                    } else if ((LA(1) == RBRACKET && bracket_count == 1) || LA(1) == 1 /* EOF */) {
+                    } else if (LA(1) == RBRACKET && bracket_count == 1) {
                         break;
                     } else {
                         consume();
@@ -23938,7 +23925,7 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
         inputState->guessing++;
 
         try {
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 consume();
 
                 if (
@@ -23946,7 +23933,6 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
                     || LA(1) == JS_FUNCTION
                     || LA(1) == JS_GET
                     || LA(1) == JS_SET
-                    || LA(1) == 1 /* EOF */
                     || (LA(1) == NAME && perform_keywordless_function_check_js())
                 )
                     break;
@@ -23990,6 +23976,7 @@ attribute_ts[] { ENTRY_DEBUG } :
                     && LA(1) == NAME
                     && next_token() == COLON
                 )
+                || LA(1) == 1 /* EOF */
             }?
             {
                 break;
@@ -24024,12 +24011,11 @@ attribute_ts[] { ENTRY_DEBUG } :
                 endDownToMode(MODE_DECORATOR_TS);
                 endMode(MODE_DECORATOR_TS);
             }
-
-            // TERMINATE after a decorator does not indicate the end of a statement
-            // decorators occur before a function/class, so ignore the TERMINATE
-            if (LA(1) == TERMINATE)
-                consume();
         }
+
+        // TERMINATE after a decorator does not indicate the end of a statement
+        // decorators occur before a function/class, so ignore the TERMINATE
+        ({ LA(1) == TERMINATE }? TERMINATE)?
 ;
 
 /*
@@ -24250,7 +24236,7 @@ perform_lookahead_lcurly_differentiator_check_js[] returns [bool skipterminate] 
 declare_statement_ts[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // "{" will always denote the start of a block in a "declare" statement
-            { LA(1) == LCURLY }?
+            { LA(1) == LCURLY || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -24319,7 +24305,7 @@ perform_generic_lambda_check_ts[] returns [bool islambda] {
                 consume();
 
             // match generic argument list
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == TEMPOPS)
                     ++tempops_count;
 
@@ -24334,12 +24320,12 @@ perform_generic_lambda_check_ts[] returns [bool islambda] {
 
                 consume();
 
-                if (tempops_count < 0 || LA(1) == 1 /* EOF */)
+                if (tempops_count < 0)
                     break;
             }
 
             // match parameter list
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == LPAREN)
                     ++paren_count;
 
@@ -24348,7 +24334,7 @@ perform_generic_lambda_check_ts[] returns [bool islambda] {
 
                 consume();
 
-                if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                if (paren_count < 1)
                     break;
             }
 
@@ -24356,7 +24342,7 @@ perform_generic_lambda_check_ts[] returns [bool islambda] {
             if (LA(1) == COLON) {
                 consume();  // ":"
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
                         ++bracket_count;
                     if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
@@ -24368,7 +24354,7 @@ perform_generic_lambda_check_ts[] returns [bool islambda] {
                         bracket_count < 0
                         || (
                             bracket_count == 0
-                            && (LA(1) == JS_ARROW || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                            && (LA(1) == JS_ARROW || LA(1) == TERMINATE)
                         )
                     )
                         break;
@@ -24426,65 +24412,73 @@ generic_lambda_ts[] {
 
         {
             skip_lone_lambda_js = false;
-
-            // if the generic lambda started with a ":", what follows the arrow is a type
-            if (was_colon_type) {
-                type_ts();
-                return;
-            }
-
-            // end the parameter list lambda after the block
-            if (LA(1) == LCURLY) {
-                expression_block_js();
-                return;
-            }
-
-            lparen_types_size = lparen_types_js.size();
         }
 
-        (options { greedy = true; } :
-            // do not consume right parentheses or ">" outside the scope of the lambda
-            {
-                (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
-                || (
-                    LA(1) == TEMPOPE
-                    && (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) || was_tempops)
-                )
-                || (
-                    LA(1) == EQUAL
-                    && !inTransparentMode(MODE_MIXINS_TS)
-                    && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
-                )
-            }?
-            {
-                break;
-            } |
+        (
+            // end the parameter list lambda after the block
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
 
-            { inMode(MODE_ARGUMENT) }?
-            argument |
+            // special logic for blocks in guessing mode
+            { LA(1) == LCURLY && inputState->guessing != 0 }?
+            curly_pair |
 
-            // allow JavaScript ternaries to use existing "else" logic
-            { inTransparentMode(MODE_TERNARY) }?
-            colon_marked_js |
+            // if the generic lambda started with a ":", what follows the arrow is a type
+            { was_colon_type }?
+            type_ts |
 
-            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
-            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
-            colon_type_ts |
+            // anything else continues the lambda
+            (
+                {
+                    lparen_types_size = lparen_types_js.size();
+                }
 
-            // handle all other instances of a colon
-            { LA(1) == COLON }?
-            colon_marked |
+                (options { greedy = true; } :
+                    // do not consume right parentheses or ">" outside the scope of the lambda
+                    {
+                        (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
+                        || (
+                            LA(1) == TEMPOPE
+                            && (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) || was_tempops)
+                        )
+                        || (
+                            LA(1) == EQUAL
+                            && !inTransparentMode(MODE_MIXINS_TS)
+                            && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                        )
+                        || LA(1) == 1 /* EOF */
+                    }?
+                    {
+                        break;
+                    } |
 
-            {
-                if (!inMode(MODE_EXPRESSION))
-                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-            }
-            expression |
+                    { inMode(MODE_ARGUMENT) }?
+                    argument |
 
-            // consume commas only if directly inside a call
-            { bracket_types_js.back() == "cLPAREN" }?
-            comma
-        )*
+                    // allow JavaScript ternaries to use existing "else" logic
+                    { inTransparentMode(MODE_TERNARY) }?
+                    colon_marked_js |
+
+                    // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+                    { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+                    colon_type_ts |
+
+                    // handle all other instances of a colon
+                    { LA(1) == COLON }?
+                    colon_marked |
+
+                    {
+                        if (!inMode(MODE_EXPRESSION))
+                            startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    }
+                    expression |
+
+                    // consume commas only if directly inside a call
+                    { bracket_types_js.back() == "cLPAREN" }?
+                    comma
+                )*
+            )
+        )
 ;
 
 /*
@@ -24514,7 +24508,7 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
 
                 // match generic argument list
                 if (LA(1) == TEMPOPS) {
-                    while (true) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
                         if (LA(1) == TEMPOPS)
                             ++tempops_count;
 
@@ -24529,13 +24523,13 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
 
                         consume();
 
-                        if (tempops_count < 0 || LA(1) == 1 /* EOF */)
+                        if (tempops_count < 0)
                             break;
                     }
 
                     // match parameter list
                     if (LA(1) == LPAREN) {
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             if (LA(1) == LPAREN)
                                 ++paren_count;
 
@@ -24555,7 +24549,7 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
 
                             consume();
 
-                            if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                            if (paren_count < 1)
                                 break;
                         }
                     }
@@ -24593,7 +24587,10 @@ generic_function_call_ts[] { CompleteElement element(this); size_t lparen_types_
         }
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -24651,7 +24648,7 @@ perform_shorthand_computed_property_check_js[] returns [bool islambda] {
 
             // match parameter list
             if (LA(1) == LPAREN) {
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LPAREN)
                         ++paren_count;
 
@@ -24660,7 +24657,7 @@ perform_shorthand_computed_property_check_js[] returns [bool islambda] {
 
                     consume();
 
-                    if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                    if (paren_count < 1)
                         break;
                 }
 
@@ -24694,7 +24691,7 @@ perform_colon_differentiator_check_ts[] returns [bool isternary] {
 
                 // "?" must be followed by "(" to warrant checking
                 if (LA(1) == LPAREN) {
-                    while (true) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
                         if (LA(1) == LPAREN)
                             ++paren_count;
 
@@ -24711,7 +24708,7 @@ perform_colon_differentiator_check_ts[] returns [bool isternary] {
                             break;
                         }
 
-                        if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                        if (paren_count < 1)
                             break;
 
                         consume();
@@ -24751,7 +24748,7 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
                 }
                 else {
                     // consume the first pair of curly braces
-                    while (true) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
                         if (LA(1) == LCURLY)
                             ++curly_count;
 
@@ -24762,7 +24759,7 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
                                 break;
                         }
 
-                        if (curly_count < 1 || LA(1) == 1 /* EOF */)
+                        if (curly_count < 1)
                             break;
 
                         consume();
@@ -24788,8 +24785,8 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
 
                         // consume additional TypeScript types, if applicable
                         if (LA(1) != LCURLY) {
-                            while (true) {
-                                if (LA(1) == LCURLY || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                            while (LA(1) != antlr::Token::EOF_TYPE) {
+                                if (LA(1) == LCURLY || LA(1) == TERMINATE)
                                     break;
 
                                 consume();
@@ -24798,7 +24795,7 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
 
                         // consume the second pair of curly braces
                         if (LA(1) == LCURLY) {
-                            while (true) {
+                            while (LA(1) != antlr::Token::EOF_TYPE) {
                                 if (LA(1) == LCURLY)
                                     ++curly_count;
 
@@ -24814,7 +24811,7 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
                                     }
                                 }
 
-                                if (curly_count < 1 || LA(1) == 1 /* EOF */)
+                                if (curly_count < 1)
                                     break;
 
                                 consume();
@@ -24855,7 +24852,7 @@ perform_global_context_call_check_js[] returns [bool iscall] {
         try {
             // match the first set of parentheses
             if (LA(1) == LPAREN) {
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LPAREN)
                         ++paren_count;
 
@@ -24867,7 +24864,7 @@ perform_global_context_call_check_js[] returns [bool iscall] {
 
                     consume();
 
-                    if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                    if (paren_count < 1)
                         break;
                 }
             }
@@ -24880,7 +24877,7 @@ perform_global_context_call_check_js[] returns [bool iscall] {
             if (found_comma && LA(1) == LPAREN) {
                 paren_count = 0;
 
-                while (true) {
+                while (LA(1) != antlr::Token::EOF_TYPE) {
                     if (LA(1) == LPAREN)
                         ++paren_count;
 
@@ -24895,7 +24892,7 @@ perform_global_context_call_check_js[] returns [bool iscall] {
 
                     consume();
 
-                    if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                    if (paren_count < 1)
                         break;
                 }
             }
@@ -24928,7 +24925,7 @@ global_context_call_js[] { CompleteElement element(this); size_t lparen_types_si
 
         (options { greedy = true; } :
             // ensure the first set of parentheses ends correctly
-            { LA(1) == RPAREN && lparen_types_size == lparen_types_js.size() }?
+            { (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size()) || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -24968,11 +24965,12 @@ global_context_call_js[] { CompleteElement element(this); size_t lparen_types_si
         {
             if (inTransparentMode(MODE_GLOBAL_CONTEXT_CALL_JS))
                 endDownToMode(MODE_GLOBAL_CONTEXT_CALL_JS);
+        }
 
-            // match optional call chaining syntax (e.g., "?.")
-            if (LA(1) == QMARK_PERIOD)
-                qmark_period();
+        // match optional call chaining syntax (e.g., "?.")
+        ({ LA(1) == QMARK_PERIOD }? qmark_period)?
 
+        {
             startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
         }
 
@@ -24983,7 +24981,10 @@ global_context_call_js[] { CompleteElement element(this); size_t lparen_types_si
         }
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -25074,7 +25075,7 @@ perform_declaration_in_class_check_js[] returns [bool isdecl] {
                 }
                 // case 2: first token is a computed property
                 else if (LA(1) == LBRACKET) {
-                    while (true) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
                         if (LA(1) == LBRACKET)
                             ++square_bracket_count;
 
@@ -25087,7 +25088,6 @@ perform_declaration_in_class_check_js[] returns [bool isdecl] {
                         if (
                             (LA(1) == RBRACKET && square_bracket_count == 0)
                             || (LA(1) == TERMINATE && square_bracket_count == 0)
-                            || LA(1) == 1 /* EOF */
                         )
                             break;
 
@@ -25132,7 +25132,7 @@ perform_dynamic_module_import_check_ts[] returns [bool isimport] {
 
                 // match parameter list
                 if (LA(1) == LPAREN) {
-                    while (true) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
                         if (LA(1) == LPAREN)
                             ++paren_count;
 
@@ -25147,13 +25147,13 @@ perform_dynamic_module_import_check_ts[] returns [bool isimport] {
 
                         consume();
 
-                        if (paren_count < 1 || LA(1) == 1 /* EOF */)
+                        if (paren_count < 1)
                             break;
                     }
 
                     // match generic argument list
                     if (LA(1) == TEMPOPS) {
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             if (LA(1) == TEMPOPS)
                                 ++tempops_count;
 
@@ -25173,7 +25173,7 @@ perform_dynamic_module_import_check_ts[] returns [bool isimport] {
 
                             consume();
 
-                            if (tempops_count < 0 || LA(1) == 1 /* EOF */)
+                            if (tempops_count < 0)
                                 break;
                         }
                     }
@@ -25210,7 +25210,10 @@ dynamic_module_import_ts[] { CompleteElement element(this); size_t lparen_types_
         }
 
         (options { greedy = true; } :
-            { LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size() }?
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -25268,7 +25271,7 @@ perform_pseudo_generic_argument_list_check_ts[] returns [bool islist] {
             consume();  // "<<" or "<<<" or ... etc.
 
             // match generic argument list
-            while (true) {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (LA(1) == TEMPOPS)
                     ++tempops_count;
 
@@ -25283,7 +25286,7 @@ perform_pseudo_generic_argument_list_check_ts[] returns [bool islist] {
 
                 consume();
 
-                if (tempops_count < 0 || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                if (tempops_count < 0 || LA(1) == TERMINATE)
                     break;
             }
         }
@@ -25336,7 +25339,6 @@ perform_named_array_with_index_check_ts[] returns [bool isarray] {
         ENTRY_DEBUG
 
         isarray = false;
-        int tempops_count = 0;  // for generic argument list
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
@@ -25386,11 +25388,12 @@ named_array_with_index_ts[] { bool iscomplex = false; ENTRY_DEBUG } :
         {
             if (inTransparentMode(MODE_ARRAY_JS))
                 endDownToMode(MODE_ARRAY_JS);
+        }
 
-            // consume array-ending bracket, if it exists
-            if (LA(1) == RBRACKET)
-                consume();  // "]"
+        // consume array-ending bracket, if it exists
+        ({ LA(1) == RBRACKET }? RBRACKET)?
 
+        {
             if (inMode(MODE_ARRAY_JS))
                 endMode(MODE_ARRAY_JS);
         }
@@ -25447,7 +25450,7 @@ perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunct
                     else if (next_token() != LCURLY) {
                         consume();  // ":"
 
-                        while (true) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
                             // found a statement-level LCURLY, indicating a block
                             if (bracket_count == 0 && LA(1) == LCURLY)
                                 break;
@@ -25457,11 +25460,7 @@ perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunct
                             if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
                                 --bracket_count;
 
-                            if (
-                                bracket_count < 0
-                                || LA(1) == 1 /* EOF */
-                                || (bracket_count == 0 && LA(1) == TERMINATE)
-                            )
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
                                 break;
 
                             consume();
@@ -25518,13 +25517,14 @@ nameless_keywordless_generator_function_expression_js[] { ENTRY_DEBUG } :
 
         javascript_parameter_list
 
-        {
-            // consume TypeScript types, if applicable
-            if (LA(1) == COLON)
-                colon_type_ts();
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
 
-            // this is required; conditional used to handle invalid syntax
-            if (LA(1) == LCURLY)
-                expression_block_js();
-        }
+        // start the block, if it exists
+        (options { greedy = true; } :
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )?
 ;

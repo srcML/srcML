@@ -129,7 +129,7 @@
     <for>for <specifier>each</specifier> <control>(<init><decl><name>handle</name> <range>in <expr><name><name>Stack</name><operator>.</operator><name>phases</name><index>[<expr><name>phase</name></expr>]</index></name></expr></range></decl></init>)</control> <block>{<block_content>
         <try>try <block>{<block_content>
             <expr_stmt><expr><call><name><name>Stack</name><operator>.</operator><name>runHandle</name></name><argument_list>(<argument><expr><name>handle</name></expr></argument>)</argument_list></call></expr></expr_stmt>
-        </block_content>}</block> <catch>catch(<name>e</name>) <block>{<block_content>
+        </block_content>}</block> <catch>catch<parameter_list>(<parameter><decl><name>e</name></decl></parameter>)</parameter_list> <block>{<block_content>
             <throw>throw <expr><name>e</name></expr></throw>
         </block_content>}</block></catch></try>
     </block_content>}</block></for>

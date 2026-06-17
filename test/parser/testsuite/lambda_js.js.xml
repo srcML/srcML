@@ -151,7 +151,7 @@
 <expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
   <try>try <block>{<block_content>
     <comment type="line">// ...</comment>
-  </block_content>}</block> <catch>catch (<name>error</name>) <block>{<block_content>
+  </block_content>}</block> <catch>catch <parameter_list>(<parameter><decl><name>error</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <comment type="line">// ...</comment>
   </block_content>}</block></catch> <finally>finally <block>{<block_content>
     <comment type="line">// ...</comment>
