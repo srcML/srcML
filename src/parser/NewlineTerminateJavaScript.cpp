@@ -300,6 +300,13 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                 && token->getType() == srcMLParser::NAME
                 && nextNonSkipToken->getType() == srcMLParser::LBRACKET
             )
+
+            // an EOL separates an RCURLY "}" and an LCURLY "{"
+            || (
+                containsEOL
+                && token->getType() == srcMLParser::RCURLY
+                && nextNonSkipToken->getType() == srcMLParser::LCURLY
+            )
         )
     );
 }

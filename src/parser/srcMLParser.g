@@ -23243,6 +23243,17 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
             { bracket_types_js.back() == "cLPAREN" }?
             comma
         )*
+
+        // consume TERMINATE that separates a TypeScript type block and a typical block
+        (
+            {
+                last_consumed == RCURLY
+                && LA(1) == TERMINATE
+                && next_token() == LCURLY
+                && inPrevMode(MODE_LCURLY_BLOCK_JS)
+            }?
+            TERMINATE
+        )?
 ;
 
 /*
