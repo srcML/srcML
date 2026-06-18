@@ -1144,9 +1144,9 @@ public:
         temp_array[JS_DEBUGGER]    = { SDEBUGGER_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, nullptr };
         temp_array[JS_EXPORT]      = { SEXPORT_STATEMENT, 0, MODE_STATEMENT | MODE_EXPORT_JS, MODE_VARIABLE_NAME | MODE_LIST | MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_FUNCTION]    = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
-        temp_array[JS_GET]         = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_GET]         = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::property_name_js };
         temp_array[JS_IMPORT]      = { SIMPORT_STATEMENT, 0, MODE_STATEMENT | MODE_IMPORT_JS, MODE_VARIABLE_NAME | MODE_LIST, nullptr, nullptr };
-        temp_array[JS_SET]         = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
+        temp_array[JS_SET]         = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::property_name_js };
         temp_array[JS_YIELD]       = { SYIELD_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
 
         /* TYPESCRIPT STATEMENTS */
@@ -19164,6 +19164,25 @@ type_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  propery_name_js
+
+  Handles name of get/set property, which could be a name or literal (bracketless_computed_property)
+  Computed property names are handled separately as a duplex keyword
+*/
+property_name_js[] { 
+        ENTRY_DEBUG
+
+        if (LA(1) == NAME)
+            compound_name();
+
+        else if (LA(1) == TEMPOPS) 
+            generic_argument_list_js();
+
+        else if (LA(1) != LCURLY && LA(1) != LPAREN)
+            bracketless_computed_property_js();
+}: ;
+
+/*
   check_valid_specifier_js
 
   Checks to see if the current token is a specifier in JavaScript or TypeScript (namespaces).
@@ -20785,7 +20804,10 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
             generic_argument_list_js |
 
             // consume the name for named expression-level functions
-            compound_name
+            compound_name |
+
+            // consume literals that could be the "name" of a function
+            bracketless_computed_property_js 
         )*
 
         {
