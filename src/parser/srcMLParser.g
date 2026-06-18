@@ -19498,9 +19498,13 @@ for_control_js[] { ENTRY_DEBUG } :
 
         LPAREN
 
-        // Initialization ends at ";" or ")".  Can be omitted.
+        // Initialization ends at ";" or condition ")".  Can be omitted.
         (options { greedy = true; } :
-            { LA(1) == TERMINATE || LA(1) == RPAREN || LA(1) == 1 /* EOF */ }?
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'n')
+                || LA(1) == TERMINATE
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -19592,8 +19596,12 @@ control_initialization_js[] {
         }
 
         (options { greedy = true; } :
-            // termination token or right parenthesis signifiy the end of the initialization
-            { LA(1) == TERMINATE || LA(1) == RPAREN || LA(1) == 1 /* EOF */ }?
+            // termination token or condition right parenthesis signifiy the end of the initialization
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'n')
+                || LA(1) == TERMINATE
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
@@ -19964,6 +19972,12 @@ declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         (JS_RANGE_IN | JS_RANGE_OF)
 
         (options { greedy = true; } :
+            // ensure condition ")" is not consumed here
+            { (LA(1) == RPAREN && lparen_types_js.back() == 'n') || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
             { inMode(MODE_ARGUMENT) }?
             argument |
 
@@ -19980,10 +19994,6 @@ declaration_range_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             colon_marked |
 
             {
-                // ensure non-call ")" is not consumed here
-                if (LA(1) == RPAREN && lparen_types_js.back() != 'c')
-                    break;
-
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }

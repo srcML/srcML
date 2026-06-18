@@ -2,6 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="for">
 
 <!-- Empty for-loop -->
+
 <unit revision="1.0.0" language="JavaScript">
 <for>for<control>(<init/>)</control> <block>{<block_content/>}</block></for>
 </unit>
@@ -87,6 +88,12 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>async</name></decl></decl_stmt>
 <for>for <control>(<init><decl><name>async</name> <range>of <expr><array>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="const">const <name>propertyName</name> <range>of <expr><name>Object</name> <operator>as</operator> <ts:specifier>readonly</ts:specifier> <operator>(</operator><ts:operator>keyof</ts:operator> <name><name>ts</name><operator>.</operator><name>SourceFile</name></name><operator>)</operator><index>[]</index></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>propertyName</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
 </unit>
 
 <!-- "for await...of" -->
