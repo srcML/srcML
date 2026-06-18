@@ -152,6 +152,24 @@
 }</block></class></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <function type="get">get <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><class>class <block>{
+    <function type="get">get <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><expr><function type="get">get <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Setters ("set") -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -190,6 +208,24 @@
 <decl_stmt><decl type="let">let <name>holey_array</name> <init>= <expr><class>class <block>{
   <function type="set">set <name type="computed"><expr><literal type="number">3</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <function type="set">set <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><class>class <block>{
+    <function type="set">set <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><expr><function type="set">set <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Functions in Expressions (i.e., lambdas in other languages) -->

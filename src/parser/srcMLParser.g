@@ -20806,6 +20806,9 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
             // consume the name for named expression-level functions
             compound_name |
 
+            // consume the computed property name
+            computed_property_js |
+
             // consume literals that could be the "name" of a function
             bracketless_computed_property_js 
         )*
