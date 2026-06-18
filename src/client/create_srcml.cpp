@@ -62,7 +62,7 @@ int srcml_handler_dispatch(ParseQueue& queue,
             uninput.fd = input_archive(uninput);
         }
 
-        return srcml_input_srcml(queue, srcml_arch, srcml_request, uninput, srcml_request.revision);
+        return srcml_input_srcml(queue, srcml_arch, srcml_request, uninput);
     }
 
     if (input.protocol == "text"sv) {

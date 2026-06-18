@@ -459,14 +459,6 @@ LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const cha
 LIBSRCML_DECL int srcml_set_eol(size_t eol);
 
 /**
- * Set what revision in a srcDiff document to operate with
- * @param revision_number The revision to operate with
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_set_srcdiff_revision(size_t revision_number);
-
-/**
  * @return The source encoding on success
  * @return NULL on failure
  */
@@ -1884,37 +1876,6 @@ LIBSRCML_DECL int srcml_write_attribute(struct srcml_unit* unit, const char* pre
  */
 LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char* content);
 /**@}*/
-/**@}*/
-
-/** @defgroup srcDiff srcDiff
-    @{
-*/
-/** Constant for original srcDiff revision number */
-#define SRCDIFF_REVISION_ORIGINAL 0
-/** Constant for modified srcDiff revision number */
-#define SRCDIFF_REVISION_MODIFIED 1
-/** Constant for an invalid srcDiff revision number */
-#define SRCDIFF_REVISION_INVALID  2
-
-/**
- * @return The current srcDiff revision number used for processing
- */
-LIBSRCML_DECL size_t srcml_get_srcdiff_revision();
-
-/**
- * @param archive A srcml_archive
- * @return The srcdiff revision number the archive is using for processing
- */
-LIBSRCML_DECL size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive);
-
-/**
- * Set what revision in a srcDiff archive to operate with
- * @param archive A srcml_archive
- * @param revision_number The operational srcdff revision
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_archive_set_srcdiff_revision(struct srcml_archive* archive, size_t revision_number);
 /**@}*/
 
 #ifdef __cplusplus

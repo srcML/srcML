@@ -107,7 +107,7 @@ int src_input_filesystem(ParseQueue& queue,
         }
 
         if (srcml_request.command & SRCML_COMMAND_PARSER_TEST) {
-            srcml_input_srcml(queue, srcml_arch, srcml_request, input_file, srcml_request.revision);
+            srcml_input_srcml(queue, srcml_arch, srcml_request, input_file);
         } else {
             input_file.prefix = filename.substr(0, filename.find_last_of('/'));
             src_input_libarchive(queue, srcml_arch, srcml_request, input_file);

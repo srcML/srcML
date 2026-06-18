@@ -460,31 +460,5 @@ int main(int, char* argv[]) {
         srcml_archive_free(archive);
     }
 
-    /*
-      srcml_archive_set_srcdiff_revision
-    */
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-
-        dassert(srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_OK);
-        dassert(srcml_archive_set_srcdiff_revision(0, SRCDIFF_REVISION_INVALID), SRCML_STATUS_INVALID_ARGUMENT);
-
-        srcml_archive_free(archive);
-    }
-
-    {
-        srcml_archive* archive = srcml_archive_create();
-
-        dassert(srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_OK);
-        dassert(srcml_archive_set_srcdiff_revision(archive, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_OK);
-
-        srcml_archive_free(archive);
-    }
-
-    {
-        dassert(srcml_archive_set_srcdiff_revision(0, SRCDIFF_REVISION_ORIGINAL), SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
     return 0;
 }

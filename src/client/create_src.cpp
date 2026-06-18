@@ -133,7 +133,7 @@ static std::string createYAMLHeader(const srcml_archive* arch, const srcml_unit*
     return header;
 }
 
-static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source, const std::optional<size_t>& revision) {
+static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input_src& input_source) {
 
     OpenFileLimiter::open();
     std::unique_ptr<srcml_archive> arch(srcml_archive_create());
@@ -141,12 +141,6 @@ static std::unique_ptr<srcml_archive> srcml_read_open_internal(const srcml_input
         return 0;
 
     int status = SRCML_STATUS_OK;
-
-    if (revision) {
-        status = srcml_archive_set_srcdiff_revision(arch.get(), *revision);
-        if (status != SRCML_STATUS_OK)
-            return 0;
-    }
 
     // may need to modify input source based on url and compressions
     srcml_input_src curinput = input_source;
@@ -222,7 +216,7 @@ void create_src(const srcml_request_t& srcml_request,
         TraceLog log;
 
         for (const auto& input_source : input_sources) {
-            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
+            auto arch(srcml_read_open_internal(input_source));
 
             src_output_filesystem(arch.get(), destination, log);
         }
@@ -235,7 +229,7 @@ void create_src(const srcml_request_t& srcml_request,
         char lastchar = '\0';
         for (auto& input_source : input_sources) {
 
-            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
+            auto arch(srcml_read_open_internal(input_source));
 
             // move to the correct unit
             for (int i = 1; i < srcml_request.unit; ++i) {
@@ -327,7 +321,7 @@ void create_src(const srcml_request_t& srcml_request,
 
     } else if (input_sources.size() == 1 && destination.compressions.empty() && destination.archives.empty()) {
 
-        auto arch(srcml_read_open_internal(input_sources[0], srcml_request.revision));
+        auto arch(srcml_read_open_internal(input_sources[0]));
 
         // move to the correct unit
         for (int i = 1; i < srcml_request.unit; ++i) {
@@ -390,7 +384,7 @@ void create_src(const srcml_request_t& srcml_request,
         // extract all the srcml archives to this libarchive
         for (const auto& input_source : input_sources) {
 
-            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
+            auto arch(srcml_read_open_internal(input_source));
 
             // extract this srcml archive to the source archive
             src_output_libarchive(arch.get(), ar.get());

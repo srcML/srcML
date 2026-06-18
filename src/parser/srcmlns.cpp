@@ -111,11 +111,6 @@ Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, std::strin
     return it;
 }
 
-bool issrcdiff(const Namespaces& namespaces) {
-
-    return findNSURI(namespaces, SRCML_DIFF_NS_URI) != namespaces.end();
-}
-
 void addAttribute(Attributes& attributes, std::string_view uri, std::string_view prefix, std::string_view name, std::string_view value) {
 
     // if we already have the attribute, then just update the value

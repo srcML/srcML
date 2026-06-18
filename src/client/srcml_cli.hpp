@@ -157,8 +157,6 @@ struct srcml_request_t {
 
     std::optional<std::string> pretty_format;
 
-    std::optional<size_t> revision;
-
     // pre-input
     char buf[4] = { 0 };
     size_t bufsize = 0;

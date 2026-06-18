@@ -70,11 +70,6 @@ constexpr inline auto SRCML_OPENMP_NS_URI = "http://www.srcML.org/srcML/openmp"s
 
 constexpr inline auto SRCML_OPENMP_NS_DEFAULT_PREFIX = "omp"sv;
 
-/** srcDiff namespace uri and default prefix */
-constexpr inline auto SRCML_DIFF_NS_URI = "http://www.srcML.org/srcDiff"sv;
-
-constexpr inline auto SRCML_DIFF_NS_DEFAULT_PREFIX = "diff"sv;
-
 /** default namespaces */
 const Namespaces default_namespaces = {
     Namespace(SRCML_SRC_NS_DEFAULT_PREFIX,      SRCML_SRC_NS_URI,      NS_STANDARD | NS_REQUIRED),
@@ -152,8 +147,5 @@ Namespaces::iterator findNSPrefix(Namespaces& namespaces, std::string_view prefi
 Namespaces::const_iterator findNSURI(const Namespaces& namespaces, std::string_view uri);
 
 Namespaces::const_iterator findNSPrefix(const Namespaces& namespaces, std::string_view prefix);
-
-// is a srcdiff archive
-bool issrcdiff(const Namespaces& namespaces);
 
 #endif

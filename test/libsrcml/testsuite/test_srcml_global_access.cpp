@@ -246,25 +246,6 @@ int main(int, char* argv[]) {
     }
 
     /*
-      srcml_set_srcdiff_revision
-    */
-
-    {
-        srcml_set_srcdiff_revision(SRCDIFF_REVISION_ORIGINAL);
-        dassert(srcml_get_srcdiff_revision(), SRCDIFF_REVISION_ORIGINAL);
-    }
-
-    {
-        srcml_set_srcdiff_revision(SRCDIFF_REVISION_ORIGINAL);
-        srcml_set_srcdiff_revision(SRCDIFF_REVISION_MODIFIED);
-        dassert(srcml_get_srcdiff_revision(), SRCDIFF_REVISION_MODIFIED);
-    }
-
-    {
-        dassert(srcml_set_srcdiff_revision(SRCDIFF_REVISION_INVALID), SRCML_STATUS_INVALID_ARGUMENT);
-    }
-
-    /*
       srcml_get_src_encoding
     */
 
@@ -469,20 +450,6 @@ int main(int, char* argv[]) {
 
     {
         dassert(srcml_get_uri_from_prefix(0), 0);
-    }
-
-    /*
-      srcml_get_srcdiff_revision
-    */
-
-    {
-        srcml_set_srcdiff_revision(0);
-        dassert(srcml_get_srcdiff_revision(), 0);
-    }
-
-    {
-        srcml_set_srcdiff_revision(SRCDIFF_REVISION_ORIGINAL);
-        dassert(srcml_get_srcdiff_revision(), SRCDIFF_REVISION_ORIGINAL);
     }
 
     return 0;
