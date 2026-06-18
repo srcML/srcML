@@ -253,7 +253,7 @@ token_set(srcMLParser, post_specifier_js_token_set,
     srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET,
 
     // TypeScript keywords that follow one or more specifiers
-    srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
+    srcMLParser::TS_ENUM, srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, table_keywords_js_token_set,
@@ -266,7 +266,7 @@ token_set(srcMLParser, table_keywords_js_token_set,
     srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::WHILE,
 
     // TypeScript keywords that have regular entries (or duplex entries) for the table-based approach
-    srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
+    srcMLParser::TS_ENUM, srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_js_token_set,
@@ -282,7 +282,7 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_UNDEFINED, srcMLParser::JS_USING, srcMLParser::JS_VAR, srcMLParser::JS_VOID, srcMLParser::WHILE,
     srcMLParser::JS_WITH, srcMLParser::JS_YIELD,
 
-    // TypeScript keywords
+    // TypeScript keywords (excludes "enum")
     srcMLParser::TS_ABSTRACT, srcMLParser::TS_ASSERTS, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS,
     srcMLParser::TS_INFER, srcMLParser::TS_INTERFACE, srcMLParser::TS_IS, srcMLParser::TS_KEYOF, srcMLParser::TS_NAMESPACE,
     srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC,
@@ -291,7 +291,7 @@ token_set(srcMLParser, name_differentiator_js_token_set,
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,
     // A subset of JavaScript keywords from "name_differentiator_js_token_set"
-    // Exclusions: literals (e.g., true), operators (e.g., await), async, readonly, function, and class
+    // Exclusions: literals (e.g., true), operators (e.g., await), async, readonly, function, class, and enum
     srcMLParser::JS_AS, srcMLParser::BREAK, srcMLParser::CASE, srcMLParser::JS_CATCH,
     srcMLParser::JS_CONST, srcMLParser::JS_CONSTRUCTOR, srcMLParser::CONTINUE, srcMLParser::JS_DEBUGGER,
     srcMLParser::JS_DEFAULT, srcMLParser::JS_DELETE, srcMLParser::DO, srcMLParser::JS_EACH, srcMLParser::JS_ELSE,

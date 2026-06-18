@@ -365,6 +365,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::STS_ATTRIBUTE,                 { "attribute",          TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_CONSTRAINT,                { "constraint",         TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_DECLARE_STATEMENT,         { "declare",            TS,      0,           0,        0,                   0 }},
+    { TOKEN::STS_ENUM,                      { "enum",               TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_EXTENDS,                   { "extends",            TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_FUNCTION_DECLARATION,      { "function_decl",      TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_IMPLEMENTS,                { "implements",         TS,      0,           0,        0,                   0 }},

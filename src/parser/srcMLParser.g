@@ -752,6 +752,7 @@ tokens {
     STS_ATTRIBUTE;
     STS_CONSTRAINT;
     STS_DECLARE_STATEMENT;
+    STS_ENUM;
     STS_EXTENDS;
     STS_FUNCTION_DECLARATION;
     STS_IMPLEMENTS;
@@ -1038,6 +1039,9 @@ public:
             // special case: TypeScript namespace statements
             if (declaration_specifiers_ts_token_set.member(LA(1)))
                 declaration_specifiers_ts();
+            // special case: TypeScript enums
+            else if (LA(1) == JS_CONST)
+                const_as_specifier_ts();
             else
                 specifier_js();
         }
@@ -1147,6 +1151,7 @@ public:
 
         /* TYPESCRIPT STATEMENTS */
         temp_array[TS_DECLARE]   = { STS_DECLARE_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_DECLARE_TS | MODE_LIST | MODE_EXPRESSION, nullptr, &srcMLParser::declare_statement_ts };
+        temp_array[TS_ENUM]      = { STS_ENUM, 0, MODE_STATEMENT | MODE_NEST | MODE_ENUM, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[TS_INTERFACE] = { STS_INTERFACE, 0, MODE_STATEMENT | MODE_NEST | MODE_INTERFACE_TS, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[TS_NAMESPACE] = { STS_NAMESPACE, 0, MODE_STATEMENT | MODE_NEST | MODE_NAMESPACE_TS, MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
         temp_array[TS_TYPE]      = { STS_TYPEDEF, 0, MODE_STATEMENT | MODE_TYPEDEF, MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, nullptr };
@@ -1704,9 +1709,9 @@ javascript_statements[] {
                     )
                     && perform_declaration_statement_check_ts()
                 )
-                // type declaration statement in interface blocks
+                // type declaration statement in interface or enum blocks
                 || (
-                    inTransparentMode(MODE_INTERFACE_TS)
+                    (inTransparentMode(MODE_INTERFACE_TS) || inTransparentMode(MODE_ENUM))
                     && (
                         LA(1) == NAME
                         || ((LA(1) == LBRACKET || LA(1) == TS_DATSIGN) && next_token() == NAME)
@@ -1783,6 +1788,7 @@ javascript_statements[] {
             // looking for "let", "var", "const", "static", or "using"
             if (
                 decl_start_js_token_set.member(post_specifier_tokens[0])
+                && post_specifier_tokens[1] != TS_ENUM
                 && (
                     post_specifier_tokens[0] != JS_STATIC
                     || (
@@ -1807,8 +1813,16 @@ javascript_statements[] {
                     post_specifier_tokens[0] = lookup;
             }
 
+            // looking for enums
+            if (post_specifier_tokens[1] == TS_ENUM) {
+                const auto& rule = javascriptRules[post_specifier_tokens[1]];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
+            }
             // looking for classes or functions (regular/get/set)
-            if (post_specifier_tokens[0] != -1) {
+            else if (post_specifier_tokens[0] != -1) {
                 const auto& rule = javascriptRules[post_specifier_tokens[0]];
                 if (rule.elementToken && processRule(rule)) {
                     processed_statement = true;
@@ -1837,6 +1851,7 @@ javascript_statements[] {
             // (Note: do not confuse static declaration with static method in a class)
             if (
                 decl_start_js_token_set.member(LA(1))
+                && next_token() != TS_ENUM
                 && (
                     LA(1) != JS_STATIC
                     || (
@@ -1860,6 +1875,17 @@ javascript_statements[] {
                 const auto lookup = duplexKeywords[token + (next_token() << 8)];
                 if (lookup)
                     token = lookup;
+            }
+
+            // special case: looking for enum in the table
+            if (next_token() == TS_ENUM) {
+                auto nxtoken = next_token();
+
+                const auto& rule = javascriptRules[nxtoken];
+                if (rule.elementToken && processRule(rule)) {
+                    processed_statement = true;
+                    return;
+                }
             }
 
             // looking for keyword-based statements in the table
@@ -19156,6 +19182,7 @@ check_valid_specifier_js[] returns [int isspecifier] {
                     || (LA(1) == JS_STATIC && (next_token() == OPERATORS || next_token() == DESTOP))
                 )
             )
+            || (inPrevMode(MODE_ENUM) && LA(1) == JS_CONST)
             || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
             || LA(1) == TS_ABSTRACT
         )

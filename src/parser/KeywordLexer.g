@@ -397,6 +397,7 @@ tokens {
     TS_ATSIGN;
     TS_DATSIGN;
     TS_DECLARE;
+    TS_ENUM;
     TS_IMPLEMENTS;
     TS_INFER;
     TS_INTERFACE;
@@ -989,7 +990,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
 
         // Existing language keywords that are names in JavaScript
-        { "enum"         , NAME              , LANGUAGE_JAVASCRIPT },
         { "goto"         , NAME              , LANGUAGE_JAVASCRIPT },
 
         // JavaScript
@@ -1037,6 +1037,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "abstract"     , TS_ABSTRACT       , LANGUAGE_JAVASCRIPT },
         { "asserts"      , TS_ASSERTS        , LANGUAGE_JAVASCRIPT },
         { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT },
+        { "enum"         , TS_ENUM           , LANGUAGE_JAVASCRIPT },
         { "implements"   , TS_IMPLEMENTS     , LANGUAGE_JAVASCRIPT },
         { "infer"        , TS_INFER          , LANGUAGE_JAVASCRIPT },
         { "interface"    , TS_INTERFACE      , LANGUAGE_JAVASCRIPT },
