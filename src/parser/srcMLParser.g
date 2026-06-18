@@ -15434,11 +15434,21 @@ angle_bracket_pair[] { ENTRY_DEBUG } :
         TEMPOPS
 
         (
+            { LA(1) == TEMPOPS }?
             angle_bracket_pair |
+
+            { LA(1) == LBRACKET }?
+            bracket_pair |
+
+            { LA(1) == LCURLY }?
+            curly_pair |
+
+            { LA(1) == LPAREN }?
+            paren_pair |
 
             qmark |
 
-            ~(QMARK | TEMPOPS | TEMPOPE)
+            ~(QMARK | TEMPOPS | TEMPOPE | RPAREN | RCURLY | RBRACKET)
         )*
 
         TEMPOPE
