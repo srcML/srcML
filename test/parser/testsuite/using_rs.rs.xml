@@ -2,6 +2,14 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="using_rs">
 
 <unit revision="1.0.0" language="Rust">
+<using>use <name>A</name>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name>A</name> <alias>as <name>B</name></alias>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
 <using>use <name><name>std</name><operator>::</operator><name>io</name></name>;</using>
 </unit>
 
