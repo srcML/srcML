@@ -21004,7 +21004,10 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     // consume optional TypeScript type, followed by a typical block
                     if (
                         LA(1) == COLON
-                        && next_token() == LCURLY
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
                         && perform_colon_lcurly_differentiator_check_js() == 3
                     ) {
                         isfunction = true;
@@ -21757,7 +21760,10 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
                     // consume optional TypeScript type, followed by a typical block
                     if (
                         LA(1) == COLON
-                        && next_token() == LCURLY
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
                         && perform_colon_lcurly_differentiator_check_js() == 3
                     ) {
                         found_type = true;
@@ -21912,7 +21918,10 @@ perform_computed_property_as_function_check_js[] returns [bool iscomputed] {
                     // consume optional TypeScript type, followed by a typical block
                     if (
                         LA(1) == COLON
-                        && next_token() == LCURLY
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
                         && perform_colon_lcurly_differentiator_check_js() == 3
                     ) {
                         iscomputed = true;
@@ -22199,8 +22208,15 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                     paren_pair();
 
                     // determine the type of block that "{" starts
-                    if (LA(1) == COLON && next_token() == LCURLY)
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                    ) {
                         lcurly_type = perform_colon_lcurly_differentiator_check_js();
+                    }
 
                     // match optional TypeScript type
                     if (
@@ -22208,7 +22224,10 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                         && (
                             next_token() != LCURLY
                             || (
-                                next_token() == LCURLY
+                                (
+                                    next_token() == LCURLY
+                                    || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                                )
                                 && lcurly_type == 3
                             )
                         )
@@ -22234,28 +22253,17 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
 
                             consume();
                         }
+
+                        // consume optional TypeScript array after type block
+                        if (LA(1) == LBRACKET)
+                            bracket_pair();
                     }
 
                     // consume block
                     if (LA(1) == LCURLY) {
-                        while (LA(1) != antlr::Token::EOF_TYPE) {
-                            if (LA(1) == LCURLY)
-                                ++curly_count;
-                            else if (LA(1) == RCURLY && curly_count > 1)
-                                --curly_count;
-                            else if ((LA(1) == RCURLY && curly_count == 1) || curly_count < 0)
-                                break;
+                        curly_pair();
 
-                            consume();
-                        }
-
-                        // end the block
-                        if (LA(1) == RCURLY) {
-                            --curly_count;
-                            consume();
-                        }
-
-                        // looking for ")(" after the function expression
+                        // looking for "})" after the function expression
                         if (LA(1) == RPAREN) {
                             consume();
 
@@ -22395,7 +22403,13 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
                 paren_pair();
 
                 // determine the type of block that "{" starts
-                if (LA(1) == COLON && next_token() == LCURLY)
+                if (
+                    LA(1) == COLON
+                    && (
+                        next_token() == LCURLY
+                        || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                    )
+                )
                     lcurly_type = perform_colon_lcurly_differentiator_check_js();
 
                 // match optional TypeScript type
@@ -22404,7 +22418,10 @@ perform_keywordless_iife_check_js[] returns [bool isiife] {
                     && (
                         next_token() != LCURLY
                         || (
-                            next_token() == LCURLY
+                            (
+                                next_token() == LCURLY
+                                || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                            )
                             && lcurly_type == 3
                         )
                     )
@@ -22981,7 +22998,13 @@ colon_marked_js[] {
                 startElement(SOPERATOR);
 
             // determine if "{" starts an object or a kind of block
-            if (LA(1) == COLON && next_token() == LCURLY)
+            if (
+                LA(1) == COLON
+                && (
+                    next_token() == LCURLY
+                    || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                )
+            )
                 lcurly_type = perform_colon_lcurly_differentiator_check_js();
 
             // consume the entire type (with the colon)
@@ -23129,6 +23152,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                 || last_consumed == OPERATORS
                 || last_consumed == LPAREN
                 || last_consumed == TS_KEYOF
+                || last_consumed == TS_READONLY
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
                 || inTransparentMode(MODE_MIXINS_TS)
                 || inTransparentMode(MODE_TYPEDEF)
@@ -23356,7 +23380,14 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                         break;
 
                     // determine if "{" starts an object or a kind of block
-                    if (paren_count == 0 && LA(1) == COLON && next_token() == LCURLY) {
+                    if (
+                        paren_count == 0
+                        && LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                    ) {
                         if (perform_colon_lcurly_differentiator_check_js() == 2)
                             isdecl = true;
                         else
@@ -23536,7 +23567,13 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
                     }
 
                     // consume optional TypeScript type
-                    if (LA(1) == COLON && next_token() == LCURLY) {
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                    ) {
                         int curly_type = perform_colon_lcurly_differentiator_check_js();
 
                         // "() : TYPE {}" is not a function declaration
@@ -24769,8 +24806,17 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
         inputState->guessing++;
 
         try {
-            if (LA(1) == COLON && next_token() == LCURLY) {
+            if (
+                LA(1) == COLON
+                && (
+                    next_token() == LCURLY
+                    || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                )
+            ) {
                 consume();  // ":"
+
+                if (LA(1) == TS_READONLY)
+                    consume();  // "readonly"
 
                 /*
                     CASE 1: "{" in a ternary
@@ -24803,11 +24849,12 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
                     if (LA(1) == RCURLY && (next_token() == TERMINATE || next_token() == COMMA)) {
                         curlytype = 2;  // TypeScript "type" block
                     }
-                    // could be "{} | TYPE {}", "{} & TYPE {}", or "{} {}"
+                    // could be "{} | TYPE {}", "{} & TYPE {}", "{}[] {}", or "{} {}"
                     else if (
                         LA(1) == RCURLY
                         && (
                             next_token() == LCURLY
+                            || next_token() == LBRACKET
                             || next_token() == REFOPS
                             || next_token() == OPERATORS
                         )
@@ -25473,7 +25520,10 @@ perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunct
                 if (LA(1) == COLON) {
                     // consume optional TypeScript type, followed by a typical block
                     if (
-                        next_token() == LCURLY
+                        (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
                         && perform_colon_lcurly_differentiator_check_js() == 3
                     ) {
                         isfunction = true;

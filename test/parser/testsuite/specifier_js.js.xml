@@ -145,6 +145,56 @@
 <decl_stmt><decl type="const">const <name>values</name> <init>= <expr><name>value</name> <operator>as</operator> <ts:specifier>readonly</ts:specifier> <name><name>string</name><index>[]</index></name></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>getAmbientCandidates</name><parameter_list>()</parameter_list><ts:type>: <ts:specifier>readonly</ts:specifier> <block>{<block_content> <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt> </block_content>}</block><array>[]</array></ts:type> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>program</name> <init>= <expr><name><name>ls</name><operator>.</operator><name>name</name></name></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <expr_stmt><expr><function type="generator">*<parameter_list>()</parameter_list><ts:type>: <ts:specifier>readonly</ts:specifier> <block>{<block_content> <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt> </block_content>}</block><array>[]</array></ts:type> <block>{<block_content>
+        <decl_stmt><decl type="const">const <name>program</name> <init>= <expr><name><name>ls</name><operator>.</operator><name>name</name></name></expr></init></decl></decl_stmt>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <expr_stmt><expr><function type="generator">*<name type="computed">[<expr><name>getAmbientCandidates</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <ts:specifier>readonly</ts:specifier> <block>{<block_content> <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt> </block_content>}</block><array>[]</array></ts:type> <block>{<block_content>
+        <decl_stmt><decl type="const">const <name>program</name> <init>= <expr><name><name>ls</name><operator>.</operator><name>name</name></name></expr></init></decl></decl_stmt>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <function><name type="computed">[<expr><name>getAmbientCandidates</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <ts:specifier>readonly</ts:specifier> <block>{<block_content> <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt> </block_content>}</block><array>[]</array></ts:type> <block>{<block_content>
+        <decl_stmt><decl type="const">const <name>program</name> <init>= <expr><name><name>ls</name><operator>.</operator><name>name</name></name></expr></init></decl></decl_stmt>
+    </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <expr_stmt><expr><function><name>getAmbientCandidates</name><parameter_list>()</parameter_list><ts:type>: <ts:specifier>readonly</ts:specifier> <block>{<block_content> <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt> </block_content>}</block><array>[]</array></ts:type> <block>{<block_content>
+        <decl_stmt><decl type="const">const <name>program</name> <init>= <expr><name><name>ls</name><operator>.</operator><name>name</name></name></expr></init></decl></decl_stmt>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list><ts:type>: <ts:specifier>readonly</ts:specifier> <block>{<block_content> <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt> </block_content>}</block><array>[]</array></ts:type> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>program</name> <init>= <expr><name><name>ls</name><operator>.</operator><name>name</name></name></expr></init></decl></decl_stmt>
+</block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>()</parameter_list><ts:type>: <ts:specifier>readonly</ts:specifier> <block>{<block_content> <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt> </block_content>}</block><array>[]</array></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>program</name> <init>= <expr><name><name>ls</name><operator>.</operator><name>name</name></name></expr></init></decl></decl_stmt>
+</block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
 <!-- "override" (TypeScript) -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
