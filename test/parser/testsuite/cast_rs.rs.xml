@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="cast_rs">
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <name>T</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <name>T</name> <operator>as</operator> <name>S</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <name>T</name> <operator>as</operator> <name>S</name> <operator>as</operator> <name>U</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <name>T</name> <operator>as</operator> <name>S</name> <operator>as</operator> <name>U</name> <operator>as</operator> <name>V</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <operator>&amp;</operator><name>T</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <operator>&amp;</operator><operator>mut</operator> <name>T</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <operator>*</operator><specifier>const</specifier> <name>T</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <operator>*</operator><operator>mut</operator> <name>T</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <array>[<name>T</name>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <specifier>dyn</specifier> <name>T</name></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <function_decl>fn<parameter_list>()</parameter_list> -&gt; <type><name>T</name></type></function_decl></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <function_decl>fn<parameter_list>(<parameter><type><name>i32</name></type></parameter>)</parameter_list> -&gt; <type><name>i32</name></type></function_decl></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <name><name>T</name><argument_list type="generic">&lt;<argument><name>S</name></argument>&gt;</argument_list></name></expr>
+</unit>
+
+</unit>
