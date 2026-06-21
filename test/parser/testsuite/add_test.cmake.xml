@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="add_test">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument> <argument><expr><name>argument</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument> <argument><expr><name>argument</name></expr></argument> <argument><expr><name>argument2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>config</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>config</name></expr></argument> <argument><expr><name>config2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option> <option><name>COMMAND_EXPAND_LISTS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>config</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>config</name></expr></argument></option> <option><name>COMMAND_EXPAND_LISTS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option> <option><name>COMMAND_EXPAND_LISTS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>config</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option> <option><name>COMMAND_EXPAND_LISTS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_test</name><argument_list>(<option><name>NAME</name> <argument><expr><name>test</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>testDriver</name></expr></argument> <argument><expr><name>argument</name></expr></argument> <argument><expr><name>argument2</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>config</name></expr></argument> <argument><expr><name>config2</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option> <option><name>COMMAND_EXPAND_LISTS</name></option>)</argument_list></command>
+</unit>
+
+</unit>
