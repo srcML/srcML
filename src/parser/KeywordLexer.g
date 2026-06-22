@@ -591,21 +591,21 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         { "while"        , WHILE         , LANGUAGE_ALL },
         { "for"          , FOR           , LANGUAGE_ALL },
-        { "do"           , DO            , LANGUAGE_ALL },
+        { "do"           , DO            , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
 
         { "break"        , BREAK         , LANGUAGE_ALL },
         { "continue"     , CONTINUE      , LANGUAGE_ALL },
 
-        { "switch"       , SWITCH        , LANGUAGE_ALL },
+        { "switch"       , SWITCH        , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
         { "case"         , CASE          , LANGUAGE_ALL },
-        { "default"      , DEFAULT       , LANGUAGE_ALL },
+        { "default"      , DEFAULT       , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
 
         { "return"       , RETURN        , LANGUAGE_ALL },
 
-        { "enum"         , ENUM          , LANGUAGE_ALL },
+        { "enum"         , ENUM          , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
 
-        { "static"       , STATIC        , LANGUAGE_ALL },
-        { "const"        , CONST         , LANGUAGE_ALL },
+        { "static"       , STATIC        , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
+        { "const"        , CONST         , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
  
         // operators and special characters
         { ")"            , RPAREN        , LANGUAGE_ALL },
@@ -689,13 +689,13 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "__asm__"      , ASM            , LANGUAGE_C_FAMILY },
         { "__asm"        , VISUAL_CXX_ASM , LANGUAGE_C_FAMILY },
 
-        { "goto"         , GOTO           , LANGUAGE_ALL },
+        { "goto"         , GOTO           , LANGUAGE_ALL & ~LANGUAGE_PYTHON & ~LANGUAGE_JAVASCRIPT },
         { "sizeof"       , SIZEOF         , LANGUAGE_C_FAMILY },
 
         { "register"     , REGISTER       , LANGUAGE_C | LANGUAGE_CXX },
         { "mutable"      , MUTABLE        , LANGUAGE_CXX },
-        { "volatile"     , VOLATILE       , LANGUAGE_ALL },
-        { "__volatile__" , VOLATILE       , LANGUAGE_C_FAMILY  },
+        { "volatile"     , VOLATILE       , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
+        { "__volatile__" , VOLATILE       , LANGUAGE_C_FAMILY },
         { "auto"         , AUTO           , LANGUAGE_CXX | LANGUAGE_C },
         { "__attribute__", C_ATTRIBUTE    , LANGUAGE_CXX | LANGUAGE_C },
 
@@ -713,16 +713,16 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         // exception handling
         { "try"          , TRY           , LANGUAGE_OO },
-        { "catch"        , CATCH         , LANGUAGE_OO },
-        { "throw"        , THROW         , LANGUAGE_OO },
+        { "catch"        , CATCH         , LANGUAGE_OO & ~LANGUAGE_PYTHON },
+        { "throw"        , THROW         , LANGUAGE_OO & ~LANGUAGE_PYTHON },
 
         // class
         { "class"        , CLASS         , LANGUAGE_OO },
-        { "public"       , PUBLIC        , LANGUAGE_OO },
-        { "private"      , PRIVATE       , LANGUAGE_OO },
-        { "protected"    , PROTECTED     , LANGUAGE_OO },
+        { "public"       , PUBLIC        , LANGUAGE_OO & ~LANGUAGE_PYTHON },
+        { "private"      , PRIVATE       , LANGUAGE_OO & ~LANGUAGE_PYTHON },
+        { "protected"    , PROTECTED     , LANGUAGE_OO & ~LANGUAGE_PYTHON },
 
-        { "new"          , NEW           , LANGUAGE_OO },
+        { "new"          , NEW           , LANGUAGE_OO & ~LANGUAGE_PYTHON },
 
         // Qt
         { "signals"      , SIGNAL        , LANGUAGE_CXX },
@@ -750,8 +750,8 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "&&"           , RVALUEREF     , LANGUAGE_CXX_FAMILY },
 
         // special C++ constant values
-        { "false"        , LITERAL_FALSE         , LANGUAGE_OO },
-        { "true"         , LITERAL_TRUE          , LANGUAGE_OO },
+        { "false"        , LITERAL_FALSE         , LANGUAGE_OO & ~LANGUAGE_PYTHON },
+        { "true"         , LITERAL_TRUE          , LANGUAGE_OO & ~LANGUAGE_PYTHON },
 
         // C++ specifiers
         { "final"         , FINAL          , LANGUAGE_CXX },
@@ -930,38 +930,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "not"          , PY_NOT            , LANGUAGE_PYTHON },
         { "or"           , PY_OR             , LANGUAGE_PYTHON },
 
-        // Existing language keywords that are names in Python
-        { "__asm"        , NAME              , LANGUAGE_PYTHON },
-        { "__volatile__" , NAME              , LANGUAGE_PYTHON },
-        { "catch"        , NAME              , LANGUAGE_PYTHON },
-        { "const"        , NAME              , LANGUAGE_PYTHON },
-        { "default"      , NAME              , LANGUAGE_PYTHON },
-        { "do"           , NAME              , LANGUAGE_PYTHON },
-        { "enum"         , NAME              , LANGUAGE_PYTHON },
-        { "extern"       , NAME              , LANGUAGE_PYTHON },
-        { "explicit"     , NAME              , LANGUAGE_PYTHON },
-        { "false"        , NAME              , LANGUAGE_PYTHON },
-        { "goto"         , NAME              , LANGUAGE_PYTHON },
-        { "inline"       , NAME              , LANGUAGE_PYTHON },
-        { "main"         , NAME              , LANGUAGE_PYTHON },
-        { "namespace"    , NAME              , LANGUAGE_PYTHON },
-        { "new"          , NAME              , LANGUAGE_PYTHON },
-        { "omp"          , NAME              , LANGUAGE_PYTHON },
-        { "operator"     , NAME              , LANGUAGE_PYTHON },
-        { "private"      , NAME              , LANGUAGE_PYTHON },
-        { "protected"    , NAME              , LANGUAGE_PYTHON },
-        { "public"       , NAME              , LANGUAGE_PYTHON },
-        { "sizeof"       , NAME              , LANGUAGE_PYTHON },
-        { "static"       , NAME              , LANGUAGE_PYTHON },
-        { "struct"       , NAME              , LANGUAGE_PYTHON },
-        { "switch"       , NAME              , LANGUAGE_PYTHON },
-        { "throw"        , NAME              , LANGUAGE_PYTHON },
-        { "true"         , NAME              , LANGUAGE_PYTHON },
-        { "typedef"      , NAME              , LANGUAGE_PYTHON },
-        { "using"        , NAME              , LANGUAGE_PYTHON },
-        { "virtual"      , NAME              , LANGUAGE_PYTHON },
-        { "volatile"     , NAME              , LANGUAGE_PYTHON },
-
         // Python
         { "as"           , PY_ALIAS          , LANGUAGE_PYTHON },
         { "assert"       , ASSERT            , LANGUAGE_PYTHON },
@@ -988,9 +956,6 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "type"         , PY_TYPE           , LANGUAGE_PYTHON },
         { "with"         , PY_WITH           , LANGUAGE_PYTHON },
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
-
-        // Existing language keywords that are names in JavaScript
-        { "goto"         , NAME              , LANGUAGE_JAVASCRIPT },
 
         // JavaScript
         { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
