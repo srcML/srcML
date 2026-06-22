@@ -1240,6 +1240,12 @@
 <decl_stmt><decl type="const">const <name>try</name> <init>= <expr><name>try</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>PromiseConstructor</name> <block>{
+    <ts:function_decl><name><name>try</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>U</name> <ts:extends>extends <ts:type><name><name>unknown</name><index>[]</index></name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>callbackFn</name><ts:type>: <lambda><parameter_list>(<parameter><decl><modifier>...</modifier><ts:type><name>args</name><ts:type>: <name>U</name></ts:type></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>T</name> <operator>|</operator> <name><name>PromiseLike</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></expr></lambda></ts:type></decl></parameter>, <parameter><decl><modifier>...</modifier><name>args</name><ts:type>: <name>U</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name><name>Awaited</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+}</block></ts:interface>
+</unit>
+
 <!-- "type" -->
 
 <unit revision="1.0.0" language="JavaScript">

@@ -309,6 +309,9 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         // the token directly before was a "?." or the token directly after is also "?."
         || (prevToken->getType() == srcMLParser::QMARK_PERIOD || nextToken->getType() == srcMLParser::QMARK_PERIOD)
 
+        // the current token is "try" and the next token is anything but "{"
+        || (token->getType() == srcMLParser::TRY && nextToken->getType() != srcMLParser::LCURLY)
+
         // the current token is "void" and the next token is "=>"
         || (token->getType() == srcMLParser::JS_VOID && nextToken->getType() == srcMLParser::JS_ARROW)
 
