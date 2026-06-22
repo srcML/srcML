@@ -23743,13 +23743,16 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
         isdecl = false;
         last_consumed_guessing_mode = -1;
         bool continue_guessing = false;
+        bool found_specifier = false;
         int start = mark();
         inputState->guessing++;
 
         try {
-            // consume optional specifiers
-            while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1)))
+            // consume optional specifiers (required if looking for "=" case)
+            while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
                 declaration_specifiers_ts();
+                found_specifier = true;
+            }
 
             // consume optional unary operators
             if ((LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-")) || (LA(1) == DESTOP))
@@ -23792,8 +23795,14 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
             while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
                 declaration_modifiers_ts();
 
-            // found "NAME:" or "[NAME]:"
-            if (continue_guessing && LA(1) == COLON)
+            // found "NAME:" or "[NAME]:" or "NAME =" or "[NAME] ="
+            if (
+                continue_guessing
+                && (
+                    LA(1) == COLON
+                    || (LA(1) == EQUAL && found_specifier)
+                )
+            )
                 isdecl = true;
         }
         catch (...) {}

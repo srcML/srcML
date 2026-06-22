@@ -458,6 +458,30 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>TestState</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <name>foo</name> <init>= <expr><literal type="string">"bar"</literal></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>TestState</name> <block>{
+    <decl_stmt><decl><ts:specifier>protected</ts:specifier> <name>currentCaretPosition</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>TestState</name> <block>{
+    <decl_stmt><decl><ts:specifier>public</ts:specifier> <name>enableFormatting</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>TestState</name> <block>{
+    <decl_stmt><decl><ts:specifier>private</ts:specifier> <name>inputFiles</name> <init>= <expr><operator>new</operator> <call><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>, <argument><expr><name>string</name></expr></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
 <!-- Strings as Declaration Names -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
