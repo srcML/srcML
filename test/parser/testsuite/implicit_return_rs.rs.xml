@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="implicit_return_rs">
+
+<!-- functions -->
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <return type="implicit"><expr><name>a</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+  <return type="implicit"><expr><name>a</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>product</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>y</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> -&gt; <type><name>i32</name></type> <block>{<block_content>
+  <return type="implicit"><expr><name>x</name> <operator>*</operator> <name>y</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <return type="implicit"><expr><call><name>a</name><argument_list>()</argument_list></call></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><block>{<block_content>
+    <block>{<block_content>
+      <block>{<block_content>
+        <block>{<block_content>
+          <expr><name>a</name></expr>
+        </block_content>}</block>
+      </block_content>}</block>
+    </block_content>}</block>
+  </block_content>}</block></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name>: <type><name>bool</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><name>bool</name></type></decl></parameter>)</parameter_list> -&gt; <type><name>i32</name></type> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><if_stmt><if>if <condition><expr><name>a</name></expr></condition> <block>{<block_content>
+    <expr><literal type="number">0</literal></expr>
+  </block_content>}</block></if> <if type="elseif">else if <condition><expr><name>b</name></expr></condition> <block>{<block_content>
+    <expr><literal type="number">1</literal></expr>
+  </block_content>}</block></if> <else>else <block>{<block_content>
+    <expr><literal type="number">2</literal></expr>
+  </block_content>}</block></else></if_stmt></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><switch>match <expr><name>a</name></expr> <block>{<block_content>
+    <case><expr><name>_</name></expr> =&gt; <block type="pseudo"><block_content><expr><name>b</name></expr></block_content></block></case>
+  </block_content>}</block></switch></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><while>while <condition><expr><name>a</name></expr></condition> <block>{<block_content>
+    <expr><tuple>()</tuple></expr>
+  </block_content>}</block></while></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><for>for <control><decl><name>_</name></decl> <range>in <expr><literal type="number">0</literal><operator>..</operator><name>n</name></expr></range></control> <block>{<block_content>
+    <expr><tuple>()</tuple></expr>
+  </block_content>}</block></for></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><loop>loop <block>{<block_content>
+    <break>break <expr><tuple>()</tuple></expr>;</break>
+  </block_content>}</block></loop></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<!-- closures -->
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>||</parameter_list> <block>{<block_content> <return type="implicit"><expr><name>a</name></expr></return> </block_content>}</block> </lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>||</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+  <return type="implicit"><expr><name>a</name></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>|<parameter><name>x</name>: <type><name>i32</name></type></parameter>, <parameter><name>y</name>: <type><name>i32</name></type></parameter>|</parameter_list> <block>{<block_content>
+  <return type="implicit"><expr><name>x</name> <operator>*</operator> <name>y</name></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>||</parameter_list> <block>{<block_content>
+  <return type="implicit"><expr><call><name>a</name><argument_list>()</argument_list></call></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>||</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><block>{<block_content>
+    <block>{<block_content>
+      <block>{<block_content>
+        <block>{<block_content>
+          <expr><name>a</name></expr>
+        </block_content>}</block>
+      </block_content>}</block>
+    </block_content>}</block>
+  </block_content>}</block></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>|<parameter><decl><name>a</name>: <type><name>bool</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><name>bool</name></type></decl></parameter>|</parameter_list> -&gt; <type><name>i32</name></type> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><if_stmt><if>if <condition><expr><name>a</name></expr></condition> <block>{<block_content>
+    <expr><literal type="number">0</literal></expr>
+  </block_content>}</block></if> <if type="elseif">else if <condition><expr><name>b</name></expr></condition> <block>{<block_content>
+    <expr><literal type="number">1</literal></expr>
+  </block_content>}</block></if> <else>else <block>{<block_content>
+    <expr><literal type="number">2</literal></expr>
+  </block_content>}</block></else></if_stmt></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>||</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><switch>match <expr><name>a</name></expr> <block>{<block_content>
+    <case><expr><name>_</name></expr> =&gt; <block type="pseudo"><block_content><expr><name>b</name></expr></block_content></block></case>
+  </block_content>}</block></switch></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>||</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><while>while <condition><expr><name>a</name></expr></condition> <block>{<block_content>
+    <expr><tuple>()</tuple></expr>
+  </block_content>}</block></while></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>||</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><for>for <control><decl><name>_</name></decl> <range>in <expr><literal type="number">0</literal><operator>..</operator><name>n</name></expr></range></control> <block>{<block_content>
+    <expr><tuple>()</tuple></expr>
+  </block_content>}</block></for></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<lambda><parameter_list>||</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+
+  <return type="implicit"><expr><loop>loop <block>{<block_content>
+    <break>break <expr><tuple>()</tuple></expr>;</break>
+  </block_content>}</block></loop></expr></return>
+</block_content>}</block></lambda>
+</unit>
+
+</unit>
