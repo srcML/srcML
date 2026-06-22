@@ -568,6 +568,18 @@
 <decl_stmt><decl type="const">const <name>extends</name> <init>= <expr><name>extends</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>ElementDefinitionOptions</name> <block>{
+    <decl_stmt><decl><name>extends</name><ts:modifier>?</ts:modifier><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>ElementDefinitionOptions</name> <block>{
+    <decl_stmt><decl><name>extends</name><ts:modifier>!</ts:modifier><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
 <!-- "false" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -756,6 +768,44 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>if</name> <init>= <expr><name>if</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "implements" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>implements</name></expr>: <expr><literal type="string">"implements"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>implements</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>implements</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>implements</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>implements</name> <init>= <expr><name>implements</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>implements</name> <init>= <expr><name>implements</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>implements</name> <init>= <expr><name>implements</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>ElementDefinitionOptions</name> <block>{
+    <decl_stmt><decl><name>implements</name><ts:modifier>?</ts:modifier><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>ElementDefinitionOptions</name> <block>{
+    <decl_stmt><decl><name>implements</name><ts:modifier>!</ts:modifier><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
 </unit>
 
 <!-- "import" -->
