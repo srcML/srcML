@@ -1132,12 +1132,12 @@ public:
         temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };
         temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::for_control_situational_specifiers_js };  // check for "await" or "each" following the "for"
-        temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, nullptr };
+        temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::condition_js };
         temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
-        temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, &srcMLParser::condition_js };
         temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[TRY]         = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_TRY, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };
-        temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[WHILE]       = { SWHILE_STATEMENT, MODE_DO_STATEMENT, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, &srcMLParser::condition_js };
 
         /* JAVASCRIPT STATEMENTS */
         temp_array[JS_CONSTRUCTOR] = { SCONSTRUCTOR_DEFINITION, 0, MODE_STATEMENT | MODE_NEST | MODE_CONSTRUCTOR_JS, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS, nullptr, nullptr };
@@ -1158,7 +1158,7 @@ public:
 
         /* DUPLEX KEYWORDS */
         temp_array[JS_CATCH_LPAREN]     = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, &srcMLParser::javascript_parameter_list };  // extra consume for '(' is in the provided rule
-        temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::consume };  // extra consume for 'if'
+        temp_array[JS_ELSE_IF]          = { SELSEIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::condition_js };  // rule will consume 'if'
         temp_array[JS_FUNCTION_MULTOPS] = { SFUNCTION_GENERATOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume for '*'
         temp_array[JS_GET_LBRACKET]     = { SFUNCTION_GET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
         temp_array[JS_SET_LBRACKET]     = { SFUNCTION_SET_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_PARAMETER_LIST_JS | MODE_VARIABLE_NAME | MODE_EXPECT, nullptr, &srcMLParser::computed_property_js };  // consume computed property
@@ -6760,12 +6760,6 @@ condition[] { ENTRY_DEBUG } :
 
             // mark the condition mode as the one to stop at a right parentheses; non-empty conditions contain an expression
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
-
-            // lparen starts a condition
-            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
-                lparen_types_js.emplace_back('n');  // condition LPAREN
-                bracket_types_js.emplace_back("nLPAREN");
-            }
         }
 
         LPAREN
@@ -19459,6 +19453,71 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                 endMode(MODE_DECL_JS);
             }
         }
+;
+
+/*
+  condition_js
+
+  Handles conditions contained in "if"/"while"/"switch" in JavaScript/TypeScript.
+*/
+condition_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            // consume optional "if" for "else...if" construct
+            if (last_consumed == JS_ELSE && LA(1) == IF)
+                consume();
+
+            assertMode(MODE_CONDITION | MODE_EXPECT);
+
+            // start element condition outside of the left parentheses
+            startElement(SCONDITION);
+
+            // mark the condition mode as the one to stop at a right parentheses; non-empty conditions contain an expression
+            setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            lparen_types_js.emplace_back('n');  // condition LPAREN
+            bracket_types_js.emplace_back("nLPAREN");
+
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        LPAREN
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'n' && lparen_types_size == lparen_types_js.size())
+                || (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        // consume condition-ending parenthesis, if it exists
+        ({ LA(1) == RPAREN }? rparen[false])?
 ;
 
 /*
