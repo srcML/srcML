@@ -34,7 +34,8 @@ private:
     std::deque<antlr::RefToken> buffer;
     std::deque<antlr::RefToken> tempSkipBuffer;
     std::deque<std::string> bracketTokenTracker;  // tracks '(', '[', and '{'
-    antlr::RefToken lastToken = srcMLToken::factory();
+    antlr::RefToken currentToken = srcMLToken::factory();
+    antlr::RefToken prevNonWhitespaceToken = srcMLToken::factory();
 
     bool firstToken = true;
     bool wasPostfixName = false;

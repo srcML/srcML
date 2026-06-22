@@ -38,12 +38,12 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
 
         // denote the current token as the upcoming last token, if it is not a skip token
         if (!srcMLParser::skip_tokens_set.member(token->getType()))
-            lastToken = token;
+            currentToken = token;
     }
 
     // process pairs of tokens: the previously-used token and the next non-skip token
     if (buffer.empty()) {
-        antlr::RefToken token = lastToken;
+        antlr::RefToken token = currentToken;
         auto nextNonSkipToken = input.nextToken();
         bool containsEOL = false;
 
@@ -95,7 +95,8 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
             tempSkipBuffer.pop_front();
         }
 
-        lastToken = nextNonSkipToken;
+        prevNonWhitespaceToken = currentToken;
+        currentToken = nextNonSkipToken;
 
         // ensure the EOF token is not missed at the end of a file
         if (nextNonSkipToken->getType() == 1 /* EOF */)
@@ -306,6 +307,15 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                 containsEOL
                 && token->getType() == srcMLParser::RCURLY
                 && nextNonSkipToken->getType() == srcMLParser::LCURLY
+            )
+
+            // an EOL separates an "!" and a NAME if the previous token was ")"
+            || (
+                containsEOL
+                && prevNonWhitespaceToken->getType() == srcMLParser::RPAREN
+                && token->getType() == srcMLParser::OPERATORS
+                && token->getText() == "!"
+                && nextNonSkipToken->getType() == srcMLParser::NAME
             )
         )
     );

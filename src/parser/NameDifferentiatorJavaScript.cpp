@@ -215,6 +215,7 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         // the current token is "type" and one of the following is true:
         // - the next token is an operator, ":", "=", ".", "?", "=>", a terminate (";"), or end-of-file
         // - the previous token was a ":"
+        // - currently in a "{}" pair and either the next token is "}", is "{ type ,", or is ", type ,"
         // - currently in a "()" or "[]" pair and the next token is ",", ")", or "]"
         || (
             token->getType() == srcMLParser::TS_TYPE
@@ -228,6 +229,14 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || nextToken->getType() == srcMLParser::TERMINATE
                 || nextToken->getType() == srcMLParser::EOF_
                 || prevNonWhitespaceToken->getType() == srcMLParser::COLON
+                || (
+                    bracketBuffer.front() == "{"
+                    && (
+                        nextToken->getType() == srcMLParser::RCURLY
+                        || (prevNonWhitespaceToken->getType() == srcMLParser::LCURLY && nextToken->getType() == srcMLParser::COMMA)
+                        || (prevNonWhitespaceToken->getType() == srcMLParser::COMMA && nextToken->getType() == srcMLParser::COMMA)
+                    )
+                )
                 || (
                     (bracketBuffer.front() == "(" || bracketBuffer.front() == "[")
                     && (
