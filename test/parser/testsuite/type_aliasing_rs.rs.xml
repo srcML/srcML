@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="while_rs">
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>Int</name> = <type><name>i32</name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>Null</name> = <type><tuple>()</tuple></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>Tuple</name> = <type><tuple>(<type><name>i32</name></type>, <type><name>f64</name></type>)</tuple></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><name><name>T</name><argument_list type="generic">&lt;<argument><name>S</name></argument>&gt;</argument_list></name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><name><name>T</name><argument_list type="generic">&lt;<argument><name>S</name></argument>, <argument><name>U</name></argument>, <argument><name>V</name></argument>&gt;</argument_list></name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name><name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name> = <type><name>S</name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name><name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>, <argument><name>S</name></argument>, <argument><name>U</name></argument>&gt;</argument_list></name> = <type><name>V</name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><function_decl>fn<parameter_list>()</parameter_list> -&gt; <type><name>T</name></type><function_decl></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>BinaryOperator</name> = <type><function_decl>fn<parameter_list>(<parameter><type>i32</type></parameter>, <parameter><type>i32</type></parameter>)</parameter_list> -&gt; <type><name>i32</name></type><function_decl></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name><name>A</name><argument_list type="generic">&lt;<argument><name><modifier>'</modifier>a</name></argument>&gt;</argument_list></name> = <type><name>T</name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>Repeat</name> = <type><name><name>std</name><operator>::</operator><name>io</name><operator>::</operator><name>Repeat</name></name></type>;</typedef>
+</unit>
+
+<!-- TODO: type name = <type as trait>::child -->
+
+</unit>
