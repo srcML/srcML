@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="decl_simple">
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple><expr><name>long</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple><expr><name>signed</name></expr>, <expr><name>char</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple><expr><name>short</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>char</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>short</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple><expr><name>unsigned</name></expr>, <expr><name>long</name></expr>, <expr><name>int</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>bool</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>char</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>wchar_t</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>float</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>double</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple><expr><name>long</name></expr>, <expr><name>double</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <literal type="null">None</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>a</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[<expr><name>a</name></expr>]</array></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <array>[<expr><array>[<expr><name>a</name></expr>]</array></expr>, <expr><name>b</name></expr>]</array></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <tuple>(<expr><array>[<expr><name>a</name></expr>]</array></expr>, <expr><name>b</name></expr>)</tuple></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <operator>=</operator> <call><name>a</name><argument_list>(<argument><expr><call><name>c</name><argument_list>(<argument><expr><name>d</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>include</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>define</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>_elif</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>endif</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>error</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>ifdef</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>ifndef</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>line</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>pragma</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>undef</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>include</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>define</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>_elif</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>endif</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>error</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>ifdef</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>ifndef</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>line</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>pragma</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>undef</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>decimal</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>o</name> <operator>=</operator> <name>object</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <operator>=</operator> <name>sbyte</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>s</name> <operator>=</operator> <name>string</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>i</name> <operator>=</operator> <name>uint</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>l</name> <operator>=</operator> <name>ulong</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>s</name> <operator>=</operator> <name>ushort</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>d</name> <operator>=</operator> <name>dynamic</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>i</name> <operator>=</operator> <name>var</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>get</name> <operator>=</operator> <name>var</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>set</name> <operator>=</operator> <name>var</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>i</name> <operator>=</operator> <name>get</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>i</name> <operator>=</operator> <name>set</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <literal type="number">1</literal></expr>;</expr_stmt> <expr_stmt><expr><name>b</name> <operator>=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>signal</name> <operator>=</operator> <name>var</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>int</name></expr>;</expr_stmt> <expr_stmt><expr><name>b</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>int</name></expr>;</expr_stmt> <expr_stmt><expr><name>b</name> <operator>=</operator> <name>int</name></expr>;</expr_stmt> <expr_stmt><expr><name>c</name> <operator>=</operator> <name>int</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>bar</name> <operator>=</operator> <array>[]</array></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>nameDsc</name> <operator>=</operator> <name>_descriptor</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>nameDsc</name> <operator>=</operator> <name>dsc_descriptor</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>warning</name> <operator>=</operator> <name>warning</name></expr></expr_stmt>
+</unit>
+
+</unit>
