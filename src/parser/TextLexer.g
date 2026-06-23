@@ -47,13 +47,17 @@ tokens {
     CHAR_START;
     BACKTICK_START;
     SQUOTE_DOCSTRING_START;
-    BRACKET_ARGUMENT_START;
+    BRACKET_ARGUMENT;
     MACRO_NAME;
     COMPLEX_NUMBER;
     HASHBANG_COMMENT_START;
     HASHTAG_COMMENT_START;
     HTML_COMMENT_START;
     CMAKE_BLOCK_COMMENT_START;
+    CMAKE_QUOTE;
+    CMAKE_NAME_EXPRESSION_START;
+    CMAKE_ENV_EXPRESSION_START;
+    CMAKE_GENERATOR_EXPRESSION_START;
     WS_EOL;
 }
 
@@ -79,6 +83,10 @@ STRING_START :
         // handle a string that starts/ends with one double-quote in Python
         else if (inLanguage(LANGUAGE_PYTHON))
             changetotextlexer(PY_SIMPLE_DQUOTE_STRING_END);
+        // handle strings in CMake, which can have significant things in them
+        // The quotes are the only things marked special - everything else will be tokenized normally
+        else if (inLanguage(LANGUAGE_CMAKE))
+            $setType(CMAKE_QUOTE);
         else
             changetotextlexer(STRING_END);
 
@@ -141,17 +149,47 @@ BACKTICK_START :
     }
 ;
 
-BRACKET_ARGUMENT_START :
+BRACKET_ARGUMENT :
     { startline = false; }
 
     '[' {
-        // bracket arguments are only valid in CMake
-        // (e.g., '[[...]]', '[=[...]=]', '[==[...]==]', etc.)
-        if (inLanguage(LANGUAGE_CMAKE) && (LA(1) == '[' || LA(1) == '='))
-            changetotextlexer(BRACKET_ARGUMENT_END);
-        // otherwise, treat '[' as a normal left bracket
-        else
+        if (inLanguage(LANGUAGE_CMAKE)) {
+            int equal_count = 0;
+            while (LA(1) == '=') {
+                ++equal_count;
+                consume();
+            }
+
+            if (equal_count == 0 && LA(1) != '[') {
+                $setType(LBRACKET);
+            }
+            else if (LA(1) == '[') {
+                consume();
+                while (LA(1) != -1 /*EOF*/) {
+                    if (LA(1) == ']') {
+                        int end_equal_count = 0;
+                        consume();
+                        while (LA(1) == '=') {
+                            ++end_equal_count;
+                            consume();
+                        }
+                        if (equal_count == end_equal_count && LA(1) == ']') {
+                            consume();
+                            break;
+                        }
+                    }
+                    consume();
+                }
+                $setType(BRACKET_ARGUMENT);
+            }
+            else {
+                $setType(OPERATORS);
+            }
+        }
+
+        else {
             $setType(LBRACKET);
+        }
     }
 ;
 
@@ -166,41 +204,53 @@ CONSTANTS :
         { inLanguage(LANGUAGE_PYTHON) }?
         ('j' | 'J') { $setType(COMPLEX_NUMBER); }
     )*
-    (options { greedy = true; } : NAME)*
-    {
-        //firstpreprocline = false;
-        if (onpreprocline && isline) {
-            line_number = atoi(text.substr(_begin, text.length()-_begin).data());
-        }
-    }
+    (
+        { !inLanguage(LANGUAGE_CMAKE) }?
+        (
+            (options { greedy = true; } : NAME)*
+            {
+                //firstpreprocline = false;
+                if (onpreprocline && isline) {
+                    line_number = atoi(text.substr(_begin, text.length()-_begin).data());
+                }
+            }
+        )
+    )?
 ;
 
 NAME options { testLiterals = true; } { int firstChar = LA(1); } :
     { startline = false; this->updateNonWhitespaceCharacters(); }
-    ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+    
 
     ({ inLanguage(LANGUAGE_CMAKE)}?
     (
-        (options { greedy = true; } :
-            // Name starts with '$' + '{' (CMake)
-            { inLanguage(LANGUAGE_CMAKE) && firstChar == '$' && LA(1) == '{' }?
-            '{' { $setType(NAME); break; } |
+        (
+            ('$')
+            (
+                { inLanguage(LANGUAGE_CMAKE) && LA(1) == '{' }?
+                '{' { $setType(CMAKE_NAME_EXPRESSION_START); } |
 
-            // Name includes '$' + '{' at some point (CMake)
-            { inLanguage(LANGUAGE_CMAKE) && LA(1) == '$' && LA(2) == '{' }?
-            '$' '{' { $setType(NAME); break; } |
+                { inLanguage(LANGUAGE_CMAKE) && isEnvExprCMake() }?
+                'E' 'N' 'V' '{' { $setType(CMAKE_ENV_EXPRESSION_START); } |
 
-            // Other special characters that are valid in a name (CMake)
-            { inLanguage(LANGUAGE_CMAKE) }?
-            ('\\' ~('\000') | '/' | '*' | '.' | '+' | '-' | '{') |
+                { inLanguage(LANGUAGE_CMAKE) && LA(1) == '<' }?
+                '<' { $setType(CMAKE_GENERATOR_EXPRESSION_START); } |
 
-            '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$'
-        )*
+                { $setType(NAME); }
+            )
+        ) |
+        (
+            ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
+            (options { greedy = true; } :
+                '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377'
+            )*
+        )
     )
 
     |
 
     ( // In ANY other language
+        ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
         (
             (options { greedy = true; } :
                 { this->updateNonWhitespaceCharacters(); }

@@ -406,13 +406,13 @@ tokens {
     CMAKE_ITEMS;
     CMAKE_LISTS;
     CMAKE_MACRO;
+    CMAKE_OPERATORS;
     CMAKE_OPTIONS;
-    CMAKE_POLICIES;
     CMAKE_PROPAGATE;
     CMAKE_RANGE;
     CMAKE_RCURLY;
     CMAKE_SCOPE_FOR;
-    CMAKE_VARIABLES;
+    CMAKE_ZIP_LISTS;
 
     // TypeScript (appears as a namespace prefix)
     TS_ABSTRACT;
@@ -477,6 +477,16 @@ public:
             lookaheadMinusThree = lookaheadMinusTwo;
             lookaheadMinusTwo = lookaheadMinusOne;
             lookaheadMinusOne = LA(1);
+        }
+    }
+
+    bool isEnvExprCMake() {
+        size_t index = 1;
+        if (LA(index++) == 'E' && LA(index++) == 'N' && LA(index++) == 'V' && LA(index) == '{') {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -1079,42 +1089,42 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "_-_-_-_"        , CMAKE_COMPILER_FLAG , LANGUAGE_CMAKE },
 
         // CMake operators
-        { "AND",                    OPERATORS, LANGUAGE_CMAKE },
-        { "COMMAND",                OPERATORS, LANGUAGE_CMAKE },
-        { "DEFINED",                OPERATORS, LANGUAGE_CMAKE },
-        { "DEFINED CACHE",          OPERATORS, LANGUAGE_CMAKE },
-        { "DEFINED ENV",            OPERATORS, LANGUAGE_CMAKE },
-        { "EQUAL",                  OPERATORS, LANGUAGE_CMAKE },
-        { "EXISTS",                 OPERATORS, LANGUAGE_CMAKE },
-        { "GREATER",                OPERATORS, LANGUAGE_CMAKE },
-        { "GREATER_EQUAL",          OPERATORS, LANGUAGE_CMAKE },
-        { "IN_LIST",                OPERATORS, LANGUAGE_CMAKE },
-        { "IS_ABSOLUTE",            OPERATORS, LANGUAGE_CMAKE },
-        { "IS_DIRECTORY",           OPERATORS, LANGUAGE_CMAKE },
-        { "IS_EXECUTABLE",          OPERATORS, LANGUAGE_CMAKE },
-        { "IS_NEWER_THAN",          OPERATORS, LANGUAGE_CMAKE },
-        { "IS_READABLE",            OPERATORS, LANGUAGE_CMAKE },
-        { "IS_SYMLINK",             OPERATORS, LANGUAGE_CMAKE },
-        { "IS_WRITABLE",            OPERATORS, LANGUAGE_CMAKE },
-        { "LESS",                   OPERATORS, LANGUAGE_CMAKE },
-        { "LESS_EQUAL",             OPERATORS, LANGUAGE_CMAKE },
-        { "MATCHES",                OPERATORS, LANGUAGE_CMAKE },
-        { "NOT",                    OPERATORS, LANGUAGE_CMAKE },
-        { "OR",                     OPERATORS, LANGUAGE_CMAKE },
-        { "PATH_EQUAL",             OPERATORS, LANGUAGE_CMAKE },
-        { "STREQUAL",               OPERATORS, LANGUAGE_CMAKE },
-        { "STRGREATER",             OPERATORS, LANGUAGE_CMAKE },
-        { "STRGREATER_EQUAL",       OPERATORS, LANGUAGE_CMAKE },
-        { "STRLESS",                OPERATORS, LANGUAGE_CMAKE },
-        { "STRLESS_EQUAL",          OPERATORS, LANGUAGE_CMAKE },
-        { "TARGET",                 OPERATORS, LANGUAGE_CMAKE },
-        { "TEST",                   OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_EQUAL",          OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_GREATER",        OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_GREATER_EQUAL",  OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_LESS",           OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_LESS_EQUAL",     OPERATORS, LANGUAGE_CMAKE },
-        { "XOR",                    OPERATORS, LANGUAGE_CMAKE },
+        { "AND",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "COMMAND",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED CACHE",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED ENV",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "EQUAL",                  CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "EXISTS",                 CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "GREATER",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "GREATER_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IN_LIST",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_ABSOLUTE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_DIRECTORY",           CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_EXECUTABLE",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_NEWER_THAN",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_READABLE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_SYMLINK",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_WRITABLE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "LESS",                   CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "LESS_EQUAL",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "MATCHES",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "NOT",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "OR",                     CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "PATH_EQUAL",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STREQUAL",               CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRGREATER",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRGREATER_EQUAL",       CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRLESS",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRLESS_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "TARGET",                 CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "TEST",                   CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_GREATER",        CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_GREATER_EQUAL",  CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_LESS",           CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_LESS_EQUAL",     CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "XOR",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
 
         // CMake literals
         { "TRUE"         , LITERAL_TRUE  , LANGUAGE_CMAKE },
@@ -1164,11 +1174,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "ITEMS"        , CMAKE_ITEMS       , LANGUAGE_CMAKE },
         { "LISTS"        , CMAKE_LISTS       , LANGUAGE_CMAKE },
         { "macro"        , CMAKE_MACRO       , LANGUAGE_CMAKE },
-        { "POLICIES"     , CMAKE_POLICIES    , LANGUAGE_CMAKE },
         { "PROPAGATE"    , CMAKE_PROPAGATE   , LANGUAGE_CMAKE },
         { "RANGE"        , CMAKE_RANGE       , LANGUAGE_CMAKE },
         { "SCOPE_FOR"    , CMAKE_SCOPE_FOR   , LANGUAGE_CMAKE },
-        { "VARIABLES"    , CMAKE_VARIABLES   , LANGUAGE_CMAKE },
+        { "ZIP_LISTS"    , CMAKE_ZIP_LISTS   , LANGUAGE_CMAKE },
    };
 
     // fill up the literals for the language that we are parsing

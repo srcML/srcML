@@ -341,4 +341,34 @@ token_set(srcMLParser, function_declaration_specifiers_ts_token_set,
     srcMLParser::JS_STATIC, srcMLParser::TS_ABSTRACT
 )
 
+token_set(srcMLParser, cmake_end_statement_commands,
+    srcMLParser::CMAKE_ENDBLOCK, srcMLParser::CMAKE_ENDFOREACH, srcMLParser::CMAKE_ENDFUNCTION,
+    srcMLParser::CMAKE_ENDIF, srcMLParser::CMAKE_ENDMACRO, srcMLParser::CMAKE_ENDWHILE,
+    srcMLParser::ELSE, srcMLParser::CMAKE_ELSEIF
+)
+
+token_set(srcMLParser, cmake_foreach_ranges,
+    srcMLParser::CMAKE_IN, srcMLParser::CMAKE_RANGE
+)
+
+token_set(srcMLParser, cmake_foreach_lists, 
+    srcMLParser::CMAKE_ITEMS, srcMLParser::CMAKE_LISTS, srcMLParser::CMAKE_ZIP_LISTS
+)
+
+token_set(srcMLParser, cmake_keywords,
+    srcMLParser::CMAKE_OPERATORS, srcMLParser::LITERAL_TRUE, srcMLParser::LITERAL_FALSE,
+    srcMLParser::CMAKE_BLOCK, srcMLParser::CMAKE_ENDBLOCK, srcMLParser::CMAKE_ENDFOREACH,
+    srcMLParser::CMAKE_ENDFUNCTION, srcMLParser::CMAKE_ENDIF, srcMLParser::CMAKE_ELSEIF,
+    srcMLParser::CMAKE_ENDMACRO, srcMLParser::CMAKE_ENDWHILE, srcMLParser::CMAKE_FOREACH,
+    srcMLParser::CMAKE_FUNCTION, srcMLParser::CMAKE_IN, srcMLParser::CMAKE_ITEMS,
+    srcMLParser::CMAKE_LISTS, srcMLParser::CMAKE_MACRO, srcMLParser::CMAKE_PROPAGATE,
+    srcMLParser::CMAKE_RANGE, srcMLParser::CMAKE_SCOPE_FOR, srcMLParser::CMAKE_ZIP_LISTS
+)
+
+token_set(srcMLParser, cmake_expansion_expr_tokens,
+    srcMLParser::CMAKE_NAME_EXPRESSION_START, srcMLParser::CMAKE_ENV_EXPRESSION_START,
+    srcMLParser::CMAKE_GENERATOR_EXPRESSION_START, srcMLParser::CMAKE_RCURLY, srcMLParser::TEMPOPE
+)
+
+
 #endif
