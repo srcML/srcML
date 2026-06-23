@@ -26320,47 +26320,29 @@ cmake_string[] { CompleteElement element(this); ENTRY_DEBUG } :
 cmake_expression[] { ENTRY_DEBUG
     
     bool mark_as_plaintext_string = false;
+    bool only_name_tokens = true;
     int token_count = 0;
     int starting_token = LA(1);
-
-    bool is_pure_name = true;
-    bool is_only_expansion = false;
-    bool is_generator_expr = false;
 
     int start = mark();
     inputState->guessing++;
 
     // Need to look ahead and count how many tokens appear without a delimiter
     try {
-        if (cmake_expansion_expr_tokens.member(LA(1))) {
-            is_only_expansion = true;
-        }
         while(LA(2) != WS && LA(1) != RPAREN) {
             ++token_count;
             if (starting_token != LA(1)) {
                 mark_as_plaintext_string = true;
             }
-
-            if (LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1))) {
-                is_pure_name = false;
+            if (LA(1) != NAME && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+                only_name_tokens = false;
             }
-            if ((LA(1) == CMAKE_RCURLY || LA(1) == TEMPOPE) && is_only_expansion && LA(2) != RPAREN && LA(2) != WS && LA(2) != antlr::Token::EOF_TYPE) {
-                is_only_expansion = false;
-            }
-            
             consume();
         }
         if (LA(1) != RPAREN) {
             ++token_count;
             if (starting_token != LA(1)) {
                 mark_as_plaintext_string = true;
-            }
-
-            if (LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1))) {
-                is_pure_name = false;
-            }
-            if ((LA(1) == CMAKE_RCURLY || LA(1) == TEMPOPE) && is_only_expansion && LA(2) != RPAREN && LA(2) != WS && LA(2) != antlr::Token::EOF_TYPE) {
-                is_only_expansion = false;
             }
         }
     }
@@ -26376,29 +26358,13 @@ cmake_expression[] { ENTRY_DEBUG
 
     std::cerr << LT(1)->getText() << " : " << LA(1) << std:: endl;
 
-    if (!is_only_expansion) {
-        startNewMode(MODE_EXPRESSION);
-        startElement(SEXPRESSION);
-    }
-    else if (LA(1) == CMAKE_NAME_EXPRESSION_START) {
-        startNewMode(MODE_EXPRESSION);
-        startElement(SEXPRESSION_NAME);
-    }
-    else if (LA(1) == CMAKE_ENV_EXPRESSION_START) {
-        startNewMode(MODE_EXPRESSION);
-        startElement(SEXPRESSION_ENV);
-    }
-    else if (LA(1) == CMAKE_GENERATOR_EXPRESSION_START) {
-        startNewMode(MODE_EXPRESSION);
-        startElement(SEXPRESSION_GENERATOR);
-    }
-    else {
-        // fallback
-        startNewMode(MODE_EXPRESSION);
-        startElement(SEXPRESSION);
-    }
 
-    if (mark_as_plaintext_string && !is_pure_name) {
+    startNewMode(MODE_EXPRESSION);
+    startElement(SEXPRESSION);
+
+
+
+    if (mark_as_plaintext_string && !only_name_tokens) {
         startNewMode(MODE_LOCAL);
         startElement(SSTRING);
 
@@ -26409,22 +26375,7 @@ cmake_expression[] { ENTRY_DEBUG
         endMode(MODE_LOCAL);
     }
 
-    else if (is_only_expansion && is_pure_name) {
-        consume(); // consume ${
-
-        startNewMode(MODE_VARIABLE_NAME);
-        startElement(SNAME);
-
-        while (LA(1) != CMAKE_RCURLY && LA(1) != antlr::Token::EOF_TYPE) {
-            consume();
-        }
-
-        endMode(MODE_VARIABLE_NAME);
-
-        if (LA(1) == CMAKE_RCURLY) consume();
-    }
-
-    else if (is_pure_name) {
+    else if (LA(1) == NAME || cmake_expansion_expr_tokens.member(LA(1))) {
         startNewMode(MODE_VARIABLE_NAME);
         startElement(SNAME);
 
@@ -26484,7 +26435,9 @@ cmake_expression[] { ENTRY_DEBUG
         endMode(MODE_LOCAL);
     }
 
+
     endMode(MODE_EXPRESSION);
+
 
 }:;
 
@@ -26516,13 +26469,26 @@ cmake_process_one_token_argument_text[] { ENTRY_DEBUG
         startNewMode(MODE_EXPRESSION_GENERATOR_CMAKE);
         startElement(SNAME);
     }
-    else if (LA(1) == CMAKE_RCURLY) {
+    else if (LA(1) == COLON && inMode(MODE_EXPRESSION_GENERATOR_CMAKE)) {
+        endMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == CMAKE_RCURLY && (inMode(MODE_EXPRESSION_NAME_CMAKE) || inMode(MODE_EXPRESSION_ENV_CMAKE))) {
         if (inMode(MODE_EXPRESSION_NAME_CMAKE))
             endMode(MODE_EXPRESSION_NAME_CMAKE);
         else if (inMode(MODE_EXPRESSION_ENV_CMAKE))
             endMode(MODE_EXPRESSION_ENV_CMAKE);
-        else if (inMode(MODE_EXPRESSION_GENERATOR_CMAKE))
-            endMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+
+        consume();
+
+        endMode(MODE_EXPRESSION);
+    }
+    else if (LA(1) == TEMPOPE && inMode(MODE_EXPRESSION_GENERATOR_CMAKE)) {
+        endMode(MODE_EXPRESSION_GENERATOR_CMAKE);
 
         consume();
 

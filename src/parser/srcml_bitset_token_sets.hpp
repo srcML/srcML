@@ -367,7 +367,7 @@ token_set(srcMLParser, cmake_keywords,
 
 token_set(srcMLParser, cmake_expansion_expr_tokens,
     srcMLParser::CMAKE_NAME_EXPRESSION_START, srcMLParser::CMAKE_ENV_EXPRESSION_START,
-    srcMLParser::CMAKE_GENERATOR_EXPRESSION_START, srcMLParser::CMAKE_RCURLY, srcMLParser::TEMPOPE
+    srcMLParser::CMAKE_GENERATOR_EXPRESSION_START
 )
 
 
