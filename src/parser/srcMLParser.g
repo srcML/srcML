@@ -26356,13 +26356,8 @@ cmake_expression[] { ENTRY_DEBUG
         mark_as_plaintext_string = false;
     }
 
-    std::cerr << LT(1)->getText() << " : " << LA(1) << std:: endl;
-
-
     startNewMode(MODE_EXPRESSION);
     startElement(SEXPRESSION);
-
-
 
     if (mark_as_plaintext_string && !only_name_tokens) {
         startNewMode(MODE_LOCAL);
