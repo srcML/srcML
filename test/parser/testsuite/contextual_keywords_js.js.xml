@@ -516,6 +516,14 @@
 <decl_stmt><decl type="const">const <name>else</name> <init>= <expr><name>else</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "enum" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>textToKeywordObj</name><ts:type>: <name><name>MapLike</name><argument_list type="generic">&lt;<argument><expr><name>KeywordSyntaxKind</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
+    <property><expr><name>enum</name></expr>: <expr><name><name>SyntaxKind</name><operator>.</operator><name>EnumKeyword</name></name></expr></property>,
+}</object></expr></init></decl>;</decl_stmt>
+</unit>
+
 <!-- "export" -->
 
 <unit revision="1.0.0" language="JavaScript">

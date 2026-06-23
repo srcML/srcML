@@ -21632,9 +21632,9 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
                 }
             ) |
 
-            // special case: "default:" is a property name, not a statement
+            // special case: "default:" and "enum:" are property names, not a statements
             { inMode(MODE_PROPERTY_JS) && next_token() == COLON }?
-            default_property_js |
+            keyword_as_property_name_js |
 
             { inMode(MODE_ARGUMENT) }?
             argument |
@@ -21672,11 +21672,11 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
 ;
 
 /*
-  default_property_js
+  keyword_as_property_name_js
 
-  Handles the special case "default:" in a JavaScript property.
+  Handles the special case "default:" and "enum:" in a JavaScript/TypeScript property.
 */
-default_property_js[] { ENTRY_DEBUG } :
+keyword_as_property_name_js[] { ENTRY_DEBUG } :
         {
             startNewMode(MODE_EXPRESSION);
             startElement(SEXPRESSION);
@@ -21685,7 +21685,7 @@ default_property_js[] { ENTRY_DEBUG } :
             startElement(SNAME);
         }
 
-        JS_DEFAULT
+        (JS_DEFAULT | TS_ENUM)
 
         {
             endMode(MODE_VARIABLE_NAME);
