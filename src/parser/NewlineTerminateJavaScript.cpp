@@ -46,6 +46,11 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
         antlr::RefToken token = currentToken;
         auto nextNonSkipToken = input.nextToken();
         bool containsEOL = false;
+        bool containsTerminate = false;
+
+        // special case: do not generate an extra TERMINATE if the current token is TERMINATE
+        if (token->getType() == srcMLParser::TERMINATE)
+            containsTerminate = true;
 
         // find the next non-skip token, if applicable
         while (srcMLParser::skip_tokens_set.member(nextNonSkipToken->getType())) {
@@ -56,6 +61,10 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
             tempSkipBuffer.emplace_back(nextNonSkipToken);
             nextNonSkipToken = input.nextToken();
         }
+
+        // special case: do not generate an extra TERMINATE if the next token is TERMINATE
+        if (nextNonSkipToken->getType() == srcMLParser::TERMINATE)
+            containsTerminate = true;
 
         // in a code snippet beginning with '(', '[', or '{'
         if (
@@ -86,7 +95,7 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
         buffer.emplace_back(token);
 
         // insert a TERMINATE token if applicable
-        if (insertTerminate && isTerminateCase(token, nextNonSkipToken, containsEOL))
+        if (insertTerminate && !containsTerminate && isTerminateCase(token, nextNonSkipToken, containsEOL))
             insertTerminateToken(token->getLine());
 
         // empty the temporary skip token buffer, if applicable

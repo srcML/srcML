@@ -515,4 +515,8 @@
 <ts:typedef><specifier>export</specifier> type <name><name>RequiredKeys</name><argument_list type="generic">&lt;<argument><expr><name>V</name></expr></argument>&gt;</argument_list></name> = <ts:type><block>{ <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>V</name>]</index><ts:type>: <name><name>V</name><index>[<expr><name>K</name></expr>]</index></name> <ts:extends>extends <ts:type><name><name>Validator</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>T</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></ts:type></ts:constraint> <ts:modifier>?</ts:modifier></decl> <decl><name><name>IsOptional</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <ts:extends>extends <ts:type><literal type="boolean">true</literal> <ts:modifier>?</ts:modifier> <name>never</name> <operator>: <name>K</name> <operator>: <name>never</name></operator></operator></ts:type></ts:extends></decl></decl_stmt> }</block></ts:type></ts:typedef>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>foo</name> = <ts:type><ts:specifier>readonly</ts:specifier> <array>[<expr><name>number</name></expr>, <expr><name>number</name></expr>]</array></ts:type></ts:typedef>
+</unit>
+
 </unit>

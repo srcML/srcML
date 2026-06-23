@@ -9,5 +9,25 @@
 <break>break <name>outerBlock</name></break>
 </unit>
 
+<!-- Semicolons are required for the following tests -->
+
+<unit revision="1.0.0" language="JavaScript">
+<while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
+    <break>break;</break>
+</block_content>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
+    <break>break    ;</break>
+</block_content>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
+    <break>break <name>foo</name>;</break>
+</block_content>}</block></while>
+</unit>
+
 </unit>
 

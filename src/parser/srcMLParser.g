@@ -1122,11 +1122,11 @@ public:
         std::array<Rule, SIZE> temp_array;
 
         /* GENERIC STATEMENTS */
-        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[BREAK]       = { SBREAK_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::jump_statement_post_js };
         temp_array[CASE]        = { SCASE, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_EXPRESSION | MODE_EXPECT | MODE_IGNORE_LABEL_JS, nullptr, nullptr };
         temp_array[JS_CATCH]    = { SCATCH_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };  // "case" has a duplex keyword variant in JavaScript
         temp_array[CLASS]       = { SCLASS, 0, MODE_STATEMENT | MODE_NEST | MODE_CLASS, MODE_NO_BLOCK_CONTENT | MODE_LCURLY_BLOCK_JS | MODE_VARIABLE_NAME, nullptr, nullptr };
-        temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, MODE_VARIABLE_NAME, nullptr, nullptr };
+        temp_array[CONTINUE]    = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::jump_statement_post_js };
         temp_array[DO]          = { SDO_STATEMENT, 0, MODE_STATEMENT | MODE_TOP | MODE_DO_STATEMENT, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, nullptr, nullptr };
         temp_array[JS_DEFAULT]  = { SDEFAULT, 0, MODE_TOP_SECTION | MODE_TOP | MODE_STATEMENT | MODE_DETECT_COLON, MODE_STATEMENT, nullptr, nullptr };  // "default" can also be a specifier in JavaScript
         temp_array[JS_ELSE]     = { SELSE, 0, MODE_STATEMENT | MODE_NEST | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_STATEMENT | MODE_NEST, &srcMLParser::if_statement_start_kb, nullptr };  // "else" has a duplex keyword variant in JavaScript
@@ -19185,6 +19185,21 @@ property_name_js[] {
         else if (LA(1) != LCURLY && LA(1) != LPAREN)
             bracketless_computed_property_js();
 }: ;
+
+/*
+  jump_statement_post_js
+
+  Handles names or TERMINATE tokens after a break or continue in JavaScript/TypeScript.
+*/
+jump_statement_post_js[] {
+        ENTRY_DEBUG
+
+        if (LA(1) == NAME)
+            compound_name();
+
+        if (LA(1) == TERMINATE)
+            terminate();
+} :;
 
 /*
   check_valid_specifier_js
