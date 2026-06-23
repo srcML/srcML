@@ -1870,6 +1870,13 @@ javascript_statements[] {
                 return;
             }
 
+            // special case for TypeScript function declarations with the "function" keyword
+            if (token == JS_FUNCTION && perform_function_declaration_check_ts()) {
+                function_declaration_ts();
+                processed_statement = true;
+                return;
+            }
+
             // looking for statements that start with a duplex keyword (e.g., "else if")
             if (duplex_keyword_set.member((unsigned int) LA(1))) {
                 const auto lookup = duplexKeywords[token + (next_token() << 8)];
@@ -2301,6 +2308,24 @@ next_token_two[] returns [int token] {
         consume();
 
         token = LA(1);
+
+        inputState->guessing--;
+        rewind(place);
+} :;
+
+/*
+  next_token_text
+
+  Checks the text of the token after the current LA(1).
+*/
+next_token_text[] returns [std::string token_text] {
+        int place = mark();
+        inputState->guessing++;
+
+        // consume curren token
+        consume();
+
+        token_text = LT(1)->getText();
 
         inputState->guessing--;
         rewind(place);
@@ -23470,6 +23495,10 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
         inputState->guessing++;
 
         try {
+            // special case: consume "function" keyword
+            if (LA(1) == JS_FUNCTION)
+                consume();  // "function"
+
             // consume optional specifiers
             while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
@@ -23506,7 +23535,6 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
             // found "NAME() :"
             if (LA(1) == COLON) {
                 int tempops_count = 0;
-                int paren_count = 0;
                 isdecl = true;
 
                 while (LA(1) != antlr::Token::EOF_TYPE) {
@@ -23520,26 +23548,22 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                             consume();  // ">"
 
                             // "NAME() : TYPE<TYPE> {}" cannot be a function declaration
-                            if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
+                            if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js()) {
                                 isdecl = false;
-
-                            break;
+                                break;
+                            }
                         }
                     }
 
                     if (LA(1) == LPAREN)
-                        ++paren_count;
+                        paren_pair();
 
-                    if (LA(1) == RPAREN)
-                        --paren_count;
-
-                    if ((LA(1) == TERMINATE && next_token() != RCURLY) || paren_count < 0)
+                    if (LA(1) == TERMINATE && next_token() != RCURLY)
                         break;
 
                     // determine if "{" starts an object or a kind of block
                     if (
-                        paren_count == 0
-                        && LA(1) == COLON
+                        LA(1) == COLON
                         && (
                             next_token() == LCURLY
                             || (next_token() == TS_READONLY && next_token_two() == LCURLY)
@@ -23553,10 +23577,32 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                         break;
                     }
 
+                    // "NAME() : {TYPE} \n {}" is a function, not a function declaration
+                    if (
+                        last_consumed_guessing_mode == RCURLY
+                        && LA(1) == TERMINATE
+                        && LT(1)->getText().empty()
+                        && next_token() == LCURLY
+                        && perform_lcurly_differentiator_check_js()
+                    ) {
+                        isdecl = false;
+                        break;
+                    }
+
+                    // the first part of "NAME() : {TYPE} \n NAME : {}" is a function declaration
+                    if (
+                        last_consumed_guessing_mode == RCURLY
+                        && LA(1) == NAME
+                        && next_token() == COLON
+                        && next_token_two() == LCURLY
+                    ) {
+                        isdecl = true;
+                        break;
+                    }
+
                     // "NAME() : TYPE {}" is a function expression, not a function declaration
                     if (
                         LA(1) == LCURLY
-                        && paren_count == 0
                         && last_consumed_guessing_mode != COLON
                         && last_consumed_guessing_mode != RCURLY
                     ) {
@@ -23600,6 +23646,9 @@ function_declaration_ts[] { ENTRY_DEBUG } :
 
         (
             (function_declaration_specifiers_ts | declaration_specifiers_ts)*
+
+            // special case for TypeScript function declarations with the "function" keyword
+            (JS_FUNCTION)*
 
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             (datsign_ts)*
@@ -24362,6 +24411,10 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
         inputState->guessing++;
 
         try {
+            // consume any TERMINATE tokens that may appear before the first "{"
+            while (LA(1) == TERMINATE)
+                consume();
+
             // only process "{" that could start objects; everything else starts a block
             if (
                 LA(1) == LCURLY
@@ -25010,9 +25063,16 @@ perform_colon_lcurly_differentiator_check_js[] returns [size_t curlytype] {
                     }
 
                     /*
-                        CASE 2: "{}" followed by a TERMINATE or "," indicates a function declaration
+                        CASE 2: "{}" followed by certain TERMINATEs or "," indicates a function declaration
                     */
-                    if (LA(1) == RCURLY && (next_token() == TERMINATE || next_token() == COMMA)) {
+                    if (
+                        LA(1) == RCURLY
+                        && (
+                            (next_token() == TERMINATE && next_token_text() == ";")
+                            || (next_token() == TERMINATE && next_token_two() != LCURLY)
+                            || next_token() == COMMA
+                        )
+                    ) {
                         curlytype = 2;  // TypeScript "type" block
                     }
                     // could be "{} | TYPE {}", "{} & TYPE {}", "{}[] {}", or "{} {}"
