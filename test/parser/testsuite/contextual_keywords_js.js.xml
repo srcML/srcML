@@ -1036,6 +1036,38 @@
 <decl_stmt><decl type="const">const <name>of</name> <init>= <expr><name>of</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "readonly" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>readonly</name></expr>: <expr><literal type="string">"readonly"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>readonly</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>readonly</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>readonly</name></expr></property>, <property><expr><name>readonly</name></expr></property>, <property><expr><name>readonly</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>readonly</name> <init>= <expr><name>readonly</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>readonly</name> <init>= <expr><name>readonly</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>readonly</name> <init>= <expr><name>readonly</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>createArrayType</name><parameter_list>(<parameter><decl><name>elementType</name><ts:type>: <name>Type</name></ts:type></decl></parameter>, <parameter><decl><name>readonly</name><ts:modifier>?</ts:modifier><ts:type>: <name>boolean</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>ObjectType</name></ts:type> <block>{<block_content>
+    <return>return <expr><call><name>createTypeFromGenericGlobalType</name><argument_list>(<argument><expr><ternary><condition><expr><name>readonly</name></expr> ?</condition><then> <expr><name>globalReadonlyArrayType</name></expr> </then><else>: <expr><name>globalArrayType</name></expr></else></ternary></expr></argument>, <argument><expr><array>[<expr><name>elementType</name></expr>]</array></expr></argument>)</argument_list></call></expr></return>
+</block_content>}</block></function>
+</unit>
+
 <!-- "return" -->
 
 <unit revision="1.0.0" language="JavaScript">

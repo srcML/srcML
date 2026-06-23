@@ -198,10 +198,38 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         // the current token is NOT "default" and the next token is ":"
         (token->getType() != srcMLParser::JS_DEFAULT && nextToken->getType() == srcMLParser::COLON)
 
+        // the current token is a subset of all keywords and the next token is "?"
+        || (
+            (
+                srcMLParser::name_differentiator_subset_js_token_set.member(token->getType())
+                || token->getType() == srcMLParser::TS_READONLY
+            )
+            && nextToken->getType() == srcMLParser::QMARK
+        )
+
+        // the current token is "readonly" and one of the following is true:
+        // - the previous token was "=" and the next token is NOT "["
+        // - the previous token was "{" or "," and the next token is ",", ":", or "}"
+        || (
+            token->getType() == srcMLParser::TS_READONLY
+            && (
+                (prevNonWhitespaceToken->getType() == srcMLParser::EQUAL && nextToken->getType() != srcMLParser::LBRACKET)
+                || (
+                    (prevNonWhitespaceToken->getType() == srcMLParser::LCURLY || prevNonWhitespaceToken->getType() == srcMLParser::COMMA)
+                    && (
+                        nextToken->getType() == srcMLParser::COMMA
+                        || nextToken->getType() == srcMLParser::COLON
+                        || nextToken->getType() == srcMLParser::RCURLY
+                    )
+                )
+            )
+        )
+
         // the current token is "default" and one of the following is true:
         // - the next token is "as", ")", "}", or "]"
         // - the previous token was a decl specifier (e.g., "public")
-        || (token->getType() == srcMLParser::JS_DEFAULT
+        || (
+            token->getType() == srcMLParser::JS_DEFAULT
             && (
                 nextToken->getType() == srcMLParser::JS_AS
                 || nextToken->getType() == srcMLParser::COMMA
