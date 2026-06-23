@@ -956,6 +956,32 @@
 }</block></class>
 </unit>
 
+<!-- "module" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>module</name></expr>: <expr><literal type="string">"module"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>module</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>module</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>module</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>module</name> <init>= <expr><name>module</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>module</name> <init>= <expr><name>module</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>module</name> <init>= <expr><name>module</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "new"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">

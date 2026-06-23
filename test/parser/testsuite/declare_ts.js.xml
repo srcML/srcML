@@ -11,38 +11,10 @@
 </block_content>}</block></ts:declare>
 </unit>
 
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<ts:declare>declare <name>module</name> <literal type="string">'zlib'</literal> <block>{<block_content>
-  <decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>Z_NO_FLUSH</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
-</block_content>}</block></ts:declare>
-</unit>
-
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<ts:declare>declare <name>module</name> <literal type="string">"zlib"</literal> <block>{<block_content>
-  <ts:declare>declare <name>global</name> <block>{<block_content>
-    <ts:interface>interface <name>Window</name> <block>{
-      <decl_stmt><decl><name>title</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
-    }</block></ts:interface>
-  </block_content>}</block></ts:declare>
-</block_content>}</block></ts:declare>
-</unit>
-
 <!-- Global Declarations in a TypeScript declaration file (".d.ts") -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:declare><name>global</name> <block>{<block_content/>}</block></ts:declare>
-</unit>
-
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<ts:declare>declare <name>module</name> <literal type="string">"react"</literal> <block>{<block_content>
-    <ts:declare><name>global</name> <block>{<block_content>
-        <ts:namespace>namespace <name>JSX</name> <block>{<block_content>
-            <ts:interface>interface <name>ElementClass</name> <super_list><extends>extends <super><expr><name><name>React</name><operator>.</operator><name><name>Component</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></name></expr></super></extends></super_list> <block>{
-                <ts:function_decl><name>render</name><parameter_list>()</parameter_list><ts:type>: <name><name>React</name><operator>.</operator><name>ReactNode</name></name></ts:type></ts:function_decl>
-            }</block></ts:interface>
-        </block_content>}</block></ts:namespace>
-    </block_content>}</block></ts:declare>
-</block_content>}</block></ts:declare>
 </unit>
 
 </unit>

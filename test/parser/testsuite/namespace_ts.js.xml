@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="namespace">
 
+<!-- "namespace" -->
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:namespace>namespace <name><name>robot</name><operator>.</operator><name>robots</name></name> <block>{<block_content>
   <function><specifier>export</specifier> function <name>i2cReadRegU8</name><parameter_list>(<parameter><decl><name>addr</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>reg</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
@@ -27,6 +29,55 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:namespace><ts:specifier>declare</ts:specifier> namespace <name>JSX</name> <block>{<block_content>
   <ts:typedef>type <name>Element</name> = <ts:type><name><name>globalThis</name><operator>.</operator><name>Element</name></name></ts:type></ts:typedef>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<!-- "module" (deprecated) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace>module <literal type="string">"Observable"</literal> <block>{<block_content>
+    <ts:interface>interface <name>Observable</name> <block>{
+        <ts:function_decl><name>foo2</name><parameter_list>()</parameter_list><ts:type>: <name>Cls2</name></ts:type>;</ts:function_decl>
+    }</block></ts:interface>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> module <literal type="string">"Map"</literal> <block>{<block_content>
+    <class>class <name>Cls2</name> <block>{ <decl_stmt><decl><name>x2</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt> }</block></class>
+    <ts:namespace>module <literal type="string">"Observable"</literal> <block>{<block_content>
+        <ts:interface>interface <name>Observable</name> <block>{
+            <ts:function_decl><name>foo2</name><parameter_list>()</parameter_list><ts:type>: <name>Cls2</name></ts:type>;</ts:function_decl>
+        }</block></ts:interface>
+    </block_content>}</block></ts:namespace>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> module <literal type="string">'zlib'</literal> <block>{<block_content>
+  <decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>Z_NO_FLUSH</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> module <literal type="string">"zlib"</literal> <block>{<block_content>
+  <ts:declare>declare <name>global</name> <block>{<block_content>
+    <ts:interface>interface <name>Window</name> <block>{
+      <decl_stmt><decl><name>title</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+    }</block></ts:interface>
+  </block_content>}</block></ts:declare>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> module <literal type="string">"react"</literal> <block>{<block_content>
+    <ts:declare><name>global</name> <block>{<block_content>
+        <ts:namespace>namespace <name>JSX</name> <block>{<block_content>
+            <ts:interface>interface <name>ElementClass</name> <super_list><extends>extends <super><expr><name><name>React</name><operator>.</operator><name><name>Component</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></name></expr></super></extends></super_list> <block>{
+                <ts:function_decl><name>render</name><parameter_list>()</parameter_list><ts:type>: <name><name>React</name><operator>.</operator><name>ReactNode</name></name></ts:type></ts:function_decl>
+            }</block></ts:interface>
+        </block_content>}</block></ts:namespace>
+    </block_content>}</block></ts:declare>
 </block_content>}</block></ts:namespace>
 </unit>
 

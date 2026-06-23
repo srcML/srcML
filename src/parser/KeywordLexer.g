@@ -403,6 +403,7 @@ tokens {
     TS_INTERFACE;
     TS_IS;
     TS_KEYOF;
+    TS_MODULE;
     TS_NAMESPACE;
     TS_OVERRIDE;
     TS_PRIVATE;
@@ -1006,6 +1007,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "implements"   , TS_IMPLEMENTS     , LANGUAGE_JAVASCRIPT },
         { "infer"        , TS_INFER          , LANGUAGE_JAVASCRIPT },
         { "interface"    , TS_INTERFACE      , LANGUAGE_JAVASCRIPT },
+        { "module"       , TS_MODULE         , LANGUAGE_JAVASCRIPT },
         { "namespace"    , TS_NAMESPACE      , LANGUAGE_JAVASCRIPT },
         { "override"     , TS_OVERRIDE       , LANGUAGE_JAVASCRIPT },
         { "private"      , TS_PRIVATE        , LANGUAGE_JAVASCRIPT },
