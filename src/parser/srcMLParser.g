@@ -20999,6 +20999,9 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
         // consume TypeScript types, if applicable
         ({ LA(1) == COLON }? colon_type_ts)?
 
+        // consume inserted semicolone in case block is on next line
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" }? TERMINATE)?
+
         // start the block, if it exists
         (options { greedy = true; } :
             { LA(1) == LCURLY && inputState->guessing == 0 }?
