@@ -54,4 +54,24 @@
 </block_content>}</block></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="rust">
+<block><specifier>async</specifier> {<block_content/>}</block>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<block><specifier>unsafe</specifier> {<block_content/>}</block>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<block><specifier>extern</specifier> {<block_content/>}</block>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<block><specifier>unsafe</specifier> <specifier>extern</specifier> {<block_content/>}</block>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<block><specifier>unsafe</specifier> <specifier>extern <literal type="string">"C"</literal></specifier> {<block_content/>}</block>
+</unit>
+
 </unit>
