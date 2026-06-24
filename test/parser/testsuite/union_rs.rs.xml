@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="union_rs">
+
+<!-- FIXME: segmentation fault with 3 or more items in block -->
+
+<unit revision="1.0.0" language="rust">
+<union>union <name>A</name> <block>{}</block></union>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<union>union <name>A</name> <block>{
+  <decl><name>a</name>: <type><name>i32</name></type></decl>
+}</block></union>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<union>union <name>A</name> <block>{
+  <decl><name>a</name>: <type><name>i32</name></type></decl>,
+  <decl><name>b</name>: <type><name>u32</name></type></decl>,
+  <decl><name>c</name>: <type><name>f32</name></type></decl>,
+  <decl><name>d</name>: <type><name>bool</name></type></decl>,
+  <decl><name>e</name>: <type><name>char</name></type></decl>,
+}</block></union>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<union>union <name>A</name> <block>{
+  <decl><name>a</name>: <type><modifier>&amp;</modifier><name>T</name></type></decl>,
+  <decl><name>b</name>: <type><modifier>&amp;</modifier><modifier>mut</modifier> <name>T</name></type></decl>,
+  <decl><name>c</name>: <type><name><name>ManuallyDrop</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type></decl>,
+}</block></union>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<union><specifier>pub</specifier> union <name>A</name> <block>{
+  <decl><name>a</name>: <type><tuple>()</tuple></type></decl>,
+  <decl><name>b</name>: <type><tuple>(
+    <type><name>i32</name></type>,
+    <type><name>u32</name></type>,
+    <type><name>f32</name></type>,
+    <type><name>bool</name></type>,
+    <type><name>char</name></type>
+  )</tuple></type></decl>,
+  <decl><name>c</name>: <type><tuple>(
+    <type><modifier>&amp;</modifier><name>T</name></type>,
+    <type><modifier>&amp;</modifier><modifier>mut</modifier> <name>T</name></type>,
+    <type><name><name>ManuallyDrop</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type>
+  )</tuple></type></decl>
+}</block></union>
+</unit>
+
+</unit>
