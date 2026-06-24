@@ -22361,7 +22361,6 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
         ENTRY_DEBUG
 
         isiife = false;
-        int curly_count = 0;
         int bracket_count = 0;  // for TypeScript types
         size_t lcurly_type = 0;
         last_consumed_guessing_mode = -1;
@@ -25850,4 +25849,28 @@ nameless_keywordless_generator_function_expression_js[] { ENTRY_DEBUG } :
 
             curly_pair
         )?
+;
+
+/*
+  trailing_html_comment_js
+
+  Handles a trailing HTML comment (starts with "-->") in JavaScript.
+  Relic of "Annex B" of the old EcmaScript standard. Some modern JS
+  interpreters still allow this.
+*/
+trailing_html_comment_js[] { ENTRY_DEBUG }:
+        {
+            startNewMode(MODE_LOCAL);
+            startElement(SHTML_COMMENT);
+        }
+
+        TRAILING_HTML_COMMENT_START
+
+        ( options { greedy = true; } :
+            ~(EOL)
+        )*
+
+        {
+            endMode(MODE_LOCAL);
+        }
 ;

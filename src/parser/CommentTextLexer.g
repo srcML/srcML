@@ -493,7 +493,7 @@ COMMENT_TEXT {
 
             $setType(mode);
             selector->pop();
-        }
+        } 
    } )+
 ;
 

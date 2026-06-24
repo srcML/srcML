@@ -659,6 +659,37 @@ private:
             return true;
         }
 
+        if (srcMLParser::LA(1) == srcMLParser::TRAILING_HTML_COMMENT_START) {
+            // start "trailing HTML comment" handling
+            inskip = true;
+
+            // use preprocessor token buffers
+            pouttb = &pretb;
+            pskiptb = &skippretb;
+
+            // parse the trailing HTML comment stopping at EOL
+            try {
+                srcMLParser::trailing_html_comment_js();
+            } catch (...) {}
+
+            // flush remaining whitespace from preprocessor handling onto preprocessor buffer
+            pretb.insert(pretb.end(), std::make_move_iterator(skippretb.begin()), std::make_move_iterator(skippretb.end()));
+            skippretb.clear();
+
+            // move back to normal buffer
+            pskiptb = &skiptb;
+            pouttb = &tb;
+
+            // put preprocessor buffer into skipped buffer
+            skiptb.insert(skiptb.end(), std::make_move_iterator(pretb.begin()), std::make_move_iterator(pretb.end()));
+            pretb.clear();
+
+            // stop preprocessor handling
+            inskip = false;
+
+            return true;
+        }
+
         // no white space or preprocessor tokens were skipped
         return false;
     }

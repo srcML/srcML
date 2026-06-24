@@ -70,4 +70,21 @@ console.log("srcML");
 --&gt;</comment>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">--&gt; hello world</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+    <comment type="html">--&gt; still a comment (need to test with whitespace)</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">--&gt; hello world</comment>
+    <comment type="html">--&gt; still a comment (need to test with whitespace)</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>x</name><operator>--</operator><operator>&gt;</operator><literal type="string">"not a comment"</literal></expr></expr_stmt>
+</unit>
+
 </unit>

@@ -464,12 +464,12 @@ public:
         size_t index = 1;
         size_t angle_bracket_count = 0;
 
-        while (true) {
+        while (LA(index) != -1 /* EOF */) {
             // ignore JavaScript code found in blocks (e.g., "{...}")
             if (LA(index) == '{') {
                 size_t curly_count = 0;
 
-                while (true) {
+                while (LA(index) != -1 /* EOF */) {
                     if (LA(index) == '{')
                         ++curly_count;
 
@@ -480,9 +480,6 @@ public:
                             break;
                     }
 
-                    if (LA(index) == -1 /* EOF */)
-                        break;
-
                     ++index;
                 }
             }
@@ -492,8 +489,8 @@ public:
                 (LA(index) == '/' && LA(index + 1) == '/')
                 || (LA(index) == '#' && LA(index + 1) == '!')
             ) {
-                while (true) {
-                    if (LA(index) == '\n' || LA(index) == -1 /* EOF */)
+                while (LA(index) != -1 /* EOF */) {
+                    if (LA(index) == '\n')
                         break;
                     else
                         ++index;
@@ -502,8 +499,8 @@ public:
 
             // process block comments (e.g., "/* ... */")
             if (LA(index) == '/' && LA(index + 1) == '*') {
-                while (true) {
-                    if ((LA(index) == '*' && LA(index + 1) == '/') || LA(index) == -1 /* EOF */)
+                while (LA(index) != -1 /* EOF */) {
+                    if ((LA(index) == '*' && LA(index + 1) == '/'))
                         break;
                     else
                         ++index;
@@ -512,15 +509,12 @@ public:
 
             // process HTML comments separately (e.g., "<!-- ... -->")
             if (LA(index) == '<' && LA(index + 1) == '!' && LA(index + 2) == '-' && LA(index + 3) == '-') {
-                while (true) {
+                while (LA(index) != -1 /* EOF */) {
                     // found end of HTML comment (e.g., "-->")
                     if (LA(index) == '-' && LA(index + 1) == '-' && LA(index + 2) == '>') {
                         index += 3;  // "consume" the end of the comment
                         break;
                     }
-
-                    if (LA(1) == -1 /* EOF */)
-                        break;
 
                     ++index;
                 }
@@ -544,12 +538,11 @@ public:
                 --angle_bracket_count;
 
             // stop searching at TERMINATE or EOF
-            if (LA(index) == ';' || LA(index) == -1 /* EOF */)
+            if (LA(index) == ';')
                 break;
 
             ++index;
         }
-
         return false;
     }
 
