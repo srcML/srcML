@@ -805,6 +805,7 @@ public:
     std::deque<char> lparen_types_js;
     std::deque<char> lcurly_types_js;
     std::deque<std::string> bracket_types_js;  // '(' and '{'
+    int super_list_curly_types_size_js = -1;
     bool in_template_param = false;
     bool processed_statement = false;
     bool is_pseudo_terminate = false;
@@ -13295,7 +13296,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
-            && !inTransparentMode(MODE_SUPER_LIST_JS)
+            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
             && last_consumed != JS_ARROW
             && last_consumed != QMARK
             && perform_keywordless_function_check_js()
@@ -20129,10 +20130,16 @@ super_list_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             startNewMode(MODE_SUPER_LIST_JS);
             startElement(SDERIVATION_LIST);
+
+            super_list_curly_types_size_js = lcurly_types_js.size();
         }
 
         (extends_js | implements_ts)
         (options { greedy = true; } : extends_js | implements_ts)*
+
+        {
+            super_list_curly_types_size_js = -1;
+        }
 ;
 
 /*
@@ -20148,6 +20155,10 @@ extends_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         JS_EXTENDS
         derivation_list_js
+
+        {
+            super_list_curly_types_size_js = lcurly_types_js.size();
+        }
 ;
 
 /*
@@ -20163,6 +20174,10 @@ implements_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
 
         TS_IMPLEMENTS
         derivation_list_js
+
+        {
+            super_list_curly_types_size_js = lcurly_types_js.size();
+        }
 ;
 
 /*
