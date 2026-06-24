@@ -20362,7 +20362,10 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
                 colon_type_ts |
 
                 // regular parameter
-                compound_name
+                compound_name |
+
+                // literal parameter
+                bracketless_computed_property_js
             )
         )
 
@@ -21680,6 +21683,8 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             { inTransparentMode(MODE_PROPERTY_JS) }?
             colon_property_js |
 
+            // ensures compliance with idiomatic ANTLR guidelines
+            { true }?
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -21688,7 +21693,31 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
 
             // consume commas only if directly inside a call
             { bracket_types_js.back() == "cLPAREN" }?
-            comma
+            comma |
+
+            // if at this point, likely in a statement in an object
+            { table_keywords_js_token_set.member((unsigned int) LA(1)) }?
+            {
+                // mimic behavior as if starting a statement for the first time
+                startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
+
+                while (
+                    (LA(1) != RCURLY || lcurly_types_js.back() != 'o' || lcurly_types_size != lcurly_types_js.size())
+                    && LA(1) != 1 /* EOF */
+                ) {
+                    // check for potential statement-start tokens before anything else
+                    javascript_statements();
+
+                    // if javascript_statements explicitly returns, do not run
+                    // javascript_rules; applicable for 2+ declaration statements in a row
+                    if (processed_statement) {
+                        processed_statement = false;
+                    }
+                    else {
+                        javascript_rules();
+                    }
+                }
+            }
         )*
 ;
 

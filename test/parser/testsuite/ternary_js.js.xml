@@ -133,6 +133,10 @@
 <decl_stmt><decl type="const">const <name>firstOption</name> <init>= <expr><name><name>commandLineArgs</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>.</operator><call><name>slice</name><argument_list>(<argument><expr><ternary><condition><expr><name>CharacterCodes</name></expr> ?</condition><then> <expr><literal type="number">2</literal></expr> </then><else>: <expr><literal type="number">1</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><ternary><condition><expr><literal type="boolean">false</literal></expr> ?</condition><then> <expr><operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><literal type="null">null</literal></expr></lambda><operator>)</operator></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></expr_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>factory</name><ts:type>: <name>NodeFactory</name></ts:type> <init>= <expr><object>{
     <property><expr><name>foo</name></expr>: <expr><ternary><condition><expr><name>bar</name></expr> ?</condition><then> <expr><lambda><parameter_list>(<parameter><decl><name>expression</name></decl></parameter>, <parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><call><name>setEmitFlags</name><argument_list>(<argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></lambda></expr> </then><else>: <expr><name>quux</name></expr></else></ternary></expr></property>,
