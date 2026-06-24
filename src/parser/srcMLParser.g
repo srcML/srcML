@@ -9023,6 +9023,9 @@ complete_expression[] { CompleteElement element(this); ENTRY_DEBUG } :
             { inMode(MODE_ARGUMENT) }?
             argument |
 
+            { inLanguage(LANGUAGE_JAVASCRIPT) }?
+            mixins_ts |
+
             // expression with right parentheses if a previous match is in one
             // colons were not in the expression rule, but that changed with TypeScript
             { (LA(1) != RPAREN || inTransparentMode(MODE_INTERNAL_END_PAREN)) && LA(1) != COLON }?
@@ -13136,12 +13139,19 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         pseudo_generic_argument_list |
 
-        // special case: mark "?" and "!" as modifiers in certain TypeScript instances
+        // special case: mark "?", "+?", "-?", and "!" as modifiers in certain TypeScript instances
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && (
                 LA(1) == QMARK
-                || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
             )
             && (
                 next_token() == COLON
@@ -19443,7 +19453,17 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
                     specifier_js
                 ) |
 
-                { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+                {
+                    LA(1) == QMARK
+                    || (
+                        LA(1) == OPERATORS
+                        && (
+                            LT(1)->getText() == "!"
+                            || LT(1)->getText() == "+?"
+                            || LT(1)->getText() == "-?"
+                        )
+                    )
+                }?
                 declaration_modifiers_ts |
 
                 { (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-")) || LA(1) == DESTOP }?
@@ -20370,12 +20390,19 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 
         (options { greedy = true; } :
-            // "?" and "!" are valid TypeScript modifiers if preceded by a name
+            // "?", "+?", "-?", and "!" are valid TypeScript modifiers if preceded by a name
             {
                 last_consumed == NAME
                 && (
                     LA(1) == QMARK
-                    || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+                    || (
+                        LA(1) == OPERATORS
+                        && (
+                            LT(1)->getText() == "!"
+                            || LT(1)->getText() == "+?"
+                            || LT(1)->getText() == "-?"
+                        )
+                    )
                 )
             }?
             declaration_modifiers_ts |
@@ -20412,11 +20439,18 @@ complete_typescript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (
-            // "...", "?", and "!" are valid modifiers before the type
+            // "...", "?", "+?", "-?", and "!" are valid modifiers before the type
             {
                 LA(1) == DOTDOTDOT
                 || LA(1) == QMARK
-                || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
             }?
             ((declaration_modifiers_ts | tripledotop) type_ts) |
 
@@ -23328,12 +23362,19 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                 break;
             } |
 
-            // "?" and "!" are valid TypeScript modifiers
+            // "?", "+?", "-?", and "!" are valid TypeScript modifiers
             {
                 !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
                 && (
                     LA(1) == QMARK
-                    || (LA(1) == OPERATORS && LT(1)->getText() == "!")
+                    || (
+                        LA(1) == OPERATORS
+                        && (
+                            LT(1)->getText() == "!"
+                            || LT(1)->getText() == "+?"
+                            || LT(1)->getText() == "-?"
+                        )
+                    )
                 )
             }?
             declaration_modifiers_ts |
@@ -23588,7 +23629,17 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
             paren_pair();
 
             // consume optional modifiers
-            while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+            while (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
                 declaration_modifiers_ts();
 
             // found "NAME() :"
@@ -23735,8 +23786,18 @@ function_declaration_ts[] { ENTRY_DEBUG } :
                 break;
             } |
 
-            // currently, "?" and "!" are the only valid modifiers
-            { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+            // consume optional declaration modifiers
+            {
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            }?
             declaration_modifiers_ts |
 
             declaration_init_js | colon_type_ts
@@ -23801,8 +23862,18 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
 
             paren_pair();
 
-            // consume optional modifiers
-            while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+            // consume optional declaration modifiers
+            while (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
                 declaration_modifiers_ts();
 
             // found "() :"
@@ -23894,8 +23965,18 @@ nameless_function_declaration_ts[] { ENTRY_DEBUG } :
                 break;
             } |
 
-            // currently, "?" and "!" are the only valid modifiers
-            { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+            // consume optional declaration modifiers
+            {
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            }?
             declaration_modifiers_ts |
 
             declaration_init_js | colon_type_ts
@@ -23974,7 +24055,17 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
             }
 
             // consume optional modifiers
-            while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+            while (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
                 declaration_modifiers_ts();
 
             // found "NAME:" or "[NAME]:" or "NAME =" or "[NAME] ="
@@ -24094,8 +24185,18 @@ declaration_ts[] { ENTRY_DEBUG } :
                 break;
             } |
 
-            // currently, "?" and "!" are the only valid modifiers
-            { LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }?
+            // consume optional declaration modifiers
+            {
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            }?
             declaration_modifiers_ts |
 
             // optional generic types (mixins) using the "extends" keyword in TypeScript
@@ -24156,8 +24257,18 @@ constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
             if (inMode(MODE_INDEX_TS))
                 endMode(MODE_INDEX_TS);
 
-            // currently, "?" and "!" are the only valid modifiers
-            if (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+            // consume optional declaration modifiers
+            if (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
                 declaration_modifiers_ts();
         }
 
@@ -24223,7 +24334,12 @@ declaration_modifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
             startElement(STS_MODIFIER);
         }
 
-        (QMARK | { LT(1)->getText() == "!" }? OPERATORS)
+        (
+            { LT(1)->getText() == "!" || LT(1)->getText() == "+?" || LT(1)->getText() == "-?" }?
+            OPERATORS |
+
+            QMARK
+        )
 ;
 
 /*

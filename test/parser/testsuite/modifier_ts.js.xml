@@ -42,6 +42,20 @@
 </block_content>}</block></function>
 </unit>
 
+<!-- "+?" and "-?" Modifiers -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>O</name>]</index><ts:modifier>+?</ts:modifier><ts:type>: <name><name>Expand__</name><argument_list type="generic">&lt;<argument><expr><name><name>O</name><index>[<expr><name>K</name></expr>]</index></name></expr></argument>, <argument><expr><name>Keys</name></expr></argument>, <argument><expr><name><name>PrefixWith</name><argument_list type="generic">&lt;<argument><expr><name>P</name></expr></argument>, <argument><expr><name>K</name></expr></argument>&gt;</argument_list></name></expr></argument>, <argument><expr><name>N</name></expr></argument>, <argument><expr><array>[<expr><literal type="number">1</literal></expr>, <expr><operator>...</operator><name>Depth</name></expr>]</array></expr></argument>&gt;</argument_list></name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>O</name>]</index><ts:modifier>-?</ts:modifier><ts:type>: <name><name>Expand__</name><argument_list type="generic">&lt;<argument><expr><name><name>O</name><index>[<expr><name>K</name></expr>]</index></name></expr></argument>, <argument><expr><name>Keys</name></expr></argument>, <argument><expr><name><name>PrefixWith</name><argument_list type="generic">&lt;<argument><expr><name>P</name></expr></argument>, <argument><expr><name>K</name></expr></argument>&gt;</argument_list></name></expr></argument>, <argument><expr><name>N</name></expr></argument>, <argument><expr><array>[<expr><literal type="number">1</literal></expr>, <expr><operator>...</operator><name>Depth</name></expr>]</array></expr></argument>&gt;</argument_list></name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></class>
+</unit>
+
 <!-- "..." Modifier -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

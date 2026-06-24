@@ -161,8 +161,8 @@ OPERATORS options { testLiterals = true; } {
             }
     )? |
 
-    '+' ('+' | '=')? |
-    '-' ('-' | '=' | '>' ('*')? )? |
+    '+' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '?' | '+' | '=')? |
+    '-' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '?' | '-' | '=' | '>' ('*')? )? |
 
     // *, *=, ** (Python/JavaScript), **= (Python/JavaScript)
     '*' ({ inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) }? '*')? ('=')? |
