@@ -22295,8 +22295,13 @@ yield_expression_js[] {
 
         (options { greedy = true; } :
             // do not consume top-level parameter list for a function
+            // do not conume ")" if it is an operator for an already opened "(" eg. "(yield)"
             {
-                (LA(1) == RPAREN && lparen_types_js.back() == 'p' && lparen_types_size == lparen_types_js.size())
+                (
+                    LA(1) == RPAREN 
+                    && (lparen_types_js.back() == 'p' || lparen_types_js.back() == 'o') 
+                    && lparen_types_size == lparen_types_js.size()
+                )
                 || LA(1) == 1 /* EOF */
             }?
             {
