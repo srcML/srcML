@@ -13170,7 +13170,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         function_declaration_specifiers_ts |
 
         // special case: generic types (mixins) using the "extends" keyword in TypeScript
-        { inTransparentMode(MODE_TERNARY | MODE_CONDITION) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
+        { inTransparentMode(MODE_TERNARY | MODE_CONDITION) }?
         mixins_ts |
 
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
@@ -24221,31 +24221,47 @@ declaration_ts[] { ENTRY_DEBUG } :
 
   Handles index signatures (e.g., "[NAME : TYPE]: TYPE") in TypeScript.
 */
-constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
+constraint_ts[] { CompleteElement element(this); size_t bracket_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_TOP | MODE_LIST | MODE_CONSTRAINT_TS);
             startElement(STS_CONSTRAINT);
 
             startNewMode(MODE_INDEX_TS);
             startElement(SINDEX);
+
+            bracket_types_size = bracket_types_js.size();
         }
 
         LBRACKET
 
         (options { greedy = true; } :
+            // constraint ends at the appropriate "]" or at the end of the file
+            { (LA(1) == RBRACKET && bracket_types_size == bracket_types_js.size()) || LA(1) == 1 /* EOF */}?
             {
-                LA(1) == REFOPS
-                || LT(1)->getText() == "-"
-                || LT(1)->getText() == "|"
-                || LT(1)->getText() == "in"
-                || LT(1)->getText() == "keyof"
-                || LT(1)->getText() == "typeof"
-            }?
-            general_operators |
+                break;
+            } |
 
-            declaration_specifiers_ts |
+            { inMode(MODE_ARGUMENT) }?
+            argument |
 
-            compound_name | literals | colon_type_ts
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            { !inTransparentMode(MODE_TERNARY) }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION);
+            }
+            expression |
+
+            comma
         )*
 
         {
