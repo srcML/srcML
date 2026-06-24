@@ -61,6 +61,13 @@
 <class>class <name>F</name> <super_list><extends>extends <super><expr><operator>(</operator><name>C</name> <operator>||</operator> <name>D</name><operator>)</operator></expr></super></extends></super_list> <block>{}</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <super_list><extends>extends <super><expr><class>class <block>{}</block></class></expr></super></extends></super_list>
+<block>{
+
+}</block></class>
+</unit>
+
 <!-- Classes in expressions -->
 
 <unit revision="1.0.0" language="JavaScript">

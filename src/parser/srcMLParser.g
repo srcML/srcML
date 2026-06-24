@@ -22257,6 +22257,9 @@ class_expression_js[] { ENTRY_DEBUG } :
 
             curly_pair
         )?
+
+        // consume inserted terminate after the class, if it exists and we are in a super list
+        ({LA(1) == TERMINATE && LT(1)->getText() != ";" && inTransparentMode(MODE_SUPER_LIST_JS) }? TERMINATE)?
 ;
 
 /*
