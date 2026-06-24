@@ -22,11 +22,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <argument><expr><name>src</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -34,11 +34,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>MACOSX_BUNDLE</name></option> <argument><expr><name>src</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>MACOSX_BUNDLE</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>MACOSX_BUNDLE</name></option> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>MACOSX_BUNDLE</name> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -46,19 +46,19 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>EXCLUDE_FROM_ALL</name></option> <argument><expr><name>src</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>EXCLUDE_FROM_ALL</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>EXCLUDE_FROM_ALL</name></option> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>EXCLUDE_FROM_ALL</name> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <option><name>EXCLUDE_FROM_ALL</name></option> <argument><expr><name>src</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <option><name>EXCLUDE_FROM_ALL</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <option><name>EXCLUDE_FROM_ALL</name></option> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <option><name>EXCLUDE_FROM_ALL</name> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -66,11 +66,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <option><name>MACOSX_BUNDLE</name></option> <option><name>EXCLUDE_FROM_ALL</name></option> <argument><expr><name>src</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <option><name>MACOSX_BUNDLE</name></option> <option><name>EXCLUDE_FROM_ALL</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <option><name>MACOSX_BUNDLE</name></option> <option><name>EXCLUDE_FROM_ALL</name></option> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>main</name></expr></argument> <option><name>WIN32</name></option> <option><name>MACOSX_BUNDLE</name></option> <option><name>EXCLUDE_FROM_ALL</name> <argument><expr><name>src</name></expr></argument> <argument><expr><name>src2</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -82,7 +82,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_executables</name><argument_list>(<argument><expr><name>myapp</name></expr></argument> <option><name>ALIAS</name></option> <argument><expr><name>main</name></expr></argument>)</argument_list></command>
+<command><name>add_executables</name><argument_list>(<argument><expr><name>myapp</name></expr></argument> <option><name>ALIAS</name> <argument><expr><name>main</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 </unit>
