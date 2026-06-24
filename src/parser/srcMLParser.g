@@ -24034,18 +24034,20 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
                     if (LA(1) == LBRACKET)
                         ++bracket_count;
 
-                    if (LA(1) == RBRACKET)
+                    if (LA(1) == RBRACKET) {
                         --bracket_count;
+
+                        if (bracket_count == 0 && LA(1) == RBRACKET) {
+                            consume();
+                            continue_guessing = true;
+                            break;
+                        }
+                    }
 
                     if (bracket_count < 0)
                         break;
 
                     consume();
-
-                    if (bracket_count == 0 && last_consumed_guessing_mode == RBRACKET) {
-                        continue_guessing = true;
-                        break;
-                    }
                 }
             }
             // or, consume a string-like literal

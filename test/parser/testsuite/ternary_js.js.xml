@@ -225,4 +225,24 @@
                 </then><else>: <expr><name>O</name></expr></else></ternary></expr></else></ternary></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>KeysCanBeExpanded_</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>N</name> <ts:extends>extends <ts:type><name>number</name></ts:type></ts:extends></expr></argument>, <argument><expr><name>Depth</name> <ts:extends>extends <ts:type><name><name>number</name><index>[]</index></name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name> = <ts:type><ternary><condition><expr><name>N</name> <ts:extends>extends <ts:type><name><name>Depth</name><index>[<expr><literal type="string">'length'</literal></expr>]</index></name></ts:type></ts:extends></expr> ?</condition><then> <expr><name>never</name></expr> </then><else>:
+    <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name>CanBeExpanded</name></ts:type></ts:extends></expr> ?</condition><then>
+        <expr><name><name>KeysCanBeExpanded_</name><argument_list type="generic">&lt;<argument><expr><name><name>T</name><index>[<expr><literal type="string">'value'</literal></expr>]</index></name></expr></argument>, <argument><expr><name>N</name></expr></argument>, <argument><expr><name>Depth</name></expr></argument>&gt;</argument_list></name></expr> </then><else>:
+        <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Array</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><name><name>KeysCanBeExpanded_</name><argument_list type="generic">&lt;<argument><expr><name>U</name></expr></argument>, <argument><expr><name>N</name></expr></argument>, <argument><expr><name>Depth</name></expr></argument>&gt;</argument_list></name></expr> </then><else>:
+
+            <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name>object</name></ts:type></ts:extends></expr> ?</condition><then>
+                <block>{<block_content>
+                    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>T</name> ]</index> <ts:type>:
+                    <ternary><condition><expr><name><name>T</name><index>[<expr><name>K</name></expr>]</index></name> <ts:extends>extends <ts:type><name>object</name></ts:type></ts:extends></expr> ?</condition><then>
+                        <expr><ternary><condition><expr><name>K</name> <ts:extends>extends <ts:type><name>string</name> <operator>|</operator> <name>number</name></ts:type></ts:extends></expr>
+                            ?</condition><then> <expr><literal type="string">`${K}`</literal> <operator>|</operator> <name><name>Join</name><argument_list type="generic">&lt;<argument><expr><literal type="string">`${K}`</literal></expr></argument>, <argument><expr><name><name>KeysCanBeExpanded_</name><argument_list type="generic">&lt;<argument><expr><name><name>T</name><index>[<expr><name>K</name></expr>]</index></name></expr></argument>, <argument><expr><name>N</name></expr></argument>, <argument><expr><array>[<expr><literal type="number">1</literal></expr>, <expr><operator>...</operator><name>Depth</name></expr>]</array></expr></argument>&gt;</argument_list></name></expr></argument>&gt;</argument_list></name></expr>
+                            </then><else>: <expr><name>never</name></expr></else></ternary></expr>
+                        </then><else>: <expr><name>never</name></expr></else></ternary></ts:type></ts:constraint></decl></decl_stmt>
+
+                </block_content>}</block><expr><array>[<expr><ts:operator>keyof</ts:operator> <name>T</name></expr>]</array></expr>
+                </then><else>:
+                <expr><name>never</name></expr></else></ternary></expr></else></ternary></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
 </unit>
