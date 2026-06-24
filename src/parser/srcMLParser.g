@@ -23387,7 +23387,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
             dynamic_module_import_ts |
 
             // looking for arrays with a sibling index (e.g., "[NAME: TYPE][]")
-            { perform_named_array_with_index_check_ts() }?
+            { perform_named_array_with_index_check_ts() && !perform_ternary_check() }?
             named_array_with_index_ts |
 
             // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")

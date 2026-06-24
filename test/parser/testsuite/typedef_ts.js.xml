@@ -48,4 +48,32 @@
     </then><else>: <expr><name>P</name></expr></else></ternary></ts:type></ts:typedef>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>_ConcatLargestUntilDone</name><argument_list type="generic">&lt;
+    <argument><expr><name>Length</name> <ts:extends>extends <ts:type><name>number</name></ts:type></ts:extends></expr></argument>,
+    <argument><expr><name>AccumulatedArray</name> <ts:extends>extends <ts:type><name><name>never</name><index>[]</index><index>[]</index></name></ts:type></ts:extends></expr></argument>,
+    <argument><expr><name>NextArray</name> <ts:extends>extends <ts:type><name><name>never</name><index>[]</index></name></ts:type></ts:extends></expr></argument>,
+&gt;</argument_list></name> = <ts:type><ternary><condition><expr><name><name>NextArray</name><index>[<expr><literal type="string">'length'</literal></expr>]</index></name> <ts:extends>extends <ts:type><name>Length</name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name>NextArray</name></expr>
+    </then><else>: <expr><ternary><condition><expr><array>[<expr><operator>...</operator><name><name>AccumulatedArray</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>, <expr><operator>...</operator><name>NextArray</name></expr>]</array><array>[<expr><name>Length</name></expr>]</array> <ts:extends>extends <ts:type><name>never</name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name><name>_ConcatLargestUntilDone</name><argument_list type="generic">&lt;
+        <argument><expr><name>Length</name></expr></argument>,
+        <argument><expr><ternary><condition><expr><name>AccumulatedArray</name> <ts:extends>extends <ts:type><array>[<expr><name><name>AccumulatedArray</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>, <expr><operator>...</operator><ts:operator>infer</ts:operator> <name>U</name></expr>]</array></ts:type></ts:extends></expr>
+        ?</condition><then> <expr><ternary><condition><expr><name>U</name> <ts:extends>extends <ts:type><name><name>never</name><index>[]</index><index>[]</index></name></ts:type></ts:extends></expr>
+        ?</condition><then> <expr><name>U</name></expr>
+        </then><else>: <expr><name>never</name></expr></else></ternary></expr>
+        </then><else>: <expr><name>never</name></expr></else></ternary></expr></argument>,
+        <argument><expr><name>NextArray</name></expr></argument>
+    &gt;</argument_list></name></expr>
+    </then><else>: <expr><name><name>_ConcatLargestUntilDone</name><argument_list type="generic">&lt;
+        <argument><expr><name>Length</name></expr></argument>,
+        <argument><expr><ternary><condition><expr><name>AccumulatedArray</name> <ts:extends>extends <ts:type><array>[<expr><name><name>AccumulatedArray</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>, <expr><operator>...</operator><ts:operator>infer</ts:operator> <name>U</name></expr>]</array></ts:type></ts:extends></expr>
+        ?</condition><then> <expr><ternary><condition><expr><name>U</name> <ts:extends>extends <ts:type><name><name>never</name><index>[]</index><index>[]</index></name></ts:type></ts:extends></expr>
+        ?</condition><then> <expr><name>U</name></expr>
+        </then><else>: <expr><name>never</name></expr></else></ternary></expr>
+        </then><else>: <expr><name>never</name></expr></else></ternary></expr></argument>,
+        <argument><expr><array>[<expr><operator>...</operator><name><name>AccumulatedArray</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr>, <expr><operator>...</operator><name>NextArray</name></expr>]</array></expr></argument>
+    &gt;</argument_list></name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
 </unit>
