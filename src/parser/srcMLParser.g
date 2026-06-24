@@ -805,7 +805,7 @@ public:
     std::deque<char> lparen_types_js;
     std::deque<char> lcurly_types_js;
     std::deque<std::string> bracket_types_js;  // '(' and '{'
-    int super_list_curly_types_size_js = -1;
+    size_t super_list_curly_types_size_js = 0;
     bool in_template_param = false;
     bool processed_statement = false;
     bool is_pseudo_terminate = false;
@@ -22458,6 +22458,10 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                 if (LA(1) == JS_FUNCTION) {
                     consume();
 
+                    // consume optional name
+                    if (LA(1) == NAME) 
+                        consume();
+
                     // consume parameter list
                     paren_pair();
 
@@ -22554,6 +22558,9 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         }
 
         ((specifier_js)* JS_FUNCTION)
+
+        // consume optional name
+        (compound_name)*
 
         {
             startNewMode(MODE_PARAMETER_LIST_JS);

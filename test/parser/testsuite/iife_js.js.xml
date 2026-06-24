@@ -86,4 +86,39 @@
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
+        <expr_stmt><expr><call><name>bar</name><argument_list>()</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></if>
+    <else>else <block>{<block_content>
+        <expr_stmt><expr><call><name>baz</name><argument_list>()</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></else></if_stmt>
+</block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
+        <break>break</break>
+    </block_content>}</block></while>
+</block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; <condition><expr><name>i</name> <operator>&lt;</operator> <name>bar</name></expr></condition>; <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control> <block>{<block_content>
+        <continue>continue</continue>
+    </block_content>}</block></for>
+</block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
 </unit>
