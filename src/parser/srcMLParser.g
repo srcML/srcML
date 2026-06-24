@@ -10584,6 +10584,10 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // looking for lbracket to start an array in JavaScript (note that ")[" starts an index)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != RPAREN }?
+        array_js |
+
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
         UNION |
@@ -13212,6 +13216,26 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_optional_call_chaining_check_js() }?
         optional_call_chain_js |
 
+        // looking for "EXPR ? EXPR : EXPR" to start a ternary
+        {
+            !skip_ternary
+            && !inMode(MODE_TERNARY_CONDITION)
+            && (!inTransparentMode(MODE_DECL_STATEMENT_TS) || inTransparentMode(MODE_CONSTRAINT_TS))
+            && (
+                !inLanguage(LANGUAGE_JAVA)
+                || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
+            )
+            && (
+                !inTransparentMode(MODE_TYPE_TS)
+                || !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
+                || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
+                || (inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN")
+            )
+            && (!inLanguage(LANGUAGE_JAVASCRIPT) || last_consumed != JS_EXTENDS)
+            && perform_ternary_check()
+        }?
+        ternary_expression |
+
         // looking for "NAME<>()" to start a generic function call
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
@@ -13384,25 +13408,6 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // looking for a colon to start a Python type annotation
         { inLanguage(LANGUAGE_PYTHON) && !inTransparentMode(MODE_EXCLUDE_NO_PAREN_TUPLES_PY) }?
         type_alias_annotation_py |
-
-        {
-            !skip_ternary
-            && !inMode(MODE_TERNARY_CONDITION)
-            && !inTransparentMode(MODE_DECL_STATEMENT_TS)
-            && (
-                !inLanguage(LANGUAGE_JAVA)
-                || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
-            )
-            && (
-                !inTransparentMode(MODE_TYPE_TS)
-                || !inTransparentMode(MODE_TERNARY | MODE_CONDITION)
-                || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
-                || (inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN")
-            )
-            && (!inLanguage(LANGUAGE_JAVASCRIPT) || last_consumed != JS_EXTENDS)
-            && perform_ternary_check()
-        }?
-        ternary_expression |
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -23083,6 +23088,10 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 break;
             } |
 
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
             // consume TypeScript types if not in an object
             { lcurly_types_js.back() != 'o' && bracket_types_js.back() != "oLCURLY" }?
             colon_type_ts |
@@ -23222,6 +23231,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
             // - do not consume the closing RPAREN for certain constructs
             // - a unary operator that should start a new declaration statement
             // - after an argument list closing ">" with no generated TERMINATE
+            // - a "?" that ends the type in a TypeScript mixin
             // - an argument list closing ">" in mixins or template arguments
             // - "as" or "=" (start of next type/expression)
             // - at the end of the file
@@ -23250,6 +23260,11 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                     && (LA(1) != OPERATORS || (LT(1)->getText() != "|"))
                     && (LA(1) != RPAREN || bracket_types_js.back() != "oLPAREN")
                     && (LA(1) != QMARK || !inTransparentMode(MODE_TERNARY | MODE_CONDITION))
+                )
+                || (
+                    LA(1) == QMARK
+                    && inTransparentMode(MODE_MIXINS_TS)
+                    && lparen_types_size == lparen_types_js.size()
                 )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
                 || (LA(1) == EQUAL && !inTransparentMode(MODE_MIXINS_TS) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
@@ -24062,7 +24077,7 @@ declaration_ts[] { ENTRY_DEBUG } :
 */
 constraint_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_CONSTRAINT_TS);
             startElement(STS_CONSTRAINT);
 
             startNewMode(MODE_INDEX_TS);
