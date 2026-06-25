@@ -814,6 +814,7 @@ public:
     bool is_ternary_colon = true;
     int lambda_depth = 0;
     int tempops_count_ts = 0;
+    int super_count_js = 0;
     int current_decl_type_js = 0;
     int start_count = 0;
 
@@ -20428,7 +20429,12 @@ derivation_list_js[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // ensure the super list ends before the start of the class or interface block
             {
-                (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
+                (
+                    LA(1) == LCURLY
+                    && last_consumed != REFOPS
+                    && last_consumed != OPERATORS  // e.g., "|"
+                    && super_count_js > 0
+                )
                 || LA(1) == JS_EXTENDS
                 || LA(1) == TS_IMPLEMENTS
                 || LA(1) == 1 /* EOF */
@@ -20450,49 +20456,57 @@ derivation_list_js[] { ENTRY_DEBUG } :
 
   Handles the elements of a super list in JavaScript differently from other languages (e.g., Java).
 */
-super_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+super_js[] { CompleteElement element(this); super_count_js = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_LOCAL);
             startElement(SDERIVATION);
         }
 
         (options { greedy = true; } :
-            // ensure the super ends before the start of a block or a comma
-            {
-                (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
-                || (LA(1) == COMMA && bracket_types_js.back() != "cLPAREN")
-                || LA(1) == JS_EXTENDS
-                || LA(1) == TS_IMPLEMENTS
-                || LA(1) == 1 /* EOF */
-            }?
-            {
-                break;
-            } |
+            (
+                // ensure the super ends before the start of a block or a comma
+                {
+                    (
+                        LA(1) == LCURLY
+                        && last_consumed != REFOPS
+                        && last_consumed != OPERATORS  // e.g., "|"
+                        && super_count_js > 0
+                    )
+                    || (LA(1) == COMMA && bracket_types_js.back() != "cLPAREN")
+                    || LA(1) == JS_EXTENDS
+                    || LA(1) == TS_IMPLEMENTS
+                    || LA(1) == 1 /* EOF */
+                }?
+                {
+                    break;
+                } |
 
-            { inMode(MODE_ARGUMENT) }?
-            argument |
+                { inMode(MODE_ARGUMENT) }?
+                argument |
 
-            // allow JavaScript ternaries to use existing "else" logic
-            { inTransparentMode(MODE_TERNARY) }?
-            colon_marked_js |
+                // allow JavaScript ternaries to use existing "else" logic
+                { inTransparentMode(MODE_TERNARY) }?
+                colon_marked_js |
 
-            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
-            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
-            colon_type_ts |
+                // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+                { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+                colon_type_ts |
 
-            // handle all other instances of a colon
-            { LA(1) == COLON }?
-            colon_marked |
+                // handle all other instances of a colon
+                { LA(1) == COLON }?
+                colon_marked |
 
-            {
-                if (!inMode(MODE_EXPRESSION))
-                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-            }
-            expression |
+                {
+                    if (!inMode(MODE_EXPRESSION))
+                        startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                }
+                expression |
 
-            // consume commas for calls, but not for parameters
-            { bracket_types_js.back() == "cLPAREN" }?
-            comma
+                // consume commas for calls, but not for parameters
+                { bracket_types_js.back() == "cLPAREN" }?
+                comma
+            )
+            set_int[super_count_js, super_count_js + 1]
         )*
 ;
 
