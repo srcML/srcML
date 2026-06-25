@@ -168,6 +168,23 @@
 <label><name>customLabel</name>:</label> <import>import <name>defaultExport</name> <from>from <literal type="string">"module-name"</literal></from></import>
 </unit>
 
+<!-- "let" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<while>while <condition>(<expr><literal type="boolean">false</literal></expr>)</condition> <block>{<block_content>
+    <label><name>label2</name>:</label> <label><name>label3</name>:</label> <label><name>label4</name>:</label> <decl_stmt><decl type="let">let <name>l9</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</block_content>}</block></while>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace>namespace <name>m3</name> <block>{<block_content>
+    <label><name>label</name>:</label> <decl_stmt><decl type="let">let <name>l34</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+    <block>{<block_content>
+        <label><name>label2</name>:</label> <decl_stmt><decl type="let">let <name>l35</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+    </block_content>}</block>
+</block_content>}</block></ts:namespace>
+</unit>
+
 <!-- "return" -->
 
 <unit revision="1.0.0" language="JavaScript">

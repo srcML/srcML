@@ -1585,9 +1585,20 @@ javascript_statements[] {
             && !inMode(MODE_PROPERTY_JS)
             && !inMode(MODE_TERNARY)
             && (next_token_two() != LCURLY || perform_label_with_block_check_js())
-            && (table_keywords_js_token_set.member(next_token_two()) || next_token_two() == LCURLY)
-        )
+            && (
+                table_keywords_js_token_set.member(next_token_two())
+                || decl_start_js_token_set.member(next_token_two())
+                || next_token_two() == LCURLY
+                || perform_consecutive_label_check_js()
+            )
+        ) {
+            // always process the first label
             label_js();
+
+            // process any additional consecutive labels, if applicable
+            while (LA(1) == NAME && next_token() == COLON)
+                label_js();
+        }
 
         // special case: "global {}" is a global declaration in a TypeScript declaration file
         if (
@@ -24854,7 +24865,11 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
                     compound_name();
 
                     // match properties (not labels)
-                    if (LA(1) == COLON && !table_keywords_js_token_set.member(next_token()))
+                    if (
+                        LA(1) == COLON
+                        && !table_keywords_js_token_set.member(next_token())
+                        && !decl_start_js_token_set.member(next_token())
+                    )
                         isblock = false;
                 }
                 // case 3: the first token in the block or object is a square bracket
@@ -24983,6 +24998,40 @@ perform_label_with_block_check_js[] returns [bool islabel] {
             // found "NAME: {}", where "{}" is a block
             if (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
                 islabel = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  perform_consecutive_label_check_js
+
+  Checks if a label is followed by one or more labels in JavaScript (e.g., "NAME: NAME: NAME:").
+*/
+perform_consecutive_label_check_js[] returns [bool islabel] {
+        ENTRY_DEBUG
+
+        islabel = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume a name and a ":"
+            if (LA(1) == NAME && next_token() == COLON) {
+                consume();
+                consume();
+            }
+
+            // consume an additional "NAME:" pair
+            if (LA(1) == NAME && next_token() == COLON) {
+                consume();
+                consume();
+
+                islabel = true;
+            }
         }
         catch (...) {}
 
