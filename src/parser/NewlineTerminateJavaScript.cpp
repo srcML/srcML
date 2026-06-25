@@ -92,6 +92,20 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
         else
             insertTerminate = true;
 
+        // do not insert a terminate between "<" and a TypeScript word operator used in generic argument lists
+        if (
+            token->getType() == srcMLParser::TEMPOPS
+            && (
+                nextNonSkipToken->getType() == srcMLParser::JS_TYPEOF
+                || nextNonSkipToken->getType() == srcMLParser::TS_INFER
+                || nextNonSkipToken->getType() == srcMLParser::TS_IS
+                || nextNonSkipToken->getType() == srcMLParser::TS_KEYOF
+                || nextNonSkipToken->getType() == srcMLParser::TS_SATISFIES
+            )
+        ) {
+            insertTerminate = false;
+        }
+
         buffer.emplace_back(token);
 
         // insert a TERMINATE token if applicable
@@ -142,7 +156,6 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
  * `containsEOL` is true if there is an EOL between `token` and `nextNonSkipToken`, otherwise it is false.
  */
 bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::RefToken nextNonSkipToken, bool containsEOL) {
-
     return (
         (
             // token is not LCURLY and the next non-skip token is RCURLY

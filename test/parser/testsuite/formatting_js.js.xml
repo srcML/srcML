@@ -190,4 +190,17 @@
 </block_content>}</block></function>
 </unit>
 
+<!-- TypeScript Multi-line Generic Argument Lists -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><specifier>export</specifier> type <name><name>StyledComponentInnerComponent</name><argument_list type="generic">&lt;<argument><expr><name>C</name> <ts:extends>extends <ts:type><name><name>React</name><operator>.</operator><name><name>ComponentType</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name> = <ts:type><ternary><condition><expr><name>C</name> <ts:extends>extends <ts:type><name><name>StyledComponent</name><argument_list type="generic">&lt;
+    <argument><expr><ts:operator>infer</ts:operator> <name>I</name></expr></argument>,
+    <argument><expr><name>any</name></expr></argument>
+&gt;</argument_list></name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name>I</name></expr>
+    </then><else>: <expr><ternary><condition><expr><name>C</name> <ts:extends>extends <ts:type><name><name>StyledComponent</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>I</name></expr></argument>, <argument><expr><name>any</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name>I</name></expr>
+    </then><else>: <expr><name>C</name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
 </unit>
