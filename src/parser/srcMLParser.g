@@ -19491,7 +19491,7 @@ perform_accessor_is_name_check_js[] returns [bool isaccessor] {
                 if (LA(1) == NAME)
                     consume();
                 else if (LA(1) == LBRACKET)
-                    computed_property_js();
+                    bracket_pair();
                 else if (literal_tokens_set.member((unsigned int) LA(1)))
                     literals();
 
@@ -24926,7 +24926,7 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
                 }
                 // case 2: the first token in the block or object is a name
                 else if (LA(1) == NAME) {
-                    compound_name();
+                    consume();
 
                     // match properties (not labels)
                     if (
@@ -24938,7 +24938,7 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
                 }
                 // case 3: the first token in the block or object is a square bracket
                 else if (LA(1) == LBRACKET) {
-                    computed_property_js();
+                    bracket_pair();
 
                     // match computed properties (not arrays)
                     if (LA(1) == COLON)
