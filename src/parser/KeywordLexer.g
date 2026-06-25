@@ -533,6 +533,10 @@ public:
             if (LA(index) == '/' && LA(index + 1) == '>' && angle_bracket_count == 1)
                 return true;
 
+            // found a comma in a start tag, so it is not a JSX literal
+            if (angle_bracket_count > 0 && LA(index) == ',')
+                return false;
+
             // found the ">" to end the current opening/closing JSX tag
             if (LA(index) == '>' && angle_bracket_count > 0)
                 --angle_bracket_count;

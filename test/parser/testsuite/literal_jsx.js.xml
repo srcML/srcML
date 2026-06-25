@@ -832,4 +832,17 @@
 }</block></class>
 </unit>
 
+<!-- The first statement does NOT have a JSX literal, but the second DOES -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Foo</name> <super_list><extends>extends <super><expr><name><name>React</name><operator>.</operator><name><name>Component</name><argument_list type="generic">&lt;<argument><expr><name>PropsType</name></expr></argument>, <argument><expr><block>{<block_content/>}</block></expr></argument>&gt;</argument_list></name></name></expr></super></extends></super_list> <block>{}</block></class>
+
+<decl_stmt><decl type="const">const <name>b</name> <init>= <expr><operator>(</operator>
+    <jsx:literal type="jsx">&lt;Foo&gt;
+        {&lt;div/&gt; as unknown}
+        {"aa"}
+    &lt;/Foo&gt;</jsx:literal>
+<operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
