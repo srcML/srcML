@@ -708,6 +708,51 @@
 <decl_stmt><decl type="const">const <name>from</name> <init>= <expr><name>from</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>from</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>from</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name><name>from</name><operator>.</operator><name>from</name></name> <operator>=</operator> <name>from</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>from</name></expr>)</condition> <block>{<block_content> </block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<while>while <condition>(<expr><name>from</name></expr>)</condition> <block>{<block_content> </block_content>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>from</name> <init>= <expr><class>class <name>from</name> <block>{ <decl_stmt><decl><name>from</name><ts:type>: <name>from</name></ts:type></decl></decl_stmt> }</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<break>break <name>from</name></break>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><name>from</name></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>from</name><parameter_list>(<parameter><decl><name>from</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>from</name><operator>.</operator><name>from</name></name> <operator>=</operator> <name>from</name></expr></expr_stmt>
+    <if_stmt><if>if <condition>(<expr><name>from</name></expr>)</condition> <block>{<block_content>
+        <while>while <condition>(<expr><name>from</name></expr>)</condition> <block>{<block_content>
+            <break>break <name>from</name></break>
+        </block_content>}</block></while>
+    </block_content>}</block></if></if_stmt>
+    <decl_stmt><decl type="const">const <name>from</name> <init>= <expr><class>class <name>from</name> <block>{ <decl_stmt><decl><name>from</name><ts:type>: <name>from</name></ts:type></decl>;</decl_stmt> }</block></class></expr></init></decl></decl_stmt>
+    <return>return <expr><name>from</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
 <!-- "function"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -766,6 +811,20 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>currentPropGetter</name> <init>= <expr><call><name><name>currentProp</name><operator>?.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>get</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{
+    <property><expr><name>get</name></expr>: <expr><function>function <name>get</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>get</name> <block>{}</block></class>
 </unit>
 
 <!-- "if" -->
@@ -1186,6 +1245,20 @@
 <decl_stmt><decl type="const">const <name>set</name> <init>= <expr><name>set</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>set</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{
+    <property><expr><name>set</name></expr>: <expr><function>function <name>set</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>set</name> <block>{}</block></class>
+</unit>
+
 <!-- "static" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1398,6 +1471,12 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>candidates</name> <init>= <expr><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>type</name></decl></parameter>)</parameter_list><ts:type>: <name>type</name> <ts:operator>is</ts:operator> <name>StringLiteralType</name></ts:type> <operator>=&gt;</operator> <expr><name>flags</name></expr></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>type</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name><name>type</name><operator>.</operator><name>prop</name></name> <operator>|</operator> <name><name>type</name><operator>.</operator><name>otherProp</name></name></expr>;</return>
+</block_content>}</block></function></unit>
 </unit>
 
 <!-- "typeof"; can appear within expressions -->

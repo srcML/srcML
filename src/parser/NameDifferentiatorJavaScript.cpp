@@ -190,6 +190,17 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     }
 }
 
+bool printState(antlr::RefToken token, antlr::RefToken prev, antlr::RefToken next) {
+    std::cout << "Previous token text: " << prev->getType() << std::endl;
+    std::cout << "Previous token type: " << prev->getText() << std::endl;
+    std::cout << "Current token type:  " << token->getType() << std::endl;
+    std::cout << "Current token text:  " << token->getText() << std::endl;
+    std::cout << "Next token type:     " << next->getType() << std::endl;
+    std::cout << "Next token text:     " << next->getText() << std::endl;
+
+    return false;
+}
+
 /**
  * Returns true if `token` should be changed to a NAME token, and false otherwise.
  */
@@ -256,7 +267,11 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || nextToken->getType() == srcMLParser::JS_ARROW
                 || nextToken->getType() == srcMLParser::TERMINATE
                 || nextToken->getType() == srcMLParser::EOF_
+                || nextToken->getType() == srcMLParser::JS_RANGE_IN
+                || nextToken->getType() == srcMLParser::TS_KEYOF
+                || prevNonWhitespaceToken->getType() == srcMLParser::BREAK
                 || prevNonWhitespaceToken->getType() == srcMLParser::COLON
+                || prevNonWhitespaceToken->getType() == srcMLParser::RETURN
                 || (
                     bracketBuffer.front() == "{"
                     && (
@@ -275,6 +290,28 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 )
             )
         )
+
+        // the current token is "set" or "get" and the previous token expects to be followed by a name
+        || (
+            (token->getType() == srcMLParser::JS_GET || token->getType() == srcMLParser::JS_SET)
+            && (
+                prevNonWhitespaceToken->getType() == srcMLParser::CLASS  
+                || prevNonWhitespaceToken->getType() == srcMLParser::TS_ENUM
+                || prevNonWhitespaceToken->getType() == srcMLParser::JS_FUNCTION
+                || prevNonWhitespaceToken->getType() == srcMLParser::TS_INTERFACE
+                || prevNonWhitespaceToken->getType() == srcMLParser::TS_MODULE
+                || prevNonWhitespaceToken->getType() == srcMLParser::TS_NAMESPACE
+            )
+        )
+
+        // the current token is "from" and the next token is not a string literal
+        || (
+            token->getType() == srcMLParser::JS_FROM 
+            && (
+                nextToken->getType() != srcMLParser::STRING_START
+                && nextToken->getType() != srcMLParser::CHAR_START
+            )
+        ) 
 
         // the current token is a subset of all keywords and one of the following is true:
         // - the previous token was on the same line as the current token and the previous token was "="
