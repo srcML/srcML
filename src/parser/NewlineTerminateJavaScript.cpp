@@ -112,6 +112,14 @@ antlr::RefToken NewlineTerminateJavaScript::nextToken() {
         if (insertTerminate && !containsTerminate && isTerminateCase(token, nextNonSkipToken, containsEOL))
             insertTerminateToken(token->getLine());
 
+        // stop "= ..." check if there was an EOL between the token and the next non-skip token
+        if (inEqualRHS && containsEOL)
+            inEqualRHS = false;
+
+        // start checking the right-hand side of an "=" to see if an inserted terminate is required
+        if (!containsEOL && token->getType() == srcMLParser::EQUAL)
+            inEqualRHS = true;
+
         // empty the temporary skip token buffer, if applicable
         while (!tempSkipBuffer.empty()) {
             buffer.emplace_back(tempSkipBuffer.front());
@@ -164,6 +172,13 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
 
             // the next non-skip token is the end of the file
             || (nextNonSkipToken->getType() == 1 /* EOF */)
+
+            // found "= ... \n {}", so there should be a terminate between the end of equal RHS and the "{"
+            || (
+                containsEOL
+                && inEqualRHS
+                && nextNonSkipToken->getType() == srcMLParser::LCURLY
+            )
 
             // token is JS_DEBUGGER (always insert a terminate after a JS_DEBUGGER token)
             || (token->getType() == srcMLParser::JS_DEBUGGER)

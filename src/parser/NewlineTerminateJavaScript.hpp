@@ -40,6 +40,7 @@ private:
     bool firstToken = true;
     bool wasPostfixName = false;
     bool insertTerminate = false;
+    bool inEqualRHS = false;
 };
 
 #endif

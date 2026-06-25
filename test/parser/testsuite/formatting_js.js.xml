@@ -169,6 +169,27 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+<block>{<block_content>
+    <decl_stmt><decl type="let">let <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+</block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>var20</name> <init>= <expr><call><name><name>foo</name><operator>.</operator><name>bar</name></name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+<block>{<block_content>
+    <decl_stmt><decl type="let">let <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+</block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>var20</name> <init>= <expr><object>{ <property><expr><name>a</name></expr>: <expr><name>b</name></expr></property> }</object></expr></init></decl></decl_stmt>
+<block>{<block_content>
+    <decl_stmt><decl type="let">let <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+</block_content>}</block>
+</unit>
+
 <!-- Statement with Blocks followed by Bare Blocks -->
 
 <unit revision="1.0.0" language="JavaScript">
