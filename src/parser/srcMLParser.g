@@ -12806,6 +12806,7 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
                 && (
                     LA(1) == TS_ATSIGN
                     || LA(1) == TS_INFER
+                    || LA(1) == TS_IS
                     || LA(1) == TS_KEYOF
                     || LA(1) == TS_SATISFIES
                 )
@@ -12858,10 +12859,10 @@ general_operators[] { LightweightElement element(this); ENTRY_DEBUG } :
             EXPONENTIATION | PY_AND | PY_ATSIGN | PY_AWAIT | PY_COLON | PY_IN | PY_IS | PY_NOT | PY_OR |
 
             // JavaScript
-            JS_AS | JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_TYPEOF | JS_VOID |
+            JS_AS | JS_AWAIT | JS_DELETE | JS_INSTANCEOF | JS_RANGE_IN | JS_RANGE_OF | JS_TYPEOF | JS_VOID |
 
             // TypeScript
-            TS_ATSIGN | TS_INFER | TS_KEYOF | TS_SATISFIES
+            TS_ATSIGN | TS_INFER | TS_IS | TS_KEYOF | TS_SATISFIES
         )
 ;
 
@@ -23735,8 +23736,8 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
             { inTransparentMode(MODE_TYPE_TS) }?
             void_as_name |
 
-            // marks "asserts" and "is" as operators
-            assertion_function_operator_ts | type_predicate_operator_ts |
+            // marks "asserts" and "is" as operators (not expression-level)
+            assertion_function_operator_ts | { true }? type_predicate_operator_ts |
 
             // allow nested types (e.g., in lambda parameter lists)
             { bracket_types_js.back() == "pLPAREN" }?
