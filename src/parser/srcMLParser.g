@@ -21803,6 +21803,7 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
         (options { greedy = true; } :
             {
                 (LA(1) == RCURLY && lcurly_types_js.back() == 'o' && lcurly_types_size == lcurly_types_js.size())
+                || (LA(1) == TERMINATE && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
                 || LA(1) == 1 /* EOF */
             }?
             {
@@ -21816,15 +21817,15 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
             { inMode(MODE_OBJECT_JS) || bracket_types_js.back() == "oLCURLY" }?
             COMMA
             {
-                // cannot be a statement; ignore the TERMINATE token
-                while (LA(1) == TERMINATE)
+                // cannot be a statement; ignore the generated TERMINATE token
+                while (LA(1) == TERMINATE && LT(1)->getText() != ";")
                     consume();
             } |
 
             property_js
             {
-                // cannot be a statement; ignore the TERMINATE token
-                while (LA(1) == TERMINATE)
+                // cannot be a statement; ignore the generated TERMINATE token
+                while (LA(1) == TERMINATE && LT(1)->getText() != ";")
                     consume();
             }
         )*
@@ -21843,7 +21844,7 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
         }
 
         // consume object-ending curly brace, if it exists
-        ({ LA(1) == RCURLY}? RCURLY)?
+        ({ LA(1) == RCURLY }? RCURLY)?
 ;
 
 /*
