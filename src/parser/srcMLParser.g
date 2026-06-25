@@ -1909,6 +1909,13 @@ javascript_statements[] {
                 }
             }
 
+            // special case: looking for "get" or "set" that is really a name
+            if ((LA(1) == JS_GET || LA(1) == JS_SET) && !perform_accessor_is_name_check_js()) {
+                LT(1)->setType(NAME);
+                processed_statement = true;
+                return;
+            }
+
             // looking for keyword-based statements in the table
             const auto& rule = javascriptRules[token];
             if (rule.elementToken && processRule(rule)) {
@@ -19464,11 +19471,55 @@ jump_statement_post_js[] {
 } :;
 
 /*
+  perform_accessor_is_name_check_js
+
+  Checks if "get" or "set" are really accessors or if they should be names in JavaScript/TypeScript.
+*/
+perform_accessor_is_name_check_js[] returns [bool isaccessor] {
+        ENTRY_DEBUG
+
+        isaccessor = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == JS_GET || LA(1) == JS_SET) {
+                consume();
+
+                // consume any optional name, computed property, or literal
+                if (LA(1) == NAME)
+                    consume();
+                else if (LA(1) == LBRACKET)
+                    computed_property_js();
+                else if (literal_tokens_set.member((unsigned int) LA(1)))
+                    literals();
+
+                // consume the parameter list
+                paren_pair();
+
+                if (
+                    LA(1) == COLON
+                    || LA(1) == LCURLY
+                    || LA(1) == LBRACKET
+                    || LA(1) == NAME
+                )
+                    isaccessor = true;
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
   check_valid_specifier_js
 
   Checks to see if the current token is a specifier in JavaScript or TypeScript (namespaces).
 */
 check_valid_specifier_js[] returns [int isspecifier] {
+        ENTRY_DEBUG
         isspecifier = false;
 
         if (
@@ -19487,8 +19538,6 @@ check_valid_specifier_js[] returns [int isspecifier] {
             || LA(1) == TS_ABSTRACT
         )
             isspecifier = true;
-
-        ENTRY_DEBUG
 } :;
 
 /*

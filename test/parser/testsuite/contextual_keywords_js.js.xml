@@ -827,6 +827,16 @@
 <class>class <name>get</name> <block>{}</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>main</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><call><name>__awaiter</name><argument_list>(<argument><expr><name>this</name></expr></argument>, <argument><expr><operator>void</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><operator>void</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><function type="generator">function* <parameter_list>()</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><call><name>get</name><argument_list>()</argument_list></call><operator>.</operator><call><name>then</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>response</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+            <decl_stmt><decl type="const">const <name>body</name> <init>= <expr><name><name>response</name><operator>.</operator><name>data</name></name></expr></init></decl></decl_stmt>
+        </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></function></expr></argument>)</argument_list></call></expr></return>
+</block_content>}</block></function>
+</unit>
+
 <!-- "if" -->
 
 <unit revision="1.0.0" language="JavaScript">

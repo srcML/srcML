@@ -89,8 +89,11 @@ token_set(srcMLParser, enum_preprocessing_token_set,
 )
 
 token_set(srcMLParser, literal_tokens_set,
-    srcMLParser::CHAR_START, srcMLParser::COMPLEX_NUMBER, srcMLParser::STRING_START, srcMLParser::CONSTANTS, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NULLPTR,
-    srcMLParser::NULLLITERAL, srcMLParser::NIL, srcMLParser::LITERAL_NONE, srcMLParser::LITERAL_ELLIPSIS, srcMLParser::DQUOTE_DOCSTRING_START, srcMLParser::SQUOTE_DOCSTRING_START
+    srcMLParser::BACKTICK_START, srcMLParser::CHAR_START, srcMLParser::COMPLEX_NUMBER, srcMLParser::CONSTANTS,
+    srcMLParser::DQUOTE_DOCSTRING_START, srcMLParser::JS_NULL, srcMLParser::JS_REGEX, srcMLParser::JS_UNDEFINED,
+    srcMLParser::LITERAL_ELLIPSIS, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_NONE, srcMLParser::LITERAL_TRUE,
+    srcMLParser::NIL, srcMLParser::NULLLITERAL, srcMLParser::NULLPTR, srcMLParser::SQUOTE_DOCSTRING_START,
+    srcMLParser::STRING_START
 )
 
 token_set(srcMLParser, modifier_tokens_set,
