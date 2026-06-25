@@ -10588,9 +10588,214 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         ENTRY_DEBUG
 } :
+        // special case: "<<", "<<<", etc. that should start a TypeScript generic argument list
+        // note: this is invalid code, but must be handled to avoid crashes and/or infinite loops
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) == OPERATORS
+            && LT(1)->getText().find("<<") != std::string::npos
+            && perform_pseudo_generic_argument_list_check_ts()
+        }?
+        pseudo_generic_argument_list |
+
+        // special case: mark "?", "+?", "-?", and "!" as modifiers in certain TypeScript instances
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
+                    )
+                )
+            )
+            && (
+                next_token() == COLON
+                || last_consumed == TEMPOPS
+                || last_consumed == COMMA
+            )
+        }?
+        declaration_modifiers_ts |
+
+        // special case: mark "readonly" as a specifier
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TS_READONLY }?
+        declaration_specifiers_ts |
+
+        // special case: mark "abstract" as a specifier if in operator parentheses
+        { inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN" }?
+        function_declaration_specifiers_ts |
+
+        // special case: generic types (mixins) using the "extends" keyword in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TERNARY | MODE_CONDITION) }?
+        mixins_ts |
+
+        // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
+        keyword_iife_js |
+
+        // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) with no keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_iife_check_js() }?
+        keywordless_iife_js |
+
+        // special case: JavaScript global context call (e.g., "(,)()")
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_global_context_call_check_js() }?
+        global_context_call_js |
+
+        // special case: JavaScript tagged templates (e.g., a`b`)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_tagged_template_check_js(call_count) }?
+        tagged_template_js[call_count] |
+
+        // special case: JavaScript lambda starts with a lone parameter (optional "async")
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !skip_lone_lambda_js
+            && (
+                !inTransparentMode(MODE_TYPE_TS)
+                || (
+                    inTransparentMode(MODE_TYPE_TS)
+                    && (
+                        lambda_depth == 0
+                        || last_consumed != JS_ARROW
+                    )
+                )
+            )
+            && perform_lone_parameter_lambda_check_js()
+        }?
+        lambda_js[false] |
+
+        // special case: TypeScript generic lambdas (e.g., "<TYPE>() => ...") [optional "async"]
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == TEMPOPS || (LA(1) == JS_ASYNC && next_token() == TEMPOPS))
+            && perform_generic_lambda_check_ts()
+        }?
+        generic_lambda_ts |
+
+        // special case: JavaScript lambda starts with a parameter list (optional "async")
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LPAREN || (LA(1) == JS_ASYNC && next_token() == LPAREN))
+            && perform_parameter_list_lambda_check_js()
+        }?
+        lambda_js[true] |
+
+        // special case: JavaScript optional chaining with function calls
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_optional_call_chaining_check_js() }?
+        optional_call_chain_js |
+
+        // looking for "NAME<>()" to start a generic function call
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == NAME || (LA(1) == JS_AWAIT && next_token() == NAME))
+            && perform_generic_function_call_check_ts()
+        }?
+        generic_function_call_ts |
+
+        // looking for "*[...](){}" to start a generator function computed property
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
+            && perform_generator_function_computed_property_check_js()
+        }?
+        generator_function_computed_property_js |
+
+        // looking for "[...](){}" to start a computed property function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
+            && perform_computed_property_as_function_check_js()
+        }?
+        computed_property_as_function_js |
+
+        // looking for "[...]:" to start a computed property in an object in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
+        computed_property_js |
+
         // looking for lbracket to start an array in JavaScript (note that ")[" starts an index)
         { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != RPAREN }?
         array_js |
+
+        // looking for "class" to start a class in an expression in JavaScript
+        // Note that "class:" is a property name in an object
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        class_expression_js |
+
+        // looking for "*(){...}" to start a nameless, keywordless generator function in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_nameless_keywordless_generator_function_check_js() }?
+        nameless_keywordless_generator_function_expression_js |
+
+        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            // generator keywordless function
+            if (perform_generator_function_check_js())
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            // regular keywordless function
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        ((attribute_ts)+ keywordless_function_expression_js[false]) |
+
+        // looking for "NAME(){...}" to start a keywordless function in JavaScript
+        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+            && last_consumed != JS_ARROW
+            && last_consumed != QMARK
+            && perform_keywordless_function_check_js()
+        }?
+        keywordless_function_expression_js[true] |
+
+        // looking for "@decorator function" to start a function (with a decorator) in an expression in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_decorator_function_expression_check_ts() }?
+        {
+            std::array<int, 2> post_specifier_tokens = perform_post_decorator_check_ts();
+
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            if (post_specifier_tokens[0] == JS_GET)
+                startElement(SFUNCTION_GET_STATEMENT);
+            else if (post_specifier_tokens[0] == JS_SET)
+                startElement(SFUNCTION_SET_STATEMENT);
+            else if (post_specifier_tokens[0] == JS_FUNCTION && post_specifier_tokens[1] == MULTOPS)
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        (
+            attribute_ts
+            (options { greedy = true; } : attribute_ts | specifier_js)*
+            function_expression_js[false]
+        ) |
+
+        // looking for "function" to start a function in an expression in JavaScript
+        // Note that "function:" is a property name in an object
+        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        function_expression_js[true] |
+
+        // looking for lcurly to start an object in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        object_js |
+
+        // looking for "yield" or "yield*" to start a yield expression in JavaScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        yield_expression_js |
+
+        // looking for name to start a JavaScript subscriptable function call (e.g., "a[]()" or "a.b[]()")
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) == NAME
+            && (next_token() == LBRACKET || (next_token() == PERIOD && perform_member_access_function_call_check_py()))
+            && perform_subscriptable_function_call_check_py()
+        }?
+        call[call_count]
+        argument |
 
         // cast
         { inTransparentMode(MODE_INTERNAL_END_PAREN) }?
@@ -10681,6 +10886,9 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
                 member_pointer_dereference |
                 dot_dereference |
                 /* Commented-out code: newop | */
+
+                { inLanguage(LANGUAGE_JAVASCRIPT) }?
+                qmark_period |
 
                 // left parentheses
                 { function_pointer_name_check() }?
@@ -13170,7 +13378,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         function_declaration_specifiers_ts |
 
         // special case: generic types (mixins) using the "extends" keyword in TypeScript
-        { inTransparentMode(MODE_TERNARY | MODE_CONDITION) }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TERNARY | MODE_CONDITION) }?
         mixins_ts |
 
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) that use the "function" keyword

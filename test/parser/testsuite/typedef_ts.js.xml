@@ -76,4 +76,11 @@
     &gt;</argument_list></name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><specifier>export</specifier> type <name><name>Equals</name><argument_list type="generic">&lt;<argument><expr><name>A1</name> <ts:extends>extends <ts:type><name>any</name></ts:type></ts:extends></expr></argument>, <argument><expr><name>A2</name> <ts:extends>extends <ts:type><name>any</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name> =
+    <ts:type><ternary><condition><expr><operator>(</operator><ternary><condition><expr><lambda><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>A</name> <ts:extends>extends <ts:type><name>A1</name></ts:type></ts:extends></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></lambda></expr></condition></ternary><operator>)</operator></expr>
+    ?</condition><then> <expr><literal type="number">1</literal></expr>
+    </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
 </unit>
