@@ -428,6 +428,15 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
 
+        // the current token is "constructor" and it follows extends or implements
+        || (
+            token->getType() == srcMLParser::JS_CONSTRUCTOR 
+            && (
+                prevNonWhitespaceToken->getType() == srcMLParser::JS_EXTENDS 
+                || prevNonWhitespaceToken->getType() == srcMLParser::TS_IMPLEMENTS
+            )
+        )
+
         // the current token starts a decl (e.g., "var") and the next token is "("
         || (srcMLParser::decl_start_js_token_set.member(token->getType()) && nextToken->getType() == srcMLParser::LPAREN)
 

@@ -298,6 +298,22 @@
 <decl_stmt><decl type="const">const <name>componentName</name> <init>= <expr><operator>(</operator><name>constructor</name> <operator>&amp;&amp;</operator> <operator>(</operator><name><name>constructor</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>constructor</name><operator>.</operator><name>name</name></name><operator>)</operator><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <super_list><extends>extends <super><expr><name>constructor</name></expr></super></extends></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <super_list><extends>extends <super><expr><name>Bar</name> <operator>|</operator> <name>constructor</name></expr></super></extends></super_list> <block>{}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <super_list><ts:implements>implements <super><expr><name>constructor</name></expr></super></ts:implements></super_list> <block>{}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <super_list><ts:implements>implements <super><expr><name>Bar</name> <operator>|</operator> <name>constructor</name></expr></super></ts:implements></super_list> <block>{}</block></class>
+</unit>
+
 <!-- "continue" -->
 
 <unit revision="1.0.0" language="JavaScript">

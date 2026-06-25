@@ -45,6 +45,29 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <super_list><extends>extends <super><expr><operator>(</operator><yield>yield</yield><operator>)</operator></expr></super></extends></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <super_list><extends>extends <super><expr><operator>(</operator><operator>await</operator> <call><name>foo</name><argument_list>()</argument_list></call><operator>)</operator></expr></super></extends></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>E</name> <super_list><extends>extends <super><expr><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content><expr_stmt><expr><name>x</name><operator>*</operator><name>x</name></expr></expr_stmt></block_content>}</block></lambda><operator>)</operator></expr></super></extends></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>F</name> <super_list><extends>extends <super><expr><operator>(</operator><name>C</name> <operator>||</operator> <name>D</name><operator>)</operator></expr></super></extends></super_list> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <super_list><extends>extends <super><expr><class>class <block>{}</block></class></expr></super></extends></super_list>
+<block>{
+
+}</block></class>
+</unit>
+
 <!-- Classes in expressions -->
 
 <unit revision="1.0.0" language="JavaScript">

@@ -805,7 +805,7 @@ public:
     std::deque<char> lparen_types_js;
     std::deque<char> lcurly_types_js;
     std::deque<std::string> bracket_types_js;  // '(' and '{'
-    int super_list_curly_types_size_js = -1;
+    size_t super_list_curly_types_size_js = 0;
     bool in_template_param = false;
     bool processed_statement = false;
     bool is_pseudo_terminate = false;
@@ -21207,6 +21207,9 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
         // consume TypeScript types, if applicable
         ({ LA(1) == COLON }? colon_type_ts)?
 
+        // consume inserted semicolone in case block is on next line
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" }? TERMINATE)?
+
         // start the block, if it exists
         (options { greedy = true; } :
             { LA(1) == LCURLY && inputState->guessing == 0 }?
@@ -22465,6 +22468,9 @@ class_expression_js[] { ENTRY_DEBUG } :
 
             curly_pair
         )?
+
+        // consume inserted terminate after the class, if it exists and we are in a super list
+        ({LA(1) == TERMINATE && LT(1)->getText() != ";" && inTransparentMode(MODE_SUPER_LIST_JS) }? TERMINATE)?
 ;
 
 /*
@@ -22503,8 +22509,13 @@ yield_expression_js[] {
 
         (options { greedy = true; } :
             // do not consume top-level parameter list for a function
+            // do not conume ")" if it is an operator for an already opened "(" eg. "(yield)"
             {
-                (LA(1) == RPAREN && lparen_types_js.back() == 'p' && lparen_types_size == lparen_types_js.size())
+                (
+                    LA(1) == RPAREN 
+                    && (lparen_types_js.back() == 'p' || lparen_types_js.back() == 'o') 
+                    && lparen_types_size == lparen_types_js.size()
+                )
                 || LA(1) == 1 /* EOF */
             }?
             {
@@ -22666,6 +22677,10 @@ perform_keyword_iife_check_js[] returns [bool isiife] {
                 if (LA(1) == JS_FUNCTION) {
                     consume();
 
+                    // consume optional name
+                    if (LA(1) == NAME) 
+                        consume();
+
                     // consume parameter list
                     paren_pair();
 
@@ -22762,6 +22777,9 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         }
 
         ((specifier_js)* JS_FUNCTION)
+
+        // consume optional name
+        (compound_name)*
 
         {
             startNewMode(MODE_PARAMETER_LIST_JS);
