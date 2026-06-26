@@ -2251,7 +2251,7 @@ pattern_statements[] {
         CALL_TYPE type = NOCALL;
 
         // detect the declaration/definition type for non-declarative languages
-        if (!inLanguage(LANGUAGE_PYTHON) && !inLanguage(LANGUAGE_CMAKE))
+        if (!inLanguage(LANGUAGE_PYTHON))
             pattern_check(stmt_type, secondtoken, type_count, after_token);
 
         ENTRY_DEBUG

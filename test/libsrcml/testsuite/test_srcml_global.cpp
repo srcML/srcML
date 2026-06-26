@@ -64,7 +64,7 @@ int main(int, char* argv[]) {
     */
 
     {
-        dassert(srcml_get_language_list_size(), 9);
+        dassert(srcml_get_language_list_size(), 8);
     }
 
     /*
