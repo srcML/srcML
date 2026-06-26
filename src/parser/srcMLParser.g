@@ -21298,8 +21298,8 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
         )?
 
         {
-            if (markup) {
-                endDownOverMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            if (markup && inPrevMode(MODE_FUNCTION_EXPRESSION_JS)) {
+                endDownOverMode(MODE_FUNCTION_EXPRESSION_JS);
             }
         }
 ;
@@ -22559,7 +22559,9 @@ class_expression_js[] { ENTRY_DEBUG } :
         ({LA(1) == TERMINATE && LT(1)->getText() != ";" && inTransparentMode(MODE_SUPER_LIST_JS) }? TERMINATE)?
 
         {
-            endDownOverMode(MODE_NEST | MODE_BLOCK | MODE_CLASS_EXPRESSION_JS);
+            if (inPrevMode(MODE_CLASS_EXPRESSION_JS)) {
+                endDownOverMode(MODE_CLASS_EXPRESSION_JS);
+            }
         }
 ;
 
