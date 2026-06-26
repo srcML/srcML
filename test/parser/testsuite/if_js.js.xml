@@ -41,4 +41,13 @@
 </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>notFunctionName</name> <operator>&lt;</operator> <name>notGenericArgument</name></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>foo</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content>}</block></if>
+<if type="elseif">else if <condition>(<expr><name>notGenericArgument</name> <operator>&gt;</operator> <operator>(</operator><name>notAParameter</name><operator>)</operator></expr>)</condition> <block>{<block_content>
+  <expr_stmt><expr><call><name>bar</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
 </unit>

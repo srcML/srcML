@@ -25312,7 +25312,6 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
         ENTRY_DEBUG
 
         iscall = false;
-        int tempops_count = 0;  // for generic argument list
         int paren_count = 0;  // for parameter list
         last_consumed_guessing_mode = -1;
         int start = mark();
@@ -25329,24 +25328,10 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
 
                 // match generic argument list
                 if (LA(1) == TEMPOPS) {
-                    while (LA(1) != antlr::Token::EOF_TYPE) {
-                        if (LA(1) == TEMPOPS)
-                            ++tempops_count;
 
-                        if (LA(1) == TEMPOPE) {
-                            --tempops_count;
-
-                            if (tempops_count == 0) {
-                                consume();
-                                break;
-                            }
-                        }
-
-                        consume();
-
-                        if (tempops_count < 0)
-                            break;
-                    }
+                    // match generic argument list
+                    // angle_bracket_pair will break out if it's not a valid generic argument list
+                    angle_bracket_pair();
 
                     // match parameter list
                     if (LA(1) == LPAREN) {
