@@ -23969,7 +23969,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                 consume();
 
             // handle optional argument list since compound_name will not in guessing mode
-            if (LA(1) == TEMPOPS)
+            if (LA(1) == TEMPOPS && generic_argument_list_check())
                 angle_bracket_pair();
 
             paren_pair();
@@ -24203,7 +24203,7 @@ perform_nameless_function_declaration_check_ts[] returns [bool isdecl] {
             }
 
             // consume optional generic argument list
-            if (LA(1) == TEMPOPS)
+            if (LA(1) == TEMPOPS && generic_argument_list_check())
                 angle_bracket_pair();
 
             paren_pair();
@@ -25398,7 +25398,7 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
                 consume();  // "NAME"
 
                 // match generic argument list
-                if (LA(1) == TEMPOPS) {
+                if (LA(1) == TEMPOPS && generic_argument_list_check()) {
 
                     // try to consume generic arugment list
                     angle_bracket_pair();
@@ -26151,37 +26151,13 @@ perform_pseudo_generic_argument_list_check_ts[] returns [bool islist] {
         ENTRY_DEBUG
 
         islist = false;
-        int tempops_count = 0;  // for generic argument list
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            // suppose each "<" was separate; handle a generic argument list as if this were true
-            std::string token_text = LT(1)->getText();
-            tempops_count = std::count(token_text.begin(), token_text.end(), '<');
-
-            consume();  // "<<" or "<<<" or ... etc.
-
-            // match generic argument list
-            while (LA(1) != antlr::Token::EOF_TYPE) {
-                if (LA(1) == TEMPOPS)
-                    ++tempops_count;
-
-                if (LA(1) == TEMPOPE) {
-                    --tempops_count;
-
-                    if (tempops_count == 0) {
-                        islist = true;
-                        break;
-                    }
-                }
-
-                consume();
-
-                if (tempops_count < 0 || LA(1) == TERMINATE)
-                    break;
-            }
+            angle_bracket_pair();
+            islist = true;
         }
         catch (...) {}
 
@@ -26324,7 +26300,7 @@ perform_nameless_keywordless_generator_function_check_js[] returns [bool isfunct
                 consume();  // "*"
 
                 // handle optional TypeScript generic argument list
-                if (LA(1) == TEMPOPS)
+                if (LA(1) == TEMPOPS && generic_argument_list_check())
                     angle_bracket_pair();
 
                 // handle required parameter list

@@ -56,4 +56,8 @@
 </block_content>}</block></if></if_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>x</name> <operator>==</operator> <operator>(</operator><operator>(</operator><name>y</name> <operator>&lt;&lt;</operator> <literal type="number">2</literal><operator>)</operator> <operator>&gt;&gt;</operator> <name>z</name><operator>)</operator></expr>)</condition> <block>{<block_content/>}</block></if></if_stmt>
+</unit>
+
 </unit>
