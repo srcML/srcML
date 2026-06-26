@@ -369,6 +369,9 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         // the current token is "void" and the next token is "=>"
         || (token->getType() == srcMLParser::JS_VOID && nextToken->getType() == srcMLParser::JS_ARROW)
 
+        // the current token is "catch" and the previous nonwhitespace token is "."
+        || (token->getType() == srcMLParser::JS_CATCH && prevNonWhitespaceToken->getType() == srcMLParser::PERIOD)
+
         // the current token is "async" and one of the following is true:
         // - the next token is ":", ",", "=>", "in", "of", "?", or ")"
         // - the previous token was "async"
