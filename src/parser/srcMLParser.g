@@ -19835,6 +19835,7 @@ condition_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
                 (LA(1) == RPAREN && lparen_types_js.back() == 'n' && lparen_types_size == lparen_types_js.size())
                 || (
                     LA(1) == LCURLY
+                    && next_token() != RCURLY // allow empty objects
                     && lparen_types_size == lparen_types_js.size()
                     && perform_lcurly_differentiator_check_js()
                 )
