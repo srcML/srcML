@@ -1077,6 +1077,10 @@
 <decl_stmt><decl type="const">const <name>module</name> <init>= <expr><name>module</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>some</name><argument_list>(<argument><expr><name>patternAmbientModules</name></expr></argument>, <argument><expr><lambda><parameter><decl><name>module</name></decl></parameter> <operator>=&gt;</operator> <expr><name>mainModule</name> <operator>===</operator> <name><name>module</name><operator>.</operator><name>symbol</name></name></expr></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
 <!-- "new"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">

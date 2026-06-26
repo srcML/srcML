@@ -366,8 +366,8 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         // the current token is "try" and the next token is anything but "{"
         || (token->getType() == srcMLParser::TRY && nextToken->getType() != srcMLParser::LCURLY)
 
-        // the current token is "void" and the next token is "=>"
-        || (token->getType() == srcMLParser::JS_VOID && nextToken->getType() == srcMLParser::JS_ARROW)
+        // the current token is a subset of all keywords and the next token is "=>"
+        || (srcMLParser::name_differentiator_subset_js_token_set.member(token->getType()) && nextToken->getType() == srcMLParser::JS_ARROW)
 
         // the current token is "catch" and the previous nonwhitespace token is "."
         || (token->getType() == srcMLParser::JS_CATCH && prevNonWhitespaceToken->getType() == srcMLParser::PERIOD)
