@@ -15723,7 +15723,7 @@ angle_bracket_pair[] { ENTRY_DEBUG } :
 
             qmark |
 
-            ~(QMARK | TEMPOPS | TEMPOPE | RPAREN | RCURLY | RBRACKET)
+            ~(QMARK | TEMPOPS | TEMPOPE | RPAREN | RCURLY | RBRACKET | TERMINATE)
         )*
 
         TEMPOPE
@@ -25400,8 +25400,7 @@ perform_generic_function_call_check_ts[] returns [bool iscall] {
                 // match generic argument list
                 if (LA(1) == TEMPOPS) {
 
-                    // match generic argument list
-                    // angle_bracket_pair will break out if it's not a valid generic argument list
+                    // try to consume generic arugment list
                     angle_bracket_pair();
 
                     // match parameter list
