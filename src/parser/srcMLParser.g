@@ -21643,7 +21643,14 @@ lambda_js[bool is_list = false] {
         ENTRY_DEBUG
 } :
         {
-            startNewMode(MODE_LAMBDA_JS);
+
+            if (inPrevMode(MODE_TYPE_TS)) {
+                startNewMode(MODE_LAMBDA_AS_TYPE_TS | MODE_LAMBDA_JS);
+            }
+            else {
+                startNewMode(MODE_LAMBDA_JS);
+            }
+
             startElement(SFUNCTION_LAMBDA);
 
             ++lambda_depth;
@@ -21698,7 +21705,14 @@ lambda_js[bool is_list = false] {
                     // do not consume tokens that are outside the scope of the lambda
                     {
                         (LA(1) == RPAREN && lparen_types_size == lparen_types_js.size())
-                        || (LA(1) == LCURLY && bracket_types_size == bracket_types_js.size())
+                        || (
+                            LA(1) == LCURLY 
+                            && bracket_types_size == bracket_types_js.size()
+                            && (
+                                !perform_lcurly_differentiator_check_js() 
+                                || perform_in_mode_before_expression_check_js(MODE_LAMBDA_AS_TYPE_TS)
+                            )
+                        )
                         || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
                         || (
                             (LA(1) == JS_ARROW || LA(1) == EQUAL)
@@ -24928,7 +24942,6 @@ perform_post_decorator_check_ts[] returns [std::array<int, 2> keywords] {
 */
 perform_lcurly_differentiator_check_js[] returns [bool isblock] {
         ENTRY_DEBUG
-
         isblock = true;
         last_consumed_guessing_mode = -1;
         int token_before_lcurly = last_consumed;
@@ -24981,6 +24994,34 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
 
         inputState->guessing--;
         rewind(start);
+} :;
+
+/*
+  perform_in_mode_before_expression_check_js
+
+  Checks if "m" is the mode started before MODE_EXPRESSION | MODE_EXPECT.
+*/
+perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [bool inmode] {
+        inmode = false;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end down to the most recent MODE_EXPRESSION | MODE_EXPECT
+            if (inTransparentMode(MODE_EXPRESSION | MODE_EXPECT))
+                endDownOverMode(MODE_EXPRESSION | MODE_EXPECT);
+
+            // check if we are in the given mode
+            if (inMode(m))
+                inmode = true;
+
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
 } :;
 
 /*

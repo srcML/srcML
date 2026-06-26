@@ -389,6 +389,8 @@ const static srcMLState::MODE_TYPE MODE_EXPRESSION_COLON_TS;
 
 const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_TS;
 
+const static srcMLState::MODE_TYPE MODE_LAMBDA_AS_TYPE_TS;
+
 const static srcMLState::MODE_TYPE MODE_FUNCTION_DECL_TS;
 
 const static srcMLState::MODE_TYPE MODE_CONSTRAINT_TS;
