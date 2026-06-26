@@ -47,7 +47,8 @@ tokens {
     CHAR_START;
     BACKTICK_START;
     SQUOTE_DOCSTRING_START;
-    BRACKET_ARGUMENT;
+    BRACKET_ARGUMENT_START;
+    BRACKET_ARGUMENT_END;
     MACRO_NAME;
     COMPLEX_NUMBER;
     HASHBANG_COMMENT_START;
@@ -85,8 +86,12 @@ STRING_START :
             changetotextlexer(PY_SIMPLE_DQUOTE_STRING_END);
         // handle strings in CMake, which can have significant things in them
         // The quotes are the only things marked special - everything else will be tokenized normally
-        else if (inLanguage(LANGUAGE_CMAKE))
+        else if (inLanguage(LANGUAGE_CMAKE)) {
             $setType(CMAKE_QUOTE);
+            if (!in_cmake_bracket) {
+                in_cmake_string = !in_cmake_string;
+            }
+        }
         else
             changetotextlexer(STRING_END);
 
@@ -129,6 +134,8 @@ CHAR_START :
         // handle a string that starts/ends with one single-quote in Python
         else if (inLanguage(LANGUAGE_PYTHON))
             changetotextlexer(PY_SIMPLE_SQUOTE_STRING_END);
+        else if (inLanguage(LANGUAGE_CMAKE))
+            $setType(OPERATORS);
         else {
             $setType(CHAR_START); changetotextlexer(CHAR_END);
         }
@@ -149,7 +156,7 @@ BACKTICK_START :
     }
 ;
 
-BRACKET_ARGUMENT :
+BRACKET_ARGUMENT_START :
     { startline = false; }
 
     '[' {
@@ -165,22 +172,10 @@ BRACKET_ARGUMENT :
             }
             else if (LA(1) == '[') {
                 consume();
-                while (LA(1) != -1 /*EOF*/) {
-                    if (LA(1) == ']') {
-                        int end_equal_count = 0;
-                        consume();
-                        while (LA(1) == '=') {
-                            ++end_equal_count;
-                            consume();
-                        }
-                        if (equal_count == end_equal_count && LA(1) == ']') {
-                            consume();
-                            break;
-                        }
-                    }
-                    consume();
+                $setType(BRACKET_ARGUMENT_START);
+                if (!in_cmake_string) {
+                    in_cmake_bracket = true;
                 }
-                $setType(BRACKET_ARGUMENT);
             }
             else {
                 $setType(OPERATORS);
@@ -189,6 +184,38 @@ BRACKET_ARGUMENT :
 
         else {
             $setType(LBRACKET);
+        }
+    }
+;
+
+BRACKET_ARGUMENT_END :
+    { startline = false; }
+
+    ']' {
+        if (inLanguage(LANGUAGE_CMAKE)) {
+            int equal_count = 0;
+            while (LA(1) == '=') {
+                ++equal_count;
+                consume();
+            }
+
+            if (equal_count == 0 && LA(1) != ']') {
+                $setType(RBRACKET);
+            }
+            else if (LA(1) == ']') {
+                consume();
+                $setType(BRACKET_ARGUMENT_END);
+                if (!in_cmake_string) {
+                    in_cmake_bracket = false;
+                }
+            }
+            else {
+                $setType(OPERATORS);
+            }
+        }
+
+        else {
+            $setType(RBRACKET);
         }
     }
 ;
@@ -218,7 +245,7 @@ CONSTANTS :
     )?
 ;
 
-NAME options { testLiterals = true; } { int firstChar = LA(1); } :
+NAME options { testLiterals = true; } :
     { startline = false; this->updateNonWhitespaceCharacters(); }
     
 
@@ -346,20 +373,20 @@ LINE_COMMENT_START options { testLiterals = true; } {
         ) |
 
         // '/W*' and '/w*' are compiler flags (CMake only)
+        { inLanguage(LANGUAGE_CMAKE) && (LA(1) == 'W' || LA(1) == 'w') }?
         (
-            { inLanguage(LANGUAGE_CMAKE) && (LA(1) == 'W' || LA(1) == 'w') }?
             ('W' | 'w')
             {
                 $setType(CMAKE_COMPILER_FLAG);
                 mode = 0;
             }
-            (options { greedy = true; } : ~(' ' | '\t' | '\n' | ';' | ')'))*
+            (options { greedy = true; } : ~(' ' | '\t' | '\n' | ';' | ')' | '"' | '\\'))*
         ) |
 
         '/'
             {
                 // '//' is an operator in Python
-                if (inLanguage(LANGUAGE_PYTHON)) {
+                if (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_CMAKE)) {
                     $setType(OPERATORS);
                     mode = 0;
                 }
@@ -373,8 +400,14 @@ LINE_COMMENT_START options { testLiterals = true; } {
             )? |
         '*'
             { 
-                $setType(BLOCK_COMMENT_START);
-                mode = BLOCK_COMMENT_END;
+                if (inLanguage(LANGUAGE_CMAKE)) {
+                    $setType(OPERATORS);
+                    mode = 0;
+                }
+                else {
+                    $setType(BLOCK_COMMENT_START);
+                    mode = BLOCK_COMMENT_END;
+                }
             }
             (
                 { inLanguage(LANGUAGE_JAVA) }? '*'

@@ -2149,7 +2149,7 @@ cmake_statement_level[] { ENTRY_DEBUG
     const auto& cmake_rules = getStaticCMakeRules();
 
     while (LA(1) != 1 /* EOF */) {
-        if (LA(1) == NAME) {
+        if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) {
             // Need to put generic command call
             init_command_cmake();
         }
@@ -25952,10 +25952,87 @@ cmake_condition_expression[] { ENTRY_DEBUG
     startNewMode(MODE_EXPRESSION);
     startElement(SEXPRESSION);
 
-    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
-        if (LA(1) == NAME) {
-            compound_name();
+    int paren_count = 0;
+
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+        if (LA(1) == RPAREN && paren_count == 0) {
+            break;
         }
+        bool mark_as_plaintext_string = false;
+        bool only_name_tokens = true;
+        int token_count = 0;
+        int starting_token = LA(1);
+
+        int start = mark();
+        inputState->guessing++;
+
+        // Need to look ahead and count how many tokens appear without a delimiter
+        try {
+            while(LA(2) != WS && LA(2) != EOL && LA(1) != RPAREN && LA(1) != LPAREN) {
+                ++token_count;
+                if (starting_token != LA(1)) {
+                    mark_as_plaintext_string = true;
+                }
+                if (LA(1) != NAME && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+                    only_name_tokens = false;
+                }
+                consume();
+            }
+            if (LA(1) != RPAREN) {
+                ++token_count;
+                if (starting_token != LA(1)) {
+                    mark_as_plaintext_string = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        // if this is a marked string of some kind, ignore
+        if (LA(1) == CMAKE_QUOTE || LA(1) == BRACKET_ARGUMENT_START ) {
+            mark_as_plaintext_string = false;
+        }
+
+
+        if (mark_as_plaintext_string && !only_name_tokens) {
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_LOCAL);
+        }
+
+        else if (LA(1) == NAME || cmake_expansion_expr_tokens.member(LA(1))) {
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_VARIABLE_NAME);
+        }
+
+        else if (LA(1) == LPAREN) {
+            startNewMode(MODE_LOCAL);
+            startElement(SOPERATOR);
+            consume();
+            endMode(MODE_LOCAL);
+            ++paren_count;
+        }
+        else if (LA(1) == RPAREN) {
+            startNewMode(MODE_LOCAL);
+            startElement(SOPERATOR);
+            consume();
+            endMode(MODE_LOCAL);
+            --paren_count;
+        }
+
         else if (LA(1) == CMAKE_OPERATORS) {
             startNewMode(MODE_LOCAL);
             startElement(SOPERATOR);
@@ -25981,13 +26058,36 @@ cmake_condition_expression[] { ENTRY_DEBUG
             consume(); // consume "
 
             while (LA(1) != CMAKE_QUOTE && LA(1) != antlr::Token::EOF_TYPE) {
-                consume();
+                cmake_process_one_token_argument_text();
             }
 
             if (LA(1) == CMAKE_QUOTE) consume();
 
             endMode(MODE_LOCAL);
         }
+        else if (LA(1) == BRACKET_ARGUMENT_START) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        std::string bracket_start = LT(1)->getText();
+        int equal_count = std::count(bracket_start.begin(), bracket_start.end(), '=');
+
+        consume();
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == BRACKET_ARGUMENT_END) {
+                std::string bracket_end = LT(1)->getText();
+                if (equal_count == std::count(bracket_end.begin(), bracket_end.end(), '=')) {
+                    break;
+                }
+            }
+            consume();
+        }
+
+        if (LA(1) == BRACKET_ARGUMENT_END) consume();
+
+        endMode(MODE_LOCAL);
+    }
         else if (LA(1) == CONSTANTS) {
             startNewMode(MODE_LOCAL);
             startElement(SLITERAL);
@@ -26005,8 +26105,15 @@ cmake_condition_expression[] { ENTRY_DEBUG
             endMode(MODE_LOCAL);
         }
         else {
-            // Other, just consume it
-            consume();
+            // Other, make it a string!
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_LOCAL);
         }
     }
 
@@ -26045,7 +26152,12 @@ generic_command_cmake[] { ENTRY_DEBUG
     startNewMode(MODE_COMMAND_CMAKE);
     startElement(SCOMMAND);
 
-    consume(); // consume NAME
+    startNewMode(MODE_VARIABLE_NAME);
+    startElement(SNAME);
+
+    if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) consume();
+
+    endMode(MODE_VARIABLE_NAME);
 
     startNewMode(MODE_ARGUMENT_LIST);
     startElement(SARGUMENT_LIST);
@@ -26262,55 +26374,6 @@ cmake_compiler_flag[] { CompleteElement element(this); ENTRY_DEBUG } :
         CMAKE_COMPILER_FLAG
 ;
 
-/*
-  cmake_string
-
-  Handles strings (NOT string literals) in CMake.
-  Marks inner names with a name tag (e.g., `COMPONENT` in `${COMPONENT}`).
-*/
-cmake_string[] { CompleteElement element(this); ENTRY_DEBUG } :
-        {
-            // start the string
-            startNewMode(MODE_LOCAL);
-            startElement(SSTRING);
-
-            char last_char_of_name = '\000';
-            bool end_string = false;
-
-            while (!end_string && (LA(1) == NAME || LA(1) == CMAKE_RCURLY)) {
-                std::string name_text = LT(1)->getText();
-                size_t dollar_position = name_text.find('$');
-                size_t lcurly_position = name_text.find('{');
-                size_t rcurly_position = name_text.find('}');
-
-                if (
-                    last_char_of_name == '{'
-                    && dollar_position == std::string::npos
-                    && lcurly_position == std::string::npos
-                    && rcurly_position == std::string::npos
-                ) {
-                    // found inner name in a string
-                    startNewMode(MODE_VARIABLE_NAME);
-                    startElement(SNAME);
-
-                    consume();
-
-                    endMode(MODE_VARIABLE_NAME);
-                }
-                else {
-                    // "} " or "};" will end the string
-                    if (LA(1) == CMAKE_RCURLY && LA(2) == WS)
-                        end_string = true;
-
-                    consume();
-                }
-
-                // record the last character in the current name
-                if (!name_text.empty())
-                    last_char_of_name = name_text.back();
-            }
-        }
-;
 
 /*
   cmake_expression
@@ -26329,12 +26392,15 @@ cmake_expression[] { ENTRY_DEBUG
 
     // Need to look ahead and count how many tokens appear without a delimiter
     try {
-        while(LA(2) != WS && LA(1) != RPAREN) {
+        while(LA(2) != WS && LA(2) != EOL && LA(1) != RPAREN) {
+            if (LA(1) == antlr::Token::EOF_TYPE) {
+                break;
+            }
             ++token_count;
             if (starting_token != LA(1)) {
                 mark_as_plaintext_string = true;
             }
-            if (LA(1) != NAME && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+            if (LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
                 only_name_tokens = false;
             }
             consume();
@@ -26352,7 +26418,7 @@ cmake_expression[] { ENTRY_DEBUG
     rewind(start);
 
     // if this is a marked string of some kind, ignore
-    if (LA(1) == CMAKE_QUOTE || LA(1) == BRACKET_ARGUMENT ) {
+    if (LA(1) == CMAKE_QUOTE || LA(1) == BRACKET_ARGUMENT_START ) {
         mark_as_plaintext_string = false;
     }
 
@@ -26364,13 +26430,13 @@ cmake_expression[] { ENTRY_DEBUG
         startElement(SSTRING);
 
         for (int i = 0; i < token_count; ++i) {
-            consume();
+            cmake_process_one_token_argument_text();
         }
 
         endMode(MODE_LOCAL);
     }
 
-    else if (LA(1) == NAME || cmake_expansion_expr_tokens.member(LA(1))) {
+    else if (LA(1) == NAME || cmake_keywords.member(LA(1)) || cmake_expansion_expr_tokens.member(LA(1))) {
         startNewMode(MODE_VARIABLE_NAME);
         startElement(SNAME);
 
@@ -26394,11 +26460,26 @@ cmake_expression[] { ENTRY_DEBUG
 
         endMode(MODE_LOCAL);
     }
-    else if (LA(1) == BRACKET_ARGUMENT) {
+    else if (LA(1) == BRACKET_ARGUMENT_START) {
         startNewMode(MODE_LOCAL);
         startElement(SSTRING);
 
+        std::string bracket_start = LT(1)->getText();
+        int equal_count = std::count(bracket_start.begin(), bracket_start.end(), '=');
+
         consume();
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == BRACKET_ARGUMENT_END) {
+                std::string bracket_end = LT(1)->getText();
+                if (equal_count == std::count(bracket_end.begin(), bracket_end.end(), '=')) {
+                    break;
+                }
+            }
+            consume();
+        }
+
+        if (LA(1) == BRACKET_ARGUMENT_END) consume();
 
         endMode(MODE_LOCAL);
     }
@@ -26523,13 +26604,17 @@ builtin_command_cmake[] { ENTRY_DEBUG
 
         // start the command
         startNewMode(MODE_COMMAND_CMAKE);
-
         startElement(SCOMMAND);
 
         // save the name of the current command
         command_name = LT(1)->getText();
 
-        if (LA(1) == NAME) consume();
+        startNewMode(MODE_VARIABLE_NAME);
+        startElement(SNAME);
+
+        if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) consume();
+
+        endMode(MODE_VARIABLE_NAME);
 
         // start the argument list
         startNewMode(MODE_ARGUMENT_LIST);

@@ -146,7 +146,19 @@ OPERATORS options { testLiterals = true; } {
             { $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END); } |
 
         { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT) || inLanguage(LANGUAGE_CMAKE)) && LA(1) != '!' }?
-            { $setType(HASHTAG_COMMENT_START); changetotextlexer(HASHTAG_COMMENT_END); } |
+        { 
+            if (!inLanguage(LANGUAGE_CMAKE)) {
+                $setType(HASHTAG_COMMENT_START); 
+                changetotextlexer(HASHTAG_COMMENT_END); 
+            }
+            else if (inLanguage(LANGUAGE_CMAKE) && !in_cmake_string && !in_cmake_bracket) {
+                $setType(HASHTAG_COMMENT_START); 
+                changetotextlexer(HASHTAG_COMMENT_END); 
+            }
+            else {
+                $setType(OPERATORS);
+            }
+        } |
 
         // Names can include '#' (JavaScript)
         { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) != '!' }?
@@ -169,10 +181,10 @@ OPERATORS options { testLiterals = true; } {
     // Compiler flags can begin with '-' or '--' (CMake)
     '-' (
         { inLanguage(LANGUAGE_CMAKE) && LA(1) == '-' }?
-          '-' { inLanguage(LANGUAGE_CMAKE) }? (({ $setType(CMAKE_COMPILER_FLAG); } ~(' ' | '\t' | '\n' | ';' | ')'))*)
+          '-' { inLanguage(LANGUAGE_CMAKE) }? (({ $setType(CMAKE_COMPILER_FLAG); } ~(' ' | '\t' | '\n' | ';' | ')' | '"' | '\\'))*)
         |
         { inLanguage(LANGUAGE_CMAKE) }?
-          { $setType(CMAKE_COMPILER_FLAG); } (~(' ' | '\t' | '\n' | ';' | ')'))*
+          { $setType(CMAKE_COMPILER_FLAG); } (~(' ' | '\t' | '\n' | ';' | ')' | '"' | '\\'))*
         |
           '-'
         |
@@ -469,7 +481,7 @@ OPERATORS options { testLiterals = true; } {
     )? |
 
     // match these as individual operators only
-    ',' | ';' | '('..')' | ']' | '{' | '}' | 
+    ',' | ';' | '('..')' | '{' | '}' | 
 
     // names can start with a @ in C#
     '@' (
@@ -513,7 +525,17 @@ OPERATORS options { testLiterals = true; } {
     '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |
     
 
-    '\\' ({ inLanguage(LANGUAGE_PYTHON) }? EOL { $setType(EOL_BACKSLASH); } | (EOL { $setType(EOL_BACKSLASH); })*)
+    '\\' (
+            { inLanguage(LANGUAGE_PYTHON) }? 
+            EOL { $setType(EOL_BACKSLASH); } | 
+
+            { inLanguage(LANGUAGE_CMAKE) }?
+            ('\040'..'\134' | '\136'..'\377') { $setType(OPERATORS); } |
+
+            (
+                EOL { $setType(EOL_BACKSLASH); }
+            )*
+        )
     )
     { startline = false; lastpos = getColumn(); prev = start; }
 ;

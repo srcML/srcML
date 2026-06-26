@@ -449,6 +449,8 @@ public:
     int prev;
     int currentmode;
     int lastnonspacetoken;
+    bool in_cmake_string = false;
+    bool in_cmake_bracket = false;
 
     virtual void consume() noexcept(false) {
         if (LA(1) != ' ')
