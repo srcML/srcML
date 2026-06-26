@@ -22027,7 +22027,10 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             comma |
 
             // if at this point, likely in a statement in an object
-            { table_keywords_js_token_set.member((unsigned int) LA(1)) }?
+            { 
+                table_keywords_js_token_set.member((unsigned int) LA(1))
+                || decl_start_js_token_set.member((unsigned int) LA(1))
+             }?
             {
                 // mimic behavior as if starting a statement for the first time
                 startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
