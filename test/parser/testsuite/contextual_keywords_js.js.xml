@@ -324,6 +324,14 @@
 <class>class <name>Foo</name> <super_list><ts:implements>implements <super><expr><name>Bar</name> <operator>|</operator> <name>constructor</name></expr></super></ts:implements></super_list> <block>{}</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>constructor</name></decl></parameter>, <parameter><decl><name>arg</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><operator>!</operator><operator>new</operator> <call><name>constructor</name><argument_list>(<argument><expr><name>arg</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><call><name>bar</name><argument_list>()</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></if></if_stmt>
+</block_content>}</block></function>
+</unit>
+
 <!-- "continue" -->
 
 <unit revision="1.0.0" language="JavaScript">
