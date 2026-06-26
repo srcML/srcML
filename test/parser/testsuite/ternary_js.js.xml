@@ -245,4 +245,16 @@
                 <expr><name>never</name></expr></else></ternary></expr></else></ternary></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>foo</name> <operator>=</operator> <ternary><condition><expr><name><name>bar</name><index>[<expr><literal type="string">'baz'</literal></expr>]</index></name></expr> ?</condition><then> 
+<expr><function>function<parameter_list>()</parameter_list> <block>{<block_content> <return>return</return> </block_content>}</block></function></expr> 
+</then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>foo</name> <operator>=</operator> <ternary><condition><expr><name><name>bar</name><index>[<expr><literal type="string">'baz'</literal></expr>]</index></name></expr> ?</condition><then>
+<expr><class>class <block>{ <expr_stmt><expr><function><name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt> }</block></class></expr>
+</then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></expr_stmt>
+</unit>
+
 </unit>

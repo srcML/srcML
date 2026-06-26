@@ -190,17 +190,6 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     }
 }
 
-bool printState(antlr::RefToken token, antlr::RefToken prev, antlr::RefToken next) {
-    std::cout << "Previous token text: " << prev->getType() << std::endl;
-    std::cout << "Previous token type: " << prev->getText() << std::endl;
-    std::cout << "Current token type:  " << token->getType() << std::endl;
-    std::cout << "Current token text:  " << token->getText() << std::endl;
-    std::cout << "Next token type:     " << next->getType() << std::endl;
-    std::cout << "Next token text:     " << next->getText() << std::endl;
-
-    return false;
-}
-
 /**
  * Returns true if `token` should be changed to a NAME token, and false otherwise.
  */

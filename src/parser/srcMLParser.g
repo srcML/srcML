@@ -8279,6 +8279,10 @@ qmark[] { is_qmark = true; ENTRY_DEBUG } :
                 startNewMode(MODE_THEN | MODE_EXPRESSION | MODE_EXPECT);
 
                 startNoSkipElement(STHEN);
+
+                if (inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TERMINATE && LT(1)->getText() != ";") {
+                    consume(); // consume inserted terminate in JavaScript
+                }
             }
         }
 ;
@@ -21282,7 +21286,7 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
         // consume TypeScript types, if applicable
         ({ LA(1) == COLON }? colon_type_ts)?
 
-        // consume inserted semicolone in case block is on next line
+        // consume inserted semicolon in case block is on next line
         ({ LA(1) == TERMINATE && LT(1)->getText() != ";" }? TERMINATE)?
 
         // start the block, if it exists
@@ -21292,6 +21296,12 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
 
             curly_pair
         )?
+
+        {
+            if (markup) {
+                endDownOverMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            }
+        }
 ;
 
 /*
@@ -22547,6 +22557,10 @@ class_expression_js[] { ENTRY_DEBUG } :
 
         // consume inserted terminate after the class, if it exists and we are in a super list
         ({LA(1) == TERMINATE && LT(1)->getText() != ";" && inTransparentMode(MODE_SUPER_LIST_JS) }? TERMINATE)?
+
+        {
+            endDownOverMode(MODE_NEST | MODE_BLOCK | MODE_CLASS_EXPRESSION_JS);
+        }
 ;
 
 /*
