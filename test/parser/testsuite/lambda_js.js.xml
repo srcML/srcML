@@ -297,4 +297,12 @@
 </block_content>}</block></function>
 </unit>
 
+<!-- Edge Case (blockless body with objects) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><call><name>call</name><argument_list>(<argument><expr><object>{
+  <property><expr><name>prop</name></expr>: <expr><call><name><name>x</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter><decl><name>x</name></decl></parameter> <operator>=&gt;</operator> <expr><ternary><condition><expr><operator>(</operator><name>x</name> <operator>&amp;&amp;</operator> <literal type="boolean">true</literal><operator>)</operator></expr> ?</condition><then> <expr><object>{<property><expr><name>a</name></expr>: <expr><name>b</name></expr></property>}</object></expr> </then><else>: <expr><object>{<property><expr><name>c</name></expr>: <expr><name>d</name></expr></property>}</object></expr></else></ternary></expr></lambda></expr></argument>)</argument_list></call></expr></property>,
+}</object></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
 </unit>
