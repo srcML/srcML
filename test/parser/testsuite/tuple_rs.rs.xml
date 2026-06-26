@@ -117,14 +117,14 @@
 
 <unit revision="1.0.0" language="Rust">
 <expr><name>tuple</name> <operator>=</operator> <tuple>(
-  <expr><ternary>if <condition><expr><name>a</name></expr></condition> <then><block>{<block_content> <return type="implicit"><expr><literal type="number">0</literal></expr></return> </block_content>}</block></then> <else>else <block>{<block_content> <return type="implicit"><expr><call><name>b</name><argument_list>()</argument_list></call></expr></return> </block_content>}</block></else></ternary></expr>,
+  <expr><ternary>if <condition><expr><name>a</name></expr></condition> <then><block>{<block_content> <expr><literal type="number">0</literal></expr> </block_content>}</block></then> <else>else <block>{<block_content> <expr><call><name>b</name><argument_list>()</argument_list></call></expr> </block_content>}</block></else></ternary></expr>,
   <expr><name>c</name></expr>
 )</tuple></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
 <expr_stmt><expr><name>tuple</name> <operator>=</operator> <tuple>(
-  <expr><ternary>if <condition><expr><name>a</name></expr></condition> <then><block>{<block_content> <return type="implicit"><expr><literal type="number">0</literal></expr></return> </block_content>}</block></then> <else>else <block>{<block_content> <return type="implicit"><expr><call><name>b</name><argument_list>()</argument_list></call></expr></return> </block_content>}</block></else></ternary></expr>,
+  <expr><ternary>if <condition><expr><name>a</name></expr></condition> <then><block>{<block_content> <expr><literal type="number">0</literal></expr> </block_content>}</block></then> <else>else <block>{<block_content> <expr><call><name>b</name><argument_list>()</argument_list></call></expr> </block_content>}</block></else></ternary></expr>,
   <expr><name>c</name></expr>
 )</tuple></expr>;</expr_stmt>
 </unit>

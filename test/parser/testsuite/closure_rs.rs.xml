@@ -2,31 +2,31 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="closure_rs">
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>||</parameter_list> <block>{<block_content/>}</block></lambda>
+<expr_stmt><expr><lambda><parameter_list>||</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>||</parameter_list> <block type="pseudo"><expr_stmt><expr><literal type="number">0</literal></expr>;</expr_stmt></block></lambda>
+<expr_stmt><expr><lambda><parameter_list>||</parameter_list> <block type="pseudo"><expr><literal type="number">0</literal></expr></block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>||</parameter_list> <block type="pseudo"><return type="implicit"><expr><tuple>()</tuple></expr>;</return></block></lambda>
+<expr_stmt><expr><lambda><parameter_list>||</parameter_list> <block type="pseudo"><expr><tuple>()</tuple></expr></block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>|<parameter><decl><name>a</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><name>i32</name></type></decl></parameter>|</parameter_list> <block>{<block_content/>}</block></lambda>
+<expr_stmt><expr><lambda><parameter_list>|<parameter><decl><name>a</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><name>i32</name></type></decl></parameter>|</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>||</parameter_list> -&gt; <type><tuple>()</tuple></type> <block>{<block_content/>}</block></lambda>
+<expr_stmt><expr><lambda><parameter_list>||</parameter_list> -&gt; <type><tuple>()</tuple></type> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>||</parameter_list> -&gt; <type><name>i32</name></type> <block>{<block_content><return type="implicit"><literal type="number">0</literal></return></block_content>}</block></lambda>
+<expr_stmt><expr><lambda><parameter_list>||</parameter_list> -&gt; <type><name>i32</name></type> <block>{<block_content><expr><literal type="number">0</literal></expr></block_content>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><lambda><parameter_list>|<parameter><decl><name>b</name></decl></parameter>|</parameter_list> <block type="pseudo"><return type="implicit"><expr><name>b</name> <operator>+</operator> <name>c</name></expr></return></block></lambda></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><lambda><parameter_list>|<parameter><decl><name>b</name></decl></parameter>|</parameter_list> <block type="pseudo"><expr><name>b</name> <operator>+</operator> <name>c</name></expr></block></lambda></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
@@ -34,33 +34,33 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><specifier>move</specifier> <parameter_list>||</parameter_list> <block>{<block_content/>}</block></lambda>
+<expr_stmt><expr><lambda><specifier>move</specifier> <parameter_list>||</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><specifier>async</specifier> <specifier>move</specifier> <parameter_list>||</parameter_list> <block>{<block_content/>}</block></lambda>
+<expr_stmt><expr><lambda><specifier>async</specifier> <specifier>move</specifier> <parameter_list>||</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><modifier>&amp;</modifier><specifier>async</specifier> <specifier>move</specifier> <parameter_list>||</parameter_list> <block>{<block_content/>}</block></lambda>
+<expr_stmt><expr><lambda><modifier>&amp;</modifier><specifier>async</specifier> <specifier>move</specifier> <parameter_list>||</parameter_list> <block>{<block_content/>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>|<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>|</parameter_list> <block>{<block_content>
+<expr_stmt><expr><lambda><parameter_list>|<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>|</parameter_list> <block>{<block_content>
   <return>return <expr><operator>(</operator><name>x</name> <operator>%</operator> <literal type="number">2</literal><operator>)</operator> <operator>==</operator> <literal type="number">0</literal></expr>;</return>
-</block_content>}</block></lambda>
+</block_content>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>|<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>y</name>: <type><name>i32</name></type></decl></parameter>|</parameter_list> <block>{<block_content>
-  <return type="implicit"><expr><name>x</name> <operator>*</operator> <name>y</name></expr></return>
-</block_content>}</block></lambda>
+<expr_stmt><expr><lambda><parameter_list>|<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>y</name>: <type><name>i32</name></type></decl></parameter>|</parameter_list> <block>{<block_content>
+  <expr><name>x</name> <operator>*</operator> <name>y</name></expr>
+  </block_content>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<lambda><parameter_list>||</parameter_list> <block>{<block_content>
-  <return type="implicit"><expr><name>a</name> <operator>+</operator> <name>b</name></expr></return>
-</block_content>}</block></lambda>
+<expr_stmt><expr><lambda><parameter_list>||</parameter_list> <block>{<block_content>
+  <expr><name>a</name> <operator>+</operator> <name>b</name></expr>
+</block_content>}</block></lambda></expr>;</expr_stmt>
 </unit>
 
 </unit>

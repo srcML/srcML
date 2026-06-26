@@ -20,7 +20,7 @@
 
 <unit revision="1.0.0" language="Rust">
 <function><specifier>pub</specifier> fn <name>get_rectangle_area</name><parameter_list>(<parameter><decl><modifier>mut</modifier> <name>width</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><modifier>mut</modifier> <name>height</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> <block>{<block_content>
-  <return type="implicit"><expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
+  <expr><name>width</name> <operator>*</operator> <name>height</name></expr>
 </block_content>}</block></function>
 </unit>
 
