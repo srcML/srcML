@@ -19826,7 +19826,11 @@ condition_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         (options { greedy = true; } :
             {
                 (LA(1) == RPAREN && lparen_types_js.back() == 'n' && lparen_types_size == lparen_types_js.size())
-                || (LA(1) == LCURLY && perform_lcurly_differentiator_check_js())
+                || (
+                    LA(1) == LCURLY
+                    && lparen_types_size == lparen_types_js.size()
+                    && perform_lcurly_differentiator_check_js()
+                )
                 || LA(1) == 1 /* EOF */
             }?
             {

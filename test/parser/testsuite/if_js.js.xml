@@ -50,4 +50,10 @@
 </block_content>}</block></if></if_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><call><name>foo</name><argument_list>(<argument><expr><name>bar</name> <operator>||</operator> <object>{}</object></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+    <return>return <expr><literal type="boolean">true</literal></expr></return>
+</block_content>}</block></if></if_stmt>
+</unit>
+
 </unit>
