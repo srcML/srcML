@@ -1898,8 +1898,15 @@ javascript_statements[] {
                     token = lookup;
             }
 
-            // special case: looking for enum in the table
-            if (next_token() == TS_ENUM) {
+            // special case: looking for "enum" in the table when preceded by "export"
+            if (
+                (
+                    LA(1) == JS_CONST
+                    || LA(1) == JS_EXPORT
+                    || LA(1) == JS_STATIC
+                )
+                && next_token() == TS_ENUM
+            ) {
                 auto nxtoken = next_token();
 
                 const auto& rule = javascriptRules[nxtoken];

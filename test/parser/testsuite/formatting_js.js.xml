@@ -224,4 +224,20 @@
     </then><else>: <expr><name>C</name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
 </unit>
 
+<!-- TypeScript "enum" LCURLY Detection -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>ScriptInfoData</name> <block>{
+    <decl_stmt><decl><name>open</name><ts:type>: <name><name>ReturnType</name><argument_list type="generic">&lt;<argument><expr><name><name>ScriptInfo</name><index>[<expr><literal type="string">"isScriptOpen"</literal></expr>]</index></name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+    <decl_stmt><decl><name>version</name><ts:type>: <name><name>ReturnType</name><argument_list type="generic">&lt;<argument><expr><name><name>TextStorage</name><index>[<expr><literal type="string">"getVersion"</literal></expr>]</index></name></expr></argument>&gt;</argument_list></name></ts:type></decl>;</decl_stmt>
+}</block></ts:interface>
+
+<ts:enum>enum <name>Diff</name> <block>{
+    <decl_stmt><decl><name>None</name> <init>= <expr><literal type="string">""</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>New</name> <init>= <expr><literal type="string">" *new*"</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>Change</name> <init>= <expr><literal type="string">" *changed*"</literal></expr></init></decl>,</decl_stmt>
+    <decl_stmt><decl><name>Deleted</name> <init>= <expr><literal type="string">" *deleted*"</literal></expr></init></decl>,</decl_stmt>
+}</block></ts:enum>
+</unit>
+
 </unit>
