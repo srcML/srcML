@@ -1634,9 +1634,10 @@ javascript_statements[] {
             return;
         }
 
-        // special case: "with():" is a TypeScript function declaration
-        if (LA(1) == JS_WITH && next_token() == LPAREN && perform_with_as_function_decl_check_ts()) {
-            function_declaration_ts();
+        // special case: with is only a keyword in certain circumstances
+        if (LA(1) == JS_WITH && !perform_with_statement_check_js()) {
+            // restart parsing treating "with" as a name
+            LT(1)->setType(NAME);
             processed_statement = true;
             return;
         }
@@ -20158,28 +20159,39 @@ situational_specifiers_js[] { LightweightElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
-  perform_with_as_function_decl_check_ts
+  perform_with_statement_check_js
 
-  Checks if the "with" keyword starts a TypeScript function declaration.
+  Determines if "with" is the start of a with statement, or is just a name.
 */
-perform_with_as_function_decl_check_ts[] returns [bool isdecl] {
+perform_with_statement_check_js[] returns [bool isstatement] {
         ENTRY_DEBUG
 
-        isdecl = false;
+        isstatement = false;
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
-
+        
         try {
             if (LA(1) == JS_WITH) {
-                consume();  // "with"
+                consume(); // "with"
 
-                if (LA(1) == LPAREN) {
-                    paren_pair();
+                // "with" must be followed by (...) to be a statement
+                paren_pair();
 
-                    // found "with():", indicating a TypeScript function declaration
-                    if (LA(1) == COLON)
-                        isdecl = true;
+                // with statements can have a pseudoblock
+                // therefore, it is insufficient to check if there is a block
+                // "with" is definitely not a statement if:
+                // - it is a top-level statement in an object
+                // - it is a top-level statement in a class/enum/interface/type
+                // - it is followed by a terminate, comma, or colon
+                if (!(
+                    lcurly_types_js.back() == 'o'
+                    || perform_in_class_block_check_js()
+                    || LA(1) == TERMINATE
+                    || LA(1) == COMMA
+                    || LA(1) == COLON
+                )) {
+                    isstatement = true;
                 }
             }
         }
@@ -20249,6 +20261,15 @@ with_lparen_js[] { ENTRY_DEBUG } :
         }
 
         RPAREN
+        
+        {
+            // force a pseudoblock to start
+            if (LA(1) != LCURLY) {
+                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_THEN | MODE_LCURLY_BLOCK_JS);
+                startNoSkipElement(SPSEUDO_BLOCK);
+                startNoSkipElement(SCONTENT);
+            }
+        }
 ;
 
 /*
@@ -25017,6 +25038,41 @@ perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [boo
             if (inMode(m))
                 inmode = true;
 
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+
+/*
+  perform_in_class_block_check_js
+
+  Checks if the current block is for a class/class expression/enum/interface/type.
+*/
+perform_in_class_block_check_js[] returns [bool inclass] {
+        inclass = false;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // end down to first block
+            if (inTransparentMode(MODE_BLOCK)) {
+                endDownOverMode(MODE_BLOCK);
+            }
+
+            // check if the prior mode was a class (or similar)
+            if (
+                inMode(MODE_CLASS) 
+                || inMode(MODE_CLASS_EXPRESSION_JS)
+                || inMode(MODE_ENUM)
+                || inMode(MODE_INTERFACE_TS)
+            ) {
+                inclass = true;
+            }
         }
         catch (...) {}
 

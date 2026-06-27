@@ -35,4 +35,16 @@
 )</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<with>with (<expr><name>foo</name></expr>)<block type="pseudo"><block_content> <expr_stmt><expr><call><name>bar</name><argument_list>()</argument_list></call></expr></expr_stmt></block_content></block></with>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<with>with (<expr><object>{<property><expr><name>x</name></expr>:<expr><literal type="number">1</literal></expr></property>}</object></expr>)<block type="pseudo"><block_content> <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt></block_content></block></with>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<with>with (<expr><object>{}</object></expr>)<block type="pseudo"><block_content> <decl_stmt><decl type="let">let {<expr><name>a</name></expr>: <decl><name>x</name></decl>} <init>= <expr><object>{<property><expr><name>a</name></expr>: <expr><literal type="number">42</literal></expr></property>}</object></expr></init></decl></decl_stmt></block_content></block></with>
+</unit>
+
 </unit>
