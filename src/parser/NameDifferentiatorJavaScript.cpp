@@ -280,7 +280,9 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
 
-        // the current token is "set" or "get" and the previous token expects to be followed by a name
+        // the current token is "get" or "set" and 
+        // - the previous token expects to be followed by a name
+        // - the current token is a property in an object
         || (
             (token->getType() == srcMLParser::JS_GET || token->getType() == srcMLParser::JS_SET)
             && (
@@ -290,6 +292,9 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || prevNonWhitespaceToken->getType() == srcMLParser::TS_INTERFACE
                 || prevNonWhitespaceToken->getType() == srcMLParser::TS_MODULE
                 || prevNonWhitespaceToken->getType() == srcMLParser::TS_NAMESPACE
+                || (prevNonWhitespaceToken->getType() == srcMLParser::LCURLY && nextToken->getType() == srcMLParser::COMMA)
+                || (prevNonWhitespaceToken->getType() == srcMLParser::COMMA && nextToken->getType() == srcMLParser::COMMA)
+                || (prevNonWhitespaceToken->getType() == srcMLParser::COMMA && nextToken->getType() == srcMLParser::RCURLY)
             )
         )
 
