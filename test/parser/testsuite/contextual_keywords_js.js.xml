@@ -332,6 +332,18 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>obj</name> <init>= <expr><object>{
+  <property><expr><function type="get">get <name>constructor</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>obj</name> <init>= <expr><object>{
+  <property><expr><function type="set">set <name>constructor</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "continue" -->
 
 <unit revision="1.0.0" language="JavaScript">
