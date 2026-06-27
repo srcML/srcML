@@ -879,6 +879,10 @@
 <decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property>, <property><expr><name>get</name></expr></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><call><name>get</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "if" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1325,6 +1329,10 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property>, <property><expr><name>set</name></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>bar</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><call><name>set</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "static" -->
