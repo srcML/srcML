@@ -47,4 +47,8 @@
 <with>with (<expr><object>{}</object></expr>)<block type="pseudo"><block_content> <decl_stmt><decl type="let">let {<expr><name>a</name></expr>: <decl><name>x</name></decl>} <init>= <expr><object>{<property><expr><name>a</name></expr>: <expr><literal type="number">42</literal></expr></property>}</object></expr></init></decl></decl_stmt></block_content></block></with>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<with>with ( <expr><literal type="string">'str'</literal> <operator>,</operator> <name>obj</name></expr> ) <block>{<block_content/>}</block></with>
+</unit>
+
 </unit>

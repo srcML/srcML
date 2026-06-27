@@ -1817,6 +1817,8 @@ javascript_statements[] {
                 )
             ) {
                 declaration_statement_js(post_specifier_tokens[0]);
+                // need to make sure a pseudo block ends
+                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
                 processed_statement = true;
                 return;
             }
@@ -1854,6 +1856,8 @@ javascript_statements[] {
             && perform_declaration_in_class_check_js()
         ) {
             declaration_statement_js(LA(1));
+            // need to make sure a pseudo block ends
+            endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
             processed_statement = true;
             return;
         }
@@ -1881,6 +1885,8 @@ javascript_statements[] {
                 )
             ) {
                 declaration_statement_js(LA(1));
+                // need to make sure a pseudo block ends
+                endDownToModeSet(MODE_TOP | MODE_IF | MODE_ELSE | MODE_SWITCH);
                 processed_statement = true;
                 return;
             }
@@ -20243,7 +20249,8 @@ with_lparen_js[] { ENTRY_DEBUG } :
             expression |
 
             // consume commas for calls, but not for parameters
-            { bracket_types_js.back() == "cLPAREN" }?
+            // can also have top-level comma operators in with statement "argument"
+            { bracket_types_js.back() == "cLPAREN" || bracket_types_js.back() == "wLPAREN" }?
             comma
         )*
 
