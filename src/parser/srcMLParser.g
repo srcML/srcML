@@ -23535,6 +23535,10 @@ template_argument_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         }
 
         (options { greedy = true; } :
+            // comma separating arguments in call within generic argument list
+            { LA(1) == COMMA && inPrevMode(MODE_ARGUMENT | MODE_EXPRESSION | MODE_EXPECT) }?
+            comma argument|
+
             { LA(1) == TEMPOPE || LA(1) == COMMA || LA(1) == 1 /* EOF */ }?
             {
                 break;
