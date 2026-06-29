@@ -186,5 +186,6 @@ const srcMLState::MODE_TYPE ModeStack::MODE_OPTION_CMAKE               (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_MACRO_CMAKE                (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_NAME_CMAKE      (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_ENV_CMAKE       (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_CACHE_CMAKE     (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_GENERATOR_CMAKE (bit(__COUNTER__));
 

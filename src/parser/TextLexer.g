@@ -58,6 +58,7 @@ tokens {
     CMAKE_QUOTE;
     CMAKE_NAME_EXPRESSION_START;
     CMAKE_ENV_EXPRESSION_START;
+    CMAKE_CACHE_EXPRESSION_START;
     CMAKE_GENERATOR_EXPRESSION_START;
     WS_EOL;
 }
@@ -260,6 +261,9 @@ NAME options { testLiterals = true; } :
                 { inLanguage(LANGUAGE_CMAKE) && isEnvExprCMake() }?
                 'E' 'N' 'V' '{' { $setType(CMAKE_ENV_EXPRESSION_START); } |
 
+                { inLanguage(LANGUAGE_CMAKE) && isCacheExprCMake() }?
+                'C' 'A' 'C' 'H' 'E' '{' { $setType(CMAKE_CACHE_EXPRESSION_START); } |
+
                 { inLanguage(LANGUAGE_CMAKE) && LA(1) == '<' }?
                 '<' { $setType(CMAKE_GENERATOR_EXPRESSION_START); } |
 
@@ -267,9 +271,9 @@ NAME options { testLiterals = true; } :
             )
         ) |
         (
-            ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
+            ('a'..'z' | 'A'..'Z' | '_' | '@' | '\200'..'\377')
             (options { greedy = true; } :
-                '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377'
+                '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '@' | '\200'..'\377'
             )*
         )
     )

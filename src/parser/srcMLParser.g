@@ -854,6 +854,7 @@ tokens {
     SCOMPILER_FLAG_CMAKE;
     SEXPRESSION_NAME;
     SEXPRESSION_ENV;
+    SEXPRESSION_CACHE;
     SEXPRESSION_GENERATOR;
     SINCLUDE_CMAKE;
     SLIST_LISTS;
@@ -26536,6 +26537,16 @@ cmake_process_one_token_argument_text[] { ENTRY_DEBUG
         startNewMode(MODE_EXPRESSION_ENV_CMAKE);
         startElement(SNAME);
     }
+    else if (LA(1) == CMAKE_CACHE_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_CACHE);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_CACHE_CMAKE);
+        startElement(SNAME);
+
+    }
     else if (LA(1) == CMAKE_GENERATOR_EXPRESSION_START) {
         startNewMode(MODE_EXPRESSION);
         startElement(SEXPRESSION_GENERATOR);
@@ -26553,11 +26564,13 @@ cmake_process_one_token_argument_text[] { ENTRY_DEBUG
         startNewMode(MODE_EXPRESSION_GENERATOR_CMAKE);
         startElement(SNAME);
     }
-    else if (LA(1) == CMAKE_RCURLY && (inMode(MODE_EXPRESSION_NAME_CMAKE) || inMode(MODE_EXPRESSION_ENV_CMAKE))) {
+    else if (LA(1) == CMAKE_RCURLY && (inMode(MODE_EXPRESSION_NAME_CMAKE) || inMode(MODE_EXPRESSION_ENV_CMAKE) || inMode(MODE_EXPRESSION_CACHE_CMAKE))) {
         if (inMode(MODE_EXPRESSION_NAME_CMAKE))
             endMode(MODE_EXPRESSION_NAME_CMAKE);
         else if (inMode(MODE_EXPRESSION_ENV_CMAKE))
             endMode(MODE_EXPRESSION_ENV_CMAKE);
+        else if (inMode(MODE_EXPRESSION_CACHE_CMAKE))
+            endMode(MODE_EXPRESSION_CACHE_CMAKE);
 
         consume();
 

@@ -492,6 +492,16 @@ public:
         }
     }
 
+    bool isCacheExprCMake() {
+        size_t index = 1;
+        if (LA(index++) == 'C' && LA(index++) == 'A' && LA(index++) == 'C' && LA(index++) == 'H' && LA(index++) == 'E' && LA(index) == '{') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     // determine if "<" starts a JSX literal in JavaScript by looking ahead
     bool isJSXLiteral() {
         size_t index = 1;

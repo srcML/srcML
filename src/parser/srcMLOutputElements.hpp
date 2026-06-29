@@ -385,6 +385,7 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::SCOMPILER_FLAG_CMAKE,          { "flag",              SRC,      0,                    0,        0,             0 }},
     { TOKEN::SEXPRESSION_NAME,              { "expr",              SRC, "type",               "name",        0,             0 }},
     { TOKEN::SEXPRESSION_ENV,               { "expr",              SRC, "type",                "env",        0,             0 }},
+    { TOKEN::SEXPRESSION_CACHE,             { "expr",              SRC, "type",              "cache",        0,             0 }},
     { TOKEN::SEXPRESSION_GENERATOR,         { "expr",              SRC, "type",          "generator",        0,             0 }},
     { TOKEN::SLIST_LISTS,                   { "list",              SRC, "type",               "list",        0,             0 }},
     { TOKEN::SLIST_ITEMS,                   { "list",              SRC, "type",               "item",        0,             0 }},
