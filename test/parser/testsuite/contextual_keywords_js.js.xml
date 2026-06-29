@@ -932,7 +932,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>implements</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>implements</name></expr></property>, <property><expr><name>implements</name></expr></property>, <property><expr><name>implements</name></expr></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

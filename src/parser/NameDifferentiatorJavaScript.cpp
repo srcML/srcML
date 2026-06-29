@@ -354,12 +354,24 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && prevNonWhitespaceToken->getType() == srcMLParser::JS_AS
         )
 
-        // the current token is "extends" or "implements" and the next token is "?" or "!"
+        // the current token is "extends" or "implements" and one of the following is true:
+        // - the next token is "?" or "!"
+        // - the previous token was "{" or "," and the next token is ",", ":", or "}"
         || (
             (token->getType() == srcMLParser::JS_EXTENDS || token->getType() == srcMLParser::TS_IMPLEMENTS)
             && (
-                nextToken->getType() == srcMLParser::QMARK
-                || (nextToken->getType() == srcMLParser::OPERATORS && nextToken->getText() == "!")
+                (
+                    nextToken->getType() == srcMLParser::QMARK
+                    || (nextToken->getType() == srcMLParser::OPERATORS && nextToken->getText() == "!")
+                )
+                || (
+                    (prevNonWhitespaceToken->getType() == srcMLParser::LCURLY || prevNonWhitespaceToken->getType() == srcMLParser::COMMA)
+                    && (
+                        nextToken->getType() == srcMLParser::COMMA
+                        || nextToken->getType() == srcMLParser::COLON
+                        || nextToken->getType() == srcMLParser::RCURLY
+                    )
+                )
             )
         )
 
