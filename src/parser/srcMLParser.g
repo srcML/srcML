@@ -5734,7 +5734,12 @@ lcurly[bool content = true] { ENTRY_DEBUG } :
                 content = false;
 
             // special end for conditions
-            if (inTransparentMode(MODE_CONDITION) && !inMode(MODE_ANONYMOUS) && !inMode(MODE_CLASS)) {
+            if (
+                !inLanguage(LANGUAGE_JAVASCRIPT)
+                && inTransparentMode(MODE_CONDITION)
+                && !inMode(MODE_ANONYMOUS)
+                && !inMode(MODE_CLASS)
+            ) {
                 endDownToMode(MODE_CONDITION);
                 endMode(MODE_CONDITION);
             }
