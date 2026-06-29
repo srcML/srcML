@@ -570,6 +570,12 @@
 
 <!-- "enum" -->
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>tokenFromDeclarationMapping</name> <init>= <expr><operator>new</operator> <call><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><name>SyntaxKind</name></expr></argument>, <argument><expr><name>TokenType</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><array>[
+    <expr><array>[<expr><name><name>SyntaxKind</name><operator>.</operator><name>EnumDeclaration</name></name></expr>, <expr><name><name>TokenType</name><operator>.</operator><name>enum</name></name></expr>]</array></expr>,
+]</array></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>textToKeywordObj</name><ts:type>: <name><name>MapLike</name><argument_list type="generic">&lt;<argument><expr><name>KeywordSyntaxKind</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
     <property><expr><name>enum</name></expr>: <expr><name><name>SyntaxKind</name><operator>.</operator><name>EnumKeyword</name></name></expr></property>,
