@@ -1567,6 +1567,14 @@
 </block_content>}</block></function></unit>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>type</name><ts:type>: <name>Type</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><call><name>bar</name><argument_list>(<argument><expr><name>type</name></expr></argument>, <argument><expr><name>type</name></expr></argument>, <argument><expr><name>a</name> <operator>as</operator> <name>TypeReference</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+        <return>return <expr><literal type="boolean">false</literal></expr></return>
+    </block_content>}</block></if></if_stmt>
+</block_content>}</block></function>
+</unit>
+
 <!-- "typeof"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">
