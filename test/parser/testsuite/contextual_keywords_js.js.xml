@@ -324,6 +324,26 @@
 <class>class <name>Foo</name> <super_list><ts:implements>implements <super><expr><name>Bar</name> <operator>|</operator> <name>constructor</name></expr></super></ts:implements></super_list> <block>{}</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>constructor</name></decl></parameter>, <parameter><decl><name>arg</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><operator>!</operator><operator>new</operator> <call><name>constructor</name><argument_list>(<argument><expr><name>arg</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><call><name>bar</name><argument_list>()</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></if></if_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>obj</name> <init>= <expr><object>{
+  <property><expr><function type="get">get <name>constructor</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>obj</name> <init>= <expr><object>{
+  <property><expr><function type="set">set <name>constructor</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "continue" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -847,6 +867,22 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>get</name></expr></property>, <property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>x</name></expr></property>, <property><expr><name>get</name></expr></property>, <property><expr><name>y</name></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property>, <property><expr><name>get</name></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><call><name>get</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "if" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1281,6 +1317,22 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>set</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>set</name></expr></property>, <property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>x</name></expr></property>, <property><expr><name>set</name></expr></property>, <property><expr><name>y</name></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{ <property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property>, <property><expr><name>set</name></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>bar</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><call><name>set</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "static" -->

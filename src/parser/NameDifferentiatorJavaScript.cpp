@@ -280,16 +280,22 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
 
-        // the current token is "set" or "get" and the previous token expects to be followed by a name
+        // the current token is "get" or "set" and 
+        // - the previous token expects to be followed by a name
+        // - the current token is a property in an object
         || (
             (token->getType() == srcMLParser::JS_GET || token->getType() == srcMLParser::JS_SET)
             && (
                 prevNonWhitespaceToken->getType() == srcMLParser::CLASS  
+                || prevNonWhitespaceToken->getType() == srcMLParser::JS_ARROW
                 || prevNonWhitespaceToken->getType() == srcMLParser::TS_ENUM
                 || prevNonWhitespaceToken->getType() == srcMLParser::JS_FUNCTION
                 || prevNonWhitespaceToken->getType() == srcMLParser::TS_INTERFACE
                 || prevNonWhitespaceToken->getType() == srcMLParser::TS_MODULE
                 || prevNonWhitespaceToken->getType() == srcMLParser::TS_NAMESPACE
+                || (prevNonWhitespaceToken->getType() == srcMLParser::LCURLY && nextToken->getType() == srcMLParser::COMMA)
+                || (prevNonWhitespaceToken->getType() == srcMLParser::COMMA && nextToken->getType() == srcMLParser::COMMA)
+                || (prevNonWhitespaceToken->getType() == srcMLParser::COMMA && nextToken->getType() == srcMLParser::RCURLY)
             )
         )
 
@@ -461,7 +467,10 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         || (
             token->getType() == srcMLParser::JS_CONSTRUCTOR 
             && (
-                prevNonWhitespaceToken->getType() == srcMLParser::JS_EXTENDS 
+                prevNonWhitespaceToken->getType() == srcMLParser::JS_EXTENDS
+                || prevNonWhitespaceToken->getType() == srcMLParser::JS_GET
+                || prevNonWhitespaceToken->getType() == srcMLParser::JS_SET 
+                || prevNonWhitespaceToken->getType() == srcMLParser::NEW
                 || prevNonWhitespaceToken->getType() == srcMLParser::TS_IMPLEMENTS
             )
         )
