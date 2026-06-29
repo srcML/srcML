@@ -794,7 +794,7 @@ size_t srcml_get_srcdiff_revision() {
  *                                                                            *
  ******************************************************************************/
 
-static std::string_view langs[] = { "C", "C++", "C#", "Java", "Python", "JavaScript", "Objective-C" };
+static std::string_view langs[] = { "C", "C++", "C#", "Java", "Python", "JavaScript", "CMake", "Objective-C" };
 
 /**
  * srcml_check_language

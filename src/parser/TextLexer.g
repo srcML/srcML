@@ -47,12 +47,20 @@ tokens {
     CHAR_START;
     BACKTICK_START;
     SQUOTE_DOCSTRING_START;
+    BRACKET_ARGUMENT_START;
+    BRACKET_ARGUMENT_END;
     MACRO_NAME;
     COMPLEX_NUMBER;
     HASHBANG_COMMENT_START;
     HASHTAG_COMMENT_START;
     HTML_COMMENT_START;
     TRAILING_HTML_COMMENT_START;
+    CMAKE_BLOCK_COMMENT_START;
+    CMAKE_QUOTE;
+    CMAKE_NAME_EXPRESSION_START;
+    CMAKE_ENV_EXPRESSION_START;
+    CMAKE_CACHE_EXPRESSION_START;
+    CMAKE_GENERATOR_EXPRESSION_START;
     WS_EOL;
 }
 
@@ -78,6 +86,14 @@ STRING_START :
         // handle a string that starts/ends with one double-quote in Python
         else if (inLanguage(LANGUAGE_PYTHON))
             changetotextlexer(PY_SIMPLE_DQUOTE_STRING_END);
+        // handle strings in CMake, which can have significant things in them
+        // The quotes are the only things marked special - everything else will be tokenized normally
+        else if (inLanguage(LANGUAGE_CMAKE)) {
+            $setType(CMAKE_QUOTE);
+            if (!in_cmake_bracket) {
+                in_cmake_string = !in_cmake_string;
+            }
+        }
         else
             changetotextlexer(STRING_END);
 
@@ -120,6 +136,8 @@ CHAR_START :
         // handle a string that starts/ends with one single-quote in Python
         else if (inLanguage(LANGUAGE_PYTHON))
             changetotextlexer(PY_SIMPLE_SQUOTE_STRING_END);
+        else if (inLanguage(LANGUAGE_CMAKE))
+            $setType(OPERATORS);
         else {
             $setType(CHAR_START); changetotextlexer(CHAR_END);
         }
@@ -140,6 +158,70 @@ BACKTICK_START :
     }
 ;
 
+BRACKET_ARGUMENT_START :
+    { startline = false; }
+
+    '[' {
+        if (inLanguage(LANGUAGE_CMAKE)) {
+            int equal_count = 0;
+            while (LA(1) == '=') {
+                ++equal_count;
+                consume();
+            }
+
+            if (equal_count == 0 && LA(1) != '[') {
+                $setType(LBRACKET);
+            }
+            else if (LA(1) == '[') {
+                consume();
+                $setType(BRACKET_ARGUMENT_START);
+                if (!in_cmake_string) {
+                    in_cmake_bracket = true;
+                }
+            }
+            else {
+                $setType(OPERATORS);
+            }
+        }
+
+        else {
+            $setType(LBRACKET);
+        }
+    }
+;
+
+BRACKET_ARGUMENT_END :
+    { startline = false; }
+
+    ']' {
+        if (inLanguage(LANGUAGE_CMAKE)) {
+            int equal_count = 0;
+            while (LA(1) == '=') {
+                ++equal_count;
+                consume();
+            }
+
+            if (equal_count == 0 && LA(1) != ']') {
+                $setType(RBRACKET);
+            }
+            else if (LA(1) == ']') {
+                consume();
+                $setType(BRACKET_ARGUMENT_END);
+                if (!in_cmake_string) {
+                    in_cmake_bracket = false;
+                }
+            }
+            else {
+                $setType(OPERATORS);
+            }
+        }
+
+        else {
+            $setType(RBRACKET);
+        }
+    }
+;
+
 CONSTANTS :
     { startline = false; }
     ('0'..'9') (options { greedy = true; } : '0'..'9' | '_')*
@@ -151,53 +233,95 @@ CONSTANTS :
         { inLanguage(LANGUAGE_PYTHON) }?
         ('j' | 'J') { $setType(COMPLEX_NUMBER); }
     )*
-    (options { greedy = true; } : NAME)*
-    {
-        //firstpreprocline = false;
-        if (onpreprocline && isline) {
-            line_number = atoi(text.substr(_begin, text.length()-_begin).data());
-        }
-    }
+    (
+        { !inLanguage(LANGUAGE_CMAKE) }?
+        (
+            (options { greedy = true; } : NAME)*
+            {
+                //firstpreprocline = false;
+                if (onpreprocline && isline) {
+                    line_number = atoi(text.substr(_begin, text.length()-_begin).data());
+                }
+            }
+        )
+    )?
 ;
 
 NAME options { testLiterals = true; } :
     { startline = false; this->updateNonWhitespaceCharacters(); }
-    ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+    
+
+    ({ inLanguage(LANGUAGE_CMAKE)}?
     (
-        (options { greedy = true; } :
-            { this->updateNonWhitespaceCharacters(); }
-            (
-                '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$' |
-
-                { inLanguage(LANGUAGE_JAVASCRIPT) }?
-                ('\\' 'u') => '\\' 'u'
-            )
-        )*
-    )
-    (
-        { text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv }?
-        { $setType(STRING_START); } STRING_START |
-
-        { inLanguage(LANGUAGE_CXX) && (text == "R"sv || text == "u8R"sv || text == "LR"sv || text == "UR"sv || text == "uR"sv) }?
-        { $setType(STRING_START); } RAW_STRING_START |
-
-        {
-            inLanguage(LANGUAGE_PYTHON)
-            && (text == "b"sv || text == "f"sv || text == "r"sv || text == "u"sv
-            || text == "B"sv || text == "F"sv || text == "R"sv || text == "U"sv
-            || text == "rf"sv || text == "rb"sv || text == "Rf"sv || text == "Rb"sv
-            || text == "rF"sv || text == "rB"sv || text == "RF"sv || text == "RB"sv
-            || text == "fr"sv || text == "fR"sv || text == "Fr"sv || text == "FR"sv
-            || text == "ur"sv || text == "Ur"sv || text == "uR"sv || text == "UR"sv)
-        }?
         (
-            { LA(1) == '"' }?
+            ('$')
+            (
+                { inLanguage(LANGUAGE_CMAKE) && LA(1) == '{' }?
+                '{' { $setType(CMAKE_NAME_EXPRESSION_START); } |
+
+                { inLanguage(LANGUAGE_CMAKE) && isEnvExprCMake() }?
+                'E' 'N' 'V' '{' { $setType(CMAKE_ENV_EXPRESSION_START); } |
+
+                { inLanguage(LANGUAGE_CMAKE) && isCacheExprCMake() }?
+                'C' 'A' 'C' 'H' 'E' '{' { $setType(CMAKE_CACHE_EXPRESSION_START); } |
+
+                { inLanguage(LANGUAGE_CMAKE) && LA(1) == '<' }?
+                '<' { $setType(CMAKE_GENERATOR_EXPRESSION_START); } |
+
+                { $setType(NAME); }
+            )
+        ) |
+        (
+            ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377')
+            (options { greedy = true; } :
+                '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377'
+            )*
+        )
+    )
+
+    |
+
+    ( // In ANY other language
+        ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+        (
+            (options { greedy = true; } :
+                { this->updateNonWhitespaceCharacters(); }
+                (
+                    '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$' |
+
+                    { inLanguage(LANGUAGE_JAVASCRIPT) }?
+                    ('\\' 'u') => '\\' 'u'
+                )
+            )*
+        )
+        (
+            { text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv }?
             { $setType(STRING_START); } STRING_START |
 
-            { LA(1) == '\'' }?
-            { $setType(CHAR_START); } CHAR_START
-        )
-    )?
+            { inLanguage(LANGUAGE_CXX) && (text == "R"sv || text == "u8R"sv || text == "LR"sv || text == "UR"sv || text == "uR"sv) }?
+            { $setType(STRING_START); } RAW_STRING_START |
+
+            {
+                inLanguage(LANGUAGE_PYTHON)
+                && (text == "b"sv || text == "f"sv || text == "r"sv || text == "u"sv
+                || text == "B"sv || text == "F"sv || text == "R"sv || text == "U"sv
+                || text == "rf"sv || text == "rb"sv || text == "Rf"sv || text == "Rb"sv
+                || text == "rF"sv || text == "rB"sv || text == "RF"sv || text == "RB"sv
+                || text == "fr"sv || text == "fR"sv || text == "Fr"sv || text == "FR"sv
+                || text == "ur"sv || text == "Ur"sv || text == "uR"sv || text == "UR"sv)
+            }?
+            (
+                { LA(1) == '"' }?
+                { $setType(STRING_START); } STRING_START |
+
+                { LA(1) == '\'' }?
+                { $setType(CHAR_START); } CHAR_START
+            )
+        )?
+
+
+
+    ))
 ;
 
 // Single-line comments (no EOL); also processes potential regular expression literals in JavaScript
@@ -207,6 +331,7 @@ LINE_COMMENT_START options { testLiterals = true; } {
     int lastnonspacetoken = this->getLastToken();
     std::string operatorends = "+-*/%&|^~<>=?!.,";
 } : '/'
+
     (
         // for this conditional, lastnonspacetoken must refer to the token before the first '/'
         {
@@ -252,10 +377,21 @@ LINE_COMMENT_START options { testLiterals = true; } {
             { $setType(OPERATORS); }
         ) |
 
+        // '/W*' and '/w*' are compiler flags (CMake only)
+        { inLanguage(LANGUAGE_CMAKE) && (LA(1) == 'W' || LA(1) == 'w') }?
+        (
+            ('W' | 'w')
+            {
+                $setType(CMAKE_COMPILER_FLAG);
+                mode = 0;
+            }
+            (options { greedy = true; } : ~(' ' | '\t' | '\n' | ';' | ')' | '"' | '\\'))*
+        ) |
+
         '/'
             {
                 // '//' is an operator in Python
-                if (inLanguage(LANGUAGE_PYTHON)) {
+                if (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_CMAKE)) {
                     $setType(OPERATORS);
                     mode = 0;
                 }
@@ -269,8 +405,14 @@ LINE_COMMENT_START options { testLiterals = true; } {
             )? |
         '*'
             { 
-                $setType(BLOCK_COMMENT_START);
-                mode = BLOCK_COMMENT_END;
+                if (inLanguage(LANGUAGE_CMAKE)) {
+                    $setType(OPERATORS);
+                    mode = 0;
+                }
+                else {
+                    $setType(BLOCK_COMMENT_START);
+                    mode = BLOCK_COMMENT_END;
+                }
             }
             (
                 { inLanguage(LANGUAGE_JAVA) }? '*'

@@ -409,4 +409,38 @@ const static srcMLState::MODE_TYPE MODE_INDEX_TS;
 
 const static srcMLState::MODE_TYPE MODE_TYPE_TS;
 
+
+// CMake modes
+const static srcMLState::MODE_TYPE MODE_PAREN_ENDS_STATEMENT_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_BLOCK_STATEMENT_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_WHILE_LOOP_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_PROPAGATE_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_PROPAGATE_STATEMENT_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_ENDTOKEN_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_FUNCTION_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_COMMAND_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_FOREACH_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_INCLUDE_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_OPTION_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_MACRO_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_NAME_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_ENV_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_CACHE_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_GENERATOR_CMAKE;
+
 #endif

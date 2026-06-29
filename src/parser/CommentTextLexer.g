@@ -77,6 +77,7 @@ tokens {
     PY_SIMPLE_DQUOTE_STRING_END;
     PY_SQUOTE_STRING_START;
     PY_SIMPLE_SQUOTE_STRING_END;
+    CMAKE_BLOCK_COMMENT_END;
 }
 
 {
@@ -446,7 +447,14 @@ COMMENT_TEXT {
         }
     } |
 
-    ']'..'_' |
+    ']' {
+        // detect the end of a CMake bracket argument or block comment (both end with '=]' or ']]')
+        if ((mode == CMAKE_BLOCK_COMMENT_END) && (lookaheadMinusTwo == '=' || lookaheadMinusTwo == ']')) {
+            $setType(mode); selector->pop();
+        }
+    } |
+
+    '^'..'_' |
 
     '`' {
         if (scopeCount == 0 && lookaheadMinusTwo != '\\' && mode == BACKTICK_END) {

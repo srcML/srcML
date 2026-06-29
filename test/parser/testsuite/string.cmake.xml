@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="string">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>()</argument_list></command>
+</unit>
+
+<!--String Search and Replace-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>FIND</name> <argument><expr><literal type="string">"hello_world"</literal></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>FIND</name> <argument><expr><literal type="string">"hello_world"</literal></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <option><name>REVERSE</name></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REPLACE</name> <argument><expr><literal type="string">"hello"</literal></expr></argument> <argument><expr><literal type="string">"bye"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"hello_world"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REPLACE</name> <argument><expr><literal type="string">"hello"</literal></expr></argument> <argument><expr><literal type="string">"bye"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"hello_world"</literal></expr></argument> <argument><expr><literal type="string">"hello_universe"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REGEX</name> <option><name>MATCH</name> <argument><expr><literal type="string">"[0-9]+"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"abc123def"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REGEX</name> <option><name>MATCH</name> <argument><expr><literal type="string">"[0-9]+"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"abc123def"</literal></expr></argument> <argument><expr><literal type="string">"ghi456jkl"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REGEX</name> <option><name>MATCHALL</name> <argument><expr><literal type="string">"[0-9]+"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"123hello456"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REGEX</name> <option><name>MATCHALL</name> <argument><expr><literal type="string">"[0-9]+"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"123hello"</literal></expr></argument> <argument><expr><literal type="string">"456world"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REGEX</name> <option><name>REPLACE</name> <argument><expr><literal type="string">"[0-9]+"</literal></expr></argument> <argument><expr><literal type="string">"NUM"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"abc123def456"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REGEX</name> <option><name>REPLACE</name> <argument><expr><literal type="string">"[0-9]+"</literal></expr></argument> <argument><expr><literal type="string">"NUM"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"abc123"</literal></expr></argument> <argument><expr><literal type="string">"def456"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String Manipulation-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>APPEND</name> <argument><expr><name>greeting</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>APPEND</name> <argument><expr><name>greeting</name></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>APPEND</name> <argument><expr><name>greeting</name></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument> <argument><expr><literal type="string">"!"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>PREPEND</name> <argument><expr><name>greeting</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>PREPEND</name> <argument><expr><name>greeting</name></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>PREPEND</name> <argument><expr><name>greeting</name></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument> <argument><expr><literal type="string">"!"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>CONCAT</name> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>CONCAT</name> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"hello"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>CONCAT</name> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"hello"</literal></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JOIN</name> <argument><expr><literal type="string">" "</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JOIN</name> <argument><expr><literal type="string">" "</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"hello"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JOIN</name> <argument><expr><literal type="string">" "</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"hello"</literal></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>TOLOWER</name> <argument><expr><literal type="string">"HELLO WORLD"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>TOUPPER</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>LENGTH</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>SUBSTRING</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">5</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>STRIP</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>GENEX_STRIP</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REPEAT</name> <argument><expr><literal type="string">"hello"</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>REGEX</name> <option><name>QUOTE</name> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"3.14.1"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String Comparison-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>COMPARE</name> <option><name>EQUAL</name> <argument><expr><literal type="string">"hello"</literal></expr></argument> <argument><expr><literal type="string">"world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String Hashing-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>SHA1</name> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"hello"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<!--String Generation-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>ASCII</name> <argument><expr><literal type="number">72</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>ASCII</name> <argument><expr><literal type="number">72</literal></expr></argument> <argument><expr><literal type="number">105</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>HEX</name> <argument><expr><literal type="string">"hello"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>CONFIGURE</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>CONFIGURE</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <option><name>@ONLY</name></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>CONFIGURE</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <option><name>ESCAPE_QUOTES</name></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>CONFIGURE</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument> <option><name>@ONLY</name></option> <option><name>ESCAPE_QUOTES</name></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>MAKE_C_IDENTIFIER</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>RANDOM</name> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>RANDOM</name> <option><name>LENGTH</name> <argument><expr><literal type="number">10</literal></expr></argument></option> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>RANDOM</name> <option><name>LENGTH</name> <argument><expr><literal type="number">10</literal></expr></argument></option> <option><name>ALPHABET</name> <argument><expr><literal type="string">"abc"</literal></expr></argument></option> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>RANDOM</name> <option><name>LENGTH</name> <argument><expr><literal type="number">10</literal></expr></argument></option> <option><name>RANDOM_SEED</name> <argument><expr><literal type="number">42</literal></expr></argument></option> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>RANDOM</name> <option><name>ALPHABET</name> <argument><expr><literal type="string">"abc"</literal></expr></argument></option> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>RANDOM</name> <option><name>ALPHABET</name> <argument><expr><literal type="string">"abc"</literal></expr></argument></option> <option><name>RANDOM_SEED</name> <argument><expr><literal type="number">42</literal></expr></argument></option> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>RANDOM</name> <option><name>RANDOM_SEED</name> <argument><expr><literal type="number">42</literal></expr></argument></option> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>RANDOM</name> <option><name>LENGTH</name> <argument><expr><literal type="number">10</literal></expr></argument></option> <option><name>ALPHABET</name> <argument><expr><literal type="string">"abc"</literal></expr></argument></option> <option><name>RANDOM_SEED</name> <argument><expr><literal type="number">42</literal></expr></argument></option> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>TIMESTAMP</name> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>TIMESTAMP</name> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"%Y-%m-%d"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>TIMESTAMP</name> <argument><expr><name>result</name></expr></argument> <option><name>UTC</name></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>TIMESTAMP</name> <argument><expr><name>result</name></expr></argument> <argument><expr><literal type="string">"%Y-%m-%d"</literal></expr></argument> <option><name>UTC</name></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>UUID</name> <argument><expr><name>result</name></expr></argument> <option><name>NAMESPACE</name> <argument><expr><literal type="string">"6ba7b810-9dad-11d1-80b4-00c04fd430c8"</literal></expr></argument></option> <option><name>NAME</name> <argument><expr><name>myApp</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>MD5</name></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>UUID</name> <argument><expr><name>result</name></expr></argument> <option><name>NAMESPACE</name> <argument><expr><literal type="string">"6ba7b810-9dad-11d1-80b4-00c04fd430c8"</literal></expr></argument></option> <option><name>NAME</name> <argument><expr><name>myApp</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>SHA1</name></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>UUID</name> <argument><expr><name>result</name></expr></argument> <option><name>NAMESPACE</name> <argument><expr><literal type="string">"6ba7b810-9dad-11d1-80b4-00c04fd430c8"</literal></expr></argument></option> <option><name>NAME</name> <argument><expr><name>myApp</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>MD5</name></expr></argument></option> <option><name>UPPER</name></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>UUID</name> <argument><expr><name>result</name></expr></argument> <option><name>NAMESPACE</name> <argument><expr><literal type="string">"6ba7b810-9dad-11d1-80b4-00c04fd430c8"</literal></expr></argument></option> <option><name>NAME</name> <argument><expr><name>myApp</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>SHA1</name></expr></argument></option> <option><name>UPPER</name></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON GET-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET</name> <argument><expr><literal type="string">"[1, 2, 3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET</name> <argument><expr><literal type="string">"[1, 2, 3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET</name> <argument><expr><literal type="string">"[{\"name\":\"John\"}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET</name> <argument><expr><literal type="string">"[{\"name\":\"John\"}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON GET_RAW-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET_RAW</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET_RAW</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET_RAW</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET_RAW</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET_RAW</name> <argument><expr><literal type="string">"[1, 2, 3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET_RAW</name> <argument><expr><literal type="string">"[1, 2, 3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET_RAW</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET_RAW</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET_RAW</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET_RAW</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET_RAW</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET_RAW</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>GET_RAW</name> <argument><expr><literal type="string">"[{\"name\":\"John\"}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>GET_RAW</name> <argument><expr><literal type="string">"[{\"name\":\"John\"}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON TYPE-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>TYPE</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>TYPE</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>TYPE</name> <argument><expr><literal type="string">"[1, 2, 3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><literal type="string">"[1, 2, 3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>TYPE</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>TYPE</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>TYPE</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>TYPE</name> <argument><expr><literal type="string">"[{\"name\":\"John\"}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><literal type="string">"[{\"name\":\"John\"}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON LENGTH-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>LENGTH</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>LENGTH</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>LENGTH</name> <argument><expr><literal type="string">"{\"name\":{\"first\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>LENGTH</name> <argument><expr><literal type="string">"{\"name\":{\"first\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>LENGTH</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>LENGTH</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>LENGTH</name> <argument><expr><literal type="string">"{\"user\":{\"name\":{\"first\":\"John\"}}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>LENGTH</name> <argument><expr><literal type="string">"{\"user\":{\"name\":{\"first\":\"John\"}}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>LENGTH</name> <argument><expr><literal type="string">"[[[1,2],[3,4]],[[5,6]]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>LENGTH</name> <argument><expr><literal type="string">"[[[1,2],[3,4]],[[5,6]]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>LENGTH</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>LENGTH</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>LENGTH</name> <argument><expr><literal type="string">"[{\"name\":{\"first\":\"John\"}}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>LENGTH</name> <argument><expr><literal type="string">"[{\"name\":{\"first\":\"John\"}}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON REMOVE-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>REMOVE</name> <argument><expr><literal type="string">"{\"name\":\"John\",\"age\":30}"</literal></expr></argument> <argument><expr><literal type="string">"age"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REMOVE</name> <argument><expr><literal type="string">"{\"name\":\"John\",\"age\":30}"</literal></expr></argument> <argument><expr><literal type="string">"age"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>REMOVE</name> <argument><expr><literal type="string">"[1,2,3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REMOVE</name> <argument><expr><literal type="string">"[1,2,3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>REMOVE</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\",\"age\":30}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"age"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REMOVE</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\",\"age\":30}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"age"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>REMOVE</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REMOVE</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>REMOVE</name> <argument><expr><literal type="string">"{\"user\":{\"name\":{\"first\":\"John\",\"last\":\"Doe\"}}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"first"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REMOVE</name> <argument><expr><literal type="string">"{\"user\":{\"name\":{\"first\":\"John\",\"last\":\"Doe\"}}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"first"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>REMOVE</name> <argument><expr><literal type="string">"[[[1,2],[3,4]],[[5,6]]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REMOVE</name> <argument><expr><literal type="string">"[[[1,2],[3,4]],[[5,6]]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>REMOVE</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\",\"age\":30}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"age"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REMOVE</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\",\"age\":30}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"age"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>REMOVE</name> <argument><expr><literal type="string">"[{\"user\":[\"John\",\"Doe\"]}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REMOVE</name> <argument><expr><literal type="string">"[{\"user\":[\"John\",\"Doe\"]}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON MEMBER-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>MEMBER</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>MEMBER</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>MEMBER</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>MEMBER</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>MEMBER</name> <argument><expr><literal type="string">"[{\"name\":\"John\",\"age\":30}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>MEMBER</name> <argument><expr><literal type="string">"[{\"name\":\"John\",\"age\":30}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>MEMBER</name> <argument><expr><literal type="string">"{\"user\":{\"name\":{\"first\":\"John\"}}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>MEMBER</name> <argument><expr><literal type="string">"{\"user\":{\"name\":{\"first\":\"John\"}}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>MEMBER</name> <argument><expr><literal type="string">"[[{\"name\":\"John\",\"age\":30}]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>MEMBER</name> <argument><expr><literal type="string">"[[{\"name\":\"John\",\"age\":30}]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>MEMBER</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\",\"age\":30}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>MEMBER</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\",\"age\":30}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>MEMBER</name> <argument><expr><literal type="string">"[{\"user\":{\"name\":\"John\",\"age\":30}}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>MEMBER</name> <argument><expr><literal type="string">"[{\"user\":{\"name\":\"John\",\"age\":30}}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON SET-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"{\"name\":\"John\"}"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"[1,2,3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"[1,2,3]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"{\"user\":{\"name\":\"John\"}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"[[1,2],[3,4]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"{\"user\":[1,2,3]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"{\"user\":[1,2,3]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"[{\"name\":\"John\"}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"[{\"name\":\"John\"}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"{\"user\":{\"name\":{\"first\":\"John\"}}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"first"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"{\"user\":{\"name\":{\"first\":\"John\"}}}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"first"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"[[[1,2],[3,4]],[[5,6]]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"[[[1,2],[3,4]],[[5,6]]]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">1</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"[{\"user\":[1,2]}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"[{\"user\":[1,2]}]"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="number">10</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>SET</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>SET</name> <argument><expr><literal type="string">"{\"user\":[{\"name\":\"John\"}]}"</literal></expr></argument> <argument><expr><literal type="string">"user"</literal></expr></argument> <argument><expr><literal type="number">0</literal></expr></argument> <argument><expr><literal type="string">"name"</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON EQUAL-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>EQUAL</name> <argument><expr><literal type="string">"\"John\""</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>EQUAL</name> <argument><expr><literal type="string">"\"John\""</literal></expr></argument> <argument><expr><literal type="string">"\"Jane\""</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<!--String JSON STRING_ENCODE-->
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>STRING_ENCODE</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>string</name><argument_list>(<option><name>JSON</name> <argument><expr><name>result</name></expr></argument> <option><name>ERROR_VARIABLE</name> <argument><expr><name>error</name></expr></argument></option> <option><name>STRING_ENCODE</name> <argument><expr><literal type="string">"hello world"</literal></expr></argument></option></option>)</argument_list></command>
+</unit>
+
+</unit>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="add_compile_options">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>-Wall</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>-Wall</flag></expr></argument> <argument><expr><flag>-Wextra</flag></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

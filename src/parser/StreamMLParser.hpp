@@ -201,6 +201,10 @@ private:
                 srcMLParser::start_javascript();
                 break;
 
+            case LANGUAGE_CMAKE:
+                srcMLParser::start_cmake();
+                break;
+
             default:
                 srcMLParser::start();
             }
@@ -506,6 +510,26 @@ private:
                 pushSkipToken();
                 srcMLParser::consume();
                 pushESkipToken(srcMLParser::SHTML_COMMENT);
+
+                break;
+
+            case srcMLParser::CMAKE_BLOCK_COMMENT_START:
+
+                pushSSkipToken(srcMLParser::SCOMMENT);
+                pushSkipToken();
+                srcMLParser::consume();
+
+                open_comments.push(srcMLParser::SCOMMENT);
+
+                break;
+
+            case srcMLParser::CMAKE_BLOCK_COMMENT_END:
+
+                open_comments.pop();
+
+                pushSkipToken();
+                srcMLParser::consume();
+                pushESkipToken(srcMLParser::SCOMMENT);
 
                 break;
 

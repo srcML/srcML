@@ -115,6 +115,7 @@ header "pre_include_cpp" {
 
 // Included in the generated srcMLParser.hpp file after antlr includes
 header "post_include_hpp" {
+#include "OptionsConfig.h"
 #include <string>
 #include <string_view>
 #include <algorithm>
@@ -125,6 +126,9 @@ header "post_include_hpp" {
 #include <ModeStack.hpp>
 #include <srcml_options.hpp>
 #include <cstdlib>
+#include <fstream>
+#include <filesystem>
+#include <unordered_map>
 #undef CONST
 #undef VOID
 #undef DELETE
@@ -212,6 +216,84 @@ struct TokenPosition {
 
     antlr::RefToken* token;
     int* sp;
+};
+
+static std::vector<std::string> split(const std::string& s, char delimiter) {
+        std::vector<std::string> tokens;
+        std::string token;
+        for (char c : s) {
+            if (c == delimiter) {
+                if (!token.empty())
+                    tokens.push_back(token);
+                token.clear();
+            } else {
+                token += c;
+            }
+        }
+        if (!token.empty())
+            tokens.push_back(token);
+        return tokens;
+    }
+
+class CMakeOptionsSet {
+public:
+    static CMakeOptionsSet& getInstance() {
+        static CMakeOptionsSet instance;
+        return instance;
+    }
+
+    bool checkCommand(std::string command) {
+        return data.find(command) != data.end();
+    }
+
+    std::vector<std::string> getCommandVector(std::string command_name, std::string command_type) {
+        if (data[command_name].find(command_type) != data[command_name].end()) {
+            return data[command_name][command_type];
+        }
+        else if (data[command_name].find("_") != data[command_name].end()) {
+            return data[command_name]["_"];
+        }
+        else {
+            return std::vector<std::string>();
+        }
+    }
+
+
+private:
+    CMakeOptionsSet() {
+        std::ifstream in;
+
+        if (std::filesystem::exists(CMAKE_OPTIONS_FILE_INSTALL))
+            in.open(CMAKE_OPTIONS_FILE_INSTALL);
+        else
+            in.open(CMAKE_OPTIONS_FILE_BUILD);
+
+        if (!in.is_open())
+            std::cerr << "Could not locate the CMake Options file" << std::endl;
+
+        std::string line;
+        while (std::getline(in, line)) {
+            std::vector<std::string> values = split(line,',');
+            std::string command_name = values[0];
+            if (data.find(command_name) != data.end()) {
+                data.insert(std::make_pair(command_name,std::unordered_map<std::string,std::vector<std::string>>()));
+            }
+
+            for (std::string command_type_option : split(values[1],':')) {
+                std::string command_type = split(command_type_option,'|')[0];
+                data[command_name].insert(std::make_pair(command_type,std::vector<std::string>()));
+                for (size_t i = 1; i < values.size(); ++i) {
+                    if (values[i] != "_") {
+                        data[command_name][command_type].push_back(values[i]);
+                    }
+                }
+            }
+        }
+
+        in.close();
+    }
+
+    std::unordered_map<std::string, std::unordered_map<std::string,std::vector<std::string>>> data;
 };
 
 }
@@ -763,6 +845,28 @@ tokens {
     STS_SPECIFIER;
     STS_TYPE;
     STS_TYPEDEF;
+
+    // CMake
+    SBLOCK_STATEMENT;
+    SBRACKET_ARGUMENT;
+    SBOOLEAN_VALUE_TRUE;
+    SBOOLEAN_VALUE_FALSE;
+    SCOMMAND;
+    SCOMPILER_FLAG_CMAKE;
+    SEXPRESSION_NAME;
+    SEXPRESSION_ENV;
+    SEXPRESSION_CACHE;
+    SEXPRESSION_GENERATOR;
+    SINCLUDE_CMAKE;
+    SLIST_LISTS;
+    SLIST_ITEMS;
+    SLIST_ZIP;
+    SMACRO_DEFINITION;
+    SOPTION;
+    SPROPAGATE;
+    SRANGE_IN_CMAKE;
+    SRANGE_RANGE_CMAKE;
+    SSCOPE;
 }
 
 /*
@@ -849,6 +953,11 @@ public:
     static const antlr::BitSet keyword_expression_pair_js_token_set;
     static const antlr::BitSet declaration_specifiers_ts_token_set;
     static const antlr::BitSet function_declaration_specifiers_ts_token_set;
+    static const antlr::BitSet cmake_end_statement_commands;
+    static const antlr::BitSet cmake_foreach_ranges;
+    static const antlr::BitSet cmake_foreach_lists;
+    static const antlr::BitSet cmake_keywords;
+    static const antlr::BitSet cmake_expansion_expr_tokens;
 
     // constructor
     srcMLParser(antlr::TokenStream& lexer, int lang, const OPTION_TYPE& options);
@@ -935,6 +1044,7 @@ public:
     // If there are ever more than 100 duplex keywords in a single language, this must change
     static constexpr std::size_t PYTHON_RULES_SIZE     = DUPLEX_RULES_SIZE + 200;
     static constexpr std::size_t JAVASCRIPT_RULES_SIZE = DUPLEX_RULES_SIZE + 200;
+    static constexpr std::size_t CMAKE_RULES_SIZE      = DUPLEX_RULES_SIZE + 200;
 
     // If downstream helpers expect INDEX, provide aliases matching the absolute codes above
     // If the helpers instead expect 0-based indices, change these to 0 and 1 respectively
@@ -981,6 +1091,13 @@ public:
                 JS_GET_LBRACKET_INDEX, JS_SET_LBRACKET_INDEX, JS_STATIC_LCURLY_INDEX, JS_WITH_LPAREN_INDEX, JS_YIELD_MULTOPS_INDEX
             );
         return javascriptRules;
+    }
+
+    /* CMake */
+    static inline const std::array<Rule, CMAKE_RULES_SIZE>& getStaticCMakeRules() {
+        static const std::array<Rule, CMAKE_RULES_SIZE> cmakeRules =
+            getCMakeRules<CMAKE_RULES_SIZE>();
+        return cmakeRules;
     }
 
     bool processRule(const Rule& rule) {
@@ -1169,6 +1286,27 @@ public:
         temp_array[JS_STATIC_LCURLY]    = { SSTATIC_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS | MODE_BLOCK | MODE_EXPECT, nullptr, nullptr };  // differentiates a 'static' declaration from a 'static {}' block
         temp_array[JS_WITH_LPAREN]      = { SWITH_STATEMENT, 0, MODE_STATEMENT | MODE_NEST, MODE_WITH_JS | MODE_LCURLY_BLOCK_JS | MODE_BLOCK | MODE_EXPECT, nullptr, &srcMLParser::with_lparen_js };  // extra consume for '(' is in the provided rule
         temp_array[JS_YIELD_MULTOPS]    = { SYIELD_GENERATOR_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, &srcMLParser::consume };  // extra consume() for '*'
+
+        return temp_array;
+    }
+
+
+    template <size_t SIZE>
+    static constexpr std::array<Rule, SIZE> getCMakeRules() {
+        std::array<Rule, SIZE> temp_array;
+
+        /* GENERIC STATEMENTS */
+        temp_array[BREAK]    = { SBREAK_STATEMENT, 0, MODE_STATEMENT , 0, nullptr, &srcMLParser::cmake_end_statement };
+        temp_array[CONTINUE] = { SCONTINUE_STATEMENT, 0, MODE_STATEMENT , 0, nullptr, &srcMLParser::cmake_end_statement };
+        temp_array[IF]       = { SIF, 0, MODE_IF, 0, &srcMLParser::cmake_if_stmt_start, &srcMLParser::cmake_if_stmt };
+        temp_array[RETURN]   = { SRETURN_STATEMENT, 0, MODE_STATEMENT | MODE_PROPAGATE_STATEMENT_CMAKE , 0, nullptr, &srcMLParser::cmake_end_statement };
+        temp_array[WHILE]    = { SWHILE_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::cmake_while };
+
+        /* CMAKE STATEMENTS */
+        temp_array[CMAKE_BLOCK]    = { SBLOCK_STATEMENT, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::cmake_block_statement };
+        temp_array[CMAKE_FOREACH]  = { SFOREACH_STATEMENT, 0, MODE_STATEMENT , 0, nullptr, &srcMLParser::cmake_foreach };
+        temp_array[CMAKE_FUNCTION] = { SFUNCTION_DEFINITION, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::cmake_function };
+        temp_array[CMAKE_MACRO]    = { SMACRO_DEFINITION, 0, MODE_STATEMENT, 0, nullptr, &srcMLParser::cmake_macro };
 
         return temp_array;
     }
@@ -2064,6 +2202,65 @@ javascript_rules[] {
 ;
 
 /*
+  start_cmake
+
+  Invokes a table-based approach to detecting and handling tokens.
+
+  Whitespace tokens are handled elsewhere and are automagically included
+  in the output stream.
+
+  Order of evaluation is important.
+*/
+start_cmake[] { ENTRY_DEBUG_START ENTRY_DEBUG
+        ++start_count;
+
+        cmake_statement_level();
+}:;
+exception
+catch[...] {
+        CATCH_DEBUG
+
+        // need to consume the token. If we got here because
+        // of an error with EOF token, then call EOF directly
+        if (LA(1) == 1)
+            eof();
+        else
+            consume();
+}
+
+cmake_statement_level[] { ENTRY_DEBUG
+    // CMake rules adhere to the following form:
+    // START_TOKEN, MODE_NOT_IN, MODE_TO_START, MODE_FOLLOWING_KEYWORD, pre(), post()
+    const auto& cmake_rules = getStaticCMakeRules();
+
+    while (LA(1) != 1 /* EOF */) {
+        if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) {
+            // Need to put generic command call
+            init_command_cmake();
+        }
+
+        else if (cmake_end_statement_commands.member(LA(1))) {
+            // Encountered the end of the block, end!
+            break;
+        }
+
+        else {
+            auto token = LA(1);
+            if (next_token() == LPAREN) {
+                const auto& rule = cmake_rules[token];
+                if (rule.elementToken) {
+                    processRule(rule);
+                }
+            }
+            else {
+                // consume to be safe
+                consume();
+            }
+        }
+    }
+}:;
+
+/*
   keyword_statements
 
   Statements that begin with a unique keyword.
@@ -2138,7 +2335,7 @@ pattern_statements[] {
         STMT_TYPE stmt_type = NONE;
         CALL_TYPE type = NOCALL;
 
-        // detect the declaration/definition type for non-Python languages
+        // detect the declaration/definition type for non-declarative languages
         if (!inLanguage(LANGUAGE_PYTHON))
             pattern_check(stmt_type, secondtoken, type_count, after_token);
 
@@ -26504,3 +26701,1022 @@ trailing_html_comment_js[] { ENTRY_DEBUG }:
             endMode(MODE_LOCAL);
         }
 ;
+
+/*
+  cmake_end_statement
+
+  Consumes the parentheses that follows a simple CMake statement (break, include, continue, return, etc)
+*/
+cmake_end_statement[] { ENTRY_DEBUG
+    if (LA(1) == LPAREN) consume();
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        if (LA(1) == CMAKE_PROPAGATE && inMode(MODE_PROPAGATE_STATEMENT_CMAKE))
+            cmake_propagate();
+        else
+            cmake_expression();
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    if (inMode(MODE_STATEMENT))
+        endMode(MODE_STATEMENT);
+}:;
+
+cmake_function[] { ENTRY_DEBUG
+
+    if (LA(1) == LPAREN) consume();
+
+    if (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_expression();
+    }
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        startNewMode(MODE_PARAMETER);
+        startElement(SPARAMETER);
+
+        cmake_expression();
+
+        endMode(MODE_PARAMETER);
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDFUNCTION) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+}:;
+
+cmake_macro[] { ENTRY_DEBUG
+
+    if (LA(1) == LPAREN) consume();
+
+    if (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_expression();
+    }
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        startNewMode(MODE_PARAMETER);
+        startElement(SPARAMETER);
+
+        cmake_expression();
+
+        endMode(MODE_PARAMETER);
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDMACRO) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+}:;
+
+cmake_while[] { ENTRY_DEBUG
+    
+    startNewMode(MODE_CONDITION);
+    startElement(SCONDITION);
+
+    if (LA(1) == LPAREN) consume();
+
+    cmake_condition_expression();
+
+    if (LA(1) == RPAREN) consume();
+
+    endMode(MODE_CONDITION);
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDWHILE) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+}:;
+
+cmake_if_stmt_start[] {
+    startNewMode(MODE_STATEMENT);
+    startElement(SIF_STATEMENT);
+}:;
+
+cmake_if_stmt[] { ENTRY_DEBUG
+
+    startNewMode(MODE_CONDITION);
+    startElement(SCONDITION);
+
+    if (LA(1) == LPAREN) consume();
+
+    cmake_condition_expression();
+
+    if (LA(1) == RPAREN) consume();
+
+    endMode(MODE_CONDITION);
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    endMode(MODE_IF);
+
+    while (LA(1) == CMAKE_ELSEIF) {
+        startNewMode(MODE_IF);
+        startElement(SELSEIF);
+
+        consume(); // consume elseif
+
+        startNewMode(MODE_CONDITION);
+
+        startElement(SCONDITION);
+
+        if (LA(1) == LPAREN) consume();
+
+        cmake_condition_expression();
+
+        if (LA(1) == RPAREN) consume();
+
+        endMode(MODE_CONDITION);
+
+        startNewMode(MODE_BLOCK);
+        startNoSkipElement(SBLOCK);
+
+        cmake_statement_level();
+
+        flushSkip();
+        endMode(MODE_BLOCK);
+
+        endMode(MODE_IF);
+    }
+
+    if (LA(1) == ELSE) {
+        startNewMode(MODE_ELSE);
+        startElement(SELSE);
+
+        consume(); // consume else
+
+        startNewMode(MODE_CONDITION);
+
+        startElement(SCONDITION);
+
+        if (LA(1) == LPAREN) consume();
+
+        cmake_condition_expression();
+
+        if (LA(1) == RPAREN) consume();
+
+        endMode(MODE_CONDITION);
+
+        startNewMode(MODE_BLOCK);
+        startNoSkipElement(SBLOCK);
+
+        cmake_statement_level();
+
+        flushSkip();
+        endMode(MODE_BLOCK);
+
+        endMode(MODE_ELSE);
+    }
+
+    if (LA(1) == CMAKE_ENDIF) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+}:;
+
+
+cmake_condition_expression[] { ENTRY_DEBUG
+
+    startNewMode(MODE_EXPRESSION);
+    startElement(SEXPRESSION);
+
+    int paren_count = 0;
+
+    while (LA(1) != antlr::Token::EOF_TYPE) {
+        if (LA(1) == RPAREN && paren_count == 0) {
+            break;
+        }
+        bool mark_as_plaintext_string = false;
+        bool only_name_tokens = true;
+        int token_count = 0;
+        int starting_token = LA(1);
+
+        int start = mark();
+        inputState->guessing++;
+
+        // Need to look ahead and count how many tokens appear without a delimiter
+        try {
+            while(LA(2) != WS && LA(2) != EOL && LA(1) != RPAREN && LA(1) != LPAREN) {
+                ++token_count;
+                if (starting_token != LA(1)) {
+                    mark_as_plaintext_string = true;
+                }
+                if (LA(1) != NAME && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+                    only_name_tokens = false;
+                }
+                consume();
+            }
+            if (LA(1) != RPAREN) {
+                ++token_count;
+                if (starting_token != LA(1)) {
+                    mark_as_plaintext_string = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+
+        // if this is a marked string of some kind, ignore
+        if (LA(1) == CMAKE_QUOTE || LA(1) == BRACKET_ARGUMENT_START ) {
+            mark_as_plaintext_string = false;
+        }
+
+
+        if (mark_as_plaintext_string && !only_name_tokens) {
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_LOCAL);
+        }
+
+        else if (LA(1) == NAME || cmake_expansion_expr_tokens.member(LA(1))) {
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_VARIABLE_NAME);
+        }
+
+        else if (LA(1) == LPAREN) {
+            startNewMode(MODE_LOCAL);
+            startElement(SOPERATOR);
+            consume();
+            endMode(MODE_LOCAL);
+            ++paren_count;
+        }
+        else if (LA(1) == RPAREN) {
+            startNewMode(MODE_LOCAL);
+            startElement(SOPERATOR);
+            consume();
+            endMode(MODE_LOCAL);
+            --paren_count;
+        }
+
+        else if (LA(1) == CMAKE_OPERATORS) {
+            startNewMode(MODE_LOCAL);
+            startElement(SOPERATOR);
+            consume();
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == LITERAL_TRUE) {
+            startNewMode(MODE_LOCAL);
+            startElement(SBOOLEAN_VALUE_TRUE);
+            consume();
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == LITERAL_FALSE) {
+            startNewMode(MODE_LOCAL);
+            startElement(SBOOLEAN_VALUE_FALSE);
+            consume();
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == CMAKE_QUOTE) {
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING);
+
+            consume(); // consume "
+
+            while (LA(1) != CMAKE_QUOTE && LA(1) != antlr::Token::EOF_TYPE) {
+                cmake_process_one_token_argument_text();
+            }
+
+            if (LA(1) == CMAKE_QUOTE) consume();
+
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == BRACKET_ARGUMENT_START) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        std::string bracket_start = LT(1)->getText();
+        int equal_count = std::count(bracket_start.begin(), bracket_start.end(), '=');
+
+        consume();
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == BRACKET_ARGUMENT_END) {
+                std::string bracket_end = LT(1)->getText();
+                if (equal_count == std::count(bracket_end.begin(), bracket_end.end(), '=')) {
+                    break;
+                }
+            }
+            consume();
+        }
+
+        if (LA(1) == BRACKET_ARGUMENT_END) consume();
+
+        endMode(MODE_LOCAL);
+    }
+        else if (LA(1) == CONSTANTS) {
+            startNewMode(MODE_LOCAL);
+            startElement(SLITERAL);
+
+            consume();
+
+            endMode(MODE_LOCAL);
+        }
+        else if (LA(1) == CMAKE_COMPILER_FLAG) {
+            startNewMode(MODE_LOCAL);
+            startElement(SCOMPILER_FLAG_CMAKE);
+
+            consume();
+
+            endMode(MODE_LOCAL);
+        }
+        else {
+            // Other, make it a string!
+            startNewMode(MODE_LOCAL);
+            startElement(SSTRING);
+
+            for (int i = 0; i < token_count; ++i) {
+                cmake_process_one_token_argument_text();
+            }
+
+            endMode(MODE_LOCAL);
+        }
+    }
+
+    endMode(MODE_EXPRESSION);
+
+}:;
+
+
+/*
+  cmake_propagate
+
+  Handles support for CMake propogates.
+*/
+cmake_propagate[] { ENTRY_DEBUG 
+
+    startNewMode(MODE_LOCAL);
+    startElement(SPROPAGATE);
+
+    consume(); // consume "PROPAGATE"
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_expression();
+    }
+
+    endMode(MODE_LOCAL);
+
+}:;
+
+/*
+  generic_command_cmake
+
+  Handles a command in CMake, which follow a similar syntax to calls.
+  Not used directly, but called by init_command_cmake.
+*/
+generic_command_cmake[] { ENTRY_DEBUG 
+    startNewMode(MODE_COMMAND_CMAKE);
+    startElement(SCOMMAND);
+
+    startNewMode(MODE_VARIABLE_NAME);
+    startElement(SNAME);
+
+    if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) consume();
+
+    endMode(MODE_VARIABLE_NAME);
+
+    startNewMode(MODE_ARGUMENT_LIST);
+    startElement(SARGUMENT_LIST);
+
+    if (LA(1) == LPAREN) consume();
+
+    while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_argument();
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    endMode(MODE_ARGUMENT_LIST);
+    
+    endMode(MODE_COMMAND_CMAKE);
+} :;
+
+cmake_argument[] { ENTRY_DEBUG
+    startNewMode(MODE_ARGUMENT);
+    startElement(SARGUMENT);
+
+    cmake_expression();
+
+    endMode(MODE_ARGUMENT);
+}:;
+
+
+/*
+  cmake_option
+
+  Handles a CMake option.
+*/
+cmake_option[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_OPTION_CMAKE);
+            startElement(SOPTION);
+
+            startNewMode(MODE_VARIABLE_NAME);
+            startElement(SNAME);
+        }
+
+        CMAKE_OPTIONS
+
+        {
+            endMode(MODE_VARIABLE_NAME);
+        }
+
+        (options { greedy = true; } :
+            // ensure the closing paren is not included in the argument
+            { LA(1) == RPAREN }?
+            {
+                break;
+            } |
+
+            // ensure the current option does not include a new option
+            { inTransparentMode(MODE_COMMAND_CMAKE) }?
+            {
+                break;
+            }
+            CMAKE_OPTIONS |
+
+            {
+                if (!inMode(MODE_OPTION_CMAKE))
+                    endDownToMode(MODE_OPTION_CMAKE);
+            }
+            cmake_argument
+        )*
+;
+
+/*
+  cmake_option_as_name
+
+  Treats a CMake option as a name.  Not used directly, but called by cmake_expression.
+*/
+cmake_option_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+            {
+                startNewMode(MODE_VARIABLE_NAME);
+
+                startElement(SNAME);
+            }
+
+            CMAKE_OPTIONS
+;
+
+cmake_foreach[] { ENTRY_DEBUG
+
+    startNewMode(MODE_CONTROL);
+    startElement(SCONTROL);
+
+    if (LA(1) == LPAREN) consume();
+
+    while (LA(1) != RPAREN && !cmake_foreach_ranges.member(LA(1)) && LA(1) != antlr::Token::EOF_TYPE) {
+        cmake_expression();
+    }
+
+    if (cmake_foreach_ranges.member(LA(1))) {
+        startNewMode(MODE_RANGED_FOR);
+        if (LA(1) == CMAKE_RANGE) {
+            startElement(SRANGE_RANGE_CMAKE);
+            consume(); // consume "RANGE"
+
+            while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                cmake_expression();
+            }
+
+        }
+
+        else if (LA(1) == CMAKE_IN) {
+            startElement(SRANGE_IN_CMAKE);
+            consume(); // consume "IN"
+
+            while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                if (cmake_foreach_lists.member(LA(1))) {
+                    startNewMode(MODE_LIST);
+                    if (LA(1) == CMAKE_ITEMS) startElement(SLIST_ITEMS);
+                    else if (LA(1) == CMAKE_LISTS) startElement(SLIST_LISTS);
+                    if (LA(1) == CMAKE_ZIP_LISTS) startElement(SLIST_ZIP);
+                    consume();
+
+                    while (LA(1) != RPAREN && !cmake_foreach_lists.member(LA(1)) && LA(1) != antlr::Token::EOF_TYPE) {
+                        cmake_expression();
+                    }
+                    endMode(MODE_LIST);
+                }
+                else {
+                    cmake_expression();
+                }
+            }
+        }
+        endMode(MODE_RANGED_FOR);
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    endMode(MODE_CONTROL);
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDFOREACH) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+} :;
+
+/*
+  cmake_block_statement
+
+  Handles the parenthesis contents in a "block()" statement in CMake.
+*/
+cmake_block_statement[] { ENTRY_DEBUG 
+
+    if (LA(1) == LPAREN) consume();
+
+    if (LA(1) == CMAKE_SCOPE_FOR) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSCOPE);
+
+        consume(); // consume "SCOPE_FOR"
+
+        while (LA(1) != RPAREN && LA(1) != CMAKE_PROPAGATE && LA(1) != antlr::Token::EOF_TYPE) {
+            cmake_expression();
+        }
+
+        endMode(MODE_LOCAL);
+    }
+
+    if (LA(1) == CMAKE_PROPAGATE) {
+        cmake_propagate();
+    }
+
+    if (LA(1) == RPAREN) consume();
+
+    startNewMode(MODE_BLOCK);
+    startNoSkipElement(SBLOCK);
+
+    cmake_statement_level();
+
+    flushSkip();
+    endMode(MODE_BLOCK);
+
+    if (LA(1) == CMAKE_ENDBLOCK) {
+        consume();
+        startNewMode(MODE_STATEMENT); // start this mode so it can end in the end_statement part
+        cmake_end_statement();
+    }
+
+    endMode(MODE_STATEMENT);
+
+} :;
+
+
+/*
+  cmake_compiler_flag
+
+  Handles a compiler flag in CMake.  Supports "-", "--", and "/W*".
+*/
+cmake_compiler_flag[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_LOCAL);
+
+            startElement(SCOMPILER_FLAG_CMAKE);
+        }
+
+        CMAKE_COMPILER_FLAG
+;
+
+
+/*
+  cmake_expression
+
+  Matches an expression in CMake.
+*/
+cmake_expression[] { ENTRY_DEBUG
+    
+    bool mark_as_plaintext_string = false;
+    bool only_name_tokens = true;
+    int token_count = 0;
+    int starting_token = LA(1);
+
+    int start = mark();
+    inputState->guessing++;
+
+    // Need to look ahead and count how many tokens appear without a delimiter
+    try {
+        while(LA(2) != WS && LA(2) != EOL && LA(1) != RPAREN) {
+            if (LA(1) == antlr::Token::EOF_TYPE) {
+                break;
+            }
+            ++token_count;
+            if (starting_token != LA(1)) {
+                mark_as_plaintext_string = true;
+            }
+            if (LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+                only_name_tokens = false;
+            }
+            consume();
+        }
+        if (LA(1) != RPAREN) {
+            ++token_count;
+            if (starting_token != LA(1)) {
+                mark_as_plaintext_string = true;
+            }
+        }
+    }
+    catch (...) {}
+
+    inputState->guessing--;
+    rewind(start);
+
+    // if this is a marked string of some kind, ignore
+    if (LA(1) == CMAKE_QUOTE || LA(1) == BRACKET_ARGUMENT_START ) {
+        mark_as_plaintext_string = false;
+    }
+
+    startNewMode(MODE_EXPRESSION);
+    startElement(SEXPRESSION);
+
+    if (mark_as_plaintext_string && !only_name_tokens) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        for (int i = 0; i < token_count; ++i) {
+            cmake_process_one_token_argument_text();
+        }
+
+        endMode(MODE_LOCAL);
+    }
+
+    else if (LA(1) == NAME || cmake_keywords.member(LA(1)) || cmake_expansion_expr_tokens.member(LA(1))) {
+        startNewMode(MODE_VARIABLE_NAME);
+        startElement(SNAME);
+
+        for (int i = 0; i < token_count; ++i) {
+            cmake_process_one_token_argument_text();
+        }
+
+        endMode(MODE_VARIABLE_NAME);
+    }
+    else if (LA(1) == CMAKE_QUOTE) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        consume(); // consume "
+
+        while (LA(1) != CMAKE_QUOTE && LA(1) != antlr::Token::EOF_TYPE) {
+            cmake_process_one_token_argument_text();
+        }
+
+        if (LA(1) == CMAKE_QUOTE) consume();
+
+        endMode(MODE_LOCAL);
+    }
+    else if (LA(1) == BRACKET_ARGUMENT_START) {
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        std::string bracket_start = LT(1)->getText();
+        int equal_count = std::count(bracket_start.begin(), bracket_start.end(), '=');
+
+        consume();
+
+        while (LA(1) != antlr::Token::EOF_TYPE) {
+            if (LA(1) == BRACKET_ARGUMENT_END) {
+                std::string bracket_end = LT(1)->getText();
+                if (equal_count == std::count(bracket_end.begin(), bracket_end.end(), '=')) {
+                    break;
+                }
+            }
+            consume();
+        }
+
+        if (LA(1) == BRACKET_ARGUMENT_END) consume();
+
+        endMode(MODE_LOCAL);
+    }
+    else if (LA(1) == CONSTANTS) {
+        startNewMode(MODE_LOCAL);
+        startElement(SLITERAL);
+
+        consume();
+
+        endMode(MODE_LOCAL);
+    }
+    else if (LA(1) == CMAKE_COMPILER_FLAG) {
+        startNewMode(MODE_LOCAL);
+        startElement(SCOMPILER_FLAG_CMAKE);
+
+        consume();
+
+        endMode(MODE_LOCAL);
+    }
+    else {
+        // Other, make it a string!
+        startNewMode(MODE_LOCAL);
+        startElement(SSTRING);
+
+        for (int i = 0; i < token_count; ++i) {
+            cmake_process_one_token_argument_text();
+        }
+
+        endMode(MODE_LOCAL);
+    }
+
+
+    endMode(MODE_EXPRESSION);
+
+
+}:;
+
+cmake_process_one_token_argument_text[] { ENTRY_DEBUG
+    if (LA(1) == CMAKE_NAME_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_NAME);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_NAME_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == CMAKE_ENV_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_ENV);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_ENV_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == CMAKE_CACHE_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_CACHE);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_CACHE_CMAKE);
+        startElement(SNAME);
+
+    }
+    else if (LA(1) == CMAKE_GENERATOR_EXPRESSION_START) {
+        startNewMode(MODE_EXPRESSION);
+        startElement(SEXPRESSION_GENERATOR);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == COLON && inMode(MODE_EXPRESSION_GENERATOR_CMAKE)) {
+        endMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+
+        consume();
+
+        startNewMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+        startElement(SNAME);
+    }
+    else if (LA(1) == CMAKE_RCURLY && (inMode(MODE_EXPRESSION_NAME_CMAKE) || inMode(MODE_EXPRESSION_ENV_CMAKE) || inMode(MODE_EXPRESSION_CACHE_CMAKE))) {
+        if (inMode(MODE_EXPRESSION_NAME_CMAKE))
+            endMode(MODE_EXPRESSION_NAME_CMAKE);
+        else if (inMode(MODE_EXPRESSION_ENV_CMAKE))
+            endMode(MODE_EXPRESSION_ENV_CMAKE);
+        else if (inMode(MODE_EXPRESSION_CACHE_CMAKE))
+            endMode(MODE_EXPRESSION_CACHE_CMAKE);
+
+        consume();
+
+        endMode(MODE_EXPRESSION);
+    }
+    else if (LA(1) == TEMPOPE && inMode(MODE_EXPRESSION_GENERATOR_CMAKE)) {
+        endMode(MODE_EXPRESSION_GENERATOR_CMAKE);
+
+        consume();
+
+        endMode(MODE_EXPRESSION);
+    }
+    else {
+        consume();
+    }
+}:;
+
+/*
+  init_command_cmake
+
+  Differentiates a built-in CMake command from a "generic" CMake command.
+  Built-in commands have special markup (including options).
+*/
+init_command_cmake[] { ENTRY_DEBUG 
+
+    CMakeOptionsSet& data = CMakeOptionsSet::getInstance();
+    if (data.checkCommand(LT(1)->getText())) {
+        builtin_command_cmake();
+    }
+    else {
+        generic_command_cmake();
+    }
+
+}:;
+
+/*
+  builtin_command_cmake
+
+  Handles a built-in command in CMake.
+*/
+builtin_command_cmake[] { ENTRY_DEBUG
+        CMakeOptionsSet& data = CMakeOptionsSet::getInstance(); 
+        std::string command_name = "";
+
+        // start the command
+        startNewMode(MODE_COMMAND_CMAKE);
+        startElement(SCOMMAND);
+
+        // save the name of the current command
+        command_name = LT(1)->getText();
+
+        startNewMode(MODE_VARIABLE_NAME);
+        startElement(SNAME);
+
+        if (LA(1) == NAME || LA(1) == CMAKE_OPERATORS) consume();
+
+        endMode(MODE_VARIABLE_NAME);
+
+        // start the argument list
+        startNewMode(MODE_ARGUMENT_LIST);
+
+        startElement(SARGUMENT_LIST);
+
+        if (LA(1) == LPAREN) consume();
+
+        // identify which command-structure this is
+        std::string command_type = LT(1)->getText();
+
+        // get the vector of command structure
+        std::vector<std::string> values = data.getCommandVector(command_name, command_type);
+
+        size_t value_position = 0;
+
+        while (LA(1) != RPAREN && LA(1) != 1) {
+            // first, gather all possible options in the current target set
+            std::vector<std::string> possible_options;
+
+            if (value_position < values.size())
+                possible_options = split(values[value_position],':');
+
+            std::string current_token = LT(1)->getText();
+
+            // check if current token is an option or not
+            bool isOption = false;
+            std::string option;
+            for (size_t i = 0; i < possible_options.size(); ++i) {
+                option = possible_options[i];
+                if (split(option,'|')[0] == current_token) {
+                    isOption = true;
+                    break;
+                }
+            }
+
+            if (!isOption)
+                cmake_argument();
+            else {
+                int num_of_values = std::stoi(split(option,'|')[1]);
+
+                // start the option
+                startNewMode(MODE_OPTION_CMAKE);
+                startElement(SOPTION);
+
+                // start the option name
+                startNewMode(MODE_VARIABLE_NAME);
+                startElement(SNAME);
+
+                consume();
+
+                endMode(MODE_VARIABLE_NAME);
+
+                if (num_of_values >= 0) {
+                    for (int i = 0; i < num_of_values; ++i) {
+                        cmake_argument();
+                    }
+                }
+                else {
+                    while(true) {
+                        std::string next_value = LT(1)->getText();
+
+                        if (next_value == ")")
+                            break;
+
+                        bool isAnOption = false;
+
+                        // first, check if value is an option in current set
+                        for (auto next_option : possible_options) {
+                            if (split(next_option,'|')[0] == next_value) {
+                                isAnOption = true;
+                                break;
+                            }
+                        }
+
+                        // then, check if there is a next set
+                        if (value_position < values.size() - 1) {
+                            // If there is, get that set and then check if value is an option in it
+                            std::vector<std::string> next_possible_options = split(values[value_position+1],':');
+                            for (auto next_option : next_possible_options) {
+                                if (split(next_option,'|')[0] == next_value) {
+                                    isAnOption = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // finally, if it's an option, leave
+                        if (isAnOption)
+                            break;
+                        cmake_argument();
+                    }
+                }
+                endDownToMode(MODE_OPTION_CMAKE);
+                endMode(MODE_OPTION_CMAKE);
+                std::string next_value = LT(1)->getText();
+                bool done_with_option_set = true;
+                for (auto next_option : possible_options) {
+                    if (split(next_option,'|')[0] == next_value) {
+                        done_with_option_set = false;
+                        break;
+                    }
+                }
+                if (done_with_option_set)
+                    ++value_position;
+            }
+        }
+        endDownToMode(MODE_ARGUMENT_LIST);
+
+        if (LA(1) == RPAREN) consume();
+
+        endDownToMode(MODE_COMMAND_CMAKE);
+        endMode(MODE_COMMAND_CMAKE);
+}:;
+
+

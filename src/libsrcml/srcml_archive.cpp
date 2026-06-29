@@ -27,7 +27,16 @@ const char* srcml_archive_check_extension(const srcml_archive* archive, const ch
     if (archive == nullptr || filename == nullptr)
         return 0;
 
-    Language language(archive->registered_languages.get_language_from_filename(filename));
+    std::string path = filename;
+
+    std::transform(path.begin(), path.end(), path.begin(), [](unsigned char c) {
+        return std::tolower(c);
+    });
+
+    if (path.size() >= 14 && path.substr(path.size() - 14, 14) == "cmakelists.txt")
+        path = "cmakelists.cmake";
+
+    Language language(archive->registered_languages.get_language_from_filename(path.c_str()));
     std::string_view lang_string = language.getLanguageString();
     return lang_string.empty() ? 0 : lang_string.data();
 }

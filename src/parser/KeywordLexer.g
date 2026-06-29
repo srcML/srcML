@@ -391,6 +391,29 @@ tokens {
     JS_YIELD;
     QMARK_PERIOD;
 
+    CMAKE_BLOCK;
+    CMAKE_COMPILER_FLAG;
+    CMAKE_ENDBLOCK;
+    CMAKE_ENDFOREACH;
+    CMAKE_ENDFUNCTION;
+    CMAKE_ENDIF;
+    CMAKE_ELSEIF;
+    CMAKE_ENDMACRO;
+    CMAKE_ENDWHILE;
+    CMAKE_FOREACH;
+    CMAKE_FUNCTION;
+    CMAKE_IN;
+    CMAKE_ITEMS;
+    CMAKE_LISTS;
+    CMAKE_MACRO;
+    CMAKE_OPERATORS;
+    CMAKE_OPTIONS;
+    CMAKE_PROPAGATE;
+    CMAKE_RANGE;
+    CMAKE_RCURLY;
+    CMAKE_SCOPE_FOR;
+    CMAKE_ZIP_LISTS;
+
     // TypeScript (appears as a namespace prefix)
     TS_ABSTRACT;
     TS_ASSERTS;
@@ -428,6 +451,8 @@ public:
     int prev;
     int currentmode;
     int lastnonspacetoken;
+    bool in_cmake_string = false;
+    bool in_cmake_bracket = false;
 
     virtual void consume() noexcept(false) {
         if (LA(1) != ' ')
@@ -456,6 +481,26 @@ public:
             lookaheadMinusThree = lookaheadMinusTwo;
             lookaheadMinusTwo = lookaheadMinusOne;
             lookaheadMinusOne = LA(1);
+        }
+    }
+
+    bool isEnvExprCMake() {
+        size_t index = 1;
+        if (LA(index++) == 'E' && LA(index++) == 'N' && LA(index++) == 'V' && LA(index) == '{') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    bool isCacheExprCMake() {
+        size_t index = 1;
+        if (LA(index++) == 'C' && LA(index++) == 'A' && LA(index++) == 'C' && LA(index++) == 'H' && LA(index++) == 'E' && LA(index) == '{') {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
@@ -1013,6 +1058,103 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "readonly"     , TS_READONLY       , LANGUAGE_JAVASCRIPT },
         { "satisfies"    , TS_SATISFIES      , LANGUAGE_JAVASCRIPT },
         { "type"         , TS_TYPE           , LANGUAGE_JAVASCRIPT },
+
+        // CMake options; placeholder value to be replaced later
+        { "_-_-_"          , CMAKE_OPTIONS       , LANGUAGE_CMAKE },
+
+        // CMake strings; placeholder value to be replaced later
+        { "_-_-_-_"        , CMAKE_COMPILER_FLAG , LANGUAGE_CMAKE },
+
+        // CMake operators
+        { "AND",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "COMMAND",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED CACHE",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED ENV",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "EQUAL",                  CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "EXISTS",                 CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "GREATER",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "GREATER_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IN_LIST",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_ABSOLUTE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_DIRECTORY",           CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_EXECUTABLE",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_NEWER_THAN",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_READABLE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_SYMLINK",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_WRITABLE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "LESS",                   CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "LESS_EQUAL",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "MATCHES",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "NOT",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "OR",                     CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "PATH_EQUAL",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STREQUAL",               CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRGREATER",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRGREATER_EQUAL",       CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRLESS",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRLESS_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "TARGET",                 CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "TEST",                   CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_GREATER",        CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_GREATER_EQUAL",  CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_LESS",           CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_LESS_EQUAL",     CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "XOR",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
+
+        // CMake literals
+        { "TRUE"         , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "True"         , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "true"         , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "FALSE"        , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "False"        , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "false"        , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "ON"           , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "On"           , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "on"           , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "OFF"          , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "Off"          , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "off"          , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "YES"          , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "Yes"          , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "yes"          , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "NO"           , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "No"           , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "no"           , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "Y"            , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "y"            , LITERAL_TRUE  , LANGUAGE_CMAKE },
+        { "N"            , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "n"            , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "IGNORE"       , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "Ignore"       , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "ignore"       , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "NOTFOUND"     , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "NotFound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "Notfound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "notfound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
+
+        // CMake
+        { ";"            , WS                , LANGUAGE_CMAKE },
+        { "}"            , CMAKE_RCURLY      , LANGUAGE_CMAKE },
+        { "block"        , CMAKE_BLOCK       , LANGUAGE_CMAKE },
+        { "endblock"     , CMAKE_ENDBLOCK    , LANGUAGE_CMAKE },
+        { "endforeach"   , CMAKE_ENDFOREACH  , LANGUAGE_CMAKE },
+        { "endfunction"  , CMAKE_ENDFUNCTION , LANGUAGE_CMAKE },
+        { "endif"        , CMAKE_ENDIF ,       LANGUAGE_CMAKE },
+        { "elseif"       , CMAKE_ELSEIF      , LANGUAGE_CMAKE },
+        { "endmacro"     , CMAKE_ENDMACRO    , LANGUAGE_CMAKE },
+        { "endwhile"     , CMAKE_ENDWHILE    , LANGUAGE_CMAKE },
+        { "foreach"      , CMAKE_FOREACH     , LANGUAGE_CMAKE },
+        { "function"     , CMAKE_FUNCTION    , LANGUAGE_CMAKE },
+        { "IN"           , CMAKE_IN          , LANGUAGE_CMAKE },
+        { "ITEMS"        , CMAKE_ITEMS       , LANGUAGE_CMAKE },
+        { "LISTS"        , CMAKE_LISTS       , LANGUAGE_CMAKE },
+        { "macro"        , CMAKE_MACRO       , LANGUAGE_CMAKE },
+        { "PROPAGATE"    , CMAKE_PROPAGATE   , LANGUAGE_CMAKE },
+        { "RANGE"        , CMAKE_RANGE       , LANGUAGE_CMAKE },
+        { "SCOPE_FOR"    , CMAKE_SCOPE_FOR   , LANGUAGE_CMAKE },
+        { "ZIP_LISTS"    , CMAKE_ZIP_LISTS   , LANGUAGE_CMAKE },
    };
 
     // fill up the literals for the language that we are parsing

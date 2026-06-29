@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="flag">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>-O2</flag></expr></argument> <argument><expr><flag>-g</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_SHARED_LINKER_FLAGS</name></expr></argument> <argument><expr><flag>--cflags=0</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_SHARED_LINKER_FLAGS</name></expr></argument> <argument><expr><flag>--export-all</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/w</flag></expr></argument>)</comment></argument_list>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/W</flag></expr></argument>)</comment></argument_list>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/w4</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/W4</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/wall</flag></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/Wall</flag></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

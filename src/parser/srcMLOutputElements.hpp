@@ -376,4 +376,26 @@ const std::unordered_map<int, Element> srcMLOutput::process = {
     { TOKEN::STS_SPECIFIER,                 { "specifier",          TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_TYPE,                      { "type",               TS,      0,           0,        0,                   0 }},
     { TOKEN::STS_TYPEDEF,                   { "typedef",            TS,      0,           0,        0,                   0 }},
+
+    // CMake
+    { TOKEN::SBLOCK_STATEMENT,              { "block_stmt",        SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SBRACKET_ARGUMENT,             { "literal",           SRC, "type",             "string", "format",     "bracket" }},
+    { TOKEN::SBOOLEAN_VALUE_TRUE,           { "literal",           SRC, "type",            "boolean",  "value",        "true" }},
+    { TOKEN::SBOOLEAN_VALUE_FALSE,          { "literal",           SRC, "type",            "boolean",  "value",       "false" }},
+    { TOKEN::SCOMMAND,                      { "command",           SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SCOMPILER_FLAG_CMAKE,          { "flag",              SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SEXPRESSION_NAME,              { "expr",              SRC, "type",               "name",        0,             0 }},
+    { TOKEN::SEXPRESSION_ENV,               { "expr",              SRC, "type",                "env",        0,             0 }},
+    { TOKEN::SEXPRESSION_CACHE,             { "expr",              SRC, "type",              "cache",        0,             0 }},
+    { TOKEN::SEXPRESSION_GENERATOR,         { "expr",              SRC, "type",          "generator",        0,             0 }},
+    { TOKEN::SLIST_LISTS,                   { "list",              SRC, "type",               "list",        0,             0 }},
+    { TOKEN::SLIST_ITEMS,                   { "list",              SRC, "type",               "item",        0,             0 }},
+    { TOKEN::SLIST_ZIP,                     { "list",              SRC, "type",                "zip",        0,             0 }},
+    { TOKEN::SMACRO_DEFINITION,             { "macro_defn",        SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SOPTION,                       { "option",            SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SPROPAGATE,                    { "propagate",         SRC,      0,                    0,        0,             0 }},
+    { TOKEN::SRANGE_IN_CMAKE,               { "range",             SRC, "type",                 "in",        0,             0 }},
+    { TOKEN::SRANGE_RANGE_CMAKE,            { "range",             SRC, "type",              "range",        0,             0 }},
+    { TOKEN::SSCOPE,                        { "scope",             SRC,      0,                    0,        0,             0 }},
+
 };
