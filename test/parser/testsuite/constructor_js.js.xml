@@ -70,5 +70,28 @@
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>C</name> <init>= <expr><class>class <block>{
+  <constructor><ts:specifier>public</ts:specifier> constructor <parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>name</name></expr></expr_stmt>
+  </block_content>}</block></constructor>
+}</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>C</name> <init>= <expr><class>class <block>{
+  <constructor><ts:specifier>private</ts:specifier> constructor <parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>name</name></expr></expr_stmt>
+  </block_content>}</block></constructor>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>C</name> <init>= <expr><class>class <block>{
+  <constructor><ts:specifier>protected</ts:specifier> constructor <parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>name</name></expr></expr_stmt>
+  </block_content>}</block></constructor>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

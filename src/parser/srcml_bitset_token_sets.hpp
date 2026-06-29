@@ -279,8 +279,8 @@ token_set(srcMLParser, specifier_js_token_set,
 
 token_set(srcMLParser, post_specifier_js_token_set,
     // JavaScript keywords that follow one or more specifiers
-    srcMLParser::CLASS, srcMLParser::JS_LET, srcMLParser::JS_VAR, srcMLParser::JS_CONST, srcMLParser::JS_STATIC,
-    srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET,
+    srcMLParser::CLASS, srcMLParser::JS_CONSTRUCTOR, srcMLParser::JS_LET, srcMLParser::JS_VAR, srcMLParser::JS_CONST,
+    srcMLParser::JS_STATIC, srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET,
 
     // TypeScript keywords that follow one or more specifiers
     srcMLParser::TS_ENUM, srcMLParser::TS_INTERFACE, srcMLParser::TS_MODULE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
