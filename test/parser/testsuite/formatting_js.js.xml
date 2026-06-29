@@ -240,4 +240,18 @@
 }</block></ts:enum>
 </unit>
 
+<!-- Unicode as Names -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>\u0061</name> <init>= <expr><name>\u0061</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>#\u0061</name> <init>= <expr><name>#\u0061</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>#\u{6F}</name> <init>= <expr><name>#\u{6F}</name></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>

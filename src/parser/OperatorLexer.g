@@ -142,16 +142,33 @@ OPERATORS options { testLiterals = true; } {
         { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) == '!' }?
             { $setType(HASHBANG_COMMENT_START); changetotextlexer(HASHBANG_COMMENT_END); } |
 
-        { (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && LA(1) != '!' }?
+        { inLanguage(LANGUAGE_PYTHON) && LA(1) != '!' }?
             { $setType(HASHTAG_COMMENT_START); changetotextlexer(HASHTAG_COMMENT_END); } |
 
         // Names can include '#' (JavaScript)
         { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) != '!' }?
-            NAME { $setType(NAME); } |
+        (
+            (
+                // allow unicode (e.g., #\u0061)
+                { LA(1) == '\\' }?
+                (
+                    '\\'
+                    ('0'..'9' | 'a'..'z' | 'A'..'Z' | '{' | '}')*
+                    { $setType(NAME); }
+                ) |
+
+                NAME
+            )
+            { $setType(NAME); }
+        ) |
 
         { startline }?
             {
-                $setType(PREPROC);
+                // mark "#" as a name for JavaScript specifically
+                if (inLanguage(LANGUAGE_JAVASCRIPT))
+                    $setType(NAME);
+                else
+                    $setType(PREPROC);
 
                 // record that we are on a preprocessor line,
                 // primarily so that unterminated strings in
@@ -496,7 +513,19 @@ OPERATORS options { testLiterals = true; } {
     '.' ({ inLanguage(LANGUAGE_C_FAMILY) }? '*' | '.' ('.')? | { $setType(CONSTANTS); } CONSTANTS )? |
     
 
-    '\\' ({ inLanguage(LANGUAGE_PYTHON) }? EOL { $setType(EOL_BACKSLASH); } | (EOL { $setType(EOL_BACKSLASH); })*)
+    '\\' (
+        // allow unicode (e.g., \u0061)
+        { inLanguage(LANGUAGE_JAVASCRIPT) && (LA(1) == 'u' || LA(1) == 'U') }?
+        (
+            ('0'..'9' | 'a'..'z' | 'A'..'Z' | '{' | '}')*
+            { $setType(NAME); }
+        ) |
+
+        { inLanguage(LANGUAGE_PYTHON) }?
+        EOL { $setType(EOL_BACKSLASH); } |
+
+        (EOL { $setType(EOL_BACKSLASH); })*
     )
-    { startline = false; lastpos = getColumn(); prev = start; }
+)
+{ startline = false; lastpos = getColumn(); prev = start; }
 ;
