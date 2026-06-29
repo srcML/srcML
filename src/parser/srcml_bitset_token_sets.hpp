@@ -124,6 +124,33 @@ token_set(srcMLParser, decl_specifier_tokens_set,
 
 )
 
+token_set(srcMLParser, general_operator_tokens_set,
+    srcMLParser::AS, srcMLParser::ASSIGNMENT, srcMLParser::AWAIT, srcMLParser::DELETE, srcMLParser::DESTOP,
+    srcMLParser::DOTDOT, srcMLParser::DOTDOTDOT, srcMLParser::EQUAL, srcMLParser::IN, srcMLParser::IS,
+    srcMLParser::LAMBDA, srcMLParser::MULTOPS, srcMLParser::NEW, srcMLParser::OPERATORS, srcMLParser::REFOPS,
+    srcMLParser::RVALUEREF, srcMLParser::STACKALLOC, srcMLParser::TEMPOPE, srcMLParser::TEMPOPS,
+
+    // Apple
+    srcMLParser::BLOCKOP,
+
+    // Objective-C
+    srcMLParser::CSPEC, srcMLParser::MSPEC,
+
+    // Java
+    srcMLParser::BAR,
+
+    // Python
+    srcMLParser::EXPONENTIATION, srcMLParser::PY_AND, srcMLParser::PY_ATSIGN, srcMLParser::PY_AWAIT, srcMLParser::PY_COLON,
+    srcMLParser::PY_IN, srcMLParser::PY_IS, srcMLParser::PY_IS, srcMLParser::PY_NOT, srcMLParser::PY_NOT, srcMLParser::PY_OR,
+
+    // JavaScript
+    srcMLParser::JS_AS, srcMLParser::JS_AWAIT, srcMLParser::JS_DELETE, srcMLParser::JS_INSTANCEOF, srcMLParser::JS_RANGE_IN,
+    srcMLParser::JS_RANGE_OF, srcMLParser::JS_TYPEOF, srcMLParser::JS_VOID,
+
+    // TypeScript
+    srcMLParser::TS_ATSIGN, srcMLParser::TS_INFER, srcMLParser::TS_IS, srcMLParser::TS_KEYOF, srcMLParser::TS_SATISFIES
+)
+
 token_set(srcMLParser, identifier_list_tokens_set,
 
     srcMLParser::NAME, srcMLParser::INCLUDE, srcMLParser::DEFINE, srcMLParser::ELIF, srcMLParser::ENDIF, srcMLParser::ERRORPREC, srcMLParser::IFDEF, srcMLParser::IFNDEF, srcMLParser::LINE,

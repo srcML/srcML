@@ -183,12 +183,13 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
             // token is JS_DEBUGGER (always insert a terminate after a JS_DEBUGGER token)
             || (token->getType() == srcMLParser::JS_DEBUGGER)
 
-            // both token and the next non-skip token are any combination of the following:
+            // an EOL separates the token and the next non-skip token, which are any combination of:
             // - names
             // - literals (numbers, booleans, strings, etc.) except backtick literals
             // Note: never place a TERMINATE between the start and end of a string or char
             || (
-                srcMLParser::insert_terminate_js_token_set.member(token->getType())
+                containsEOL
+                && srcMLParser::insert_terminate_js_token_set.member(token->getType())
                 && srcMLParser::insert_terminate_js_token_set.member(nextNonSkipToken->getType())
                 && (
                     !(token->getType() == srcMLParser::STRING_START && nextNonSkipToken->getType() == srcMLParser::STRING_END)

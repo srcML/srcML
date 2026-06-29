@@ -162,20 +162,24 @@ OPERATORS options { testLiterals = true; } {
             { $setType(NAME); }
         ) |
 
-        { startline }?
-            {
-                // mark "#" as a name for JavaScript specifically
-                if (inLanguage(LANGUAGE_JAVASCRIPT))
-                    $setType(NAME);
-                else
-                    $setType(PREPROC);
+        // mark "#" as a name for JavaScript specifically
+        { inLanguage(LANGUAGE_JAVASCRIPT) }?
+        { $setType(NAME); } |
 
-                // record that we are on a preprocessor line,
-                // primarily so that unterminated strings in
-                // a preprocessor line will end at the right spot
-                onpreprocline = true;
-                //firstpreprocline = true;
-            }
+        { startline }?
+        {
+            // mark "#" as a name for JavaScript specifically
+            if (inLanguage(LANGUAGE_JAVASCRIPT))
+                $setType(NAME);
+            else
+                $setType(PREPROC);
+
+            // record that we are on a preprocessor line,
+            // primarily so that unterminated strings in
+            // a preprocessor line will end at the right spot
+            onpreprocline = true;
+            //firstpreprocline = true;
+        }
     )? |
 
     '+' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '?' | '+' | '=')? |

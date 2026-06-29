@@ -828,6 +828,7 @@ public:
     static const antlr::BitSet skip_tokens_set;
     static const antlr::BitSet class_tokens_set;
     static const antlr::BitSet decl_specifier_tokens_set;
+    static const antlr::BitSet general_operator_tokens_set;
     static const antlr::BitSet identifier_list_tokens_set;
     static const antlr::BitSet whitespace_token_set;
     static const antlr::BitSet duplex_keyword_set;
@@ -21437,7 +21438,7 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
             // optional "*" for generator functions
             (MULTOPS)*
 
-            (compound_name | bracketless_computed_property_js | computed_property_js)
+            (compound_name | bracketless_computed_property_js | computed_property_js)+
         )
 
         {
@@ -21499,19 +21500,26 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
             if (LA(1) == MULTOPS)
                 consume();
 
-            // match "NAME"
-            if (LA(1) == NAME) {
-                consume();
-                found_name = true;
-            }
-            else if (LA(1) == LBRACKET) {
-                bracket_pair();
-                found_name = true;
-            }
-            else {
-                // match a literal, which can be a name in this case
-                literals();
-                found_name = true;
+            // match what should be a name
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                // found a literal "NAME" token
+                if (LA(1) == NAME) {
+                    consume();
+                    found_name = true;
+                }
+                // found a computed property
+                else if (LA(1) == LBRACKET) {
+                    bracket_pair();
+                    found_name = true;
+                }
+                // found a literal, which can be a name in this case
+                else if (literal_tokens_set.member((unsigned int) LA(1))) {
+                    literals();
+                    found_name = true;
+                }
+                else {
+                    break;
+                }
             }
 
             // match optional TypeScript generic argument list
