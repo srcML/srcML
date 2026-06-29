@@ -22535,20 +22535,22 @@ perform_generator_function_computed_property_check_js[] returns [bool iscomputed
             }
 
             // match "[...]"
-            while (found_multops) {
-                if (LA(1) == LBRACKET)
-                    ++square_bracket_count;
+            if (LA(1) == LBRACKET) {
+                while (found_multops) {
+                    if (LA(1) == LBRACKET)
+                        ++square_bracket_count;
 
-                if (LA(1) == RBRACKET)
-                    --square_bracket_count;
+                    if (LA(1) == RBRACKET)
+                        --square_bracket_count;
 
-                if (square_bracket_count < 0)
-                    break;
+                    if (square_bracket_count < 0)
+                        break;
 
-                if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
-                    break;
+                    if ((LA(1) == RBRACKET && square_bracket_count == 0) || LA(1) == TERMINATE || LA(1) == 1 /* EOF */)
+                        break;
 
-                consume();
+                    consume();
+                }
             }
 
             // match "()"

@@ -112,6 +112,12 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C1</name> <block>{
+    <expr_stmt><expr><function type="generator"><specifier>async</specifier> * <name>ag</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
 <!-- Getters ("get") -->
 
 <unit revision="1.0.0" language="JavaScript">
