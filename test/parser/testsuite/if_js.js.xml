@@ -65,6 +65,11 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><object>{ <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property> }</object> <operator>!=</operator> <name>a</name></expr>)</condition> <block>{<block_content>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(
     <expr><call><name>some</name><argument_list>(<argument><expr><lambda><parameter><decl><name>m</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
         <if_stmt><if>if <condition>(<expr><name>idText</name></expr>)</condition> <block>{<block_content>

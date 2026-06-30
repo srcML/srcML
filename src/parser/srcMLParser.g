@@ -20051,7 +20051,7 @@ condition_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
                     LA(1) == LCURLY
                     && next_token() != RCURLY // allow empty objects
                     && lparen_types_size == lparen_types_js.size()
-                    && perform_lcurly_differentiator_check_js()
+                    && perform_lcurly_differentiator_check_js() //
                 )
                 || LA(1) == 1 /* EOF */
             }?
@@ -25207,6 +25207,7 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
                 LA(1) == LCURLY
                 && (
                     !perform_statement_has_block_check_js()
+                    || bracket_types_js.back() == "nLPAREN"
                     || token_before_lcurly == TERMINATE
                     || token_before_lcurly == LCURLY
                 )
