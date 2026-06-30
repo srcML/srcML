@@ -10864,8 +10864,8 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         declaration_modifiers_ts |
 
-        // special case: mark "readonly" as a specifier
-        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TS_READONLY }?
+        // special case: handle declaration specifiers if they appear in an argument
+        { inLanguage(LANGUAGE_JAVASCRIPT) && (LA(1) == TS_READONLY || inPrevMode(MODE_ARGUMENT)) }?
         declaration_specifiers_ts |
 
         // special case: mark "abstract" as a specifier if in operator parentheses
@@ -13614,8 +13614,8 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         declaration_modifiers_ts |
 
-        // special case: mark "readonly" as a specifier
-        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == TS_READONLY }?
+        // special case: handle declaration specifiers if they appear in an argument
+        { inLanguage(LANGUAGE_JAVASCRIPT) && (LA(1) == TS_READONLY || inPrevMode(MODE_ARGUMENT)) }?
         declaration_specifiers_ts |
 
         // special case: mark "abstract" as a specifier if in operator parentheses
