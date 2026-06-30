@@ -141,6 +141,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_IGNORE_LABEL_JS            (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_LCURLY_BLOCK_JS            (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_CONSTRUCTOR_JS             (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FOR_CONTROL_JS             (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_IIFE_INNER_JS              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_INNER_NAME_JS              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_OUTER_NAME_JS              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_SUPER_LIST_JS              (bit(__COUNTER__));

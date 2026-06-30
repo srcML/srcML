@@ -139,4 +139,20 @@
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr>;</expr_stmt>
 </unit>
 
+<!-- Douglas Crockford IIFEs (Function Expressions) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+  <return>return <expr><name>x</name></expr></return>
+</block_content>}</block></function><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument>)</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<!-- Douglas Crockford IIFEs (Lambdas) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><name>x</name></expr></return>
+</block_content>}</block></lambda><argument_list>(<argument><expr><name>a</name></expr></argument>, <argument><expr><name>b</name></expr></argument>)</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
 </unit>

@@ -10879,9 +10879,17 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
         keyword_iife_js |
 
+        // special case: JavaScript Douglas Crockford Immediately Invoked Function Expressions (IIFEs) using "function"
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_dc_iife_check_js() }?
+        keyword_dc_iife_js |
+
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) with no keyword
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_iife_check_js() }?
         keywordless_iife_js |
+
+        // special case: JavaScript Douglas Crockford Immediately Invoked Function Expressions (IIFEs) with no keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_dc_iife_check_js() }?
+        keywordless_dc_iife_js |
 
         // special case: JavaScript global context call (e.g., "(,)()")
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_global_context_call_check_js() }?
@@ -13629,9 +13637,17 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_iife_check_js() }?
         keyword_iife_js |
 
+        // special case: JavaScript Douglas Crockford Immediately Invoked Function Expressions (IIFEs) using "function"
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keyword_dc_iife_check_js() }?
+        keyword_dc_iife_js |
+
         // special case: JavaScript Immediately Invoked Function Expressions (IIFEs) with no keyword
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_iife_check_js() }?
         keywordless_iife_js |
+
+        // special case: JavaScript Douglas Crockford Immediately Invoked Function Expressions (IIFEs) with no keyword
+        { inLanguage(LANGUAGE_JAVASCRIPT) && perform_keywordless_dc_iife_check_js() }?
+        keywordless_dc_iife_js |
 
         // special case: JavaScript global context call (e.g., "(,)()")
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_global_context_call_check_js() }?
@@ -23218,6 +23234,215 @@ keyword_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 ;
 
 /*
+  perform_keyword_dc_iife_check_js
+
+  Checks to see if a function expression should be a Douglas Crockford IIFE in JavaScript.
+  For example, "(function (){}())".
+*/
+perform_keyword_dc_iife_check_js[] returns [bool isiife] {
+        ENTRY_DEBUG
+
+        isiife = false;
+        int bracket_count = 0;  // for TypeScript types
+        size_t lcurly_type = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // keyword IIFE must start with "("
+            if (LA(1) == LPAREN) {
+                consume();
+
+                // consume optional "async" before checking
+                if (LA(1) == JS_ASYNC)
+                    consume();
+
+                // consume the "function" keyword
+                if (LA(1) == JS_FUNCTION) {
+                    consume();
+
+                    // consume optional name
+                    if (LA(1) == NAME) 
+                        consume();
+
+                    // consume parameter list
+                    paren_pair();
+
+                    // determine the type of block that "{" starts
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() == LCURLY
+                            || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                        )
+                    ) {
+                        lcurly_type = perform_colon_lcurly_differentiator_check_js();
+                    }
+
+                    // match optional TypeScript type
+                    if (
+                        LA(1) == COLON
+                        && (
+                            next_token() != LCURLY
+                            || (
+                                (
+                                    next_token() == LCURLY
+                                    || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                                )
+                                && lcurly_type == 3
+                            )
+                        )
+                    ) {
+                        while (LA(1) != antlr::Token::EOF_TYPE) {
+                            // found a statement-level LCURLY
+                            if (bracket_count == 0 && LA(1) == LCURLY) {
+                                // LCURLY indicates a type block, so keep going
+                                if (lcurly_type == 3)
+                                    lcurly_type = 0;
+                                // LCURLY indicates a block, so break
+                                else
+                                    break;
+                            }
+
+                            if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                ++bracket_count;
+                            if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                --bracket_count;
+
+                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                                break;
+
+                            consume();
+                        }
+
+                        // consume optional TypeScript array after type block
+                        if (LA(1) == LBRACKET)
+                            bracket_pair();
+                    }
+
+                    // consume block
+                    if (LA(1) == LCURLY) {
+                        curly_pair();
+                        paren_pair();
+
+                        // looking for ")" after the function expression
+                        if (LA(1) == RPAREN)
+                            isiife = true;
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  keyword_dc_iife_js
+
+  Handles Douglas Crockford Immediately Invoked Function Expressions (IIFEs) in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keyword_dc_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_IIFE_CALL_JS);
+            startElement(SFUNCTION_CALL);
+        }
+
+        lparen_marked
+
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            startElement(SFUNCTION_DEFINITION);
+        }
+
+        ((specifier_js)* JS_FUNCTION)
+
+        // consume optional name
+        (compound_name)*
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        (
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )
+
+        {
+            endDownToMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            endMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            endDownToMode(MODE_IIFE_CALL_JS);
+
+            startNewMode(MODE_IIFE_INNER_JS);
+        }
+
+        call_argument_list
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+
+        {
+            endDownOverMode(MODE_IIFE_INNER_JS);
+        }
+
+        // manually handle operator RPAREN
+        rparen
+
+        {
+            endDownOverMode(MODE_IIFE_CALL_JS);
+        }
+;
+
+/*
   perform_keywordless_iife_check_js
 
   Checks to see if a lambda should really be an IIFE in JavaScript.
@@ -23440,6 +23665,218 @@ keywordless_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
         )*
 
         rparen[false]
+;
+
+/*
+  perform_keywordless_dc_iife_check_js
+
+  Checks to see if a lambda is a Douglas Crockford IIFE in JavaScript.
+  For example, "(() => {}())".
+*/
+perform_keywordless_dc_iife_check_js[] returns [bool isiife] {
+        ENTRY_DEBUG
+
+        isiife = false;
+        int bracket_count = 0;  // for TypeScript types
+        size_t lcurly_type = 0;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // keywordless IIFE must start with "("
+            if (LA(1) == LPAREN) {
+                consume();
+
+                // consume optional "async" before checking
+                if (LA(1) == JS_ASYNC)
+                    consume();
+
+                // consume parameter list
+                paren_pair();
+
+                // determine the type of block that "{" starts
+                if (
+                    LA(1) == COLON
+                    && (
+                        next_token() == LCURLY
+                        || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                    )
+                )
+                    lcurly_type = perform_colon_lcurly_differentiator_check_js();
+
+                // match optional TypeScript type
+                if (
+                    LA(1) == COLON
+                    && (
+                        next_token() != LCURLY
+                        || (
+                            (
+                                next_token() == LCURLY
+                                || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                            )
+                            && lcurly_type == 3
+                        )
+                    )
+                ) {
+                    while (LA(1) != antlr::Token::EOF_TYPE) {
+                        // found arrow ("=>") before IIFE lambda block
+                        if (LA(1) == JS_ARROW && bracket_count == 0 && lcurly_type != 3)
+                            break;
+
+                        // found a statement-level LCURLY
+                        if (bracket_count == 0 && LA(1) == LCURLY) {
+                            // LCURLY indicates a type block, so keep going
+                            if (lcurly_type == 3)
+                                lcurly_type = 0;
+                            // LCURLY indicates a block, so break
+                            else
+                                break;
+                        }
+
+                        if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                            ++bracket_count;
+                        if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                            --bracket_count;
+
+                        if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                            break;
+
+                        consume();
+                    }
+                }
+
+                // consume "=>"
+                if (LA(1) == JS_ARROW) {
+                    consume();
+
+                    // consume block
+                    if (LA(1) == LCURLY) {
+                        curly_pair();
+                        paren_pair();
+
+                        // looking for ")" after the function expression
+                        if (LA(1) == RPAREN)
+                            isiife = true;
+                    }
+                }
+
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
+  keywordless_dc_iife_js
+
+  Handles Douglas Crockford Immediately Invoked Function Expressions (IIFEs) with arrows ("=>") in JavaScript.
+  Not used directly, but can be called by expression_part.
+*/
+keywordless_dc_iife_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_IIFE_CALL_JS);
+            startElement(SFUNCTION_CALL);
+        }
+
+        lparen_marked
+
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_LAMBDA_JS);
+            startElement(SFUNCTION_LAMBDA);
+        }
+
+        ((specifier_js)*)
+
+        {
+            startNewMode(MODE_PARAMETER_LIST_JS);
+        }
+
+        javascript_parameter_list
+
+        {
+            // a lone parameter lambda cannot appear here
+            skip_lone_lambda_js = true;
+        }
+
+        // consume TypeScript types, if applicable
+        ({ LA(1) == COLON }? colon_type_ts)?
+
+        arrow_operator_js
+
+        {
+            skip_lone_lambda_js = false;
+        }
+
+        (
+            { LA(1) == LCURLY && inputState->guessing == 0 }?
+            expression_block_js |
+
+            curly_pair
+        )
+        {
+            endDownToMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+            endMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            endDownToMode(MODE_IIFE_CALL_JS);
+
+            startNewMode(MODE_IIFE_INNER_JS);
+        }
+
+        call_argument_list
+
+        {
+            startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+            lparen_types_size = lparen_types_js.size();
+        }
+
+        (options { greedy = true; } :
+            {
+                (LA(1) == RPAREN && lparen_types_js.back() == 'c' && lparen_types_size == lparen_types_js.size())
+                || LA(1) == 1 /* EOF */
+            }?
+            {
+                break;
+            } |
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            comma
+        )*
+
+        rparen[false]
+
+        {
+            endDownOverMode(MODE_IIFE_INNER_JS);
+        }
+
+        // manually handle operator RPAREN
+        rparen
+
+        {
+            endDownOverMode(MODE_IIFE_CALL_JS);
+        }
 ;
 
 /*
