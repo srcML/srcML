@@ -340,6 +340,31 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
 
+        // the current token is a declaration specifier (or table keyword) and one of the following is true:
+        // - the previous token was "," or a keyword that comes before an expression
+        // - the next token is ",", "]", "}", ")", ">", or ";"
+        || (
+            (
+                srcMLParser::function_declaration_specifiers_ts_token_set.member(token->getType())
+                || srcMLParser::declaration_specifiers_ts_token_set.member(token->getType())
+                || srcMLParser::table_keywords_js_token_set.member(token->getType())
+            )
+            && (
+                (
+                    prevNonWhitespaceToken->getType() == srcMLParser::COMMA
+                    || srcMLParser::keyword_expression_pair_js_token_set.member(prevNonWhitespaceToken->getType())
+                )
+                && (
+                    nextToken->getType() == srcMLParser::COMMA
+                    || nextToken->getType() == srcMLParser::RBRACKET
+                    || nextToken->getType() == srcMLParser::RCURLY
+                    || nextToken->getType() == srcMLParser::RPAREN
+                    || nextToken->getType() == srcMLParser::TEMPOPE
+                    || nextToken->getType() == srcMLParser::TERMINATE
+                )
+            )
+        )
+
         // the previous token was "await", the current token is a keyword, and the next token is "("
         || (
             prevNonWhitespaceToken->getType() == srcMLParser::JS_AWAIT
@@ -487,19 +512,36 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         )
 
         // the current token is "constructor" and it follows:
-        // - extends or implements (used in a super list)
-        // - get or set (name of an accessor)
-        // - new
-        // - MULTOPS "*" (generator function name)
+        // - extends or implements (used in a super list), get or set (name of an accessor), new, or
+        //   MULTOPS "*" (generator function name)
+        // - the previous token was "," or a keyword that comes before an expression
+        // - the next token is ",", "]", "}", ")", ">", or ";"
         || (
             token->getType() == srcMLParser::JS_CONSTRUCTOR 
             && (
-                prevNonWhitespaceToken->getType() == srcMLParser::MULTOPS
-                || prevNonWhitespaceToken->getType() == srcMLParser::JS_EXTENDS
-                || prevNonWhitespaceToken->getType() == srcMLParser::JS_GET
-                || prevNonWhitespaceToken->getType() == srcMLParser::JS_SET 
-                || prevNonWhitespaceToken->getType() == srcMLParser::NEW
-                || prevNonWhitespaceToken->getType() == srcMLParser::TS_IMPLEMENTS
+                (
+                    prevNonWhitespaceToken->getType() == srcMLParser::MULTOPS
+                    || prevNonWhitespaceToken->getType() == srcMLParser::JS_EXTENDS
+                    || prevNonWhitespaceToken->getType() == srcMLParser::JS_FUNCTION
+                    || prevNonWhitespaceToken->getType() == srcMLParser::JS_GET
+                    || prevNonWhitespaceToken->getType() == srcMLParser::JS_SET
+                    || prevNonWhitespaceToken->getType() == srcMLParser::NEW
+                    || prevNonWhitespaceToken->getType() == srcMLParser::TS_IMPLEMENTS
+                )
+                || (
+                    (
+                        prevNonWhitespaceToken->getType() == srcMLParser::COMMA
+                        || srcMLParser::keyword_expression_pair_js_token_set.member(prevNonWhitespaceToken->getType())
+                    )
+                    && (
+                        nextToken->getType() == srcMLParser::COMMA
+                        || nextToken->getType() == srcMLParser::RBRACKET
+                        || nextToken->getType() == srcMLParser::RCURLY
+                        || nextToken->getType() == srcMLParser::RPAREN
+                        || nextToken->getType() == srcMLParser::TEMPOPE
+                        || nextToken->getType() == srcMLParser::TERMINATE
+                    )
+                )
             )
         )
 

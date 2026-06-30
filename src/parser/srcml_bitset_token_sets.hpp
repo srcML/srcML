@@ -354,6 +354,12 @@ token_set(srcMLParser, insert_terminate_eol_js_token_set,
     srcMLParser::STRING_END, srcMLParser::STRING_START, srcMLParser::TS_ATSIGN
 )
 
+token_set(srcMLParser, keyword_expression_pair_js_token_set,
+    // JavaScript keywords that can have one (or more) expressions after them
+    srcMLParser::JS_AS, srcMLParser::CASE, srcMLParser::JS_DEFAULT, srcMLParser::JS_EXPORT, srcMLParser::JS_RANGE_IN,
+    srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::THROW, srcMLParser::JS_YIELD
+)
+
 token_set(srcMLParser, declaration_specifiers_ts_token_set,
     // TypeScript specifiers on a declaration
     srcMLParser::TS_DECLARE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,

@@ -950,6 +950,7 @@ public:
     static const antlr::BitSet name_differentiator_subset_js_token_set;
     static const antlr::BitSet insert_terminate_js_token_set;
     static const antlr::BitSet insert_terminate_eol_js_token_set;
+    static const antlr::BitSet keyword_expression_pair_js_token_set;
     static const antlr::BitSet declaration_specifiers_ts_token_set;
     static const antlr::BitSet function_declaration_specifiers_ts_token_set;
     static const antlr::BitSet cmake_end_statement_commands;

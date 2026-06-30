@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="contextual_keywords">
 
+<!-- "abstract" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>abstract</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>abstract</name><operator>,</operator> <name>abstract</name><operator>,</operator> <name>abstract</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
 <!-- "as" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -354,6 +364,14 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>constructor</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>constructor</name><operator>,</operator> <name>constructor</name><operator>,</operator> <name>constructor</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
 <!-- "continue" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -404,6 +422,16 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>debugger</name> <init>= <expr><name>debugger</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "declare" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>declare</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>declare</name><operator>,</operator> <name>declare</name><operator>,</operator> <name>declare</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
 <!-- "default" -->
@@ -899,6 +927,14 @@
 <decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><call><name>get</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>get</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>get</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
 <!-- "if" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1221,6 +1257,46 @@
 <decl_stmt><decl type="const">const <name>of</name> <init>= <expr><name>of</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "override" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>override</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>override</name><operator>,</operator> <name>override</name><operator>,</operator> <name>override</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<!-- "private" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>private</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>private</name><operator>,</operator> <name>private</name><operator>,</operator> <name>private</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<!-- "protected" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>protected</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>protected</name><operator>,</operator> <name>protected</name><operator>,</operator> <name>protected</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<!-- "public" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>public</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>public</name><operator>,</operator> <name>public</name><operator>,</operator> <name>public</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
 <!-- "readonly" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1245,6 +1321,14 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>readonly</name> <init>= <expr><name>readonly</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>readonly</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>readonly</name><operator>,</operator> <name>readonly</name><operator>,</operator> <name>readonly</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -1351,6 +1435,14 @@
 <decl_stmt><decl type="const">const <name>bar</name> <init>= <expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><call><name>set</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>set</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>set</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
 <!-- "static" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1375,6 +1467,14 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>static</name> <init>= <expr><name>static</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator><function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <function>function <name>static</name><parameter_list>()</parameter_list> <block>{<block_content>
+    </block_content>}</block></function>
+    <return>return <expr><name>static</name><operator>,</operator> <name>static</name><operator>,</operator> <name>static</name></expr></return>
+</block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
