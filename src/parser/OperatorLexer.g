@@ -119,22 +119,7 @@ OPERATORS options { testLiterals = true; } {
 
     // determine if "<" starts a JSX literal in JavaScript
     if (inLanguage(LANGUAGE_JAVASCRIPT) && start == '<') {
-        // if the prior token is a keyword that can contain many expressions afterward (e.g., "as", "return", etc.)
-        // or the prior tokens are JS_YIELD and MULTOPS (e.g., "yield *"), then '<' starts a JSX literal
-        if (
-            srcMLParser::keyword_expression_pair_js_token_set.member(TokenLookbackJavaScript::lastTokenType())
-            || (
-                // special case: "yield *" syntax
-                TokenLookbackJavaScript::lastTokenTypeTwo() == srcMLParser::JS_YIELD
-                && TokenLookbackJavaScript::lastTokenType() == srcMLParser::MULTOPS
-            )
-        ) {
-            isjsx = true;
-        }
-        // handle all other cases by looking ahead
-        else {
-            isjsx = this->isJSXLiteral();
-        }
+        isjsx = this->isJSXLiteral();
     }
 } : (
     // # (C++/Python/JavaScript), #! (Python/JavaScript)
