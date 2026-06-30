@@ -22196,19 +22196,20 @@ object_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY
 
   Handles properties in JavaScript.  Not used directly, but called by object_js.
 */
-property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENTRY_DEBUG } :
+property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; size_t lparen_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_PROPERTY_JS);
             startElement(SPROPERTY);
 
             lcurly_types_size = lcurly_types_js.size();
+            lparen_types_size = lparen_types_js.size();
         }
 
         (options { greedy = true; } :
             // do not consume non-call comma or ending RCURLY for an object
             {
                 LA(1) == TERMINATE
-                || (LA(1) == COMMA && lparen_types_js.back() != 'c')
+                || (LA(1) == COMMA && lparen_types_js.back() != 'c' && lparen_types_size == lparen_types_js.size() )
                 || (
                     LA(1) == COMMA
                     && lcurly_types_js.back() == 'o'
@@ -22306,8 +22307,8 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; ENT
             }
             expression |
 
-            // consume commas only if directly inside a call
-            { bracket_types_js.back() == "cLPAREN" }?
+            // consume commas only if directly inside a call or operator parens
+            { bracket_types_js.back() == "cLPAREN" || bracket_types_js.back() == "oLPAREN" }?
             comma |
 
             // if at this point, likely in a statement in an object
