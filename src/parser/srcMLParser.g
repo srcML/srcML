@@ -1724,6 +1724,7 @@ javascript_statements[] {
             && next_token() == COLON
             && !inMode(MODE_PROPERTY_JS)
             && !inMode(MODE_TERNARY)
+            && !inPrevMode(MODE_TERNARY)
             && (next_token_two() != LCURLY || perform_label_with_block_check_js())
             && (
                 table_keywords_js_token_set.member(next_token_two())
@@ -6183,7 +6184,7 @@ rcurly[] { bool waslambda = inTransparentMode(MODE_LAMBDA_JS); bool wasblock = f
                 inLanguage(LANGUAGE_JAVASCRIPT)
                 && !inMode(MODE_LAMBDA_JS)
                 && inTransparentMode(MODE_FUNCTION_EXPRESSION_JS)
-                && (LA(1) == RPAREN && next_token() != LPAREN)
+                && (LA(1) == RPAREN && next_token() != LPAREN && last_consumed != RCURLY)
                 && (lparen_types_js.back() == 'o' || lparen_types_js.back() == 'c')
             ) {
                 endDownToMode(MODE_FUNCTION_EXPRESSION_JS);
@@ -6860,9 +6861,12 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                     || (
                         inLanguage(LANGUAGE_JAVASCRIPT)
                         && (
-                            inTransparentMode(MODE_ARGUMENT)
-                            || inTransparentMode(MODE_ARRAY_JS)
+                            inTransparentMode(MODE_ARRAY_JS)
                             || inTransparentMode(MODE_LAMBDA_JS)
+                            || (
+                                perform_in_mode_before_expression_check_js(MODE_ARGUMENT)
+                                || bracket_types_js.back() == "cLPAREN"
+                            )
                         )
                     )
                 )
@@ -27720,5 +27724,3 @@ builtin_command_cmake[] { ENTRY_DEBUG
         endDownToMode(MODE_COMMAND_CMAKE);
         endMode(MODE_COMMAND_CMAKE);
 }:;
-
-
