@@ -23940,7 +23940,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                 )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
                 || (LA(1) == EQUAL && !inTransparentMode(MODE_MIXINS_TS) && !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS))
-                || LA(1) == JS_AS
+                || (LA(1) == JS_AS && bracket_types_js.back() != "cLPAREN")
                 || LA(1) == 1 /* EOF */
             }?
             {

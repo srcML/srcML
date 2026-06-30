@@ -529,4 +529,10 @@
   </then><else>: <expr><operator>(</operator><ternary><condition><expr><array>[<expr><name>T</name></expr>]</array> <ts:extends>extends <ts:type><array>[<expr><name>string</name></expr>]</array></ts:type></ts:extends></expr> ?</condition><then> <block>{<block_content> <decl_stmt><decl><name>y</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt> </block_content>}</block> </then><else>: <block>{<block_content> <decl_stmt><decl><name>b</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt> </block_content>}</block><expr/></else></ternary><operator>)</operator></expr></else></ternary></ts:type> <init>= <expr><name>x</name></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><lambda><argument_list type="generic">&lt;<argument><expr><name>SO_FAR</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>soFar</name><ts:type>: <name>SO_FAR</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <decl_stmt><decl><name>record</name><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>TYPE</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>instance</name><ts:type>: <name>TYPE</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><call><name>buildPubSubRecordType</name><argument_list>(<argument><expr><name>Object</name> <operator>as</operator> <name>SO_FAR</name></expr></argument>)</argument_list></call></ts:type></lambda></ts:type></decl></decl_stmt>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
