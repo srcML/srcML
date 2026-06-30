@@ -32,6 +32,10 @@
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var"><ts:specifier>declare</ts:specifier> var <name>pfn</name><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><block>{<block_content> <ts:function_decl><parameter_list>(<parameter><decl><name>arg0</name><ts:type>: <name>boolean</name></ts:type></decl></parameter>, <parameter><decl><name>arg1</name><ts:type>: <name>boolean</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl> </block_content>}</block></expr></argument>&gt;</argument_list></name></ts:type></decl></decl_stmt>
+</unit>
+
 <!-- Well-known symbols ("@@") syntax is technically invalid, but is handled anyways to avoid crashes -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

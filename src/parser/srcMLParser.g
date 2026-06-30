@@ -20841,7 +20841,7 @@ javascript_parameter_list[] { CompleteElement element(this); size_t bracket_type
                 if (!inMode(MODE_PARAMETER | MODE_LIST | MODE_EXPECT))
                     endMode();
             }
-            comma |
+            COMMA |
 
             // parameter that contains an object with a type (e.g., "{}: TYPE")
             (
