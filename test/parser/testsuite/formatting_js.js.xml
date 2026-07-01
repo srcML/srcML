@@ -90,6 +90,25 @@
 <comment type="block">/* 9 */</comment> <expr_stmt><expr><name>d</name> <comment type="block">/* 10 */</comment> <operator>=</operator> <comment type="block">/* 11 */</comment> <name>e</name></expr></expr_stmt> <comment type="block">/* 12 */</comment>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><operator>(</operator><literal type="number">1</literal> <operator>+</operator> <literal type="number">1</literal><operator>)</operator>
+<operator>+</operator> <literal type="number">2</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>createClient</name> = <ts:type><operator>(</operator><name>a</name><operator>)</operator>
+<operator>|</operator> <name>b</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>createClient</name> <init>= <expr><lambda><argument_list type="generic">&lt;<argument><expr><name>D</name> <ts:extends>extends
+    <ts:type><operator>|</operator> <operator>(</operator><name>Client</name><operator>)</operator>
+    <operator>|</operator> <name><name>Record</name><argument_list type="generic">&lt;<argument><expr><name>string</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr></argument>
+&gt;</argument_list><parameter_list>(<parameter><decl><name>clientDef</name><ts:type>: <name>D</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>D</name></ts:type> <operator>=&gt;</operator> <block>{<block_content>
+  <return>return <expr><literal type="null">null</literal> <operator>as</operator> <name>any</name></expr></return>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Multi-line Statements (with blocks) -->
 
 <unit revision="1.0.0" language="JavaScript">

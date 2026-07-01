@@ -326,8 +326,8 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                 containsEOL
                 && (bracketTokenTracker.front() == "*" || bracketTokenTracker.front() == "{")
                 && (token->getType() == srcMLParser::RPAREN || token->getType() == srcMLParser::RBRACKET)
+                && !srcMLParser::general_operator_tokens_set.member(nextNonSkipToken->getType())
                 && nextNonSkipToken->getType() != srcMLParser::COLON
-                && nextNonSkipToken->getType() != srcMLParser::TEMPOPE
                 && nextNonSkipToken->getType() != srcMLParser::QMARK
             )
 
