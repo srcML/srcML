@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="macro_rules_rs">
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>a</name> {}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>a</name> { <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content><expr><name>b</name></expr></block_content>}</block></macro_defn> }</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>null</name> {
+  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content><expr><literal type="number">0</literal></expr></block_content>}</block></macro_defn>;
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>square</name> {
+  <macro_defn><parameter_list>(<parameter>$a:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <expr><name>$a</name> <operator>*</operator> <name>$a</name></expr>
+  </block_content>}</block></macro_defn>
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>product</name> {
+  <macro_defn><parameter_list>(<parameter>$a:expr</parameter>, <parameter>$b:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <expr><name>$a</name> <operator>*</operator> <name>$b</name></expr>
+  </block_content>}</block></macro_defn>
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>sum</name> {
+  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content>
+    <expr><literal>$a</literal></expr>
+  </block_content>}</block></macro_defn>;
+
+  <macro_defn><parameter_list>(<parameter>$a:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <expr><name>$a</name></expr>
+  </block_content>}</block></macro_defn>;
+
+  <macro_defn><parameter_list>(<parameter>$a:expr</parameter>, <parameter>$b:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <expr><name>$a</name> <operator>+</operator> <name>$b</name></expr>
+  </block_content>}</block></macro_defn>;
+
+  <macro_defn><parameter_list>(<parameter>$a:expr</parameter>, <parameter>$b:expr</parameter>, <parameter>$c:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <expr><name>$a</name> <operator>+</operator> <name>$b</name> <operator>+</operator> <name>$c</name></expr>
+  </block_content>}</block></macro_defn>;
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>switch</name> {
+  <macro_defn><parameter_list>(<parameter>0</parameter>)</parameter_list> =&gt; <block>{<block_content><expr><literal type="string">"Naught"</literal></expr></block_content>}</block></macro_defn>;
+  <macro_defn><parameter_list>(<parameter>1</parameter>)</parameter_list> =&gt; <block>{<block_content><expr><literal type="string">"One"</literal></expr></block_content>}</block></macro_defn>;
+  <macro_defn><parameter_list>(<parameter>2</parameter>)</parameter_list> =&gt; <block>{<block_content><expr><literal type="string">"Two"</literal></expr></block_content>}</block></macro_defn>;
+  <macro_defn><parameter_list>(<parameter>3</parameter>)</parameter_list> =&gt; <block>{<block_content><expr><literal type="string">"Three"</literal></expr></block_content>}</block></macro_defn>;
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>vector</name> {
+  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content>
+    <expr><call><name><name>Vec</name><operator>::</operator><name>new</name></name><argument_list>()</argument_list></call></expr>
+  </block_content>}</block></macro_defn>;
+
+  <macro_defn><parameter_list>(<parameter>$( $x:expr ),+</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <block>{<block_content>
+      <decl_stmt><decl type="let">let <modifier>mut</modifier> <name>temp_vec</name> <init>= <expr><call><name><name>Vec</name><operator>::</operator><name>new</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <repetition type="+">$(
+        <expr_stmt><expr><call><name><name>temp_vec</name><operator>.</operator><name>push</name></name><argument_list>(<argument><expr><name>$x</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      )+</repetition>
+      <expr><name>temp_vec</name></expr>
+    </block_content>}</block>
+  </block_content>}</block></macro_defn>;
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>a</name> {
+  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content>
+    <repetition type="*">$(
+      <repetition type="+">$(
+        <repetition type="?">$(
+          <expr_stmt><expr><call><name>foo</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        )?</repetition>
+      )+</repetition>
+    )*</repetition>
+  </block_content>}</block></macro_defn>;
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules type="new">macro <name>a</name> {}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules type="new">macro <name>a</name> { <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content><expr><name>b</name></expr></block_content>}</block></macro_defn> }</macro_rules>
+</unit>
+
+<macro_rules type="new">macro <name>null</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <expr><literal type="number">0</literal></expr>
+</block_content>}</block></macro_rules>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules type="new">macro <name>square</name><parameter_list>(<parameter>$a:expr</parameter>)</parameter_list> <block>{<block_content>
+  <expr><name>$a</name> <operator>*</operator> <name>$a</name></expr>
+</block_content>}</block></macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules type="new">macro <name>product</name><parameter_list>(<parameter>$a:expr, $b:expr</parameter>)</parameter_list> <block>{<block_content>
+  <expr><name>$a</name> <operator>*</operator> <name>$b</name></expr>
+</block_content>}</block></macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules type="new">macro <name>sum</name> {
+  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content>
+    <expr><literal>$a</literal></expr>
+  </block_content>}</block></macro_defn>;
+
+  <macro_defn><parameter_list>(<parameter>$a:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <expr><name>$a</name></expr>
+  </block_content>}</block></macro_defn>;
+
+  <macro_defn><parameter_list>(<parameter>$a:expr, $b:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <expr><name>$a</name> <operator>+</operator> <name>$b</name></expr>
+  </block_content>}</block></macro_defn>;
+
+  <macro_defn><parameter_list>(<parameter>$a:expr, $b:expr, $c:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <expr><name>$a</name> <operator>+</operator> <name>$b</name> <operator>+</operator> <name>$c</name></expr>
+  </block_content>}</block></macro_defn>;
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules type="new">macro <name>switch</name> {
+  <macro_defn><parameter_list>(<parameter>0</parameter>)</parameter_list> =&gt; <block>{<block_content><expr><literal type="string">"Naught"</literal></expr></block_content>}</block></macro_defn>;
+  <macro_defn><parameter_list>(<parameter>1</parameter>)</parameter_list> =&gt; <block>{<block_content><expr><literal type="string">"One"</literal></expr></block_content>}</block></macro_defn>;
+  <macro_defn><parameter_list>(<parameter>2</parameter>)</parameter_list> =&gt; <block>{<block_content><expr><literal type="string">"Two"</literal></expr></block_content>}</block></macro_defn>;
+  <macro_defn><parameter_list>(<parameter>3</parameter>)</parameter_list> =&gt; <block>{<block_content><expr><literal type="string">"Three"</literal></expr></block_content>}</block></macro_defn>;
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules type="new">macro <name>vector</name> {
+  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content>
+    <expr><call><name><name>Vec</name><operator>::</operator><name>new</name></name><argument_list>()</argument_list></call></expr>
+  </block_content>}</block></macro_defn>
+
+  <macro_defn><parameter_list>(<parameter>$( $x:expr ),+</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <block>{<block_content>
+      <decl_stmt><decl type="let">let <modifier>mut</modifier> <name>temp_vec</name> <init>= <expr><call><name><name>Vec</name><operator>::</operator><name>new</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+      <repetition type="+">$(
+        <expr_stmt><expr><call><name><name>temp_vec</name><operator>.</operator><name>push</name></name><argument_list>(<argument><expr><name>$x</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+      )+</repetition>
+      <expr><name>temp_vec</name></expr>
+    </block_content>}</block>
+  </block_content>}</block></macro_defn>
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<macro_rules type="new">macro <name>a</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <repetition type="*">$(
+    <repetition type="+">$(
+      <repetition type="?">$(
+        <expr_stmt><expr><call><name>foo</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+      )?</repetition>
+    )+</repetition>
+  )*</repetition>
+</block_content>}</block></macro_rules>
+</unit>
+
+</unit>
