@@ -95,6 +95,10 @@
 <decl_stmt><decl type="const">const <name>newString</name> <init>= <expr><call><name><name>originalString</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="regex">/world/</literal></expr></argument>,<argument><expr><literal type="string">"JavaScript"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><call><name><name>bar</name><operator>.</operator><name>match</name></name><argument_list>(<argument><expr><literal type="regex">/matchwith\[escaped lbracket = ([\w:]+))?/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Regular expression frollowing ',' -->
 
 <unit revision="1.0.0" language="JavaScript">
