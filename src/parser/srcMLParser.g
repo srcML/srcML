@@ -25449,7 +25449,7 @@ datsign_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
 /*
   perform_post_attribute_check_ts
 
-  Returns the next token that occur after a Python decorator.
+  Returns the next token that occur after a TypeScript decorator.
   If there are multiple decorators in a row, returns the next token after the last decorator.
 */
 perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
@@ -25467,6 +25467,7 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
 
                 if (
                     LA(1) == CLASS
+                    || LA(1) == JS_CONSTRUCTOR
                     || LA(1) == JS_FUNCTION
                     || LA(1) == JS_GET
                     || LA(1) == JS_SET
@@ -25475,7 +25476,13 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
                     break;
             }
 
-            if (LA(1) == CLASS || LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
+            if (
+                LA(1) == CLASS
+                || LA(1) == JS_CONSTRUCTOR
+                || LA(1) == JS_FUNCTION
+                || LA(1) == JS_GET
+                || LA(1) == JS_SET
+            ) {
                 keywords[0] = LA(1);
                 keywords[1] = next_token();
             }
@@ -25504,6 +25511,7 @@ attribute_ts[] { ENTRY_DEBUG } :
             {
                 LA(1) == TS_ATSIGN
                 || LA(1) == CLASS
+                || LA(1) == JS_CONSTRUCTOR
                 || LA(1) == JS_FUNCTION
                 || LA(1) == JS_GET
                 || LA(1) == JS_SET
@@ -25552,11 +25560,12 @@ attribute_ts[] { ENTRY_DEBUG } :
                 endDownToMode(MODE_DECORATOR_TS);
                 endMode(MODE_DECORATOR_TS);
             }
-        }
 
-        // TERMINATE after a decorator does not indicate the end of a statement
-        // decorators occur before a function/class, so ignore the TERMINATE
-        ({ LA(1) == TERMINATE }? TERMINATE)?
+            // TERMINATE after a decorator does not indicate the end of a statement
+            // decorators occur before a function/class, so ignore the TERMINATE
+            if (LA(1) == TERMINATE)
+                consume();
+        }
 ;
 
 /*

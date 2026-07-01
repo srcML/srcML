@@ -70,6 +70,14 @@ function <name>invalid</name><parameter_list>()</parameter_list> <block>{<block_
 }</block></class>
 </unit>
 
+<!-- Attributes on constructors ("constructor") -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <constructor><ts:attribute>@<expr><name>dec</name></expr></ts:attribute> constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+}</block></class>
+</unit>
+
 <!-- Attributes on keywordless functions (in classes) -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
