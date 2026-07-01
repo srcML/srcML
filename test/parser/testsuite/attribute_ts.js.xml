@@ -78,6 +78,14 @@ function <name>invalid</name><parameter_list>()</parameter_list> <block>{<block_
 }</block></class>
 </unit>
 
+<!-- Attributes on enums ("enum") -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:enum><ts:attribute>@<expr><name>dec</name></expr></ts:attribute>
+enum <name>E</name> <block>{
+}</block></ts:enum>
+</unit>
+
 <!-- Attributes on keywordless functions (in classes) -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

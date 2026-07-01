@@ -25471,6 +25471,7 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
                     || LA(1) == JS_FUNCTION
                     || LA(1) == JS_GET
                     || LA(1) == JS_SET
+                    || LA(1) == TS_ENUM
                     || (LA(1) == NAME && perform_keywordless_function_check_js())
                 )
                     break;
@@ -25482,6 +25483,7 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
                 || LA(1) == JS_FUNCTION
                 || LA(1) == JS_GET
                 || LA(1) == JS_SET
+                || LA(1) == TS_ENUM
             ) {
                 keywords[0] = LA(1);
                 keywords[1] = next_token();
@@ -25515,6 +25517,7 @@ attribute_ts[] { ENTRY_DEBUG } :
                 || LA(1) == JS_FUNCTION
                 || LA(1) == JS_GET
                 || LA(1) == JS_SET
+                || LA(1) == TS_ENUM
                 || LA(1) == TERMINATE
                 || (
                     inTransparentMode(MODE_PARAMETER)
