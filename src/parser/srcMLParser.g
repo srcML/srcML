@@ -25049,6 +25049,24 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
         inputState->guessing++;
 
         try {
+            // consume decorator(s) before checking
+            while (LA(1) == TS_ATSIGN) {
+                while (
+                    LA(1) != CLASS
+                    && LA(1) != JS_FUNCTION
+                    && LA(1) != JS_GET
+                    && LA(1) != JS_SET
+                    && LA(1) != TERMINATE
+                    && !declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    && LA(1) != 1 /* EOF */
+                ) {
+                    consume();
+                }
+                if (LA(1) == TERMINATE) {
+                    consume();
+                }
+            }
+
             // consume optional specifiers (required if looking for "=" case)
             while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
                 declaration_specifiers_ts();
@@ -25161,6 +25179,10 @@ declaration_statement_ts[] { ENTRY_DEBUG } :
 
                 break;
             } |
+
+            // consume optional decorators (do not process "@@" here)
+            { next_token() != TS_ATSIGN }?
+            attribute_ts |
 
             declaration_ts
         )*
@@ -25490,6 +25512,10 @@ attribute_ts[] { ENTRY_DEBUG } :
                     inTransparentMode(MODE_PARAMETER)
                     && LA(1) == NAME
                     && next_token() == COLON
+                )
+                || (
+                    inTransparentMode(MODE_DECL_STATEMENT_TS)
+                    && declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
                 )
                 || LA(1) == 1 /* EOF */
             }?

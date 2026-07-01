@@ -200,4 +200,18 @@ function <name>invalid</name><parameter_list>()</parameter_list> <block>{<block_
 }</block></class>
 </unit>
 
+<!-- Attributes on TypeScript declaration statements -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><ts:attribute>@<expr><name>decorator</name></expr></ts:attribute> <decl><ts:specifier>declare</ts:specifier> <name>a</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><ts:attribute>@<expr><name>decorator</name></expr></ts:attribute> <decl><ts:specifier>declare</ts:specifier> <name type="computed">[<expr><name>b</name></expr>]</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
 </unit>
