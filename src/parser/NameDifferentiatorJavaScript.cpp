@@ -195,8 +195,30 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
  */
 bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::RefToken nextToken) const {
     return (
+        // the current token is a subset of all keywords and the next token is a ";"
+        (
+            srcMLParser::name_differentiator_subset_js_token_set.member(token->getType())
+            && token->getType() != srcMLParser::BREAK
+            && token->getType() != srcMLParser::CONTINUE
+            && token->getType() != srcMLParser::RETURN
+            && nextToken->getType() == srcMLParser::TERMINATE
+        )
+
+        // the previous token is a declaration specifier, current token is a keyword, and the next token is "=" or ";"
+        || (
+            srcMLParser::declaration_specifiers_ts_token_set.member(prevNonWhitespaceToken->getType())
+            && (
+                srcMLParser::name_differentiator_js_token_set.member(token->getType())
+                || token->getType() == srcMLParser::TS_ENUM
+            )
+            && (
+                nextToken->getType() == srcMLParser::EQUAL
+                || nextToken->getType() == srcMLParser::TERMINATE
+            )
+        )
+
         // the current token is NOT "default" and the next token is ":"
-        (token->getType() != srcMLParser::JS_DEFAULT && nextToken->getType() == srcMLParser::COLON)
+        || (token->getType() != srcMLParser::JS_DEFAULT && nextToken->getType() == srcMLParser::COLON)
 
         // the current token is a subset of all keywords and the next token is "?"
         || (
