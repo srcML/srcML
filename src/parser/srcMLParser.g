@@ -20026,6 +20026,12 @@ declaration_js[bool is_comma_decl = false, int post_specifier_token = -1] { int 
         )*
 
         {
+            // if didn't break on a correct break token, consume any garbage after
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == RPAREN) break;
+                consume();
+            }
+
             if (inTransparentMode(MODE_DECL_JS)) {
                 endDownToMode(MODE_DECL_JS);
                 endMode(MODE_DECL_JS);

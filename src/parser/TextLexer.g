@@ -369,7 +369,7 @@ LINE_COMMENT_START options { testLiterals = true; } {
 
             ('\\') { if (LA(1) == '\\' || LA(1) == '/') consume(); } |
 
-            ~('/' | '[' | ']' | '\\' | '\000')
+            ~('/' | '[' | ']' | '\n' | '\\' | '\000')
         )*
         (
             ('/') (NAME)? { $setType(JS_REGEX); } |
