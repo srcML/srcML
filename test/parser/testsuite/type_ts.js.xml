@@ -535,4 +535,14 @@
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><ts:specifier>declare</ts:specifier> const <name>_default</name><ts:type>: <block>{
+    <decl_stmt><decl><name>test</name><ts:type>: <block>{
+        <decl_stmt><decl><name>fn</name><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><block>{
+            <decl_stmt><decl><name>x</name><ts:type>: <ternary><condition><expr><name><name>T</name><index>[<expr><literal type="string">"x"</literal></expr>]</index></name> <ts:extends>extends <ts:type><name>T_1</name></ts:type></ts:extends></expr> ?</condition><then> <expr><name>T_1</name></expr> </then><else>: <expr><name>never</name></expr></else></ternary></ts:type></decl></decl_stmt>
+        }</block></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>sliceIndex</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>T</name></ts:type></lambda></ts:type></decl></decl_stmt>
+    }</block></ts:type></decl></decl_stmt>
+}</block></ts:type></decl></decl_stmt>
+</unit>
+
 </unit>

@@ -13700,7 +13700,6 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         {
             !skip_ternary
             && !inMode(MODE_TERNARY_CONDITION)
-            && (!inTransparentMode(MODE_DECL_STATEMENT_TS) || inTransparentMode(MODE_CONSTRAINT_TS))
             && (
                 !inLanguage(LANGUAGE_JAVA)
                 || !inTransparentMode(MODE_TEMPLATE_PARAMETER_LIST)
@@ -24379,7 +24378,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                 )
                 || (
                     LA(1) == QMARK
-                    && inTransparentMode(MODE_MIXINS_TS)
+                    && perform_in_mode_before_expression_check_js(MODE_MIXINS_TS)
                     && lparen_types_size == lparen_types_js.size()
                 )
                 || (LA(1) == TEMPOPE && (inTransparentMode(MODE_MIXINS_TS) || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)))
