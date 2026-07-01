@@ -303,7 +303,11 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>constructor</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<decl_stmt><decl type="const">const { <decl><name>constructor</name></decl> } <init>= <expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const { <decl><name>constructor</name></decl>, <decl><name>constructor</name></decl>, <decl><name>constructor</name></decl> } <init>= <expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

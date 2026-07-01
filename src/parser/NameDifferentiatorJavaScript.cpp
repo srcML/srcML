@@ -536,6 +536,7 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         )
 
         // the current token is "constructor" and it follows:
+        // - the previous token is "{" or "," and the next token is NOT "("
         // - extends or implements (used in a super list), get or set (name of an accessor), new, or
         //   MULTOPS "*" (generator function name)
         // - the previous token was "," or a keyword that comes before an expression
@@ -544,6 +545,13 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             token->getType() == srcMLParser::JS_CONSTRUCTOR 
             && (
                 (
+                    (
+                        prevNonWhitespaceToken->getType() == srcMLParser::LCURLY
+                        || prevNonWhitespaceToken->getType() == srcMLParser::COMMA
+                    )
+                    && nextToken->getType() != srcMLParser::LPAREN
+                )
+                || (
                     prevNonWhitespaceToken->getType() == srcMLParser::MULTOPS
                     || prevNonWhitespaceToken->getType() == srcMLParser::JS_EXTENDS
                     || prevNonWhitespaceToken->getType() == srcMLParser::JS_FUNCTION
