@@ -25525,6 +25525,7 @@ attribute_ts[] { ENTRY_DEBUG } :
                     inTransparentMode(MODE_DECL_STATEMENT_TS)
                     && declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
                 )
+                || specifier_js_token_set.member((unsigned int) LA(1))
                 || LA(1) == 1 /* EOF */
             }?
             {

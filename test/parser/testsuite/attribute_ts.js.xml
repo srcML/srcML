@@ -11,6 +11,11 @@ class <name>BugReport</name> <block>{
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <specifier>export</specifier> class <name>A</name> <block>{
+}</block></class>
+</unit>
+
 <!-- Attributes on functions ("function") -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
