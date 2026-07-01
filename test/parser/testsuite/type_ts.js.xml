@@ -154,18 +154,6 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type></function>
-</unit>
-
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>,<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type></function>
-</unit>
-
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<function><ts:specifier>declare</ts:specifier> function <name>skipWaiting</name><parameter_list>()</parameter_list><ts:type>: <name><name>Promise</name><argument_list type="generic">&lt; <argument><expr><name>void</name></expr></argument> , <argument><expr><name>void</name></expr></argument> &gt;</argument_list></name></ts:type></function>
-</unit>
-
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <function>function <name>addProperty</name><parameter_list>()</parameter_list> <block>{<block_content>
   <decl_stmt><decl type="const">const <name>proxy</name><ts:type>: <name>PropertyDescriptor</name> <operator>&amp;</operator> <block>{<block_content><function type="get">get<parameter_list>()</parameter_list><ts:type>: <name>unknown</name></ts:type></function></block_content>}</block></ts:type> <init>= <expr><object>{
     <property><expr><function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>

@@ -20945,18 +20945,15 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
         )
 
         (options { greedy = true; } :
-            // "?", "+?", "-?", and "!" are valid TypeScript modifiers if preceded by a name
+            // "?", "+?", "-?", and "!" are valid TypeScript modifiers
             {
-                last_consumed == NAME
-                && (
-                    LA(1) == QMARK
-                    || (
-                        LA(1) == OPERATORS
-                        && (
-                            LT(1)->getText() == "!"
-                            || LT(1)->getText() == "+?"
-                            || LT(1)->getText() == "-?"
-                        )
+                LA(1) == QMARK
+                || (
+                    LA(1) == OPERATORS
+                    && (
+                        LT(1)->getText() == "!"
+                        || LT(1)->getText() == "+?"
+                        || LT(1)->getText() == "-?"
                     )
                 )
             }?
@@ -24633,10 +24630,6 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
         inputState->guessing++;
 
         try {
-            // special case: consume "function" keyword
-            if (LA(1) == JS_FUNCTION)
-                consume();  // "function"
-
             // consume optional specifiers
             while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
@@ -24649,6 +24642,10 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                     break;
                 }
             }
+
+            // special case: consume "function" keyword
+            if (LA(1) == JS_FUNCTION)
+                consume();  // "function"
 
             // only here to handle invalid "@@NAME()" syntax that would otherwise cause issues
             if (LA(1) == TS_DATSIGN)
