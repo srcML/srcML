@@ -24610,7 +24610,14 @@ type_array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         LBRACKET
 
         (options { greedy = true; } :
-            { LA(1) == RBRACKET || LA(1) == TERMINATE || LA(1) == 1 /* EOF */ }?
+            // end if "]" (normal) or if encountered something that does not belong
+            {
+                LA(1) == RBRACKET
+                || LA(1) == TERMINATE
+                || table_keywords_js_token_set.member((unsigned int) LA(1))
+                || decl_start_js_token_set.member((unsigned int) LA(1))
+                || LA(1) == 1 /* EOF */
+            }?
             {
                 break;
             } |
