@@ -13585,6 +13585,7 @@ expression_part_plus_linq[CALL_TYPE type = NOCALL, int call_count = 1] { ENTRY_D
 expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         bool flag;
         bool isempty = false;
+        ENTRY_DEBUG
 
         // special case: expression that starts a Python tuple without parentheses
         if (
@@ -13599,7 +13600,34 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             return;
         }
 
-        ENTRY_DEBUG
+        // special case: encountered a "}" when expected a ")" in JavaScript
+        if (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == RCURLY
+            && bracket_types_js.back().find("LP") != std::string::npos  /* "LPAREN" */
+        ) {
+            if (lcurly_types_js.back() != '*' && lcurly_types_js.back() == bracket_types_js.back()[0])
+                lcurly_types_js.pop_back();
+
+            bracket_types_js.pop_back();
+            rcurly();
+            return;
+        }
+        // special case: encountered a ")" when expected a "}" in JavaScript
+        else if (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == RPAREN
+            && bracket_types_js.back().find("LC") != std::string::npos  /* "LCURLY" */
+        ) {
+            if (lparen_types_js.back() != '*' && lparen_types_js.back() == bracket_types_js.back()[0])
+                lparen_types_js.pop_back();
+
+            bracket_types_js.pop_back();
+            rparen(true);
+            return;
+        }
 } :
         // special case: "<<", "<<<", etc. that should start a TypeScript generic argument list
         // note: this is invalid code, but must be handled to avoid crashes and/or infinite loops
