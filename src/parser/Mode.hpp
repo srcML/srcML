@@ -397,6 +397,8 @@ const static srcMLState::MODE_TYPE MODE_FUNCTION_DECL_TS;
 
 const static srcMLState::MODE_TYPE MODE_CONSTRAINT_TS;
 
+const static srcMLState::MODE_TYPE MODE_TYPE_ARRAY_TS;
+
 const static srcMLState::MODE_TYPE MODE_DECORATOR_TS;
 
 const static srcMLState::MODE_TYPE MODE_INTERFACE_TS;

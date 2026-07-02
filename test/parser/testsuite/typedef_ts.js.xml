@@ -83,4 +83,11 @@
     </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></ts:type></ts:typedef>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>ConditionalTuple</name> = <ts:type><array>[
+  <ts:type><name>first</name><ts:type>: <name>boolean</name></ts:type></ts:type>,
+  <ts:type><operator>...</operator><operator>(</operator><ternary><condition><expr><literal type="number">0</literal> <ts:extends>extends <ts:type><literal type="number">0</literal></ts:type></ts:extends></expr> ?</condition><then> <array>[<ts:type><name>second</name><ts:type>: <name>string</name></ts:type></ts:type>]</array> <ts:type>: <array>[]</array></ts:type></then></ternary><operator>)</operator></ts:type>
+]</array></ts:type></ts:typedef>
+</unit>
+
 </unit>

@@ -6824,6 +6824,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                 inTransparentMode(MODE_IMPORT_JS)
                 || inTransparentMode(MODE_EXPORT_JS)
                 || inTransparentMode(MODE_ARRAY_JS)
+                || inTransparentMode(MODE_TYPE_ARRAY_TS)
                 || (
                     inLanguage(LANGUAGE_JAVASCRIPT)
                     && (
@@ -6862,6 +6863,7 @@ comma[] { bool markup_comma = true; ENTRY_DEBUG } :
                         inLanguage(LANGUAGE_JAVASCRIPT)
                         && (
                             inTransparentMode(MODE_ARRAY_JS)
+                            || inTransparentMode(MODE_TYPE_ARRAY_TS)
                             || inTransparentMode(MODE_LAMBDA_JS)
                             || (
                                 perform_in_mode_before_expression_check_js(MODE_ARGUMENT)
@@ -24502,6 +24504,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
             {
                 last_consumed == COLON
                 || last_consumed == COMMA
+                || last_consumed == DOTDOTDOT
                 || last_consumed == REFOPS
                 || last_consumed == QMARK
                 || last_consumed == OPERATORS
@@ -24523,12 +24526,16 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
             assertion_function_operator_ts | { true }? type_predicate_operator_ts |
 
             // allow nested types (e.g., in lambda parameter lists)
-            { bracket_types_js.back() == "pLPAREN" }?
+            { bracket_types_js.back() == "pLPAREN" || inTransparentMode(MODE_TYPE_ARRAY_TS) }?
             colon_type_ts |
 
             // allow JavaScript ternaries to use existing "else" logic
-            { LA(1) == COLON }?
+            { !inTransparentMode(MODE_TYPE_ARRAY_TS) }?
             colon_marked_js |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
             // optional generic types (mixins) using the "extends" keyword in TypeScript
             { !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
@@ -24596,14 +24603,14 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
 */
 type_array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_TOP | MODE_LIST | MODE_ARRAY_JS);
+            startNewMode(MODE_TOP | MODE_LIST | MODE_TYPE_ARRAY_TS);
             startElement(SARRAY);
         }
 
         LBRACKET
 
         (options { greedy = true; } :
-            { LA(1) == RBRACKET || LA(1) == 1 /* EOF */ }?
+            { LA(1) == RBRACKET || LA(1) == TERMINATE || LA(1) == 1 /* EOF */ }?
             {
                 break;
             } |
@@ -24616,8 +24623,8 @@ type_array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 
         {
-            if (inTransparentMode(MODE_ARRAY_JS))
-                endDownToMode(MODE_ARRAY_JS);
+            if (inTransparentMode(MODE_TYPE_ARRAY_TS))
+                endDownToMode(MODE_TYPE_ARRAY_TS);
         }
 
         // consume array-ending bracket, if it exists
