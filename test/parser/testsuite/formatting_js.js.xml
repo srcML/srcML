@@ -95,6 +95,11 @@
 <operator>+</operator> <literal type="number">2</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><name>IgnoreRulesSpecific</name><operator>.</operator></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>y</name> <init>= <expr><name><name>Position</name><operator>.</operator><name>IgnoreRulesSpecific</name></name></expr></init></decl></decl_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:typedef>type <name>createClient</name> = <ts:type><operator>(</operator><name>a</name><operator>)</operator>
 <operator>|</operator> <name>b</name></ts:type></ts:typedef>

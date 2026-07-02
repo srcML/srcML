@@ -9849,30 +9849,41 @@ multops_star[] { ENTRY_DEBUG } :
   Handles a compound name for keyword-based languages (e.g., Python and JavaScript).
 */
 compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
-        generic_argument_list | simple_name_optional_template_keyword
+        generic_argument_list |
 
-        (options { greedy = true; } :
-            (
-                ({ inLanguage(LANGUAGE_JAVASCRIPT) }? qmark_period | period)
+        (
+            simple_name_optional_template_keyword
 
-                {
-                    iscompound = true;
-                }
-
+            (options { greedy = true; } :
                 (
-                    // optional computed access in JavaScript
-                    { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed == QMARK_PERIOD }?
-                    computed_property_js |
+                    ({ inLanguage(LANGUAGE_JAVASCRIPT) }? qmark_period | period)
 
-                    keyword_name |
+                    {
+                        // end the name early if the compound name is malformed
+                        if (
+                            inLanguage(LANGUAGE_JAVASCRIPT)
+                            && (last_consumed == QMARK_PERIOD || last_consumed == PERIOD)
+                            && LA(1) == TERMINATE
+                        ) {
+                            break;
+                        }
 
-                    simple_name_optional_template_keyword |
+                        iscompound = true;
+                    }
 
-                    { next_token() == TERMINATE }?
-                    multop_name
+                    (
+                        // optional computed access in JavaScript
+                        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed == QMARK_PERIOD }?
+                        computed_property_js |
+
+                        simple_name_optional_template_keyword |
+
+                        { next_token() == TERMINATE }?
+                        multop_name
+                    )
                 )
-            )
-        )*
+            )*
+        )
 ;
 
 /*
