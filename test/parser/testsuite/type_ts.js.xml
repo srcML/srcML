@@ -348,6 +348,32 @@
 <decl_stmt><decl type="const">const <name>perfStats</name><ts:type>: <array>[<expr><name>name</name><ts:type>: <name>string</name></ts:type></expr>, <expr><name>reportThreshold</name><ts:type>: <name>number</name></ts:type></expr>]</array><index>[]</index></ts:type> <init>= <expr><array>[]</array></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Array of Types -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>foo</name> = <ts:type><ts:specifier>readonly</ts:specifier> <array>[<ts:type><name>number</name></ts:type>, <ts:type><name>number</name></ts:type>]</array></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:function_decl><ts:specifier>declare</ts:specifier> function <name>h</name><parameter_list>(<parameter><decl><array>[<expr><object>{ <property><expr><name>z</name></expr>: <expr><object>{ <property><expr><name>a1</name></expr></property>, <property><expr><name>b1</name></expr></property> }</object></expr></property> }</object></expr>]</array><ts:type>: <array>[<ts:type><block>{
+    <decl_stmt><decl><name>z</name><ts:type>: <block>{
+        <decl_stmt><decl><name>a1</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>
+        <decl_stmt><decl><name>b1</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>
+    }</block></ts:type></decl></decl_stmt>
+}</block></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:function_decl><ts:specifier>declare</ts:specifier> function <name>h</name><parameter_list>(<parameter><decl><array>[<expr><name>a</name></expr>, <expr><array>[<expr><name>b</name></expr>]</array></expr>, <expr><array>[<expr><array>[<expr><name>c</name></expr>]</array></expr>]</array></expr>, <expr><object>{ <property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr>: <expr><array>[<expr><name>a</name></expr>, <expr><name>b</name></expr>, <expr><name>c</name></expr>]</array></expr></property>, <property><expr><name>z</name></expr>: <expr><object>{ <property><expr><name>a1</name></expr></property>, <property><expr><name>b1</name></expr></property> }</object></expr></property> }</object></expr>]</array><ts:type>: <array>[<ts:type><name>any</name></ts:type>, <ts:type><array>[<ts:type><name>any</name></ts:type>]</array></ts:type>, <ts:type><array>[<ts:type><array>[<ts:type><name>any</name></ts:type>]</array></ts:type>]</array></ts:type>, <ts:type><block>{
+    <decl_stmt><decl><name>x</name><ts:modifier>?</ts:modifier><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+    <decl_stmt><decl><name>y</name><ts:type>: <array>[<ts:type><name>any</name></ts:type>, <ts:type><name>any</name></ts:type>, <ts:type><name>any</name></ts:type>]</array></ts:type></decl></decl_stmt>
+    <decl_stmt><decl><name>z</name><ts:type>: <block>{
+        <decl_stmt><decl><name>a1</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>
+        <decl_stmt><decl><name>b1</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>
+    }</block></ts:type></decl></decl_stmt>
+}</block></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl>
+</unit>
+
 <!-- Edge Cases -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -501,10 +527,6 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:typedef><specifier>export</specifier> type <name><name>RequiredKeys</name><argument_list type="generic">&lt;<argument><expr><name>V</name></expr></argument>&gt;</argument_list></name> = <ts:type><block>{ <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>V</name>]</index><ts:type>: <ternary><condition><expr><name><name>V</name><index>[<expr><name>K</name></expr>]</index></name> <ts:extends>extends <ts:type><name><name>Validator</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>T</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><ternary><condition><expr><name><name>IsOptional</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <ts:extends>extends <ts:type><literal type="boolean">true</literal></ts:type></ts:extends></expr> ?</condition><then> <expr><name>never</name></expr> </then><else>: <expr><name>K</name></expr></else></ternary></expr> </then><else>: <expr><name>never</name></expr></else></ternary></ts:type></ts:constraint></decl></decl_stmt> }</block></ts:type></ts:typedef>
-</unit>
-
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<ts:typedef>type <name>foo</name> = <ts:type><ts:specifier>readonly</ts:specifier> <array>[<expr><name>number</name></expr>, <expr><name>number</name></expr>]</array></ts:type></ts:typedef>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

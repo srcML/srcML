@@ -60,13 +60,13 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface>interface <name>Generator</name> <block>{
-    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><array>[<expr><name>value</name></expr>]</array><ts:type>: <array>[]</array> <operator>|</operator> <array>[<expr><name>TNext</name></expr>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>IteratorResult</name></ts:type></ts:function_decl>
+    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><array>[<expr><name>value</name></expr>]</array><ts:type>: <array>[]</array> <operator>|</operator> <array>[<ts:type><name>TNext</name></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>IteratorResult</name></ts:type></ts:function_decl>
 }</block></ts:interface>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface>interface <name>Generator</name> <block>{
-    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><object>{<property><expr><name>value</name></expr>: <expr><literal type="number">10</literal></expr></property>}</object><ts:type>: <array>[]</array> <operator>|</operator> <array>[<expr><name>TNext</name></expr>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>IteratorResult</name></ts:type></ts:function_decl>
+    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><object>{<property><expr><name>value</name></expr>: <expr><literal type="number">10</literal></expr></property>}</object><ts:type>: <array>[]</array> <operator>|</operator> <array>[<ts:type><name>TNext</name></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>IteratorResult</name></ts:type></ts:function_decl>
 }</block></ts:interface>
 </unit>
 

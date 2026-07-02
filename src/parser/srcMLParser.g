@@ -24464,6 +24464,16 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
             { perform_named_array_with_index_check_ts() && !perform_ternary_check() }?
             named_array_with_index_ts |
 
+            // looking for an array that contains types (different from an expression array)
+            {
+                last_consumed != NAME
+                && last_consumed != RBRACKET
+                && last_consumed != RCURLY
+                && last_consumed != RPAREN
+                && !perform_ternary_check()
+            }?
+            type_array_js |
+
             // "typeof" appearing directly after an arrow ("=>") or ternary colon (":")
             {
                 LT(1)->getText() == "typeof"
@@ -24496,6 +24506,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                 || last_consumed == QMARK
                 || last_consumed == OPERATORS
                 || last_consumed == LPAREN
+                || last_consumed == LBRACKET
                 || last_consumed == TS_KEYOF
                 || last_consumed == TS_READONLY
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
@@ -24576,6 +24587,41 @@ colon_type_ts[] { CompleteElement element(this); size_t lparen_types_size = 0; E
         }
 
         type_ts[false]
+;
+
+/*
+  type_array_js
+
+  Handles array that contain types in JavaScript.  Not used directly, but can be called by type_ts.
+*/
+type_array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_TOP | MODE_LIST | MODE_ARRAY_JS);
+            startElement(SARRAY);
+        }
+
+        LBRACKET
+
+        (options { greedy = true; } :
+            { LA(1) == RBRACKET || LA(1) == 1 /* EOF */ }?
+            {
+                break;
+            } |
+
+            // do not consume call commas
+            { bracket_types_js.back() != "cLPAREN" }?
+            comma |
+
+            type_ts
+        )*
+
+        {
+            if (inTransparentMode(MODE_ARRAY_JS))
+                endDownToMode(MODE_ARRAY_JS);
+        }
+
+        // consume array-ending bracket, if it exists
+        ({ LA(1) == RBRACKET }? RBRACKET)?
 ;
 
 /*
