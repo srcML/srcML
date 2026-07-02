@@ -42,19 +42,19 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <block>{
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <block>{
   <decl><name>t</name>: <type><name>T</name></type></decl>
 }</block></struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list> <block>{
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <block>{
   <decl><name>t</name>: <type><name>T</name></type></decl>,
 }</block></struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>, <parameter><name>S</name></parameter>, <parameter><name>U</name></parameter>, <parameter><name>V</name></parameter>&gt;</parameter_list> <block>{
+  <struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>, <parameter><decl><name>U</name></decl></parameter>, <parameter><decl><name>V</name></decl></parameter>&gt;</parameter_list> <block>{
   <decl><name>t</name>: <type><name>T</name></type></decl>,
   <decl><name>s</name>: <type><name>S</name></type></decl>,
   <decl><name>u</name>: <type><name>U</name></type></decl>,
@@ -63,7 +63,7 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct><specifier>pub</specifier> struct <name>A</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>, <parameter><name>S</name></parameter>&gt;</parameter_list> <block>{
+<struct><specifier>pub</specifier> struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>&gt;</parameter_list> <block>{
   <decl><specifier>pub</specifier> <name>t</name>: <type><name>T</name></type></decl>,
   <decl><name>s</name>: <type><name>S</name></type></decl>,
   <decl><specifier>pub</specifier> <name>a</name>: <type><name>i32</name></type></decl>,
@@ -92,15 +92,15 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct type="tuple">struct <name>Vec3</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list><tuple>(<type><name>T</name></type>, <type><name>T</name></type>, <type><name>T</name></type>)</tuple>;</struct>
+<struct type="tuple">struct <name>Vec3</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><tuple>(<type><name>T</name></type>, <type><name>T</name></type>, <type><name>T</name></type>)</tuple>;</struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct type="tuple">struct <name>BinaryLink</name><parameter_list type="generic">&lt;<parameter><name>K</name></parameter>, <parameter><name>V</name></parameter>&gt;</parameter_list><tuple>(<type><name>K</name></type>, <type><name>V</name></type>)</tuple>;</struct>
+<struct type="tuple">struct <name>BinaryLink</name><parameter_list type="generic">&lt;<parameter><decl><name>K</name></decl></parameter>, <parameter><decl><name>V</name></decl></parameter>&gt;</parameter_list><tuple>(<type><name>K</name></type>, <type><name>V</name></type>)</tuple>;</struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct type="tuple"><specifier>pub</specifier> struct <name>TransformVec3</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list><tuple>(<type><name>T</name></type>, <type><name>T</name></type>, <type><name>T</name></type>, <type><name>u8</name></type>)</tuple>;</struct>
+<struct type="tuple"><specifier>pub</specifier> struct <name>TransformVec3</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><tuple>(<type><name>T</name></type>, <type><name>T</name></type>, <type><name>T</name></type>, <type><name>u8</name></type>)</tuple>;</struct>
 </unit>
 
 </unit>

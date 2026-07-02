@@ -18,7 +18,7 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<enum><specifier>pub</specifier> enum <name>Result</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>, <parameter><name>E</name></parameter>&gt;</parameter_list> <block>{
+<enum><specifier>pub</specifier> enum <name>Result</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>E</name></decl></parameter>&gt;</parameter_list> <block>{
   <struct type="tuple"><name>Ok</name><tuple>(<type><name>T</name></type>)</tuple></struct>,
   <struct type="tuple"><name>Error</name><tuple>(<type><name>E</name></type>)</tuple></struct>,
 }</block></enum>

@@ -45,19 +45,19 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub</specifier> fn <name>a</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
+<function><specifier>pub</specifier> fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub</specifier> fn <name>a</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
+<function><specifier>pub</specifier> fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type> <where>where <name>T</name><constraint>: <name>Default</name></constraint></where> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub</specifier> fn <name>function</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>, <parameter><name>S</name></parameter>, <parameter><name>U</name></parameter>, <parameter><name>V</name></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name>: <type><modifier>&amp;</modifier><name>T</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><modifier>&amp;</modifier><name>S</name></type></decl></parameter>, <parameter><decl><name>c</name>: <type><modifier>&amp;</modifier><name>U</name></type></decl></parameter>)</parameter_list> -&gt; <type><tuple>()</tuple></type>
+<function><specifier>pub</specifier> fn <name>function</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>, <parameter><decl><name>U</name></decl></parameter>, <parameter><decl><name>V</name></decl></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name>: <type><modifier>&amp;</modifier><name>T</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><modifier>&amp;</modifier><name>S</name></type></decl></parameter>, <parameter><decl><name>c</name>: <type><modifier>&amp;</modifier><name>U</name></type></decl></parameter>)</parameter_list> -&gt; <type><tuple>()</tuple></type>
 <where>where <name>T</name><constraint>: <name>A</name></constraint>,
   <name>S</name><constraint>: <name>B</name></constraint>,
   <name>U</name><constraint>: <name>C</name></constraint></where>
