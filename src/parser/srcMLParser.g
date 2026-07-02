@@ -25222,12 +25222,12 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
             )
                 declaration_modifiers_ts();
 
-            // found "NAME:" or "[NAME]:" or "NAME =" or "[NAME] ="
+            // found "NAME:" or "[NAME]:" or "NAME =" or "[NAME] =" or "NAME;" or "[NAME];"
             if (
                 continue_guessing
                 && (
                     LA(1) == COLON
-                    || (LA(1) == EQUAL && found_specifier)
+                    || ((LA(1) == EQUAL || LA(1) == TERMINATE) && found_specifier)
                 )
             )
                 isdecl = true;

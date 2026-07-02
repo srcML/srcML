@@ -235,4 +235,10 @@ enum <name>E</name> <block>{
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <decl_stmt><ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <decl><ts:specifier>public</ts:specifier> <name>prop</name></decl></decl_stmt>
+}</block></class>
+</unit>
+
 </unit>
