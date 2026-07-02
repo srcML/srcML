@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="attribute_rs">
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <attribute type="inner">#![<expr><name>crate_type</name> <operator>=</operator> <literal type="string">"lib"</literal></expr>]</attribute>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <attribute type="outer">#[<expr><call><name>allow</name><argument_list>(<argument><name>unused</name></argument>)</argument_list></call></expr>]</attribute>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
   <attribute type="inner">#![<expr><call><name>cfg</name><argument_list>(<argument><expr><name>target_os</name> <operator>=</operator> <literal type="string">"linux"</literal></expr></argument>)</argument_list></call></expr>]</attribute>
 </block_content>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <attribute type="outer">#[<expr><name>test</name></expr>]</attribute>
 <function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
@@ -31,7 +31,7 @@
 </block_content>}</block></extern>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <attribute type="outer">#[<expr><call><name>allow</name><argument_list>(<argument><name>non_camel_case_types</name></argument>)</argument_list></call></expr>]</attribute>
 <typedef>type <name>int8_t</name> = <type><name>i8</name></type>;</typedef>
 </unit>

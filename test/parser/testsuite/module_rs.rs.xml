@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="module_rs">
 
-<!-- FIXME: segmentation fault with 3 or more items in block -->
-
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <module>mod <name>module</name> <block>{}</block></module>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <module><specifier>pub</specifier> mod <name>module</name> <block>{}</block></module>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <module><specifier>pub</specifier> mod <name>module</name> <block>{
   <function>fn <name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
   <struct>struct <name>A</name> <block>{}</block></struct>
@@ -21,7 +19,7 @@
 }</block></module>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <module> mod <name>module</name> <block>{
   <attribute type="innner">#![<expr><call><name>allow</name><argument_list>(<argument><name>unused</name></argument>)</argument_list></call></expr>]</attribute>
 

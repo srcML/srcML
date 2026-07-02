@@ -7,19 +7,19 @@
 </block_content>}</block></switch>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <switch>match <expr><name>a</name></expr> <block>{<block_content>
   <case><expr><name>_</name></expr> =&gt; <block>{<block_content></block_content>}</block></case>
 </block_content>}</block></switch>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <switch>match <expr><name>a</name></expr> <block>{<block_content>
   <case><expr><name>_</name></expr> =&gt; <block>{<block_content><expr_stmt><expr><tuple>()</tuple></expr></expr_stmt></block_content>}</block></case>
 </block_content>}</block></switch>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <switch>match <expr><name>a</name></expr> <block>{<block_content>
   <case><expr><name>_</name></expr> =&gt; <label>'<name>block</name>:</label> <block>{<block_content> <break>break '<name>block</name></break> </block_content>}</block></case>
 </block_content>}</block></switch>

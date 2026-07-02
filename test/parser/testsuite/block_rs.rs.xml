@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="block_rs">
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block>{<block_content/>}</block>
 </unit>
 
@@ -11,66 +11,66 @@
 </block_content>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block>{<block_content>
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </block_content>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block>{<block_content>
   <return>return <expr><name>a</name></expr>;</return>
 </block_content>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block>{<block_content>
   <decl_stmt><decl type="let">let <name>x</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </block_content>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <expr_stmt><expr><name>a</name> <operator>=</operator> <expr><block>{<block_content/>}</block></expr></expr>;</expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <expr_stmt><expr><name>a</name> <operator>=</operator> <expr><block>{<block_content>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
   <expr><name>c</name></expr>
 </block_content>}</block></expr></expr>;</expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <expr_stmt><expr><name>a</name> <operator>=</operator> <expr><label>' <name>label</name>:</label> <block>{<block_content>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
   <break>break '<name>label</name> <expr><literal type="number">0</literal></expr>;</break>
 </block_content>}</block></expr></expr>;</expr_stmt>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
   <decl_stmt><decl><name>a</name>: <type><name>i32</name></type> <init>= <expr><label>' <name>label</name>:</label> <block>{<block_content>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
   <break>break '<name>label</name> <expr><literal type="number">0</literal></expr>;</break>
 </block_content>}</block></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block><specifier>async</specifier> {<block_content/>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block><specifier>unsafe</specifier> {<block_content/>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block><specifier>extern</specifier> {<block_content/>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block><specifier>unsafe</specifier> <specifier>extern</specifier> {<block_content/>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block><specifier>unsafe</specifier> <specifier>extern <literal type="string">"C"</literal></specifier> {<block_content/>}</block>
 </unit>
 
