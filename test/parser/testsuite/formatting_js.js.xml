@@ -214,6 +214,13 @@
 </block_content>}</block>
 </unit>
 
+<!-- Statements separated by Terminate(s) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:function_decl><ts:specifier>declare</ts:specifier> function <name>f</name><parameter_list>(<parameter><decl><name>g</name><ts:type>: <lambda><parameter_list>(<parameter><decl><name>as</name><ts:type>: <name><name>string</name><index>[]</index></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl>
+<expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><array>[<expr><name>_1</name></expr>, <expr><name>_2</name> <operator>=</operator> <literal type="undefined">undefined</literal></expr>]</array></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="undefined">undefined</literal></expr></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
 <!-- Statement with Blocks followed by Bare Blocks -->
 
 <unit revision="1.0.0" language="JavaScript">
