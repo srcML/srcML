@@ -939,6 +939,10 @@
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>f</name> <init>= <expr><call><name>foo</name><argument_list>( <argument><expr><object>{ <property><expr><name>get</name></expr>: <expr><name>get</name></expr></property> }</object></expr></argument> )</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "if" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1445,6 +1449,10 @@
     </block_content>}</block></function>
     <return>return <expr><name>set</name></expr></return>
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>f</name> <init>= <expr><call><name>foo</name><argument_list>(<argument><expr><object>{ <property><expr><name>set</name></expr>: <expr><name>set</name></expr></property> }</object></expr></argument> )</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "static" -->

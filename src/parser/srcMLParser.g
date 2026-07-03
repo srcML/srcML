@@ -11042,7 +11042,15 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // looking for "function" to start a function in an expression in JavaScript
         // Note that "function:" is a property name in an object
-        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        { 
+            inLanguage(LANGUAGE_JAVASCRIPT) 
+            && !inTransparentMode(MODE_NAME_LIST_JS) 
+            && next_token() != COLON
+            && (
+                (LA(1) == JS_GET || LA(1) == JS_SET)
+                && !perform_accessor_is_name_check_js()
+            )
+         }?
         function_expression_js[true] |
 
         // looking for lcurly to start an object in JavaScript
@@ -13847,7 +13855,18 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
 
         // looking for "function" to start a function in an expression in JavaScript
         // Note that "function:" is a property name in an object
-        { inLanguage(LANGUAGE_JAVASCRIPT) && !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+        { 
+            inLanguage(LANGUAGE_JAVASCRIPT) 
+            && !inTransparentMode(MODE_NAME_LIST_JS) 
+            && next_token() != COLON
+            && (
+                (LA(1) != JS_GET && LA(1) != JS_SET) 
+                || (
+                    (LA(1) == JS_GET || LA(1) == JS_SET)
+                    && perform_accessor_is_name_check_js()
+                )
+             )
+        }?
         function_expression_js[true] |
 
         // looking for lcurly to start an object in JavaScript
@@ -24181,7 +24200,7 @@ identifier_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
             PY_2_EXEC | PY_2_PRINT | PY_ASYNC | PY_CASE | PY_MATCH | PY_TYPE |
 
             // JavaScript
-            JS_WITH
+            JS_GET | JS_SET | JS_WITH
         )
 ;
 
