@@ -73,6 +73,10 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
+<function><specifier>async</specifier> fn <name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
 <function><specifier>extern <literal type="string">"Rust"</literal></specifier> fn <name>a</name> <parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type> <block>{<block_content/>}</block></function>
 </unit>
 

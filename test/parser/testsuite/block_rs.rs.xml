@@ -48,14 +48,22 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-  <decl_stmt><decl><name>a</name>: <type><name>i32</name></type> <init>= <expr><label>' <name>label</name>:</label> <block>{<block_content>
+<decl_stmt><decl type="let">let <name>a</name>: <type><name>i32</name></type> <init>= <expr><label>' <name>label</name>:</label> <block>{<block_content>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
   <break>break '<name>label</name> <expr><literal type="number">0</literal></expr>;</break>
 </block_content>}</block></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="Rust">
+<unit revision="1.0.0" language="rust">
+<block><specifier>move</specifier> {<block_content/>}</block>
+</unit>
+
+<unit revision="1.0.0" language="rust">
 <block><specifier>async</specifier> {<block_content/>}</block>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<block><specifier>async</specifier> <specifier>move</specifier> {<block_content/>}</block>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
