@@ -378,6 +378,8 @@ const static srcMLState::MODE_TYPE MODE_LAMBDA_JS;
 
 const static srcMLState::MODE_TYPE MODE_OBJECT_JS;
 
+const static srcMLState::MODE_TYPE MODE_RETURN_JS;
+
 const static srcMLState::MODE_TYPE MODE_ARRAY_JS;
 
 const static srcMLState::MODE_TYPE MODE_DECL_JS;
