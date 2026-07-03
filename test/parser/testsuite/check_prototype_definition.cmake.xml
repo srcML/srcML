@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="check_prototype_definition">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_prototype_definition</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_prototype_definition</name><argument_list>(<argument><expr><name>getpwent_r</name></expr></argument> <argument><expr><literal type="string">"prototype"</literal></expr></argument> <argument><expr><literal type="string">"NULL"</literal></expr></argument> <argument><expr><literal type="string">"unistd.h;pwd.h"</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>
