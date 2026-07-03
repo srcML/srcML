@@ -69,6 +69,14 @@
 </block_content>}</block></for>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl>{<decl><name>x</name></decl>} <range>in <expr><object>{<property><expr><name>x</name></expr>:<expr><name>y</name></expr></property>}</object></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl>{<expr><name>x</name></expr>:<decl><name>y</name></decl>} <range>in <expr><name>foo</name></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
 <!-- "for...of" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -94,6 +102,14 @@
 <for>for <control>(<init><decl type="const">const <name>propertyName</name> <range>of <expr><name>Object</name> <operator>as</operator> <ts:specifier>readonly</ts:specifier> <operator>(</operator><ts:operator>keyof</ts:operator> <name><name>ts</name><operator>.</operator><name>SourceFile</name></name><operator>)</operator><index>[]</index></expr></range></decl></init>)</control> <block>{<block_content>
     <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>propertyName</name></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl>{<decl><name>x</name></decl>} <range>of <expr><object>{<property><expr><name>x</name></expr>:<expr><name>y</name></expr></property>}</object></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl>{ <expr><name>x</name></expr>: <decl>[<decl><name>x</name> <init>= <expr><yield>yield</yield></expr></init></decl>]</decl> } <range>of <expr><array>[]</array></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
 </unit>
 
 <!-- "for await...of" -->

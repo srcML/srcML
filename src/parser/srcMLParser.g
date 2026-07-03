@@ -20210,7 +20210,7 @@ for_control_js[] { ENTRY_DEBUG } :
             } |
 
             // allow names in "for await...of" and "for each...in" loops
-            { decl_start_js_token_set.member(LA(1)) || check_valid_specifier_js() || LA(1) == NAME }?
+            { decl_start_js_token_set.member(LA(1)) || check_valid_specifier_js() || LA(1) == NAME || LA(1) == LCURLY }?
             control_initialization_js
         )*
 
@@ -20314,6 +20314,7 @@ control_initialization_js[] {
                 LA(1) == NAME
                 || decl_start_js_token_set.member(LA(1))
                 || decl_start_js_token_set.member(post_specifier_tokens[0])
+                || LA(1) == LCURLY
             }?
             {
                 // allow names in "for await...of" and "for each...in" loops
