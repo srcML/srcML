@@ -224,6 +224,16 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>A</name>
+<block>{
+    <expr_stmt><expr><function><ts:specifier>public</ts:specifier> <name>B</name><parameter_list>()</parameter_list>
+    <block>{<block_content>
+        <return>return <expr><literal type="number">42</literal></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
 <!-- Statements separated by Terminate(s) -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

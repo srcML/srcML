@@ -21816,32 +21816,18 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
 
             // match "("
             if (found_name && LA(1) == LPAREN) {
-                int paren_count = 0;
+                paren_pair();
 
-                while (LA(1) != antlr::Token::EOF_TYPE) {
-                    if (LA(1) == LPAREN)
-                        ++paren_count;
-
-                    if (LA(1) == RPAREN)
-                        --paren_count;
-
-                    if (paren_count < 0)
-                        break;
-
-                    if ((LA(1) == RPAREN || LA(1) == LCURLY) && paren_count == 0)
-                        break;
-
+                // consume auto-inserted terminate, if applicable
+                if (LA(1) == TERMINATE && (next_token() == LCURLY || next_token() == COLON))
                     consume();
-                }
 
                 // found "NAME() {", a keywordless function
-                if (LA(1) == RPAREN && next_token() == LCURLY)
+                if (LA(1) == LCURLY) {
                     isfunction = true;
-
+                }
                 // looking for "NAME(): TYPE {", also a keywordless function
-                if (LA(1) == RPAREN && next_token() == COLON) {
-                    consume();  // ")"
-
+                else if (LA(1) == COLON) {
                     // consume optional TypeScript type, followed by a typical block
                     if (
                         LA(1) == COLON
