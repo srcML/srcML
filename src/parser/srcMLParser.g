@@ -20936,6 +20936,9 @@ javascript_parameter_list[] { CompleteElement element(this); size_t bracket_type
         )*
 
         rparen[false]
+
+        // consume generated TERMINATE if it separates the parameter list and a block
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" && next_token() == LCURLY }? TERMINATE )?
 ;
 
 /*

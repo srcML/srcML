@@ -288,8 +288,8 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<function>function <name>foo</name><parameter_list>()</parameter_list></function> 
-<block>{<block_content/>}</block>
+<function>function <name>foo</name><parameter_list>()</parameter_list>
+<block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

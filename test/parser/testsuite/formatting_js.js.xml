@@ -214,6 +214,16 @@
 </block_content>}</block>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>A</name>
+<block>{
+    <constructor>constructor <parameter_list>()</parameter_list>
+    <block>{<block_content>
+
+    </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
 <!-- Statements separated by Terminate(s) -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
