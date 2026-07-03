@@ -25822,6 +25822,10 @@ perform_lcurly_differentiator_check_js[] returns [bool isblock] {
 */
 perform_in_mode_before_expression_check_js[srcMLState::MODE_TYPE m] returns [bool inmode] {
         inmode = false;
+
+        if (!inTransparentMode(m))
+            return false;
+
         std::list<srcMLState> temp_st = st;
         int start = mark();
         inputState->guessing++;
