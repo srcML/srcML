@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="break_rs">
+
+<unit revision="1.0.0" language="Rust">
+<break>break</break>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<break>break;</break>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<break>break <expr><literal type="number">0</literal></expr></break>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<break>break <expr><literal type="number">0</literal></expr>;</break>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<break>break '<name>a</name></break>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<break>break '<name>a</name>;</break>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<break>break '<name>a</name> <expr><literal type="number">0</literal></expr></break>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<break>break '<name>a</name> <expr><literal type="number">0</literal></expr>;</break>
+</unit>
+
+</unit>
