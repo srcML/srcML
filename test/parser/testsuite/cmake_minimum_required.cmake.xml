@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="cmake_minimum_required">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_minimum_required</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_minimum_required</name><argument_list>(<option><name>VERSION</name> <argument><expr><literal type="number">3.16</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_minimum_required</name><argument_list>(<option><name>VERSION</name> <argument><expr><literal type="number">3.16</literal></expr></argument></option> <option><name>FATAL_ERROR</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_minimum_required</name><argument_list>(<option><name>VERSION</name> <argument><expr><literal type="number">3.16...3.28</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_minimum_required</name><argument_list>(<option><name>VERSION</name> <argument><expr><literal type="number">3.16...3.28</literal></expr></argument></option> <option><name>FATAL_ERROR</name></option>)</argument_list></command>
+</unit>
+
+</unit>
