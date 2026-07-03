@@ -19813,6 +19813,7 @@ check_valid_specifier_js[] returns [int isspecifier] {
                 && (
                     LA(1) != JS_STATIC
                     || (LA(1) == JS_STATIC && perform_keywordless_function_check_js())
+                    || (LA(1) == JS_STATIC && (next_token() == JS_GET || next_token() == JS_SET))
                     || (LA(1) == JS_STATIC && (next_token() == OPERATORS || next_token() == DESTOP))
                 )
             )

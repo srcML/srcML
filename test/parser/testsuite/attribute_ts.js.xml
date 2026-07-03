@@ -62,6 +62,24 @@ function <name>invalid</name><parameter_list>()</parameter_list> <block>{<block_
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <function type="get"><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">11</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <specifier>static</specifier> get <name>method1</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <function type="get"><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">21</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <specifier>static</specifier> get <name type="computed">[<expr><literal type="string">"method2"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <function type="get"><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">31</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <specifier>static</specifier> get <name type="computed">[<expr><name>method3</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function>
+}</block></class>
+</unit>
+
 <!-- Attributes on setters ("set") -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -72,6 +90,24 @@ function <name>invalid</name><parameter_list>()</parameter_list> <block>{<block_
   set <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
     <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
   </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <function type="set"><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">12</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <specifier>static</specifier> set <name>method1</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <function type="set"><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">22</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <specifier>static</specifier> set <name type="computed">[<expr><literal type="string">"method2"</literal></expr>]</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <function type="set"><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">32</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <specifier>static</specifier> set <name type="computed">[<expr><name>method3</name></expr>]</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class>
 </unit>
 
