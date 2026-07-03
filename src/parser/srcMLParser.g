@@ -21102,7 +21102,7 @@ parameter_init_js[] { SingleElement element(this); ENTRY_DEBUG } :
             expression |
 
             // consume commas for calls, but not for parameters
-            { bracket_types_js.back() == "cLPAREN" }?
+            { bracket_types_js.back() != "pLPAREN" }?
             comma
         )*
 ;

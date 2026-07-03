@@ -451,4 +451,18 @@
 }</block></class>
 </unit>
 
+<!-- Comma operator in Parameter Init -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>x</name> <init>= <expr><operator>(</operator><name>x</name><operator>)</operator></expr></init></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>x</name> <init>= <expr><operator>(</operator><name>x</name><operator>,</operator> <name>y</name><operator>)</operator></expr></init></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>x</name> <init>= <expr><operator>(</operator><name>x</name><operator>,</operator> <name>y</name><operator>,</operator> <name>z</name><operator>)</operator></expr></init></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
 </unit>
