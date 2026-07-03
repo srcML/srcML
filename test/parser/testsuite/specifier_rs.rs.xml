@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="specifier_rs">
+
+<!-- visibility -->
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub(self)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub(super)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub(crate)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub(in <name>crate</name>)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>pub(in <name><name>crate</name><operator>::</operator><name>module</name></name>)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<!-- foreign function interface -->
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>extern</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>extern <literal type="string">"system"</literal></specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<!-- memory safety -->
+
+<unit revision="1.0.0" language="Rust">
+<function><specifier>unsafe</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifier>safe</specifier> fn <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><specifier>dyn</specifier></expr>
+</unit>
+
+<!-- asynchronous -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><specifier>async</specifier></expr>
+</unit>
+
+<!-- ownership -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><specifier>move</specifier></expr>
+</unit>
+
+<!-- constant -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><specifier>const</specifier></expr>
+</unit>
+
+</unit>
