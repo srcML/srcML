@@ -21841,7 +21841,10 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                 paren_pair();
 
                 // consume auto-inserted terminate, if applicable
-                if (LA(1) == TERMINATE && (next_token() == LCURLY || next_token() == COLON))
+                if (
+                    (LA(1) == TERMINATE && LT(1)->getText() != ";") 
+                    && (next_token() == LCURLY || next_token() == COLON)
+                )
                     consume();
 
                 // found "NAME() {", a keywordless function
