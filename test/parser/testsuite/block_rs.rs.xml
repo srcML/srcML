@@ -54,15 +54,15 @@
 </block_content>}</block></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block><specifier>move</specifier> {<block_content/>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block><specifier>async</specifier> {<block_content/>}</block>
 </unit>
 
-<unit revision="1.0.0" language="rust">
+<unit revision="1.0.0" language="Rust">
 <block><specifier>async</specifier> <specifier>move</specifier> {<block_content/>}</block>
 </unit>
 
