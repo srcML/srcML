@@ -1154,14 +1154,20 @@ public:
             inLanguage(LANGUAGE_JAVASCRIPT)
             && !inMode(MODE_DECLARE_TS)
             && !inTransparentMode(MODE_EXPORT_JS)
-            && check_valid_specifier_js()
+            && (check_valid_specifier_js() || LA(1) == TS_ATSIGN)
         ) {
             // special case: TypeScript namespace statements
             if (declaration_specifiers_ts_token_set.member(LA(1)))
                 declaration_specifiers_ts();
+            // special case: TypeScript "abstract"
+            else if (LA(1) == TS_ABSTRACT)
+                function_declaration_specifiers_ts();
             // special case: TypeScript enums
             else if (LA(1) == JS_CONST)
                 const_as_specifier_ts();
+            // special case: TypeScript attributes between specifiers
+            else if (LA(1) == TS_ATSIGN)
+                attribute_ts();
             else
                 specifier_js();
         }
@@ -19863,6 +19869,18 @@ perform_post_specifier_check_js[] returns [std::array<int, 3> keywords] {
             while (LA(1) != antlr::Token::EOF_TYPE) {
                 consume();
 
+                // consume optional decorator that can appear after (at least one) specifier
+                while (LA(1) == TS_ATSIGN) {
+                    while (
+                        LA(1) != 1 /* EOF */
+                        && !specifier_js_token_set.member((unsigned int) LA(1))
+                        && !declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        && !function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    ) {
+                        consume();
+                    }
+                }
+
                 if (!check_valid_specifier_js())
                     break;
             }
@@ -25638,6 +25656,7 @@ attribute_ts[] { ENTRY_DEBUG } :
                     inTransparentMode(MODE_DECL_STATEMENT_TS)
                     && declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
                 )
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
                 || specifier_js_token_set.member((unsigned int) LA(1))
                 || LA(1) == 1 /* EOF */
             }?

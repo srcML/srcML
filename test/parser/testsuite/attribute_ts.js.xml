@@ -16,6 +16,26 @@ class <name>BugReport</name> <block>{
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <ts:specifier>abstract</ts:specifier> class <name>C8</name> <block>{}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <specifier>export</specifier> <ts:specifier>abstract</ts:specifier> class <name>C9</name> <block>{}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <specifier>export</specifier> <specifier>default</specifier> <ts:specifier>abstract</ts:specifier> class <name>C10</name> <block>{}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> <ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <ts:specifier>abstract</ts:specifier> class <name>C11</name> <block>{}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> <specifier>default</specifier> <ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <ts:specifier>abstract</ts:specifier> class <name>C12</name> <block>{}</block></class>
+</unit>
+
 <!-- Attributes on functions ("function") -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
