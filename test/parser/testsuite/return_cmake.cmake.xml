@@ -8,9 +8,9 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<function>function(<name>add_test</name> <parameter><expr><name>name</name></expr></parameter>)<block>
+<function>function(<expr><name>add_test</name></expr> <parameter><expr><name>name</name></expr></parameter>)<block>
     <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <name>name</name> <operator>STREQUAL</operator> <literal type="string">"NAME"</literal></expr>)</condition><block>
-        <command><name>_add_test</name><argument_list>(<argument><expr><literal type="string">${<name>VALGRIND_EXECUTABLE</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>VALGRIND_ARGS</name>}</literal></expr></argument> <argument><expr><literal type="string">${<name>ARGV</name>}</literal></expr></argument>)</argument_list></command>
+        <command><name>_add_test</name><argument_list>(<argument><expr><name><expr type="name">${<name>VALGRIND_EXECUTABLE</name>}</expr></name></expr></argument> <argument><expr><name><expr type="name">${<name>VALGRIND_ARGS</name>}</expr></name></expr></argument> <argument><expr><name><expr type="name">${<name>ARGV</name>}</expr></name></expr></argument>)</argument_list></command>
         <return>return()</return>
     </block></if>endif()</if_stmt>
 </block>endfunction()</function>
@@ -21,11 +21,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<return>return(<propagate>PROPAGATE <expr><literal type="string">${<name>result_var1</name>}</literal></expr></propagate>)</return>
+<return>return(<propagate>PROPAGATE <expr><name><expr type="name">${<name>result_var1</name>}</expr></name></expr></propagate>)</return>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<return>return(<propagate>PROPAGATE <expr><literal type="string">${<name>result_var1</name>}</literal></expr> <expr><literal type="string">${<name>result_var2</name>}</literal></expr></propagate>)</return>
+<return>return(<propagate>PROPAGATE <expr><name><expr type="name">${<name>result_var1</name>}</expr></name></expr> <expr><name><expr type="name">${<name>result_var2</name>}</expr></name></expr></propagate>)</return>
 </unit>
 
 </unit>

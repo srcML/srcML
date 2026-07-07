@@ -14,11 +14,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/w</flag></expr></argument>)</comment></argument_list>
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/w</flag></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/W</flag></expr></argument>)</comment></argument_list>
+<command><name>add_compile_options</name><argument_list>(<argument><expr><flag>/W</flag></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
