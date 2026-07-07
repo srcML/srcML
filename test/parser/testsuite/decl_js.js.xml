@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="decl">
+
+<!-- "let" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name></decl>, <decl type="let"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="let"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><call><name>value1</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <decl type="let"><name>nameN</name> <init>= <expr><call><name>valueN</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- "let" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name></decl>, <decl type="let"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="let"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>name1</name> <init>= <expr><call><name>value1</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl>, <decl type="let"><name>name2</name></decl>, <decl type="let"><name>nameN</name> <init>= <expr><call><name>valueN</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "var" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="var"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name></decl>, <decl type="var"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="var"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="var"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- "var" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="var"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name></decl>, <decl type="var"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="var"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="var"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "const" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>, <comment type="block">/* ..., */</comment> <decl type="const"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>tmp</name> <init>= <expr><operator>(</operator><call><name>mutate</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call><operator>,</operator> <name>key</name><operator>)</operator></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- "const" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="const"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>, <comment type="block">/* ..., */</comment> <decl type="const"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>tmp</name> <init>= <expr><operator>(</operator><call><name>mutate</name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call><operator>,</operator> <name>key</name><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "static" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name></decl>;</decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name></decl>;</decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl>;</decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl>;</decl_stmt>
+}</block></class>
+</unit>
+
+<!-- "static" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ExampleClass</name> <block>{
+    <decl_stmt><decl type="static">static <name>name1</name></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name></decl>, <decl type="static"><name>name2</name> <init>= <expr><name>value2</name></expr></init></decl></decl_stmt>
+    <decl_stmt><decl type="static">static <name>name1</name> <init>= <expr><name>value1</name></expr></init></decl>, <decl type="static"><name>name2</name></decl>, <comment type="block">/* ..., */</comment> <decl type="static"><name>nameN</name> <init>= <expr><name>valueN</name></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<!-- "using" (with semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>_</name> <init>= <expr><operator>new</operator> <call><name>Lock</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>resource</name> <init>= <expr><operator>new</operator> <call><name>Resource</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>resource1</name> <init>= <expr><call><name>getFirstResource</name><argument_list>()</argument_list></call></expr></init></decl>, <decl type="using"><name>resource2</name> <init>= <expr><call><name>getSecondResource</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="using">using <name>resource</name> <range>of <expr><name>resources</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><name><name>resource</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+    <comment type="line">// ...</comment>
+</block_content>}</block></for>
+</unit>
+
+<!-- "using" (without semicolons) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>_</name> <init>= <expr><operator>new</operator> <call><name>Lock</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>resource</name> <init>= <expr><operator>new</operator> <call><name>Resource</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using">using <name>resource1</name> <init>= <expr><call><name>getFirstResource</name><argument_list>()</argument_list></call></expr></init></decl>, <decl type="using"><name>resource2</name> <init>= <expr><call><name>getSecondResource</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="using">using <name>resource</name> <range>of <expr><name>resources</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><name><name>resource</name><operator>.</operator><name>getValue</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+    <comment type="line">// ...</comment>
+</block_content>}</block></for>
+</unit>
+
+<!-- Object Destructuring -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<decl><name>sync</name></decl>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'child_process'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<decl><name>copy</name></decl>, <decl><name>validate</name></decl>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'./src/gd'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<decl><name>copy</name></decl>, <decl/>, <decl><name>validate</name></decl>} <init>= <expr><call><name>require</name><argument_list>(<argument><expr><literal type="string">'./src/gd'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><literal type="string">"key"</literal></expr>: <decl><name>value</name></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><literal type="string">"key1"</literal></expr>: <decl><name>value1</name></decl>, <expr><literal type="string">"key2"</literal></expr>: <decl><name>value2</name></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><literal type="string">"key1"</literal></expr>: <decl><name>value1</name></decl>, <decl/>, <expr><literal type="string">"key2"</literal></expr>: <decl><name>value2</name></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl><name>a1</name> <init>= <expr><name>aDefault</name></expr></init></decl>, <decl><name>b</name> <init>= <expr><name>bDefault</name></expr></init></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl><name>a1</name> <init>= <expr><name>aDefault</name></expr></init></decl>, <expr><name>b</name></expr>: <decl><name>b1</name> <init>= <expr><name>bDefault</name></expr></init></decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name type="computed">[<expr><name>computedKey</name></expr>]</name></expr>: <decl><name>x</name></decl>} <init>= <expr><name><name>props</name><operator>.</operator><name>val</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name type="computed">[<expr><name>computedKey</name></expr>]</name></expr>: <decl><name>x</name></decl>, <expr><name type="computed">[<expr><name>nextKey</name></expr>]</name></expr>: <decl><name>y</name></decl>} <init>= <expr><name><name>props</name><operator>.</operator><name>val</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<decl/>, <expr><literal type="string">"s"</literal></expr>: <decl><name>setState</name></decl>} <init>= <expr><call><name>useState</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using"><specifier>await</specifier> using <name>a</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using">{<decl><name>b</name></decl>} <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using"><name>c</name> <init>= <expr><literal type="null">null</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Array Destructuring -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>stack</name></decl>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>r</name></decl>, <decl><name>g</name></decl>, <decl><name>b</name></decl>] <init>= <expr><name>modifiers</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>_</name></decl>, <decl><modifier>...</modifier><name>rest</name></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>array</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>x</name> <init>= <expr><array>[<expr><operator>-</operator><literal type="number">1</literal></expr>, <expr><literal type="number">1</literal></expr>]</array></expr></init></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>value</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>x</name> <init>= <expr><call><name>sum</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></init></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>value</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>x</name> <init>= <expr><ternary><condition><expr><literal type="boolean">true</literal></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></init></decl>] <init>= <expr><name><name>props</name><operator>.</operator><name>y</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl/>, <decl><name>setState</name></decl>] <init>= <expr><call><name>useState</name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using"><specifier>await</specifier> using <name>a</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using">[<decl><name>b</name></decl>] <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using"><name>c</name> <init>= <expr><literal type="null">null</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Nested Destructuring -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>a</name></decl>, <decl>[<decl><name>b</name></decl>, <decl><name>c</name></decl>]</decl>] <init>= <expr><name>array</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>a</name></decl>, <decl>{<expr><name>b</name></expr>: <decl><name>b1</name></decl>}</decl>] <init>= <expr><name>array</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl>[<decl><name>a1</name></decl>]</decl>, <expr><name>b</name></expr>: <decl>[<decl><name>b1</name></decl>]</decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<expr><name>a</name></expr>: <decl>{<expr><name>b</name></expr>: <decl><name>b1</name></decl>}</decl>} <init>= <expr><name>obj</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><operator>(</operator>
+    <lambda><parameter_list>(<parameter><decl><name>_a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+        <decl_stmt><decl type="var">var <name>_b</name></decl></decl_stmt>
+        <decl_stmt><decl type="var">var {
+            <decl>[
+                <decl><operator>(</operator>
+                    <name>_b</name> <init>= <expr><class>class <block>{}</block></class></expr></init><operator>,</operator>
+                    <name><name>_b</name><operator>.</operator><name>x</name></name> <operator>=</operator> <literal type="number">1</literal><operator>,</operator>
+                    <name>_b</name>
+                <operator>)</operator><expr><operator>.</operator><name>x</name></expr></decl>
+            ]: <decl><name>b</name> <init>= <expr><literal type="string">""</literal></expr></init></decl></decl>
+        } <init>= <expr><name>_a</name></expr></init></decl></decl_stmt>
+    </block_content>}</block></lambda>
+<operator>)</operator></call><argument_list>()</argument_list></expr></expr_stmt>
+</unit>
+
+<!-- Subscriptable Function Call -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><call><name><name>foo</name><index>[<expr><name><name>props</name><operator>.</operator><name>method</name></name></expr>]</index></name><argument_list>(<argument><expr><operator>...</operator><name><name>props</name><operator>.</operator><name>a</name></name></expr></argument>, <argument><expr><literal type="null">null</literal></expr></argument>, <argument><expr><operator>...</operator><name><name>props</name><operator>.</operator><name>b</name></name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><call><name><name>foo</name><index>[<expr><name>a</name></expr>]</index><index>[<expr><name>b</name></expr>]</index></name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Declaration Statements when in Classes -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+  <decl_stmt><decl type="static">static <name type="computed">[<expr><operator>await</operator> <name>x</name></expr>]</name> <init>= <expr><operator>await</operator> <name>x</name></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+  <decl_stmt><decl type="static">static <name type="computed">[<expr><yield>yield <expr><literal type="number">3</literal></expr></yield></expr>]</name> <init>= <expr><yield>yield <expr><literal type="number">4</literal></expr></yield></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>bar</name> <block>{
+  <decl_stmt><decl><name>a</name> <init>= <expr><name>b</name></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>bar</name> <block>{
+  <decl_stmt><decl><name type="computed">[<expr><operator>await</operator> <name>x</name></expr>]</name> <init>= <expr><operator>await</operator> <name>x</name></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>bar</name> <block>{
+  <decl_stmt><decl><name type="computed">[<expr><yield>yield <expr><literal type="number">1</literal></expr></yield></expr>]</name> <init>= <expr><yield>yield <expr><literal type="number">2</literal></expr></yield></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><class>class <name>bar</name> <block>{
+  <decl_stmt><decl type="static">static <name type="computed">[<expr><operator>await</operator> <name>x</name></expr>]</name> <init>= <expr><operator>await</operator> <name>x</name></expr></init></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><class>class <name>bar</name> <block>{
+  <decl_stmt><decl type="static">static <name type="computed">[<expr><yield>yield <expr><literal type="number">3</literal></expr></yield></expr>]</name> <init>= <expr><yield>yield <expr><literal type="number">4</literal></expr></yield></expr></init></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><class>class <name>bar</name> <block>{
+  <decl_stmt><decl><name>a</name> <init>= <expr><name>b</name></expr></init></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><class>class <name>bar</name> <block>{
+  <decl_stmt><decl><name type="computed">[<expr><operator>await</operator> <name>x</name></expr>]</name> <init>= <expr><operator>await</operator> <name>x</name></expr></init></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><class>class <name>bar</name> <block>{
+  <decl_stmt><decl><name type="computed">[<expr><yield>yield <expr><literal type="number">1</literal></expr></yield></expr>]</name> <init>= <expr><yield>yield <expr><literal type="number">2</literal></expr></yield></expr></init></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Strings as Declaration Names -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>RegExpConstructor</name> <block>{
+    <decl_stmt><decl><literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">"prototype"</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <literal type="string">'prototype'</literal><ts:type>: <name>RegExp</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+</unit>

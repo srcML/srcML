@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="yield">
+
+<unit revision="1.0.0" language="JavaScript">
+<yield>yield</yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield>yield <expr><name>index</name></expr></yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield type="generator">yield* <expr><call><name>func1</name><argument_list>()</argument_list></call></expr></yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield type="generator">yield* <expr><literal type="string">"1234"</literal></expr></yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield type="generator">yield* <expr><array>[<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>, <expr><literal type="number">3</literal></expr>, <expr><literal type="number">4</literal></expr>]</array></expr></yield>
+</unit>
+
+<!-- Yield in expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>a</name> <init>= <expr><yield>yield</yield></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>counter</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
+        <decl_stmt><decl type="const">const <name>step</name> <init>= <expr><yield>yield <expr><name>value</name><operator>++</operator></expr></yield></expr></init></decl></decl_stmt>
+
+        <if_stmt><if>if <condition>(<expr><name>step</name></expr>)</condition> <block>{<block_content>
+            <expr_stmt><expr><name>value</name> <operator>+=</operator> <name>step</name></expr></expr_stmt>
+        </block_content>}</block></if></if_stmt>
+    </block_content>}</block></while>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>test</name><argument_list>(<argument><expr><literal type="string">'generator with exec()'</literal></expr></argument>, <argument><expr><function type="generator">function* <parameter_list>(<parameter><decl><name>t</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="let">let <name>commit</name> <init>= <expr><yield>yield <expr><call><name>exec</name><argument_list>(<argument><expr><literal type="string">'ls -alt|grep .gitignore|wc -l'</literal></expr></argument>)</argument_list></call></expr></yield></expr></init></decl></decl_stmt>
+    <expr_stmt><expr><call><name><name>t</name><operator>.</operator><name>status</name></name><argument_list>(<argument><expr><name>commit</name> <operator>==</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></function></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<while>while <condition>(<expr><name>next</name> <operator>&amp;&amp;</operator> <operator>(</operator><name>incomplete</name> <operator>||</operator> <call><name><name>this</name><operator>.</operator><name>hasChars</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>)</operator></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>next</name> <operator>=</operator> <yield type="generator">yield* <expr><call><name><name>this</name><operator>.</operator><name>parseNext</name></name><argument_list>(<argument><expr><name>next</name></expr></argument>)</argument_list></call></expr></yield></expr></expr_stmt>
+</block_content>}</block></while>
+</unit>
+
+</unit>

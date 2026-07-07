@@ -193,12 +193,16 @@ private:
 
             // more partial parsing to do
             switch (getLanguage()) {
-            case LANGUAGE_CMAKE:
-                srcMLParser::start_cmake();
-                break;
-
             case LANGUAGE_PYTHON:
                 srcMLParser::start_python();
+                break;
+
+            case LANGUAGE_JAVASCRIPT:
+                srcMLParser::start_javascript();
+                break;
+
+            case LANGUAGE_CMAKE:
+                srcMLParser::start_cmake();
                 break;
 
             default:
@@ -489,6 +493,26 @@ private:
 
                 break;
 
+            case srcMLParser::HTML_COMMENT_START:
+
+                pushSSkipToken(srcMLParser::SHTML_COMMENT);
+                pushSkipToken();
+                srcMLParser::consume();
+
+                open_comments.push(srcMLParser::SHTML_COMMENT);
+
+                break;
+
+            case srcMLParser::HTML_COMMENT_END:
+
+                open_comments.pop();
+
+                pushSkipToken();
+                srcMLParser::consume();
+                pushESkipToken(srcMLParser::SHTML_COMMENT);
+
+                break;
+
             case srcMLParser::CMAKE_BLOCK_COMMENT_START:
 
                 pushSSkipToken(srcMLParser::SCOMMENT);
@@ -520,7 +544,12 @@ private:
             return true;
         }
 
+        // if we are handling a preprocessor element already, don't start nested handling
         if (inskip)
+            return false;
+
+        // if we are in an attribute, finish then handle the preprocessor
+        if (inAttribute)
             return false;
 
         // preprocessor (unless we already are in one)

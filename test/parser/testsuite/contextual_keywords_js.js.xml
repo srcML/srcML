@@ -1,0 +1,1445 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="contextual_keywords">
+
+<!-- "as" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>as</name></expr>: <expr><literal type="string">"as"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>as</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>as</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>as</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>as</name> <init>= <expr><name>as</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>as</name> <init>= <expr><name>as</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>as</name> <init>= <expr><name>as</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>step</name> <init>= <expr><yield>yield <expr><operator>(</operator>
+    <name>value</name>
+    <operator>+</operator>
+    <name>as</name>
+<operator>)</operator></expr></yield></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "async"; can appear as a specifier within expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>async</name></expr>: <expr><literal type="string">"async"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>async</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>async</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>async</name></decl></decl_stmt>
+<for>for <control>(<init><decl><name>async</name> <range>in <expr><object>{ <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property>, <property><expr><name>b</name></expr>: <expr><literal type="number">2</literal></expr></property> }</object></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><name>async</name></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><specifier>async</specifier> <parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><name>async</name></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><specifier>async</specifier> <parameter><decl><name>foo</name></decl></parameter> <operator>=&gt;</operator> <expr><name>foo</name></expr></lambda></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><specifier>async</specifier> <parameter_list>(<parameter><decl><name>foo</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>foo</name></expr></lambda></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><specifier>async</specifier> <parameter><decl><name>async</name></decl></parameter> <operator>=&gt;</operator> <expr><name>foo</name></expr></lambda></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <name>async</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>async</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>async</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>async</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>async</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>async</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>async</name></decl></parameter>, <parameter><decl><name>async</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>async</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>XMLHttpRequest</name> <block>{
+  <ts:function_decl><name>open</name><parameter_list>(
+    <parameter><decl><name>method</name><ts:type>: <name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>url</name><ts:type>: <name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>async</name><ts:modifier>?</ts:modifier><ts:type>: <name>boolean</name></ts:type></decl></parameter>,
+    <parameter><decl><name>user</name><ts:modifier>?</ts:modifier><ts:type>: <name>string</name></ts:type></decl></parameter>,
+    <parameter><decl><name>password</name><ts:modifier>?</ts:modifier><ts:type>: <name>string</name></ts:type></decl></parameter>
+  )</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<!-- "await"; can appear within expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>await</name></expr>: <expr><literal type="string">"await"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>await</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>await</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>await</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>await</name> <init>= <expr><operator>await</operator><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>await</name> <init>= <expr><operator>await</operator> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>await</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>await</name> <block>{ }</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>x</name> <init>= <expr><lambda><parameter><decl><name>await</name></decl></parameter> <operator>=&gt;</operator> <expr><name>await</name></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <name>await</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>await</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>await</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>await</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>await</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>await</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>x</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>await</name></decl></parameter>, <parameter><decl><name>await</name></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>await</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "break" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>break</name></expr>: <expr><literal type="string">"break"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>break</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>break</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>break</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>break</name> <init>= <expr><name>break</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>break</name> <init>= <expr><name>break</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>break</name> <init>= <expr><name>break</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "case" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>case</name></expr>: <expr><literal type="string">"case"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>case</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>case</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>case</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>case</name> <init>= <expr><name>case</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>case</name> <init>= <expr><name>case</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>case</name> <init>= <expr><name>case</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "catch" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>catch</name></expr>: <expr><literal type="string">"catch"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>catch</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>catch</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>catch</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>catch</name> <init>= <expr><name>catch</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>catch</name> <init>= <expr><name>catch</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>catch</name> <init>= <expr><name>catch</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "class"; can appear within expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>class</name></expr>: <expr><literal type="string">"class"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>class</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>class</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- "const" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>const</name></expr>: <expr><literal type="string">"const"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>const</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>const</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>const</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>const</name> <init>= <expr><name>const</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>const</name> <init>= <expr><name>const</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>const</name> <init>= <expr><name>const</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>const</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<!-- "constructor" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>constructor</name></expr>: <expr><literal type="string">"constructor"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>constructor</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>constructor</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>constructor</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>constructor</name> <init>= <expr><name>constructor</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>constructor</name> <init>= <expr><name>constructor</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>constructor</name> <init>= <expr><name>constructor</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>componentName</name> <init>= <expr><operator>(</operator><name>constructor</name> <operator>&amp;&amp;</operator> <operator>(</operator><name><name>constructor</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>constructor</name><operator>.</operator><name>name</name></name><operator>)</operator><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "continue" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>continue</name></expr>: <expr><literal type="string">"continue"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>continue</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>continue</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>continue</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>continue</name> <init>= <expr><name>continue</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>continue</name> <init>= <expr><name>continue</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>continue</name> <init>= <expr><name>continue</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "debugger" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>debugger</name></expr>: <expr><literal type="string">"debugger"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>debugger</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>debugger</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>debugger</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>debugger</name> <init>= <expr><name>debugger</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>debugger</name> <init>= <expr><name>debugger</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>debugger</name> <init>= <expr><name>debugger</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "default" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>default</name></expr>: <expr><literal type="string">"default"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>default</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>default</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>default</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>default</name> <init>= <expr><name>default</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>default</name> <init>= <expr><name>default</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>default</name> <init>= <expr><name>default</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>declare</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>override</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>private</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>protected</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>public</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
+    <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<!-- "delete" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>delete</name></expr>: <expr><literal type="string">"delete"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>delete</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>delete</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>delete</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>delete</name> <init>= <expr><name>delete</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>delete</name> <init>= <expr><name>delete</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>delete</name> <init>= <expr><name>delete</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "do" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>do</name></expr>: <expr><literal type="string">"do"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>do</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>do</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>do</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>do</name> <init>= <expr><name>do</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>do</name> <init>= <expr><name>do</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>do</name> <init>= <expr><name>do</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "each" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>each</name></expr>: <expr><literal type="string">"each"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>each</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>each</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>each</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>each</name> <init>= <expr><name>each</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>each</name> <init>= <expr><name>each</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>each</name> <init>= <expr><name>each</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "else" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>else</name></expr>: <expr><literal type="string">"else"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>else</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>else</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>else</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>else</name> <init>= <expr><name>else</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>else</name> <init>= <expr><name>else</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>else</name> <init>= <expr><name>else</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "export" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>export</name></expr>: <expr><literal type="string">"export"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>export</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>export</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>export</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>export</name> <init>= <expr><name>export</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>export</name> <init>= <expr><name>export</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>export</name> <init>= <expr><name>export</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "extends" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>extends</name></expr>: <expr><literal type="string">"extends"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>extends</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>extends</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>extends</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>extends</name> <init>= <expr><name>extends</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>extends</name> <init>= <expr><name>extends</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>extends</name> <init>= <expr><name>extends</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "false" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>false</name></expr>: <expr><literal type="string">"false"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>false</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>false</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><literal type="boolean">false</literal></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>false</name> <init>= <expr><literal type="boolean">false</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>false</name> <init>= <expr><literal type="boolean">false</literal><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>false</name> <init>= <expr><literal type="boolean">false</literal> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "finally" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>finally</name></expr>: <expr><literal type="string">"finally"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>finally</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>finally</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>finally</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>finally</name> <init>= <expr><name>finally</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>finally</name> <init>= <expr><name>finally</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>finally</name> <init>= <expr><name>finally</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "for" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>for</name></expr>: <expr><literal type="string">"for"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>for</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>for</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>for</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>for</name> <init>= <expr><name>for</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>for</name> <init>= <expr><name>for</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>for</name> <init>= <expr><name>for</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "from" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>from</name></expr>: <expr><literal type="string">"from"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>from</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>from</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>from</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>from</name> <init>= <expr><name>from</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>from</name> <init>= <expr><name>from</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>from</name> <init>= <expr><name>from</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "function"; can appear within expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>function</name></expr>: <expr><literal type="string">"function"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>function</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>function</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <name_list>{ <name>_function</name> <alias>as <expr><name>function</name></expr></alias> }</name_list></export>
+</unit>
+
+<!-- "get" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>get</name></expr>: <expr><literal type="string">"get"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>get</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const {<decl><name>get</name></decl>, <decl><name>set</name></decl>} <init>= <expr><name>descriptor</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const [<decl><name>get</name></decl>, <decl><name>set</name></decl>] <init>= <expr><name>descriptor</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>result</name> <init>= <expr><call><name>descriptor</name><argument_list>(<argument><expr><name>get</name></expr></argument>, <argument><expr><name>set</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>get</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>get</name> <init>= <expr><name>get</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>get</name> <init>= <expr><name>get</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>get</name> <init>= <expr><name>get</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>currentPropGetter</name> <init>= <expr><name><name>currentProp</name><operator>?.</operator><name>get</name></name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>currentPropGetter</name> <init>= <expr><call><name><name>currentProp</name><operator>?.</operator><name>get</name></name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "if" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>if</name></expr>: <expr><literal type="string">"if"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>if</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>if</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>if</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>if</name> <init>= <expr><name>if</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>if</name> <init>= <expr><name>if</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>if</name> <init>= <expr><name>if</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "import" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>import</name></expr>: <expr><literal type="string">"import"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>import</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>import</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>import</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>import</name> <init>= <expr><name>import</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>import</name> <init>= <expr><name>import</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>import</name> <init>= <expr><name>import</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> <specifier>async</specifier> function <name>f</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>mod3</name> <init>= <expr><operator>await</operator> <call><name>import</name> <argument_list>(<argument><expr><literal type="string">"../index.js"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<!-- "in" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>in</name></expr>: <expr><literal type="string">"in"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>in</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>in</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>in</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>in</name> <init>= <expr><name>in</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>in</name> <init>= <expr><name>in</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>in</name> <init>= <expr><name>in</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "infer" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> namespace <name>foo</name> <block>{<block_content>
+    <decl_stmt><decl type="let"><specifier>export</specifier> let <name>infer</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<!-- "instanceof" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>instanceof</name></expr>: <expr><literal type="string">"instanceof"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>instanceof</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>instanceof</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>instanceof</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>instanceof</name> <init>= <expr><name>instanceof</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>instanceof</name> <init>= <expr><name>instanceof</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>instanceof</name> <init>= <expr><name>instanceof</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "is" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> namespace <name>foo</name> <block>{<block_content>
+    <decl_stmt><decl type="let"><specifier>export</specifier> let <name>is</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<!-- "keyof" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:namespace><ts:specifier>declare</ts:specifier> namespace <name>foo</name> <block>{<block_content>
+    <decl_stmt><decl type="let"><specifier>export</specifier> let <name>keyof</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></ts:namespace>
+</unit>
+
+<!-- "let" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>let</name></expr>: <expr><literal type="string">"let"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>let</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>let</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>let</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>let</name> <init>= <expr><name>let</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>let</name> <init>= <expr><name>let</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>let</name> <init>= <expr><name>let</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>let</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<!-- "new"; can appear within expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>new</name></expr>: <expr><literal type="string">"new"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>new</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>new</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>new</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>new</name> <init>= <expr><operator>new</operator><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>new</name> <init>= <expr><operator>new</operator> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WeakSetConstructor</name> <block>{
+  <ts:function_decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list><ts:type>: <name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+}</block></ts:interface>
+</unit>
+
+<!-- Semicolon delimiters are required for validity -->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WeakSetConstructor</name> <block>{
+  <ts:function_decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list><ts:type>: <name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type>;</ts:function_decl>
+  <ts:function_decl><name><name>new</name> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>WeakKey</name> <operator>=</operator> <name>WeakKey</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>()</parameter_list><ts:type>: <name><name>WeakSet</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name></ts:type>;</ts:function_decl>
+}</block></ts:interface>
+</unit>
+
+<!-- "null" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>null</name></expr>: <expr><literal type="string">"null"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>null</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>null</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><literal type="null">null</literal></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>null</name> <init>= <expr><literal type="null">null</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>null</name> <init>= <expr><literal type="null">null</literal><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>null</name> <init>= <expr><literal type="null">null</literal> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "of" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>of</name></expr>: <expr><literal type="string">"of"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>of</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>of</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>of</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>of</name> <init>= <expr><name>of</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>of</name> <init>= <expr><name>of</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>of</name> <init>= <expr><name>of</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "return" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>return</name></expr>: <expr><literal type="string">"return"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>return</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>return</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>return</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>return</name> <init>= <expr><name>return</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>return</name> <init>= <expr><name>return</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>return</name> <init>= <expr><name>return</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "satisfies" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>originalTest</name><argument_list>(<argument><expr><name>testName</name></expr></argument>, <argument><expr><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>args</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <expr_stmt><expr><name>shouldPass</name> <operator>=</operator> <operator>!</operator><operator>!</operator><call><name><name>semver</name><operator>.</operator><name>satisfies</name></name><argument_list>(<argument><expr><literal type="string">'18.0.0'</literal></expr></argument>, <argument><expr><name>range</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- "set" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>set</name></expr>: <expr><literal type="string">"set"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>set</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>set</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>set</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>set</name> <init>= <expr><operator>new</operator> <call><name>WeakSet</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>set</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>set</name> <init>= <expr><name>set</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>set</name> <init>= <expr><name>set</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>set</name> <init>= <expr><name>set</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "static" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>static</name></expr>: <expr><literal type="string">"static"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>static</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>static</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>static</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>static</name> <init>= <expr><name>static</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>static</name> <init>= <expr><name>static</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>static</name> <init>= <expr><name>static</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>static</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<!-- "switch" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>switch</name></expr>: <expr><literal type="string">"switch"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>switch</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>switch</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>switch</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>switch</name> <init>= <expr><name>switch</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>switch</name> <init>= <expr><name>switch</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>switch</name> <init>= <expr><name>switch</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "throw" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>throw</name></expr>: <expr><literal type="string">"throw"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>throw</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>throw</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>throw</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>throw</name> <init>= <expr><name>throw</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>throw</name> <init>= <expr><name>throw</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>throw</name> <init>= <expr><name>throw</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "true" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>true</name></expr>: <expr><literal type="string">"true"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>true</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>true</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><literal type="boolean">true</literal></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>true</name> <init>= <expr><literal type="boolean">true</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>true</name> <init>= <expr><literal type="boolean">true</literal><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>true</name> <init>= <expr><literal type="boolean">true</literal> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "try" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>try</name></expr>: <expr><literal type="string">"try"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>try</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>try</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>try</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>try</name> <init>= <expr><name>try</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>try</name> <init>= <expr><name>try</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>try</name> <init>= <expr><name>try</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "type" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>param</name> <init>= <expr><call><name><name>typeChecker</name><operator>.</operator><name>typeParameterToDeclaration</name></name><argument_list>(
+    <argument><expr><name>type</name> <operator>as</operator> <name>TypeParameter</name></expr></argument>,
+)</argument_list></call><operator>!</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>reactStableValue</name> <init>= <expr><operator>await</operator> <call><name>getRenderedAttributeValue</name><argument_list>(
+  <argument><expr><name>ReactStable</name></expr></argument>,
+  <argument><expr><name>attribute</name></expr></argument>,
+  <argument><expr><name>type</name></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>hasNonFBBundleTypes</name> <init>= <expr><call><name><name>bundle</name><operator>.</operator><name>bundleTypes</name><operator>.</operator><name>some</name></name><argument_list>(
+  <argument><expr><lambda><parameter><decl><name>type</name></decl></parameter> <operator>=&gt;</operator> <expr><name>type</name> <operator>!==</operator> <name>FB_WWW_DEV</name> <operator>&amp;&amp;</operator> <name>type</name> <operator>!==</operator> <name>FB_WWW_PROD</name></expr></lambda></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>checkAssertionDeferred</name><parameter_list>(<parameter><decl><name>node</name><ts:type>: <name>JSDocTypeAssertion</name> <operator>|</operator> <name>AssertionExpression</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="const">const { <decl><name>type</name></decl> } <init>= <expr><call><name>getAssertionTypeAndExpression</name><argument_list>(<argument><expr><name>node</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>candidates</name> <init>= <expr><call><name>filter</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>type</name></decl></parameter>)</parameter_list><ts:type>: <name>type</name> <ts:operator>is</ts:operator> <name>StringLiteralType</name></ts:type> <operator>=&gt;</operator> <expr><name>flags</name></expr></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "typeof"; can appear within expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>typeof</name></expr>: <expr><literal type="string">"typeof"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>typeof</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>typeof</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><operator>typeof</operator></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>typeof</name> <init>= <expr><operator>typeof</operator><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>typeof</name> <init>= <expr><operator>typeof</operator> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "undefined" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>undefined</name></expr>: <expr><literal type="string">"undefined"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>undefined</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>undefined</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><literal type="undefined">undefined</literal></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>undefined</name> <init>= <expr><literal type="undefined">undefined</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>undefined</name> <init>= <expr><literal type="undefined">undefined</literal><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>undefined</name> <init>= <expr><literal type="undefined">undefined</literal> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "using" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>using</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<!-- "var" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>var</name></expr>: <expr><literal type="string">"var"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>var</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>var</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>var</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>var</name> <init>= <expr><name>var</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>var</name> <init>= <expr><name>var</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>var</name> <init>= <expr><name>var</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
+  <ts:function_decl><name>var</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<!-- "void"; can appear within expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>void</name></expr>: <expr><literal type="string">"void"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>void</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>void</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><operator>void</operator></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>void</name> <init>= <expr><operator>void</operator><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>void</name> <init>= <expr><operator>void</operator> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>entangledThenable</name><ts:type>: <name><name>Thenable</name><argument_list type="generic">&lt;<argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
+  <property><expr><function><name>then</name><parameter_list>(<parameter><decl><name>resolve</name><ts:type>: <lambda><parameter><decl><name>void</name></decl></parameter> <operator>=&gt;</operator> <expr><name>mixed</name></expr></lambda></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>entangledListeners</name><operator>.</operator><name>push</name></name><argument_list>(<argument><expr><name>resolve</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "while" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>while</name></expr>: <expr><literal type="string">"while"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>while</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>while</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>while</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>while</name> <init>= <expr><name>while</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>while</name> <init>= <expr><name>while</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>while</name> <init>= <expr><name>while</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "with" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>with</name></expr>: <expr><literal type="string">"with"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>with</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>with</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>with</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>with</name> <init>= <expr><name>with</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>with</name> <init>= <expr><name>with</name><operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>with</name> <init>= <expr><name>with</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><call><name>with</name><argument_list>(<argument><expr><name>bar</name></expr></argument>, <argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><call><name>bar</name><argument_list>(<argument><expr><call><name>with</name><argument_list>(<argument><expr><name>baz</name></expr></argument>, <argument><expr><name>quux</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name><name>Float16Array</name><argument_list type="generic">&lt;<argument><expr><name>TArrayBuffer</name> <ts:extends>extends <ts:type><name>ArrayBufferLike</name> <operator>=</operator> <name>ArrayBufferLike</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name> <block>{
+    <ts:function_decl><name>with</name><parameter_list>(<parameter><decl><name>index</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>value</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>Float16Array</name><argument_list type="generic">&lt;<argument><expr><name>ArrayBuffer</name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+}</block></ts:interface>
+</unit>
+
+<!-- "yield"; can appear within expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>yield</name></expr>: <expr><literal type="string">"yield"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>yield</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>yield</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><yield>yield</yield></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>yield</name> <init>= <expr><yield>yield</yield></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>yield</name> <init>= <expr><yield>yield<expr><operator>+</operator> <literal type="number">1</literal></expr></yield></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>yield</name> <init>= <expr><yield>yield <expr><operator>+</operator> <literal type="number">1</literal></expr></yield></expr></init></decl></decl_stmt>
+</unit>
+
+<!--
+"type" (again)
+Note: Do NOT adjust the unit tags or position of this test
+-->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript"><decl_stmt><decl type="var">var <name>displayName</name> <init>= <expr><ternary><condition><expr><operator>typeof</operator> <name>type</name> <operator>===</operator> <name>type</name></expr> ?</condition><then> <expr><name><name>type</name><operator>.</operator><name>displayName</name></name> <operator>||</operator> <name><name>type</name><operator>.</operator><name>name</name></name> <operator>||</operator> <name>type</name></expr> </then><else>: <expr><name>type</name></expr></else></ternary></expr></init></decl></decl_stmt></unit>
+
+</unit>

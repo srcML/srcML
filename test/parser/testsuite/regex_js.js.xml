@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="regex">
+
+<!-- Expression statement -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="regex">/\p{L}*/u</literal></expr></expr_stmt>
+</unit>
+
+<!-- Regular expression following '=' -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regex</name> <init>= <expr><literal type="regex">/ab+c/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexEscape</name> <init>= <expr><literal type="regex">/\//</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexEscape</name> <init>= <expr><literal type="regex">/\\/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexFlag</name> <init>= <expr><literal type="regex">/d(b+)d/g</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexFlag</name> <init>= <expr><literal type="regex">/#/ig</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexCharacters</name> <init>= <expr><literal type="regex">/abcdefghijklmnopqrstuvwxyz/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexCharacters</name> <init>= <expr><literal type="regex">/ABCDEFGHIJKLMNOPQRSTUVWXYZ/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexCharacters</name> <init>= <expr><literal type="regex">/0123456789/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexSyntax</name> <init>= <expr><literal type="regex">/\.\+\*\?\^\$\(\)\[\]\{\}\|\\/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexClasses</name> <init>= <expr><literal type="regex">/\d\D\w\W\s\S\./</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexClasses</name> <init>= <expr><literal type="regex">/[abc][^abc][a-z][0-9]/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexQuantifiers</name> <init>= <expr><literal type="regex">/a*b+c?{0}{1,}{2,3}/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexAnchors</name> <init>= <expr><literal type="regex">/^$\b\B/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexBackreferences</name> <init>= <expr><literal type="regex">/\0\1\2/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexUnicode</name> <init>= <expr><literal type="regex">/\u{1F600}/u</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>filter</name> <init>= <expr><literal type="regex">/]/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>filter</name> <init>= <expr><literal type="regex">/src[\\/]typescript[\\/]typescript\.ts$/</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><literal type="regex">/ /</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Regular expression following '(' -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>prices</name> <init>= <expr><call><name><name>text</name><operator>.</operator><name>match</name></name><argument_list>(<argument><expr><literal type="regex">/\$\d+\.\d{2}/g</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>newString</name> <init>= <expr><call><name><name>originalString</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="regex">/world/</literal></expr></argument>, <argument><expr><literal type="string">"JavaScript"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>newString</name> <init>= <expr><call><name><name>originalString</name><operator>.</operator><name>replace</name></name><argument_list>(<argument><expr><literal type="regex">/world/</literal></expr></argument>,<argument><expr><literal type="string">"JavaScript"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Regular expression frollowing ',' -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><call><name><name>input</name><operator>.</operator><name>example</name></name><argument_list>(<argument><expr><literal type="string">"JavaScript"</literal></expr></argument>, <comment type="block">/* srcML */</comment> <argument><expr><literal type="regex">/world/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><call><name><name>input</name><operator>.</operator><name>example</name></name><argument_list>(<argument><expr><literal type="string">"JavaScript"</literal></expr></argument>, <argument><expr><literal type="regex">/world/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><call><name><name>input</name><operator>.</operator><name>example</name></name><argument_list>(<argument><expr><literal type="string">"JavaScript"</literal></expr></argument>,<argument><expr><literal type="regex">/world/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Regular expressions following both '(' and ',' -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>complex</name> <init>= <expr><call><name><name>input</name><operator>.</operator><name>sample</name></name><argument_list>(<argument><expr><literal type="regex">/hello/</literal></expr></argument>, <comment type="block">/* srcML */</comment> <argument><expr><literal type="regex">/world/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>complex</name> <init>= <expr><call><name><name>input</name><operator>.</operator><name>sample</name></name><argument_list>(<argument><expr><literal type="regex">/hello/</literal></expr></argument>, <argument><expr><literal type="regex">/world/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>complex</name> <init>= <expr><call><name><name>input</name><operator>.</operator><name>sample</name></name><argument_list>(<argument><expr><literal type="regex">/hello/</literal></expr></argument>,<argument><expr><literal type="regex">/world/</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Regular expressions following '[' -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>babelOptions</name> <init>= <expr><object>{
+  <property><expr><name>ignore</name></expr>: <expr><array>[<expr><literal type="regex">/\/(build|node_modules)\//</literal></expr>]</array></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexes</name> <init>= <expr><array>[
+    <expr><literal type="regex">/[[]/</literal></expr> <comment type="line">// Valid</comment>
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexes</name> <init>= <expr><array>[
+    <expr><literal type="regex">/[[]/u</literal></expr> <comment type="line">// Valid</comment>
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>regexes</name> <init>= <expr><array>[
+    <expr><literal type="regex">/[[]/</literal></expr>, <comment type="line">// Valid</comment>
+    <expr><literal type="regex">/[[]/u</literal></expr>, <comment type="line">// Valid</comment>
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Regular expressions following ':' -->
+
+<unit revision="1.0.0" language="JavaScript">
+  <decl_stmt><decl type="const">const <name>getStyleLoaders</name> <init>= <expr><object>{
+    <property><expr><name>rules</name></expr>: <expr><array>[
+      <expr><name>shouldUseSourceMap</name> <operator>&amp;&amp;</operator> <object>{
+        <property><expr><name>exclude</name></expr>: <expr><literal type="regex">/@babel(?:\/|\\{1,2})runtime/</literal></expr></property>,
+        <property><expr><name>test</name></expr>: <expr><literal type="regex">/\.(js|mjs|jsx|ts|tsx|css)$/</literal></expr></property>,
+      }</object></expr>,
+    ]</array></expr></property>,
+  }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Regular expressions following '!' -->
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><operator>!</operator><literal type="regex">/\s*javascript:/i</literal><operator>.</operator><call><name>test</name><argument_list>(<argument><expr><name>action</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+  <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">'Navigate to: '</literal> <operator>+</operator> <name>action</name></expr></argument>)</argument_list></call></expr></throw>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<!-- Regular expressions following an operator (e.g., '/') -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><literal type="number">1</literal> <operator>/</operator> <literal type="regex">/abc/</literal><operator>.</operator><name>length</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name><name>part</name><operator>.</operator><name>file</name></name> <operator>&amp;&amp;</operator> <literal type="regex">/lib.*\.d\.ts$/</literal><operator>.</operator><call><name>test</name><argument_list>(<argument><expr><name><name>part</name><operator>.</operator><name>file</name></name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name><name>part</name><operator>.</operator><name>span</name><ts:modifier>!</ts:modifier><operator>.</operator><name>start</name></name> <operator>=</operator> <operator>-</operator><literal type="number">1</literal></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
+<!-- The following should NOT be marked as regular expression literals -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>result</name> <init>= <expr><literal type="number">1</literal> <operator>/</operator> <literal type="number">2</literal> <operator>/</operator> <literal type="number">3</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>result</name> <init>= <expr><name>a</name> <operator>/</operator> <name>b</name> <operator>/</operator> <name>c</name></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

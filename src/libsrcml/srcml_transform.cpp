@@ -772,6 +772,18 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
             itomp->flags &= ~NS_USED;
         }
 
+        // mark TypeScript as ununsed until we examine the query result
+        auto ittypescript = findNSURI(*nunit->namespaces, SRCML_TYPESCRIPT_NS_URI);
+        if (ittypescript != nunit->namespaces->end()) {
+            ittypescript->flags &= ~NS_USED;
+        }
+
+        // mark JavaScript XML (JSX) as ununsed until we examine the query result
+        auto itjsx = findNSURI(*nunit->namespaces, SRCML_JSX_NS_URI);
+        if (itjsx != nunit->namespaces->end()) {
+            itjsx->flags &= ~NS_USED;
+        }
+
         // special cases where the nodes are not written to the tree
 #ifdef _MSC_VER
 #   pragma warning(push)
@@ -834,6 +846,26 @@ int srcml_unit_apply_transforms(struct srcml_archive* archive, struct srcml_unit
                     itomp->flags |= NS_USED;
                 } else {
                     nunit->namespaces->emplace_back(SRCML_OPENMP_NS_DEFAULT_PREFIX, SRCML_OPENMP_NS_URI, NS_USED | NS_STANDARD);
+                }
+            }
+
+            // update the TypeScript namespace if it is actually used
+            if (usesURI(fullresults->nodeTab[i], SRCML_TYPESCRIPT_NS_URI)) {
+
+                if (ittypescript != nunit->namespaces->end()) {
+                    ittypescript->flags |= NS_USED;
+                } else {
+                    nunit->namespaces->emplace_back(SRCML_TYPESCRIPT_NS_DEFAULT_PREFIX, SRCML_TYPESCRIPT_NS_URI, NS_USED | NS_STANDARD);
+                }
+            }
+
+            // update the JavaScript XML (JSX) namespace if it is actually used
+            if (usesURI(fullresults->nodeTab[i], SRCML_JSX_NS_URI)) {
+
+                if (itjsx != nunit->namespaces->end()) {
+                    itjsx->flags |= NS_USED;
+                } else {
+                    nunit->namespaces->emplace_back(SRCML_JSX_NS_DEFAULT_PREFIX, SRCML_JSX_NS_URI, NS_USED | NS_STANDARD);
                 }
             }
 

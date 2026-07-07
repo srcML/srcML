@@ -325,6 +325,89 @@ const static srcMLState::MODE_TYPE MODE_FROM_PY;
 
 const static srcMLState::MODE_TYPE MODE_SET_PY;
 
+// JavaScript modes
+const static srcMLState::MODE_TYPE MODE_FUNCTION_EXPRESSION_JS;
+
+const static srcMLState::MODE_TYPE MODE_GLOBAL_CONTEXT_CALL_JS;
+
+const static srcMLState::MODE_TYPE MODE_OBJECT_DESTRUCTURE_JS;
+
+const static srcMLState::MODE_TYPE MODE_ARRAY_DESTRUCTURE_JS;
+
+const static srcMLState::MODE_TYPE MODE_COMPUTED_FUNCTION_JS;
+
+const static srcMLState::MODE_TYPE MODE_CLASS_EXPRESSION_JS;
+
+const static srcMLState::MODE_TYPE MODE_DECL_DESTRUCTURE_JS;
+
+const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_JS;
+
+const static srcMLState::MODE_TYPE MODE_PARAMETER_LIST_JS;
+
+const static srcMLState::MODE_TYPE MODE_CATCH_LPAREN_JS;
+
+const static srcMLState::MODE_TYPE MODE_IGNORE_LABEL_JS;
+
+const static srcMLState::MODE_TYPE MODE_LCURLY_BLOCK_JS;
+
+const static srcMLState::MODE_TYPE MODE_CONSTRUCTOR_JS;
+
+const static srcMLState::MODE_TYPE MODE_FOR_CONTROL_JS;
+
+const static srcMLState::MODE_TYPE MODE_INNER_NAME_JS;
+
+const static srcMLState::MODE_TYPE MODE_OUTER_NAME_JS;
+
+const static srcMLState::MODE_TYPE MODE_SUPER_LIST_JS;
+
+const static srcMLState::MODE_TYPE MODE_DECL_INIT_JS;
+
+const static srcMLState::MODE_TYPE MODE_IIFE_CALL_JS;
+
+const static srcMLState::MODE_TYPE MODE_NAME_LIST_JS;
+
+const static srcMLState::MODE_TYPE MODE_PROPERTY_JS;
+
+const static srcMLState::MODE_TYPE MODE_EXTENDS_JS;
+
+const static srcMLState::MODE_TYPE MODE_EXPORT_JS;
+
+const static srcMLState::MODE_TYPE MODE_IMPORT_JS;
+
+const static srcMLState::MODE_TYPE MODE_LAMBDA_JS;
+
+const static srcMLState::MODE_TYPE MODE_OBJECT_JS;
+
+const static srcMLState::MODE_TYPE MODE_ARRAY_JS;
+
+const static srcMLState::MODE_TYPE MODE_DECL_JS;
+
+const static srcMLState::MODE_TYPE MODE_WITH_JS;
+
+// TypeScript modes (appears as a namespace prefix)
+const static srcMLState::MODE_TYPE MODE_TEMPLATE_ARGUMENT_TS;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_COLON_TS;
+
+const static srcMLState::MODE_TYPE MODE_DECL_STATEMENT_TS;
+
+const static srcMLState::MODE_TYPE MODE_FUNCTION_DECL_TS;
+
+const static srcMLState::MODE_TYPE MODE_DECORATOR_TS;
+
+const static srcMLState::MODE_TYPE MODE_INTERFACE_TS;
+
+const static srcMLState::MODE_TYPE MODE_NAMESPACE_TS;
+
+const static srcMLState::MODE_TYPE MODE_DECLARE_TS;
+
+const static srcMLState::MODE_TYPE MODE_MIXINS_TS;
+
+const static srcMLState::MODE_TYPE MODE_INDEX_TS;
+
+const static srcMLState::MODE_TYPE MODE_TYPE_TS;
+
+
 // CMake modes
 const static srcMLState::MODE_TYPE MODE_PAREN_ENDS_STATEMENT_CMAKE;
 
@@ -333,6 +416,8 @@ const static srcMLState::MODE_TYPE MODE_BLOCK_STATEMENT_CMAKE;
 const static srcMLState::MODE_TYPE MODE_WHILE_LOOP_CMAKE;
 
 const static srcMLState::MODE_TYPE MODE_PROPAGATE_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_PROPAGATE_STATEMENT_CMAKE;
 
 const static srcMLState::MODE_TYPE MODE_ENDTOKEN_CMAKE;
 
@@ -347,5 +432,13 @@ const static srcMLState::MODE_TYPE MODE_INCLUDE_CMAKE;
 const static srcMLState::MODE_TYPE MODE_OPTION_CMAKE;
 
 const static srcMLState::MODE_TYPE MODE_MACRO_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_NAME_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_ENV_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_CACHE_CMAKE;
+
+const static srcMLState::MODE_TYPE MODE_EXPRESSION_GENERATOR_CMAKE;
 
 #endif

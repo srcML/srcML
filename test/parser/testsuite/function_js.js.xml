@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="function">
+
+<!-- Regular functions ("function" or "[](){}") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>empty</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>calcRectArea</name><parameter_list>(<parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>height</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>calcRectArea</name><parameter_list>(<parameter><decl><name>width</name><init>=<expr><literal type="number">0</literal></expr></init></decl></parameter>, <parameter><decl><name>height</name><init>=<expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>printExamples</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>, <parameter><decl><modifier>...</modifier><name>manyMoreArgs</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"a"</literal></expr></argument>, <argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"b"</literal></expr></argument>, <argument><expr><name>b</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"manyMoreArgs"</literal></expr></argument>, <argument><expr><name>manyMoreArgs</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>example</name><parameter_list>(<parameter><decl><name>a</name><init>=<expr><call><name>init</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></init></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>normalizeCodeLocInfo</name><parameter_list>(<parameter><decl><name>example</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><operator>(</operator>
+    <call><name>example</name><argument_list>(<argument><expr><function>function <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></argument>)</argument_list></call>
+  <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function><name type="computed">[<expr><name>DEV</name></expr>]</name><parameter_list>(<parameter><decl><name>source</name></decl></parameter>, <parameter><decl><name>filename</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>source</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>topLevelWrappers</name> <init>= <expr><object>{
+  <property><expr><function><name type="computed">[<expr><name>DEV</name></expr>]</name><parameter_list>(<parameter><decl><name>source</name></decl></parameter>, <parameter><decl><name>filename</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>source</name></expr></return>
+  </block_content>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><ts:specifier>declare</ts:specifier> function <name><name>createXMachine</name><argument_list type="generic">&lt;
+  <argument><ts:specifier>const</ts:specifier> <expr><name>TConfig</name> <ts:extends>extends <ts:type><name><name>MachineConfig</name><argument_list type="generic">&lt;<argument><expr><name>TActor</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr></argument>
+&gt;</argument_list></name><parameter_list>(<parameter><decl><name>config</name><ts:type>: <name>Foo</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>TConfig</name></ts:type></function>
+</unit>
+
+<!-- Generator functions ("function*" or "*[](){}") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>emptyGenerator</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>anotherGenerator</name><parameter_list>(<parameter><decl><name>i</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">2</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">3</literal></expr></yield>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>generator</name><parameter_list>(<parameter><decl><name>i</name><init>=<expr><literal type="number">0</literal></expr></init></decl></parameter>)</parameter_list> <block>{<block_content>
+    <yield>yield <expr><name>i</name></expr></yield>
+    <yield type="generator">yield* <expr><call><name>anotherGenerator</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">10</literal></expr></yield>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator">function* <name>extraGenerator</name><parameter_list>(<parameter><decl><name>i</name></decl></parameter>, <parameter><decl><modifier>...</modifier><name>manyMoreArgs</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">1</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">2</literal></expr></yield>
+    <yield>yield <expr><name>i</name> <operator>+</operator> <literal type="number">3</literal></expr></yield>
+</block_content>}</block></function>
+</unit>
+
+<!-- Note: The semicolon is required after the first declaration or else the code is invalid -->
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <decl_stmt><decl type="static">static <name>a</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+    <function type="generator">*<name type="computed">[<expr><name><name>Symbol</name><operator>.</operator><name>iterator</name></name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><literal type="number">1</literal></expr></yield>
+        <yield>yield <expr><literal type="number">2</literal></expr></yield>
+    </block_content>}</block></function>
+    <decl_stmt><decl type="static">static <name>b</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>SomeObj</name> <init>= <expr><object>{
+    <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property>,
+    <property><expr><function type="generator">*<name type="computed">[<expr><name><name>Symbol</name><operator>.</operator><name>iterator</name></name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><literal type="string">"a"</literal></expr></yield>
+        <yield>yield <expr><literal type="string">"b"</literal></expr></yield>
+    </block_content>}</block></function></expr></property>,
+    <property><expr><name>b</name></expr>: <expr><literal type="number">2</literal></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Getters ("get") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithGet</name> <block>{
+    <decl_stmt><decl><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></decl></decl_stmt>
+
+    <function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
+    </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithGet</name> <block>{
+    <decl_stmt><decl><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></decl></decl_stmt>
+
+    <function type="get">get <name>msg</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>this</name><operator>.</operator><name>#msg</name></name></expr></return>
+    </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<!-- Setters ("set") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithSet</name> <block>{
+    <decl_stmt><decl><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></decl></decl_stmt>
+
+    <function type="set">set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <operator>=</operator> <literal type="string">`hello ${x}`</literal></expr></expr_stmt>
+    </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>ClassWithSet</name> <block>{
+    <decl_stmt><decl><name>#msg</name> <init>= <expr><literal type="string">"Hello, World!"</literal></expr></init></decl></decl_stmt>
+
+    <function type="set">set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>#msg</name></name> <operator>=</operator> <literal type="string">`hello ${x}`</literal></expr></expr_stmt>
+    </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<!-- Functions in Expressions (i.e., lambdas in other languages) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>a</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
+</block_content>}</block></function><operator>)</operator></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>a</name> <operator>+</operator> <name>b</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
+</block_content>}</block></function><operator>)</operator></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>getRectArea</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>height</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>width</name> <operator>*</operator> <name>height</name></expr></return>
+</block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name><name>x</name><operator>.</operator><name>default</name></name> <operator>=</operator> <function type="generator">function* <parameter_list>(<parameter><decl><name>sourcePath</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <yield>yield <expr><call><name><name>this</name><operator>.</operator><name>watch</name></name><argument_list>(<argument><expr><name>sourcePath</name></expr></argument>, <argument><expr><literal type="string">"input"</literal></expr></argument>)</argument_list></call></expr></yield>
+</block_content>}</block></function></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>(</operator><function>function <parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <function>function <name>addHundred</name><parameter_list>(<parameter><decl><name>y</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <return>return <expr><name>y</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
+    </block_content>}</block></function>
+
+    <return>return <expr><call><name>addHundred</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></return>
+</block_content>}</block></function><operator>)</operator></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><function><name>setBoundingClientRect</name><parameter_list>(<parameter><decl><object>{<property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property>, <property><expr><name>width</name></expr></property>, <property><expr><name>height</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content>
+  <expr_stmt><expr><name><name>node</name><operator>.</operator><name>getBoundingClientRect</name></name> <operator>=</operator> <function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><object>{
+      <property><expr><name>width</name></expr></property>,
+      <property><expr><name>height</name></expr></property>,
+      <property><expr><name>left</name></expr>: <expr><name>x</name></expr></property>,
+      <property><expr><name>right</name></expr>: <expr><name>x</name> <operator>+</operator> <name>width</name></expr></property>,
+      <property><expr><name>top</name></expr>: <expr><name>y</name></expr></property>,
+      <property><expr><name>bottom</name></expr>: <expr><name>y</name> <operator>+</operator> <name>height</name></expr></property>,
+    }</object></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></function></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>j</name> <init>= <expr><function>function <name>bar</name><parameter_list>(<parameter><decl><name>args</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>j</name> <init>= <expr><function>function <name>bar</name><parameter_list>(<parameter><decl><array>[<expr><name>quz</name></expr>, <expr><name>qux</name></expr>]</array></decl></parameter>, <parameter><decl><name>args</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Keywordless Functions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
+    <specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>logged</name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></ts:attribute>
+    <specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function type="generator"><specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function type="generator"><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
+    <specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function type="generator"><ts:attribute>@<expr><call><name>logged</name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></ts:attribute>
+    <specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <expr_stmt><expr><function><ts:specifier>public</ts:specifier> <name>baselineSmartSelection</name><parameter_list>()</parameter_list><ts:type>: <name>void</name></ts:type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>obj</name> <init>= <expr><object>{
+  <property><expr><function><name><name>doThing</name><argument_list type="generic">&lt;<argument><expr><name>K</name> <ts:extends>extends <ts:type><name>string</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>_k</name><ts:type>: <name>K</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>Foo</name><argument_list type="generic">&lt;<argument><expr><name>K</name></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
+    <return>return <expr><object>{}</object> <operator>as</operator> <name>any</name></expr></return>
+  </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Nameless, Keywordless Generator Functions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator"><specifier>async</specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <expr_stmt><expr><function type="generator"><ts:specifier>private</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <expr_stmt><expr><function type="generator"><ts:specifier>protected</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <expr_stmt><expr><function type="generator"><ts:specifier>public</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+    <expr_stmt><expr><function type="generator"><specifier>static</specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>C4</name> <block>{
+  <expr_stmt><expr><function type="generator"><specifier>static</specifier> *<name type="computed">[<expr><literal type="string">"prototype"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<parameter_list>()</parameter_list><ts:type>: <name>T</name></ts:type> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list><ts:type>: <name>T</name></ts:type> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<parameter_list>()</parameter_list><ts:type>: <block>{ }</block></ts:type> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Literals as Function Names -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>A</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="string">"\""</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>A</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="string">'foo'</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>A</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="number">1</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+</unit>

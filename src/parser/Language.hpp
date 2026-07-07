@@ -50,6 +50,9 @@ namespace LanguageName {
     /** String constant for Python language */
     const char* const LANGUAGE_PYTHON = "Python";
 
+    /** String constant for JavaScript language */
+    const char* const LANGUAGE_JAVASCRIPT = "JavaScript";
+
     /** String constant for CMake language */
     const char* const LANGUAGE_CMAKE = "CMake";
 }
@@ -93,11 +96,14 @@ public:
         /** Python language */
         LANGUAGE_PYTHON = 32,
 
+        /** JavaScript language */
+        LANGUAGE_JAVASCRIPT = 64,
+
         /** CMake language */
-        LANGUAGE_CMAKE = 64,
+        LANGUAGE_CMAKE = 128,
 
         /** C++ family i.e. C++/C#  */
-        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP | LANGUAGE_PYTHON | LANGUAGE_CMAKE,
+        LANGUAGE_CXX_FAMILY = LANGUAGE_CXX | LANGUAGE_CSHARP,
 
         /** C family i.e. C/C++/C# */
         LANGUAGE_C_FAMILY = LANGUAGE_C | LANGUAGE_CXX_FAMILY | LANGUAGE_OBJECTIVE_C,
@@ -105,8 +111,11 @@ public:
         /** Java family i.e. Java/AspectJ */
         LANGUAGE_JAVA_FAMILY = LANGUAGE_JAVA,
 
-        /** Object-Oriented languages i.e. C++/C#/Java */
-        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY,
+        /** Keyword-based language family i.e. Python/JavaScript/CMake */
+        LANGUAGE_KEYWORD_FAMILY = LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT | LANGUAGE_CMAKE,
+
+        /** Object-Oriented languages i.e. C++/C#/Java/Python/JavaScript */
+        LANGUAGE_OO = LANGUAGE_CXX_FAMILY | LANGUAGE_JAVA_FAMILY | LANGUAGE_PYTHON | LANGUAGE_JAVASCRIPT,
 
         /** All languages */
         LANGUAGE_ALL = ~0

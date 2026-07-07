@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="import">
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <literal type="string">"module-name"</literal></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>defaultExport</name> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>*</name> <alias>as <expr><name>name</name></expr></alias> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>export1</name> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>export1</name> <alias>as <expr><name>alias1</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>default</name> <alias>as <expr><name>alias</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <literal type="string">"string name"</literal> <alias>as <expr><name>alias</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>export1</name>, <name>export2</name> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>export1</name>, <name>export2</name> <alias>as <expr><name>alias2</name></expr></alias> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>defaultExport</name>, <name_list>{ <name>export1</name> }</name_list> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>defaultExport</name>, <name>*</name> <alias>as <expr><name>name</name></expr></alias> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <ts:specifier>type</ts:specifier> <name_list>{ <name>Something</name> }</name_list></import>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <ts:specifier>type</ts:specifier> <name_list>{ <name>Component</name> }</name_list> <from>from <literal type="string">"react"</literal></from></import>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <ts:specifier>type</ts:specifier> <name_list>{ <name>Handler</name>, <name>HandlerMapping</name> }</name_list> <from>from <literal type="string">"handler"</literal></from></import>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <name_list>{ <name>createUser</name>, <ts:specifier>type</ts:specifier> <name>User</name> }</name_list> <from>from <literal type="string">"./user"</literal></from></import>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<import>import <ts:specifier>type</ts:specifier> <name>*</name> <alias>as <expr><name>ModuleName</name></expr></alias> <from>from <literal type="string">"./module-path"</literal></from></import>
+</unit>
+
+</unit>

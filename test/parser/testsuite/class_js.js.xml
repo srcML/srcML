@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="class">
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Empty</name> <block>{}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Rectangle</name> <block>{
+  <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Rectangle"</literal></expr></expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
+  </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>FilledRectangle</name> <super_list><extends>extends <super><expr><name>Rectangle</name></expr></super></extends></super_list> <block>{
+  <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>color</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>height</name></expr></argument>, <argument><expr><name>width</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Filled rectangle"</literal></expr></expr_stmt>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>color</name></name> <operator>=</operator> <name>color</name></expr></expr_stmt>
+  </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Bar</name> <super_list><extends>extends <super><expr><call><name>calculatorMixin</name><argument_list>(<argument><expr><name>x</name></expr></argument>, <argument><expr><name>y</name></expr></argument>)</argument_list></call></expr></super></extends></super_list> <block>{}</block></class>
+</unit>
+
+<!-- Classes in expressions -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+    <expr_stmt><expr><function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><literal type="string">"Hello, World!"</literal></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+    <expr_stmt><expr><function><specifier>async</specifier> <name>bar</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><literal type="string">"Hello, World!"</literal></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <name>NamedFoo</name> <block>{
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+    <expr_stmt><expr><function><name>whoIsThere</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>NamedFoo</name><operator>.</operator><name>name</name></name></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <name>NamedFoo</name> <block>{
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+    <expr_stmt><expr><function><specifier>async</specifier> <name>whoIsThere</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name><name>NamedFoo</name><operator>.</operator><name>name</name></name></expr></return>
+    </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> <specifier>default</specifier> class <name>ErrorBoundary</name> <super_list><extends>extends <super><expr><name><name>React</name><operator>.</operator><name>Component</name></name></expr></super></extends></super_list> <block>{
+  <expr_stmt><expr><function><specifier>static</specifier> <name>getDerivedStateFromError</name><parameter_list>(<parameter><decl><name>error</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><object>{<property><expr><name>error</name></expr></property>}</object></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>SymbolLinks</name> <init>= <expr><class>class <super_list><extends>extends <super><expr><name>SymbolLinks</name></expr></super></extends></super_list> <block>{
+    <decl_stmt><decl><ts:specifier>declare</ts:specifier> <name>_symbolLinksBrand</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Nameless Generic Class Expression -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>C2</name> <init>= <expr><class>class <argument_list type="generic">&lt;<argument><ts:specifier>const</ts:specifier> <expr><name>T</name></expr></argument>&gt;</argument_list> <block>{}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

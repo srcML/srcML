@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="typedef">
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>Example</name> = <ts:type><name>number</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>Union</name> = <ts:type><name>number</name> <operator>|</operator> <name>string</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>Language</name> = <ts:type><block>{
+  <decl_stmt><decl><name>name</name><ts:type>: <name>string</name></ts:type></decl>,</decl_stmt>
+  <decl_stmt><decl><name>release</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>Printable</name> = <ts:type><block>{ <decl_stmt><decl><name>print</name><ts:type>: <lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type></decl></decl_stmt> }</block></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name>ColorfulCircle</name> = <ts:type><name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
+  <ts:type><ternary><condition><expr><name>foo</name></expr>
+    ?</condition><then> <expr><name>bar</name></expr>
+    </then><else>: <expr><name>baz</name></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>MapOrSetPropertyKey</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> =
+  <ts:type><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>, <argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr>
+    ?</condition><then> <expr><name>U</name></expr>
+    </then><else>: <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Set</name><argument_list type="generic">&lt;<argument><expr><ts:operator>infer</ts:operator> <name>U</name></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><name>U</name></expr> </then><else>: <expr><name>never</name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><specifier>export</specifier> type <name>LocalInterface</name> = <ts:type><call><name>import</name><argument_list>(<argument><expr><literal type="string">"pkg"</literal></expr></argument>, <argument><expr><object>{ <property><expr><name>with</name></expr>: <expr><object>{ <property><expr><literal type="string">"resolution-mode"</literal></expr>: <expr><literal type="string">"require"</literal></expr></property> }</object></expr></property> }</object></expr></argument>)</argument_list></call><operator>.</operator><name>RequireInterface</name></ts:type></ts:typedef>
+</unit>
+
+</unit>

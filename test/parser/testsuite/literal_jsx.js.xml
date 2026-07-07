@@ -1,0 +1,835 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="literal">
+
+<!-- JSX literals after comments -->
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <comment type="line">// example line comment</comment>
+        <jsx:literal type="jsx">&lt;unit&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/unit&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <comment type="block">/* example block comment */</comment>
+        <jsx:literal type="jsx">&lt;unit&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/unit&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <comment type="block">/*
+          example multi-line block comment
+        */</comment>
+        <jsx:literal type="jsx">&lt;unit&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/unit&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <comment type="hashbang">#! example hashbang comment</comment>
+        <jsx:literal type="jsx">&lt;unit&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/unit&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <comment type="html">&lt;!-- example JSX comment --&gt;</comment>
+        <jsx:literal type="jsx">&lt;unit&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/unit&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <comment type="html">&lt;!--
+          example multi-line JSX comment
+        --&gt;</comment>
+        <jsx:literal type="jsx">&lt;unit&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/unit&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<!-- Comments in JSX literals (left unmarked) -->
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;App
+    key="three"
+    // We reset after &lt;App /&gt; so we need to render one more
+    siblingsBeforeStackOne={501}
+  /&gt;</jsx:literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;App
+    key="three"
+    /*
+      We reset after &lt;App /&gt; so we need to render one more
+    */
+    siblingsBeforeStackOne={501}
+  /&gt;</jsx:literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;App
+    key="three"
+    #! We reset after &lt;App /&gt; so we need to render one more
+    siblingsBeforeStackOne={501}
+  /&gt;</jsx:literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;App
+    key="three"
+    &lt;!-- We reset after &lt;App /&gt; so we need to render one more --&gt;
+    siblingsBeforeStackOne={501}
+  /&gt;</jsx:literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;App&gt;
+    // We reset after &lt;/App&gt; so we need to render one more
+    siblingsBeforeStackOne={501}
+  &lt;/App&gt;</jsx:literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;App&gt;
+    /* We reset after &lt;/App&gt; so we need to render one more */
+    siblingsBeforeStackOne={501}
+  &lt;/App&gt;</jsx:literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;App&gt;
+    #! We reset after &lt;/App&gt; so we need to render one more
+    siblingsBeforeStackOne={501}
+  &lt;/App&gt;</jsx:literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>render</name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;App&gt;
+    &lt;!-- We reset after &lt;/App&gt; so we need to render one more --&gt;
+    siblingsBeforeStackOne={501}
+  &lt;/App&gt;</jsx:literal></expr></argument>,
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <decl_stmt><decl type="const">const <name>example</name> <init>= <expr><operator>(</operator>
+    <jsx:literal type="jsx">&lt;Suspense key="A" fallback={&lt;Text text="Loading A" /&gt;}&gt;
+      &lt;A /&gt;
+    &lt;/Suspense&gt;</jsx:literal>
+  <operator>)</operator></expr></init></decl></decl_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>editorContent</name> <init>= <expr><operator>(</operator>
+  <jsx:literal type="jsx">&lt;MonacoEditor
+    /**
+     * TS language features don't work.
+     */
+    language={'javascript'}
+  /&gt;</jsx:literal>
+<operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>content</name> <init>= <expr><operator>(</operator>
+  <jsx:literal type="jsx">&lt;h1&gt;
+    /**
+     * Single ' and " characters
+     */
+    JavaScript
+  &lt;/h1&gt;</jsx:literal>
+<operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>HereIsTheError</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;ComponentWithUnion
+          // &lt;- this throws an error
+        /&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>HereIsTheError</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;ComponentWithUnion
+          #! &lt;- this throws an error
+        /&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>HereIsTheError</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;ComponentWithUnion
+          /*
+          &lt;- this throws an error
+          */
+        /&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<!-- JSX literals (enclosed in parentheses) -->
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal><operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;unit&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/unit&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;unit revision="1.0.0" language="JavaScript"&gt;
+            &lt;Suspense fallback={&lt;div&gt;(display: none)&lt;/div&gt;}&gt;
+                &lt;div&gt;
+                    &lt;AsyncStep text={`${this.state.step} + ${this.id}`} ms={500} /&gt;
+                    {this.props.children}
+                &lt;/div&gt;
+            &lt;/Suspense&gt;
+            &lt;button onClick={this.increment}&gt;Hide&lt;/button&gt;
+        &lt;/unit&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;img src="logo.jpg" alt="srcML" class="photo"/&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;img
+            src="logo.jpg"
+            alt="srcML"
+            class="photo"
+        /&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <return>return <expr><operator>(</operator>
+    <jsx:literal type="jsx">&lt;FixtureSet
+      title="Suspense"
+      description="Preserving the state of timed-out children"&gt;
+      &lt;p&gt;
+        Clicking "Hide" will hide the fixture context using{' '}
+        &lt;code&gt;display: none&lt;/code&gt; for 0.5 seconds, then restore. This is the
+        built-in behavior for timed-out children. Each fixture tests whether
+        the state of the DOM is preserved. Clicking "Remove" will remove the
+        fixture content from the DOM for 0.5 seconds, then restore. This is{' '}
+        &lt;strong&gt;not&lt;/strong&gt; how timed-out children are hidden, but is
+        included for comparison purposes.
+      &lt;/p&gt;
+      &lt;div className="footnote"&gt;
+        As a shortcut, you can use Command + Enter (or Control + Enter on
+        Windows, Linux) to "Hide" all the fixtures, or Command + / to "Remove"
+        them.
+      &lt;/div&gt;
+      &lt;TestCase title="Text selection where entire range times out"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;Use your cursor to select the text below.&lt;/li&gt;
+          &lt;li&gt;Click "Hide" or "Remove".&lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          Text selection is preserved when hiding, but not when removing.
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            Select this entire sentence (and only this sentence).
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+      &lt;TestCase title="Text selection that extends outside timed-out subtree"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;
+            Use your cursor to select a range that includes both the text and
+            the "Go" button.
+          &lt;/li&gt;
+          &lt;li&gt;Click "Hide" or "Remove".&lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          Text selection is preserved when hiding, but not when removing.
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            Select a range that includes both this sentence and the "Go"
+            button.
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+      &lt;TestCase title="Focus"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;
+            Use your cursor to select a range that includes both the text and
+            the "Go" button.
+          &lt;/li&gt;
+          &lt;li&gt;
+            Instead of clicking "Go", which switches focus, press Command +
+            Enter (or Control + Enter on Windows, Linux).
+          &lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          The ideal behavior is that the focus would not be lost, but
+          currently it is (both when hiding and removing).
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            &lt;button&gt;Focus me&lt;/button&gt;
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+      &lt;TestCase title="Uncontrolled form input"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;Type something ("Hello") into the text input.&lt;/li&gt;
+          &lt;li&gt;Click "Hide" or "Remove".&lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          Input is preserved when hiding, but not when removing.
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            &lt;input type="text" /&gt;
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+      &lt;TestCase title="Image flicker"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;Click "Hide" or "Remove".&lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          The image should reappear without flickering. The text should not
+          reflow.
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            &lt;img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Atom.png" /&gt;
+            React is cool
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+      &lt;TestCase title="Iframe"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;
+            The iframe shows a nested version of this fixtures app. Navigate
+            to the "Text inputs" page.
+          &lt;/li&gt;
+          &lt;li&gt;Select one of the checkboxes.&lt;/li&gt;
+          &lt;li&gt;Click "Hide" or "Remove".&lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          When removing, the iframe is reloaded. When hiding, the iframe
+          should still be on the "Text inputs" page. The checkbox should still
+          be checked. (Unfortunately, scroll position is lost.)
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            &lt;iframe width="500" height="300" src="/" /&gt;
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+      &lt;TestCase title="Video playback"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;Start playing the video, or seek to a specific position.&lt;/li&gt;
+          &lt;li&gt;Click "Hide" or "Remove".&lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          The playback position should stay the same. When hiding, the video
+          plays in the background for the entire duration. When removing, the
+          video stops playing, but the position is not lost.
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            &lt;video controls&gt;
+              &lt;source
+                src="http://techslides.com/demos/sample-videos/small.webm"
+                type="video/webm"
+              /&gt;
+              &lt;source
+                src="http://techslides.com/demos/sample-videos/small.ogv"
+                type="video/ogg"
+              /&gt;
+              &lt;source
+                src="http://techslides.com/demos/sample-videos/small.mp4"
+                type="video/mp4"
+              /&gt;
+              &lt;source
+                src="http://techslides.com/demos/sample-videos/small.3gp"
+                type="video/3gp"
+              /&gt;
+            &lt;/video&gt;
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+      &lt;TestCase title="Audio playback"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;Start playing the audio, or seek to a specific position.&lt;/li&gt;
+          &lt;li&gt;Click "Hide" or "Remove".&lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          The playback position should stay the same. When hiding, the audio
+          plays in the background for the entire duration. When removing, the
+          audio stops playing, but the position is not lost.
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            &lt;audio controls={true}&gt;
+              &lt;source src="https://upload.wikimedia.org/wikipedia/commons/e/ec/Mozart_K448.ogg" /&gt;
+            &lt;/audio&gt;
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+      &lt;TestCase title="Scroll position"&gt;
+        &lt;TestCase.Steps&gt;
+          &lt;li&gt;Scroll to a position in the list.&lt;/li&gt;
+          &lt;li&gt;Click "Hide" or "Remove".&lt;/li&gt;
+        &lt;/TestCase.Steps&gt;
+        &lt;TestCase.ExpectedResult&gt;
+          Scroll position is preserved when hiding, but not when removing.
+        &lt;/TestCase.ExpectedResult&gt;
+        &lt;Fixture&gt;
+          &lt;SuspendyTree&gt;
+            &lt;div style={{height: 200, overflow: 'scroll'}}&gt;
+              {Array(20)
+                .fill()
+                .map((_, i) =&gt; (
+                  &lt;h2 key={i}&gt;{i + 1}&lt;/h2&gt;
+                ))}
+            &lt;/div&gt;
+          &lt;/SuspendyTree&gt;
+        &lt;/Fixture&gt;
+      &lt;/TestCase&gt;
+    &lt;/FixtureSet&gt;</jsx:literal>
+  <operator>)</operator></expr></return>
+</block_content>}</block></function></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>ChildComponent</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><object>{<property><expr><name>id</name></expr></property>, <property><expr><name>eventHandler</name></expr></property>}</object></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>(</operator>
+  <jsx:literal type="jsx">&lt;div
+    id={id + '__DIV'}
+    onClickCapture={e =&gt; eventHandler(e.currentTarget.id, 'captured', e.type)}
+    onClick={e =&gt; eventHandler(e.currentTarget.id, 'bubbled', e.type)}&gt;
+    &lt;div
+      id={id + '__DIV_1'}
+      onClickCapture={e =&gt; eventHandler(e.currentTarget.id, 'captured', e.type)}
+      onClick={e =&gt; eventHandler(e.currentTarget.id, 'bubbled', e.type)}
+    /&gt;
+  &lt;/div&gt;</jsx:literal>
+<operator>)</operator></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- JSX literals (without parentheses) -->
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>Component</name> <init>= <expr><class>class <name>Component</name> <super_list><extends>extends <super><expr><name><name>React</name><operator>.</operator><name>Component</name></name></expr></super></extends></super_list> <block>{
+  <expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><jsx:literal type="jsx">&lt;div /&gt;</jsx:literal></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><jsx:literal type="jsx">&lt;div&gt;
+        Hello, World!
+    &lt;/div&gt;</jsx:literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<import>import <name>*</name> <alias>as <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr></alias> <from>from <literal type="string">"module-name"</literal></from></import>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<switch>switch <condition>(<expr><name>input</name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr>:</case>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Found a button"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+</block_content>}</block></switch>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<export>export <specifier>default</specifier> <jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></export>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<export>export <jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></export>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="const">const <name>char</name> <range>in <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Found letter '${char}'`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="let">let <name>char</name> <range>of <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Found letter '${char}'`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<throw>throw <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr></throw>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<yield>yield <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr></yield>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<yield type="generator">yield* <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr></yield>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<yield type="generator">yield * <expr><jsx:literal type="jsx">&lt;Button appearance="primary"&gt;Hello World&lt;/Button&gt;</jsx:literal></expr></yield>
+</unit>
+
+<!-- JSX literals (multiple instances of the same starting tag) -->
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+  <expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+      <jsx:literal type="jsx">&lt;&gt;
+        &lt;div ref={this.parentContainer}&gt;
+          &lt;div ref={this.container} /&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          {this.container.current !== null
+            ? ReactDOM.createPortal(
+                &lt;&gt;
+                  &lt;SuspendyTreeChild&gt;{this.props.children}&lt;/SuspendyTreeChild&gt;
+                  &lt;button onClick={this.removeAndRestore}&gt;Remove&lt;/button&gt;
+                &lt;/&gt;,
+                this.container.current
+              )
+            : null}
+        &lt;/div&gt;
+      &lt;/&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+</unit>
+
+<!-- JSX literals (edge cases) -->
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt; div &gt;
+          Hello, World!
+        &lt;/ div &gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;div&gt;
+          Hello, World!
+        &lt;/ div &gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt; div &gt;
+          Hello, World!
+        &lt;/div&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt; div id="srcml" &gt;
+          Hello, World!
+        &lt;/ div &gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt; div &gt;
+          &lt; div &gt;
+            Hello, World!
+          &lt;/ div &gt;
+        &lt;/ div &gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;
+        div
+        &gt;
+          Hello, World!
+        &lt;/
+        div
+        &gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt; div &gt;
+          &lt; div id="srcml" &gt;
+            Hello, World!
+          &lt;/ div &gt;
+        &lt;/ div &gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;div&gt;
+          &lt;div id="&gt;srcml" tag="&lt;srcml" set="&lt;srcml&gt;"&gt;
+            Hello, World!
+          &lt;/div&gt;
+        &lt;/div&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;div&gt;
+          &lt;div id="\"srcml\"" tag='\'srcml\'' set="\`srcml\`"&gt;
+            Hello, World!
+          &lt;/div&gt;
+        &lt;/div&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;TestComponent
+            name="y"
+            ref={current =&gt; {
+                instance = current;
+            }}
+        /&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<function>function <name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><operator>(</operator>
+        <jsx:literal type="jsx">&lt;TestComponent
+            name="y"
+            ref={current =&gt; {
+                instance = "&gt;&lt;";
+                instance = "\"";
+                instance = '\'';
+                instance = `\``;
+            }}
+        /&gt;</jsx:literal>
+    <operator>)</operator></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>tag</name> <init>= <expr><jsx:literal type="jsx">&lt;div&gt;Hello, World!&lt;/div&gt;</jsx:literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>exampleCall</name><argument_list>(<argument><expr><jsx:literal type="jsx">&lt;div&gt;Hello, World!&lt;/div&gt;</jsx:literal></expr></argument>, <argument><expr><jsx:literal type="jsx">&lt;div&gt;srcML&lt;/div&gt;</jsx:literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>tags</name> <init>= <expr><array>[<expr><jsx:literal type="jsx">&lt;div&gt;Hello, World!&lt;/div&gt;</jsx:literal></expr>, <expr><jsx:literal type="jsx">&lt;div&gt;srcML&lt;/div&gt;</jsx:literal></expr>]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>title</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><jsx:literal type="jsx">&lt;h1&gt;Welcome, {name}!&lt;/h1&gt;</jsx:literal></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>(</operator>
+  <jsx:literal type="jsx">&lt;fbt desc="Gift button's label"&gt;
+    {'Gift | '}
+  &lt;/fbt&gt;</jsx:literal>
+<operator>)</operator></expr></return>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>(</operator>
+  <jsx:literal type="jsx">&lt;fbt desc="The \"real\" label"&gt;
+    {'Gift | '}
+  &lt;/fbt&gt;</jsx:literal>
+<operator>)</operator></expr></return>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>(</operator>
+  <jsx:literal type="jsx">&lt;fbt desc="The `code` label"&gt;
+    {'Gift | '}
+  &lt;/fbt&gt;</jsx:literal>
+<operator>)</operator></expr></return>
+</unit>
+
+<unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<return>return <expr><call><name><name>memo</name><operator>.</operator><name>concat</name></name><argument_list>(
+  <argument><expr><jsx:literal type="jsx">&lt;a href={'https://github.com/facebook/react/issues/' + issue} key={issue}&gt;
+    {issue}
+  &lt;/a&gt;</jsx:literal></expr></argument>
+)</argument_list></call></expr></return>
+</unit>
+
+<!-- "Mistaken" JSX Literals (do NOT mark these as JSX literals) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<class>class <name><name>C</name><argument_list type="generic">&lt;<comment type="block">/**docComment for type parameter*/</comment> <argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
+<class>class <name><name>C</name><argument_list type="generic">&lt;<comment type="block">/**docComment for type parameter*/</comment> <argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <expr_stmt><expr><function><name><name>method</name><argument_list type="generic">&lt;<comment type="block">/**docComment of method type parameter */</comment> <argument><expr><name>U</name> <ts:extends>extends <ts:type><name>T</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>U</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+</unit>

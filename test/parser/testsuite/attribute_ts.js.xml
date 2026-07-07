@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="attribute">
+
+<!-- Attributes on classes -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:attribute>@<expr><call><name>sealed</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+class <name>BugReport</name> <block>{
+  <decl_stmt><decl><name>type</name> <init>= <expr><literal type="string">"report"</literal></expr></init></decl></decl_stmt>
+  <decl_stmt><decl><name>title</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<!-- Attributes on functions ("function") -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><ts:attribute>@<expr><name>sealed</name></expr></ts:attribute>
+function <name>invalid</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <return>return <expr><literal type="string">"Technically invalid syntax, but should be marked properly"</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <function><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  function <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<!-- Attributes on generator functions ("function*") -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <function type="generator"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  function* <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<!-- Attributes on getters ("get") -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <function type="get"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  get <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<!-- Attributes on setters ("set") -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <function type="set"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  set <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function>
+}</block></class>
+</unit>
+
+<!-- Attributes on keywordless functions (in classes) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <expr_stmt><expr><function><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  <name>greet</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="string">"Hello, "</literal> <operator>+</operator> <name><name>this</name><operator>.</operator><name>greeting</name></name></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<!-- Attributes on expression-level functions (with keywords) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  function <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute> function <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function type="generator"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  function* <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function type="generator"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute> function* <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function type="get"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  get <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function type="get"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute> get <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function type="set"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+  set <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Greeter</name> <block>{
+  <decl_stmt><decl><name>greeting</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <decl_stmt><decl type="const">const <name>sample</name> <init>= <expr><function type="set"><ts:attribute>@<expr><call><name>enumerable</name><argument_list>(<argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr></ts:attribute> set <name>greet</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>greeting</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<!-- Attributes on function parameters -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>BugReport</name> <block>{
+  <decl_stmt><decl><name>type</name> <init>= <expr><literal type="string">"report"</literal></expr></init></decl></decl_stmt>
+  <decl_stmt><decl><name>title</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>
+
+  <expr_stmt><expr><function><ts:attribute>@<expr><name>validate</name></expr></ts:attribute>
+  <name>print</name><parameter_list>(<parameter><decl><ts:attribute>@<expr><name>required</name></expr></ts:attribute> <name>verbose</name><ts:type>: <name>boolean</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><name>verbose</name></expr>)</condition> <block>{<block_content>
+      <return>return <expr><literal type="string">`type: ${this.type}\ntitle: ${this.title}`</literal></expr></return>
+    </block_content>}</block></if> <else>else <block>{<block_content>
+      <return>return <expr><name><name>this</name><operator>.</operator><name>title</name></name></expr></return>
+    </block_content>}</block></else></if_stmt>
+  </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Line</name> <block>{
+  <decl_stmt><decl><ts:specifier>private</ts:specifier> <name>_start</name><ts:type>: <name>Point</name></ts:type></decl></decl_stmt>
+  <decl_stmt><decl><ts:specifier>private</ts:specifier> <name>_end</name><ts:type>: <name>Point</name></ts:type></decl></decl_stmt>
+
+  <function type="set"><ts:attribute>@<expr><name>validate</name></expr></ts:attribute>
+  <ts:attribute>@<expr><call><name><name>Reflect</name><operator>.</operator><name>metadata</name></name><argument_list>(<argument><expr><literal type="string">"design:type"</literal></expr></argument>, <argument><expr><name>Point</name></expr></argument>)</argument_list></call></expr></ts:attribute>
+  set <name>start</name><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>Point</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name><name>this</name><operator>.</operator><name>_start</name></name> <operator>=</operator> <name>value</name></expr></expr_stmt>
+  </block_content>}</block></function>
+}</block></class>
+</unit>
+
+</unit>

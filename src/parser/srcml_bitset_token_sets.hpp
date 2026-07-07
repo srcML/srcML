@@ -100,7 +100,8 @@ token_set(srcMLParser, modifier_tokens_set,
 token_set(srcMLParser, skip_tokens_set,
     srcMLParser::WS, srcMLParser::CONTROL_CHAR, srcMLParser::EOL_BACKSLASH, srcMLParser::BLOCK_COMMENT_START, srcMLParser::BLOCK_COMMENT_END, srcMLParser::LINE_COMMENT_END, srcMLParser::COMMENT_TEXT,
     srcMLParser::LINE_COMMENT_START, srcMLParser::JAVADOC_COMMENT_START, srcMLParser::DOXYGEN_COMMENT_START, srcMLParser::LINE_DOXYGEN_COMMENT_START, srcMLParser::EOL, srcMLParser::WHOLE_COMMENT,
-    srcMLParser::HASHTAG_COMMENT_START, srcMLParser::HASHTAG_COMMENT_END, srcMLParser::HASHBANG_COMMENT_START, srcMLParser::HASHBANG_COMMENT_END, srcMLParser::WS_EOL
+    srcMLParser::HASHTAG_COMMENT_START, srcMLParser::HASHTAG_COMMENT_END, srcMLParser::HASHBANG_COMMENT_START, srcMLParser::HASHBANG_COMMENT_END, srcMLParser::HTML_COMMENT_START, srcMLParser::HTML_COMMENT_END,
+    srcMLParser::WS_EOL
 )
 
 token_set(srcMLParser, class_tokens_set,
@@ -143,7 +144,10 @@ token_set(srcMLParser, identifier_list_tokens_set,
     srcMLParser::EMIT, srcMLParser::FOREACH, srcMLParser::SIGNAL, srcMLParser::FOREVER,
 
     // Python
-    srcMLParser::PY_2_EXEC, srcMLParser::PY_2_PRINT, srcMLParser::PY_ASYNC, srcMLParser::PY_CASE, srcMLParser::PY_MATCH, srcMLParser::PY_TYPE
+    srcMLParser::PY_2_EXEC, srcMLParser::PY_2_PRINT, srcMLParser::PY_ASYNC, srcMLParser::PY_CASE, srcMLParser::PY_MATCH, srcMLParser::PY_TYPE,
+
+    // JavaScript
+    srcMLParser::JS_AS, srcMLParser::JS_DEFAULT, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET
 )
 
 token_set(srcMLParser, whitespace_token_set,
@@ -167,6 +171,8 @@ token_set(srcMLParser, whitespace_token_set,
     srcMLParser::HASHBANG_COMMENT_END,
     srcMLParser::HASHTAG_COMMENT_START,
     srcMLParser::HASHTAG_COMMENT_END,
+    srcMLParser::HTML_COMMENT_START,
+    srcMLParser::HASHTAG_COMMENT_END,
     srcMLParser::CMAKE_BLOCK_COMMENT_START,
     srcMLParser::CMAKE_BLOCK_COMMENT_END
 )
@@ -174,7 +180,17 @@ token_set(srcMLParser, whitespace_token_set,
 token_set(srcMLParser, duplex_keyword_set,
     // Python
     srcMLParser::PY_EXCEPT,
-    srcMLParser::PY_YIELD
+    srcMLParser::PY_YIELD,
+
+    // JavaScript
+    srcMLParser::JS_CATCH,
+    srcMLParser::JS_ELSE,
+    srcMLParser::JS_FUNCTION,
+    srcMLParser::JS_GET,
+    srcMLParser::JS_SET,
+    srcMLParser::JS_STATIC,
+    srcMLParser::JS_WITH,
+    srcMLParser::JS_YIELD
 )
 
 token_set(srcMLParser, keyword_name_token_set_py,
@@ -218,5 +234,141 @@ token_set(srcMLParser, multiline_literals_py_token_set,
     srcMLParser::DQUOTE_DOCSTRING_END, srcMLParser::DQUOTE_DOXYGEN_END,
     srcMLParser::SQUOTE_DOCSTRING_END, srcMLParser::SQUOTE_DOXYGEN_END
 )
+
+token_set(srcMLParser, decl_start_js_token_set,
+    // JavaScript declarations contain one of these keywords
+    srcMLParser::JS_CONST, srcMLParser::JS_LET, srcMLParser::JS_STATIC, srcMLParser::JS_USING, srcMLParser::JS_VAR
+)
+
+token_set(srcMLParser, specifier_js_token_set,
+    // JavaScript keywords that could be specifiers
+    srcMLParser::JS_ASYNC, srcMLParser::JS_AWAIT, srcMLParser::JS_DEFAULT, srcMLParser::JS_EACH, srcMLParser::JS_EXPORT,
+    srcMLParser::JS_STATIC,
+
+    // TypeScript keywords that could be specifiers
+    srcMLParser::TS_DECLARE
+)
+
+token_set(srcMLParser, post_specifier_js_token_set,
+    // JavaScript keywords that follow one or more specifiers
+    srcMLParser::CLASS, srcMLParser::JS_LET, srcMLParser::JS_VAR, srcMLParser::JS_CONST, srcMLParser::JS_STATIC,
+    srcMLParser::JS_USING, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_SET,
+
+    // TypeScript keywords that follow one or more specifiers
+    srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
+)
+
+token_set(srcMLParser, table_keywords_js_token_set,
+    // JavaScript keywords that have regular entries (or duplex entries) for the table-based approach
+    srcMLParser::BREAK, srcMLParser::CASE, srcMLParser::CLASS, srcMLParser::CONTINUE, srcMLParser::DO,
+    srcMLParser::FINALLY, srcMLParser::FOR, srcMLParser::IF, srcMLParser::JS_CATCH, srcMLParser::JS_CONSTRUCTOR,
+    srcMLParser::JS_DEBUGGER, srcMLParser::JS_DEFAULT, srcMLParser::JS_ELSE, srcMLParser::JS_EXPORT,
+    srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::JS_IMPORT, srcMLParser::JS_SET,
+    srcMLParser::JS_STATIC, srcMLParser::JS_WITH, srcMLParser::JS_YIELD, srcMLParser::RETURN,
+    srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::WHILE,
+
+    // TypeScript keywords that have regular entries (or duplex entries) for the table-based approach
+    srcMLParser::TS_INTERFACE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_TYPE
+)
+
+token_set(srcMLParser, name_differentiator_js_token_set,
+    // JavaScript keywords
+    srcMLParser::JS_AS, srcMLParser::JS_ASYNC, srcMLParser::JS_AWAIT, srcMLParser::BREAK, srcMLParser::CASE,
+    srcMLParser::JS_CATCH, srcMLParser::CLASS, srcMLParser::JS_CONST, srcMLParser::JS_CONSTRUCTOR, srcMLParser::CONTINUE,
+    srcMLParser::JS_DEBUGGER, srcMLParser::JS_DEFAULT, srcMLParser::JS_DELETE, srcMLParser::DO, srcMLParser::JS_EACH,
+    srcMLParser::JS_ELSE, srcMLParser::JS_EXPORT, srcMLParser::JS_EXTENDS, srcMLParser::LITERAL_FALSE, srcMLParser::FINALLY,
+    srcMLParser::FOR, srcMLParser::JS_FROM, srcMLParser::JS_FUNCTION, srcMLParser::JS_GET, srcMLParser::IF,
+    srcMLParser::JS_IMPORT, srcMLParser::JS_RANGE_IN, srcMLParser::JS_INSTANCEOF, srcMLParser::JS_LET, srcMLParser::NEW,
+    srcMLParser::JS_NULL, srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::JS_SET, srcMLParser::JS_STATIC,
+    srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::LITERAL_TRUE, srcMLParser::TRY, srcMLParser::JS_TYPEOF,
+    srcMLParser::JS_UNDEFINED, srcMLParser::JS_USING, srcMLParser::JS_VAR, srcMLParser::JS_VOID, srcMLParser::WHILE,
+    srcMLParser::JS_WITH, srcMLParser::JS_YIELD,
+
+    // TypeScript keywords
+    srcMLParser::TS_ABSTRACT, srcMLParser::TS_ASSERTS, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS,
+    srcMLParser::TS_INFER, srcMLParser::TS_INTERFACE, srcMLParser::TS_IS, srcMLParser::TS_KEYOF, srcMLParser::TS_NAMESPACE,
+    srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC,
+    srcMLParser::TS_READONLY, srcMLParser::TS_SATISFIES, srcMLParser::TS_TYPE
+)
+
+token_set(srcMLParser, name_differentiator_subset_js_token_set,
+    // A subset of JavaScript keywords from "name_differentiator_js_token_set"
+    // Exclusions: literals (e.g., true), operators (e.g., await), async, readonly, function, and class
+    srcMLParser::JS_AS, srcMLParser::BREAK, srcMLParser::CASE, srcMLParser::JS_CATCH,
+    srcMLParser::JS_CONST, srcMLParser::JS_CONSTRUCTOR, srcMLParser::CONTINUE, srcMLParser::JS_DEBUGGER,
+    srcMLParser::JS_DEFAULT, srcMLParser::JS_DELETE, srcMLParser::DO, srcMLParser::JS_EACH, srcMLParser::JS_ELSE,
+    srcMLParser::JS_EXPORT, srcMLParser::JS_EXTENDS, srcMLParser::FINALLY, srcMLParser::FOR, srcMLParser::JS_FROM,
+    srcMLParser::JS_GET, srcMLParser::IF, srcMLParser::JS_IMPORT, srcMLParser::JS_RANGE_IN, srcMLParser::JS_INSTANCEOF,
+    srcMLParser::JS_LET, srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::JS_SET, srcMLParser::JS_STATIC,
+    srcMLParser::SWITCH, srcMLParser::THROW, srcMLParser::TRY, srcMLParser::JS_VAR, srcMLParser::WHILE,
+    srcMLParser::JS_WITH,
+
+    // TypeScript keywords
+    srcMLParser::TS_ABSTRACT, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE,
+    srcMLParser::TS_NAMESPACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED,
+    srcMLParser::TS_PUBLIC, srcMLParser::TS_TYPE
+)
+
+token_set(srcMLParser, insert_terminate_js_token_set,
+    // if two adjacent tokens are any of these, insert a TERMINATE in JavaScript
+    srcMLParser::CHAR_END, srcMLParser::CHAR_START, srcMLParser::CONSTANTS, srcMLParser::JS_NULL, srcMLParser::JS_REGEX,
+    srcMLParser::JS_UNDEFINED, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NAME,
+    srcMLParser::STRING_END, srcMLParser::STRING_START
+)
+
+token_set(srcMLParser, insert_terminate_eol_js_token_set,
+    // if two adjacent tokens are any of these, and EOL is between them, insert a TERMINATE in JavaScript and TypeScript
+    srcMLParser::BACKTICK_END, srcMLParser::BACKTICK_START, srcMLParser::CHAR_END, srcMLParser::CHAR_START,
+    srcMLParser::CONSTANTS, srcMLParser::DESTOP, srcMLParser::JS_NULL, srcMLParser::JS_REGEX,
+    srcMLParser::JS_UNDEFINED, srcMLParser::LITERAL_FALSE, srcMLParser::LITERAL_TRUE, srcMLParser::NAME,
+    srcMLParser::STRING_END, srcMLParser::STRING_START, srcMLParser::TS_ATSIGN
+)
+
+token_set(srcMLParser, keyword_expression_pair_js_token_set,
+    // JavaScript keywords that can have one (or more) expressions after them
+    srcMLParser::JS_AS, srcMLParser::CASE, srcMLParser::JS_DEFAULT, srcMLParser::JS_EXPORT, srcMLParser::JS_RANGE_IN,
+    srcMLParser::JS_RANGE_OF, srcMLParser::RETURN, srcMLParser::THROW, srcMLParser::JS_YIELD
+)
+
+token_set(srcMLParser, declaration_specifiers_ts_token_set,
+    // TypeScript specifiers on a declaration
+    srcMLParser::TS_DECLARE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
+    srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY
+)
+
+token_set(srcMLParser, function_declaration_specifiers_ts_token_set,
+    // TypeScript specifiers on a function declaration
+    srcMLParser::JS_STATIC, srcMLParser::TS_ABSTRACT
+)
+
+token_set(srcMLParser, cmake_end_statement_commands,
+    srcMLParser::CMAKE_ENDBLOCK, srcMLParser::CMAKE_ENDFOREACH, srcMLParser::CMAKE_ENDFUNCTION,
+    srcMLParser::CMAKE_ENDIF, srcMLParser::CMAKE_ENDMACRO, srcMLParser::CMAKE_ENDWHILE,
+    srcMLParser::ELSE, srcMLParser::CMAKE_ELSEIF
+)
+
+token_set(srcMLParser, cmake_foreach_ranges,
+    srcMLParser::CMAKE_IN, srcMLParser::CMAKE_RANGE
+)
+
+token_set(srcMLParser, cmake_foreach_lists, 
+    srcMLParser::CMAKE_ITEMS, srcMLParser::CMAKE_LISTS, srcMLParser::CMAKE_ZIP_LISTS
+)
+
+token_set(srcMLParser, cmake_keywords,
+    srcMLParser::CMAKE_OPERATORS, srcMLParser::LITERAL_TRUE, srcMLParser::LITERAL_FALSE,
+    srcMLParser::CMAKE_BLOCK, srcMLParser::CMAKE_ENDBLOCK, srcMLParser::CMAKE_ENDFOREACH,
+    srcMLParser::CMAKE_ENDFUNCTION, srcMLParser::CMAKE_ENDIF, srcMLParser::CMAKE_ELSEIF,
+    srcMLParser::CMAKE_ENDMACRO, srcMLParser::CMAKE_ENDWHILE, srcMLParser::CMAKE_FOREACH,
+    srcMLParser::CMAKE_FUNCTION, srcMLParser::CMAKE_IN, srcMLParser::CMAKE_ITEMS,
+    srcMLParser::CMAKE_LISTS, srcMLParser::CMAKE_MACRO, srcMLParser::CMAKE_PROPAGATE,
+    srcMLParser::CMAKE_RANGE, srcMLParser::CMAKE_SCOPE_FOR, srcMLParser::CMAKE_ZIP_LISTS
+)
+
+token_set(srcMLParser, cmake_expansion_expr_tokens,
+    srcMLParser::CMAKE_NAME_EXPRESSION_START, srcMLParser::CMAKE_ENV_EXPRESSION_START,
+    srcMLParser::CMAKE_GENERATOR_EXPRESSION_START
+)
+
 
 #endif

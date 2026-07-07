@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="lambda">
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">100</literal></expr></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><parameter><decl><name>a</name></decl></parameter> <operator>=&gt;</operator> <expr><name>a</name> <operator>+</operator> <literal type="number">100</literal></expr></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>a</name> <operator>+</operator> <literal type="number">100</literal></expr></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>a</name> <operator>+</operator> <name>b</name> <operator>+</operator> <literal type="number">100</literal></expr></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>func</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>a</name> <operator>+</operator> <literal type="number">100</literal></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <return>return <expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">100</literal></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><parameter><decl><name>a</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
+    <return>return <expr><name>a</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <return>return <expr><name>a</name> <operator>+</operator> <name>b</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><specifier>async</specifier> <parameter><decl><name>x</name></decl></parameter> <operator>=&gt;</operator> <expr><name>x</name> <operator>*</operator> <name>x</name></expr></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><specifier>async</specifier> <parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>x</name> <operator>*</operator> <name>x</name></expr></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><specifier>async</specifier> <parameter><decl><name>x</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
+    <return>return <expr><name>x</name> <operator>+</operator> <literal type="number">100</literal></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><lambda><specifier>async</specifier> <parameter_list>(<parameter><decl><name>x</name></decl></parameter>, <parameter><decl><name>y</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <return>return <expr><name>x</name> <operator>+</operator> <name>y</name></expr></return>
+</block_content>}</block></lambda></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>reassign</name> <init>= <expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>new</operator> <call><name>Promise</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>resolve</name></decl></parameter>, <parameter><decl><name>reject</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content><expr_stmt><expr><call><name><name>f</name><operator>.</operator><name>stats</name></name><argument_list>()</argument_list></call></expr></expr_stmt></block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><lambda><parameter_list>(<parameter><decl><name>resolve</name></decl></parameter>, <parameter><decl><name>reject</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content><expr_stmt><expr><call><name><name>f</name><operator>.</operator><name>stats</name></name><argument_list>()</argument_list></call></expr></expr_stmt></block_content>}</block></lambda></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+  <return>return <expr><object>{
+    <property><expr><name>resolve</name></expr>: <expr><object>{
+      <property><expr><name>extensions</name></expr>: <expr><call><name><name>paths</name><operator>.</operator><name>moduleFileExtensions</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter><decl><name>ext</name></decl></parameter> <operator>=&gt;</operator> <expr><literal type="string">`.${ext}`</literal></expr></lambda></expr></argument>)</argument_list></call></expr></property>
+    }</object></expr></property>,
+  }</object></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+  <return>return <expr><object>{
+    <property><expr><name>resolve</name></expr>: <expr><object>{
+      <property><expr><name>extensions</name></expr>: <expr><call><name><name>paths</name><operator>.</operator><name>moduleFileExtensions</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>ext</name></decl></parameter>, <parameter><decl><name>sample</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="string">`.${ext}-${sample}`</literal></expr></lambda></expr></argument>)</argument_list></call></expr></property>
+    }</object></expr></property>,
+  }</object></expr></return>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>r2</name> <init>= <expr><operator>&lt;</operator> <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>T</name></expr></lambda><operator>&gt;</operator><name>f</name></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Lambdas containing statements with blocks -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <class>class <name>App</name> <block>{
+    <comment type="line">// ...</comment>
+  }</block></class>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <do>do <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block> while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition>;</do>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><name>a</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"positive"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></if> <if type="elseif">else if <condition>(<expr><name>a</name> <operator>==</operator> <literal type="number">0</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"zero"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></if> <else>else <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"negative"</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></else></if_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>beforeEach</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><call><name>gate</name><argument_list>(<argument><expr><lambda><parameter><decl><name>flags</name></decl></parameter> <operator>=&gt;</operator> <expr><name><name>flags</name><operator>.</operator><name>enable</name></name></expr></lambda></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></if></if_stmt>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>data</name> <init>= <expr><call><name>useMemo</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>props</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></if></if_stmt>
+</block_content>}</block></lambda></expr></argument>, <argument><expr><name>a</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>y</name> <init>= <expr><call><name>useMemo</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <for>for <control>(<init><decl type="const">const <name>i</name> <range>of <expr><name>x</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></for>
+</block_content>}</block></lambda></expr></argument>, <argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <try>try <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block> <catch>catch (<name>error</name>) <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></catch> <finally>finally <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></finally></try>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; <condition><expr><name>i</name> <operator>&lt;</operator> <name><name>cars</name><operator>.</operator><name>length</name></name></expr></condition>; <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name><name>cars</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></for>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <for>for <control>(<init><decl type="const">const <name>key</name> <range>in <expr><name>obj</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></for>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+  <expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <for>for <control>(<init><decl type="let">let <name>value</name> <range>of <expr><name>iterable</name></expr></range></decl></init>)</control> <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></for>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <switch>switch <condition>(<expr><name>letter</name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><literal type="string">'a'</literal></expr>:</case>
+      <comment type="line">// ...</comment>
+      <break>break</break>
+
+    <default>default:</default>
+      <comment type="line">// ...</comment>
+  </block_content>}</block></switch>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <while>while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition> <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></while>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <class>class <name>Rectangle</name> <block>{
+    <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
+      <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
+    </block_content>}</block></constructor>
+  }</block></class>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <function>function <name>sum</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>, <parameter><decl><name>y</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>x</name> <operator>+</operator> <name>y</name></expr></return>
+  </block_content>}</block></function>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <function type="get">get <name>fullName</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><name><name>this</name><operator>.</operator><name>firstName</name></name> <operator>+</operator> <literal type="string">' '</literal> <operator>+</operator> <name><name>this</name><operator>.</operator><name>lastName</name></name></expr></return>
+  </block_content>}</block></function>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <function type="set">set <name>current</name><parameter_list>(<parameter><decl><name>name</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>log</name><operator>.</operator><name>push</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+  </block_content>}</block></function>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <function type="generator">function* <name>idGenerator</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></function>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <function type="get">get <name type="computed">[<expr><name>dynamicName</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></function>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <function type="set">set <name type="computed">[<expr><name>dynamicName</name></expr>]</name><parameter_list>(<parameter><decl><name>value</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <comment type="line">// ...</comment>
+  </block_content>}</block></function>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>it</name><argument_list>(<argument><expr><lambda><specifier>async</specifier> <parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+  <class>class <name>Rectangle</name> <block>{
+    <static>static <block>{<block_content>
+      <comment type="line">// ...</comment>
+    </block_content>}</block></static>
+  }</block></class>
+</block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>pointerCaptureFn</name> <init>= <expr><lambda><parameter><decl><name>name</name></decl></parameter> <operator>=&gt;</operator> <expr><lambda><parameter><decl><name>id</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
+  <if_stmt><if>if <condition>(<expr><operator>typeof</operator> <name>id</name> <operator>!==</operator> <literal type="string">'number'</literal></expr>)</condition> <block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><name>__DEV__</name></expr>)</condition> <block>{<block_content>
+      <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>error</name></name><argument_list>(<argument><expr><literal type="string">'A pointerId must be passed to "%s"'</literal></expr></argument>, <argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+    </block_content>}</block></if></if_stmt>
+  </block_content>}</block></if></if_stmt>
+</block_content>}</block></lambda></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>args_1</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><call><name>__awaiter</name><argument_list>(<argument><expr><operator>void</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><array>[<expr><operator>...</operator><name>args_1</name></expr>]</array></expr></argument>, <argument><expr><operator>void</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><function type="generator">function* <parameter_list>(<parameter><decl><name>a</name> <init>= <expr><yield>yield</yield></expr></init></decl></parameter> )</parameter_list> <block>{<block_content>
+</block_content>}</block></function></expr></argument>)</argument_list></call></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Edge Case ("typeof" after an arrow) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name><name>f</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>p</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="let">let <name>g</name><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><operator>typeof</operator> <name>p</name> <init>= <expr><literal type="null">null</literal> <operator>as</operator> <name>any</name></expr></init></ts:type></lambda></ts:type></decl></decl_stmt>
+    <return>return <expr><name>g</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+</unit>

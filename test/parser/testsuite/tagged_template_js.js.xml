@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="tagged_template">
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>output</name> <init>= <expr><call><name>myTag</name><argument><expr><literal type="string">`${person} is ${age}.`</literal></expr></argument></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument><expr><literal type="string">`Hello`</literal></expr></argument></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><name><name>console</name><operator>.</operator><name>log</name><operator>.</operator><name>bind</name></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call><argument><expr><literal type="string">`Hello`</literal></expr></argument></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>new</operator> <call><call><name>Function</name><argument_list>(<argument><expr><literal type="string">"console.log(arguments)"</literal></expr></argument>)</argument_list></call><argument><expr><literal type="string">`Hello`</literal></expr></argument></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><name>recursive</name><argument><expr><literal type="string">`Hello`</literal></expr></argument></call><argument><expr><literal type="string">`World`</literal></expr></argument></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><name>example</name><argument><expr><literal type="string">`Hello`</literal></expr></argument></call><argument_list>(<argument><expr><name>arg1</name></expr></argument>, <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- Do not mark the following as tagged templates -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>pkgDir</name> <init>= <expr><call><name><name>path</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>__dirname</name></expr></argument>, <argument><expr><literal type="string">`../../packages/${pkgName}`</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>dotenvFiles</name> <init>= <expr><array>[
+  <expr><literal type="string">`${paths.dotenv}.${NODE_ENV}.local`</literal></expr>,
+  <expr><name>NODE_ENV</name> <operator>!==</operator> <literal type="string">'test'</literal> <operator>&amp;&amp;</operator> <literal type="string">`${paths.dotenv}.local`</literal></expr>,
+  <expr><literal type="string">`${paths.dotenv}.${NODE_ENV}`</literal></expr>,
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

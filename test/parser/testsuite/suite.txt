@@ -301,18 +301,57 @@ LANGUAGE_PYTHON while_py
 LANGUAGE_PYTHON with_py
 LANGUAGE_PYTHON yield_py
 
-# CMake
-LANGUAGE_CMAKE boolean_cmake
-LANGUAGE_CMAKE break_cmake
-LANGUAGE_CMAKE comment_cmake
-LANGUAGE_CMAKE continue_cmake
-LANGUAGE_CMAKE delimiter_cmake
-LANGUAGE_CMAKE foreach_cmake
-LANGUAGE_CMAKE function_cmake
-LANGUAGE_CMAKE if_cmake
-LANGUAGE_CMAKE macro_cmake
-LANGUAGE_CMAKE return_cmake
-LANGUAGE_CMAKE while_cmake
+# JavaScript
+LANGUAGE_JAVASCRIPT array_js
+LANGUAGE_JAVASCRIPT break_js
+LANGUAGE_JAVASCRIPT class_js
+LANGUAGE_JAVASCRIPT comment_js
+LANGUAGE_JAVASCRIPT constructor_js
+LANGUAGE_JAVASCRIPT contextual_keywords_js
+LANGUAGE_JAVASCRIPT continue_js
+LANGUAGE_JAVASCRIPT debugger_js
+LANGUAGE_JAVASCRIPT decl_js
+LANGUAGE_JAVASCRIPT export_js
+LANGUAGE_JAVASCRIPT for_js
+LANGUAGE_JAVASCRIPT formatting_js
+LANGUAGE_JAVASCRIPT function_js
+LANGUAGE_JAVASCRIPT if_js
+LANGUAGE_JAVASCRIPT iife_js
+LANGUAGE_JAVASCRIPT import_js
+LANGUAGE_JAVASCRIPT label_js
+LANGUAGE_JAVASCRIPT lambda_js
+LANGUAGE_JAVASCRIPT literal_js
+LANGUAGE_JAVASCRIPT object_js
+LANGUAGE_JAVASCRIPT operator_js
+LANGUAGE_JAVASCRIPT regex_js
+LANGUAGE_JAVASCRIPT return_js
+LANGUAGE_JAVASCRIPT specifier_js
+LANGUAGE_JAVASCRIPT static_block_js
+LANGUAGE_JAVASCRIPT switch_js
+LANGUAGE_JAVASCRIPT tagged_template_js
+LANGUAGE_JAVASCRIPT ternary_js
+LANGUAGE_JAVASCRIPT throw_js
+LANGUAGE_JAVASCRIPT try_js
+LANGUAGE_JAVASCRIPT unicode_js
+LANGUAGE_JAVASCRIPT while_js
+LANGUAGE_JAVASCRIPT with_js
+LANGUAGE_JAVASCRIPT yield_js
+
+# JavaScript XML (JSX; appears as a namespace prefix)
+LANGUAGE_JAVASCRIPT literal_jsx
+
+# TypeScript (appears as a namespace prefix)
+LANGUAGE_JAVASCRIPT attribute_ts
+LANGUAGE_JAVASCRIPT constraint_ts
+LANGUAGE_JAVASCRIPT declare_ts
+LANGUAGE_JAVASCRIPT function_decl_ts
+LANGUAGE_JAVASCRIPT call_ts
+LANGUAGE_JAVASCRIPT implements_ts
+LANGUAGE_JAVASCRIPT interface_ts
+LANGUAGE_JAVASCRIPT modifier_ts
+LANGUAGE_JAVASCRIPT namespace_ts
+LANGUAGE_JAVASCRIPT type_ts
+LANGUAGE_JAVASCRIPT typedef_ts
 
 # class -> struct
 LANGUAGE_TRANSFORM struct.cpp.xml class.cpp.xml struct class2struct.xsl

@@ -18,14 +18,14 @@ foreach(PATH IN ITEMS ${PARSE_TESTS})
     # Set newline at LF since these are srcML files and srcML uses LF (as does XML)
     # Do not use file(COPY) as it changes the line endings
     # Do not use COPYFILE_ONLY as it changes the line endings
-    # Use @ONLY so srcML CMake parser tests keep variables intact (e.g., ${A})
+    # Use @ONLY so srcML parser tests keep variables intact (e.g., ${A} or `${B}`)
     configure_file(${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/${FILENAME} @ONLY NEWLINE_STYLE LF)
 endforeach()
 
 set(TESTFILES)
 
 # convert from input language to input extension
-set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m" "Python" "py" "CMake" "cmake")
+set(LANGLIST "C++" "cpp" "C" "c" "Java" "java" "C#" "cs" "Objective-C" "m" "Python" "py" "JavaScript" "js" "CMake" "cmake")
 function(lang2ext LANG EXT)
     list(FIND LANGLIST "${LANG}" LANG_POS)
     math(EXPR EXT_POS "${LANG_POS} + 1")
@@ -172,6 +172,10 @@ foreach(GEN IN ITEMS ${SUITE})
 
         list(APPEND TESTFILES "${URL}.py.xml")
 
+    elseif(CATEGORY STREQUAL "LANGUAGE_JAVASCRIPT")
+
+        list(APPEND TESTFILES "${URL}.js.xml")
+
     elseif(CATEGORY STREQUAL "LANGUAGE_CMAKE")
 
         list(APPEND TESTFILES "${URL}.cmake.xml")
@@ -222,9 +226,10 @@ foreach(GENURL IN ITEMS ${TESTFILES})
     # Generate "formfeed" "comment" "block" "struct" "ifthenelse"
     foreach(VARIATION IN ITEMS "formfeed" "comment" "block" "struct" "preproc" "ifthenelse")
         # preproc and struct do not work with Java
-        # skip generating any of these tests for Python and CMake
+        # skip generating any of these tests for Python and JavaScript
         if((LANGEXT STREQUAL "java" AND (VARIATION STREQUAL "struct" OR VARIATION STREQUAL "preproc")) OR
-           (LANGEXT STREQUAL "cs" AND VARIATION STREQUAL "struct") OR (LANGEXT STREQUAL "py") OR (LANGEXT STREQUAL "cmake"))
+           (LANGEXT STREQUAL "cs" AND VARIATION STREQUAL "struct") OR (LANGEXT STREQUAL "py") OR
+           (LANGEXT STREQUAL "js") OR (LANGEXT STREQUAL "cmake"))
             continue()
         endif()
 

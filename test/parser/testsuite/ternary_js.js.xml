@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="ternary">
+
+<!-- a ? b : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name</name> <init>= <expr><ternary><condition><expr><name>person</name></expr> ?</condition><then> <expr><name><name>person</name><operator>.</operator><name>name</name></name></expr> </then><else>: <expr><literal type="string">"stranger"</literal></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>name</name> <init>= <expr><ternary><condition><expr><name>person</name></expr> ?</condition><then> <expr><array>[<expr><name><name>person</name><operator>.</operator><name>name</name></name></expr>, <expr><name><name>person</name><operator>.</operator><name>age</name></name></expr>]</array></expr> </then><else>: <expr><array>[<expr><literal type="string">"stranger"</literal></expr>, <expr><literal type="number">0</literal></expr>]</array></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>beverage</name> <init>= <expr><ternary><condition><expr><name>age</name> <operator>&gt;=</operator> <literal type="number">21</literal></expr> ?</condition><then> <expr><literal type="string">"Beer"</literal></expr> </then><else>: <expr><literal type="string">"Juice"</literal></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- (x ? y : z) ? b : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><operator>(</operator><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary><operator>)</operator></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- x ? y : z ? b : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><ternary><condition><expr><name>z</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- a ? (x ? y : z) : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><operator>(</operator><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary><operator>)</operator></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- a ? x ? y : z : c -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- a ? b : (x ? y : z) -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><operator>(</operator><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary><operator>)</operator></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- a ? b : x ? y : z -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>example</name> <init>= <expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><ternary><condition><expr><name>x</name></expr> ?</condition><then> <expr><name>y</name></expr> </then><else>: <expr><name>z</name></expr></else></ternary></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Complex Cases -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>example</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><ternary><condition><expr><name>condition1</name></expr> ?</condition><then> <expr><name>value1</name></expr>
+        </then><else>: <expr><ternary><condition><expr><name>condition2</name></expr> ?</condition><then> <expr><name>value2</name></expr>
+        </then><else>: <expr><ternary><condition><expr><name>condition3</name></expr> ?</condition><then> <expr><name>value3</name></expr>
+        </then><else>: <expr><name>value4</name></expr></else></ternary></expr></else></ternary></expr></else></ternary></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name><name>module</name><operator>.</operator><name>exports</name></name> <operator>=</operator> <function>function <parameter_list>(<parameter><decl><name>path</name></decl></parameter>, <parameter><decl><name>info</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><object>{
+    <property><expr><name>template</name></expr>: <expr><ternary><condition><expr><name>isEnv</name></expr>
+      ?</condition><then> <expr><lambda><parameter><decl><name>info</name></decl></parameter> <operator>=&gt;</operator> <expr><name>path</name></expr></lambda></expr>
+      </then><else>: <expr><operator>(</operator><lambda><parameter><decl><name>info</name></decl></parameter> <operator>=&gt;</operator> <expr><call><name>resolve</name><argument_list>(<argument><expr><name>path</name></expr></argument>)</argument_list></call></expr></lambda><operator>)</operator></expr></else></ternary></expr></property>,
+  }</object></expr></return>
+</block_content>}</block></function></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>parsedPragmaOptions</name> <init>= <expr><call><name>parseConfigPragmaForTests</name><argument_list>(
+  <argument><expr><ternary><condition><expr><name>mode</name> <operator>===</operator> <literal type="string">'linter'</literal></expr>
+    ?</condition><then> <expr><object>{
+      <property><expr><name>validateRefAccessDuringRender</name></expr>: <expr><literal type="boolean">false</literal></expr></property>,
+    }</object></expr>
+    </then><else>: <expr><object>{
+      <comment type="block">/* use defaults for compiler mode */</comment>
+    }</object></expr></else></ternary></expr></argument>,
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>parsedPragmaOptions</name> <init>= <expr><call><name>parseConfigPragmaForTests</name><argument_list>(
+  <argument><expr><object>{
+    <property><expr><name>environment</name></expr>:
+      <expr><ternary><condition><expr><name>mode</name> <operator>===</operator> <literal type="string">'linter'</literal></expr>
+        ?</condition><then> <expr><object>{
+          <property><expr><name>validateRefAccessDuringRender</name></expr>: <expr><literal type="boolean">false</literal></expr></property>,
+        }</object></expr>
+        </then><else>: <expr><object>{
+          <comment type="block">/* use defaults for compiler mode */</comment>
+        }</object></expr></else></ternary></expr></property>,
+  }</object></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>parseModelTuple</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <return>return <expr><call><name>createElement</name><argument_list>(
+    <argument><expr><name>response</name></expr></argument>,
+    <argument><expr><name><name>tuple</name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></argument>,
+    <argument><expr><name><name>tuple</name><index>[<expr><literal type="number">2</literal></expr>]</index></name></expr></argument>,
+    <argument><expr><name><name>tuple</name><index>[<expr><literal type="number">3</literal></expr>]</index></name></expr></argument>,
+    <argument><expr><ternary><condition><expr><name>__DEV__</name></expr> ?</condition><then> <expr><operator>(</operator><name>tuple</name><operator>:</operator> <name>any</name><operator>)</operator><index>[<expr><literal type="number">4</literal></expr>]</index></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></argument>,
+    <argument><expr><ternary><condition><expr><name>__DEV__</name></expr> ?</condition><then> <expr><operator>(</operator><name>tuple</name><operator>:</operator> <name>any</name><operator>)</operator><index>[<expr><literal type="number">5</literal></expr>]</index></expr> </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></argument>,
+    <argument><expr><ternary><condition><expr><name>__DEV__</name></expr> ?</condition><then> <expr><operator>(</operator><name>tuple</name><operator>:</operator> <name>any</name><operator>)</operator><index>[<expr><literal type="number">6</literal></expr>]</index></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></argument>,
+  )</argument_list></call></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>updated</name> <init>= <expr><ternary><condition><expr><call><name>isArray</name><argument_list>(<argument><expr><name>obj</name></expr></argument>)</argument_list></call></expr> ?</condition><then> <expr><call><name><name>obj</name><operator>.</operator><name>slice</name></name><argument_list>()</argument_list></call></expr> </then><else>: <expr><object>{<property><expr><operator>...</operator><name>obj</name></expr></property>}</object></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>headers</name> <init>= <expr><ternary><condition><expr><name>onHeaders</name></expr>
+  ?</condition><then> <expr><object>{
+      <property><expr><name>remainingCapacity</name></expr>:
+        <expr><literal type="number">2</literal> <operator>+</operator>
+        <operator>(</operator><ternary><condition><expr><name>foo</name></expr>
+          ?</condition><then> <expr><name>bar</name></expr>
+          </then><else>: <expr><name>baz</name></expr></else></ternary><operator>)</operator></expr></property>,
+    }</object></expr>
+  </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>firstOption</name> <init>= <expr><name><name>commandLineArgs</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>.</operator><call><name>slice</name><argument_list>(<argument><expr><ternary><condition><expr><name>CharacterCodes</name></expr> ?</condition><then> <expr><literal type="number">2</literal></expr> </then><else>: <expr><literal type="number">1</literal></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>factory</name><ts:type>: <name>NodeFactory</name></ts:type> <init>= <expr><object>{
+    <property><expr><name>foo</name></expr>: <expr><ternary><condition><expr><name>bar</name></expr> ?</condition><then> <expr><lambda><parameter_list>(<parameter><decl><name>expression</name></decl></parameter>, <parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><call><name>setEmitFlags</name><argument_list>(<argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></lambda></expr> </then><else>: <expr><name>quux</name></expr></else></ternary></expr></property>,
+    <property><expr><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><name>a</name></expr></return>
+    </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef>type <name><name>SplitAC</name><argument_list type="generic">&lt;<argument><expr><name>K</name></expr></argument>&gt;</argument_list></name> = <ts:type><ternary><condition><expr><name><name>foo</name><argument_list type="generic">&lt;<argument><expr><ternary><condition><expr><name>K</name> <ts:extends>extends <ts:type><name>string</name></ts:type></ts:extends></expr> ?</condition><then> <expr><name>K</name></expr> </then><else>: <expr><literal type="string">''</literal></expr></else></ternary></expr></argument>, <argument><expr><literal type="string">'.'</literal></expr></argument>&gt;</argument_list></name> <ts:extends>extends <ts:type><name>Ko</name></ts:type></ts:extends></expr> ?</condition><then> <expr><name>Ko</name></expr> </then><else>: <expr><literal type="string">''</literal></expr></else></ternary></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name><name>g</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="let">let <name>y</name><ts:type>: <operator>typeof</operator> <ternary><condition><expr><name>x</name> <ts:extends>extends <ts:type><operator>(</operator><ts:operator>infer</ts:operator> <name>T</name><operator>)</operator><index>[]</index></ts:type></ts:extends></expr> ?</condition><then> <expr><name>T</name></expr> </then><else>: <expr><operator>typeof</operator> <name>x</name> <init>= <expr><literal type="null">null</literal> <operator>as</operator> <name>any</name></expr></init></expr></else></ternary></ts:type></decl></decl_stmt>
+    <return>return <expr><name>y</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>A</name> <block>{
+    <ts:function_decl><ts:specifier>static</ts:specifier> <name type="computed">[<expr><name><name>Symbol</name><operator>.</operator><name>hasInstance</name></name></expr>]</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>this</name><ts:type>: <name>T</name></ts:type></decl></parameter>, <parameter><decl><name>value</name><ts:type>: <name>unknown</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>value</name> <ts:operator>is</ts:operator> <operator>(</operator>
+        <ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>globalThis</name><operator>.</operator><name>Function</name></name></ts:type></ts:extends></expr> ?</condition><then>
+            <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><block>{ <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <name>prototype</name><ts:type>: <ts:operator>infer</ts:operator> <name>U</name></ts:type></decl></decl_stmt> }</block></ts:type></ts:extends></expr> ?</condition><then>
+                <expr><ternary><condition><expr><name>boolean</name> <ts:extends>extends <ts:type><operator>(</operator><ternary><condition><expr><name>U</name> <ts:extends>extends <ts:type><name>never1</name></ts:type></ts:extends></expr> ?</condition><then> <expr><name>true</name></expr> </then><else>: <expr><literal type="boolean">false</literal></expr></else></ternary><operator>)</operator></ts:type></ts:extends></expr> ?</condition><then>
+                    <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><operator>(</operator><ts:specifier>abstract</ts:specifier> <operator>new</operator> <lambda><parameter_list>(<parameter><decl><modifier>...</modifier><ts:type><name>args</name><ts:type>: <name>any</name></ts:type></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ts:operator>infer</ts:operator> <name>V</name></expr></lambda><operator>)</operator></ts:type></ts:extends></expr> ?</condition><then> <expr><name>V</name></expr> </then><else>: <block>{<block_content/>}</block></else></ternary></expr> </then><else>:
+                <expr><name>U</name></expr></else></ternary></expr> </then><else>:
+            <expr><name>never2</name></expr></else></ternary></expr> </then><else>:
+        <expr><name>never3</name></expr></else></ternary>
+    <operator>)</operator></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>checker</name><ts:type>: <name>TypeChecker</name></ts:type> <init>= <expr><object>{
+    <property><expr><name>getDefaultFromTypeParameter</name></expr>: <expr><lambda><parameter><decl><name>type</name></decl></parameter> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>type</name></expr> ?</condition><then> <expr><call><name>getDefaultFromTypeParameter</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="undefined">undefined</literal></expr></else></ternary></expr></lambda></expr></property>,
+    <property><expr><function><name>resolveName</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>a</name><ts:type>: <operator>(</operator><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><literal type="string">`${'a' &amp; { a: 1 }}`</literal></ts:type></ts:extends></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">2</literal></expr></else></ternary></expr></lambda><operator>)</operator></ts:type> <init>= <expr><literal type="null">null</literal><operator>!</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>c</name><ts:type>: <operator>(</operator><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Uppercase</name><argument_list type="generic">&lt;<argument><expr><literal type="string">'a'</literal> <operator>&amp;</operator> <object>{ <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property> }</object></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">2</literal></expr></else></ternary></expr></lambda><operator>)</operator></ts:type> <init>= <expr><literal type="null">null</literal><operator>!</operator></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

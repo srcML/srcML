@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="constraint">
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>Foo</name> <block>{
+  <decl_stmt><decl><ts:constraint><index>[<name>index</name><ts:type>: <name>number</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface><specifier>export</specifier> interface <name>KeyMap</name> <block>{
+  <decl_stmt><decl><ts:constraint><index>[<name>key</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>KeyMap</name> <operator>|</operator> <name>Action</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:typedef><specifier>export</specifier> type <name>Paths</name> = <ts:type><block>{
+  <decl_stmt><decl><ts:constraint><index>[<name>path</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:type></ts:typedef>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>LazyGuardDispatcher</name><ts:type>: <block>{<decl_stmt><decl><ts:constraint><index>[<name>key</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <lambda><parameter_list>(<parameter><decl><modifier>...</modifier><ts:type><name>args</name><ts:type>: <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>any</name></expr></lambda></ts:type></ts:constraint></decl></decl_stmt>}</block></ts:type> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name><name>sum</name><argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><block>{ <decl_stmt><decl><ts:constraint><index>[<name>P</name> <operator>in</operator> <name>T</name>]</index><ts:type>: <name>number</name></ts:type></ts:constraint></decl></decl_stmt> }</block></ts:type></ts:extends></expr></argument>, <argument><expr><name>K</name> <ts:extends>extends <ts:type><ts:operator>keyof</ts:operator> <name>T</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>n</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>v</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <expr_stmt><expr><name>n</name> <operator>+=</operator> <name><name>v</name><index>[<expr><name>k</name></expr>]</index></name></expr></expr_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><ts:specifier>declare</ts:specifier> function <name><name>genericFn3</name><argument_list type="generic">&lt;
+  <argument><expr><name>T</name> <ts:extends>extends <ts:type><block>{ <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name>T</name>]</index><ts:type>: <name><name>T</name><index>[<expr><name>K</name></expr>]</index></name></ts:type></ts:constraint></decl></decl_stmt> }</block></ts:type></ts:extends></expr></argument>
+&gt;</argument_list></name><parameter_list>(<parameter><decl><name>obj</name><ts:type>: <name>T</name></ts:type></decl></parameter>, <parameter><decl><name>u</name><ts:type>: <name>U</name></ts:type></decl></parameter>, <parameter><decl><name>v</name><ts:type>: <name>V</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>T</name><index>[<expr><name>U</name> <operator>&amp;</operator> <name>V</name></expr>]</index></name></ts:type></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name><name>any</name><index>[]</index></name>]</index><ts:modifier>!</ts:modifier><ts:type>: <name>boolean</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <name><name>any</name><index>[]</index></name>]</index><ts:modifier>?</ts:modifier><ts:type>: <name>boolean</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name><name>Array</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <ts:operator>keyof</ts:operator> <ts:specifier>readonly</ts:specifier> <name><name>any</name><index>[]</index></name>]</index><ts:modifier>?</ts:modifier><ts:type>: <name>boolean</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>mappedObject</name><ts:type>: <block>{<decl_stmt><decl><ts:constraint><index>[<name>K</name> <operator>in</operator> <literal type="string">"foo"</literal>]</index><ts:type>: <literal type="null">null</literal> <operator>|</operator> <block>{<block_content><decl_stmt><decl><name>x</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt></block_content>}</block></ts:type></ts:constraint></decl></decl_stmt>}</block></ts:type> <init>= <expr><object>{<property><expr><name>foo</name></expr>: <expr><object>{<property><expr><name>x</name></expr>: <expr><literal type="string">"hello"</literal></expr></property>}</object></expr></property>}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- The following should NOT be marked as constraints, although they look similar -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>CompilerError</name><operator>.</operator><name>invariant</name></name><argument_list>(<argument><expr><object>{
+  <property><expr><name>details</name></expr>: <expr><array>[
+    <expr><object>{
+      <property><expr><name>kind</name></expr>: <expr><literal type="string">'error'</literal></expr></property>,
+      <property><expr><name>message</name></expr>: <expr><literal type="null">null</literal></expr></property>,
+    }</object></expr>,
+  ]</array></expr></property>,
+}</object></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+</unit>

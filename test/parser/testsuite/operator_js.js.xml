@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="operator">
+
+<!-- Artithmetic Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>+</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>-</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>*</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>/</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>%</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>**</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+</unit>
+
+<!-- Prefix Sign Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>+</operator><literal type="number">1</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>-</operator><literal type="number">1</literal></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name><ts:type>: <literal type="number">0x00</literal></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name><ts:type>: <literal type="number">0x01</literal></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name><ts:type>: <literal type="number">0x02</literal></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><operator>+</operator><name>deltaX</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><operator>-</operator><name>deltaY</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><operator>~</operator><name>deltaZ</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<!-- Semicolon usage is intentional; the code becomes invalid without them -->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name><ts:type>: <literal type="number">0x00</literal></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name><ts:type>: <literal type="number">0x01</literal></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name><ts:type>: <literal type="number">0x02</literal></ts:type></decl>;</decl_stmt>
+
+  <decl_stmt><decl><operator>+</operator><name>deltaX</name><ts:type>: <name>number</name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><operator>-</operator><name>deltaY</name><ts:type>: <name>number</name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><operator>~</operator><name>deltaZ</name><ts:type>: <name>number</name></ts:type></decl>;</decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name><ts:type>: <literal type="number">0x00</literal></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name><ts:type>: <literal type="number">0x01</literal></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name><ts:type>: <literal type="number">0x02</literal></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><operator>+</operator><name>deltaX</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><operator>-</operator><name>deltaY</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl><operator>~</operator><name>deltaZ</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<!-- Semicolon usage is intentional; the code becomes invalid without them -->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>WheelEvent</name> <super_list><extends>extends <super><expr><name>MouseEvent</name></expr></super></extends></super_list> <block>{
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>+</operator><name>DOM_DELTA_PIXEL</name><ts:type>: <literal type="number">0x00</literal></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>-</operator><name>DOM_DELTA_LINE</name><ts:type>: <literal type="number">0x01</literal></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl type="static"><specifier>static</specifier> <operator>~</operator><name>DOM_DELTA_PAGE</name><ts:type>: <literal type="number">0x02</literal></ts:type></decl>;</decl_stmt>
+
+  <decl_stmt><decl><operator>+</operator><name>deltaX</name><ts:type>: <name>number</name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><operator>-</operator><name>deltaY</name><ts:type>: <name>number</name></ts:type></decl>;</decl_stmt>
+  <decl_stmt><decl><operator>~</operator><name>deltaZ</name><ts:type>: <name>number</name></ts:type></decl>;</decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<!-- Bitwise Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&amp;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>|</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>^</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>~</operator><literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;&lt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;&gt;&gt;</operator> <literal type="number">2</literal></expr>;</expr_stmt>
+</unit>
+
+<!-- Incrementation Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>++</operator><name>a</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name><operator>++</operator></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>--</operator><name>a</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name><operator>--</operator></expr></expr_stmt>
+</unit>
+
+<!-- Comparison Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>==</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>!=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>===</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>!==</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&gt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&lt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<!-- Logical Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>&amp;&amp;</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>||</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="number">1</literal> <operator>??</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="null">null</literal> <operator>??</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="undefined">undefined</literal> <operator>??</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>!</operator><literal type="boolean">true</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>!</operator><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>!</operator><operator>!</operator><operator>!</operator><operator>!</operator><call><name><name>require</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><name>name</name></expr></argument>)</argument_list></call></expr></return>
+</unit>
+
+<!-- Assignment Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>b</name> <init>= <expr><literal type="number">2</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>c</name> <init>= <expr><literal type="number">3</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="static">static <name>d</name> <init>= <expr><literal type="number">4</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>**=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;&gt;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>&amp;&amp;=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>||=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name> <operator>??=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</unit>
+
+<!-- Accessing Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name><name>a</name><operator>.</operator><name>b</name></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name><name>a</name><operator>?.</operator><name>b</name></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><call><name><name>JSON</name><operator>.</operator><name>parse</name></name><argument_list>(<argument><expr><name>json</name></expr></argument>)</argument_list></call><operator>?.</operator><name>foo</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>Component</name><parameter_list>(<parameter><decl><object>{<property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property>, <property><expr><name>z</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name><name>x</name><operator>?.</operator><name>y</name><operator>?.</operator><name type="computed">[<expr><operator>(</operator><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>y</name></expr></argument>)</argument_list></call><operator>,</operator> <name>z</name><operator>)</operator></expr>]</name></name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>config</name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>config</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>config</name><operator>.</operator><name>onA</name></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>config</name><operator>?.</operator><name>onA</name></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><name><name>handler</name><operator>.</operator><name>onA</name></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call><operator>?.</operator><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><name><name>handler</name><operator>.</operator><name>onA</name></name><operator>?.</operator><argument_list>(<argument><expr><object>{<property><expr><literal type="string">"event"</literal></expr>: <expr><name>event</name></expr></property>}</object></expr></argument>)</argument_list></call><operator>?.</operator><argument_list>(<argument><expr><object>{<property><expr><literal type="string">"x"</literal></expr>: <expr><literal type="number">1</literal></expr></property>, <property><expr><literal type="string">"y"</literal></expr>: <expr><literal type="number">2</literal></expr></property>}</object></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><call><call><name><name>host</name><operator>.</operator><name>getCompilerHost</name></name><operator>?.</operator><argument_list>()</argument_list></call><operator>?.</operator><name>getModuleResolutionCache</name><operator>?.</operator><argument_list>()</argument_list></call><operator>?.</operator><name>getPackageJsonInfoCache</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name>getImpliedNodeFormatForFile</name><argument_list>(<argument><expr><name>path</name></expr></argument>, <argument><expr><call><call><call><name><name>host</name><operator>.</operator><name>getCompilerHost</name></name><operator>?.</operator><argument_list>()</argument_list></call><operator>?.</operator><name>getModuleResolutionCache</name><operator>?.</operator><argument_list>()</argument_list></call><operator>?.</operator><name>getPackageJsonInfoCache</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>host</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>config</name><index>[<expr><literal type="number">0</literal></expr>]</index></name><operator>?.</operator><argument_list>(<argument><expr><name>event</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>replaceAll</name><parameter_list>(<parameter><decl><name>source</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
+    <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><operator>(</operator><name>foo</name><operator>)</operator><operator>.</operator><call><name>replaceAll</name><operator>?.</operator><argument_list>(<argument><expr><name>bar</name></expr></argument>, <argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>replaceAll</name><parameter_list>(<parameter><decl><name>source</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>string</name></ts:type> <block>{<block_content>
+    <decl_stmt><decl type="let">let <name>result</name> <init>= <expr><operator>(</operator><name>foo</name><operator>)</operator><operator>?.</operator><call><name>replaceAll</name><operator>?.</operator><argument_list>(<argument><expr><name>bar</name></expr></argument>, <argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<!-- Operator Comma (",") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>a</name><operator>,</operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator"><specifier>async</specifier> function* <name>test</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>_j</name> <operator>=</operator> <name>_e</name> <operator>=</operator> <operator>await</operator> <name>x</name><operator>,</operator>
+      <name>_f</name> <operator>=</operator> <operator>await</operator> <name>x</name><operator>,</operator>
+      <name>_h</name> <operator>=</operator> <yield>yield <expr><literal type="number">3</literal></expr></yield><operator>,</operator>
+      <name><name>_j</name><index>[<expr><name>_f</name></expr>]</index></name> <operator>=</operator> <operator>await</operator> <name>x</name><operator>,</operator>
+      <name><name>_j</name><index>[<expr><name>_h</name></expr>]</index></name> <operator>=</operator> <yield>yield <expr><literal type="number">4</literal></expr></yield><operator>,</operator>
+      <name>_j</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<!-- Spread Operator ("...") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>copy</name> <init>= <expr><array>[<expr><operator>...</operator><name>a</name></expr>]</array></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Lambda Arrow Operator ("=>") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>product</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><name>a</name></decl></parameter>, <parameter><decl><name>b</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>a</name> <operator>*</operator> <name>b</name></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<!--
+  Word Operators
+-->
+
+<!-- "as" -->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>x</name> <init>= <expr><literal type="string">"hello"</literal> <operator>as</operator> <name>const</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>fishPet</name> <init>= <expr><name>pet</name> <operator>as</operator> <name>Fish</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>x</name> <init>= <expr><name>y</name> <operator>as</operator> <name>any</name> <operator>as</operator> <name>T</name></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>followups</name><operator>.</operator><name>push</name></name><argument_list>(
+  <argument><expr><object>{
+    <property><expr><name>place</name></expr>: <expr><name>temp</name></expr></property>,
+    <property><expr><name>path</name></expr>: <expr><name>argument</name> <operator>as</operator> <name><name>NodePath</name><argument_list type="generic">&lt;<argument><expr><name><name>t</name><operator>.</operator><name>LVal</name></name></expr></argument>&gt;</argument_list></name></expr></property>
+  }</object></expr></argument>
+)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>isFish</name><parameter_list>(<parameter><decl><name>pet</name><ts:type>: <name>Fish</name> <operator>|</operator> <name>Bird</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>pet</name> <ts:operator>is</ts:operator> <name>Fish</name></ts:type> <block>{<block_content>
+  <return>return <expr><operator>(</operator><name>pet</name> <operator>as</operator> <name>Fish</name><operator>)</operator><operator>.</operator><name>swim</name> <operator>!==</operator> <literal type="undefined">undefined</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<!-- "asserts" -->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list><ts:type>: <ts:operator>asserts</ts:operator> <name>condition</name></ts:type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list><ts:type>: <ts:operator>asserts</ts:operator> <name>condition</name> <ts:operator>is</ts:operator> <name>string</name></ts:type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+</unit>
+
+<!-- "await" -->
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>f</name> <init>= <expr><operator>await</operator> <call><name>functionCall</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>await</operator> <call><name><name>page</name><operator>.</operator><name>goto</name></name><argument_list>(<argument><expr><literal type="string">'example_url'</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<!-- "delete" -->
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><operator>delete</operator> <name>a</name></expr></expr_stmt>
+</unit>
+
+<!-- "in" -->
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><literal type="string">"str"</literal> <operator>in</operator> <name>obj</name></expr></expr_stmt>
+</unit>
+
+<!-- "instanceof" -->
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>e</name> <init>= <expr><operator>(</operator><name>d</name> <operator>instanceof</operator> <name>FunctionName</name><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "is" -->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>isNullOrFalse</name><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>any</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>x</name> <ts:operator>is</ts:operator> <literal type="boolean">false</literal> <operator>|</operator> <literal type="null">null</literal></ts:type> <block>{<block_content>
+  <return>return <expr><name>x</name> <operator>===</operator> <literal type="boolean">false</literal> <operator>||</operator> <name>x</name> <operator>===</operator> <literal type="null">null</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>isPromise</name><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>any</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>x</name> <ts:operator>is</ts:operator> <name><name>Promise</name><argument_list type="generic">&lt;<argument><expr><name>any</name></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
+  <return>return <expr><literal type="string">'then'</literal> <operator>in</operator> <name>x</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<!-- "new" -->
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>d</name> <init>= <expr><operator>new</operator> <call><name>FunctionName</name><argument_list>(<argument><expr><literal type="string">'a'</literal></expr></argument>, <argument><expr><literal type="string">'b'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "typeof" -->
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>a</name> <init>= <expr><operator>typeof</operator> <literal type="null">null</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "void" -->
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>b</name> <init>= <expr><operator>void</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

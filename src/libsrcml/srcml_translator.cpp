@@ -34,6 +34,9 @@
 #include <OffSideRule.hpp>
 #include <NewlineTerminatePython.hpp>
 #include <NameDifferentiatorPython.hpp>
+#include <NewlineTerminateJavaScript.hpp>
+#include <NameDifferentiatorJavaScript.hpp>
+#include <TokenLookbackJavaScript.hpp>
 
 using namespace ::std::literals::string_view_literals;
 
@@ -144,7 +147,26 @@ void srcml_translator::translate(UTF8CharBuffer* parser_input) {
         selector.addInputStream(&textlexer, "text");
         selector.select(&lexer);
 
-        if (getLanguage() == LANGUAGE_PYTHON) {
+        if (getLanguage() == LANGUAGE_JAVASCRIPT) {
+            // records last non-skip token
+            TokenLookbackJavaScript monitor(selector);
+
+            // intermediate token stage
+            NameDifferentiatorJavaScript differentiator(monitor);
+
+            // intermediate token stage
+            NewlineTerminateJavaScript terminate(differentiator);
+
+            // base stream parser srcML connected to lexical analyzer
+            StreamMLParser parser(terminate, getLanguage(), options);
+
+            // connect local parser to attribute for output
+            out.setTokenStream(parser);
+
+            // parse and form srcML output with unit attributes
+            out.consume(getLanguageString(), revision, url, filename, version, timestamp, hash, encoding);
+        }
+        else if (getLanguage() == LANGUAGE_PYTHON) {
             // intermediate token stage
             DocstringPython docstring(selector);
             docstring.setBlockStartToken(srcMLParser::PY_COLON);

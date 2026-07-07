@@ -27,6 +27,7 @@ header "pre_include_cpp" {
 }
 
 header {
+    #include <algorithm>
     #include <string>
     #include <string_view>
     #include <unordered_map>
@@ -35,6 +36,7 @@ header {
     #include <antlr/TokenStreamSelector.hpp>
     #include <CommentTextLexer.hpp>
     #include <srcMLToken.hpp>
+    #include <TokenLookbackJavaScript.hpp>
     #undef CONST
     #undef VOID
     #undef DELETE
@@ -352,12 +354,49 @@ tokens {
     PY_WITH;
     PY_YIELD;
 
-    // CMake
+    // JavaScript
+    JS_ARROW;
+    JS_AS;
+    JS_ASYNC;
+    JS_AWAIT;
+    JS_CATCH;
+    JS_CONST;
+    JS_CONSTRUCTOR;
+    JS_DEBUGGER;
+    JS_DEFAULT;
+    JS_DELETE;
+    JS_EACH;
+    JS_ELSE;
+    JS_EXPORT;
+    JS_EXTENDS;
+    JS_FROM;
+    JS_FUNCTION;
+    JS_GET;
+    JS_IMPORT;
+    JS_INSTANCEOF;
+    JS_JSX_LITERAL;
+    JS_LET;
+    JS_NULL;
+    JS_RANGE_IN;
+    JS_RANGE_OF;
+    JS_REGEX;
+    JS_SET;
+    JS_STATIC;
+    JS_TYPEOF;
+    JS_UNDEFINED;
+    JS_USING;
+    JS_VAR;
+    JS_VOID;
+    JS_WITH;
+    JS_YIELD;
+    QMARK_PERIOD;
+
     CMAKE_BLOCK;
     CMAKE_COMPILER_FLAG;
     CMAKE_ENDBLOCK;
     CMAKE_ENDFOREACH;
     CMAKE_ENDFUNCTION;
+    CMAKE_ENDIF;
     CMAKE_ELSEIF;
     CMAKE_ENDMACRO;
     CMAKE_ENDWHILE;
@@ -367,13 +406,33 @@ tokens {
     CMAKE_ITEMS;
     CMAKE_LISTS;
     CMAKE_MACRO;
+    CMAKE_OPERATORS;
     CMAKE_OPTIONS;
-    CMAKE_POLICIES;
     CMAKE_PROPAGATE;
     CMAKE_RANGE;
     CMAKE_RCURLY;
     CMAKE_SCOPE_FOR;
-    CMAKE_VARIABLES;
+    CMAKE_ZIP_LISTS;
+
+    // TypeScript (appears as a namespace prefix)
+    TS_ABSTRACT;
+    TS_ASSERTS;
+    TS_ATSIGN;
+    TS_DATSIGN;
+    TS_DECLARE;
+    TS_IMPLEMENTS;
+    TS_INFER;
+    TS_INTERFACE;
+    TS_IS;
+    TS_KEYOF;
+    TS_NAMESPACE;
+    TS_OVERRIDE;
+    TS_PRIVATE;
+    TS_PROTECTED;
+    TS_PUBLIC;
+    TS_READONLY;
+    TS_SATISFIES;
+    TS_TYPE;
 }
 
 {
@@ -389,6 +448,153 @@ public:
     int lastpos;
     int prev;
     int currentmode;
+    int lastnonspacetoken;
+    bool in_cmake_string = false;
+    bool in_cmake_bracket = false;
+
+    virtual void consume() noexcept(false) {
+        if (LA(1) != ' ')
+            lastnonspacetoken = LA(1);
+
+        antlr::CharScanner::consume();
+    }
+
+    int getLastToken() const { return lastnonspacetoken; }
+
+    // if LA(1) is the current character, then this was the value of LA(1) three non-whitespace characters ago
+    // Note: excludes newline characters, tabs, and whitespace
+    int lookaheadMinusThree;
+
+    // if LA(1) is the current character, then this was the value of LA(1) two non-whitespace characters ago
+    // Note: excludes newline characters, tabs, and whitespace
+    int lookaheadMinusTwo;
+
+    // if LA(1) is the current character, then this was the value of LA(1) one non-whitespace characters ago
+    // Note: excludes newline characters, tabs, and whitespace
+    int lookaheadMinusOne;
+
+    // adjust the prior non-whitespace character values
+    void updateNonWhitespaceCharacters() {
+        if (LA(1) != '\n' && LA(1) != '\t' && LA(1) != ' ') {
+            lookaheadMinusThree = lookaheadMinusTwo;
+            lookaheadMinusTwo = lookaheadMinusOne;
+            lookaheadMinusOne = LA(1);
+        }
+    }
+
+    bool isEnvExprCMake() {
+        size_t index = 1;
+        if (LA(index++) == 'E' && LA(index++) == 'N' && LA(index++) == 'V' && LA(index) == '{') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    bool isCacheExprCMake() {
+        size_t index = 1;
+        if (LA(index++) == 'C' && LA(index++) == 'A' && LA(index++) == 'C' && LA(index++) == 'H' && LA(index++) == 'E' && LA(index) == '{') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    // determine if "<" starts a JSX literal in JavaScript by looking ahead
+    bool isJSXLiteral() {
+        size_t index = 1;
+        size_t angle_bracket_count = 0;
+
+        while (true) {
+            // ignore JavaScript code found in blocks (e.g., "{...}")
+            if (LA(index) == '{') {
+                size_t curly_count = 0;
+
+                while (true) {
+                    if (LA(index) == '{')
+                        ++curly_count;
+
+                    if (LA(index) == '}' && curly_count > 0) {
+                        --curly_count;
+
+                        if (curly_count == 0)
+                            break;
+                    }
+
+                    if (LA(index) == -1 /* EOF */)
+                        break;
+
+                    ++index;
+                }
+            }
+
+            // process line comments (e.g., "// ...") or hashbang comments (e.g., "#! ...")
+            if (
+                (LA(index) == '/' && LA(index + 1) == '/')
+                || (LA(index) == '#' && LA(index + 1) == '!')
+            ) {
+                while (true) {
+                    if (LA(index) == '\n' || LA(index) == -1 /* EOF */)
+                        break;
+                    else
+                        ++index;
+                }
+            }
+
+            // process block comments (e.g., "/* ... */")
+            if (LA(index) == '/' && LA(index + 1) == '*') {
+                while (true) {
+                    if ((LA(index) == '*' && LA(index + 1) == '/') || LA(index) == -1 /* EOF */)
+                        break;
+                    else
+                        ++index;
+                }
+            }
+
+            // process HTML comments separately (e.g., "<!-- ... -->")
+            if (LA(index) == '<' && LA(index + 1) == '!' && LA(index + 2) == '-' && LA(index + 3) == '-') {
+                while (true) {
+                    // found end of HTML comment (e.g., "-->")
+                    if (LA(index) == '-' && LA(index + 1) == '-' && LA(index + 2) == '>') {
+                        index += 3;  // "consume" the end of the comment
+                        break;
+                    }
+
+                    if (LA(1) == -1 /* EOF */)
+                        break;
+
+                    ++index;
+                }
+            }
+            // potential start of an opening/closing JSX tag (e.g., "<h1>" or "</h1>")
+            else if (LA(index) == '<') {
+                ++angle_bracket_count;
+                ++index;
+
+                // found a closing JSX tag (e.g., "</h1>")
+                if (LA(index) == '/' && LA(index + 1) != '*' && angle_bracket_count == 1)
+                    return true;
+            }
+
+            // found a self-closing JSX tag (e.g., "<h1/>")
+            if (LA(index) == '/' && LA(index + 1) == '>' && angle_bracket_count == 1)
+                return true;
+
+            // found the ">" to end the current opening/closing JSX tag
+            if (LA(index) == '>' && angle_bracket_count > 0)
+                --angle_bracket_count;
+
+            // stop searching at TERMINATE or EOF
+            if (LA(index) == ';' || LA(index) == -1 /* EOF */)
+                break;
+
+            ++index;
+        }
+
+        return false;
+    }
 
 // map from text of literal to token number, adjusted to language
 struct keyword { std::string_view text; int token; int language; };
@@ -827,6 +1033,67 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "with"         , PY_WITH           , LANGUAGE_PYTHON },
         { "yield"        , PY_YIELD          , LANGUAGE_PYTHON },
 
+        // Existing language keywords that are names in JavaScript
+        { "enum"         , NAME              , LANGUAGE_JAVASCRIPT },
+        { "goto"         , NAME              , LANGUAGE_JAVASCRIPT },
+
+        // JavaScript
+        { "=>"           , JS_ARROW          , LANGUAGE_JAVASCRIPT },
+        { "?."           , QMARK_PERIOD      , LANGUAGE_JAVASCRIPT },
+        { "as"           , JS_AS             , LANGUAGE_JAVASCRIPT },
+        { "async"        , JS_ASYNC          , LANGUAGE_JAVASCRIPT },
+        { "await"        , JS_AWAIT          , LANGUAGE_JAVASCRIPT },
+        { "catch"        , JS_CATCH          , LANGUAGE_JAVASCRIPT },
+        { "const"        , JS_CONST          , LANGUAGE_JAVASCRIPT },
+        { "constructor"  , JS_CONSTRUCTOR    , LANGUAGE_JAVASCRIPT },
+        { "debugger"     , JS_DEBUGGER       , LANGUAGE_JAVASCRIPT },
+        { "default"      , JS_DEFAULT        , LANGUAGE_JAVASCRIPT },
+        { "delete"       , JS_DELETE         , LANGUAGE_JAVASCRIPT },
+        { "each"         , JS_EACH           , LANGUAGE_JAVASCRIPT },
+        { "else"         , JS_ELSE           , LANGUAGE_JAVASCRIPT },
+        { "export"       , JS_EXPORT         , LANGUAGE_JAVASCRIPT },
+        { "extends"      , JS_EXTENDS        , LANGUAGE_JAVASCRIPT },
+        { "finally"      , FINALLY           , LANGUAGE_JAVASCRIPT },
+        { "from"         , JS_FROM           , LANGUAGE_JAVASCRIPT },
+        { "function"     , JS_FUNCTION       , LANGUAGE_JAVASCRIPT },
+        { "get"          , JS_GET            , LANGUAGE_JAVASCRIPT },
+        { "import"       , JS_IMPORT         , LANGUAGE_JAVASCRIPT },
+        { "in"           , JS_RANGE_IN       , LANGUAGE_JAVASCRIPT },
+        { "instanceof"   , JS_INSTANCEOF     , LANGUAGE_JAVASCRIPT },
+        { "let"          , JS_LET            , LANGUAGE_JAVASCRIPT },
+        { "null"         , JS_NULL           , LANGUAGE_JAVASCRIPT },
+        { "of"           , JS_RANGE_OF       , LANGUAGE_JAVASCRIPT },
+        { "set"          , JS_SET            , LANGUAGE_JAVASCRIPT },
+        { "static"       , JS_STATIC         , LANGUAGE_JAVASCRIPT },
+        { "typeof"       , JS_TYPEOF         , LANGUAGE_JAVASCRIPT },
+        { "undefined"    , JS_UNDEFINED      , LANGUAGE_JAVASCRIPT },
+        { "using"        , JS_USING          , LANGUAGE_JAVASCRIPT },
+        { "var"          , JS_VAR            , LANGUAGE_JAVASCRIPT },
+        { "void"         , JS_VOID           , LANGUAGE_JAVASCRIPT },
+        { "with"         , JS_WITH           , LANGUAGE_JAVASCRIPT },
+        { "yield"        , JS_YIELD          , LANGUAGE_JAVASCRIPT },
+
+        // TypeScript special characters or operators
+        { "@"            , TS_ATSIGN         , LANGUAGE_JAVASCRIPT },
+        { "is"           , TS_IS             , LANGUAGE_JAVASCRIPT },
+        { "keyof"        , TS_KEYOF          , LANGUAGE_JAVASCRIPT },
+
+        // TypeScript (appears as a namespace prefix)
+        { "abstract"     , TS_ABSTRACT       , LANGUAGE_JAVASCRIPT },
+        { "asserts"      , TS_ASSERTS        , LANGUAGE_JAVASCRIPT },
+        { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT },
+        { "implements"   , TS_IMPLEMENTS     , LANGUAGE_JAVASCRIPT },
+        { "infer"        , TS_INFER          , LANGUAGE_JAVASCRIPT },
+        { "interface"    , TS_INTERFACE      , LANGUAGE_JAVASCRIPT },
+        { "namespace"    , TS_NAMESPACE      , LANGUAGE_JAVASCRIPT },
+        { "override"     , TS_OVERRIDE       , LANGUAGE_JAVASCRIPT },
+        { "private"      , TS_PRIVATE        , LANGUAGE_JAVASCRIPT },
+        { "protected"    , TS_PROTECTED      , LANGUAGE_JAVASCRIPT },
+        { "public"       , TS_PUBLIC         , LANGUAGE_JAVASCRIPT },
+        { "readonly"     , TS_READONLY       , LANGUAGE_JAVASCRIPT },
+        { "satisfies"    , TS_SATISFIES      , LANGUAGE_JAVASCRIPT },
+        { "type"         , TS_TYPE           , LANGUAGE_JAVASCRIPT },
+
         // CMake options; placeholder value to be replaced later
         { "_-_-_"          , CMAKE_OPTIONS       , LANGUAGE_CMAKE },
 
@@ -834,42 +1101,42 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "_-_-_-_"        , CMAKE_COMPILER_FLAG , LANGUAGE_CMAKE },
 
         // CMake operators
-        { "AND",                    OPERATORS, LANGUAGE_CMAKE },
-        { "COMMAND",                OPERATORS, LANGUAGE_CMAKE },
-        { "DEFINED",                OPERATORS, LANGUAGE_CMAKE },
-        { "DEFINED CACHE",          OPERATORS, LANGUAGE_CMAKE },
-        { "DEFINED ENV",            OPERATORS, LANGUAGE_CMAKE },
-        { "EQUAL",                  OPERATORS, LANGUAGE_CMAKE },
-        { "EXISTS",                 OPERATORS, LANGUAGE_CMAKE },
-        { "GREATER",                OPERATORS, LANGUAGE_CMAKE },
-        { "GREATER_EQUAL",          OPERATORS, LANGUAGE_CMAKE },
-        { "IN_LIST",                OPERATORS, LANGUAGE_CMAKE },
-        { "IS_ABSOLUTE",            OPERATORS, LANGUAGE_CMAKE },
-        { "IS_DIRECTORY",           OPERATORS, LANGUAGE_CMAKE },
-        { "IS_EXECUTABLE",          OPERATORS, LANGUAGE_CMAKE },
-        { "IS_NEWER_THAN",          OPERATORS, LANGUAGE_CMAKE },
-        { "IS_READABLE",            OPERATORS, LANGUAGE_CMAKE },
-        { "IS_SYMLINK",             OPERATORS, LANGUAGE_CMAKE },
-        { "IS_WRITABLE",            OPERATORS, LANGUAGE_CMAKE },
-        { "LESS",                   OPERATORS, LANGUAGE_CMAKE },
-        { "LESS_EQUAL",             OPERATORS, LANGUAGE_CMAKE },
-        { "MATCHES",                OPERATORS, LANGUAGE_CMAKE },
-        { "NOT",                    OPERATORS, LANGUAGE_CMAKE },
-        { "OR",                     OPERATORS, LANGUAGE_CMAKE },
-        { "PATH_EQUAL",             OPERATORS, LANGUAGE_CMAKE },
-        { "STREQUAL",               OPERATORS, LANGUAGE_CMAKE },
-        { "STRGREATER",             OPERATORS, LANGUAGE_CMAKE },
-        { "STRGREATER_EQUAL",       OPERATORS, LANGUAGE_CMAKE },
-        { "STRLESS",                OPERATORS, LANGUAGE_CMAKE },
-        { "STRLESS_EQUAL",          OPERATORS, LANGUAGE_CMAKE },
-        { "TARGET",                 OPERATORS, LANGUAGE_CMAKE },
-        { "TEST",                   OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_EQUAL",          OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_GREATER",        OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_GREATER_EQUAL",  OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_LESS",           OPERATORS, LANGUAGE_CMAKE },
-        { "VERSION_LESS_EQUAL",     OPERATORS, LANGUAGE_CMAKE },
-        { "XOR",                    OPERATORS, LANGUAGE_CMAKE },
+        { "AND",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "COMMAND",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED CACHE",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "DEFINED ENV",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "EQUAL",                  CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "EXISTS",                 CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "GREATER",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "GREATER_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IN_LIST",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_ABSOLUTE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_DIRECTORY",           CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_EXECUTABLE",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_NEWER_THAN",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_READABLE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_SYMLINK",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "IS_WRITABLE",            CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "LESS",                   CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "LESS_EQUAL",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "MATCHES",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "NOT",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "OR",                     CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "PATH_EQUAL",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STREQUAL",               CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRGREATER",             CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRGREATER_EQUAL",       CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRLESS",                CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "STRLESS_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "TARGET",                 CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "TEST",                   CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_EQUAL",          CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_GREATER",        CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_GREATER_EQUAL",  CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_LESS",           CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "VERSION_LESS_EQUAL",     CMAKE_OPERATORS, LANGUAGE_CMAKE },
+        { "XOR",                    CMAKE_OPERATORS, LANGUAGE_CMAKE },
 
         // CMake literals
         { "TRUE"         , LITERAL_TRUE  , LANGUAGE_CMAKE },
@@ -909,6 +1176,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "endblock"     , CMAKE_ENDBLOCK    , LANGUAGE_CMAKE },
         { "endforeach"   , CMAKE_ENDFOREACH  , LANGUAGE_CMAKE },
         { "endfunction"  , CMAKE_ENDFUNCTION , LANGUAGE_CMAKE },
+        { "endif"        , CMAKE_ENDIF ,       LANGUAGE_CMAKE },
         { "elseif"       , CMAKE_ELSEIF      , LANGUAGE_CMAKE },
         { "endmacro"     , CMAKE_ENDMACRO    , LANGUAGE_CMAKE },
         { "endwhile"     , CMAKE_ENDWHILE    , LANGUAGE_CMAKE },
@@ -918,11 +1186,10 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "ITEMS"        , CMAKE_ITEMS       , LANGUAGE_CMAKE },
         { "LISTS"        , CMAKE_LISTS       , LANGUAGE_CMAKE },
         { "macro"        , CMAKE_MACRO       , LANGUAGE_CMAKE },
-        { "POLICIES"     , CMAKE_POLICIES    , LANGUAGE_CMAKE },
         { "PROPAGATE"    , CMAKE_PROPAGATE   , LANGUAGE_CMAKE },
         { "RANGE"        , CMAKE_RANGE       , LANGUAGE_CMAKE },
         { "SCOPE_FOR"    , CMAKE_SCOPE_FOR   , LANGUAGE_CMAKE },
-        { "VARIABLES"    , CMAKE_VARIABLES   , LANGUAGE_CMAKE },
+        { "ZIP_LISTS"    , CMAKE_ZIP_LISTS   , LANGUAGE_CMAKE },
    };
 
     // fill up the literals for the language that we are parsing

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="switch">
+
+<unit revision="1.0.0" language="JavaScript">
+<switch>switch <condition>(<expr><name>input</name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><literal type="string">"Oranges"</literal></expr>:</case>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Oranges are $0.59 a pound."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<switch>switch <condition>(<expr><name>input</name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><literal type="string">"Mangoes"</literal></expr>:</case>
+    <case>case <expr><literal type="string">"Papayas"</literal></expr>:</case>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Mangoes and papayas are $2.79 a pound."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<switch>switch <condition>(<expr><name>input</name></expr>)</condition> <block>{<block_content>
+    <default>default:</default>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Sorry, we are out of ${input}.`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<switch>switch <condition>(<expr><name>input</name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><literal type="string">"Oranges"</literal></expr>:</case>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Oranges are $0.59 a pound."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+
+    <case>case <expr><literal type="string">"Mangoes"</literal></expr>:</case>
+    <case>case <expr><literal type="string">"Papayas"</literal></expr>:</case>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">"Mangoes and papayas are $2.79 a pound."</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+
+    <default>default:</default>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><literal type="string">`Sorry, we are out of ${input}.`</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<switch>switch <condition>(<expr><name><name>props</name><operator>.</operator><name>test</name></name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><name>true</name></expr>:</case> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name><name>handlers</name><operator>.</operator><name>value</name></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+    </block_content>}</block>
+    <default>default:</default> <block>{<block_content/>}</block>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+  <decl_stmt><decl type="const">const <name>outerHandlers</name> <init>= <expr><call><name>useMemo</name><argument_list>(<argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <decl_stmt><decl type="let">let <name>handlers</name> <init>= <expr><object>{<property><expr><name>value</name></expr>: <expr><name><name>props</name><operator>.</operator><name>value</name></name></expr></property>}</object></expr></init></decl></decl_stmt>
+    <switch>switch <condition>(<expr><name><name>props</name><operator>.</operator><name>test</name></name></expr>)</condition> <block>{<block_content>
+      <case>case <expr><name>true</name></expr>:</case> <block>{<block_content>
+        <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name><name>handlers</name><operator>.</operator><name>value</name></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <break>break</break>
+      </block_content>}</block>
+      <default>default:</default> <block>{<block_content>
+      </block_content>}</block>
+    </block_content>}</block></switch>
+    <return>return <expr><name>handlers</name></expr></return>
+  </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+</unit>

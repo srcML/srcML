@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="specifier">
+
+<!-- Declarations ("let") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let"><specifier>export</specifier> let <name>rectangle</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let"><specifier>export</specifier> <specifier>default</specifier> let <name>rectangle</name></decl></decl_stmt>
+</unit>
+
+<!-- Declarations ("var") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var"><specifier>export</specifier> var <name>circle</name></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var"><specifier>export</specifier> <specifier>default</specifier> var <name>circle</name></decl></decl_stmt>
+</unit>
+
+<!-- Declarations ("const") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> <specifier>default</specifier> const <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Declarations ("static") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="static"><specifier>export</specifier> static <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="static"><specifier>export</specifier> <specifier>default</specifier> static <name>delta</name> <init>= <expr><literal type="string">"srcDiff"</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Declarations ("using") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="using"><specifier>await</specifier> using <name>db</name> <init>= <expr><call><name>getConnection</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Regular functions ("function") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> function <name>functionName</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function><specifier>export</specifier> <specifier>default</specifier> function <name>functionName</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<!-- Generator functions ("function*") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator"><specifier>export</specifier> function* <name>generatorFunctionName</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="generator"><specifier>export</specifier> <specifier>default</specifier> function* <name>generatorFunctionName</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<!-- Getters ("get") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="get"><specifier>export</specifier> get<parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="get"><specifier>export</specifier> get <name>msg</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="get"><specifier>export</specifier> <specifier>default</specifier> get<parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="get"><specifier>export</specifier> <specifier>default</specifier> get <name>msg</name><parameter_list>()</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<!-- Setters ("set") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="set"><specifier>export</specifier> set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="set"><specifier>export</specifier> set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="set"><specifier>export</specifier> <specifier>default</specifier> set<parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function type="set"><specifier>export</specifier> <specifier>default</specifier> set <name>msg</name><parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content> <comment type="block">/* ... */</comment> </block_content>}</block></function>
+</unit>
+
+<!-- Classes ("class")-->
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <block>{ <comment type="block">/* ... */</comment> }</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> <specifier>default</specifier> class <block>{ <comment type="block">/* ... */</comment> }</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>ClassName</name> <block>{ <comment type="block">/* ... */</comment> }</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> <specifier>default</specifier> class <name>ClassName</name> <block>{ <comment type="block">/* ... */</comment> }</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>Metadata</name> <block>{
+  <decl_stmt><decl type="static"><ts:specifier>private</ts:specifier> static <ts:specifier>readonly</ts:specifier> <name>_undefinedValue</name> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>abstract</ts:specifier> class <name>Project</name> <super_list><ts:implements>implements <super><expr><name>LanguageServiceHost</name></expr></super>, <super><expr><name>ModuleResolutionHost</name></expr></super></ts:implements></super_list> <block>{
+  <decl_stmt><decl><ts:specifier>readonly</ts:specifier> <name>projectKind</name><ts:type>: <name>ProjectKind</name></ts:type></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<!-- "readonly" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>diagnostics</name> <init>= <expr><operator>new</operator> <call><name><name>Map</name><argument_list type="generic">&lt;<argument><expr><name>Path</name></expr></argument>, <argument><expr><ts:specifier>readonly</ts:specifier> <name><name>Diagnostic</name><index>[]</index></name></expr></argument>&gt;</argument_list></name><argument_list>(
+  <argument><expr><name>foo</name></expr></argument>
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>values</name> <init>= <expr><name>value</name> <operator>as</operator> <ts:specifier>readonly</ts:specifier> <name><name>string</name><index>[]</index></name></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "static private" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <decl_stmt><decl type="static">static <ts:specifier>private</ts:specifier> <name>privateProperty</name></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <ts:specifier>private</ts:specifier> <name>privateMethod</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="get"><specifier>static</specifier> <ts:specifier>private</ts:specifier> get <name>privateGetter</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="set"><specifier>static</specifier> <ts:specifier>private</ts:specifier> set <name>privateSetter</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<!-- "static protected" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <decl_stmt><decl type="static">static <ts:specifier>protected</ts:specifier> <name>protectedProperty</name></decl></decl_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <ts:specifier>protected</ts:specifier> <name>protectedMethod</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="get"><specifier>static</specifier> <ts:specifier>protected</ts:specifier> get <name>protectedGetter</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="set"><specifier>static</specifier> <ts:specifier>protected</ts:specifier> set <name>protectedSetter</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<!-- "static public" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="set"><specifier>static</specifier> <ts:specifier>public</ts:specifier> set <name>publicSetter</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function><specifier>static</specifier> <ts:specifier>public</ts:specifier> <name>publicMethod</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="get"><specifier>static</specifier> <ts:specifier>public</ts:specifier> get <name>publicGetter</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><literal type="number">0</literal></expr></return> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>D</name> <block>{
+    <expr_stmt><expr><function type="set"><specifier>static</specifier> <ts:specifier>public</ts:specifier> set <name>publicSetter</name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<!-- "public static" (TypeScript) -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><ts:specifier>declare</ts:specifier> class <name><name>ConflictTarget</name><argument_list type="generic">&lt;<argument><expr><name>Cols</name></expr></argument>&gt;</argument_list></name> <block>{
+    <ts:function_decl><ts:specifier>public</ts:specifier> <ts:specifier>static</ts:specifier> <name><name>tableColumns</name><argument_list type="generic">&lt;<argument><expr><name>Cols</name></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>cols</name><ts:type>: <operator>(</operator><ts:operator>keyof</ts:operator> <name>Cols</name><operator>)</operator><index>[]</index></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>ConflictTarget</name><argument_list type="generic">&lt;<argument><expr><name>Cols</name></expr></argument>&gt;</argument_list></name></ts:type></ts:function_decl>
+}</block></class>
+</unit>
+
+</unit>

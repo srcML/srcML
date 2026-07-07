@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="constructor">
+
+<!-- JavaScript Constructors -->
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Empty</name> <block>{
+    <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content/>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Rectangle</name> <block>{
+    <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Rectangle"</literal></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
+    </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>FilledRectangle</name> <super_list><extends>extends <super><expr><name>Rectangle</name></expr></super></extends></super_list> <block>{
+    <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>, <parameter><decl><name>color</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><call><name>super</name><argument_list>(<argument><expr><name>height</name></expr></argument>, <argument><expr><name>width</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Filled rectangle"</literal></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>color</name></name> <operator>=</operator> <name>color</name></expr></expr_stmt>
+    </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Rectangle</name> <block>{
+    <constructor>constructor<parameter_list>(<parameter><decl><name>height</name></decl></parameter>, <parameter><decl><name>width</name></decl></parameter>, <parameter><decl><modifier>...</modifier><name>theArgs</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <literal type="string">"Rectangle"</literal></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>height</name></name> <operator>=</operator> <name>height</name></expr></expr_stmt>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>width</name></name> <operator>=</operator> <name>width</name></expr></expr_stmt>
+    </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<class>class <name>Person</name> <block>{
+    <constructor>constructor<parameter_list>(<parameter><decl><name>name</name> <init>= <expr><literal type="string">"Anonymous"</literal></expr></init></decl></parameter>)</parameter_list> <block>{<block_content>
+        <expr_stmt><expr><name><name>this</name><operator>.</operator><name>name</name></name> <operator>=</operator> <name>name</name></expr></expr_stmt>
+    </block_content>}</block></constructor>
+}</block></class>
+</unit>
+
+<!-- TypeScript Constructors -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>C7</name> <block>{
+    <constructor>constructor<parameter_list>(
+        <parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><array>[<expr><name>e</name></expr>]</array></expr>]</array><ts:type>: <name><name>any</name><index>[]</index></name></ts:type></decl></parameter>,
+        <parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><object>{<property><expr><name>f</name></expr></property>}</object></expr>]</array><ts:type>: <name><name>any</name><index>[]</index></name></ts:type></decl></parameter>
+    )</parameter_list> <block>{<block_content/>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>C8</name> <block>{
+    <constructor>constructor<parameter_list>(<parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><array>[<expr><name>g</name></expr>, <expr><operator>...</operator><name>rest</name></expr>]</array></expr>]</array><ts:type>: <name><name>any</name><index>[]</index></name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></constructor>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>C9</name> <block>{
+    <constructor>constructor<parameter_list>(<parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><array>[<expr><name>h</name></expr>, <expr><name>i</name></expr>]</array></expr>, <expr><object>{<property><expr><name>j</name></expr></property>, <property><expr><name>k</name></expr>: <expr><array>[<expr><name>l</name></expr>]</array></expr></property>}</object></expr>]</array><ts:type>: <name>any</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></constructor>
+}</block></class>
+</unit>
+
+</unit>
+

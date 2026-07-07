@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="call">
+
+<!-- Function Calls with "!" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><call><name>readDirectory</name><ts:modifier>!</ts:modifier><argument_list>(<argument><expr><name>rootDir</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Generic Function Calls -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>entries</name> <init>= <expr><call><name><name>mapDefined</name><argument_list type="generic">&lt;<argument><expr><name>CompletionEntry</name></expr></argument>, <argument><expr><name><name>protocol</name><operator>.</operator><name>CompletionEntry</name></name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name><name>completions</name><operator>.</operator><name>entries</name></name></expr></argument>, <argument><expr><lambda><parameter><decl><name>entry</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>factory</name><ts:type>: <name>NodeFactory</name></ts:type> <init>= <expr><object>{
+    <property><expr><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
+        <return>return <expr><call><name><name>getJSDocPrimaryTypeCreateFunction</name><argument_list type="generic">&lt;<argument><expr><name>JSDocAllType</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name><name>SyntaxKind</name><operator>.</operator><name>JSDocAllType</name></name></expr></argument>)</argument_list></call></expr></return>
+    </block_content>}</block></function></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>itemData</name> <init>= <expr><call><name><name>useMemo</name><argument_list type="generic">&lt;<argument><expr><name>ItemData</name></expr></argument>&gt;</argument_list></name><argument_list>(
+  <argument><expr><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><operator>(</operator>
+    <call><name>scale</name><argument_list>(
+      <argument><expr><ternary><condition><expr><name>foo</name> <operator>!==</operator> <literal type="null">null</literal></expr>
+        ?</condition><then> <expr><name>bar</name></expr>
+        </then><else>: <expr><name>baz</name></expr></else></ternary></expr></argument>,
+    )</argument_list></call><operator>,</operator>
+  <operator>)</operator></expr></lambda></expr></argument>,
+)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Global Context Calls -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>math</name><operator>.</operator><name>double</name></name>)</expr><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><expr><operator>(</operator><literal type="string">"ignored"</literal><operator>,</operator> <name><name>Math</name><operator>.</operator><name>max</name></name>)</expr><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>result</name> <init>= <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>math</name><operator>.</operator><name>double</name></name>)</expr><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>message</name> <init>= <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>api</name><operator>.</operator><name>greet</name></name>)</expr><argument_list>(<argument><expr><literal type="string">"srcML"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>componentDebugInfo</name><ts:type>: <name>ReactComponentInfo</name></ts:type> <init>= <expr><object>{
+  <property><expr><name>env</name></expr>: <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>request</name><operator>.</operator><name>environmentName</name></name>)</expr><argument_list>()</argument_list></call></expr></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>version</name> <init>= <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>service</name><operator>?.</operator><name>getVersion</name></name>)</expr><operator>?.</operator><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- Dynamic Module Import Calls -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> <ts:specifier>declare</ts:specifier> const <name>x</name><ts:type>: <call><name>import</name><argument_list>(<argument><expr><literal type="string">"./foo"</literal></expr></argument>)</argument_list><argument_list type="generic">&lt;<argument><expr><block>{<block_content>
+    <decl_stmt><decl><name>x</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></expr></argument>&gt;</argument_list></call></ts:type></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let"><specifier>export</specifier> <ts:specifier>declare</ts:specifier> let <name>y</name><ts:type>: <call><name>import</name><argument_list>(<argument><expr><literal type="string">"./foo2"</literal></expr></argument>)</argument_list></call><operator>.</operator><name><name>Bar</name><operator>.</operator><name><name>I</name><argument_list type="generic">&lt;<argument><expr><block>{<block_content>
+    <decl_stmt><decl><name>x</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+</block_content>}</block></expr></argument>&gt;</argument_list></name></name></ts:type></decl></decl_stmt>
+</unit>
+
+</unit>

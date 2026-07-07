@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="throw">
+
+<unit revision="1.0.0" language="JavaScript">
+<throw>throw <expr><name>error</name></expr></throw>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">"Required"</literal></expr></argument>)</argument_list></call></expr></throw>
+</unit>
+
+</unit>
+

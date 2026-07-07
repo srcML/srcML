@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="JavaScript" url="comment">
+
+<unit revision="1.0.0" language="JavaScript"><comment type="line">// abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890</comment></unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="line">//</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="line">//a</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="line">//abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[]\;',./~_+{}|:"&lt;&gt;?</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="hashbang">#!/usr/bin/env node</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/**/</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/*
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/*
+a
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="block">/*
+abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[]\;',./~_+{}|:"&lt;&gt;?
+*/</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!----&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!-- a --&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!-- &lt;!- a -&gt; --&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!--
+a
+b
+c
+--&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!-- abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&amp;*()`-=[]\;',./~_+{}|:"&lt;&gt;? --&gt;</comment>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<comment type="html">&lt;!--
+console.log("srcML");
+--&gt;</comment>
+</unit>
+
+</unit>

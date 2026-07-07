@@ -127,11 +127,56 @@ const srcMLState::MODE_TYPE ModeStack::MODE_CASE_PY                    (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_FROM_PY                    (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_SET_PY                     (bit(__COUNTER__));
 
+// JavaScript
+const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_EXPRESSION_JS     (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_GLOBAL_CONTEXT_CALL_JS     (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_OBJECT_DESTRUCTURE_JS      (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_ARRAY_DESTRUCTURE_JS       (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_COMPUTED_FUNCTION_JS       (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_CLASS_EXPRESSION_JS        (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECL_DESTRUCTURE_JS        (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECL_STATEMENT_JS          (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_PARAMETER_LIST_JS          (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_CATCH_LPAREN_JS            (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_IGNORE_LABEL_JS            (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_LCURLY_BLOCK_JS            (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_CONSTRUCTOR_JS             (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_FOR_CONTROL_JS             (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_INNER_NAME_JS              (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_OUTER_NAME_JS              (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_SUPER_LIST_JS              (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECL_INIT_JS               (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_IIFE_CALL_JS               (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_NAME_LIST_JS               (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_PROPERTY_JS                (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXTENDS_JS                 (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXPORT_JS                  (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_IMPORT_JS                  (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_LAMBDA_JS                  (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_OBJECT_JS                  (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_ARRAY_JS                   (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECL_JS                    (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_WITH_JS                    (bit(__COUNTER__));
+
+// TypeScript (appears as a namespace prefix)
+const srcMLState::MODE_TYPE ModeStack::MODE_TEMPLATE_ARGUMENT_TS       (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_COLON_TS        (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECL_STATEMENT_TS          (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_DECL_TS           (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECORATOR_TS               (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_INTERFACE_TS               (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_NAMESPACE_TS               (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_DECLARE_TS                 (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_MIXINS_TS                  (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_INDEX_TS                   (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_TYPE_TS                    (bit(__COUNTER__));
+
 // CMake modes
 const srcMLState::MODE_TYPE ModeStack::MODE_PAREN_ENDS_STATEMENT_CMAKE (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_BLOCK_STATEMENT_CMAKE      (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_WHILE_LOOP_CMAKE           (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_PROPAGATE_CMAKE            (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_PROPAGATE_STATEMENT_CMAKE  (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_ENDTOKEN_CMAKE             (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_CMAKE             (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_COMMAND_CMAKE              (bit(__COUNTER__));
@@ -139,3 +184,8 @@ const srcMLState::MODE_TYPE ModeStack::MODE_FOREACH_CMAKE              (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_INCLUDE_CMAKE              (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_OPTION_CMAKE               (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_MACRO_CMAKE                (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_NAME_CMAKE      (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_ENV_CMAKE       (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_CACHE_CMAKE     (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_GENERATOR_CMAKE (bit(__COUNTER__));
+
