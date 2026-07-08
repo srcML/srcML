@@ -20990,7 +20990,10 @@ javascript_parameter_list[] { CompleteElement element(this); size_t bracket_type
             }?
             complete_typescript_parameter |
 
-            complete_javascript_parameter
+            complete_javascript_parameter |
+
+            // failsafe to catch extraneous, invalid LPAREN
+            paren_pair
         )*
 
         rparen[false]
