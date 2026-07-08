@@ -9886,7 +9886,6 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
                     ({ inLanguage(LANGUAGE_JAVASCRIPT) }? qmark_period | period)
 
                     {
-                        std::cerr << "LA(-1) is " << last_consumed << ", and LA(1) is " << LA(1) << '\n';
                         // end the name early if the compound name is malformed
                         if (
                             inLanguage(LANGUAGE_JAVASCRIPT)
