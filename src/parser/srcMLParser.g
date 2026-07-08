@@ -2201,7 +2201,18 @@ javascript_rules[] {
         colon |
 
         // must be an expression statement; do not invoke pattern_statements[]
-        { inMode(MODE_NEST | MODE_STATEMENT) }?
+        {
+            inMode(MODE_NEST | MODE_STATEMENT)
+            || (inPrevMode(MODE_BLOCK) && inMode(MODE_PARAMETER_LIST_JS) && inTransparentMode(MODE_STATEMENT))
+        }?
+        {
+            // @TODO: this is a bug that must exist for the time being;
+            // eventually, fix MODE_PARAMETER_LIST_JS to end properly
+            if (inMode(MODE_PARAMETER_LIST_JS)) {
+                endDownOverMode(MODE_STATEMENT);
+                startNewMode(MODE_NEST | MODE_STATEMENT);
+            }
+        }
         expression_statement[type, call_count] |
 
         // in the middle of a statement
@@ -3763,7 +3774,13 @@ perform_call_check[CALL_TYPE& type, bool& isempty, int& call_count, int secondto
             call_check(postnametoken, argumenttoken, postcalltoken, isempty, call_count);
 
             // do not mark "NAME() =>" as a call in JavaScript
-            if (inLanguage(LANGUAGE_JAVASCRIPT) && (postcalltoken == JS_ARROW || postcalltoken == LBRACKET))
+            if (
+                inLanguage(LANGUAGE_JAVASCRIPT)
+                && (
+                    postcalltoken == JS_ARROW
+                    || (postcalltoken == LBRACKET && !inTransparentMode(MODE_DECORATOR_TS))
+                )
+            )
                 throw antlr::RecognitionException();
 
             // call syntax succeeded
@@ -21573,21 +21590,16 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
         {
             if (markup) {
                 startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
-                int first_token = LA(1);
-                int second_token = next_token();
-                int third_token = next_token_two();
+                int function_keyword = perform_function_keyword_check_js();
 
                 // found a getter
-                if (first_token == JS_GET || second_token == JS_GET || third_token == JS_GET)
+                if (function_keyword == JS_GET)
                     startElement(SFUNCTION_GET_STATEMENT);
                 // found a setter
-                else if (first_token == JS_SET || second_token == JS_SET || third_token == JS_SET)
+                else if (function_keyword == JS_SET)
                     startElement(SFUNCTION_SET_STATEMENT);
                 // found a generator function
-                else if (
-                    (first_token == JS_FUNCTION && second_token == MULTOPS)
-                    || (second_token == JS_FUNCTION && third_token == MULTOPS)
-                )
+                else if (function_keyword == MULTOPS)
                     startElement(SFUNCTION_GENERATOR_STATEMENT);
                 // found a function
                 else
@@ -21652,6 +21664,57 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
             }
         }
 ;
+
+/*
+  perform_function_keyword_check_js
+
+  Checks which keyword starts a function (after decorators, specifiers, etc.) in JavaScript/TypeScript.
+*/
+perform_function_keyword_check_js[] returns [int token] {
+        ENTRY_DEBUG
+
+        token = 0;
+        int bracket_count = 0;  // "[]", "{}", and "()"
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LBRACKET || LA(1) == LCURLY || LA(1) == LPAREN)
+                    ++bracket_count;
+                if (LA(1) == RBRACKET || LA(1) == RCURLY || LA(1) == RPAREN)
+                    --bracket_count;
+
+                if (bracket_count < 0)
+                    break;
+
+                if (
+                    bracket_count == 0
+                    && (
+                        LA(1) == JS_FUNCTION
+                        || LA(1) == JS_GET
+                        || LA(1) == JS_SET
+                    )
+                ) {
+                    token = LA(1);
+                    consume();
+
+                    // detect "function*"
+                    if (token == JS_FUNCTION && LA(1) == MULTOPS)
+                        token = LA(1);
+
+                    break;
+                }
+
+                consume();
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
 
 /*
   expression_block_js
@@ -21786,12 +21849,46 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
         try {
             // consume optional decorator before checking
             while (LA(1) == TS_ATSIGN) {
-                while (LA(1) != TERMINATE && LA(1) != 1 /* EOF */) {
+                consume();  // "@"
+
+                while (LA(1) != 1 /* EOF */) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
                     consume();
+
+                    if (bracket_count < 0)
+                        break;
+
+                    if (
+                        bracket_count == 0
+                        && (
+                            LA(1) == TS_ATSIGN
+                            || LA(1) == CLASS
+                            || LA(1) == JS_CONSTRUCTOR
+                            || LA(1) == JS_FUNCTION
+                            || LA(1) == JS_GET
+                            || LA(1) == JS_SET
+                            || LA(1) == LBRACKET
+                            || LA(1) == MULTOPS
+                            || LA(1) == NAME
+                            || LA(1) == TS_ENUM
+                            || LA(1) == TERMINATE
+                            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || specifier_js_token_set.member((unsigned int) LA(1))
+                            || literal_tokens_set.member((unsigned int) LA(1))
+                        )
+                    )
+                        break;
                 }
                 if (LA(1) == TERMINATE) {
                     consume();
                 }
+
+                bracket_count = 0;
             }
 
             // consume optional specifiers before checking
@@ -25585,16 +25682,23 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
 
         keywords[0] = -1;
         keywords[1] = -1;
+        int bracket_count = 0;  // "[]", "{}", and "()"
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
             while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                    ++bracket_count;
+                if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                    --bracket_count;
+
                 consume();
 
                 if (
-                    LA(1) == CLASS
+                    bracket_count < 0
+                    || LA(1) == CLASS
                     || LA(1) == JS_CONSTRUCTOR
                     || LA(1) == JS_FUNCTION
                     || LA(1) == JS_GET
@@ -25628,10 +25732,12 @@ perform_post_attribute_check_ts[] returns [std::array<int, 2> keywords] {
 
   Used to mark decorators (e.g., "@decorator") as attributes in TypeScript.
 */
-attribute_ts[] { ENTRY_DEBUG } :
+attribute_ts[] { size_t bracket_types_size = 0; ENTRY_DEBUG } :
         {
             startNewMode(MODE_DECORATOR_TS);
             startElement(STS_ATTRIBUTE);
+
+            bracket_types_size = bracket_types_js.size();
         }
 
         TS_ATSIGN
@@ -25639,25 +25745,30 @@ attribute_ts[] { ENTRY_DEBUG } :
         (options { greedy = true; } :
             // decorator ends at another "@", a corresponding class/function, or a type in a parameter
             {
-                LA(1) == TS_ATSIGN
-                || LA(1) == CLASS
-                || LA(1) == JS_CONSTRUCTOR
-                || LA(1) == JS_FUNCTION
-                || LA(1) == JS_GET
-                || LA(1) == JS_SET
-                || LA(1) == TS_ENUM
-                || LA(1) == TERMINATE
-                || (
-                    inTransparentMode(MODE_PARAMETER)
-                    && LA(1) == NAME
-                    && next_token() == COLON
+                (
+                    last_consumed != TS_ATSIGN
+                    && bracket_types_size == bracket_types_js.size()
+                    && (
+                        LA(1) == TS_ATSIGN
+                        || LA(1) == CLASS
+                        || LA(1) == JS_CONSTRUCTOR
+                        || LA(1) == JS_FUNCTION
+                        || LA(1) == JS_GET
+                        || LA(1) == JS_SET
+                        || LA(1) == LBRACKET
+                        || LA(1) == MULTOPS
+                        || LA(1) == NAME
+                        || LA(1) == TS_ENUM
+                        || LA(1) == TERMINATE
+                        || (
+                            inTransparentMode(MODE_DECL_STATEMENT_TS)
+                            && declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        )
+                        || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        || specifier_js_token_set.member((unsigned int) LA(1))
+                        || literal_tokens_set.member((unsigned int) LA(1))
+                    )
                 )
-                || (
-                    inTransparentMode(MODE_DECL_STATEMENT_TS)
-                    && declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-                )
-                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-                || specifier_js_token_set.member((unsigned int) LA(1))
                 || LA(1) == 1 /* EOF */
             }?
             {

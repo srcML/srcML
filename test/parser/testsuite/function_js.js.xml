@@ -317,6 +317,15 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><name>_a</name> <operator>=</operator> <class>class <name>C</name> <block>{
+        <expr_stmt><expr><function><name>method1</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+        <expr_stmt><expr><function><name type="computed">[<expr><literal type="string">"method2"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+    }</block></class></expr></return>
+</block_content>}</block></function>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
     <expr_stmt><expr><function><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
