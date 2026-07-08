@@ -441,14 +441,18 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         // the current token is "catch" and the previous nonwhitespace token is "."
         || (token->getType() == srcMLParser::JS_CATCH && prevNonWhitespaceToken->getType() == srcMLParser::PERIOD)
 
-        // both the previous nonwhitespace token and the current token are "accessor"
-        || (prevNonWhitespaceToken->getType() == srcMLParser::TS_ACCESSOR && token->getType() == srcMLParser::TS_ACCESSOR)
-
-        // ...
+        // the current token is "accessor" one of the following is true:
+        // - the next token is NOT a keyword
+        // - the previous nonwhitespace is "accessor"
         || (
             token->getType() == srcMLParser::TS_ACCESSOR
-            && !srcMLParser::name_differentiator_js_token_set.member(nextToken->getType())
-            && nextToken->getType() != srcMLParser::TS_ENUM
+            && (
+                (
+                    !srcMLParser::name_differentiator_js_token_set.member(nextToken->getType())
+                    && nextToken->getType() != srcMLParser::TS_ENUM
+                )
+                || prevNonWhitespaceToken->getType() == srcMLParser::TS_ACCESSOR
+            )
         )
 
         // the current token is "async" and one of the following is true:

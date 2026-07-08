@@ -25795,10 +25795,7 @@ attribute_ts[] { size_t bracket_types_size = 0; ENTRY_DEBUG } :
                         || LA(1) == NAME
                         || LA(1) == TS_ENUM
                         || LA(1) == TERMINATE
-                        || (
-                            inTransparentMode(MODE_DECL_STATEMENT_TS)
-                            && declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-                        )
+                        || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
                         || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
                         || specifier_js_token_set.member((unsigned int) LA(1))
                         || literal_tokens_set.member((unsigned int) LA(1))
