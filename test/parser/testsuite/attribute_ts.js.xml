@@ -36,24 +36,6 @@ class <name>BugReport</name> <block>{
 <class><specifier>export</specifier> <specifier>default</specifier> <ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <ts:specifier>abstract</ts:specifier> class <name>C12</name> <block>{}</block></class>
 </unit>
 
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<class>class <name>C</name> <block>{
-    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <name>method1</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
-}</block></class>
-</unit>
-
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<class>class <name>C</name> <block>{
-    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <name type="computed">[<expr><literal type="string">"method2"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
-}</block></class>
-</unit>
-
-<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<class>class <name>C</name> <block>{
-    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <name type="computed">[<expr><name>method3</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
-}</block></class>
-</unit>
-
 <!-- Attributes on functions ("function") -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -175,6 +157,24 @@ enum <name>E</name> <block>{
   <name>greet</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><literal type="string">"Hello, "</literal> <operator>+</operator> <name><name>this</name><operator>.</operator><name>greeting</name></name></expr></return>
   </block_content>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <name>method1</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <name type="computed">[<expr><literal type="string">"method2"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <name type="computed">[<expr><name>method3</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
 }</block></class>
 </unit>
 
@@ -313,6 +313,18 @@ enum <name>E</name> <block>{
 <class>class <name>C</name> <block>{
     <decl_stmt><ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <decl><ts:specifier>public</ts:specifier> <name>prop</name></decl></decl_stmt>
 }</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{
+    <decl_stmt><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>, <argument><expr><literal type="number">3</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <decl><name>field</name><ts:type>: <literal type="undefined">undefined</literal></ts:type></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{
+    <decl_stmt><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>, <argument><expr><literal type="number">2</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <decl><ts:specifier>static</ts:specifier> <name>field</name><ts:type>: <literal type="undefined">undefined</literal></ts:type></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
 </unit>
 
 </unit>

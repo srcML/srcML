@@ -67,6 +67,7 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
             && token->getType() != srcMLParser::JS_GET
             && token->getType() != srcMLParser::JS_SET
             && token->getType() != srcMLParser::NAME
+            && token->getType() != srcMLParser::TS_ACCESSOR
             && token->getType() != srcMLParser::TS_PRIVATE
             && token->getType() != srcMLParser::TS_PROTECTED
             && token->getType() != srcMLParser::TS_PUBLIC
@@ -439,6 +440,9 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
 
         // the current token is "catch" and the previous nonwhitespace token is "."
         || (token->getType() == srcMLParser::JS_CATCH && prevNonWhitespaceToken->getType() == srcMLParser::PERIOD)
+
+        // both the previous nonwhitespace token and the current token are "accessor"
+        || (prevNonWhitespaceToken->getType() == srcMLParser::TS_ACCESSOR && token->getType() == srcMLParser::TS_ACCESSOR)
 
         // the current token is "async" and one of the following is true:
         // - the next token is ":", ",", "=>", "in", "of", "?", or ")"

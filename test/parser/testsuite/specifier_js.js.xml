@@ -123,7 +123,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <name>Metadata</name> <block>{
-  <decl_stmt><decl type="static"><ts:specifier>private</ts:specifier> static <ts:specifier>readonly</ts:specifier> <name>_undefinedValue</name> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
+  <decl_stmt><decl><ts:specifier>private</ts:specifier> <ts:specifier>static</ts:specifier> <ts:specifier>readonly</ts:specifier> <name>_undefinedValue</name> <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
 }</block></class>
 </unit>
 

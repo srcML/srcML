@@ -1861,6 +1861,7 @@ javascript_statements[] {
         // - a "+", "-", or "~" followed by a NAME
         if (
             inMode(MODE_STATEMENT)
+            && (LA(1) != JS_STATIC || (LA(1) == JS_STATIC && perform_in_class_block_check_js()))
             && (
                 // type declaration statement in non-interface blocks
                 (
@@ -25268,33 +25269,63 @@ perform_declaration_statement_check_ts[] returns [bool isdecl] {
 
         isdecl = false;
         last_consumed_guessing_mode = -1;
+        int bracket_count = 0;  // for TypeScript types
         bool continue_guessing = false;
         bool found_specifier = false;
         int start = mark();
         inputState->guessing++;
 
         try {
-            // consume decorator(s) before checking
+            // consume optional decorator before checking
             while (LA(1) == TS_ATSIGN) {
-                while (
-                    LA(1) != CLASS
-                    && LA(1) != JS_FUNCTION
-                    && LA(1) != JS_GET
-                    && LA(1) != JS_SET
-                    && LA(1) != TERMINATE
-                    && !declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-                    && LA(1) != 1 /* EOF */
-                ) {
+                consume();  // "@"
+
+                while (LA(1) != 1 /* EOF */) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
                     consume();
+
+                    if (bracket_count < 0)
+                        break;
+
+                    if (
+                        bracket_count == 0
+                        && (
+                            LA(1) == TS_ATSIGN
+                            || LA(1) == CLASS
+                            || LA(1) == JS_CONSTRUCTOR
+                            || LA(1) == JS_FUNCTION
+                            || LA(1) == JS_GET
+                            || LA(1) == JS_SET
+                            || LA(1) == LBRACKET
+                            || LA(1) == MULTOPS
+                            || LA(1) == NAME
+                            || LA(1) == TS_ENUM
+                            || LA(1) == TERMINATE
+                            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || specifier_js_token_set.member((unsigned int) LA(1))
+                            || literal_tokens_set.member((unsigned int) LA(1))
+                        )
+                    )
+                        break;
                 }
                 if (LA(1) == TERMINATE) {
                     consume();
                 }
+
+                bracket_count = 0;
             }
 
             // consume optional specifiers (required if looking for "=" case)
-            while (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
-                declaration_specifiers_ts();
+            while (
+                declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            ) {
+                consume();
                 found_specifier = true;
             }
 
@@ -25437,7 +25468,7 @@ declaration_ts[] { ENTRY_DEBUG } :
         }
 
         (
-            (declaration_specifiers_ts)*
+            (declaration_specifiers_ts | function_declaration_specifiers_ts)*
 
             // optional declaration unary operators
             (options { greedy = true; } :
@@ -25655,7 +25686,7 @@ declaration_specifiers_ts[] { LightweightElement element(this); ENTRY_DEBUG } :
             startElement(STS_SPECIFIER);
         }
 
-        (TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
+        (TS_ACCESSOR | TS_DECLARE | TS_OVERRIDE | TS_READONLY | TS_PRIVATE | TS_PROTECTED | TS_PUBLIC)
 ;
 
 /*
@@ -25822,26 +25853,54 @@ perform_decorator_function_expression_check_ts[] returns [bool isfunction] {
         ENTRY_DEBUG
 
         isfunction = false;
+        int bracket_count = 0;  // for TypeScript types
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            // consume decorator(s) before checking
+            // consume optional decorator before checking
             while (LA(1) == TS_ATSIGN) {
-                while (
-                    LA(1) != CLASS
-                    && LA(1) != JS_FUNCTION
-                    && LA(1) != JS_GET
-                    && LA(1) != JS_SET
-                    && LA(1) != TERMINATE
-                    && LA(1) != 1 /* EOF */
-                ) {
+                consume();  // "@"
+
+                while (LA(1) != 1 /* EOF */) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
                     consume();
+
+                    if (bracket_count < 0)
+                        break;
+
+                    if (
+                        bracket_count == 0
+                        && (
+                            LA(1) == TS_ATSIGN
+                            || LA(1) == CLASS
+                            || LA(1) == JS_CONSTRUCTOR
+                            || LA(1) == JS_FUNCTION
+                            || LA(1) == JS_GET
+                            || LA(1) == JS_SET
+                            || LA(1) == LBRACKET
+                            || LA(1) == MULTOPS
+                            || LA(1) == NAME
+                            || LA(1) == TS_ENUM
+                            || LA(1) == TERMINATE
+                            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || specifier_js_token_set.member((unsigned int) LA(1))
+                            || literal_tokens_set.member((unsigned int) LA(1))
+                        )
+                    )
+                        break;
                 }
                 if (LA(1) == TERMINATE) {
                     consume();
                 }
+
+                bracket_count = 0;
             }
 
             // consume optional "async" or "static" before checking
@@ -25868,26 +25927,54 @@ perform_post_decorator_check_ts[] returns [std::array<int, 2> keywords] {
 
         keywords[0] = -1;
         keywords[1] = -1;
+        int bracket_count = 0;  // for TypeScript types
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
 
         try {
-            // consume decorator(s) before checking
+            // consume optional decorator before checking
             while (LA(1) == TS_ATSIGN) {
-                while (
-                    LA(1) != CLASS
-                    && LA(1) != JS_FUNCTION
-                    && LA(1) != JS_GET
-                    && LA(1) != JS_SET
-                    && LA(1) != TERMINATE
-                    && LA(1) != 1 /* EOF */
-                ) {
+                consume();  // "@"
+
+                while (LA(1) != 1 /* EOF */) {
+                    if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                        ++bracket_count;
+                    if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                        --bracket_count;
+
                     consume();
+
+                    if (bracket_count < 0)
+                        break;
+
+                    if (
+                        bracket_count == 0
+                        && (
+                            LA(1) == TS_ATSIGN
+                            || LA(1) == CLASS
+                            || LA(1) == JS_CONSTRUCTOR
+                            || LA(1) == JS_FUNCTION
+                            || LA(1) == JS_GET
+                            || LA(1) == JS_SET
+                            || LA(1) == LBRACKET
+                            || LA(1) == MULTOPS
+                            || LA(1) == NAME
+                            || LA(1) == TS_ENUM
+                            || LA(1) == TERMINATE
+                            || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                            || specifier_js_token_set.member((unsigned int) LA(1))
+                            || literal_tokens_set.member((unsigned int) LA(1))
+                        )
+                    )
+                        break;
                 }
                 if (LA(1) == TERMINATE) {
                     consume();
                 }
+
+                bracket_count = 0;
             }
 
             // consume optional "async" or "static" before checking

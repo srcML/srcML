@@ -391,6 +391,30 @@ tokens {
     JS_YIELD;
     QMARK_PERIOD;
 
+    // TypeScript (appears as a namespace prefix)
+    TS_ABSTRACT;
+    TS_ACCESSOR;
+    TS_ASSERTS;
+    TS_ATSIGN;
+    TS_DATSIGN;
+    TS_DECLARE;
+    TS_ENUM;
+    TS_IMPLEMENTS;
+    TS_INFER;
+    TS_INTERFACE;
+    TS_IS;
+    TS_KEYOF;
+    TS_MODULE;
+    TS_NAMESPACE;
+    TS_OVERRIDE;
+    TS_PRIVATE;
+    TS_PROTECTED;
+    TS_PUBLIC;
+    TS_READONLY;
+    TS_SATISFIES;
+    TS_TYPE;
+
+    // CMake
     CMAKE_BLOCK;
     CMAKE_COMPILER_FLAG;
     CMAKE_ENDBLOCK;
@@ -413,28 +437,6 @@ tokens {
     CMAKE_RCURLY;
     CMAKE_SCOPE_FOR;
     CMAKE_ZIP_LISTS;
-
-    // TypeScript (appears as a namespace prefix)
-    TS_ABSTRACT;
-    TS_ASSERTS;
-    TS_ATSIGN;
-    TS_DATSIGN;
-    TS_DECLARE;
-    TS_ENUM;
-    TS_IMPLEMENTS;
-    TS_INFER;
-    TS_INTERFACE;
-    TS_IS;
-    TS_KEYOF;
-    TS_MODULE;
-    TS_NAMESPACE;
-    TS_OVERRIDE;
-    TS_PRIVATE;
-    TS_PROTECTED;
-    TS_PUBLIC;
-    TS_READONLY;
-    TS_SATISFIES;
-    TS_TYPE;
 }
 
 {
@@ -1043,6 +1045,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         // TypeScript (appears as a namespace prefix)
         { "abstract"     , TS_ABSTRACT       , LANGUAGE_JAVASCRIPT },
+        { "accessor"     , TS_ACCESSOR       , LANGUAGE_JAVASCRIPT },
         { "asserts"      , TS_ASSERTS        , LANGUAGE_JAVASCRIPT },
         { "declare"      , TS_DECLARE        , LANGUAGE_JAVASCRIPT },
         { "enum"         , TS_ENUM           , LANGUAGE_JAVASCRIPT },

@@ -315,10 +315,11 @@ token_set(srcMLParser, name_differentiator_js_token_set,
     srcMLParser::JS_WITH, srcMLParser::JS_YIELD,
 
     // TypeScript keywords (excludes "enum")
-    srcMLParser::TS_ABSTRACT, srcMLParser::TS_ASSERTS, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS,
-    srcMLParser::TS_INFER, srcMLParser::TS_INTERFACE, srcMLParser::TS_IS, srcMLParser::TS_KEYOF, srcMLParser::TS_MODULE,
-    srcMLParser::TS_NAMESPACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED,
-    srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY, srcMLParser::TS_SATISFIES, srcMLParser::TS_TYPE
+    srcMLParser::TS_ABSTRACT, srcMLParser::TS_ACCESSOR, srcMLParser::TS_ASSERTS, srcMLParser::TS_DECLARE,
+    srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INFER, srcMLParser::TS_INTERFACE, srcMLParser::TS_IS,
+    srcMLParser::TS_KEYOF, srcMLParser::TS_MODULE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_OVERRIDE,
+    srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY,
+    srcMLParser::TS_SATISFIES, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, name_differentiator_subset_js_token_set,
@@ -334,9 +335,9 @@ token_set(srcMLParser, name_differentiator_subset_js_token_set,
     srcMLParser::JS_WITH,
 
     // TypeScript keywords
-    srcMLParser::TS_ABSTRACT, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS, srcMLParser::TS_INTERFACE,
-    srcMLParser::TS_MODULE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
-    srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_TYPE
+    srcMLParser::TS_ABSTRACT, srcMLParser::TS_ACCESSOR, srcMLParser::TS_DECLARE, srcMLParser::TS_IMPLEMENTS,
+    srcMLParser::TS_INTERFACE, srcMLParser::TS_MODULE, srcMLParser::TS_NAMESPACE, srcMLParser::TS_OVERRIDE,
+    srcMLParser::TS_PRIVATE, srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_TYPE
 )
 
 token_set(srcMLParser, insert_terminate_js_token_set,
@@ -362,7 +363,7 @@ token_set(srcMLParser, keyword_expression_pair_js_token_set,
 
 token_set(srcMLParser, declaration_specifiers_ts_token_set,
     // TypeScript specifiers on a declaration
-    srcMLParser::TS_DECLARE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
+    srcMLParser::TS_ACCESSOR, srcMLParser::TS_DECLARE, srcMLParser::TS_OVERRIDE, srcMLParser::TS_PRIVATE,
     srcMLParser::TS_PROTECTED, srcMLParser::TS_PUBLIC, srcMLParser::TS_READONLY
 )
 

@@ -11,6 +11,20 @@
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
+<!-- "accessor" -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{
+    <decl_stmt><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">3</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">4</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <decl><ts:specifier>accessor</ts:specifier> <name>accessor</name><ts:type>: <literal type="undefined">undefined</literal></ts:type></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{
+    <decl_stmt><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">4</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <decl><ts:specifier>static</ts:specifier> <ts:specifier>accessor</ts:specifier> <name>accessor</name><ts:type>: <literal type="undefined">undefined</literal></ts:type></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "as" -->
 
 <unit revision="1.0.0" language="JavaScript">
