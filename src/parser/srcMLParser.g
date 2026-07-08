@@ -25609,7 +25609,8 @@ constraint_ts[] { CompleteElement element(this); size_t bracket_types_size = 0; 
                 declaration_modifiers_ts();
         }
 
-        colon_type_ts
+        // ": type" is technically optional
+        ({ LA(1) == COLON }? colon_type_ts)?
 ;
 
 /*

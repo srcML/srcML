@@ -65,6 +65,14 @@
 }</block></class>
 </unit>
 
+<!-- Constraints without Ending Types -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<name>p1</name><ts:type>: <name>string</name></ts:type>]</index></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
 <!-- The following should NOT be marked as constraints, although they look similar -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
