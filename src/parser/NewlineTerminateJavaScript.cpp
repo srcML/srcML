@@ -214,6 +214,7 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                 )
                 && (
                     srcMLParser::insert_terminate_eol_js_token_set.member(nextNonSkipToken->getType())
+                    || nextNonSkipToken->getType() == srcMLParser::LBRACKET
                     || nextNonSkipToken->getType() == srcMLParser::LPAREN
                 )
                 && (

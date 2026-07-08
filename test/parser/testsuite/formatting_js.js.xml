@@ -241,6 +241,16 @@
 <expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><array>[<expr><name>_1</name></expr>, <expr><name>_2</name> <operator>=</operator> <literal type="undefined">undefined</literal></expr>]</array></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="undefined">undefined</literal></expr></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>B</name> <init>= <expr><class>class <block>{
+    <static>static <block>{<block_content>
+        <decl_stmt><decl type="const">const <name>_metadata</name> <init>= <expr><operator>void</operator></expr></init></decl></decl_stmt>
+    </block_content>}</block></static>
+
+    <decl_stmt><decl><name type="computed">[<expr><call><name>f</name><argument_list>(<argument><expr><name>this</name></expr></argument>)</argument_list></call></expr>]</name> <init>= <expr><literal type="number">1</literal></expr></init></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Statement with Blocks followed by Bare Blocks -->
 
 <unit revision="1.0.0" language="JavaScript">

@@ -321,7 +321,7 @@
 <function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><name>_a</name> <operator>=</operator> <class>class <name>C</name> <block>{
         <expr_stmt><expr><function><name>method1</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
-        <expr_stmt><expr><function><name type="computed">[<expr><literal type="string">"method2"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+        <function><name type="computed">[<expr><literal type="string">"method2"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
     }</block></class></expr></return>
 </block_content>}</block></function>
 </unit>
