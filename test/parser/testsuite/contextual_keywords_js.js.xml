@@ -12,6 +12,23 @@
 </unit>
 
 <!-- "accessor" -->
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>getAllAccessorDeclarationsForDeclaration</name><parameter_list>(<parameter><decl><name>accessor</name><ts:type>: <name>AccessorDeclaration</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>AllAccessorDeclarations</name></ts:type> <block>{<block_content>
+    <expr_stmt><expr><name>accessor</name> <operator>=</operator> <call><name>getParseTreeNode</name><argument_list>(<argument><expr><name>accessor</name></expr></argument>, <argument><expr><name>isGetOrSetAccessorDeclaration</name></expr></argument>)</argument_list></call><operator>!</operator></expr></expr_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>getAllAccessorDeclarationsForDeclaration</name><parameter_list>(<parameter><decl><name>accessor</name><ts:type>: <name>AccessorDeclaration</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>AllAccessorDeclarations</name></ts:type> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>otherAccessor</name> <init>= <expr><call><name><name>getDeclarationOfKind</name><argument_list type="generic">&lt;<argument><expr><name>AccessorDeclaration</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><call><name>getSymbolOfDeclaration</name><argument_list>(<argument><expr><name>accessor</name></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><name>otherKind</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>getAllAccessorDeclarationsForDeclaration</name><parameter_list>(<parameter><decl><name>accessor</name><ts:type>: <name>AccessorDeclaration</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>AllAccessorDeclarations</name></ts:type> <block>{<block_content>
+    <decl_stmt><decl type="const">const <name>setAccessor</name> <init>= <expr><ternary><condition><expr><name><name>accessor</name><operator>.</operator><name>kind</name></name> <operator>===</operator> <name><name>SyntaxKind</name><operator>.</operator><name>SetAccessor</name></name></expr> ?</condition><then> <expr><name>accessor</name></expr> </then><else>: <expr><name>otherAccessor</name> <operator>as</operator> <name>SetAccessorDeclaration</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{
@@ -23,6 +40,10 @@
 <decl_stmt><decl type="const">const <name>Foo</name> <init>= <expr><class>class <block>{
     <decl_stmt><ts:attribute>@<expr><call><name>dec</name><argument_list>(<argument><expr><literal type="number">4</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>, <argument><expr><literal type="number">1</literal></expr></argument>, <argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></ts:attribute> <decl><ts:specifier>static</ts:specifier> <ts:specifier>accessor</ts:specifier> <name>accessor</name><ts:type>: <literal type="undefined">undefined</literal></ts:type></decl></decl_stmt>
 }</block></class></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>getAllAccessorDeclarationsForDeclaration</name><parameter_list>(<parameter><decl><name>accessor</name><ts:type>: <name>AccessorDeclaration</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>AllAccessorDeclarations</name></ts:type> <block>{<block_content/>}</block></function>
 </unit>
 
 <!-- "as" -->
