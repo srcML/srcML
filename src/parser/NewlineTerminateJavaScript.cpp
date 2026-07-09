@@ -358,6 +358,13 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                 && token->getText() == "!"
                 && nextNonSkipToken->getType() == srcMLParser::NAME
             )
+
+            // an EOL separates ">" and "<" if the "<" is on a different line
+            || (
+                containsEOL
+                && token->getType() == srcMLParser::TEMPOPE
+                && nextNonSkipToken->getType() == srcMLParser::TEMPOPS
+            )
         )
     );
 }

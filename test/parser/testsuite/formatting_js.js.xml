@@ -285,6 +285,15 @@
     </then><else>: <expr><name>C</name></expr></else></ternary></expr></else></ternary></ts:type></ts:typedef>
 </unit>
 
+<!-- TypeScript Generic Lambdas with no Terminates -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><ts:specifier>declare</ts:specifier> const <name>filter</name><ts:type>: <block>{
+    <ts:function_decl><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>, <argument><expr><name>B</name> <ts:extends>extends <ts:type><name>A</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>refinement</name><ts:type>: <name><name>Refinement</name><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>, <argument><expr><name>B</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list><ts:type>: <lambda><parameter_list>(<parameter><decl><name>as</name><ts:type>: <name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>B</name></expr></argument>&gt;</argument_list></name></expr></lambda></ts:type></ts:function_decl>
+    <ts:function_decl><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>predicate</name><ts:type>: <name><name>Predicate</name><argument_list type="generic">&lt;<argument><expr><name>A</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>B</name> <ts:extends>extends <ts:type><name>A</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>bs</name><ts:type>: <name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>B</name></expr></argument>&gt;</argument_list></name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name><name>ReadonlyArray</name><argument_list type="generic">&lt;<argument><expr><name>B</name></expr></argument>&gt;</argument_list></name></ts:type></lambda></ts:type></ts:function_decl>
+}</block></ts:type></decl></decl_stmt>
+</unit>
+
 <!-- TypeScript "enum" LCURLY Detection -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
