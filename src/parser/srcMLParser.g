@@ -1726,10 +1726,12 @@ javascript_statements[] {
         // special case: detect labels that occur before a statement or a block
         if (
             !inMode(MODE_IGNORE_LABEL_JS)
+            && last_consumed != COMMA
             && LA(1) == NAME
             && next_token() == COLON
             && !inMode(MODE_PROPERTY_JS)
             && !inMode(MODE_TERNARY)
+            && !inTransparentMode(MODE_TYPE_TS)
             && !inPrevMode(MODE_TERNARY)
             && (next_token_two() != LCURLY || perform_label_with_block_check_js())
             && (

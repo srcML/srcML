@@ -555,4 +555,18 @@
 }</block></ts:type></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let"><ts:specifier>declare</ts:specifier> let <name>nestedrest</name><ts:type>: <block>{
+  <decl_stmt><decl><name>n1</name><ts:type>: <block>{
+    <decl_stmt><decl><name>y</name><ts:type>: <name>number</name></ts:type></decl>,</decl_stmt>
+    <decl_stmt><decl><name>n2</name><ts:type>: <block>{
+      <decl_stmt><decl><name>z</name><ts:type>: <name>number</name></ts:type></decl>,</decl_stmt>
+      <decl_stmt><decl><name>n3</name><ts:type>: <block>{
+        <decl_stmt><decl><name>n4</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
+      }</block></ts:type></decl></decl_stmt>
+    }</block></ts:type></decl></decl_stmt>
+  }</block></ts:type></decl>,</decl_stmt>
+}</block></ts:type></decl></decl_stmt>
+</unit>
+
 </unit>
