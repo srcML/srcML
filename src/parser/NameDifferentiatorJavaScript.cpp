@@ -485,7 +485,7 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         )
 
         // the current token is "async" and one of the following is true:
-        // - the next token is ":", ",", "=>", "in", "of", "?", or ")"
+        // - the next token is ":", ",", "=>", "in", "of", "?", ")", ";", or a subset of all operators
         // - the previous token was "async"
         // - the previous token was "=>" and the next token is NOT "async", "function", "(", nor a name
         // - the previous token was a subset of all keywords and the next token is NOT "async", "function",
@@ -500,6 +500,12 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                 || nextToken->getType() == srcMLParser::JS_RANGE_OF
                 || nextToken->getType() == srcMLParser::QMARK
                 || nextToken->getType() == srcMLParser::RPAREN
+                || nextToken->getType() == srcMLParser::TERMINATE
+                || (
+                    srcMLParser::general_operator_tokens_set.member(nextToken->getType())
+                    && nextToken->getType() != srcMLParser::MULTOPS
+                    && nextToken->getType() != srcMLParser::TEMPOPS
+                )
                 || prevNonWhitespaceToken->getType() == srcMLParser::JS_ASYNC
                 || (
                     prevNonWhitespaceToken->getType() == srcMLParser::JS_ARROW
