@@ -11,6 +11,10 @@
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>abstract</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "accessor" -->
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>getAllAccessorDeclarationsForDeclaration</name><parameter_list>(<parameter><decl><name>accessor</name><ts:type>: <name>AccessorDeclaration</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>AllAccessorDeclarations</name></ts:type> <block>{<block_content>
@@ -28,6 +32,10 @@
 <function>function <name>getAllAccessorDeclarationsForDeclaration</name><parameter_list>(<parameter><decl><name>accessor</name><ts:type>: <name>AccessorDeclaration</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>AllAccessorDeclarations</name></ts:type> <block>{<block_content>
     <decl_stmt><decl type="const">const <name>setAccessor</name> <init>= <expr><ternary><condition><expr><name><name>accessor</name><operator>.</operator><name>kind</name></name> <operator>===</operator> <name><name>SyntaxKind</name><operator>.</operator><name>SetAccessor</name></name></expr> ?</condition><then> <expr><name>accessor</name></expr> </then><else>: <expr><name>otherAccessor</name> <operator>as</operator> <name>SetAccessorDeclaration</name></expr></else></ternary></expr></init></decl></decl_stmt>
 </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>accessor</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -477,6 +485,10 @@
     </block_content>}</block></function>
     <return>return <expr><name>declare</name><operator>,</operator> <name>declare</name><operator>,</operator> <name>declare</name></expr></return>
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>declare</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "default" -->
@@ -1316,6 +1328,10 @@
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>override</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "private" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1324,6 +1340,10 @@
     </block_content>}</block></function>
     <return>return <expr><name>private</name><operator>,</operator> <name>private</name><operator>,</operator> <name>private</name></expr></return>
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>private</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "protected" -->
@@ -1336,6 +1356,10 @@
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>protected</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "public" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1344,6 +1368,10 @@
     </block_content>}</block></function>
     <return>return <expr><name>public</name><operator>,</operator> <name>public</name><operator>,</operator> <name>public</name></expr></return>
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>public</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "readonly" -->
@@ -1378,6 +1406,10 @@
     </block_content>}</block></function>
     <return>return <expr><name>readonly</name><operator>,</operator> <name>readonly</name><operator>,</operator> <name>readonly</name></expr></return>
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>readonly</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -1528,6 +1560,10 @@
     </block_content>}</block></function>
     <return>return <expr><name>static</name><operator>,</operator> <name>static</name><operator>,</operator> <name>static</name></expr></return>
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>static</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

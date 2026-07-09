@@ -218,6 +218,15 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
 
+        // the current token is a declaration specifier and the next token is "as"
+        || (
+            (
+                srcMLParser::declaration_specifiers_ts_token_set.member(token->getType())
+                || srcMLParser::function_declaration_specifiers_ts_token_set.member(token->getType())
+            )
+            && nextToken->getType() == srcMLParser::JS_AS
+        )
+
         // the current token is NOT "default" and the next token is ":"
         || (token->getType() != srcMLParser::JS_DEFAULT && nextToken->getType() == srcMLParser::COLON)
 
