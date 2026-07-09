@@ -24871,6 +24871,7 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
         isdecl = false;
         last_consumed_guessing_mode = -1;
         bool found_colon_assert = false;
+        bool found_specifier = false;
         int start = mark();
         inputState->guessing++;
 
@@ -24879,9 +24880,11 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
             while (LA(1) != antlr::Token::EOF_TYPE) {
                 if (function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
                     function_declaration_specifiers_ts();
+                    found_specifier = true;
                 }
                 else if (declaration_specifiers_ts_token_set.member((unsigned int) LA(1))) {
                     declaration_specifiers_ts();
+                    found_specifier = true;
                 }
                 else {
                     break;
@@ -25012,6 +25015,10 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
 
                     consume();
                 }
+            }
+            // found "SPECIFIER NAME();", a function declaration without an ending type
+            else if (found_specifier && LA(1) == TERMINATE && next_token() != LCURLY) {
+                isdecl = true;
             }
         }
         catch (...) {}

@@ -184,4 +184,18 @@
 }</block></ts:interface>
 </unit>
 
+<!-- Function Declarations without Ending Type -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <ts:function_decl><ts:specifier>private</ts:specifier> <name>foo</name><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>y</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list></ts:function_decl>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>C</name> <block>{
+    <ts:function_decl><ts:specifier>private</ts:specifier> <ts:specifier>static</ts:specifier> <name>foo</name><parameter_list>(<parameter><decl><name>x</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>y</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list></ts:function_decl>
+}</block></class>
+</unit>
+
 </unit>
