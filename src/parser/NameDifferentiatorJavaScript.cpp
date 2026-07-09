@@ -205,6 +205,26 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && nextToken->getType() == srcMLParser::TERMINATE
         )
 
+        // the previous token is "{", the current token is a subset of all table keywords, and the next token is "}"
+        || (
+            (
+                srcMLParser::table_keywords_js_token_set.member(token->getType())
+                && token->getType() != srcMLParser::BREAK
+                && token->getType() != srcMLParser::CONTINUE
+                && token->getType() != srcMLParser::RETURN
+            )
+            && (
+                (prevNonWhitespaceToken->getType() == srcMLParser::LCURLY && nextToken->getType() == srcMLParser::RCURLY)
+                || (
+                    prevNonWhitespaceToken->getType() == srcMLParser::COLON
+                    && (
+                        nextToken->getType() == srcMLParser::COMMA
+                        || nextToken->getType() == srcMLParser::RCURLY
+                    )
+                )
+            )
+        )
+
         // the previous token is a declaration specifier, current token is a keyword, and the next token is "=" or ";"
         || (
             srcMLParser::declaration_specifiers_ts_token_set.member(prevNonWhitespaceToken->getType())
