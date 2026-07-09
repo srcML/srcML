@@ -527,7 +527,7 @@ OPERATORS options { testLiterals = true; } {
         STRING_START )? |
 
     // ?, ??, etc. (part of ternary); ?. (JavaScript), ??= (JavaScript)
-    '?' ('?')* ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '.')? ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')? |
+    '?' ('?' ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '=')?)* ({ inLanguage(LANGUAGE_JAVASCRIPT) }? '.')? |
 
     '~' | // has to be separate if part of name
 

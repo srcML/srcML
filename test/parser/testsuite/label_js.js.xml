@@ -15,18 +15,18 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:typedef>type <name>BaseFactory</name> = <ts:type><block>{
     <ts:function_decl><parameter_list>()</parameter_list><ts:type>: <block>{}</block></ts:type></ts:function_decl>
-    <label><name>Base</name>:</label> <block>{<block_content>
+    <decl_stmt><decl><name>Base</name><ts:type>: <block>{
         <ts:function_decl><name>new</name> <parameter_list>()</parameter_list><ts:type>: <block>{}</block></ts:type></ts:function_decl>
-    </block_content>}</block>
+    }</block></ts:type></decl></decl_stmt>
 }</block></ts:type></ts:typedef>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:typedef>type <name>BaseFactoryFactory</name> = <ts:type><lambda><parameter_list>(<parameter><decl><name>factory</name><ts:type>: <block>{
     <ts:function_decl><parameter_list>()</parameter_list><ts:type>: <block>{}</block></ts:type></ts:function_decl>
-    <label><name>Base</name>:</label> <block>{<block_content>
+    <decl_stmt><decl><name>Base</name><ts:type>: <block>{
         <ts:function_decl><name>new</name> <parameter_list>()</parameter_list><ts:type>: <block>{}</block></ts:type></ts:function_decl>
-    </block_content>}</block>
+    }</block></ts:type></decl></decl_stmt>
 }</block></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><name>any</name></expr></lambda></ts:type>;</ts:typedef>
 </unit>
 
