@@ -13697,11 +13697,24 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         declaration_modifiers_ts |
 
         // special case: handle declaration specifiers if they appear in an argument
-        { inLanguage(LANGUAGE_JAVASCRIPT) && (LA(1) == TS_READONLY || inPrevMode(MODE_ARGUMENT)) }?
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                LA(1) == TS_READONLY
+                || inPrevMode(MODE_ARGUMENT)
+                || inTransparentMode(MODE_CONSTRAINT_TS)
+            )
+        }?
         declaration_specifiers_ts |
 
-        // special case: mark "abstract" as a specifier if in operator parentheses
-        { inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN" }?
+        // special case: mark "abstract" as a specifier if in operator parentheses or constraints
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                bracket_types_js.back() == "oLPAREN"
+                || inTransparentMode(MODE_CONSTRAINT_TS)
+            )
+        }?
         function_declaration_specifiers_ts |
 
         // special case: generic types (mixins) using the "extends" keyword in TypeScript

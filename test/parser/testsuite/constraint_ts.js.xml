@@ -65,6 +65,56 @@
 }</block></class>
 </unit>
 
+<!-- Specifiers in Constraints -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<ts:specifier>declare</ts:specifier> <name>x</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<ts:specifier>override</ts:specifier> <name>x</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<ts:specifier>readonly</ts:specifier> <name>x</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<ts:specifier>private</ts:specifier> <name>x</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<ts:specifier>protected</ts:specifier> <name>x</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<ts:specifier>public</ts:specifier> <name>x</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<ts:specifier>abstract</ts:specifier> <name>x</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<ts:interface>interface <name>I</name> <block>{
+    <decl_stmt><decl><ts:constraint><index>[<ts:specifier>static</ts:specifier> <name>x</name><ts:type>: <name>string</name></ts:type>]</index><ts:type>: <name>string</name></ts:type></ts:constraint></decl></decl_stmt>
+}</block></ts:interface>
+</unit>
+
 <!-- Constraints without Ending Types -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
