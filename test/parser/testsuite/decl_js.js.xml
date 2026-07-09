@@ -317,6 +317,10 @@
 <decl_stmt><decl type="using"><specifier>await</specifier> using <name>a</name> <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using">{<decl><name>b</name></decl>} <init>= <expr><literal type="null">null</literal></expr></init></decl>, <decl type="using"><name>c</name> <init>= <expr><literal type="null">null</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const { <expr><modifier>...</modifier><name>a</name></expr>: <decl><name>b</name></decl> } <init>= <expr><object>{}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Array Destructuring -->
 
 <unit revision="1.0.0" language="JavaScript">

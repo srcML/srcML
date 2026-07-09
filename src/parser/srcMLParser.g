@@ -13674,6 +13674,13 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         pseudo_generic_argument_list |
 
+        // special case: "..." in the LHS of a JavaScript property
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && perform_in_mode_before_expression_check_js(MODE_DECL_DESTRUCTURE_JS)
+        }?
+        tripledotop |
+
         // special case: mark "?", "+?", "-?", and "!" as modifiers in certain TypeScript instances
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
@@ -21389,7 +21396,15 @@ declaration_destructure_js[bool markup] { ENTRY_DEBUG } :
                         startNewMode(MODE_EXPRESSION | MODE_EXPECT);
                 }
 
-                expression
+                // consume all elements in an expression until the colon
+                (options { greedy = true; } :
+                    { LA(1) == COLON }?
+                    {
+                        break;
+                    } |
+
+                    expression
+                )*
 
                 {
                     endDownToMode(MODE_OBJECT_DESTRUCTURE_JS);
