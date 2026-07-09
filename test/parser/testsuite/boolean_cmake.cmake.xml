@@ -2,127 +2,253 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="boolean">
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>LINUX</name></expr></argument> <argument><expr><literal type="boolean" value="true">TRUE</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">TRUE</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>LINUX</name></expr></argument> <argument><expr><literal type="boolean" value="true">True</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">True</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>LINUX</name></expr></argument> <argument><expr><literal type="boolean" value="true">true</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">true</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>WINDOWS</name></expr></argument> <argument><expr><literal type="boolean" value="false">FALSE</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">FALSE</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>WINDOWS</name></expr></argument> <argument><expr><literal type="boolean" value="false">False</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">False</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>WINDOWS</name></expr></argument> <argument><expr><literal type="boolean" value="false">false</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">false</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_STANDARD_REQUIRED</name></expr></argument> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">ON</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_STANDARD_REQUIRED</name></expr></argument> <argument><expr><literal type="boolean" value="true">On</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">On</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_STANDARD_REQUIRED</name></expr></argument> <argument><expr><literal type="boolean" value="true">on</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">on</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">OFF</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">Off</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">Off</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">off</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">off</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><literal type="boolean" value="true">YES</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">YES</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><literal type="boolean" value="true">Yes</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">Yes</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><literal type="boolean" value="true">yes</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">yes</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><literal type="boolean" value="false">NO</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">NO</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><literal type="boolean" value="false">No</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">No</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><literal type="boolean" value="false">no</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">no</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">Y</literal></expr>)</condition><block>
-    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"Success."</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <if_stmt><if>if<condition>(<expr><literal type="boolean" value="true">y</literal></expr>)</condition><block>
-    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"Success."</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">N</literal></expr>)</condition><block>
-    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"Failed."</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
 <if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">n</literal></expr>)</condition><block>
-    <command><name>message</name><argument_list>(<argument><expr><literal type="string">"Failed."</literal></expr></argument>)</argument_list></command>
 </block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><literal type="boolean" value="false">IGNORE</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">IGNORE</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><literal type="boolean" value="false">Ignore</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">Ignore</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><literal type="boolean" value="false">ignore</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">ignore</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">NOTFOUND</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">NOTFOUND</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">NotFound</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">NotFound</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">Notfound</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">Notfound</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><literal type="boolean" value="false">notfound</literal></expr></argument>)</argument_list></command>
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">notFound</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<if_stmt><if>if<condition>(<expr><literal type="boolean" value="false">notfound</literal></expr>)</condition><block>
+</block></if>endif()</if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>LINUX</name></expr></argument> <argument><expr><name>TRUE</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>LINUX</name></expr></argument> <argument><expr><name>True</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>LINUX</name></expr></argument> <argument><expr><name>true</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>WINDOWS</name></expr></argument> <argument><expr><name>FALSE</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>WINDOWS</name></expr></argument> <argument><expr><name>False</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>WINDOWS</name></expr></argument> <argument><expr><name>false</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_STANDARD_REQUIRED</name></expr></argument> <argument><expr><name>ON</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_STANDARD_REQUIRED</name></expr></argument> <argument><expr><name>On</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_STANDARD_REQUIRED</name></expr></argument> <argument><expr><name>on</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><name>OFF</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><name>Off</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><name>off</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><name>YES</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><name>Yes</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>BUILD_SHARED_LIBS</name></expr></argument> <argument><expr><literal type="string">"Build shared libraries by default"</literal></expr></argument> <argument><expr><name>yes</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><name>NO</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><name>No</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><name>no</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><name>IGNORE</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><name>Ignore</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>set</name><argument_list>(<argument><expr><name>CMAKE_CXX_EXTENSIONS</name></expr></argument> <argument><expr><name>ignore</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><name>NOTFOUND</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><name>NotFound</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><name>Notfound</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>option</name><argument_list>(<argument><expr><name>AUTOVERSIONING</name></expr></argument> <argument><expr><literal type="string">"Autoversioning"</literal></expr></argument> <argument><expr><name>notfound</name></expr></argument>)</argument_list></command>
 </unit>
 
 </unit>
