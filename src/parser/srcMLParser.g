@@ -13696,7 +13696,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         declaration_modifiers_ts |
 
-        // special case: handle declaration specifiers if they appear in an argument
+        // special case: handle TypeScript declaration specifiers in an expression
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && (
@@ -13707,12 +13707,13 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         declaration_specifiers_ts |
 
-        // special case: mark "abstract" as a specifier if in operator parentheses or constraints
+        // special case: handle TypeScript function specifiers in an expression
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && (
                 bracket_types_js.back() == "oLPAREN"
                 || inTransparentMode(MODE_CONSTRAINT_TS)
+                || last_consumed == JS_EXTENDS
             )
         }?
         function_declaration_specifiers_ts |
