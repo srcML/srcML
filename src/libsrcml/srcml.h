@@ -1536,6 +1536,12 @@ LIBSRCML_DECL int srcml_unit_register_namespace(struct srcml_unit* unit, const c
 LIBSRCML_DECL int srcml_unit_add_attribute(struct srcml_unit* unit, const char* uri, const char* name, const char* value);
 
 /**
+ * @param unit A srcml_unit
+ * @return The archive the unit belong to on success, or NULL
+ */
+LIBSRCML_DECL struct srcml_archive* srcml_unit_get_archive(const struct srcml_unit* unit);
+
+/**
  * Number of custom attributes
  * @param unit A srcml_unit
  * @return The number of attributes or 0 if unit is NULL
