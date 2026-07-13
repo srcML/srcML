@@ -1782,6 +1782,13 @@ javascript_statements[] {
             return;
         }
 
+        // special case: "with():" is a TypeScript function declaration
+        if (LA(1) == JS_WITH && next_token() == LPAREN && perform_with_as_function_decl_check_ts()) {
+            function_declaration_ts();
+            processed_statement = true;
+            return;
+        }
+
         // special case: with is only a keyword in certain circumstances
         if (LA(1) == JS_WITH && !perform_with_statement_check_js()) {
             // restart parsing treating "with" as a name
@@ -20648,6 +20655,38 @@ situational_specifiers_js[] { LightweightElement element(this); ENTRY_DEBUG } :
 
         (JS_AWAIT | JS_EACH)
 ;
+
+/*
+  perform_with_as_function_decl_check_ts
+
+  Checks if the "with" keyword starts a TypeScript function declaration.
+*/
+perform_with_as_function_decl_check_ts[] returns [bool isdecl] {
+        ENTRY_DEBUG
+
+        isdecl = false;
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            if (LA(1) == JS_WITH) {
+                consume();  // "with"
+
+                if (LA(1) == LPAREN) {
+                    paren_pair();
+
+                    // found "with():", indicating a TypeScript function declaration
+                    if (LA(1) == COLON)
+                        isdecl = true;
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
 
 /*
   perform_with_statement_check_js
