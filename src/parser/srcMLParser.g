@@ -13817,6 +13817,15 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         pseudo_generic_argument_list |
 
+        // special case: "satisfies {" begins a type block in TypeScript
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == TS_SATISFIES
+            && next_token() == LCURLY
+        }?
+        (general_operators expression_block_js) |
+
         // special case: "..." in the LHS of a JavaScript property
         {
             inLanguage(LANGUAGE_JAVASCRIPT)

@@ -517,6 +517,11 @@
 <decl_stmt><decl type="var">var <name>d</name> <init>= <expr><operator>new</operator> <call><name>FunctionName</name><argument_list>(<argument><expr><literal type="string">'a'</literal></expr></argument>, <argument><expr><literal type="string">'b'</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "satisfies" -->
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>T</name> <ts:operator>satisfies</ts:operator> <block>{<block_content> <ts:function_decl><name>g</name><parameter_list>(<parameter><decl><name>s</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl> </block_content>}</block></expr></expr_stmt>
+</unit>
+
 <!-- "typeof" -->
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>a</name> <init>= <expr><operator>typeof</operator> <literal type="null">null</literal></expr></init></decl></decl_stmt>
