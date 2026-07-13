@@ -2652,6 +2652,82 @@ look_past_rule[void (srcMLParser::*rule)()] returns [int token] {
         rewind(place);
 } :;
 
+/*
+  look_back_two_modes
+
+  Temporarily pops the two current modes on the mode stack and returns the new top mode.
+*/
+look_back_two_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
+        inmode = false;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            srcMLState::MODE_TYPE current_mode = getMode();
+
+            // end the first mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            current_mode = getMode();
+
+            // end the second mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            // check if "m" is the current mode
+            if (inMode(m))
+                inmode = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
+/*
+  look_back_three_modes
+
+  Temporarily pops the three current modes on the mode stack and returns the new top mode.
+*/
+look_back_three_modes[srcMLState::MODE_TYPE m] returns [bool inmode] {
+        inmode = false;
+        std::list<srcMLState> temp_st = st;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            srcMLState::MODE_TYPE current_mode = getMode();
+
+            // end the first mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            current_mode = getMode();
+
+            // end the second mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            current_mode = getMode();
+
+            // end the third mode
+            if (inMode(current_mode))
+                endMode(current_mode);
+
+            // check if "m" is the current mode
+            if (inMode(m))
+                inmode = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+        st = temp_st;
+} :;
+
 /* functions */
 
 /*
@@ -22141,7 +22217,7 @@ lambda_js[bool is_list = false] {
             }
 
             // consume TypeScript types
-            (options { greedy = true; } : colon_type_ts)*
+            (options { greedy = true; } : colon_type_ts)?
 
             // shorthand computed property with a string does not use "=>"
             ({ LA(1) == JS_ARROW }? arrow_operator_js)?
@@ -22323,7 +22399,16 @@ perform_parameter_list_lambda_check_js[] returns [bool islambda] {
                 }
             }
 
-            if (paren_count == 0 && bracket_count == 0 && LA(1) == JS_ARROW)
+            // found "=>", but do not accidentally confuse it with a generic lambda "=>"
+            if (
+                paren_count == 0
+                && bracket_count == 0
+                && LA(1) == JS_ARROW
+                && (
+                    !look_back_two_modes(MODE_GENERIC_LAMBDA_TS)
+                    || !skip_lone_lambda_js
+                )
+            )
                 islambda = true;
         }
         catch (...) {}
@@ -24560,6 +24645,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                         || (lparen_types_size == lparen_types_js.size() && next_token() == COLON)
                         || (inTransparentMode(MODE_LAMBDA_JS) && next_token() == JS_ARROW)
                     )
+                    && (!look_back_three_modes(MODE_GENERIC_LAMBDA_TS) || bracket_types_js.back() != "oLPAREN")
                 )
                 || (
                     last_consumed == NAME
@@ -26413,7 +26499,7 @@ generic_lambda_ts[] {
         ENTRY_DEBUG
 } :
         {
-            startNewMode(MODE_LAMBDA_JS);
+            startNewMode(MODE_LAMBDA_JS | MODE_GENERIC_LAMBDA_TS);
             startElement(SFUNCTION_LAMBDA);
 
             ++lambda_depth;
@@ -26434,7 +26520,7 @@ generic_lambda_ts[] {
             }
 
             // consume TypeScript types
-            (options { greedy = true; } : colon_type_ts)*
+            (options { greedy = true; } : colon_type_ts)?
 
             arrow_operator_js
         )

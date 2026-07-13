@@ -163,6 +163,7 @@ const srcMLState::MODE_TYPE ModeStack::MODE_WITH_JS                    (bit(__CO
 const srcMLState::MODE_TYPE ModeStack::MODE_TEMPLATE_ARGUMENT_TS       (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_EXPRESSION_COLON_TS        (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_DECL_STATEMENT_TS          (bit(__COUNTER__));
+const srcMLState::MODE_TYPE ModeStack::MODE_GENERIC_LAMBDA_TS          (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_LAMBDA_AS_TYPE_TS          (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_FUNCTION_DECL_TS           (bit(__COUNTER__));
 const srcMLState::MODE_TYPE ModeStack::MODE_CONSTRAINT_TS              (bit(__COUNTER__));
