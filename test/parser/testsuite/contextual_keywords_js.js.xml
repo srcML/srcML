@@ -1394,6 +1394,10 @@
 </block_content>}</block></function>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var { <expr><name>x</name></expr>: <decl><name>public</name></decl> } <init>= <expr><object>{ <property><expr><name>x</name></expr>: <expr><literal type="number">1</literal></expr></property> }</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "readonly" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1596,6 +1600,10 @@
 <function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
     <decl_stmt><decl type="var">var <name>myClass</name> <init>= <expr><class>class <name>package</name> <super_list><ts:implements>implements <super><expr><name>static</name></expr></super></ts:implements></super_list> <block>{}</block></class></expr></init></decl></decl_stmt>
 </block_content>}</block></function>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var { <expr><name>x</name></expr>: <decl><name>static</name></decl> } <init>= <expr><object>{ <property><expr><name>x</name></expr>: <expr><literal type="number">1</literal></expr></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "switch" -->

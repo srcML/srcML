@@ -484,6 +484,15 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && nextToken->getType() == srcMLParser::LCURLY
         )
 
+        // the current token is a decl. specifier and the next token is "}"
+        || (
+            (
+                srcMLParser::declaration_specifiers_ts_token_set.member(token->getType())
+                || srcMLParser::function_declaration_specifiers_ts_token_set.member(token->getType())
+            )
+            && nextToken->getType() == srcMLParser::RCURLY
+        )
+
         // the token directly before was a "." or the token directly after is also "."
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
 
