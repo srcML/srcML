@@ -19937,6 +19937,19 @@ type_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  yield_as_name
+
+  Handles cases where "yield" is a name in JavaScript/TypeScript.
+*/
+yield_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        JS_YIELD
+;
+
+/*
   propery_name_js
 
   Handles name of get/set property, which could be a name or literal (bracketless_computed_property)
@@ -21246,6 +21259,9 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
 
                 // typed parameter (TypeScript)
                 colon_type_ts |
+
+                // special case where "yield" is a name
+                yield_as_name |
 
                 // regular parameter
                 compound_name |

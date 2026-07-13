@@ -587,6 +587,16 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
 
+        // the current token is "yield" and the next token is ":", ",", or "=>"
+        || (
+            token->getType() == srcMLParser::JS_YIELD
+            && (
+                nextToken->getType() == srcMLParser::COLON
+                || nextToken->getType() == srcMLParser::COMMA
+                || nextToken->getType() == srcMLParser::JS_ARROW
+            )
+        )
+
         // the current token is "await" and one of the following is true:
         // - the next token is ":", ",", "=>", or ")"
         // - the previous token was "=>"
