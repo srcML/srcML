@@ -493,6 +493,13 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && nextToken->getType() == srcMLParser::RCURLY
         )
 
+        // the previous token was "typeof", the current token is "module", and the next token is an operator
+        || (
+            prevNonWhitespaceToken->getType() == srcMLParser::JS_TYPEOF
+            && token->getType() == srcMLParser::TS_MODULE
+            && srcMLParser::general_operator_tokens_set.member(nextToken->getType())
+        )
+
         // the token directly before was a "." or the token directly after is also "."
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
 
