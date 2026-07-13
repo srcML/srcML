@@ -21779,10 +21779,6 @@ perform_function_expression_check_js[] returns [bool isfunction] {
                 if (LA(1) == MULTOPS)
                     consume();
 
-                // consume optional generic argument list
-                if (LA(1) == TEMPOPS && generic_argument_list_check())
-                    angle_bracket_pair();
-
                 // consume the optional function name (regular, computed, or literal)
                 while (LA(1) != antlr::Token::EOF_TYPE) {
                     // found a literal "NAME" token
@@ -21801,6 +21797,10 @@ perform_function_expression_check_js[] returns [bool isfunction] {
                         break;
                     }
                 }
+
+                // consume optional generic argument list
+                if (LA(1) == TEMPOPS && generic_argument_list_check())
+                    angle_bracket_pair();
 
                 // consume the function parameter list
                 if (LA(1) == LPAREN) {
