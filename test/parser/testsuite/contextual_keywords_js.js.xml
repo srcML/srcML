@@ -1388,6 +1388,12 @@
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="var">var <name>myClass</name> <init>= <expr><class>class <name>package</name> <super_list><extends>extends <super><expr><name>public</name></expr></super></extends></super_list> <block>{}</block></class></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
+</unit>
+
 <!-- "readonly" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1584,6 +1590,12 @@
 <class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <ts:function_decl><name>static</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
 }</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <decl_stmt><decl type="var">var <name>myClass</name> <init>= <expr><class>class <name>package</name> <super_list><ts:implements>implements <super><expr><name>static</name></expr></super></ts:implements></super_list> <block>{}</block></class></expr></init></decl></decl_stmt>
+</block_content>}</block></function>
 </unit>
 
 <!-- "switch" -->

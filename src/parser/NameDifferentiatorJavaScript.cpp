@@ -471,6 +471,19 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             )
         )
 
+        // the previous token was "extends" or "implements", the current token is a decl. specifier, and the next token is "{"
+        || (
+            (
+                prevNonWhitespaceToken->getType() == srcMLParser::JS_EXTENDS
+                || prevNonWhitespaceToken->getType() == srcMLParser::TS_IMPLEMENTS
+            )
+            && (
+                srcMLParser::declaration_specifiers_ts_token_set.member(token->getType())
+                || srcMLParser::function_declaration_specifiers_ts_token_set.member(token->getType())
+            )
+            && nextToken->getType() == srcMLParser::LCURLY
+        )
+
         // the token directly before was a "." or the token directly after is also "."
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
 
