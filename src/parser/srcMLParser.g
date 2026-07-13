@@ -9968,7 +9968,11 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
                         if (
                             inLanguage(LANGUAGE_JAVASCRIPT)
                             && (last_consumed == QMARK_PERIOD || last_consumed == PERIOD)
-                            && (literal_tokens_set.member((unsigned int) LA(1)) || LA(1) == TERMINATE)
+                            && (
+                                literal_tokens_set.member((unsigned int) LA(1))
+                                || LA(1) == EQUAL
+                                || LA(1) == TERMINATE
+                            )
                         ) {
                             break;
                         }
