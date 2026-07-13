@@ -24,7 +24,11 @@ antlr::RefToken NameDifferentiatorJavaScript::nextToken() {
         checkBracketToken(token);  // Detect if currently in/out of `()`, `{}`, or `[]`
 
         // Check if the current JavaScript/TypeScript keyword is really a keyword, or if it is used as a name
-        if (srcMLParser::name_differentiator_js_token_set.member(token->getType()) || token->getType() == srcMLParser::TS_ENUM)
+        if (
+            srcMLParser::name_differentiator_js_token_set.member(token->getType())
+            || token->getType() == srcMLParser::JS_VOID
+            || token->getType() == srcMLParser::TS_ENUM
+        )
             lookAheadDifferentiator(token);
         // Manually set the previous token as the current token
         else
@@ -499,6 +503,9 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && token->getType() == srcMLParser::TS_MODULE
             && srcMLParser::general_operator_tokens_set.member(nextToken->getType())
         )
+
+        // the current token is "void" and the next token is "=>"
+        || (token->getType() == srcMLParser::JS_VOID && nextToken->getType() == srcMLParser::JS_ARROW)
 
         // the token directly before was a "." or the token directly after is also "."
         || (prevToken->getType() == srcMLParser::PERIOD || nextToken->getType() == srcMLParser::PERIOD)
