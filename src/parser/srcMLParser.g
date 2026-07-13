@@ -10946,6 +10946,35 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         bool flag;
         bool isempty = false;
 
+        // special case: encountered a "}" when expected a ")" in JavaScript
+        if (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == RCURLY
+            && bracket_types_js.back().find("LP") != std::string::npos  /* "LPAREN" */
+        ) {
+            if (lcurly_types_js.back() != '*' && lcurly_types_js.back() == bracket_types_js.back()[0])
+                lcurly_types_js.pop_back();
+
+            bracket_types_js.pop_back();
+            rcurly();
+            return;
+        }
+        // special case: encountered a ")" when expected a "}" in JavaScript
+        else if (
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && inputState->guessing == 0
+            && LA(1) == RPAREN
+            && bracket_types_js.back().find("LC") != std::string::npos  /* "LCURLY" */
+        ) {
+            if (lparen_types_js.back() != '*' && lparen_types_js.back() == bracket_types_js.back()[0])
+                lparen_types_js.pop_back();
+
+            bracket_types_js.pop_back();
+            rparen(true);
+            return;
+        }
+
         ENTRY_DEBUG
 } :
         // special case: "<<", "<<<", etc. that should start a TypeScript generic argument list
@@ -10957,6 +10986,13 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
             && perform_pseudo_generic_argument_list_check_ts()
         }?
         pseudo_generic_argument_list |
+
+        // special case: "..." in the LHS of a JavaScript property
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && perform_in_mode_before_expression_check_js(MODE_DECL_DESTRUCTURE_JS)
+        }?
+        tripledotop |
 
         // special case: mark "?", "+?", "-?", and "!" as modifiers in certain TypeScript instances
         {
@@ -10980,12 +11016,26 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         declaration_modifiers_ts |
 
-        // special case: handle declaration specifiers if they appear in an argument
-        { inLanguage(LANGUAGE_JAVASCRIPT) && (LA(1) == TS_READONLY || inPrevMode(MODE_ARGUMENT)) }?
+        // special case: handle TypeScript declaration specifiers in an expression
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                LA(1) == TS_READONLY
+                || inPrevMode(MODE_ARGUMENT)
+                || inTransparentMode(MODE_CONSTRAINT_TS)
+            )
+        }?
         declaration_specifiers_ts |
 
-        // special case: mark "abstract" as a specifier if in operator parentheses
-        { inLanguage(LANGUAGE_JAVASCRIPT) && bracket_types_js.back() == "oLPAREN" }?
+        // special case: handle TypeScript function specifiers in an expression
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (
+                bracket_types_js.back() == "oLPAREN"
+                || inTransparentMode(MODE_CONSTRAINT_TS)
+                || last_consumed == JS_EXTENDS
+            )
+        }?
         function_declaration_specifiers_ts |
 
         // special case: generic types (mixins) using the "extends" keyword in TypeScript
@@ -11095,31 +11145,6 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_nameless_keywordless_generator_function_check_js() }?
         nameless_keywordless_generator_function_expression_js |
 
-        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
-        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
-        {
-            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
-
-            // generator keywordless function
-            if (perform_generator_function_check_js())
-                startElement(SFUNCTION_GENERATOR_STATEMENT);
-            // regular keywordless function
-            else
-                startElement(SFUNCTION_DEFINITION);
-        }
-        ((attribute_ts)+ keywordless_function_expression_js[false]) |
-
-        // looking for "NAME(){...}" to start a keywordless function in JavaScript
-        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
-        {
-            inLanguage(LANGUAGE_JAVASCRIPT)
-            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
-            && last_consumed != JS_ARROW
-            && last_consumed != QMARK
-            && perform_keywordless_function_check_js()
-        }?
-        keywordless_function_expression_js[true] |
-
         // looking for "@decorator function" to start a function (with a decorator) in an expression in TypeScript
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_decorator_function_expression_check_ts() }?
         {
@@ -11145,15 +11170,44 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         // looking for "function" to start a function in an expression in JavaScript
         // Note that "function:" is a property name in an object
         { 
-            inLanguage(LANGUAGE_JAVASCRIPT) 
-            && !inTransparentMode(MODE_NAME_LIST_JS) 
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !inTransparentMode(MODE_NAME_LIST_JS)
             && next_token() != COLON
             && (
-                (LA(1) == JS_GET || LA(1) == JS_SET)
-                && !perform_accessor_is_name_check_js()
+                (LA(1) != JS_GET && LA(1) != JS_SET)
+                || (
+                    (LA(1) == JS_GET || LA(1) == JS_SET)
+                    && perform_accessor_is_name_check_js()
+                )
             )
-         }?
+            && perform_function_expression_check_js()
+        }?
         function_expression_js[true] |
+
+        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            // generator keywordless function
+            if (perform_generator_function_check_js())
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            // regular keywordless function
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        ((attribute_ts)+ keywordless_function_expression_js[false]) |
+
+        // looking for "NAME(){...}" to start a keywordless function in JavaScript
+        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+            && last_consumed != JS_ARROW
+            && last_consumed != QMARK
+            && perform_keywordless_function_check_js()
+        }?
+        keywordless_function_expression_js[true] |
 
         // looking for lcurly to start an object in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
@@ -13929,31 +13983,6 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_nameless_keywordless_generator_function_check_js() }?
         nameless_keywordless_generator_function_expression_js |
 
-        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
-        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
-        {
-            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
-
-            // generator keywordless function
-            if (perform_generator_function_check_js())
-                startElement(SFUNCTION_GENERATOR_STATEMENT);
-            // regular keywordless function
-            else
-                startElement(SFUNCTION_DEFINITION);
-        }
-        ((attribute_ts)+ keywordless_function_expression_js[false]) |
-
-        // looking for "NAME(){...}" to start a keywordless function in JavaScript
-        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
-        {
-            inLanguage(LANGUAGE_JAVASCRIPT)
-            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
-            && last_consumed != JS_ARROW
-            && last_consumed != QMARK
-            && perform_keywordless_function_check_js()
-        }?
-        keywordless_function_expression_js[true] |
-
         // looking for "@decorator function" to start a function (with a decorator) in an expression in TypeScript
         { inLanguage(LANGUAGE_JAVASCRIPT) && perform_decorator_function_expression_check_ts() }?
         {
@@ -13979,18 +14008,44 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         // looking for "function" to start a function in an expression in JavaScript
         // Note that "function:" is a property name in an object
         { 
-            inLanguage(LANGUAGE_JAVASCRIPT) 
-            && !inTransparentMode(MODE_NAME_LIST_JS) 
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && !inTransparentMode(MODE_NAME_LIST_JS)
             && next_token() != COLON
             && (
-                (LA(1) != JS_GET && LA(1) != JS_SET) 
+                (LA(1) != JS_GET && LA(1) != JS_SET)
                 || (
                     (LA(1) == JS_GET || LA(1) == JS_SET)
                     && perform_accessor_is_name_check_js()
                 )
-             )
+            )
+            && perform_function_expression_check_js()
         }?
         function_expression_js[true] |
+
+        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+        { inLanguage(LANGUAGE_JAVASCRIPT) && last_consumed != QMARK && perform_keywordless_function_check_js() }?
+        {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            // generator keywordless function
+            if (perform_generator_function_check_js())
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            // regular keywordless function
+            else
+                startElement(SFUNCTION_DEFINITION);
+        }
+        ((attribute_ts)+ keywordless_function_expression_js[false]) |
+
+        // looking for "NAME(){...}" to start a keywordless function in JavaScript
+        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+        {
+            inLanguage(LANGUAGE_JAVASCRIPT)
+            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+            && last_consumed != JS_ARROW
+            && last_consumed != QMARK
+            && perform_keywordless_function_check_js()
+        }?
+        keywordless_function_expression_js[true] |
 
         // looking for lcurly to start an object in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT) }?
@@ -21691,6 +21746,124 @@ array_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 ;
 
 /*
+  perform_function_expression_check_js
+
+  Checks to see if the current token starts a function in an expression in JavaScript/TypeScript.
+*/
+perform_function_expression_check_js[] returns [bool isfunction] {
+        ENTRY_DEBUG
+
+        isfunction = false;
+        int bracket_count = 0;  // for TypeScript types
+        last_consumed_guessing_mode = -1;
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            // consume optional specifiers
+            while (
+                LA(1) != TS_DECLARE
+                && (
+                    specifier_js_token_set.member((unsigned int) LA(1))
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
+            )
+                consume();
+
+            // consume required "function", "get", or "set" keywords
+            if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
+                consume();
+
+                // consume optional "*" for generator functions
+                if (LA(1) == MULTOPS)
+                    consume();
+
+                // consume optional generic argument list
+                if (LA(1) == TEMPOPS && generic_argument_list_check())
+                    angle_bracket_pair();
+
+                // consume the optional function name (regular, computed, or literal)
+                while (LA(1) != antlr::Token::EOF_TYPE) {
+                    // found a literal "NAME" token
+                    if (LA(1) == NAME) {
+                        consume();
+                    }
+                    // found a computed property
+                    else if (LA(1) == LBRACKET) {
+                        bracket_pair();
+                    }
+                    // found a literal, which can be a name in this case
+                    else if (literal_tokens_set.member((unsigned int) LA(1))) {
+                        literals();
+                    }
+                    else {
+                        break;
+                    }
+                }
+
+                // consume the function parameter list
+                if (LA(1) == LPAREN) {
+                    paren_pair();
+
+                    // consume optional auto-generated TERMINATE
+                    if (
+                        (LA(1) == TERMINATE && LT(1)->getText() != ";") 
+                        && (next_token() == LCURLY || next_token() == COLON)
+                    )
+                        consume();
+
+                    // found "KEYWORD NAME() {", a function expression
+                    if (LA(1) == LCURLY) {
+                        isfunction = true;
+                    }
+                    // looking for "KEYWORD NAME(): TYPE {", also a function expression
+                    else if (LA(1) == COLON) {
+                        // consume optional TypeScript type, followed by a typical block
+                        if (
+                            LA(1) == COLON
+                            && (
+                                next_token() == LCURLY
+                                || (next_token() == TS_READONLY && next_token_two() == LCURLY)
+                            )
+                            && perform_colon_lcurly_differentiator_check_js() == 3
+                        ) {
+                            isfunction = true;
+                        }
+                        // consume optional TypeScript type
+                        else if (LA(1) == COLON && next_token() != LCURLY) {
+                            consume();  // ":"
+
+                            while (LA(1) != antlr::Token::EOF_TYPE) {
+                                // found a statement-level LCURLY, indicating a block
+                                if (bracket_count == 0 && LA(1) == LCURLY)
+                                    break;
+
+                                if (LA(1) == LPAREN || LA(1) == LCURLY || LA(1) == LBRACKET)
+                                    ++bracket_count;
+                                if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
+                                    --bracket_count;
+
+                                if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                                    break;
+
+                                consume();
+                            }
+
+                            if (LA(1) == LCURLY)
+                                isfunction = true;
+                        }
+                    }
+                }
+            }
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
+/*
   function_expression_js
 
   Handles functions that appear in expressions in JavaScript.
@@ -22591,8 +22764,16 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
             { inTransparentMode(MODE_PROPERTY_JS) }?
             colon_property_js |
 
-            // ensures compliance with idiomatic ANTLR guidelines
-            { true }?
+            // "SPECIFIER []" does not denote an expression
+            {
+                !(
+                    (
+                        declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                        || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    )
+                    && next_token() == LBRACKET
+                )
+            }?
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -22607,7 +22788,9 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
             { 
                 table_keywords_js_token_set.member((unsigned int) LA(1))
                 || decl_start_js_token_set.member((unsigned int) LA(1))
-             }?
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+            }?
             {
                 // mimic behavior as if starting a statement for the first time
                 startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
