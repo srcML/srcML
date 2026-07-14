@@ -15549,6 +15549,7 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
 
         int parencount = 0;
         int bracecount = 0;
+        int token_before_tempops = last_consumed;
         bool foundLogicalOperator = false;
         while (LA(1) != antlr::Token::EOF_TYPE) {
             if (LA(1) == RPAREN)
@@ -15605,6 +15606,26 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
                         is_generic_argument_list = true;
                 }
             }
+        }
+
+        // In JavaScript, "NAME < ... > NAME" denotes operators, not a generic argument list
+        if (
+            is_generic_argument_list
+            && inLanguage(LANGUAGE_JAVASCRIPT)
+            && LA(1) == TEMPOPE
+            && (
+                token_before_tempops == NAME
+                || literal_tokens_set.member(token_before_tempops)
+            )
+        ) {
+            consume();  // ">"
+
+            if (
+                (LA(1) == NAME || literal_tokens_set.member((unsigned int) LA(1)))
+                && !perform_mode_before_mode_statement_check(MODE_FUNCTION_DECL_TS)
+                && !perform_mode_before_mode_statement_check(MODE_DECL_STATEMENT_TS)
+            )
+                is_generic_argument_list = false;
         }
 
         inputState->guessing--;
@@ -27412,6 +27433,37 @@ global_context_call_js[] { CompleteElement element(this); size_t lparen_types_si
 
         rparen[false]
 ;
+
+/*
+  perform_mode_before_mode_statement_check
+
+  Pops modes until MODE_STATEMENT and checks if the mode before that is the same as "m".
+*/
+perform_mode_before_mode_statement_check[srcMLState::MODE_TYPE m] returns [bool inmode] {
+        inmode = false;
+
+        if (!inTransparentMode(MODE_STATEMENT))
+            return false;
+
+        int start = mark();
+        inputState->guessing++;
+
+        try {
+            const auto real_state = std::find_if(st.crbegin(), st.crend(), [](const auto& temp_state){
+                if (temp_state.inPrevMode(MODE_STATEMENT))
+                    return true;
+                return false;
+            });
+
+            if (real_state->inMode(m))
+                inmode = true;
+        }
+        catch (...) {}
+
+        inputState->guessing--;
+        rewind(start);
+} :;
+
 
 /*
   perform_top_level_class_check_js

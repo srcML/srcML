@@ -294,6 +294,32 @@
 }</block></ts:type></decl></decl_stmt>
 </unit>
 
+<!-- TypeScript Ambiguity with Generic Argument Lists and Operators -->
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>bar</name> <operator>&lt;</operator> <name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>bar</name> <operator>&gt;</operator> <name>bar</name> <operator>+</operator> <literal type="number">1</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&lt;</operator> <name>bar</name> <operator>&amp;&amp;</operator> <name>bar</name> <operator>&gt;</operator> <name>bar</name> <operator>+</operator> <literal type="number">1</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>bar</name> <operator>&lt;</operator> <name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>bar</name> <operator>&gt;</operator> <literal type="number">1</literal> <operator>+</operator> <name>bar</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <return>return <expr><name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&lt;</operator> <name>bar</name> <operator>-</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>bar</name> <operator>&gt;</operator> <literal type="number">1</literal> <operator>+</operator> <name>bar</name></expr></return>
+</block_content>}</block></function>
+</unit>
+
 <!-- TypeScript "enum" LCURLY Detection -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
