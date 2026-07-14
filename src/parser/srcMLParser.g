@@ -20529,6 +20529,7 @@ for_control_js[] { ENTRY_DEBUG } :
 control_initialization_js[] {
         CompleteElement element(this);
         std::array<int, 3> post_specifier_tokens = perform_post_specifier_check_js();
+        bool found_decl = false;
         int decl_token = -1;
 
         ENTRY_DEBUG
@@ -20550,7 +20551,7 @@ control_initialization_js[] {
             } |
 
             // allow "," followed by a name as an additional declaration
-            { bracket_types_js.back() != "cLPAREN" && next_token() == NAME }?
+            { found_decl && bracket_types_js.back() != "cLPAREN" && next_token() == NAME }?
             (COMMA declaration_js[true, post_specifier_tokens[0]]) |
 
             {
@@ -20563,6 +20564,8 @@ control_initialization_js[] {
                 )
             }?
             {
+                found_decl = true;
+
                 // allow names in "for await...of" and "for each...in" loops
                 if (decl_start_js_token_set.member(LA(1)) || LA(1) == NAME)
                     decl_token = LA(1);
@@ -20591,8 +20594,6 @@ control_initialization_js[] {
             { LA(1) == COLON }?
             colon_marked |
 
-            // consume commas for calls
-            { bracket_types_js.back() == "cLPAREN" }?
             comma |
 
             {

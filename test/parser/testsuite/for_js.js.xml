@@ -67,6 +67,10 @@
 </block_content>}</block></for>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><expr><name>foo</name><operator>,</operator> <name>i</name><operator>++</operator></expr>;</init> <condition><expr><name>bar</name></expr>;</condition>)</control> <expr_stmt><expr><call><name>baz</name><argument_list>()</argument_list></call><operator>,</operator> <name>i</name><operator>++</operator></expr></expr_stmt></for>
+</unit>
+
 <!-- "for...in" -->
 
 <unit revision="1.0.0" language="JavaScript">
