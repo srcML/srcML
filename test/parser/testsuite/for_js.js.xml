@@ -55,6 +55,18 @@
 </block_content>}</block></for>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><expr><name>t</name> <operator>&amp;&amp;</operator> <operator>(</operator><name>i</name> <operator>=</operator> <call><name>foo</name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list></call><operator>)</operator></expr></init>; <condition><expr><name><name>this</name><operator>.</operator><name>pos</name></name> <operator>&lt;</operator> <name>i</name></expr></condition>;)</control> <block>{<block_content>
+  <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>bar</name></name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><expr><name>t</name> <operator>&amp;&amp;</operator> <operator>(</operator><name>i</name> <operator>=</operator> <call><name>foo</name><argument_list>(<argument><expr><name>t</name></expr></argument>, <argument><expr><name>w</name></expr></argument>)</argument_list></call><operator>)</operator></expr></init>; <condition><expr><name><name>this</name><operator>.</operator><name>pos</name></name> <operator>&lt;</operator> <name>i</name></expr></condition>;)</control> <block>{<block_content>
+  <expr_stmt><expr><call><name><name>this</name><operator>.</operator><name>bar</name></name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
 <!-- "for...in" -->
 
 <unit revision="1.0.0" language="JavaScript">

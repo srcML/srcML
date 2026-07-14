@@ -20549,14 +20549,17 @@ control_initialization_js[] {
             } |
 
             // allow "," followed by a name as an additional declaration
-            { next_token() == NAME }?
+            { bracket_types_js.back() != "cLPAREN" && next_token() == NAME }?
             (COMMA declaration_js[true, post_specifier_tokens[0]]) |
 
             {
-                LA(1) == NAME
+                LA(1) == LCURLY
                 || decl_start_js_token_set.member(LA(1))
                 || decl_start_js_token_set.member(post_specifier_tokens[0])
-                || LA(1) == LCURLY
+                || (
+                    LA(1) == NAME
+                    && (next_token() == JS_RANGE_IN || next_token() == JS_RANGE_OF)
+                )
             }?
             {
                 // allow names in "for await...of" and "for each...in" loops
@@ -20566,7 +20569,40 @@ control_initialization_js[] {
                 else if (decl_start_js_token_set.member(post_specifier_tokens[0]))
                     decl_token = post_specifier_tokens[0];
             }
-            declaration_js[false, decl_token]
+            declaration_js[false, decl_token] |
+
+            /*
+              fallback to consume an initialization that is an expression, not a decl
+            */
+
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
+            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            colon_type_ts |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            // consume commas for calls
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma |
+
+            {
+                // ensure ";" is not consumed here
+                if (LA(1) == TERMINATE)
+                    break;
+
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression
         )*
 ;
 
