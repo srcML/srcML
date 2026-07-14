@@ -1259,7 +1259,7 @@ public:
         temp_array[FINALLY]     = { SFINALLY_BLOCK, 0, MODE_STATEMENT | MODE_NEST, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };
         temp_array[FOR]         = { SFOR_STATEMENT, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_FOR_CONTROL_JS | MODE_EXPECT, nullptr, &srcMLParser::for_control_situational_specifiers_js };  // check for "await" or "each" following the "for"
         temp_array[IF]          = { SIF, 0, MODE_STATEMENT | MODE_NEST | MODE_IF | MODE_ELSE, MODE_LCURLY_BLOCK_JS | MODE_CONDITION | MODE_EXPECT, &srcMLParser::if_statement_start_kb, &srcMLParser::condition_js };
-        temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT | MODE_RETURN_JS, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
+        temp_array[RETURN]      = { SRETURN_STATEMENT, 0, MODE_STATEMENT | MODE_RETURN_JS, MODE_LIST | MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[SWITCH]      = { SSWITCH, 0, MODE_STATEMENT | MODE_NEST | MODE_LCURLY_BLOCK_JS, MODE_CONDITION | MODE_EXPECT, nullptr, &srcMLParser::condition_js };
         temp_array[THROW]       = { STHROW_STATEMENT, 0, MODE_STATEMENT, MODE_EXPRESSION | MODE_EXPECT, nullptr, nullptr };
         temp_array[TRY]         = { STRY_BLOCK, 0, MODE_STATEMENT | MODE_NEST | MODE_TRY, MODE_LCURLY_BLOCK_JS, nullptr, nullptr };

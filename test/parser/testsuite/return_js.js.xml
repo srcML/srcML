@@ -13,5 +13,15 @@
 <return>return <expr><name>x</name> <operator>*</operator> <literal type="number">42</literal></expr></return>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><object>{
+  <property><expr><name>run</name></expr>: <expr><lambda><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+    <return>return <expr><ternary><condition><expr><name>bar</name></expr>
+      ?</condition><then> <expr><name>baz</name></expr>
+      </then><else>: <expr><name>x</name></expr></else></ternary></expr><operator>,</operator> <expr><name>y</name></expr></return>
+  </block_content>}</block></lambda></expr></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
 
