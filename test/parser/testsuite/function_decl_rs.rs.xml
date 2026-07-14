@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="function_decl_rs">
+
+<unit revision="1.0.0" language="Rust">
+<function_decl>fn <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifier>unsafe</specifier> fn <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifier>safe</specifier> fn <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifeir>pub</specifeir> fn <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifeir>pub</specifeir> <specifier>unsafe</specifier> fn <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifeir>pub</specifeir> <specifier>safe</specifier> fn <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl>fn <name>foo</name><parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl>fn <name>foo</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> -&gt; <type><name>i32</name></type>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl>fn <name>foo</name><parameter_list type="generic">&lt;&gt;</parameter_list><parameter_list>(<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> -&gt; <type><name>i32</name></type>;</function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifeir>pub</specifeir> <specifier>unsafe</specifier> fn <name>foo</name><parameter_list type="generic">&lt;&gt;</parameter_list><parameter_list>(<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>y</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> -&gt; <type><name>i32</name></type>;</function_decl>
+</unit>
+
+</unit>

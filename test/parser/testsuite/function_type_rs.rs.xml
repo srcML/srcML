@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="function_type_rs">
+
+<unit revision="1.0.0" language="Rust">
+<function_decl>fn <parameter_list>()</parameter_list></function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl>fn <parameter_list>(<parameter><decl><name>i32</name></decl></parameter>)</parameter_list></function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl>fn <parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type></function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl>fn <parameter_list>(<parameter><decl><name>i32</name></decl></parameter>)</parameter_list> -&gt; <type><name>i32</name></type></function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifer>unsafe</specifer> fn <parameter_list>()</parameter_list></function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifer>unsafe</specifer> fn <parameter_list>(<parameter><decl><name>i32</name></decl></parameter>)</parameter_list></function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifer>unsafe</specifer> fn <parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type></function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifer>unsafe</specifer> fn <parameter_list>(<parameter><decl><name>i32</name></decl></parameter>)</parameter_list> -&gt; <type><name>i32</name></type></function_decl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function_decl><specifer>unsafe</specifer> fn <parameter_list>(<parameter><decl><name>i32</name></decl></parameter>, <parameter><decl><name>i32</name></decl></parameter>)</parameter_list> -&gt; <type><name>i32</name></type></function_decl>
+</unit>
+
+</unit>
