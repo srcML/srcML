@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="attribute_outer_rs">
+
+<unit revision="1.0.0" language="Rust">
+<attribute type="outer">#[<expr><call><name>allow</name><argument_list>(<argument><name>unused</name></argument>)</argument_list></call></expr>]</attribute>
+</unit>
+
+<!-- declarations -->
+
+<unit revision="1.0.0" language="Rust">
+<module><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> mod <name>module</name> <block>{}</block></module>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<import><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> extern crate <name>std</name>;</import>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> use <name>A</name> <alias>as <name>B</name></alias>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> type <name>Int</name> = <type><name>i32</name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> struct <name>A</name> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> enum <name>A</name> <block>{}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<union><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> union <name>A</name> <block>{}</block></union>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let"><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> let <name>a</name>: <type><name>i32</name></type></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="const"><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> const <name>A</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<decl_stmt><decl type="static"><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> static <name>A</name>: <type><name>i32</name></type> <init>= <expr><literal type="string">0</literal></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<trait><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> trait <name>A</name> <block>{}</block></trait>
+</unit>
+
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<impl><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> impl <name>A</name> <block>{}</block></impl>
+</unit>
+
+<!-- expressions/statements -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <literal type="number">0</literal></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr_stmt><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <expr><literal type="number">0</literal></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><array>[<expr><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <literal type="number">0</literal></expr>]</array></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><tuple>(<expr><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <literal type="number">0</literal></expr>,)</tuple></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><call><name>foo</name><argument_list>(<argument><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <expr><name>a</name></expr></argument>)</argument_list></call></expr>
+</unit>
+
+<!-- blocks -->
+
+<unit revision="1.0.0" language="Rust">
+<block><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> {<block_content/>}</block>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<block><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <specifier>unsafe</specifier> <specifier>extern <literal type="string">"C"</literal></specifier> {<block_content/>}</block>
+</unit>
+
+<!-- fields -->
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name> <block>{
+  <decl><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <name>a</name>: <type><name>i32</name></type></decl>
+}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<union>union <name>A</name> <block>{
+  <decl><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <name>a</name>: <type><name>i32</name></type></decl>
+}</block></union>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <decl><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <name>B</name></decl>
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <struct type="tuple"><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <name>B</name><tuple>()</tuple></struct>,
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <struct><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <name>B</name> <block>{}</block></struct>
+}</block></enum>
+</unit>
+
+<!-- parameters -->
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>(<parameter><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <decl><name>a</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<!-- match arms -->
+
+<unit revision="1.0.0" language="Rust">
+<switch>match <expr><name>a</name></expr> <block>{<block_content>
+  <case><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> <expr><name>_</name></expr> =&gt; <block type="pseudo"><block_content><expr_stmt><expr><tuple>()</tuple></expr></expr_stmt></block_content></block></case>
+</block_content>}</block></switch>
+</unit>
+
+</unit>

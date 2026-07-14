@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="attribute_inner_rs">
+
+<unit revision="1.0.0" language="Rust">
+<attribute type="inner">#![<expr><name>crate_type</name> <operator>=</operator> <literal type="string">"lib"</literal></expr>]</attribute>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<block>{<block_content><attribute type="inner">#![<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute></block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <attribute type="inner">#![<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<impl>impl <name>A</name> <block>{
+  <attribute type="inner">#![<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute>
+}</block></impl>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<module>mod <name>module</name> <block>{
+  <attribute type="inner">#![<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute>
+}</block></module>
+</unit>
+
+</unit>
