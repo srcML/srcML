@@ -20440,25 +20440,22 @@ for_control_js[] { ENTRY_DEBUG } :
 
         LPAREN
 
-        // Initialization ends at ";" or condition ")".  Can be omitted.
-        (options { greedy = true; } :
-            {
-                (LA(1) == RPAREN && lparen_types_js.back() == 'n')
-                || LA(1) == TERMINATE
-                || LA(1) == 1 /* EOF */
-            }?
-            {
-                break;
-            } |
-
+        // Initialization ends after the ";" or at the condition ")".  Can be omitted.
+        (
             // allow names in "for await...of" and "for each...in" loops
-            { decl_start_js_token_set.member(LA(1)) || check_valid_specifier_js() || LA(1) == NAME || LA(1) == LCURLY }?
+            {
+                decl_start_js_token_set.member(LA(1))
+                || check_valid_specifier_js()
+                || LA(1) == NAME
+                || LA(1) == LCURLY
+                || LA(1) == TERMINATE
+            }?
             control_initialization_js
-        )*
+        )?
 
         {
             // "for...in" and "for...of" loops must end after the initialization
-            if (LA(1) != TERMINATE) {
+            if (last_consumed != TERMINATE) {
                 // found JavaScript rparen that ends a condition
                 if (LA(1) == RPAREN && lparen_types_js.back() == 'n') {
                     lparen_types_js.pop_back();
@@ -20469,38 +20466,18 @@ for_control_js[] { ENTRY_DEBUG } :
 
                 consume();  // likely ")"
 
-                if (inTransparentMode(MODE_FOR_CONTROL_JS)) {
-                    endDownToMode(MODE_FOR_CONTROL_JS);
-                    endMode(MODE_FOR_CONTROL_JS);
-                }
+                if (inTransparentMode(MODE_FOR_CONTROL_JS))
+                    endDownOverMode(MODE_FOR_CONTROL_JS);
 
                 return;
             }
         }
 
-        TERMINATE
-
-        // Condition ends at ";".  Can be omitted.
-        (options { greedy = true; } :
-            { LA(1) == TERMINATE || LA(1) == 1 /* EOF */ }?
-            {
-                break;
-            } |
-
-            control_condition_js
-        )*
-
-        TERMINATE
+        // Condition ends after the ";".  Can be omitted.
+        ({ last_consumed == TERMINATE }? control_condition_js)?
 
         // Increment ends at ")".  Can be omitted.
-        (options { greedy = true; } :
-            { LA(1) == RPAREN || LA(1) == 1 /* EOF */ }?
-            {
-                break;
-            } |
-
-            control_increment_js
-        )*
+        ({ LA(1) != RPAREN }? control_increment_js)?
 
         {
             // found JavaScript rparen that ends a condition
@@ -20510,13 +20487,16 @@ for_control_js[] { ENTRY_DEBUG } :
                 if (bracket_types_js.back() == "nLPAREN")
                     bracket_types_js.pop_back();
             }
+
+            if (inTransparentMode(MODE_FOR_CONTROL_JS))
+                endDownToMode(MODE_FOR_CONTROL_JS);
         }
 
         RPAREN
 
         {
-            if (inTransparentMode(MODE_FOR_CONTROL_JS))
-                endDownOverMode(MODE_FOR_CONTROL_JS);
+            if (inMode(MODE_FOR_CONTROL_JS))
+                endMode(MODE_FOR_CONTROL_JS);
         }
 ;
 
@@ -20604,6 +20584,13 @@ control_initialization_js[] {
             }
             expression
         )*
+
+        {
+            if (inTransparentMode(MODE_CONTROL_INITIALIZATION))
+                endDownToMode(MODE_CONTROL_INITIALIZATION);
+        }
+
+        ({ LA(1) == TERMINATE }? TERMINATE )?
 ;
 
 /*
@@ -20645,6 +20632,13 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
 
             comma
         )*
+
+        {
+            if (inTransparentMode(MODE_CONTROL_CONDITION))
+                endDownToMode(MODE_CONTROL_CONDITION);
+        }
+
+        ({ LA(1) == TERMINATE }? TERMINATE )?
 ;
 
 /*

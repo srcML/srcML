@@ -98,8 +98,8 @@
 <!-- "for" -->
 
 <unit revision="1.0.0" language="JavaScript">
-<label><name>outerLoop</name>:</label> <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">3</literal></expr></condition>; <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
-    <label><name>innerLoop</name>:</label> <for>for <control>(<init><decl type="let">let <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></init>; <condition><expr><name>j</name> <operator>&lt;</operator> <literal type="number">3</literal></expr></condition>; <incr><expr><name>j</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
+<label><name>outerLoop</name>:</label> <for>for <control>(<init><decl type="let">let <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
+    <label><name>innerLoop</name>:</label> <for>for <control>(<init><decl type="let">let <name>j</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>j</name> <operator>&lt;</operator> <literal type="number">3</literal></expr>;</condition> <incr><expr><name>j</name><operator>++</operator></expr></incr>)</control> <block>{<block_content>
         <if_stmt><if>if <condition>(<expr><name>i</name> <operator>===</operator> <literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>j</name> <operator>===</operator> <literal type="number">1</literal></expr>)</condition> <block>{<block_content>
             <break>break <name>outerLoop</name></break>
         </block_content>}</block></if></if_stmt>
