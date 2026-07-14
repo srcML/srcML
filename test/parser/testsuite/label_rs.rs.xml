@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="label_rs">
+
+<!-- for loop -->
+
+<unit revision="1.0.0" language="Rust">
+<label>'<name>label</name>:</label> <for>for <control><decl><name>_</name></decl> <range>in <expr><name>iterator</name></expr></range></control> <block>{<block_content/>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><label>'<name>label</name>:</label> <for>for <control><decl><name>_</name></decl> <range>in <expr><name>iterator</name></expr></range></control> <block>{<block_content/>}</block></for></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <label>'<name>label</name>:</label> <for>for <control><decl><name>_</name></decl> <range>in <expr><name>iterator</name></expr></range></control> <block>{<block_content/>}</block></for></expr>
+</unit>
+
+<!-- indefinite loop -->
+
+<unit revision="1.0.0" language="Rust">
+<label>'<name>label</name>:</label> <loop>loop <block>{<block_content/>}</block></loop>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><label>'<name>label</name>:</label> <loop>loop <block>{<block_content/>}</block></loop></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <label>'<name>label</name>:</label> <loop>loop <block>{<block_content/>}</block></loop></expr>
+</unit>
+
+<!-- while loop -->
+
+<unit revision="1.0.0" language="Rust">
+<label>'<name>label</name>:</label> <while>while <condition><expr><literal type="boolean">true</literal></expr></condition> <block>{<block_content/>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><label>'<name>label</name>:</label> <while>while <condition><expr><literal type="boolean">true</literal></expr></condition> <block>{<block_content/>}</block></while></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <label>'<name>label</name>:</label> <while>while <condition><expr><literal type="boolean">true</literal></expr></condition> <block>{<block_content/>}</block></while></expr>
+</unit>
+
+<!-- blocks -->
+
+<unit revision="1.0.0" language="Rust">
+<label>'<name>label</name>:</label> <block>{<block_content/>}</block>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><label>'<name>label</name>:</label> <block>{<block_content/>}</block></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <label>'<name>label</name>:</label> <block>{<block_content/>}</block></expr>
+</unit>
+
+</unit>
