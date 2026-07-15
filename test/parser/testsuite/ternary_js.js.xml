@@ -257,4 +257,12 @@
 </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <parameter_list>(<parameter><decl><name>e</name></decl></parameter>, <parameter><decl><name>t</name></decl></parameter>, <parameter><decl><name>i</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><ternary><condition><expr><name>e</name></expr>
+        ?</condition><then> <expr><operator>(</operator><name>t</name> <operator>&lt;</operator> <ternary><condition><expr><literal type="number">0</literal></expr> ?</condition><then> <expr><name>i</name></expr> </then><else>: <expr><operator>(</operator><operator>(</operator><name>i</name> <operator>=</operator> <literal type="number">1</literal> <operator>+</operator> <operator>(</operator><name>t</name> <operator>&gt;&gt;</operator> <literal type="number">4</literal><operator>)</operator><operator>)</operator><operator>)</operator></expr></else></ternary><operator>)</operator></expr>
+        </then><else>: <expr><name>i</name></expr></else></ternary></expr></return>
+</block_content>}</block></function>
+</unit>
+
 </unit>

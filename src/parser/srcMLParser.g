@@ -15557,6 +15557,7 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
         int bracecount = 0;
         int token_before_tempops = last_consumed;
         bool foundLogicalOperator = false;
+
         while (LA(1) != antlr::Token::EOF_TYPE) {
             if (LA(1) == RPAREN)
                 --parencount;
@@ -15627,7 +15628,11 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
             consume();  // ">"
 
             if (
-                (LA(1) == NAME || literal_tokens_set.member((unsigned int) LA(1)))
+                (
+                    LA(1) == NAME
+                    || literal_tokens_set.member((unsigned int) LA(1))
+                    || parencount != 0
+                )
                 && !perform_mode_before_mode_statement_check(MODE_FUNCTION_DECL_TS)
                 && !perform_mode_before_mode_statement_check(MODE_DECL_STATEMENT_TS)
             )
@@ -20600,7 +20605,12 @@ control_initialization_js[] {
             { LA(1) == COLON }?
             colon_marked |
 
+            // use this rule for commas in a call
+            { bracket_types_js.back() == "cLPAREN" }?
             comma |
+
+            // use this rule for any other unhandled comma instance
+            comma_marked |
 
             {
                 // ensure ";" is not consumed here
@@ -20648,6 +20658,13 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { LA(1) == COLON }?
             colon_marked |
 
+            // use this rule for commas in a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma |
+
+            // use this rule for any other unhandled comma instance
+            comma_marked |
+
             {
                 // ensure ";" is not consumed here
                 if (LA(1) == TERMINATE)
@@ -20656,9 +20673,7 @@ control_condition_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            expression |
-
-            comma
+            expression
         )*
 
         {
@@ -20696,6 +20711,13 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             { LA(1) == COLON }?
             colon_marked |
 
+            // use this rule for commas in a call
+            { bracket_types_js.back() == "cLPAREN" }?
+            comma |
+
+            // use this rule for any other unhandled comma instance
+            comma_marked |
+
             {
                 // ensure non-call ")" is not consumed here
                 if (LA(1) == RPAREN && lparen_types_js.back() != 'c')
@@ -20704,9 +20726,7 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
-            expression |
-
-            comma
+            expression
         )*
 ;
 
