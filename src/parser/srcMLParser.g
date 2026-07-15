@@ -25390,7 +25390,10 @@ perform_function_declaration_check_ts[] returns [bool isdecl] {
                     if (LA(1) == LPAREN)
                         paren_pair();
 
-                    if (LA(1) == TERMINATE && next_token() != RCURLY)
+                    if (
+                        tempops_count < 0
+                        || (LA(1) == TERMINATE && next_token() != RCURLY)
+                    )
                         break;
 
                     // determine if "{" starts an object or a kind of block
