@@ -94,6 +94,20 @@
 <operator>)</operator></expr></yield></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- "asserts" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>contextSensitive</name> <init>= <expr><object>{
+    <property><expr><name>asserts</name></expr>: <expr><literal type="string">"asserts"</literal></expr></property>
+}</object></expr></init></decl></decl_stmt>
+<expr_stmt><expr><call><name><name>contextSensitive</name><operator>.</operator><name>asserts</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+<expr_stmt><expr><call><name><name>asserts</name><operator>.</operator><name>contextSensitive</name></name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><call><name><name>foo</name><operator>.</operator><name>bar</name></name><argument_list>(<argument><expr><object>{ <property><expr><name>asserts</name></expr></property>, <property><expr><name>baz</name></expr></property> }</object></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
 <!-- "async"; can appear as a specifier within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">

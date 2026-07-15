@@ -504,6 +504,9 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && srcMLParser::general_operator_tokens_set.member(nextToken->getType())
         )
 
+        // the previous token was NOT a ":" and the current token is "asserts"
+        || (prevNonWhitespaceToken->getType() != srcMLParser::COLON && token->getType() == srcMLParser::TS_ASSERTS)
+
         // the current token is "void" and the next token is "=>"
         || (token->getType() == srcMLParser::JS_VOID && nextToken->getType() == srcMLParser::JS_ARROW)
 
