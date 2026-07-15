@@ -76,6 +76,18 @@
 </block_content>}</block></function></expr></else></ternary></expr></argument>)</argument_list></expr></init></decl>;</decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><call><operator>(</operator><function>function <name>r</name><parameter_list>(<parameter><decl><name>o</name></decl></parameter>)</parameter_list> <block>{<block_content>
+        <comment type="line">// ...</comment>
+    </block_content>}</block></function><operator>)</operator></call><argument_list>(
+        <argument><expr><function>function <parameter_list>(<parameter><decl><name>e</name></decl></parameter>)</parameter_list> <block>{<block_content>
+            <do>do <block>{<block_content/>}</block> while <condition>(<expr><literal type="boolean">true</literal></expr>)</condition></do>
+        </block_content>}</block></function></expr></argument>
+    )</argument_list></expr>;</return>
+</block_content>}</block></function>
+</unit>
+
 <!-- IIFEs (Lambdas) -->
 
 <unit revision="1.0.0" language="JavaScript">

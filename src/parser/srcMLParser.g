@@ -7139,6 +7139,12 @@ condition[] { ENTRY_DEBUG } :
 
             // mark the condition mode as the one to stop at a right parentheses; non-empty conditions contain an expression
             setMode(MODE_LIST | MODE_EXPRESSION | MODE_EXPECT);
+
+            // lparen starts a condition
+            if (inLanguage(LANGUAGE_JAVASCRIPT)) {
+                lparen_types_js.emplace_back('n');  // condition LPAREN
+                bracket_types_js.emplace_back("nLPAREN");
+            }
         }
 
         LPAREN
