@@ -7,47 +7,19 @@
 <if_stmt><if>if <condition><decl type="let">let <name>a</name> <init>= <expr><name>b</name></expr></init></decl></condition> <block>{<block_content/>}</block></if></if_stmt>
 </unit>
 
-<unit revision="1.0.0" language="Rust">
-<if_stmt><if>if <condition><decl type="let">let <name>a</name> <init>= <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></init></decl></condition> <block>{<block_content/>}</block></if></if_stmt>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<if_stmt><if>if <condition><decl type="let">let <modifier>mut</modifier> <name>a</name> <init>= <expr><name>b</name></expr></init></decl></condition> <block>{<block_content/>}</block></if></if_stmt>
-</unit>
-
 <!-- let else {} -->
 
 <unit revision="1.0.0" language="Rust">
 <decl_stmt><decl type="let">let <name>a</name> <init>= <expr><name>b</name></expr> <else>else <block>{<block_content/>}</block></else></init></decl>;</decl_stmt>
 </unit>
 
-<unit revision="1.0.0" language="Rust">
-<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr> <else>else <block>{<block_content> <return>return</return> </block_content>}</block></else></init></decl>;</decl_stmt>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<decl_stmt><decl type="let">let <name>a</name>: <type><name>i32</name></type> <init>= <expr><name>b</name></expr> <else>else <block>{<block_content> <return>return;</return> </block_content>}</block></else></init></decl>;</decl_stmt>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<decl_stmt><decl type="let">let <modifier>mut</modifier> <name>a</name>: <type><name>i32</name></type> <init>= <expr><name>b</name></expr> <else>else <block>{<block_content> <return>return;</return> </block_content>}</block></else></init></decl>;</decl_stmt>
-</unit>
-
 <!-- if let {} else {} -->
 
 <unit revision="1.0.0" language="Rust">
 <if_stmt><if>if <condition><decl type="let">let <name>a</name> <init>= <expr><name>b</name></expr></init></decl></condition> <block>{<block_content>
-  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></if> <else>else <block>{<block_content>
-  <return>return;</return>
-</block_content>}</block></else></if_stmt>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<if_stmt><if>if <condition><decl type="let">let <modifier>mut</modifier> <name>a</name> <init>= <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></init></decl></condition> <block>{<block_content>
-  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</block_content>}</block></if> <else>else <block>{<block_content>
-  <return>return;</return>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></else></if_stmt>
 </unit>
 
@@ -55,21 +27,11 @@
 
 <unit revision="1.0.0" language="Rust">
 <if_stmt><if>if <condition><decl type="let">let <name>a</name> <init>= <expr><name>b</name></expr></init></decl></condition> <block>{<block_content>
-  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></if> <if type="elseif">else if <condition><decl type="let">let <name>a</name> <init>= <expr><name>c</name></expr></init></decl></condition><block>{<block_content>
-  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></if> <else>else <block>{<block_content>
-  <return>return;</return>
-</block_content>}</block></else></if_stmt>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<if_stmt><if>if <condition><decl type="let">let <modifier>mut</modifier> <name>a</name> <init>= <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></init></decl></condition> <block>{<block_content>
-  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</block_content>}</block></if> <if type="elseif">else if <condition><decl type="let">let <modifier>mut</modifier> <name>a</name> <init>= <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></init></decl></condition> <block>{<block_content>
-  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-</block_content>}</block></if> <else>else <block>{<block_content>
-  <return>return;</return>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></else></if_stmt>
 </unit>
 
@@ -77,17 +39,19 @@
 
 <unit revision="1.0.0" language="Rust">
 <decl_stmt><decl type="let">let <name>a</name> <init>= <expr><if_stmt><if>if <condition><decl type="let">let <name>b</name> <init>= <expr><name>c</name></expr></init></decl></condition> <block>{<block_content>
-  <expr_stmt><expr><literal type="number">0</literal></expr>;</expr_stmt>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></if> <else>else <block>{<block_content>
-  <return>return;</return>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></else></if_stmt></expr></init></decl>;</decl_stmt>
 </unit>
 
+<!-- canonical error handling -->
+
 <unit revision="1.0.0" language="Rust">
 <decl_stmt><decl type="let">let <name>a</name> <init>= <expr><if_stmt><if>if <condition><decl type="let">let <call><name>Ok</name><argument_list>(<argument><decl><name>a</name></decl></argument>)</argument_list></call> <init>= <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></init></decl></condition> <block>{<block_content>
-  <expr_stmt><expr><literal type="number">0</literal></expr>;</expr_stmt>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></if> <else>else <block>{<block_content>
-  <expr_stmt><expr><macro><name>panic</name>!<argument_list>(<argument><expr><literal type="string">"Error"</literal></expr></argument>)</argument_list></macro></expr>;</expr_stmt>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></else></if_stmt></expr></init></decl>;</decl_stmt>
 </unit>
 

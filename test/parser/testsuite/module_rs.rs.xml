@@ -10,7 +10,7 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<module><specifier>pub</specifier> mod <name>module</name> <block>{
+<module>mod <name>module</name> <block>{
   <function>fn <name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
   <struct>struct <name>A</name> <block>{}</block></struct>
   <trait>trait <name>B</name> <block>{}</block></trait>
@@ -20,15 +20,13 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<module> mod <name>module</name> <block>{
-  <attribute type="innner">#![<expr><call><name>allow</name><argument_list>(<argument><name>unused</name></argument>)</argument_list></call></expr>]</attribute>
-
-  <attribute type="outer">#[<expr><call><name>warn</name><argument_list>(<argument><name>unused_variables</name></argument>)</argument_list></call></expr>]</attribute>
-  <module><specifier>pub</specifier> mod <name>submodule</name> <block>{
-    <attribute type="innner">#![<expr><call><name>allow</name><argument_list>(<argument><name>dead_code</name></argument>)</argument_list></call></expr>]</attribute>
-
-    <attribute type="outer">#[<expr><call><name>allow</name><argument_list>(<argument><name>missing_docs</name></argument>)</argument_list></call></expr>]</attribute>
-    <function><specifier>pub</specifier> fn <name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<module>mod <name>module</name> <block>{
+  <module>mod <name>submodule</name> <block>{
+    <function>fn <name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+    <struct>struct <name>A</name> <block>{}</block></struct>
+    <trait>trait <name>B</name> <block>{}</block></trait>
+    <impl>impl <name>A</name> <block>{}</block></impl>
+    <module>mod <name>b</name> <block>{}</block></module>
   }</block></module>
 }</block></module>
 </unit>

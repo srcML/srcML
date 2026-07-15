@@ -4,47 +4,55 @@
 <!-- visibility -->
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>pub</specifier></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub(self)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>pub(self)</specifier></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub(super)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>pub(super)</specifier></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub(crate)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>pub(crate)</specifier></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub(in <name>crate</name>)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>pub(in <name>a</name>)</specifier></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>pub(in <name><name>crate</name><operator>::</operator><name>module</name></name>)</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>pub(in <name><name>a</name><operator>::</operator><name>b</name></name>)</specifier></expr>
 </unit>
 
 <!-- foreign function interface -->
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>extern</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>extern</specifier></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>extern <literal type="string">"system"</literal></specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>extern <literal type="string">"C"</literal></specifier></expr>
 </unit>
 
 <!-- memory safety -->
 
 <unit revision="1.0.0" language="Rust">
-<function><specifier>unsafe</specifier> fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+<expr><specifier>unsafe</specifier></expr>
+</unit>
+
+<!-- 'safe' is a qualifier, it is only a specifier in the context of item declarations in unsafe extern blocks -->
+<unit revision="1.0.0" language="Rust">
+<expr><name>safe</name></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function_decl><specifier>safe</specifier> fn <name>foo</name><parameter_list>()</parameter_list>;</function_decl>
+<block><specifier>unsafe</specifier> <specifier>extern <literal type="string">"C"</literal></specifier> {<block_content>
+  <decl_stmt><decl type="static"><specifier>safe</specifier> static <name>A</name>: <type><name>i32</name></type></decl>;</decl_stmt>
+  <function_decl><specifier>safe</specifier> fn <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+</block_content>}</block>
 </unit>
 
 <unit revision="1.0.0" language="Rust">

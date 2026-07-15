@@ -2,47 +2,21 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="loop_rs">
 
 <unit revision="1.0.0" language="Rust">
-<loop>loop <block>{<block_content>
-  <if_stmt><if>if <condition><expr><name>x</name> <operator>&lt;</operator> <literal type="number">64</literal></expr></condition> <block>{<block_content>
-    <continue>continue;</continue>
-  </block_content>}</block></if> <else>else <block>{<block_content>
-    <break>break;</break>
-  </block_content>}</block></else></if_stmt>
-
-  <expr_stmt><expr><name>x</name> <operator>+=</operator> <literal type="number">2</literal></expr></expr_stmt>
-</block_content>}</block></loop>
+<loop>loop <block>{<block_content/>}</block></loop>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
 <loop>loop <block>{<block_content>
-  <if_stmt><if>if <condition><expr><name>n</name> <operator>&gt;</operator> <literal type="number">4</literal></expr></condition> <block>{<block_content>
-    <break>break <expr><name>n</name></expr>;</break>
-  </block_content>}</block></if></if_stmt>
-
-  <expr_stmt><expr><name>n</name> <operator>=</operator> <operator>(</operator><name>n</name> <operator>*</operator> <literal type="number">2</literal><operator>)</operator> <operator>%</operator> <literal type="number">10</literal></expr>;</expr_stmt>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></loop>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<label>'<name>outer</name>:</label> <loop>loop <block>{<block_content>
-  <decl_stmt><decl type="let">let <name>x</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
-  <decl_stmt><decl type="let">let <name>a</name> <init>= <expr><label>'<name>inner</name>:</label> <loop>loop <block>{<block_content>
-    <expr_stmt><expr><name>x</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><loop>loop <block>{<block_content/>}</block></loop></expr></init></decl>;</decl_stmt>
+</unit>
 
-    <if_stmt><if>if <condition><expr><name>x</name> <operator>&lt;</operator> <literal type="number">64</literal></expr></condition> <block>{<block_content>
-      <continue>continue;</continue>
-    </block_content>}</block></if> <if type="elseif">else if <condition><expr><name>x</name> <operator>&lt;</operator> <literal type="number">128</literal></expr></condition> <block>{<block_content>
-      <break>break '<name>outer</name>;</break>
-    </block_content>}</block></if> <else>else <block>{<block_content>
-      <break>break '<name>inner</name> <expr><name>x</name></expr>;</break>
-    </block_content>}</block></else></if_stmt>
-  </block_content>}</block></loop></expr></init></decl>;</decl_stmt>
-
-  <expr_stmt><expr><name>n</name> <operator>=</operator> <name>a</name> <operator>%</operator> <literal type="number">2</literal></expr>;</expr_stmt>
-  <if_stmt><if>if <condition><expr><name>n</name> <operator>==</operator> <literal type="number">0</literal></expr></condition> <block>{<block_content>
-    <break>break;</break>
-  </block_content>}</block></if></if_stmt>
-</block_content>}</block></loop>
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>=</operator> <loop>loop <block>{<block_content/>}</block></loop></expr>
 </unit>
 
 </unit>

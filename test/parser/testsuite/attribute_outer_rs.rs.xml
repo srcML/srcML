@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="attribute_outer_rs">
 
-<unit revision="1.0.0" language="Rust">
-<attribute type="outer">#[<expr><call><name>allow</name><argument_list>(<argument><name>unused</name></argument>)</argument_list></call></expr>]</attribute>
-</unit>
-
 <!-- declarations -->
 
 <unit revision="1.0.0" language="Rust">
 <module><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> mod <name>module</name> <block>{}</block></module>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<module><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">"first"</literal></expr>]</attribute>
+<attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">"second"</literal></expr>]</attribute>
+mod <name>module</name> <block>{}</block></module>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
@@ -39,23 +41,23 @@
 <union><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> union <name>A</name> <block>{}</block></union>
 </unit>
 
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<unit revision="1.0.0" language="Rust">
 <decl_stmt><decl type="let"><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> let <name>a</name>: <type><name>i32</name></type></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<unit revision="1.0.0" language="Rust">
 <decl_stmt><decl type="const"><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> const <name>A</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<unit revision="1.0.0" language="Rust">
 <decl_stmt><decl type="static"><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> static <name>A</name>: <type><name>i32</name></type> <init>= <expr><literal type="string">0</literal></expr></init></decl>;</decl_stmt>
 </unit>
 
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<unit revision="1.0.0" language="Rust">
 <trait><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> trait <name>A</name> <block>{}</block></trait>
 </unit>
 
-<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust">
+<unit revision="1.0.0" language="Rust">
 <impl><attribute type="outer">#[<expr><name>doc</name> <operator>=</operator> <literal type="string">""</literal></expr>]</attribute> impl <name>A</name> <block>{}</block></impl>
 </unit>
 

@@ -6,12 +6,14 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<macro_rules>macro_rules! <name>a</name> { <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content><expr><name>b</name></expr></block_content>}</block></macro_defn> }</macro_rules>
+<macro_rules>macro_rules! <name>a</name> { <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content/>}</block></macro_defn> }</macro_rules>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<macro_rules>macro_rules! <name>null</name> {
-  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content><expr><literal type="number">0</literal></expr></block_content>}</block></macro_defn>;
+<macro_rules>macro_rules! <name>a</name> {
+  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content>
+    <empty_stmt>;</empty_stmt>
+  </block_content>}</block></macro_defn>
 }</macro_rules>
 </unit>
 
@@ -33,9 +35,7 @@
 
 <unit revision="1.0.0" language="Rust">
 <macro_rules>macro_rules! <name>sum</name> {
-  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content>
-    <expr><literal>$a</literal></expr>
-  </block_content>}</block></macro_defn>;
+  <macro_defn><parameter_list>()</parameter_list> =&gt; <block>{<block_content/>}</block></macro_defn>;
 
   <macro_defn><parameter_list>(<parameter>$a:expr</parameter>)</parameter_list> =&gt; <block>{<block_content>
     <expr><name>$a</name></expr>
@@ -84,7 +84,6 @@
     <repetition type="*">$(
       <repetition type="+">$(
         <repetition type="?">$(
-          <expr_stmt><expr><call><name>foo</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
         )?</repetition>
       )+</repetition>
     )*</repetition>
@@ -164,11 +163,21 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
+<macro_rules>macro_rules! <name>a</name> {
+  <macro_defn><parameter_list>(<parameter>$( $a:expr )?</parameter>, <parameter>$( $a:expr ),+</parameter>, <parameter>$( $a:expr ),*</parameter>)</parameter_list> =&gt; <block>{<block_content>
+    <repetition type="?">$()?</repetition>
+    <repetition type="+">$()+</repetition>
+    <repetition type="*">$()*</repetition>
+  </block_content>}</block></macro_defn>
+}</macro_rules>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
 <macro_rules type="new">macro <name>a</name><parameter_list>()</parameter_list> <block>{<block_content>
   <repetition type="*">$(
     <repetition type="+">$(
       <repetition type="?">$(
-        <expr_stmt><expr><call><name>foo</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+        <empty_stmt>;</empty_stmt>
       )?</repetition>
     )+</repetition>
   )*</repetition>

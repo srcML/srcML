@@ -2,47 +2,25 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="for_rs">
 
 <unit revision="1.0.0" language="Rust">
-<for>for <control><decl><name>_</name></decl> <range>in <expr><literal type="number">0</literal><operator>..</operator><name>n</name></expr></range></control> <block>{<block_content>
-  <expr_stmt><expr><call><name>someFunction</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+<for>for <control><decl><name>_</name></decl> <range>in <expr><name>iterator</name></expr></range></control> <block>{<block_content/>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<for>for <control><decl><name>_</name></decl> <range>in <expr><name>iterator</name></expr></range></control> <block>{<block_content>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></for>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<for>for <control><decl><name>item</name></decl> <range>in <expr><name>list</name></expr></range></control> <block>{<block_content>
-  <expr_stmt><expr><name>x</name> <operator>+=</operator> <name><name>item</name><operator>.</operator><name>value</name></name></expr>;</expr_stmt>
-</block_content>}</block></for>
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><for>for <control><decl><name>_</name></decl> <range>in <expr><name>iterator</name></expr></range></control> <block>{<block_content/>}</block></for></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<for>for <control><decl><name>n</name></decl> <range>in <expr><literal type="number">1</literal><operator>..</operator><literal type ="number">9</literal></expr></range></control> <block>{<block_content>
-  <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>n</name></expr>;</expr_stmt>
-</block_content>}</block></for>
+<expr><name>a</name> <operator>=</operator> <for>for <control><decl><name>_</name></decl> <range>in <expr><name>iterator</name></expr></range></control> <block>{<block_content/>}</block></for></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<for>for <control><decl><name>n</name></decl> <range>in <expr><literal type="number">1</literal><type><name>i8</name></type><operator>..=</operator><literal type ="number">8</literal></expr></range></control> <block>{<block_content>
-  <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>n</name></expr>;</expr_stmt>
-</block_content>}</block></for>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<label>'<name>label</name>:</label> <for>for <control><decl><name>string</name></decl> <range>in <expr><call><name><name>string_list</name><operator>.</operator><name>into_iter</name></name><argument_list>()</argument_list></call></expr></range></control> <block>{<block_content>
-  <if_stmt><if>if <condition><expr><name>string</name> <operator>==</operator> <literal type="string">"needle"</literal></expr></condition> <block>{<block_content>
-    <expr_stmt><expr><name>found</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
-    <break>break '<name>label</name>;</break>
-  </block_content>}</block></if></if_stmt>
-</block_content>}</block></for>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><for>for <control><decl><name>_</name></decl> <range>in <expr><literal type="number">0</literal><operator>..</operator><name>n</name></expr></range></control> <block>{<block_content/>}</block></for></expr></init></decl>;</decl_stmt>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<for>for <control><decl><tuple>(<decl><name>index</name></decl>, <decl><name>value</name></decl>)</tuple></decl> <range>in <expr><call><name><name>list</name><operator>.</operator><name>iter</name><operator>.</operator><name>enumerate</name></name><argument_list>()</argument_list></call></expr></range></control> <block>{<block_content>
-  <expr_stmt><expr><name>final</name> <operator>+=</operator> <name>value</name></expr>;</expr_stmt>
-  <expr_stmt><expr><name>amount</name> <operator>-=</operator> <name>index</name></expr>;</expr_stmt>
-</block_content>}</block></for>
+<for>for <control><decl><tuple>(<decl><name>index</name></decl>, <decl><name>value</name></decl>)</tuple></decl> <range>in <expr><name>enumerated</name></expr></range></control> <block>{<block_content/>}</block></for>
 </unit>
 
 </unit>

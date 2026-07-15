@@ -193,6 +193,12 @@
 <expr><name>a</name><operator>::</operator><name>b</name></expr>
 </unit>
 
+<!-- indexing -->
+
+<unit revision="1.0.0" language="Rust">
+<expr><name><name>a</name><index>[<expr><name>b</name></expr>]</index></name></expr>
+</unit>
+
 <!-- turbo fish 🐠 -->
 
 <unit revision="1.0.0" language="Rust">

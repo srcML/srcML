@@ -124,4 +124,14 @@ a
 <comment type="block outer">/** <comment type="block">/* */</comment>  <comment type="block inner">/*! */</comment> <comment type="block outer">/** */</comment> */</comment>
 </unit>
 
+<!-- shebang comments -->
+
+<unit revision="1.0.0" language="Rust"><comment type="hashbang">#!</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="hashbang">#!/usr/bin/env rustx</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="hashbang">#!_[</comment></unit>
+
+<unit revision="1.0.0" language="Rust"><comment type="hashbang">#!"#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~</comment></unit>
+
 </unit>

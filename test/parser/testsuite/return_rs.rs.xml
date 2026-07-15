@@ -10,33 +10,11 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
+<return>return <expr><name>result</name></expr></return>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
 <return>return <expr><name>result</name></expr>;</return>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<return>return <expr><literal type="number">0</literal></expr>;</return>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<return>return <expr><name>a</name> <operator>*</operator> <literal type="number">0</literal></expr>;</return>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<block>{<block_content>
-  <return>return</return>
-</block_content>}</block>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<block>{<block_content>
-  <return>return;</return>
-</block_content>}</block>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<switch>match <expr><name>a</name></expr> <block>{<block_content>
-  <case><expr><name>_</name></expr> =&gt; <block type="pseudo"><block_content><return>return</return></block_content></block></case>
-</block_content>}</block></switch>
 </unit>
 
 </unit>

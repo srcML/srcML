@@ -6,6 +6,24 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <decl><name>Variant</name></decl>
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <struct type="tuple"><name>TupleVariant</name><tuple>()</tuple></struct>
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <struct><name>StructVariant</name> <block>{}</block></struct>
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
 <enum>enum <name>ColorSpace</name> <block>{
   <decl><name>Binary</name></decl>,
   <struct type="tuple"><name>RGB</name><tuple>(<type><name>u8</name></type>, <type><name>u8</name></type>, <type><name>u8</name></type>)</tuple></struct>,

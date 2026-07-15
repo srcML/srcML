@@ -2,54 +2,21 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="while_rs">
 
 <unit revision="1.0.0" language="Rust">
-<while>while <condition><expr><name>x</name> <operator>&lt;</operator> <literal type="number">16</literal></expr></condition> <block>{<block_content>
-  <expr_stmt><expr><name>n</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
-  <expr_stmt><expr><name>x</name> <operator>+=</operator> <name>n</name></expr>;</expr_stmt>
+<while>while <condition><expr><name>a</name></expr></condition> <block>{<block_content/>}</block></while>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<while>while <condition><expr><name>a</name></expr></condition> <block>{<block_content>
+  <empty_stmt>;</empty_stmt>
 </block_content>}</block></while>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<while>while <condition><expr><name>n</name> <operator>&lt;</operator> <literal type="number">4</literal></expr></condition> <block>{<block_content>
-  <while>while <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">8</literal></expr></condition> <block>{<block_content>
-    <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
-    <expr_stmt><expr><name>result</name> <operator>-=</operator> <name>i</name></expr>;</expr_stmt>
-  </block_content>}</block></while>
-
-  <expr_stmt><expr><name>n</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
-</block_content>}</block></while>
+<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><while>while <condition><expr><name>a</name></expr></condition> <block>{<block_content/>}</block></while></expr></init></decl>;</decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><while>while <condition><expr><name>n</name> <operator>&lt;</operator> <literal type="number">8</literal></expr></condition> <block>{<block_content>
-  <expr_stmt><expr><name>n</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
-  <expr_stmt><expr><name>result</name> <operator>+=</operator> <name>n</name></expr>;</expr_stmt>
-  <if_stmt><if>if <condition><expr><name>result</name> <operator>&gt;</operator> <literal type="number">32</literal></expr></condition> <block>{<block_content>
-    <break>break;</break>
-  </block_content>}</block></if><if type="elseif">if <condition><expr><name>result</name> <operator>&lt;</operator> <literal type="number">4</literal></expr></condition> <block>{<block_content>
-    <return>return;</return>
-  </block_content>}</block></if></if_stmt>
-</block_content>}</block></while></expr></init></decl>;</decl_stmt>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<label>'<name>outer</name>:</label> <while>while <condition><expr><name>n</name> <operator>&lt;</operator> <literal type="number">4</literal></expr></condition> <block>{<block_content>
-  <while>while <condition><expr><name>i</name> <operator>&lt;</operator> <literal type="number">8</literal></expr></condition> <block>{<block_content>
-    <expr_stmt><expr><name>i</name> <operator>+=</operator> <literal type="number">2</literal></expr>;</expr_stmt>
-    <expr_stmt><expr><name>result</name> <operator>-=</operator> <name>i</name></expr>;</expr_stmt>
-    <if_stmt><if>if <condition><expr><name>result</name> <operator>&lt;</operator> <literal type="number">0</literal></expr></condition> <block>{<block_content>
-      <break>break '<name>outer</name>;</break>
-    </block_content>}</block></if></if_stmt>
-  </block_content>}</block></while>
-
-  <expr_stmt><expr><name>n</name> <operator>+=</operator> <literal type="number">1</literal></expr>;</expr_stmt>
-
-</block_content>}</block></while>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<decl_stmt><decl type="let">let <name>a</name> <init>= <expr><label>'<name>label</name>:</label> <while>while <condition><expr><name>n</name> <operator>&lt;</operator> <literal type="number">8</literal></expr></condition> <block>{<block_content>
-  <break>break '<name>label</name>;</break>
-</block_content>}</block></while></expr></init></decl>;</decl_stmt>
+<expr><name>a</name> <operator>=</operator> <while>while <condition><expr><name>a</name></expr></condition> <block>{<block_content/>}</block></while></expr>
 </unit>
 
 </unit>

@@ -57,4 +57,12 @@
 <expr><name>a</name> <operator>=</operator> <label>'<name>label</name>:</label> <block>{<block_content/>}</block></expr>
 </unit>
 
+<!-- match statements -->
+
+<unit revision="1.0.0" language="Rust">
+<switch>match <expr><name>a</name></expr> <block>{<block_content>
+  <case><expr><name>_</name></expr> =&gt; <label>'<name>label</name>:</label> <block>{<block_content/>}</block></case>
+</block_content>}</block></switch>
+</unit>
+
 </unit>

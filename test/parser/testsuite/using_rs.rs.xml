@@ -10,15 +10,23 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
+<using><specifier>pub</specifier> use <name>A</name> <alias>as <name>B</name></alias>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<using>use <name><operator>::</operator><name>A</name></name>;</using>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
 <using>use <name><name>std</name><operator>::</operator><name>io</name></name>;</using>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<using>use <name><name>std</name><operator>::</operator><name>io</name><operator>::</operator><name>Result</name></name> <alias>as <name>IoResult</name></alias>;</using>
+<using>use <name><operator>::</operator><name>std</name><operator>::</operator><name>io</name></name>;</using>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<using><specifier>pub</specifier> use <name><name>std</name><operator>::</operator><name>fmt</name><operator>::</operator><name>Result</name></name> <alias>as <name>FmtResult</name></alias>;</using>
+<using>use <name><name>std</name><operator>::</operator><name>io</name><operator>::</operator><name>Result</name></name> <alias>as <name>IoResult</name></alias>;</using>
 </unit>
 
 <unit revision="1.0.0" language="Rust">

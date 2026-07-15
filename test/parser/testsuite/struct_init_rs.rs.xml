@@ -2,25 +2,20 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="struct_init_rs">
 
 <unit revision="1.0.0" language="Rust">
+<expr><call><name>A</name><argument_list>{}</argument_list></call></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
 <expr><call><name>A</name><argument_list>{<argument><expr><name>a</name><operator>:</operator> <literal type="number">0</literal></expr></argument>}</argument_list></call></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<expr><call><name>A</name><argument_list>{<argument><expr><name>a</name><operator>:</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><name>b</name><operator>:</operator> <literal type="boolean">true</literal></expr></argument>}</argument_list></call></expr>
+<expr><call><name>A</name><argument_list>{<argument><expr><name>a</name><operator>:</operator> <literal type="number">0</literal></expr></argument>, <argument><expr><name>b</name><operator>:</operator> <literal type="number">0</literal></expr></argument>}</argument_list></call></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
 <expr><call><name>A</name><argument_list>{
-  <argument><expr><name>a</name><operator>:</operator> <literal type="number">0</literal></expr></argument>,
-  <argument><expr><name>b</name><operator>:</operator> <literal type="boolean">true</literal></expr></argument>
-  <argument><expr><name>c</name><operator>:</operator> <call><name>B</name><argument_list>()</argument_list></call></expr></argument>
-}</argument_list></call></expr>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<expr><call><name>A</name><argument_list>{
-  <argument><expr><name>a</name><operator>:</operator> <literal type="number">0</literal></expr></argument>,
-  <argument><expr><name>b</name><operator>:</operator> <literal type="boolean">true</literal></expr></argument>
+  <argument><expr><name>c</name><operator>:</operator> <name>b</name></expr></argument>,
   <argument><expr><name>c</name><operator>:</operator> <call><name>B</name><argument_list>()</argument_list></call></expr></argument>,
   <argument><expr><name>d</name><operator>:</operator> <literal type="number">0</literal> <operator>+</operator> <literal type="number">1</literal></expr></argument>
 }</argument_list></call></expr>

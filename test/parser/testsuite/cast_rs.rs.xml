@@ -45,10 +45,14 @@
 <expr><name>a</name> <operator>as</operator> <name><name>T</name><argument_list type="generic">&lt;<argument><name>S</name></argument>&gt;</argument_list></name></expr>
 </unit>
 
-<!-- FIXME: following cause hanging -->
+<!-- FIXME: following cause hanging—function types are root -->
 
 <unit revision="1.0.0" language="Rust">
-<expr><name>a</name> <operator>as</operator> <function_decl>fn <parameter_list>()</parameter_list> -&gt; <type><name>T</name></type></function_decl></expr>
+<expr><name>a</name> <operator>as</operator> <function_decl>fn<parameter_list>()</parameter_list></function_decl></expr>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<expr><name>a</name> <operator>as</operator> <function_decl>fn<parameter_list>()</parameter_list> -&gt; <type><name>T</name></type></function_decl></expr>
 </unit>
 
 <unit revision="1.0.0" language="Rust">

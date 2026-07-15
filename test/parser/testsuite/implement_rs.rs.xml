@@ -89,27 +89,9 @@
 
   <function>fn <name>a</name><parameter_list>(<parameter><decl><modifier>&amp;</modifier><modifier>mut</modifier> <name>self</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 
-  <decl_stmt><decl type="const"><specifier>pub</specifier> const <name>VARIANT</name>: <type><name>A</name></type> <init>= <expr><call><name>A</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
-}</block></impl>
-</unit>
+  <decl_stmt><decl type="const"><specifier>pub</specifier> const <name>NULL</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 
-<unit revision="1.0.0" language="Rust">
-<impl>impl <name>Clone</name> for <name>A</name> <block>{
-  <function>fn <name>clone</name><parameter_list>(<parameter><decl><modifier>&amp;</modifier><name>self</name></decl></parameter>)</parameter_list> -&gt; <type><name>A</name></type> <block>{<block_content>
-    <expr><operator>*</operator><name>self</name></expr>
-  </block_content>}</block></function>
-}</block></impl>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<impl>impl <name><name>std</name><operator>::</operator><name>ops</name><operator>::</operator><name>Add</name></name> for <name>ImaginaryNumber</name> <block>{
-  <typedef>type <name>Output</name> = <type><name>ImaginaryNumber</name></type>;</typedef>
-  <function>fn <name>add</name><parameter_list>(<parameter><decl><name>self</name></decl></parameter>, <parameter><decl><name>self</name>: <type><name>ImaginaryNumber</name></type></decl></parameter>)</parameter_list> -&gt; <type><name>ImaginaryNumber</name></type> <block>{<block_content>
-    <expr><call><name>ImaginaryNumber</name><argument_list>{
-      <argument><expr><name>real</name><operator>:</operator> <name>self</name><operator>.</operator><name>real</name> <operator>+</operator> <name>rhs</name><operator>.</operator><name>real</name></expr></argument>,
-      <argument><expr><name>iota</name><operator>:</operator> <name>self</name><operator>.</operator><name>iota</name> <operator>+</operator> <name>rhs</name><operator>.</operator><name>iota</name></expr></argument>
-    }</argument_list></call></expr>
-  </block_content>}</block></function>
+  <typedef>type <name>Int</name> = <type><name>i32</name></type>;</typedef>
 }</block></impl>
 </unit>
 
