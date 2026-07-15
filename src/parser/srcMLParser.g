@@ -22397,7 +22397,13 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                             if (LA(1) == RPAREN || LA(1) == RCURLY || LA(1) == RBRACKET)
                                 --bracket_count;
 
-                            if (bracket_count < 0 || (bracket_count == 0 && LA(1) == TERMINATE))
+                            if (
+                                bracket_count < 0
+                                || (
+                                    bracket_count == 0
+                                    && (LA(1) == COMMA || LA(1) == TERMINATE)
+                                )
+                            )
                                 break;
 
                             consume();

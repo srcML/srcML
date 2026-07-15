@@ -374,6 +374,15 @@
 }</block></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>void</name></ts:type></ts:function_decl>
 </unit>
 
+<!-- Looks like a type, but is not -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>v</name> <init>= <expr><operator>new</operator> <call><name>baz</name><argument_list>(<argument><expr><object>{
+    <property><expr><name>foo</name></expr>: <expr><lambda><parameter_list>(<parameter><decl><name>t</name></decl></parameter>, <parameter><decl><name>e</name></decl></parameter>, <parameter><decl><name>i</name></decl></parameter>, <parameter><decl><name>n</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>e</name> <operator>&gt;</operator> <operator>-</operator><literal type="number">1</literal></expr> ?</condition><then> <expr><operator>new</operator> <call><name>_g</name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><name>t</name></expr></else></ternary></expr></lambda></expr></property>,
+    <property><expr><function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>,
+}</object></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Edge Cases -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
