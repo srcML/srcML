@@ -251,6 +251,11 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<for>for<control>(<init><decl type="var">var <name>x</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</init> <condition><expr><name>x</name> <operator>&lt;</operator> <name>y</name></expr>;</condition> <incr><expr><name>x</name><operator>++</operator></expr></incr>)</control>;</for>
+<expr_stmt><expr><name>z</name> <operator>&amp;&amp;</operator> <call><name>foo</name><argument_list>(<argument><expr><name>z</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
 <!-- Statement with Blocks followed by Bare Blocks -->
 
 <unit revision="1.0.0" language="JavaScript">

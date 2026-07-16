@@ -20552,6 +20552,12 @@ for_control_js[] { ENTRY_DEBUG } :
         {
             if (inMode(MODE_FOR_CONTROL_JS))
                 endMode(MODE_FOR_CONTROL_JS);
+
+            // special case: for-loop that ends immediately after the control
+            if (inMode(MODE_STATEMENT) && LA(1) == TERMINATE && LT(1)->getText() == ";") {
+                consume();
+                endMode(MODE_STATEMENT);
+            }
         }
 ;
 
