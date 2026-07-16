@@ -98,6 +98,7 @@ tokens {
 OPERATORS options { testLiterals = true; } {
     int start = LA(1);
     int xmlcount = 0;
+    int curlycount = 0;
 
     char prevchar = '\000';      // [JavaScript] records previous char before it is consumed
     char stringtoken = '\000';   // [JavaScript] denotes a string: '"', '\'', or '`'
@@ -542,7 +543,13 @@ OPERATORS options { testLiterals = true; } {
         // allow unicode (e.g., \u0061)
         { inLanguage(LANGUAGE_JAVASCRIPT) && (LA(1) == 'u' || LA(1) == 'U') }?
         (
-            ('0'..'9' | 'a'..'z' | 'A'..'Z' | '{' | '}')*
+            (
+                '0'..'9' | 'a'..'z' | 'A'..'Z' |
+
+                ('{' { ++curlycount; }) |
+
+                { curlycount > 0 }? ('}' { --curlycount; })
+            )*
             { $setType(NAME); }
         ) |
 
