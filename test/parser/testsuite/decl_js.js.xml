@@ -492,6 +492,23 @@
 }</block></class>
 </unit>
 
+<!-- Note: This example should NOT contain declarations in classes, even if it may look like it -->
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><array>[
+  <expr><object>{
+    <property><expr><name>bar</name></expr>: <expr><class>class <name>baz</name> <block>{
+      <expr_stmt><expr><call><name>call</name><argument_list>(
+        <argument><expr><lambda><parameter><decl><name>r</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
+          <decl_stmt><decl type="const">const <name>a</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>u</name></decl></parameter>)</parameter_list> <block>{<block_content>
+            <expr_stmt><expr><name>s</name> <operator>=</operator> <name>s</name> <operator>||</operator> <name>u</name></expr>, <expr><name>i</name><operator>--</operator></expr></expr_stmt>
+          </block_content>}</block></function></expr></init></decl></decl_stmt>
+        </block_content>}</block></lambda></expr></argument>
+      )</argument_list></call></expr></expr_stmt>
+    }</block></class></expr></property>
+  }</object></expr>
+]</array></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Strings as Declaration Names -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

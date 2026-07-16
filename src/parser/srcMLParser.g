@@ -27519,7 +27519,6 @@ perform_mode_before_mode_statement_check[srcMLState::MODE_TYPE m] returns [bool 
         rewind(start);
 } :;
 
-
 /*
   perform_top_level_class_check_js
 
@@ -27538,9 +27537,11 @@ perform_top_level_class_check_js[] returns [bool istop] {
             // must be in a class, otherwise the check is pointless
             if (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS)) {
                 // end the current block down to its associated statement
-                if (inTransparentMode(MODE_LCURLY_BLOCK_JS)) {
-                    endDownToMode(MODE_LCURLY_BLOCK_JS);
-                    endMode(MODE_LCURLY_BLOCK_JS);
+                if (inTransparentMode(MODE_BLOCK)) {
+                    endDownOverMode(MODE_BLOCK);
+
+                    if (inMode(MODE_LCURLY_BLOCK_JS))
+                        endMode(MODE_LCURLY_BLOCK_JS);
                 }
 
                 // found the class
