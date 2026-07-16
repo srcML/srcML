@@ -9,5 +9,14 @@
 <throw>throw <expr><operator>new</operator> <call><name>Error</name><argument_list>(<argument><expr><literal type="string">"Required"</literal></expr></argument>)</argument_list></call></expr></throw>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>temp</name> <init>= <expr><lambda><parameter><decl><name>o</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
+  <throw>throw <expr><call><name><name>foo</name><operator>.</operator><name>bar</name></name><argument_list>(
+    <argument><expr><lambda><parameter_list>()</parameter_list><operator>=&gt;</operator><expr><call><name><name>e</name><operator>.</operator><name>baz</name></name><argument_list>(<argument><expr><name>o</name></expr></argument>)</argument_list></call></expr></lambda></expr></argument>
+  )</argument_list></call></expr><operator>,</operator>
+  <expr><name>o</name></expr></throw>
+</block_content>}</block></lambda></expr></init></decl></decl_stmt>
+</unit>
+
 </unit>
 
