@@ -4113,7 +4113,16 @@ perform_ternary_check[] returns [bool is_ternary] {
 
         try {
             ternary_check();
-            if (LA(1) == QMARK)
+            if (
+                LA(1) == QMARK
+                && (
+                    !inLanguage(LANGUAGE_JAVASCRIPT)
+                    || (
+                        inLanguage(LANGUAGE_JAVASCRIPT)
+                        && next_token() != EQUAL
+                    )
+                )
+            )
                 is_ternary = true;
         } catch(...) {}
 
@@ -23593,42 +23602,35 @@ perform_tagged_template_check_js[int& call_count] returns [bool istagged] {
 
         try {
             while (LA(1) != antlr::Token::EOF_TYPE) {
-                // process consecutive argument lists (before backticks)
-                while (LA(1) == LPAREN) {
-                    paren_pair();
-                    ++call_count;
+                // case 1: compound names
+                if (LA(1) == NAME || LA(1) == PERIOD) {
+                    consume();
                 }
-
-                // process consecutive backtick arguments
-                while (LA(1) == BACKTICK_START) {
+                // case 2: generic argument list on a compound name
+                else if (LA(1) == TEMPOPS && generic_argument_list_check()) {
+                    angle_bracket_pair();
+                }
+                // case 3: backtick literals
+                else if (LA(1) == BACKTICK_START) {
                     if (last_consumed_guessing_mode == NAME || last_consumed_guessing_mode == RPAREN)
                         istagged = true;
 
                     backtick_literal_js();
                     ++call_count;
                 }
-
-                // process consecutive argument lists (after backticks)
-                while (LA(1) == LPAREN) {
+                // case 4: call argument lists
+                else if (LA(1) == LPAREN) {
                     paren_pair();
                     ++call_count;
                 }
-
-                // do not confuse array indexing (e.g., a[`${type}`]) with tagged templates
-                if (last_consumed_guessing_mode == NAME && LA(1) == LBRACKET)
+                // case 5: array indexing on names
+                else if (last_consumed_guessing_mode == NAME && LA(1) == LBRACKET) {
                     bracket_pair();
-
-                if (
-                    LA(1) == LCURLY /* start of a block, object, or name list */
-                    || LA(1) == COMMA /* do not confuse with arguments in an argument list */
-                    || LA(1) == COLON /* start of a property */
-                    || LA(1) == EQUAL /* LHS of assignment is not a tagged template */
-                    || LA(1) == JS_ARROW /* LHS of lambda is not a tagged template */
-                    || LA(1) == TERMINATE
-                )
+                }
+                // otherwise, break
+                else {
                     break;
-
-                consume();
+                }
             }
 
             if (!istagged)
@@ -27563,7 +27565,6 @@ perform_declaration_in_class_check_js[] returns [bool isdecl] {
         ENTRY_DEBUG
 
         isdecl = false;
-        int square_bracket_count = 0;
         last_consumed_guessing_mode = -1;
         int start = mark();
         inputState->guessing++;
@@ -27572,33 +27573,21 @@ perform_declaration_in_class_check_js[] returns [bool isdecl] {
             // must be in a class, otherwise the check is pointless
             if (perform_top_level_class_check_js()) {
                 // case 1: first token is a name
-                if (LA(1) == NAME && next_token() == EQUAL) {
-                    isdecl = true;
-                }
+                if (LA(1) == NAME)
+                    consume();
                 // case 2: first token is a computed property
-                else if (LA(1) == LBRACKET) {
-                    while (LA(1) != antlr::Token::EOF_TYPE) {
-                        if (LA(1) == LBRACKET)
-                            ++square_bracket_count;
+                else if (LA(1) == LBRACKET)
+                    bracket_pair();
+                // otherwise, the parser should not be here
+                else
+                    throw antlr::RecognitionException();
 
-                        if (LA(1) == RBRACKET)
-                            --square_bracket_count;
+                // consume optional "?" or "!" modifiers after the name
+                while (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+                    consume();
 
-                        if (square_bracket_count < 0)
-                            break;
-
-                        if (
-                            (LA(1) == RBRACKET && square_bracket_count == 0)
-                            || (LA(1) == TERMINATE && square_bracket_count == 0)
-                        )
-                            break;
-
-                        consume();
-                    }
-
-                    if (LA(1) == RBRACKET && next_token() == EQUAL)
-                        isdecl = true;
-                }
+                if (LA(1) == EQUAL)
+                    isdecl = true;
             }
         }
         catch (...) {}

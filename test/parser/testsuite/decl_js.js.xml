@@ -486,6 +486,12 @@
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class><specifier>export</specifier> class <name>C</name> <block>{
+    <decl_stmt><decl><name>foo</name><ts:modifier>?</ts:modifier> <init>= <expr><literal type="null">null</literal><operator>!</operator> <operator>as</operator> <literal type="string">`${string}-ok`</literal> <operator>|</operator> <literal type="string">`${string}-ok`</literal></expr></init></decl></decl_stmt>
+}</block></class>
+</unit>
+
 <!-- Strings as Declaration Names -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
