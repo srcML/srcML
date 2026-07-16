@@ -147,7 +147,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
 <block>{<block_content>
-  <expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr></then></ternary></expr> : <expr><literal type="string">"Not an A"</literal></expr></property>}</object></expr></expr_stmt>
+  <expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></property>}</object></expr></expr_stmt>
 </block_content>}</block></if></if_stmt>
 </unit>
 
@@ -158,7 +158,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
-<expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr></then></ternary></expr> : <expr><literal type="string">"Not an A"</literal></expr></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
+<expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

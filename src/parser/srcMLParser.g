@@ -992,13 +992,13 @@ public:
     void endAllModes();
 
     virtual void consume() {
-        // use a separate variable when in guessing mode for Python/JavaScript
-        if ((inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && inputState->guessing!=0) {
-            last_consumed_guessing_mode = LA(1);
-        }
         // do not update last_consumed if the token is in the skip_tokens_set
-        else if (!skip_tokens_set.member((unsigned int) LA(1))) {
-            last_consumed = LA(1);
+        if (!skip_tokens_set.member((unsigned int) LA(1))) {
+            // use a separate variable when in guessing mode for Python/JavaScript
+            if ((inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT)) && inputState->guessing!=0)
+                last_consumed_guessing_mode = LA(1);
+            else
+                last_consumed = LA(1);
         }
 
         LLkParser::consume();
@@ -4175,7 +4175,11 @@ ternary_check[] { ENTRY_DEBUG } :
                 { !inLanguage(LANGUAGE_JAVASCRIPT) || !inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) }?
                 TEMPOPE |
 
-                ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT | TEMPOPE)
+                // disallow "=>" that follows a lambda parameter list
+                { last_consumed_guessing_mode != RPAREN }?
+                JS_ARROW |
+
+                ~(QMARK | TERMINATE | LCURLY | COLON | RPAREN | COMMA | RBRACKET | RCURLY | EQUAL | ASSIGNMENT | TEMPOPE | JS_ARROW)
             )
         )*
 ;
@@ -10914,7 +10918,17 @@ ternary_expression[] { ENTRY_DEBUG } :
         }
 
         (
-            { LA(1) == LPAREN }?
+            // do not confuse "(() => ... ? ... : ...)" as two operator LPAREN in JavaScript/TypeScript
+            {
+                LA(1) == LPAREN
+                && (
+                    !inLanguage(LANGUAGE_JAVASCRIPT)
+                    || (
+                        inLanguage(LANGUAGE_JAVASCRIPT)
+                        && !(last_consumed == LPAREN && bracket_types_js.back() == "oLPAREN")
+                    )
+                )
+            }?
             expression_process
             lparen_marked
 
@@ -22901,9 +22915,12 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
                 inTransparentMode(MODE_TERNARY)
                 && (
                     !inTransparentMode(MODE_OBJECT_JS)
-                    || (is_ternary_colon && bracket_types_js.back() == "oLPAREN")
                     || bracket_types_js.back() == "cLPAREN"
                     || last_consumed == RCURLY
+                    || (
+                        is_ternary_colon
+                        && (inPrevMode(MODE_THEN) || bracket_types_js.back() == "oLPAREN")
+                    )
                 )
             }?
             colon_marked_js |

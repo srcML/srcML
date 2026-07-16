@@ -265,4 +265,16 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>legendSymbols</name><parameter_list>(
+  <parameter><decl><object>{
+    <property><expr><name>fill</name> <operator>=</operator> <ternary><condition><expr><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>_a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>_a</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><operator>void</operator> <literal type="number">0</literal></expr> </then><else>: <expr><name>_b</name></expr></else></ternary></expr></lambda><operator>)</operator> <operator>!==</operator> <operator>void</operator> <literal type="number">0</literal></expr>
+      ?</condition><then> <expr><name>_b</name></expr>
+      </then><else>: <expr><literal type="string">"none"</literal></expr></else></ternary></expr></property>
+  }</object> <init>= <expr><object>{}</object></expr></init></decl></parameter>
+)</parameter_list> <block>{<block_content>
+  <return>return <expr><literal type="boolean">true</literal></expr></return>
+</block_content>}</block></function>
+</unit>
+
 </unit>
