@@ -1258,6 +1258,14 @@
 </block_content>}</block></if></if_stmt>
 </unit>
 
+<!-- "namespace" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><operator>!</operator><name>namespace</name> <operator>||</operator> <call><name>nodeIsMissing</name><argument_list>(<argument><expr><name>right</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
+    <return>return <expr><literal type="undefined">undefined</literal></expr></return>
+</block_content>}</block></if></if_stmt>
+</unit>
+
 <!-- "new"; can appear within expressions -->
 
 <unit revision="1.0.0" language="JavaScript">

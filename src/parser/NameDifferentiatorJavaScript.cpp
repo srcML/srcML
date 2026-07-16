@@ -410,7 +410,10 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                     (prevNonWhitespaceToken->getLine() == token->getLine() || bracketBuffer.front() == "(")
                     && (
                         prevNonWhitespaceToken->getType() == srcMLParser::OPERATORS
-                        && prevNonWhitespaceToken->getText() != "!"
+                        && (
+                            nextToken->getType() == srcMLParser::NAME
+                            || !srcMLParser::literal_tokens_set.member(nextToken->getType())
+                        )
                     )
                 )
                 || prevNonWhitespaceToken->getType() == srcMLParser::JS_AS
