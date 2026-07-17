@@ -311,6 +311,22 @@ LIBSRCML_DECL const char* srcml_unit_get_attribute_value(const struct srcml_unit
  ******************************************************************************/
 
 /**
+ * srcml_unit_get_archive
+ * @param unit a srcml unit
+ *
+ * Get the archive this srcml unit belongs to.
+ *
+ * @returns archive on success and NULL on failure.
+ */
+srcml_archive* srcml_unit_get_archive(const struct srcml_unit* unit) {
+
+    if (unit == nullptr)
+        return 0;
+
+    return unit->archive;
+}
+
+/**
  * srcml_unit_get_src_encoding
  * @param unit a srcml unit
  *
@@ -1400,11 +1416,19 @@ int srcml_write_namespace(struct srcml_unit* unit, const char* prefix, const cha
  */
 int srcml_write_attribute(struct srcml_unit* unit, const char* prefix, const char* name, const char* uri, const char* content) {
 
-    if (unit == nullptr || name == nullptr)
+    if (unit == nullptr || name == nullptr) {
         return SRCML_STATUS_INVALID_ARGUMENT;
+    }
 
-    if (unit->unit_translator == nullptr || !unit->unit_translator->add_attribute(prefix, name, uri, content))
+    if (name && (name == "hash"sv || name == "revision"sv)) {
+        if (name == "hash"sv) {
+            unit->hash = content;
+        } else {
+            unit->revision = content;
+        }
+    } else if (unit->unit_translator == nullptr || !unit->unit_translator->add_attribute(prefix, name, uri, content)) {
         return SRCML_STATUS_INVALID_INPUT;
+    }
 
     return SRCML_STATUS_OK;
 }
