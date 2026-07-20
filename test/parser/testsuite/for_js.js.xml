@@ -71,6 +71,12 @@
 <for>for <control>(<init><expr><name>foo</name><operator>,</operator> <name>i</name><operator>++</operator></expr>;</init> <condition><expr><name>bar</name></expr>;</condition>)</control> <expr_stmt><expr><call><name>baz</name><argument_list>()</argument_list></call><operator>,</operator> <name>i</name><operator>++</operator></expr></expr_stmt></for>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init>;</init> <condition><expr><name>foo</name> <operator>&gt;</operator> <literal type="number">0</literal></expr>;</condition> <incr><expr><operator>(</operator><name>foo</name> <operator>&gt;&gt;&gt;=</operator> <literal type="number">1</literal><operator>)</operator> <operator>&amp;&amp;</operator> <operator>(</operator><name>bar</name> <operator>+=</operator> <name>bar</name><operator>)</operator></expr></incr>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
 <!-- "for...in" -->
 
 <unit revision="1.0.0" language="JavaScript">

@@ -20743,8 +20743,8 @@ control_increment_js[] { CompleteElement element(this); ENTRY_DEBUG } :
             comma_marked |
 
             {
-                // ensure non-call ")" is not consumed here
-                if (LA(1) == RPAREN && lparen_types_js.back() != 'c')
+                // ensure condition-ending ")" is not consumed here
+                if (LA(1) == RPAREN && lparen_types_js.back() == 'n')
                     break;
 
                 if (!inMode(MODE_EXPRESSION))
