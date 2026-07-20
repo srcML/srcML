@@ -149,10 +149,10 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
         srcMLParser::name_differentiator_subset_js_token_set.member(token->getType())
         && (
             nextToken->getType() == srcMLParser::COMMA
-            || nextToken->getType() == srcMLParser::OPERATORS
             || nextToken->getType() == srcMLParser::RPAREN
             || nextToken->getType() == srcMLParser::RCURLY
             || nextToken->getType() == srcMLParser::RBRACKET
+            || (nextToken->getType() == srcMLParser::OPERATORS && token->getType() != srcMLParser::RETURN)
         )
     ) {
         token->setType(srcMLParser::NAME);

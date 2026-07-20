@@ -23,5 +23,11 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<!-- Spacing for this test is intentional -->
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><object>{
+    <property><expr><name>bar</name></expr>: <expr><function>function<parameter_list>(<parameter><decl><name>baz</name></decl></parameter>)</parameter_list> <block>{<block_content><return>return<expr><operator>!</operator><operator>!</operator><operator>(</operator><name>baz</name><operator>)</operator></expr></return></block_content>}</block></function></expr></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
+</unit>
