@@ -15654,6 +15654,7 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
                 (
                     LA(1) == NAME
                     || literal_tokens_set.member((unsigned int) LA(1))
+                    || (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
                     || parencount != 0
                 )
                 && !perform_mode_before_mode_statement_check(MODE_FUNCTION_DECL_TS)

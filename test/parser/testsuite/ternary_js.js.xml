@@ -266,6 +266,18 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><ternary><condition><expr><name>bar</name></expr>
+    ?</condition><then> <expr><name>quux</name> <operator>&lt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <operator>(</operator><name>baz</name> <operator>=</operator> <call><name><name>bar</name><operator>.</operator><name>concat</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call><operator>)</operator></expr>
+    </then><else>: <expr><name>quux</name> <operator>&gt;</operator> <operator>+</operator><literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>bar</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><ternary><condition><expr><name>bar</name></expr>
+    ?</condition><then> <expr><name>quux</name> <operator>&lt;</operator> <literal type="number">0</literal> <operator>&amp;&amp;</operator> <operator>(</operator><name>baz</name> <operator>=</operator> <call><name><name>bar</name><operator>.</operator><name>concat</name></name><argument_list>(<argument><expr><literal type="null">null</literal></expr></argument>)</argument_list></call><operator>)</operator></expr>
+    </then><else>: <expr><name>quux</name> <operator>&gt;</operator> <operator>-</operator><literal type="number">1</literal> <operator>&amp;&amp;</operator> <name>bar</name></expr></else></ternary></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>legendSymbols</name><parameter_list>(
   <parameter><decl><object>{
     <property><expr><name>fill</name> <operator>=</operator> <ternary><condition><expr><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>_a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>_a</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><operator>void</operator> <literal type="number">0</literal></expr> </then><else>: <expr><name>_b</name></expr></else></ternary></expr></lambda><operator>)</operator> <operator>!==</operator> <operator>void</operator> <literal type="number">0</literal></expr>
