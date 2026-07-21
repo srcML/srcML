@@ -2033,6 +2033,12 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><call><operator>(</operator><function>function<parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><name>bar</name> <operator>+</operator> <literal type="number">1</literal></expr></return>
+</block_content>}</block></function><argument_list>(<argument><expr><name>yield</name></expr></argument>)</argument_list><operator>)</operator></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
 <function>function <name>contextSensitive</name><parameter_list>(<parameter><decl><object>{<property><expr><name>yield</name></expr></property>, <property><expr><name>text</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 

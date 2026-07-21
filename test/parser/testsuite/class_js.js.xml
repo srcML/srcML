@@ -46,7 +46,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<class>class <name>C</name> <super_list><extends>extends <super><expr><operator>(</operator><yield>yield</yield><operator>)</operator></expr></super></extends></super_list> <block>{}</block></class>
+<class>class <name>C</name> <super_list><extends>extends <super><expr><operator>(</operator><name>yield</name><operator>)</operator></expr></super></extends></super_list> <block>{}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
