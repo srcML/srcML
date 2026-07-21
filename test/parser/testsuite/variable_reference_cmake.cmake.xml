@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="variable_reference">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="name">${<name>a</name>}</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>b<expr type="name">${<name>c</name>}</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="name">${<name>d</name>}</expr>e</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>f<expr type="name">${<name>g</name>}</expr>h</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="name">${<name>a</name>}</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"b<expr type="name">${<name>c</name>}</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="name">${<name>d</name>}</expr>e"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"f<expr type="name">${<name>g</name>}</expr>h"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="env">$ENV{<name>a</name>}</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>b<expr type="env">$ENV{<name>c</name>}</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="env">$ENV{<name>d</name>}</expr>e</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>f<expr type="env">$ENV{<name>g</name>}</expr>h</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="env">$ENV{<name>a</name>}</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"b<expr type="env">$ENV{<name>c</name>}</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="env">$ENV{<name>d</name>}</expr>e"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"f<expr type="env">$ENV{<name>g</name>}</expr>h"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="generator">$&lt;<name>a</name>:<name>b</name>&gt;</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="generator">$&lt;<name><expr type="generator">$&lt;<name>c</name>:<name>d</name>&gt;</expr></name>:<name>e</name>&gt;</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="generator">$&lt;<name>f</name>:<name><expr type="generator">$&lt;<name>g</name>:<name>h</name>&gt;</expr></name>&gt;</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="generator">$&lt;<name><expr type="generator">$&lt;<name>i</name>:<name>j</name>&gt;</expr></name>:<name><expr type="generator">$&lt;<name>k</name>:<name>l</name>&gt;</expr></name>&gt;</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>_<expr type="generator">$&lt;<name>a</name>:<name>b</name>&gt;</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="generator">$&lt;<name>a</name>:<name>b</name>&gt;</expr>_</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>_<expr type="generator">$&lt;<name>a</name>:<name>b</name>&gt;</expr>_</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name>_<expr type="generator">$&lt;<name>_<expr type="generator">$&lt;<name>i</name>:<name>j</name>&gt;</expr>_</name>:<name>_<expr type="generator">$&lt;<name>k</name>:<name>l</name>&gt;</expr>_</name>&gt;</expr>_</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="generator">$&lt;<name>a</name>:<name>b</name>&gt;</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="generator">$&lt;<name><expr type="generator">$&lt;<name>c</name>:<name>d</name>&gt;</expr></name>:<name>e</name>&gt;</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="generator">$&lt;<name>f</name>:<name><expr type="generator">$&lt;<name>g</name>:<name>h</name>&gt;</expr></name>&gt;</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="generator">$&lt;<name><expr type="generator">$&lt;<name>i</name>:<name>j</name>&gt;</expr></name>:<name><expr type="generator">$&lt;<name>k</name>:<name>l</name>&gt;</expr></name>&gt;</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"_<expr type="generator">$&lt;<name>a</name>:<name>b</name>&gt;</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"<expr type="generator">$&lt;<name>a</name>:<name>b</name>&gt;</expr>_"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"_<expr type="generator">$&lt;<name>a</name>:<name>b</name>&gt;</expr>_"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string">"_<expr type="generator">$&lt;<name>_<expr type="generator">$&lt;<name>i</name>:<name>j</name>&gt;</expr>_</name>:<name>_<expr type="generator">$&lt;<name>k</name>:<name>l</name>&gt;</expr>_</name>&gt;</expr>_"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="name">${<name><expr type="name">${<name><expr type="name">${<name>x</name>}</expr></name>}</expr></name>}</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><literal type="string"><expr type="name">${<name><expr type="name">${<name><expr type="name">${<name>x</name>}</expr></name>}</expr></name>}</expr>"</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="name">${<name>HE-L\^LO\ HOW\ ARE\ YOU</name>}</expr></name></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>
