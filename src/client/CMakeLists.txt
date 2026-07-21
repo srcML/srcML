@@ -59,11 +59,29 @@ endif()
 add_library(ctpl_stl INTERFACE IMPORTED)
 target_include_directories(ctpl_stl SYSTEM INTERFACE ${ctpl_stl_src_SOURCE_DIR})
 
+# clip cross-platform clipboard library
+include(FetchContent)
+FetchContent_Declare(clip
+    GIT_REPOSITORY https://github.com/dacap/clip.git
+    GIT_TAG        v1.15
+    GIT_SHALLOW    TRUE
+)
+# only text support
+set(CLIP_ENABLE_IMAGE OFF CACHE BOOL "" FORCE)
+set(CLIP_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(CLIP_TESTS OFF CACHE BOOL "" FORCE)
+set(CLIP_INSTALL OFF CACHE BOOL "" FORCE)
+# Scope BUILD_SHARED_LIBS to clip only so it builds statically
+block()
+    set(BUILD_SHARED_LIBS OFF)
+    FetchContent_MakeAvailable(clip)
+endblock()
+
 # srcml executable
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml BEFORE PRIVATE .)
-target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl Threads::Threads cli11 ctpl_stl)
+target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl Threads::Threads cli11 ctpl_stl clip)
 
 # Put executable in bin directory
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
