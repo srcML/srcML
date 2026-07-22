@@ -210,6 +210,12 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && nextToken->getType() == srcMLParser::TERMINATE
         )
 
+        // the current token is a keyword in the table and the next token is an "="
+        || (
+            srcMLParser::table_keywords_js_token_set.member(token->getType())
+            && nextToken->getType() == srcMLParser::EQUAL
+        )
+
         // the current token is a subset of all keywords, surrounded by "{}" or "[]"
         || (
             srcMLParser::name_differentiator_js_token_set.member(token->getType())
@@ -314,7 +320,7 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         )
 
         // the current token is "type" and one of the following is true:
-        // - the next token is an operator, ":", "=", ".", "?", "=>", a terminate (";"), or end-of-file
+        // - the next token is an operator, ":", ".", "?", "=>", a terminate (";"), or end-of-file
         // - the previous token was a ":"
         // - currently in a "{}" pair and either the next token is "}", is "{ type ,", or is ", type ,"
         // - currently in a "()" or "[]" pair and the next token is ",", ")", or "]"
@@ -323,7 +329,6 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
             && (
                 nextToken->getType() == srcMLParser::OPERATORS
                 || nextToken->getType() == srcMLParser::COLON
-                || nextToken->getType() == srcMLParser::EQUAL
                 || nextToken->getType() == srcMLParser::PERIOD
                 || nextToken->getType() == srcMLParser::QMARK
                 || nextToken->getType() == srcMLParser::JS_ARROW

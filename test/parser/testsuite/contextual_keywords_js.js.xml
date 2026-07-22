@@ -1044,6 +1044,10 @@
 <decl_stmt><decl type="const">const <name>if</name> <init>= <expr><name>if</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<expr_stmt><expr><name>if</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
 <!-- "implements" -->
 
 <unit revision="1.0.0" language="JavaScript">
