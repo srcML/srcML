@@ -114,6 +114,17 @@
 }</block></class>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <name>Bar</name> <super_list><extends>extends <super><expr><operator>(</operator>
+    <name>a</name> <operator>=</operator> <name>b</name><operator>,</operator>
+    <name>c</name> <operator>=</operator> <name>d</name>
+  <operator>)</operator></expr></super></extends></super_list> <block>{
+  <expr_stmt><expr><function><name>baz</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <return>return <expr><name>Bar</name></expr></return>
+  </block_content>}</block></function></expr></expr_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>SymbolLinks</name> <init>= <expr><class>class <super_list><extends>extends <super><expr><name>SymbolLinks</name></expr></super></extends></super_list> <block>{
     <decl_stmt><decl><ts:specifier>declare</ts:specifier> <name>_symbolLinksBrand</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>

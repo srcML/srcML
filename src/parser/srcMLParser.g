@@ -21222,7 +21222,7 @@ super_js[] {
                         && super_count_js > 0
                     )
                     || (LA(1) == TERMINATE && bracket_types_size == bracket_types_js.size())
-                    || (LA(1) == COMMA && bracket_types_js.back() != "cLPAREN")
+                    || (LA(1) == COMMA && bracket_types_js.back() != "cLPAREN" && bracket_types_js.back() != "oLPAREN")
                     || LA(1) == JS_EXTENDS
                     || LA(1) == TS_IMPLEMENTS
                     || LA(1) == 1 /* EOF */
@@ -21253,7 +21253,7 @@ super_js[] {
                 expression |
 
                 // consume commas for calls, but not for parameters
-                { bracket_types_js.back() == "cLPAREN" }?
+                { bracket_types_js.back() == "cLPAREN" || bracket_types_js.back() == "oLPAREN" }?
                 comma
             )
             set_int[super_count_js, super_count_js + 1]
