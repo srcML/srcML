@@ -2218,7 +2218,7 @@ javascript_rules[] {
         {
             // @TODO: this is a bug that must exist for the time being;
             // eventually, fix MODE_PARAMETER_LIST_JS to end properly
-            if (inMode(MODE_PARAMETER_LIST_JS)) {
+            if (inMode(MODE_PARAMETER_LIST_JS) && inTransparentMode(MODE_STATEMENT)) {
                 endDownOverMode(MODE_STATEMENT);
                 startNewMode(MODE_NEST | MODE_STATEMENT);
             }
@@ -22228,6 +22228,17 @@ expression_block_js[] {
         }
 
         rcurly
+
+        {
+            // @TODO: this is a bug that must exist for the time being;
+            // eventually, fix MODE_PARAMETER_LIST_JS to end properly
+            if (
+                inMode(MODE_PARAMETER_LIST_JS)
+                && inTransparentMode(MODE_STATEMENT | MODE_EXPRESSION)
+                && decl_start_js_token_set.member((unsigned int) LA(1))
+            )
+                endDownOverMode(MODE_STATEMENT | MODE_EXPRESSION);
+        }
 ;
 
 /*

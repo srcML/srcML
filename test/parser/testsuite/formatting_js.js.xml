@@ -256,6 +256,14 @@
 <expr_stmt><expr><name>z</name> <operator>&amp;&amp;</operator> <call><name>foo</name><argument_list>(<argument><expr><name>z</name></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
+<!-- Multiple Statements on the Same Line -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function type="generator">*<name>bar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>baz</name></expr></return> </block_content>}</block></function></expr></expr_stmt> <decl_stmt><decl type="static">static <name>#$</name></decl></decl_stmt>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Statement with Blocks followed by Bare Blocks -->
 
 <unit revision="1.0.0" language="JavaScript">
