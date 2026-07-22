@@ -21167,7 +21167,7 @@ implements_ts[] { CompleteElement element(this); ENTRY_DEBUG } :
 
   Handles a list of derivations in JavaScript or TypeScript.
 */
-derivation_list_js[] { ENTRY_DEBUG } :
+derivation_list_js[] { size_t bracket_types_size = bracket_types_js.size(); ENTRY_DEBUG } :
         (options { greedy = true; } :
             // ensure the super list ends before the start of the class or interface block
             {
@@ -21177,6 +21177,7 @@ derivation_list_js[] { ENTRY_DEBUG } :
                     && last_consumed != OPERATORS  // e.g., "|"
                     && super_count_js > 0
                 )
+                || (LA(1) == TERMINATE && bracket_types_size == bracket_types_js.size())
                 || LA(1) == JS_EXTENDS
                 || LA(1) == TS_IMPLEMENTS
                 || LA(1) == 1 /* EOF */
@@ -21198,7 +21199,13 @@ derivation_list_js[] { ENTRY_DEBUG } :
 
   Handles the elements of a super list in JavaScript differently from other languages (e.g., Java).
 */
-super_js[] { CompleteElement element(this); super_count_js = 0; ENTRY_DEBUG } :
+super_js[] {
+        CompleteElement element(this);
+        size_t bracket_types_size = bracket_types_js.size();
+        super_count_js = 0;
+
+        ENTRY_DEBUG
+} :
         {
             startNewMode(MODE_LOCAL);
             startElement(SDERIVATION);
@@ -21214,6 +21221,7 @@ super_js[] { CompleteElement element(this); super_count_js = 0; ENTRY_DEBUG } :
                         && last_consumed != OPERATORS  // e.g., "|"
                         && super_count_js > 0
                     )
+                    || (LA(1) == TERMINATE && bracket_types_size == bracket_types_js.size())
                     || (LA(1) == COMMA && bracket_types_js.back() != "cLPAREN")
                     || LA(1) == JS_EXTENDS
                     || LA(1) == TS_IMPLEMENTS
@@ -22615,6 +22623,12 @@ lambda_js[bool is_list = false] {
                                 || perform_in_mode_before_expression_check_js(MODE_LAMBDA_AS_TYPE_TS)
                             )
                         )
+                        || (
+                            LA(1) == TERMINATE
+                            && inTransparentMode(MODE_EXTENDS_JS)
+                            && bracket_types_size == bracket_types_js.size()
+                            && next_token() == LCURLY
+                        )
                         || (inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS) && LA(1) == TEMPOPE)
                         || (
                             (LA(1) == JS_ARROW || LA(1) == EQUAL)
@@ -23502,6 +23516,9 @@ class_expression_js[] { ENTRY_DEBUG } :
         // consume the "extends" or "implements" portion of an expression-level class, if applicable
         (options { greedy = true; } : { LA(1) == JS_EXTENDS || LA(1) == TS_IMPLEMENTS }? super_list_js)?
 
+        // consume inserted terminate after the extends/implements and the block, if it exists
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" }? TERMINATE)?
+
         // start the block, if it exists
         (options { greedy = true; } :
             { LA(1) == LCURLY && inputState->guessing == 0 }?
@@ -23511,7 +23528,7 @@ class_expression_js[] { ENTRY_DEBUG } :
         )?
 
         // consume inserted terminate after the class, if it exists and we are in a super list
-        ({LA(1) == TERMINATE && LT(1)->getText() != ";" && inTransparentMode(MODE_SUPER_LIST_JS) }? TERMINATE)?
+        ({ LA(1) == TERMINATE && LT(1)->getText() != ";" && inTransparentMode(MODE_SUPER_LIST_JS) }? TERMINATE)?
 
         {
             if (inPrevMode(MODE_CLASS_EXPRESSION_JS)) {
