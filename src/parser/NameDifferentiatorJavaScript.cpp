@@ -61,7 +61,19 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     buffer.emplace_back(nextToken);
 
     /*
-        CASE 1: `token` should be the name of a variable in a declaration (if it is not already)
+        CASE 1: Do not change `token` if it is followed by `{` or another NAME
+    */
+    if (nextToken->getType() == srcMLParser::LCURLY || nextToken->getType() == srcMLParser::NAME) {
+        prevToken = nextToken;
+
+        if (!srcMLParser::skip_tokens_set.member(token->getType()))
+            prevNonWhitespaceToken = token;
+
+        return;
+    }
+
+    /*
+        CASE 2: `token` should be the name of a variable in a declaration (if it is not already)
                 and `token` should be the name of a TypeScript type in an argument list
     */
     if (
@@ -72,6 +84,7 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
             && token->getType() != srcMLParser::JS_SET
             && token->getType() != srcMLParser::NAME
             && token->getType() != srcMLParser::TS_ACCESSOR
+            && token->getType() != srcMLParser::TS_ENUM
             && token->getType() != srcMLParser::TS_PRIVATE
             && token->getType() != srcMLParser::TS_PROTECTED
             && token->getType() != srcMLParser::TS_PUBLIC
@@ -100,18 +113,6 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     }
 
     /*
-        CASE 2: Do not change `token` if it is followed by `{` or another NAME
-    */
-    if (nextToken->getType() == srcMLParser::LCURLY || nextToken->getType() == srcMLParser::NAME) {
-        prevToken = nextToken;
-
-        if (!srcMLParser::skip_tokens_set.member(token->getType()))
-            prevNonWhitespaceToken = token;
-
-        return;
-    }
-
-    /*
         CASE 3: `token` is followed by whitespace, comments, EOL, etc.
     */
     if (srcMLParser::whitespace_token_set.member(nextToken->getType()) || nextToken->getType() == srcMLParser::EOL) {
@@ -124,7 +125,7 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
             buffer.emplace_back(nextToken);
         }
 
-        if (isNameToken(token, nextToken))
+        if (isNameToken(token, nextToken, true))
             token->setType(srcMLParser::NAME);
 
         // Update here to ensure the bracket count is correct after invoking name-checking logic
@@ -136,7 +137,11 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
             prevNonWhitespaceToken = token;
 
         // The new `nextToken` may need to be processed (e.g., "as default" in name lists)
-        if (srcMLParser::name_differentiator_js_token_set.member(nextToken->getType()))
+        if (
+            srcMLParser::name_differentiator_js_token_set.member(nextToken->getType())
+            || nextToken->getType() == srcMLParser::JS_VOID
+            || nextToken->getType() == srcMLParser::TS_ENUM
+        )
             lookAheadDifferentiator(nextToken);
 
         return;
@@ -165,27 +170,9 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
     }
 
     /*
-        CASE 5: Change `token` to a NAME if one of the following conditions is met
+        CASE 5: Change `token` to a NAME if a condition is met in `isNameToken()`
     */
-    if (
-        isNameToken(token, nextToken)
-        || (
-            nextToken->getType() == srcMLParser::LPAREN
-            && (
-                token->getType() != srcMLParser::JS_CATCH
-                && token->getType() != srcMLParser::JS_CONSTRUCTOR
-                && token->getType() != srcMLParser::IF
-                && token->getType() != srcMLParser::FOR
-                && token->getType() != srcMLParser::JS_FUNCTION
-                && token->getType() != srcMLParser::JS_GET
-                && token->getType() != srcMLParser::JS_SET
-                && token->getType() != srcMLParser::JS_WITH
-                && token->getType() != srcMLParser::NEW
-                && token->getType() != srcMLParser::SWITCH
-                && token->getType() != srcMLParser::WHILE
-            )
-        )
-    ) {
+    if (isNameToken(token, nextToken, false)) {
         token->setType(srcMLParser::NAME);
         prevToken = nextToken;
 
@@ -199,10 +186,38 @@ void NameDifferentiatorJavaScript::lookAheadDifferentiator(antlr::RefToken token
 /**
  * Returns true if `token` should be changed to a NAME token, and false otherwise.
  */
-bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::RefToken nextToken) const {
+bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::RefToken nextToken, bool hadWhitespace) const {
+    // special case: the current token is "enum" or "void" and the next token is a name
+    // can trigger if "enum" or "void" were the nextToken entry in Case #3 and sent recursively
+    if (
+        (token->getType() == srcMLParser::JS_VOID || token->getType() == srcMLParser::TS_ENUM)
+        && nextToken->getType() == srcMLParser::NAME
+    ) {
+        return false;
+    }
+
     return (
-        // the current token is a subset of all keywords and the next token is a ";"
+        // the current token is a subset of all keywords and it is directly next to a "(" (no whitespace, newlines, etc.)
         (
+            !hadWhitespace
+            && (
+                token->getType() != srcMLParser::JS_CATCH
+                && token->getType() != srcMLParser::JS_CONSTRUCTOR
+                && token->getType() != srcMLParser::IF
+                && token->getType() != srcMLParser::FOR
+                && token->getType() != srcMLParser::JS_FUNCTION
+                && token->getType() != srcMLParser::JS_GET
+                && token->getType() != srcMLParser::JS_SET
+                && token->getType() != srcMLParser::JS_WITH
+                && token->getType() != srcMLParser::NEW
+                && token->getType() != srcMLParser::SWITCH
+                && token->getType() != srcMLParser::WHILE
+            )
+            && nextToken->getType() == srcMLParser::LPAREN
+        )
+
+        // the current token is a subset of all keywords and the next token is a ";"
+        || (
             srcMLParser::name_differentiator_subset_js_token_set.member(token->getType())
             && token->getType() != srcMLParser::BREAK
             && token->getType() != srcMLParser::CONTINUE
@@ -536,6 +551,26 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
 
         // the current token is "catch" and the previous nonwhitespace token is "."
         || (token->getType() == srcMLParser::JS_CATCH && prevNonWhitespaceToken->getType() == srcMLParser::PERIOD)
+
+        // the current token is a subset of all keywords in the table and the previous nonwhitespace token is a function keyword
+        || (
+            (
+                token->getType() == srcMLParser::FOR
+                || token->getType() == srcMLParser::NEW
+                || token->getType() == srcMLParser::SWITCH
+                || token->getType() == srcMLParser::IF
+                || token->getType() == srcMLParser::WHILE
+                || token->getType() == srcMLParser::JS_CATCH
+                || token->getType() == srcMLParser::JS_FUNCTION
+                || token->getType() == srcMLParser::JS_WITH
+                || token->getType() == srcMLParser::TS_ENUM
+            )
+            && (
+                prevNonWhitespaceToken->getType() == srcMLParser::JS_FUNCTION
+                || prevNonWhitespaceToken->getType() == srcMLParser::JS_GET
+                || prevNonWhitespaceToken->getType() == srcMLParser::JS_SET
+            )
+        )
 
         // the current token is "accessor" one of the following is true:
         // - the next token is NOT a keyword

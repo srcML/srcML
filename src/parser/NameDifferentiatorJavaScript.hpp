@@ -28,7 +28,7 @@ public:
 
     void lookAheadDifferentiator(antlr::RefToken token);
 
-    bool isNameToken(antlr::RefToken token, antlr::RefToken nextToken) const;
+    bool isNameToken(antlr::RefToken token, antlr::RefToken nextToken, bool hadWhitespace) const;
 
     void checkBracketToken(antlr::RefToken token);
 
