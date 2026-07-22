@@ -17,6 +17,7 @@
 #include <src_input_filesystem.hpp>
 #include <src_input_filelist.hpp>
 #include <src_input_text.hpp>
+#include <src_input_clipboard.hpp>
 #include <src_prefix.hpp>
 #include <srcml_input_srcml.hpp>
 #include <transform_srcml.hpp>
@@ -68,6 +69,11 @@ int srcml_handler_dispatch(ParseQueue& queue,
     if (input.protocol == "text"sv) {
 
         return src_input_text(queue, srcml_arch, srcml_request, input);
+    }
+
+    if (input.protocol == "clipboard"sv) {
+
+        return src_input_clipboard(queue, srcml_arch, srcml_request, input);
     }
 
     if (input.protocol == "filelist"sv) {
