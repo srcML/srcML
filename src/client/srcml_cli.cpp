@@ -295,6 +295,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             });
     }
 
+    app.add_flag_callback("--from-clipboard,-p", [&]() {
+        srcml_request.input_sources.emplace_back(src_prefix_add_uri("clipboard", ""));
+    }, "Input source code from the system clipboard")
+        ->group("CREATING SRCML");
+
     auto language =
     app.add_option("--language,-l", srcml_request.att_language,
         "Set the source-code language to C, C++, C#, or Java. Required for --text option")
