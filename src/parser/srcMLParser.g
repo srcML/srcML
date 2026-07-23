@@ -24815,10 +24815,6 @@ identifier_keyword[] { SingleElement element(this); ENTRY_DEBUG } :
         }
 
         (
-            // a JavaScript/TypeScript name can start with a backslash (i.e., unicode)
-            { inLanguage(LANGUAGE_JAVASCRIPT) && LT(1)->getText() == "\\" && next_token() == NAME }?
-            (OPERATORS NAME) |
-
             NAME | VOID |
 
             // Python
