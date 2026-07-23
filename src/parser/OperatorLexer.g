@@ -541,7 +541,7 @@ OPERATORS options { testLiterals = true; } {
         ('\040'..'\134' | '\136'..'\377') { $setType(OPERATORS); } |
 
         // allow unicode (e.g., \u0061)
-        { inLanguage(LANGUAGE_JAVASCRIPT) && (LA(1) == 'u' || LA(1) == 'U') }?
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) != '{' }?
         (
             (
                 '0'..'9' | 'a'..'z' | 'A'..'Z' |
