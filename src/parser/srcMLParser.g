@@ -20390,6 +20390,10 @@ condition_js[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
             if (last_consumed == JS_ELSE && LA(1) == IF)
                 consume();
 
+            // if the current token is not "(", do not try to process a condition
+            if (LA(1) != LPAREN)
+                return;
+
             assertMode(MODE_CONDITION | MODE_EXPECT);
 
             // start element condition outside of the left parentheses
