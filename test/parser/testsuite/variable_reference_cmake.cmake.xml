@@ -134,7 +134,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>foo</name><argument_list>(<argument><expr><literal type="string"><expr type="name">${<name><expr type="name">${<name><expr type="name">${<name>x</name>}</expr></name>}</expr></name>}</expr>"</literal></expr></argument>)</argument_list></command>
+<command><name>foo</name><argument_list>(<argument><expr><name><expr type="name">${<name><expr type="name">${<name><expr type="name">${<name>x</name>}</expr></name>}</expr></name>}</expr></name></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">

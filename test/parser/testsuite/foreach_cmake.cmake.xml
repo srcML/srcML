@@ -132,7 +132,6 @@
         <if_stmt><if>if<condition>(<expr><operator>NOT</operator> <literal type="string">"<expr type="name">${<name>config_name</name>}</expr>"</literal> <operator>STREQUAL</operator> <literal type="string">""</literal></expr>)</condition><block>
             <command><name>set</name><argument_list>(<argument><expr><name>var_name</name></expr></argument> <argument><expr><literal type="string">"<expr type="name">${<name>var_name</name>}</expr>_<expr type="name">${<name>config_name</name>}</expr>"</literal></expr></argument>)</argument_list></command>
         </block></if>endif()</if_stmt>
-        <command><name>string</name><argument_list>(<option><name>REPLACE</name> <argument><expr><literal type="string">"/MD"</literal></expr></argument> <argument><expr><literal type="string">"<expr type="name">${<name>LIB_RT_OPTION</name>}</expr>"</literal></expr></argument> <argument><expr><literal type="string"><expr type="name">${<name>var_name</name></expr>}</literal></expr></argument> <argument><expr><literal type="string">"<expr type="name">${<expr type="name">${<name>var_name</name>}</expr>}</expr>"</literal></expr></argument></option>)</argument_list></command>
     </block>endforeach()</foreach>
 </block>endforeach()</foreach>
 </unit>

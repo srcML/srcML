@@ -1167,6 +1167,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
         { "NOTFOUND"     , LITERAL_FALSE , LANGUAGE_CMAKE },
         { "NotFound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
         { "Notfound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
+        { "notFound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
         { "notfound"     , LITERAL_FALSE , LANGUAGE_CMAKE },
 
         // CMake

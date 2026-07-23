@@ -25920,7 +25920,7 @@ cmake_if_stmt[] { ENTRY_DEBUG
 
         if (LA(1) == LPAREN) consume();
 
-        cmake_condition_expression();
+        if (LA(1) != RPAREN) cmake_condition_expression();
 
         if (LA(1) == RPAREN) consume();
 
@@ -26250,44 +26250,80 @@ cmake_foreach[] { ENTRY_DEBUG
 
     if (LA(1) == LPAREN) consume();
 
-    while (LA(1) != RPAREN && !cmake_foreach_ranges.member(LA(1)) && LA(1) != antlr::Token::EOF_TYPE) {
+    if (LA(1) != RPAREN) {
         cmake_expression();
     }
 
-    if (cmake_foreach_ranges.member(LA(1))) {
-        startNewMode(MODE_RANGED_FOR);
-        if (LA(1) == CMAKE_RANGE) {
-            startElement(SRANGE_RANGE_CMAKE);
-            consume(); // consume "RANGE"
+    if (LA(1) != RPAREN) {
 
-            while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+        int start = mark();
+        inputState->guessing++;
+
+        // Need to look ahead and count how many tokens appear without a delimiter
+        bool is_special_range = false;
+        try {
+            while(LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                if (cmake_foreach_ranges.member(LA(1))) {
+                    is_special_range = true;
+                    break;
+                }
+                consume();
+            }
+        }
+        catch(...) {}
+      
+        inputState->guessing--;
+        rewind(start);
+
+        if (is_special_range) {
+            while(!cmake_foreach_ranges.member(LA(1)) && LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
                 cmake_expression();
             }
 
-        }
+            startNewMode(MODE_RANGED_FOR);
 
-        else if (LA(1) == CMAKE_IN) {
-            startElement(SRANGE_IN_CMAKE);
-            consume(); // consume "IN"
+            if (LA(1) == CMAKE_RANGE) {
+                startElement(SRANGE_RANGE_CMAKE);
+                consume(); // consume "RANGE"
 
-            while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
-                if (cmake_foreach_lists.member(LA(1))) {
-                    startNewMode(MODE_LIST);
-                    if (LA(1) == CMAKE_ITEMS) startElement(SLIST_ITEMS);
-                    else if (LA(1) == CMAKE_LISTS) startElement(SLIST_LISTS);
-                    if (LA(1) == CMAKE_ZIP_LISTS) startElement(SLIST_ZIP);
-                    consume();
+                while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                    cmake_expression();
+                }
 
-                    while (LA(1) != RPAREN && !cmake_foreach_lists.member(LA(1)) && LA(1) != antlr::Token::EOF_TYPE) {
+            }
+
+            else if (LA(1) == CMAKE_IN) {
+                startElement(SRANGE_IN_CMAKE);
+                consume(); // consume "IN"
+
+                while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                    if (cmake_foreach_lists.member(LA(1))) {
+                        startNewMode(MODE_LIST);
+                        if (LA(1) == CMAKE_ITEMS) startElement(SLIST_ITEMS);
+                        else if (LA(1) == CMAKE_LISTS) startElement(SLIST_LISTS);
+                        if (LA(1) == CMAKE_ZIP_LISTS) startElement(SLIST_ZIP);
+                        consume();
+
+                        while (LA(1) != RPAREN && !cmake_foreach_lists.member(LA(1)) && LA(1) != antlr::Token::EOF_TYPE) {
+                            cmake_expression();
+                        }
+                        endMode(MODE_LIST);
+                    }
+                    else {
                         cmake_expression();
                     }
-                    endMode(MODE_LIST);
-                }
-                else {
-                    cmake_expression();
                 }
             }
         }
+
+        else { // Normal range
+            startNewMode(MODE_RANGED_FOR);
+            startElement(SDECLARATION_RANGE);
+            while (LA(1) != RPAREN && LA(1) != antlr::Token::EOF_TYPE) {
+                cmake_expression();
+            }
+        }
+
         endMode(MODE_RANGED_FOR);
     }
 
@@ -26385,6 +26421,7 @@ cmake_expression[] { ENTRY_DEBUG
     
     bool mark_as_plaintext_string = false;
     bool only_name_tokens = true;
+    int expansion_expr_depth = 0;
     int token_count = 0;
     int starting_token = LA(1);
 
@@ -26401,7 +26438,14 @@ cmake_expression[] { ENTRY_DEBUG
             if (starting_token != LA(1)) {
                 mark_as_plaintext_string = true;
             }
-            if (LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
+            if (cmake_expansion_expr_tokens.member(LA(1))) {
+                ++expansion_expr_depth;
+            }
+            else if (LA(1) == CMAKE_RCURLY) {
+                --expansion_expr_depth;
+            }
+            std::cout << LT(1)->getText() << ":" << expansion_expr_depth << std::endl;
+            if (expansion_expr_depth == 0 && LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
                 only_name_tokens = false;
             }
             consume();
