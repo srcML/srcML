@@ -1484,6 +1484,12 @@
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>override</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>override</name> <operator>!=</operator> <name>foo</name></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>override</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
 <!-- "private" -->
 
 <unit revision="1.0.0" language="JavaScript">
