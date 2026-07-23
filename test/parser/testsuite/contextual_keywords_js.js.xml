@@ -2224,6 +2224,17 @@
 <decl_stmt><decl type="const">const <name>f5</name> <init>= <expr><function type="generator"><specifier>async</specifier> function * <parameter_list>(<parameter><decl><name>yield</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><lambda><parameter_list>(<parameter><decl><modifier>...</modifier><name>yield</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><yield>yield <expr><operator>+</operator> <name>bar</name></expr></yield></expr></lambda></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>, <parameter><decl><modifier>...</modifier><name>yield</name></decl></parameter>)</parameter_list>
+<block>{<block_content>
+  <return>return <expr><yield>yield <expr><operator>+</operator> <name>bar</name></expr></yield></expr></return>
+</block_content>}</block></function>
+</unit>
+
 <!--
 "type" (again)
 Note: Do NOT adjust the unit tags or position of this test
