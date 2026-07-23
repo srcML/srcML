@@ -8,44 +8,26 @@
  */
 
 #include <src_input_clipboard.hpp>
-#include <srcml_options.hpp>
+#include <src_input_libarchive.hpp>
 #include <SRCMLStatus.hpp>
 #include <clip.h>
 #include <memory>
 #include <string>
 
-// Convert input to a ParseRequest and assign request to the processing queue
 int src_input_clipboard(ParseQueue& queue, srcml_archive* srcml_arch, const srcml_request_t& srcml_request, const srcml_input_src& input) {
 
-    // form the parsing request
-    std::shared_ptr<ParseRequest> prequest(new ParseRequest);
+    // modify passed input
+    srcml_input_src clipboard_input = input;
 
-    if (option(SRCML_COMMAND_NOARCHIVE))
-        prequest->disk_dir = srcml_request.output_filename.resource;
+    // no backing filename; use "-" so libarchive input emits no filename attribute
+    clipboard_input.resource = "-";
 
-    prequest->filename = srcml_request.att_filename;
-    prequest->url = srcml_request.att_url;
-    prequest->version = srcml_request.att_version;
-    prequest->srcml_arch = srcml_arch;
-    prequest->language = srcml_request.att_language ? *srcml_request.att_language : "";
-
-    // if there is no language specified, then try to use the filename extension
-    if (prequest->language.empty() && prequest->filename)
-        if (const char* l = srcml_archive_check_extension(srcml_arch, prequest->filename->data()))
-            prequest->language = l;
-
-    prequest->status = 0;
-
-    // fill the buffer from the clipboard
-    std::string text;
-    if (!clip::get_text(text)) {
+    // read the clipboard
+    clipboard_input.memory = std::make_shared<std::string>();
+    if (!clip::get_text(*clipboard_input.memory)) {
         SRCMLstatus(ERROR_MSG, "srcml: unable to read text from the clipboard");
         return -1;
     }
-    prequest->buffer.assign(text.begin(), text.end());
 
-    // schedule for parsing
-    queue.schedule(prequest);
-
-    return 1;
+    return src_input_libarchive(queue, srcml_arch, srcml_request, clipboard_input);
 }
