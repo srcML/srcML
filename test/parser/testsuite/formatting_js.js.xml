@@ -271,6 +271,12 @@
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <block>{
+    <expr_stmt><expr><function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt> <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>baz</name> <operator>=</operator> <literal type="boolean">true</literal></expr></expr_stmt> </block_content>}</block></constructor>
+}</block></class></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Statement with Blocks followed by Bare Blocks -->
 
 <unit revision="1.0.0" language="JavaScript">

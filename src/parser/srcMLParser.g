@@ -22245,9 +22245,13 @@ expression_block_js[] {
             // @TODO: this is a bug that must exist for the time being;
             // eventually, fix MODE_PARAMETER_LIST_JS to end properly
             if (
-                inMode(MODE_PARAMETER_LIST_JS)
+                LA(1) != TERMINATE
+                && inMode(MODE_PARAMETER_LIST_JS)
                 && inTransparentMode(MODE_STATEMENT | MODE_EXPRESSION)
-                && decl_start_js_token_set.member((unsigned int) LA(1))
+                && (
+                    decl_start_js_token_set.member((unsigned int) LA(1))
+                    || table_keywords_js_token_set.member((unsigned int) LA(1))
+                )
             )
                 endDownOverMode(MODE_STATEMENT | MODE_EXPRESSION);
         }
