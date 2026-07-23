@@ -11078,6 +11078,10 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
         }?
         function_declaration_specifiers_ts |
 
+        // special case: "default" is a name, not the start of a 'default' statement
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == JS_DEFAULT }?
+        default_as_name |
+
         // special case: generic types (mixins) using the "extends" keyword in TypeScript
         { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TERNARY | MODE_CONDITION) }?
         mixins_ts |
@@ -13905,6 +13909,10 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             )
         }?
         function_declaration_specifiers_ts |
+
+        // special case: "default" is a name, not the start of a 'default' statement
+        { inLanguage(LANGUAGE_JAVASCRIPT) && LA(1) == JS_DEFAULT }?
+        default_as_name |
 
         // special case: generic types (mixins) using the "extends" keyword in TypeScript
         { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_TERNARY | MODE_CONDITION) }?
@@ -19977,6 +19985,19 @@ await_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
         }
 
         JS_AWAIT
+;
+
+/*
+  default_as_name
+
+  Handles cases where "default" is a name in JavaScript.
+*/
+default_as_name[] { SingleElement element(this); ENTRY_DEBUG } :
+        {
+            startElement(SNAME);
+        }
+
+        JS_DEFAULT
 ;
 
 /*

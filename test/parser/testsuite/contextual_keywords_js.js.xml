@@ -557,6 +557,10 @@
 <decl_stmt><decl type="const">const <name>default</name> <init>= <expr><name>default</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const { <expr><name>default</name></expr>: <decl><name>foo</name></decl> } <init>= <expr><operator>await</operator> <call><name>import</name><argument_list>(<argument><expr><literal type="string">"foo"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface>interface <name>SpeechSynthesisVoice</name> <block>{
     <decl_stmt><decl><ts:specifier>declare</ts:specifier> <name>default</name><ts:type>: <name>boolean</name></ts:type></decl></decl_stmt>
