@@ -135,6 +135,23 @@ srcml -p --show-language
 check "C++\n"
 
 ##
+# a YAML header on source clipboard input sets metadata, no --language needed
+
+defineXML header_srcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="foo.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+STDOUT
+
+printf -- '---\nfilename: foo.cpp\nlanguage: C++\nxmlns: http://www.srcML.org/srcML/src\n---\na;\n' | setclipboard
+srcml --from-clipboard
+check "$header_srcml"
+
+printf -- '---\nfilename: foo.cpp\nlanguage: C++\nxmlns: http://www.srcML.org/srcML/src\n---\na;\n' | setclipboard
+srcml -p
+check "$header_srcml"
+
+##
 # an explicit clipboard:// input mixes with files, keeping command-line order
 
 defineXML mixed <<- 'STDOUT'
