@@ -187,6 +187,57 @@
 </block_content>}</block></if></if_stmt>
 </unit>
 
+<!-- Regular expressions following a statement keyword (e.g., "return") -->
+
+<unit revision="1.0.0" language="JavaScript">
+<import>import <name>*</name> <alias>as <expr><literal type="regex">/url\(\"([^"']+)/</literal><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></alias></import>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<switch>switch <condition>(<expr><name>foo</name></expr>)</condition> <block>{<block_content>
+    <case>case <expr><literal type="regex">/url\(\"([^"']+)/</literal><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr>:</case>
+        <break>break</break>
+</block_content>}</block></switch>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <specifier>default</specifier> <literal type="regex">/url\(\"([^"']+)/</literal><expr><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<export>export <literal type="regex">/url\(\"([^"']+)/</literal><expr><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></export>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="const">const <name>foo</name> <range>in <expr><literal type="regex">/url\(\"([^"']+)/</literal><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<for>for <control>(<init><decl type="const">const <name>foo</name> <range>of <expr><literal type="regex">/url\(\"([^"']+)/</literal><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></range></decl></init>)</control> <block>{<block_content>
+    <expr_stmt><expr><call><name><name>console</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content>}</block></for>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<function>function <name>foo</name><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content>
+    <return>return <expr><literal type="regex">/url\(\"([^"']+)/</literal><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></return>
+</block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<throw>throw <expr><literal type="regex">/url\(\"([^"']+)/</literal><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></throw>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield>yield <expr><literal type="regex">/url\(\"([^"']+)/</literal><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></yield>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<yield type="generator">yield * <expr><literal type="regex">/url\(\"([^"']+)/</literal><operator>.</operator><call><name>exec</name><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></call></expr></yield>
+</unit>
+
 <!-- The following should NOT be marked as regular expression literals -->
 
 <unit revision="1.0.0" language="JavaScript">
