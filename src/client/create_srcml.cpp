@@ -27,6 +27,8 @@
 #include <SRCMLStatus.hpp>
 #include <ParserTest.hpp>
 #include <libarchive_utilities.hpp>
+#include <clip.h>
+#include <cstdlib>
 #include <string_view>
 
 using namespace ::std::literals::string_view_literals;
@@ -106,8 +108,14 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     // open the output
     int nstatus = SRCML_STATUS_OK;
+    char* clipboard_buffer = nullptr;
+    size_t clipboard_size = 0;
     if (!option(SRCML_COMMAND_NOARCHIVE)) {
-        if (contains<int>(destination)) {
+        if (destination.protocol == "clipboard"sv) {
+
+            nstatus = srcml_archive_write_open_memory(srcml_arch.get(), &clipboard_buffer, &clipboard_size);
+
+        } else if (contains<int>(destination)) {
 
             nstatus = srcml_archive_write_open_fd(srcml_arch.get(), *destination.fd);
 
@@ -357,6 +365,13 @@ void create_srcml(const srcml_request_t& srcml_request,
 
     if (status != -1 || always_archive) {
         srcml_archive_close(srcml_arch.get());
+    }
+
+    // send the buffered srcML output to the clipboard; the unique_ptr owns and
+    // frees the libsrcml-allocated buffer
+    std::unique_ptr<char, decltype(&free)> clipboard_owner(clipboard_buffer, free);
+    if (destination.protocol == "clipboard"sv && clipboard_buffer) {
+        clip::set_text(std::string(clipboard_buffer, clipboard_size));
     }
 
     // don't close stdout
