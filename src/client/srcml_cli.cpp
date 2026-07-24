@@ -251,6 +251,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
         });
 
+    app.add_flag_callback("--from-clipboard,-p", [&]() {
+        srcml_request.input_sources.emplace_back(src_prefix_add_uri("clipboard", ""));
+    }, "Read input from the system clipboard. Equivalent to using clipboard:// as an input filename.")
+        ->group("GENERAL OPTIONS");
+
     app.add_flag_callback("--to-clipboard,-c", [&]() {
         srcml_request.output_filename = srcml_output_dest(src_prefix_add_uri("clipboard", ""));
     }, "Write output to the system clipboard. Equivalent to using clipboard:// as the output filename.")
@@ -300,11 +305,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
                 srcml_request.input_sources.insert(srcml_request.input_sources.begin(), srcml_input_src(src_prefix_add_uri("text", text)));
             });
     }
-
-    app.add_flag_callback("--from-clipboard,-p", [&]() {
-        srcml_request.input_sources.emplace_back(src_prefix_add_uri("clipboard", ""));
-    }, "Read input from the system clipboard. Equivalent to using clipboard:// as an input filename.")
-        ->group("CREATING SRCML");
 
     auto language =
     app.add_option("--language,-l", srcml_request.att_language,
