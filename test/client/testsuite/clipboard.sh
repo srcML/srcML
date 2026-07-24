@@ -135,6 +135,30 @@ srcml -p --show-language
 check "C++\n"
 
 ##
+# an explicit clipboard:// input mixes with files, keeping command-line order
+
+defineXML mixed <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit revision="REVISION" language="C++" filename="sub/x.cpp" hash="aa2a72b26cf958d8718a2e9bc6b84679a81d54cb"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+
+	<unit revision="REVISION" language="C++" hash="e8622977d7b817a78d262b7a3d222bee631740f8"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></unit>
+
+	<unit revision="REVISION" language="C++" filename="sub/y.cpp" hash="520b48acbdb61e411641fd94359a82686d5591eb"><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	</unit>
+
+	</unit>
+STDOUT
+
+createfile sub/x.cpp "a;\n"
+createfile sub/y.cpp "b;\n"
+printf 'c;' | setclipboard
+srcml sub/x.cpp clipboard:// sub/y.cpp -l C++
+check "$mixed"
+
+##
 # --to-clipboard / -c : write (copy) output to the system clipboard
 
 # source input (--text) -> srcML written to the clipboard
