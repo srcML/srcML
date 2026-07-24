@@ -250,6 +250,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             }
         });
 
+    app.add_flag_callback("--to-clipboard,-c", [&]() {
+        srcml_request.output_filename = srcml_output_dest(src_prefix_add_uri("clipboard", ""));
+    }, "Write output to the system clipboard")
+        ->group("GENERAL OPTIONS");
+
     // determine default max threads
     int processorCount = CPUCount();
     if (processorCount < 2)
