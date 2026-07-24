@@ -169,3 +169,26 @@ checkclipboard "$asrcml"
 printf '%s' "$srcml_unit" | setclipboard
 srcml -p -c
 checkclipboard "a;"
+
+##
+# query (XPath) results written to the clipboard
+
+# XPath element results
+defineXML xpath_names <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit revision="REVISION" language="C++" item="1"><name>a</name></unit>
+
+	</unit>
+STDOUT
+
+srcml --text "a;" -l C++ --xpath '//src:name' --to-clipboard
+checkclipboard "$xpath_names"
+
+srcml --text "a;" -l C++ --xpath '//src:name' -c
+checkclipboard "$xpath_names"
+
+# XPath scalar (count) result
+srcml --text "a;" -l C++ --xpath 'count(//src:name)' -c
+checkclipboard "1\n"
