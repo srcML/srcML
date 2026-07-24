@@ -242,8 +242,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->each([&](std::string value) {
             srcml_request.output_filename = srcml_output_dest(value);
 
-            if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension.empty()
-                && srcml_request.output_filename.filename.back() == '/')) {
+            if (srcml_request.output_filename.protocol == "file"sv
+                && (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension.empty()
+                && srcml_request.output_filename.filename.back() == '/'))) {
 
                 srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
                 srcml_request.command |= SRCML_COMMAND_NOARCHIVE;

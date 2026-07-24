@@ -178,6 +178,23 @@ srcml -c sub/a.xml
 checkclipboard "a;"
 
 ##
+# clipboard:// as an explicit --output / -o destination (same as --to-clipboard)
+
+# source input (--text) -> srcML written to the clipboard
+srcml --text "a;" -l C++ --output clipboard://
+checkclipboard "$asrcml"
+
+srcml -t "a;" -l C++ -o clipboard://
+checkclipboard "$asrcml"
+
+# srcML input (file) -> source written to the clipboard
+srcml --output clipboard:// sub/a.xml
+checkclipboard "a;"
+
+srcml -o clipboard:// sub/a.xml
+checkclipboard "a;"
+
+##
 # --to-clipboard combined with --from-clipboard (clipboard in and out)
 
 # source (from the clipboard) -> srcML written to the clipboard
