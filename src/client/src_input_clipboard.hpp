@@ -2,7 +2,7 @@
 /**
  * @file src_input_clipboard.hpp
  *
- * @copyright Copyright (C) 2024 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2026 srcML, LLC. (www.srcML.org)
  *
  * This file is part of the srcml command-line client.
  */
@@ -10,13 +10,10 @@
 #ifndef SRC_INPUT_CLIPBOARD_HPP
 #define SRC_INPUT_CLIPBOARD_HPP
 
-#include <srcml.h>
-#include <srcml_cli.hpp>
-#include <ParseQueue.hpp>
+#include <srcml_input_src.hpp>
 
-int src_input_clipboard(ParseQueue& queue,
-                        srcml_archive* srcml_arch,
-                        const srcml_request_t& srcml_request,
-                        const srcml_input_src& input);
+// read the clipboard into the input source as in-memory input,
+// determining whether the content is source code or srcML
+void open_clipboard(srcml_input_src& input_source);
 
 #endif

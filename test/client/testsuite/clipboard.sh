@@ -68,3 +68,25 @@ check sub/a.cpp.xml "$asrcml"
 printf 'a;' | setclipboard
 srcml -l C++ -p -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"
+
+##
+# srcML in the clipboard is detected and read as srcML, just like stdin
+
+# the srcML form of "a;"
+srcml_unit='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>'
+srcml_unit=${srcml_unit//REVISION/${REVISION}}
+
+# srcML clipboard, output as source
+printf '%s' "$srcml_unit" | setclipboard
+srcml --from-clipboard
+check "a;"
+
+printf '%s' "$srcml_unit" | setclipboard
+srcml -p
+check "a;"
+
+# metadata from a srcML clipboard
+printf '%s' "$srcml_unit" | setclipboard
+srcml -p --show-language
+check "C++\n"
