@@ -339,7 +339,7 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
         // - the previous token was a ":"
         // - currently in a "{}" pair and either the next token is "}", is "{ type ,", or is ", type ,"
         // - currently in a "()" or "[]" pair and the next token is ",", ")", or "]"
-        // - "type" is the first token on a line
+        // - "type" is followed by an operator (and not preceded by "import")
         || (
             token->getType() == srcMLParser::TS_TYPE
             && (
@@ -373,9 +373,8 @@ bool NameDifferentiatorJavaScript::isNameToken(antlr::RefToken token, antlr::Ref
                     )
                 )
                 || (
-                    token->getColumn() == 1
-                    && nextToken->getType() != srcMLParser::NAME
-                    && !srcMLParser::name_differentiator_js_token_set.member(nextToken->getType())
+                    srcMLParser::general_operator_tokens_set.member(nextToken->getType())
+                    && prevNonWhitespaceToken->getType() != srcMLParser::JS_IMPORT
                 )
             )
         )

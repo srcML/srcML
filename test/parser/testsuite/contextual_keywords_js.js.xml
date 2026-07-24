@@ -1932,6 +1932,16 @@
 <expr_stmt><expr><name>type</name> <operator>+=</operator> <literal type="string">"foo"</literal></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>foo</name></expr>)</condition> <block>{<block_content><expr_stmt><expr><name>type</name> <operator>+=</operator> <literal type="string">"foo"</literal></expr></expr_stmt></block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<if_stmt><if>if <condition>(<expr><name>foo</name></expr>)</condition> <block>{<block_content>
+    <expr_stmt><expr><name>type</name> <operator>+=</operator> <literal type="string">"foo"</literal></expr></expr_stmt>
+</block_content>}</block></if></if_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>reactStableValue</name> <init>= <expr><operator>await</operator> <call><name>getRenderedAttributeValue</name><argument_list>(
   <argument><expr><name>ReactStable</name></expr></argument>,
