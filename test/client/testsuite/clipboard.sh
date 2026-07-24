@@ -10,15 +10,19 @@
 # Skip when no clipboard is available, e.g., a headless CI machine.
 if command -v pbcopy &> /dev/null; then
 	setclipboard() { pbcopy; }
+	getclipboard() { pbpaste; }
 elif [[ -n "$DISPLAY" ]] && command -v xclip &> /dev/null; then
 	# xclip daemonizes to hold the selection; close inherited fds 3/4 (the test
 	# framework's saved stdout/stderr) so the daemon does not keep the ctest
 	# output pipe open and hang the run
 	setclipboard() { xclip -selection clipboard >/dev/null 2>&1 3>&- 4>&-; }
+	getclipboard() { xclip -selection clipboard -o; }
 elif [[ -n "$DISPLAY" ]] && command -v xsel &> /dev/null; then
 	setclipboard() { xsel --clipboard --input >/dev/null 2>&1 3>&- 4>&-; }
+	getclipboard() { xsel --clipboard --output; }
 elif [[ -n "$WAYLAND_DISPLAY" ]] && command -v wl-copy &> /dev/null; then
 	setclipboard() { wl-copy >/dev/null 2>&1 3>&- 4>&-; }
+	getclipboard() { wl-paste --no-newline; }
 else
 	echo "Test Skipped: no system clipboard available"
 	exit 0
@@ -26,6 +30,45 @@ fi
 
 # test framework
 source $(dirname "$0")/framework_test.sh
+
+# checkclipboard <expected> : like check, but compares the system clipboard
+# contents to <expected>. It reads the clipboard itself, so the traced command
+# is the preceding srcml. Keep checkclipboard/getclipboard out of the history so
+# the trace shows the srcml command, not this check.
+HISTIGNORE="check:checkclipboard:getclipboard:#"
+checkclipboard() {
+
+    local exit_status=$?
+
+    set -e
+
+    line=$(caller | cut -d' ' -f1)
+    TEMPFILE=$PWD'/.test.'$line
+
+    uncapture_output
+
+    firsthistoryentry
+
+    tmpfile1=$TEMPFILE.1
+    echo -en "$1" > $tmpfile1
+
+    tmpfileclip=$TEMPFILE.clip
+    getclipboard > $tmpfileclip
+
+    $diff $tmpfile1 $tmpfileclip
+
+    [ ! -s $STDERR ]
+
+    set +e
+
+    if [ $exit_status -ne 0 ]; then
+        exit 1
+    fi
+
+    capture_output
+
+    true
+}
 
 ##
 # --from-clipboard / -p : read (paste) source code from the system clipboard
@@ -90,3 +133,39 @@ check "a;"
 printf '%s' "$srcml_unit" | setclipboard
 srcml -p --show-language
 check "C++\n"
+
+##
+# --to-clipboard / -c : write (copy) output to the system clipboard
+
+# source input (--text) -> srcML written to the clipboard
+srcml --text "a;" -l C++ --to-clipboard
+checkclipboard "$asrcml"
+
+srcml -t "a;" -l C++ -c
+checkclipboard "$asrcml"
+
+# srcML input (file) -> source written to the clipboard
+createfile sub/a.xml "$srcml_unit"
+
+srcml --to-clipboard sub/a.xml
+checkclipboard "a;"
+
+srcml -c sub/a.xml
+checkclipboard "a;"
+
+##
+# --to-clipboard combined with --from-clipboard (clipboard in and out)
+
+# source (from the clipboard) -> srcML written to the clipboard
+printf 'a;' | setclipboard
+srcml -p -c -l C++
+checkclipboard "$asrcml"
+
+printf 'a;' | setclipboard
+srcml --from-clipboard --to-clipboard -l C++
+checkclipboard "$asrcml"
+
+# srcML (from the clipboard) -> source written to the clipboard
+printf '%s' "$srcml_unit" | setclipboard
+srcml -p -c
+checkclipboard "a;"
