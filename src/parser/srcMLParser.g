@@ -28795,7 +28795,7 @@ cmake_expression[] { ENTRY_DEBUG
             else if (LA(1) == CMAKE_RCURLY) {
                 --expansion_expr_depth;
             }
-            std::cout << LT(1)->getText() << ":" << expansion_expr_depth << std::endl;
+
             if (expansion_expr_depth == 0 && LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
                 only_name_tokens = false;
             }
