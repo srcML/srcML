@@ -22938,6 +22938,13 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
             (nameless_function_declaration_ts ({ LA(1) == TERMINATE && LT(1)->getText() == ";" }? TERMINATE)?) |
 
             /*
+              special case: property is a class
+            */
+
+            { !inTransparentMode(MODE_NAME_LIST_JS) && next_token() != COLON }?
+            class_expression_js |
+
+            /*
               special case: property is a function
             */
 
