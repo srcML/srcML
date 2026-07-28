@@ -23032,6 +23032,12 @@ property_expression_js[] { size_t bracket_types_size = bracket_types_js.size(); 
 */
 property_declaration_js[] { ENTRY_DEBUG } :
         {
+            // if any of these keywords make it here, then the code was invalid
+            if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
+                function_expression_js(true);
+                return;
+            }
+
             startNewMode(MODE_DECL_JS);
             startElement(SDECLARATION);
         }
