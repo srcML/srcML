@@ -23068,6 +23068,20 @@ property_expression_js[] { size_t bracket_types_size = bracket_types_js.size(); 
 */
 property_declaration_js[] { ENTRY_DEBUG } :
         {
+            // invalid code handler: generator function with no parameter list nor block
+            if (LA(1) == MULTOPS && next_token() == TERMINATE && next_token_two() == RCURLY) {
+                consume();
+                return;                
+            }
+
+            // invalid code handler: generator function without parameter list
+            if (LA(1) == MULTOPS && next_token() == LCURLY) {
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+                consume();
+                expression_block_js();
+                return;
+            }
+
             // invalid code handler: keywordless functions
             if (LA(1) == NAME && next_token() == LPAREN) {
                 keywordless_function_expression_js(true);
