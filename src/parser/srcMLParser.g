@@ -23018,7 +23018,21 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
             /*
               property is a declaration
             */
-            property_declaration_js
+            property_declaration_js |
+
+            /*
+              property has no name (e.g., ": EXPR")
+            */
+            {
+                startNewMode(MODE_DECL_JS);
+                startElement(SDECLARATION);
+
+                // empty name tag
+                startNewMode(MODE_LOCAL);
+                startElement(SNAME);
+                endMode(MODE_LOCAL);
+            }
+            property_declaration_init_js
         )
 ;
 
