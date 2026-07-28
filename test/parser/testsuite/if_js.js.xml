@@ -65,7 +65,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<if_stmt><if>if <condition>(<expr><object>{ <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property> }</object> <operator>!=</operator> <name>a</name></expr>)</condition> <block>{<block_content>
+<if_stmt><if>if <condition>(<expr><object>{ <property><decl><name>a</name><init>: <expr><literal type="number">1</literal></expr></init></decl></property> }</object> <operator>!=</operator> <name>a</name></expr>)</condition> <block>{<block_content>
 </block_content>}</block></if></if_stmt>
 </unit>
 
@@ -82,7 +82,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<if_stmt><if>if <condition>(<expr><object>{<property><expr><name>valueOf</name></expr>: <expr><function>function<parameter_list>()</parameter_list> <block>{<block_content><return>return <expr><literal type="number">1</literal></expr></return></block_content>}</block></function></expr></property>}</object> <operator>+</operator> <literal type="number">1</literal> <operator>!==</operator> <literal type="number">2</literal></expr>)</condition> <block>{<block_content>
+<if_stmt><if>if <condition>(<expr><object>{<property><decl><name>valueOf</name><init>: <expr><function>function<parameter_list>()</parameter_list> <block>{<block_content><return>return <expr><literal type="number">1</literal></expr></return></block_content>}</block></function></expr></init></decl></property>}</object> <operator>+</operator> <literal type="number">1</literal> <operator>!==</operator> <literal type="number">2</literal></expr>)</condition> <block>{<block_content>
     <return>return <expr><literal type="number">0</literal></expr></return>
 </block_content>}</block></if></if_stmt>
 </unit>

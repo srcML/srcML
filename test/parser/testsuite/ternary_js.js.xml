@@ -65,9 +65,9 @@
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name><name>module</name><operator>.</operator><name>exports</name></name> <operator>=</operator> <function>function <parameter_list>(<parameter><decl><name>path</name></decl></parameter>, <parameter><decl><name>info</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <return>return <expr><object>{
-    <property><expr><name>template</name></expr>: <expr><ternary><condition><expr><name>isEnv</name></expr>
+    <property><decl><name>template</name><init>: <expr><ternary><condition><expr><name>isEnv</name></expr>
       ?</condition><then> <expr><lambda><parameter><decl><name>info</name></decl></parameter> <operator>=&gt;</operator> <expr><name>path</name></expr></lambda></expr>
-      </then><else>: <expr><operator>(</operator><lambda><parameter><decl><name>info</name></decl></parameter> <operator>=&gt;</operator> <expr><call><name>resolve</name><argument_list>(<argument><expr><name>path</name></expr></argument>)</argument_list></call></expr></lambda><operator>)</operator></expr></else></ternary></expr></property>,
+      </then><else>: <expr><operator>(</operator><lambda><parameter><decl><name>info</name></decl></parameter> <operator>=&gt;</operator> <expr><call><name>resolve</name><argument_list>(<argument><expr><name>path</name></expr></argument>)</argument_list></call></expr></lambda><operator>)</operator></expr></else></ternary></expr></init></decl></property>,
   }</object></expr></return>
 </block_content>}</block></function></expr></expr_stmt>
 </unit>
@@ -76,7 +76,7 @@
 <decl_stmt><decl type="const">const <name>parsedPragmaOptions</name> <init>= <expr><call><name>parseConfigPragmaForTests</name><argument_list>(
   <argument><expr><ternary><condition><expr><name>mode</name> <operator>===</operator> <literal type="string">'linter'</literal></expr>
     ?</condition><then> <expr><object>{
-      <property><expr><name>validateRefAccessDuringRender</name></expr>: <expr><literal type="boolean">false</literal></expr></property>,
+      <property><decl><name>validateRefAccessDuringRender</name><init>: <expr><literal type="boolean">false</literal></expr></init></decl></property>,
     }</object></expr>
     </then><else>: <expr><object>{
       <comment type="block">/* use defaults for compiler mode */</comment>
@@ -87,14 +87,14 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>parsedPragmaOptions</name> <init>= <expr><call><name>parseConfigPragmaForTests</name><argument_list>(
   <argument><expr><object>{
-    <property><expr><name>environment</name></expr>:
+    <property><decl><name>environment</name><init>:
       <expr><ternary><condition><expr><name>mode</name> <operator>===</operator> <literal type="string">'linter'</literal></expr>
         ?</condition><then> <expr><object>{
-          <property><expr><name>validateRefAccessDuringRender</name></expr>: <expr><literal type="boolean">false</literal></expr></property>,
+          <property><decl><name>validateRefAccessDuringRender</name><init>: <expr><literal type="boolean">false</literal></expr></init></decl></property>,
         }</object></expr>
         </then><else>: <expr><object>{
           <comment type="block">/* use defaults for compiler mode */</comment>
-        }</object></expr></else></ternary></expr></property>,
+        }</object></expr></else></ternary></expr></init></decl></property>,
   }</object></expr></argument>
 )</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
@@ -120,11 +120,11 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>headers</name> <init>= <expr><ternary><condition><expr><name>onHeaders</name></expr>
   ?</condition><then> <expr><object>{
-      <property><expr><name>remainingCapacity</name></expr>:
+      <property><decl><name>remainingCapacity</name><init>:
         <expr><literal type="number">2</literal> <operator>+</operator>
         <operator>(</operator><ternary><condition><expr><name>foo</name></expr>
           ?</condition><then> <expr><name>bar</name></expr>
-          </then><else>: <expr><name>baz</name></expr></else></ternary><operator>)</operator></expr></property>,
+          </then><else>: <expr><name>baz</name></expr></else></ternary><operator>)</operator></expr></init></decl></property>,
     }</object></expr>
   </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></init></decl></decl_stmt>
 </unit>
@@ -139,10 +139,10 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>factory</name><ts:type>: <name>NodeFactory</name></ts:type> <init>= <expr><object>{
-    <property><expr><name>foo</name></expr>: <expr><ternary><condition><expr><name>bar</name></expr> ?</condition><then> <expr><lambda><parameter_list>(<parameter><decl><name>expression</name></decl></parameter>, <parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><call><name>setEmitFlags</name><argument_list>(<argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></lambda></expr> </then><else>: <expr><name>quux</name></expr></else></ternary></expr></property>,
-    <property><expr><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <property><decl><name>foo</name><init>: <expr><ternary><condition><expr><name>bar</name></expr> ?</condition><then> <expr><lambda><parameter_list>(<parameter><decl><name>expression</name></decl></parameter>, <parameter><decl><name>name</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><call><name>setEmitFlags</name><argument_list>(<argument><expr><name>baz</name></expr></argument>)</argument_list></call></expr></lambda></expr> </then><else>: <expr><name>quux</name></expr></else></ternary></expr></init></decl></property>,
+    <property><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><name>a</name></expr></return>
-    </block_content>}</block></function></expr></property>,
+    </block_content>}</block></function></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -173,8 +173,8 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>checker</name><ts:type>: <name>TypeChecker</name></ts:type> <init>= <expr><object>{
-    <property><expr><name>getDefaultFromTypeParameter</name></expr>: <expr><lambda><parameter><decl><name>type</name></decl></parameter> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>type</name></expr> ?</condition><then> <expr><call><name>getDefaultFromTypeParameter</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="undefined">undefined</literal></expr></else></ternary></expr></lambda></expr></property>,
-    <property><expr><function><name>resolveName</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>,
+    <property><decl><name>getDefaultFromTypeParameter</name><init>: <expr><lambda><parameter><decl><name>type</name></decl></parameter> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>type</name></expr> ?</condition><then> <expr><call><name>getDefaultFromTypeParameter</name><argument_list>()</argument_list></call></expr> </then><else>: <expr><literal type="undefined">undefined</literal></expr></else></ternary></expr></lambda></expr></init></decl></property>,
+    <property><function><name>resolveName</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -183,7 +183,7 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="let">let <name>c</name><ts:type>: <operator>(</operator><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Uppercase</name><argument_list type="generic">&lt;<argument><expr><literal type="string">'a'</literal> <operator>&amp;</operator> <object>{ <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property> }</object></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">2</literal></expr></else></ternary></expr></lambda><operator>)</operator></ts:type> <init>= <expr><literal type="null">null</literal><operator>!</operator></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="let">let <name>c</name><ts:type>: <operator>(</operator><lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>T</name> <ts:extends>extends <ts:type><name><name>Uppercase</name><argument_list type="generic">&lt;<argument><expr><literal type="string">'a'</literal> <operator>&amp;</operator> <object>{ <property><decl><name>a</name><init>: <expr><literal type="number">1</literal></expr></init></decl></property> }</object></expr></argument>&gt;</argument_list></name></ts:type></ts:extends></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">2</literal></expr></else></ternary></expr></lambda><operator>)</operator></ts:type> <init>= <expr><literal type="null">null</literal><operator>!</operator></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -280,9 +280,9 @@
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>legendSymbols</name><parameter_list>(
   <parameter><decl><object>{
-    <property><expr><name>fill</name> <operator>=</operator> <ternary><condition><expr><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>_a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>_a</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><operator>void</operator> <literal type="number">0</literal></expr> </then><else>: <expr><name>_b</name></expr></else></ternary></expr></lambda><operator>)</operator> <operator>!==</operator> <operator>void</operator> <literal type="number">0</literal></expr>
+    <property><decl><name>fill</name> <init>= <expr><ternary><condition><expr><operator>(</operator><lambda><parameter_list>(<parameter><decl><name>_a</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>_a</name> <operator>==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><operator>void</operator> <literal type="number">0</literal></expr> </then><else>: <expr><name>_b</name></expr></else></ternary></expr></lambda><operator>)</operator> <operator>!==</operator> <operator>void</operator> <literal type="number">0</literal></expr>
       ?</condition><then> <expr><name>_b</name></expr>
-      </then><else>: <expr><literal type="string">"none"</literal></expr></else></ternary></expr></property>
+      </then><else>: <expr><literal type="string">"none"</literal></expr></else></ternary></expr></init></decl></property>
   }</object> <init>= <expr><object>{}</object></expr></init></decl></parameter>
 )</parameter_list> <block>{<block_content>
   <return>return <expr><literal type="boolean">true</literal></expr></return>

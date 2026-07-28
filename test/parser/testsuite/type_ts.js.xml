@@ -25,15 +25,15 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>paper</name><ts:type>: <block>{ <decl_stmt><decl><name>title</name><ts:type>: <name>string</name></ts:type></decl>,</decl_stmt> <decl_stmt><decl><name>year</name><ts:type>: <name>number</name></ts:type></decl></decl_stmt> }</block></ts:type> <init>= <expr><object>{
-  <property><expr><name>title</name></expr>: <expr><literal type="string">"An XML-Based Lightweight C++ Fact Extractor"</literal></expr></property>,
-  <property><expr><name>year</name></expr>: <expr><literal type="number">2003</literal></expr></property>
+  <property><decl><name>title</name><init>: <expr><literal type="string">"An XML-Based Lightweight C++ Fact Extractor"</literal></expr></init></decl></property>,
+  <property><decl><name>year</name><init>: <expr><literal type="number">2003</literal></expr></init></decl></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>cc</name><ts:type>: <name>Colorful</name> <operator>&amp;</operator> <name>Circle</name></ts:type> <init>= <expr><object>{
-  <property><expr><name>color</name></expr>: <expr><literal type="string">"red"</literal></expr></property>,
-  <property><expr><name>radius</name></expr>: <expr><literal type="number">42</literal></expr></property>
+  <property><decl><name>color</name><init>: <expr><literal type="string">"red"</literal></expr></init></decl></property>,
+  <property><decl><name>radius</name><init>: <expr><literal type="number">42</literal></expr></init></decl></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -61,9 +61,9 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>HooksDispatcher</name><ts:type>: <name>Dispatcher</name></ts:type> <init>= <expr><object>{
-  <property><expr><function><name>useCacheRefresh</name><parameter_list>()</parameter_list><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><ts:modifier>?</ts:modifier><ts:type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name>T</name></expr></lambda></ts:type></decl></parameter>, <parameter><decl><ts:modifier>?</ts:modifier><ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>void</name></ts:type></lambda></ts:type> <block>{<block_content>
+  <property><function><name>useCacheRefresh</name><parameter_list>()</parameter_list><ts:type>: <lambda><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><ts:modifier>?</ts:modifier><ts:type><lambda><parameter_list>()</parameter_list> <operator>=&gt;</operator> <expr><name>T</name></expr></lambda></ts:type></decl></parameter>, <parameter><decl><ts:modifier>?</ts:modifier><ts:type><name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <ts:type><name>void</name></ts:type></lambda></ts:type> <block>{<block_content>
     <return>return <expr><name>unsupportedRefresh</name></expr></return>
-  </block_content>}</block></function></expr></property>,
+  </block_content>}</block></function></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -156,25 +156,25 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <function>function <name>addProperty</name><parameter_list>()</parameter_list> <block>{<block_content>
   <decl_stmt><decl type="const">const <name>proxy</name><ts:type>: <name>PropertyDescriptor</name> <operator>&amp;</operator> <block>{<block_content><function type="get">get<parameter_list>()</parameter_list><ts:type>: <name>unknown</name></ts:type></function></block_content>}</block></ts:type> <init>= <expr><object>{
-    <property><expr><function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
+    <property><function type="get">get<parameter_list>()</parameter_list> <block>{<block_content>
       <return>return <expr><name>key</name></expr></return>
-    </block_content>}</block></function></expr></property>,
-    <property><expr><function type="set">set<parameter_list>(<parameter><decl><name>newVal</name><ts:type>: <name>unknown</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    </block_content>}</block></function></property>,
+    <property><function type="set">set<parameter_list>(<parameter><decl><name>newVal</name><ts:type>: <name>unknown</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
       <expr_stmt><expr><call><name><name>entries</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name>key</name></expr></argument>)</argument_list></call><operator>.</operator><name>val</name> <operator>=</operator> <name>newVal</name></expr></expr_stmt>
-    </block_content>}</block></function></expr></property>,
+    </block_content>}</block></function></property>,
   }</object></expr></init></decl></decl_stmt>
 </block_content>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>callComponent</name> <init>= <expr><object>{
-  <property><expr><name>react_stack_bottom_frame</name></expr>: <expr><function>function <argument_list type="generic">&lt;<argument><expr><name>Props</name></expr></argument>, <argument><expr><name>R</name></expr></argument>&gt;</argument_list><parameter_list>(
+  <property><decl><name>react_stack_bottom_frame</name><init>: <expr><function>function <argument_list type="generic">&lt;<argument><expr><name>Props</name></expr></argument>, <argument><expr><name>R</name></expr></argument>&gt;</argument_list><parameter_list>(
     <parameter><decl><name>Component</name><ts:type>: <name>R</name></ts:type></decl></parameter>,
     <parameter><decl><name>props</name><ts:type>: <name>Props</name></ts:type></decl></parameter>,
     <parameter><decl><name>secondArg</name><ts:type>: <name>Arg</name></ts:type></decl></parameter>,
   )</parameter_list><ts:type>: <name>R</name></ts:type> <block>{<block_content>
     <decl_stmt><decl type="const">const <name>result</name> <init>= <expr><call><name>Component</name><argument_list>(<argument><expr><name>props</name></expr></argument>, <argument><expr><name>secondArg</name></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
-  </block_content>}</block></function></expr></property>,
+  </block_content>}</block></function></expr></init></decl></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -214,9 +214,9 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>iterable</name><ts:type>: <name><name>$AsyncIterable</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><name>void</name></expr></argument>&gt;</argument_list></name></ts:type> <init>= <expr><object>{
-  <property><expr><function><name type="computed">[<expr><name>ASYNC_ITERATOR</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><operator>void</operator></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
+  <property><function><name type="computed">[<expr><name>ASYNC_ITERATOR</name></expr>]</name><parameter_list>()</parameter_list><ts:type>: <name><name>$AsyncIterator</name><argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>, <argument><expr><name>T</name></expr></argument>, <argument><expr><operator>void</operator></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
     <return>return <expr><call><name>createIterator</name><argument_list>(<argument><expr><lambda><parameter><decl><name>arg</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content/>}</block></lambda></expr></argument>)</argument_list></call></expr></return>
-  </block_content>}</block></function></expr></property>,
+  </block_content>}</block></function></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -252,7 +252,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>wrapData</name> <init>= <expr><lambda><specifier>async</specifier> <argument_list type="generic">&lt;<argument><expr><name>T</name> <ts:extends>extends <ts:type><name>unknown</name></ts:type></ts:extends></expr></argument>&gt;</argument_list><parameter_list>(<parameter><decl><name>value</name><ts:type>: <name>T</name></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
-  <return>return <expr><object>{ <property><expr><name>data</name></expr>: <expr><name>value</name></expr></property> }</object></expr></return>
+  <return>return <expr><object>{ <property><decl><name>data</name><init>: <expr><name>value</name></expr></init></decl></property> }</object></expr></return>
 </block_content>}</block></lambda></expr></init></decl></decl_stmt>
 </unit>
 
@@ -355,7 +355,7 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<ts:function_decl><ts:specifier>declare</ts:specifier> function <name>h</name><parameter_list>(<parameter><decl><array>[<expr><object>{ <property><expr><name>z</name></expr>: <expr><object>{ <property><expr><name>a1</name></expr></property>, <property><expr><name>b1</name></expr></property> }</object></expr></property> }</object></expr>]</array><ts:type>: <array>[<ts:type><block>{
+<ts:function_decl><ts:specifier>declare</ts:specifier> function <name>h</name><parameter_list>(<parameter><decl><array>[<expr><object>{ <property><decl><name>z</name><init>: <expr><object>{ <property><decl><name>a1</name></decl></property>, <property><decl><name>b1</name></decl></property> }</object></expr></init></decl></property> }</object></expr>]</array><ts:type>: <array>[<ts:type><block>{
     <decl_stmt><decl><name>z</name><ts:type>: <block>{
         <decl_stmt><decl><name>a1</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>
         <decl_stmt><decl><name>b1</name><ts:type>: <name>any</name></ts:type></decl></decl_stmt>
@@ -364,7 +364,7 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<ts:function_decl><ts:specifier>declare</ts:specifier> function <name>h</name><parameter_list>(<parameter><decl><array>[<expr><name>a</name></expr>, <expr><array>[<expr><name>b</name></expr>]</array></expr>, <expr><array>[<expr><array>[<expr><name>c</name></expr>]</array></expr>]</array></expr>, <expr><object>{ <property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr>: <expr><array>[<expr><name>a</name></expr>, <expr><name>b</name></expr>, <expr><name>c</name></expr>]</array></expr></property>, <property><expr><name>z</name></expr>: <expr><object>{ <property><expr><name>a1</name></expr></property>, <property><expr><name>b1</name></expr></property> }</object></expr></property> }</object></expr>]</array><ts:type>: <array>[<ts:type><name>any</name></ts:type>, <ts:type><array>[<ts:type><name>any</name></ts:type>]</array></ts:type>, <ts:type><array>[<ts:type><array>[<ts:type><name>any</name></ts:type>]</array></ts:type>]</array></ts:type>, <ts:type><block>{
+<ts:function_decl><ts:specifier>declare</ts:specifier> function <name>h</name><parameter_list>(<parameter><decl><array>[<expr><name>a</name></expr>, <expr><array>[<expr><name>b</name></expr>]</array></expr>, <expr><array>[<expr><array>[<expr><name>c</name></expr>]</array></expr>]</array></expr>, <expr><object>{ <property><decl><name>x</name></decl></property>, <property><decl><name>y</name><init>: <expr><array>[<expr><name>a</name></expr>, <expr><name>b</name></expr>, <expr><name>c</name></expr>]</array></expr></init></decl></property>, <property><decl><name>z</name><init>: <expr><object>{ <property><decl><name>a1</name></decl></property>, <property><decl><name>b1</name></decl></property> }</object></expr></init></decl></property> }</object></expr>]</array><ts:type>: <array>[<ts:type><name>any</name></ts:type>, <ts:type><array>[<ts:type><name>any</name></ts:type>]</array></ts:type>, <ts:type><array>[<ts:type><array>[<ts:type><name>any</name></ts:type>]</array></ts:type>]</array></ts:type>, <ts:type><block>{
     <decl_stmt><decl><name>x</name><ts:modifier>?</ts:modifier><ts:type>: <name>number</name></ts:type></decl></decl_stmt>
     <decl_stmt><decl><name>y</name><ts:type>: <array>[<ts:type><name>any</name></ts:type>, <ts:type><name>any</name></ts:type>, <ts:type><name>any</name></ts:type>]</array></ts:type></decl></decl_stmt>
     <decl_stmt><decl><name>z</name><ts:type>: <block>{
@@ -378,8 +378,8 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>v</name> <init>= <expr><operator>new</operator> <call><name>baz</name><argument_list>(<argument><expr><object>{
-    <property><expr><name>foo</name></expr>: <expr><lambda><parameter_list>(<parameter><decl><name>t</name></decl></parameter>, <parameter><decl><name>e</name></decl></parameter>, <parameter><decl><name>i</name></decl></parameter>, <parameter><decl><name>n</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>e</name> <operator>&gt;</operator> <operator>-</operator><literal type="number">1</literal></expr> ?</condition><then> <expr><operator>new</operator> <call><name>_g</name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><name>t</name></expr></else></ternary></expr></lambda></expr></property>,
-    <property><expr><function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>,
+    <property><decl><name>foo</name><init>: <expr><lambda><parameter_list>(<parameter><decl><name>t</name></decl></parameter>, <parameter><decl><name>e</name></decl></parameter>, <parameter><decl><name>i</name></decl></parameter>, <parameter><decl><name>n</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name>e</name> <operator>&gt;</operator> <operator>-</operator><literal type="number">1</literal></expr> ?</condition><then> <expr><operator>new</operator> <call><name>_g</name><argument_list>(<argument><expr><name>t</name></expr></argument>)</argument_list></call></expr> </then><else>: <expr><name>t</name></expr></else></ternary></expr></lambda></expr></init></decl></property>,
+    <property><function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>,
 }</object></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
 </unit>
 
@@ -390,15 +390,15 @@
   <decl_stmt><decl><name>blockInfos</name><ts:type>: <name><name>Map</name><argument_list type="generic">&lt;
     <argument><expr><name>BlockId</name></expr></argument>,
     <argument><expr><operator>|</operator> <object>{
-        <property><expr><name>kind</name></expr>: <expr><literal type="string">'end'</literal></expr></property>;
-        <property><expr><name>scope</name></expr>: <expr><name>ReactiveScope</name></expr></property>;
-        <property><expr><name>pruned</name></expr>: <expr><name>boolean</name></expr></property>;
+        <property><decl><name>kind</name><init>: <expr><literal type="string">'end'</literal></expr></init></decl></property>;
+        <property><decl><name>scope</name><init>: <expr><name>ReactiveScope</name></expr></init></decl></property>;
+        <property><decl><name>pruned</name><init>: <expr><name>boolean</name></expr></init></decl></property>;
       }</object>
     <operator>|</operator> <object>{
-        <property><expr><name>kind</name></expr>: <expr><literal type="string">'begin'</literal></expr></property>;
-        <property><expr><name>scope</name></expr>: <expr><name>ReactiveScope</name></expr></property>;
-        <property><expr><name>pruned</name></expr>: <expr><name>boolean</name></expr></property>;
-        <property><expr><name>fallthrough</name></expr>: <expr><name>BlockId</name></expr></property>;
+        <property><decl><name>kind</name><init>: <expr><literal type="string">'begin'</literal></expr></init></decl></property>;
+        <property><decl><name>scope</name><init>: <expr><name>ReactiveScope</name></expr></init></decl></property>;
+        <property><decl><name>pruned</name><init>: <expr><name>boolean</name></expr></init></decl></property>;
+        <property><decl><name>fallthrough</name><init>: <expr><name>BlockId</name></expr></init></decl></property>;
       }</object></expr></argument>
   &gt;</argument_list></name></ts:type> <init>= <expr><operator>new</operator> <call><name>Map</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
 }</block></class>
@@ -408,15 +408,15 @@
 <class><specifier>export</specifier> class <name>ScopeBlockTraversal</name> <block>{
   <decl_stmt><decl><name>blockInfos</name><ts:type>: <name><name>Map</name><argument_list type="generic">&lt;
     <argument><expr><operator>|</operator> <object>{
-        <property><expr><name>kind</name></expr>: <expr><literal type="string">'end'</literal></expr></property>;
-        <property><expr><name>scope</name></expr>: <expr><name>ReactiveScope</name></expr></property>;
-        <property><expr><name>pruned</name></expr>: <expr><name>boolean</name></expr></property>;
+        <property><decl><name>kind</name><init>: <expr><literal type="string">'end'</literal></expr></init></decl></property>;
+        <property><decl><name>scope</name><init>: <expr><name>ReactiveScope</name></expr></init></decl></property>;
+        <property><decl><name>pruned</name><init>: <expr><name>boolean</name></expr></init></decl></property>;
       }</object>
     <operator>|</operator> <object>{
-        <property><expr><name>kind</name></expr>: <expr><literal type="string">'begin'</literal></expr></property>;
-        <property><expr><name>scope</name></expr>: <expr><name>ReactiveScope</name></expr></property>;
-        <property><expr><name>pruned</name></expr>: <expr><name>boolean</name></expr></property>;
-        <property><expr><name>fallthrough</name></expr>: <expr><name>BlockId</name></expr></property>;
+        <property><decl><name>kind</name><init>: <expr><literal type="string">'begin'</literal></expr></init></decl></property>;
+        <property><decl><name>scope</name><init>: <expr><name>ReactiveScope</name></expr></init></decl></property>;
+        <property><decl><name>pruned</name><init>: <expr><name>boolean</name></expr></init></decl></property>;
+        <property><decl><name>fallthrough</name><init>: <expr><name>BlockId</name></expr></init></decl></property>;
       }</object></expr></argument>
   &gt;</argument_list></name></ts:type> <init>= <expr><operator>new</operator> <call><name>Map</name><argument_list>()</argument_list></call></expr></init></decl></decl_stmt>
 }</block></class>
@@ -446,9 +446,9 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>HostTransitionContext</name> <init>= <expr><object>{
-  <property><expr><name>$$typeof</name></expr>: <expr><name>REACT_CONTEXT_TYPE</name></expr></property>,
-  <property><expr><name>Provider</name></expr>: <expr><operator>(</operator><name>null</name><ts:type>: <name>any</name></ts:type><operator>)</operator></expr></property>,
-  <property><expr><name>_threadCount</name></expr>: <expr><literal type="number">0</literal></expr></property>,
+  <property><decl><name>$$typeof</name><init>: <expr><name>REACT_CONTEXT_TYPE</name></expr></init></decl></property>,
+  <property><decl><name>Provider</name><init>: <expr><operator>(</operator><name>null</name><ts:type>: <name>any</name></ts:type><operator>)</operator></expr></init></decl></property>,
+  <property><decl><name>_threadCount</name><init>: <expr><literal type="number">0</literal></expr></init></decl></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -470,7 +470,7 @@
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class>class <name>Agent</name> <block>{
   <decl_stmt><decl><name>clearErrorsAndWarnings</name><ts:type>: <lambda><parameter_list>(<parameter><decl><ts:type><block>{<decl_stmt><decl><name>rendererID</name><ts:type>: <name>RendererID</name></ts:type></decl></decl_stmt>}</block></ts:type></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><operator>void</operator></expr></lambda></ts:type> <init>= <expr><lambda><parameter_list>(<parameter><decl><object>{
-    <property><expr><name>rendererID</name></expr></property>,
+    <property><decl><name>rendererID</name></decl></property>,
   }</object></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
     <decl_stmt><decl type="const">const <name>renderer</name> <init>= <expr><name><name>this</name><operator>.</operator><name>_rendererInterfaces</name><index>[<expr><name>rendererID</name></expr>]</index></name></expr></init></decl></decl_stmt>
   </block_content>}</block></lambda></expr></init></decl></decl_stmt>

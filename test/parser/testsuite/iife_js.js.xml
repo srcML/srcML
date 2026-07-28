@@ -27,8 +27,8 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><call><operator>(</operator><function><specifier>async</specifier> function <parameter_list>()</parameter_list> <block>{<block_content>
-    <expr_stmt><expr><operator>await</operator> <call><name><name>fs</name><operator>.</operator><name>writeFile</name></name><argument_list>(<argument><expr><literal type="string">'./server/qs.json'</literal></expr></argument>, <argument><expr><call><name><name>JSON</name><operator>.</operator><name>stringify</name></name><argument_list>(<argument><expr><object>{ <property><expr><name>data</name></expr>: <expr><name>qss</name></expr></property> }</object></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><object>{
-        <property><expr><name>encoding</name></expr>: <expr><literal type="string">'utf8'</literal></expr></property>,
+    <expr_stmt><expr><operator>await</operator> <call><name><name>fs</name><operator>.</operator><name>writeFile</name></name><argument_list>(<argument><expr><literal type="string">'test'</literal></expr></argument>, <argument><expr><call><name><name>JSON</name><operator>.</operator><name>stringify</name></name><argument_list>(<argument><expr><object>{ <property><decl><name>data</name><init>: <expr><name>quux</name></expr></init></decl></property> }</object></expr></argument>)</argument_list></call></expr></argument>, <argument><expr><object>{
+        <property><decl><name>foo</name><init>: <expr><literal type="string">'bar'</literal></expr></init></decl></property>,
     }</object></expr></argument>)</argument_list></call></expr></expr_stmt>
 </block_content>}</block></function><operator>)</operator></call><argument_list>()</argument_list></expr>;</expr_stmt>
 </unit>
@@ -146,7 +146,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>(<parameter><decl><object>{ <property><expr><array>[<expr><class>class <super_list><extends>extends <super><expr><name>C</name></expr></super></extends></super_list> <block>{ <decl_stmt><decl type="static">static <name>x</name> <init>= <expr><literal type="number">1</literal></expr></init></decl></decl_stmt> }</block></class><operator>.</operator><name>x</name></expr>]</array></expr>: <expr><name>b</name> <operator>=</operator> <literal type="string">""</literal></expr></property> }</object></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
+<expr_stmt><expr><call><operator>(</operator><lambda><parameter_list>(<parameter><decl><object>{ <property><decl><name type="computed">[<expr><class>class <super_list><extends>extends <super><expr><name>C</name></expr></super></extends></super_list> <block>{ <decl_stmt><decl type="static">static <name>x</name> <init>= <expr><literal type="number">1</literal></expr></init></decl></decl_stmt> }</block></class><operator>.</operator><name>x</name></expr>]</name><init>: <expr><name>b</name> <operator>=</operator> <literal type="string">""</literal></expr></init></decl></property> }</object></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
     <decl_stmt><decl type="var">var <name>C</name></decl></decl_stmt>
 </block_content>}</block></lambda><operator>)</operator></call><argument_list>()</argument_list></expr>;</expr_stmt>
 </unit>

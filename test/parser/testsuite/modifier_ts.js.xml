@@ -5,8 +5,8 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>obj</name> <init>= <expr><object>{
-  <property><expr><name>optional</name><ts:modifier>?</ts:modifier></expr>: <expr><literal type="string">"optional"</literal></expr></property>,
-  <property><expr><name>definite</name><ts:modifier>!</ts:modifier></expr>: <expr><literal type="string">"definite"</literal></expr></property>,
+  <property><decl><name>optional</name><ts:modifier>?</ts:modifier><init>: <expr><literal type="string">"optional"</literal></expr></init></decl></property>,
+  <property><decl><name>definite</name><ts:modifier>!</ts:modifier><init>: <expr><literal type="string">"definite"</literal></expr></init></decl></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -72,7 +72,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <ts:interface>interface <name>Generator</name> <block>{
-    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><object>{<property><expr><name>value</name></expr>: <expr><literal type="number">10</literal></expr></property>}</object><ts:type>: <array>[]</array> <operator>|</operator> <array>[<ts:type><name>TNext</name></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>IteratorResult</name></ts:type></ts:function_decl>
+    <ts:function_decl><name>next</name><parameter_list>(<parameter><decl><modifier>...</modifier><object>{<property><decl><name>value</name><init>: <expr><literal type="number">10</literal></expr></init></decl></property>}</object><ts:type>: <array>[]</array> <operator>|</operator> <array>[<ts:type><name>TNext</name></ts:type>]</array></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>IteratorResult</name></ts:type></ts:function_decl>
 }</block></ts:interface>
 </unit>
 

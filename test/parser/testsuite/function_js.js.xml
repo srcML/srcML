@@ -47,9 +47,9 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>topLevelWrappers</name> <init>= <expr><object>{
-  <property><expr><function><name type="computed">[<expr><name>DEV</name></expr>]</name><parameter_list>(<parameter><decl><name>source</name></decl></parameter>, <parameter><decl><name>filename</name></decl></parameter>)</parameter_list> <block>{<block_content>
+  <property><function><name type="computed">[<expr><name>DEV</name></expr>]</name><parameter_list>(<parameter><decl><name>source</name></decl></parameter>, <parameter><decl><name>filename</name></decl></parameter>)</parameter_list> <block>{<block_content>
     <return>return <expr><name>source</name></expr></return>
-  </block_content>}</block></function></expr></property>
+  </block_content>}</block></function></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -97,12 +97,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>SomeObj</name> <init>= <expr><object>{
-    <property><expr><name>a</name></expr>: <expr><literal type="number">1</literal></expr></property>,
-    <property><expr><function type="generator">*<name type="computed">[<expr><name><name>Symbol</name><operator>.</operator><name>iterator</name></name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <property><decl><name>a</name><init>: <expr><literal type="number">1</literal></expr></init></decl></property>,
+    <property><function type="generator">*<name type="computed">[<expr><name><name>Symbol</name><operator>.</operator><name>iterator</name></name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><literal type="string">"a"</literal></expr></yield>
         <yield>yield <expr><literal type="string">"b"</literal></expr></yield>
-    </block_content>}</block></function></expr></property>,
-    <property><expr><name>b</name></expr>: <expr><literal type="number">2</literal></expr></property>,
+    </block_content>}</block></function></property>,
+    <property><decl><name>b</name><init>: <expr><literal type="number">2</literal></expr></init></decl></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -136,7 +136,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>holey_array</name> <init>= <expr><object>{
-  <property><expr><function type="get">get <name type="computed"><expr><literal type="number">3</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+  <property><function type="get">get <name type="computed"><expr><literal type="number">3</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl>;</decl_stmt>
 </unit>
 
@@ -166,7 +166,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
-    <property><expr><function type="get">get <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+    <property><function type="get">get <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -194,7 +194,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>holey_array</name> <init>= <expr><object>{
-  <property><expr><function type="set">set <name type="computed"><expr><literal type="number">3</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+  <property><function type="set">set <name type="computed"><expr><literal type="number">3</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl>;</decl_stmt>
 </unit>
 
@@ -224,7 +224,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
-    <property><expr><function type="set">set <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+    <property><function type="set">set <name type="computed">[<expr><name>f</name></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -265,15 +265,15 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><function><name>setBoundingClientRect</name><parameter_list>(<parameter><decl><object>{<property><expr><name>x</name></expr></property>, <property><expr><name>y</name></expr></property>, <property><expr><name>width</name></expr></property>, <property><expr><name>height</name></expr></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content>
+<expr_stmt><expr><function><name>setBoundingClientRect</name><parameter_list>(<parameter><decl><object>{<property><decl><name>x</name></decl></property>, <property><decl><name>y</name></decl></property>, <property><decl><name>width</name></decl></property>, <property><decl><name>height</name></decl></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><name><name>node</name><operator>.</operator><name>getBoundingClientRect</name></name> <operator>=</operator> <function>function <parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><object>{
-      <property><expr><name>width</name></expr></property>,
-      <property><expr><name>height</name></expr></property>,
-      <property><expr><name>left</name></expr>: <expr><name>x</name></expr></property>,
-      <property><expr><name>right</name></expr>: <expr><name>x</name> <operator>+</operator> <name>width</name></expr></property>,
-      <property><expr><name>top</name></expr>: <expr><name>y</name></expr></property>,
-      <property><expr><name>bottom</name></expr>: <expr><name>y</name> <operator>+</operator> <name>height</name></expr></property>,
+      <property><decl><name>width</name></decl></property>,
+      <property><decl><name>height</name></decl></property>,
+      <property><decl><name>left</name><init>: <expr><name>x</name></expr></init></decl></property>,
+      <property><decl><name>right</name><init>: <expr><name>x</name> <operator>+</operator> <name>width</name></expr></init></decl></property>,
+      <property><decl><name>top</name><init>: <expr><name>y</name></expr></init></decl></property>,
+      <property><decl><name>bottom</name><init>: <expr><name>y</name> <operator>+</operator> <name>height</name></expr></init></decl></property>,
     }</object></expr></return>
   </block_content>}</block></function></expr></expr_stmt>
 </block_content>}</block></function></expr></expr_stmt>
@@ -294,17 +294,17 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>obj</name> <init>= <expr><object>{
-    <property><expr><name>prop</name></expr>: <expr><function>function<parameter_list>()</parameter_list>
+    <property><decl><name>prop</name><init>: <expr><function>function<parameter_list>()</parameter_list>
     <block>{<block_content>
         <decl_stmt><decl type="var">var <name>a</name> <init>= <expr><array>[<expr><literal type="number">0</literal></expr>, <expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr>]</array></expr></init></decl></decl_stmt>
-    </block_content>}</block></function></expr></property>,
+    </block_content>}</block></function></expr></init></decl></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var">var <name>foo</name> <init>=<expr><object>{ <property><expr><function><name>x</name><parameter_list>()</parameter_list> <block>{<block_content>
+<decl_stmt><decl type="var">var <name>foo</name> <init>=<expr><object>{ <property><function><name>x</name><parameter_list>()</parameter_list> <block>{<block_content>
   <expr_stmt><expr><call><name>outerCall</name><argument_list>(<argument><expr><call><name>innerCall</name><argument_list>(<argument><expr><function>function <parameter_list>(<parameter><decl><name>x</name></decl></parameter>)</parameter_list> <block>{<block_content><return>return <expr><name>x</name></expr></return></block_content>}</block></function></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
-</block_content>}</block></function></expr></property>}</object></expr></init></decl></decl_stmt>
+</block_content>}</block></function></property>}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Keywordless Functions -->
@@ -378,16 +378,16 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>obj</name> <init>= <expr><object>{
-  <property><expr><function><name><name>doThing</name><argument_list type="generic">&lt;<argument><expr><name>K</name> <ts:extends>extends <ts:type><name>string</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>_k</name><ts:type>: <name>K</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>Foo</name><argument_list type="generic">&lt;<argument><expr><name>K</name></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
+  <property><function><name><name>doThing</name><argument_list type="generic">&lt;<argument><expr><name>K</name> <ts:extends>extends <ts:type><name>string</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>_k</name><ts:type>: <name>K</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name><name>Foo</name><argument_list type="generic">&lt;<argument><expr><name>K</name></expr></argument>&gt;</argument_list></name></ts:type> <block>{<block_content>
     <return>return <expr><object>{}</object> <operator>as</operator> <name>any</name></expr></return>
-  </block_content>}</block></function></expr></property>,
+  </block_content>}</block></function></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Nameless, Keywordless Generator Functions -->
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator"><specifier>async</specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><function type="generator"><specifier>async</specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -415,11 +415,11 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><function type="generator">*<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><function type="generator">*<argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -429,15 +429,15 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<parameter_list>()</parameter_list><ts:type>: <name>T</name></ts:type> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><function type="generator">*<parameter_list>()</parameter_list><ts:type>: <name>T</name></ts:type> <block>{<block_content> </block_content>}</block></function></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list><ts:type>: <name>T</name></ts:type> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><function type="generator">*<argument_list type="generic">&lt;<argument><expr><name>T</name></expr></argument>&gt;</argument_list><parameter_list>()</parameter_list><ts:type>: <name>T</name></ts:type> <block>{<block_content> </block_content>}</block></function></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><expr><function type="generator">*<parameter_list>()</parameter_list><ts:type>: <block>{ }</block></ts:type> <block>{<block_content> </block_content>}</block></function></expr></property> }</object></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>v</name> <init>= <expr><object>{ <property><function type="generator">*<parameter_list>()</parameter_list><ts:type>: <block>{ }</block></ts:type> <block>{<block_content> </block_content>}</block></function></property> }</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- Literals as Function Names -->

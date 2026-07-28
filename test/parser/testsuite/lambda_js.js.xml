@@ -73,19 +73,19 @@
 
 <unit revision="1.0.0" language="JavaScript">
   <return>return <expr><object>{
-    <property><expr><name>resolve</name></expr>: <expr><object>{
-      <property><expr><name>extensions</name></expr>: <expr><call><name><name>paths</name><operator>.</operator><name>moduleFileExtensions</name>
-        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter><decl><name>ext</name></decl></parameter> <operator>=&gt;</operator> <expr><literal type="string">`.${ext}`</literal></expr></lambda></expr></argument>)</argument_list></call></expr></property>
-    }</object></expr></property>,
+    <property><decl><name>resolve</name><init>: <expr><object>{
+      <property><decl><name>extensions</name><init>: <expr><call><name><name>paths</name><operator>.</operator><name>moduleFileExtensions</name>
+        <operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter><decl><name>ext</name></decl></parameter> <operator>=&gt;</operator> <expr><literal type="string">`.${ext}`</literal></expr></lambda></expr></argument>)</argument_list></call></expr></init></decl></property>
+    }</object></expr></init></decl></property>,
   }</object></expr></return>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
   <return>return <expr><object>{
-    <property><expr><name>resolve</name></expr>: <expr><object>{
-      <property><expr><name>extensions</name></expr>: <expr><call><name><name>paths</name><operator>.</operator><name>moduleFileExtensions</name>
-        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>ext</name></decl></parameter>, <parameter><decl><name>sample</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="string">`.${ext}-${sample}`</literal></expr></lambda></expr></argument>)</argument_list></call></expr></property>
-    }</object></expr></property>,
+    <property><decl><name>resolve</name><init>: <expr><object>{
+      <property><decl><name>extensions</name><init>: <expr><call><name><name>paths</name><operator>.</operator><name>moduleFileExtensions</name>
+        <operator>.</operator><name>filter</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>ext</name></decl></parameter>, <parameter><decl><name>sample</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><literal type="string">`.${ext}-${sample}`</literal></expr></lambda></expr></argument>)</argument_list></call></expr></init></decl></property>
+    }</object></expr></init></decl></property>,
   }</object></expr></return>
 </unit>
 
@@ -301,7 +301,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><call><name>call</name><argument_list>(<argument><expr><object>{
-  <property><expr><name>prop</name></expr>: <expr><call><name><name>x</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter><decl><name>x</name></decl></parameter> <operator>=&gt;</operator> <expr><ternary><condition><expr><operator>(</operator><name>x</name> <operator>&amp;&amp;</operator> <literal type="boolean">true</literal><operator>)</operator></expr> ?</condition><then> <expr><object>{<property><expr><name>a</name></expr>: <expr><name>b</name></expr></property>}</object></expr> </then><else>: <expr><object>{<property><expr><name>c</name></expr>: <expr><name>d</name></expr></property>}</object></expr></else></ternary></expr></lambda></expr></argument>)</argument_list></call></expr></property>,
+  <property><decl><name>prop</name><init>: <expr><call><name><name>x</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter><decl><name>x</name></decl></parameter> <operator>=&gt;</operator> <expr><ternary><condition><expr><operator>(</operator><name>x</name> <operator>&amp;&amp;</operator> <literal type="boolean">true</literal><operator>)</operator></expr> ?</condition><then> <expr><object>{<property><decl><name>a</name><init>: <expr><name>b</name></expr></init></decl></property>}</object></expr> </then><else>: <expr><object>{<property><decl><name>c</name><init>: <expr><name>d</name></expr></init></decl></property>}</object></expr></else></ternary></expr></lambda></expr></argument>)</argument_list></call></expr></init></decl></property>,
 }</object></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 </unit>
 

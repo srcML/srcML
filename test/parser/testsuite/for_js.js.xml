@@ -92,7 +92,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<for>for <control>(<init><decl>{<decl><name>x</name></decl>} <range>in <expr><object>{<property><expr><name>x</name></expr>:<expr><name>y</name></expr></property>}</object></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+<for>for <control>(<init><decl>{<decl><name>x</name></decl>} <range>in <expr><object>{<property><decl><name>x</name><init>:<expr><name>y</name></expr></init></decl></property>}</object></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -127,7 +127,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<for>for <control>(<init><decl>{<decl><name>x</name></decl>} <range>of <expr><object>{<property><expr><name>x</name></expr>:<expr><name>y</name></expr></property>}</object></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
+<for>for <control>(<init><decl>{<decl><name>x</name></decl>} <range>of <expr><object>{<property><decl><name>x</name><init>:<expr><name>y</name></expr></init></decl></property>}</object></expr></range></decl></init>)</control> <block>{<block_content/>}</block></for>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

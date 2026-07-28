@@ -28,7 +28,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><call><name>bar</name><argument_list>(
     <argument><expr><function>function <parameter_list>()</parameter_list> <block>{<block_content>
-        <with>with (<expr><object>{<property><expr><name>a</name></expr>: <expr><name>b</name></expr></property>}</object></expr>) <block>{<block_content>
+        <with>with (<expr><object>{<property><decl><name>a</name><init>: <expr><name>b</name></expr></init></decl></property>}</object></expr>) <block>{<block_content>
             <return>return <expr><name>quux</name></expr></return>
         </block_content>}</block></with>
     </block_content>}</block></function></expr></argument>
@@ -40,11 +40,11 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<with>with (<expr><object>{<property><expr><name>x</name></expr>:<expr><literal type="number">1</literal></expr></property>}</object></expr>)<block type="pseudo"><block_content> <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt></block_content></block></with>
+<with>with (<expr><object>{<property><decl><name>x</name><init>:<expr><literal type="number">1</literal></expr></init></decl></property>}</object></expr>)<block type="pseudo"><block_content> <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt></block_content></block></with>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<with>with (<expr><object>{}</object></expr>)<block type="pseudo"><block_content> <decl_stmt><decl type="let">let {<expr><name>a</name></expr>: <decl><name>x</name></decl>} <init>= <expr><object>{<property><expr><name>a</name></expr>: <expr><literal type="number">42</literal></expr></property>}</object></expr></init></decl></decl_stmt></block_content></block></with>
+<with>with (<expr><object>{}</object></expr>)<block type="pseudo"><block_content> <decl_stmt><decl type="let">let {<expr><name>a</name></expr>: <decl><name>x</name></decl>} <init>= <expr><object>{<property><decl><name>a</name><init>: <expr><literal type="number">42</literal></expr></init></decl></property>}</object></expr></init></decl></decl_stmt></block_content></block></with>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">

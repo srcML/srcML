@@ -15,9 +15,9 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>factory</name><ts:type>: <name>NodeFactory</name></ts:type> <init>= <expr><object>{
-    <property><expr><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <property><function type="get">get <name>createJSDocAllType</name><parameter_list>()</parameter_list> <block>{<block_content>
         <return>return <expr><call><name><name>getJSDocPrimaryTypeCreateFunction</name><argument_list type="generic">&lt;<argument><expr><name>JSDocAllType</name></expr></argument>&gt;</argument_list></name><argument_list>(<argument><expr><name><name>SyntaxKind</name><operator>.</operator><name>JSDocAllType</name></name></expr></argument>)</argument_list></call></expr></return>
-    </block_content>}</block></function></expr></property>,
+    </block_content>}</block></function></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -53,7 +53,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>componentDebugInfo</name><ts:type>: <name>ReactComponentInfo</name></ts:type> <init>= <expr><object>{
-  <property><expr><name>env</name></expr>: <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>request</name><operator>.</operator><name>environmentName</name></name>)</expr><argument_list>()</argument_list></call></expr></property>,
+  <property><decl><name>env</name><init>: <expr><call><expr><operator>(</operator><literal type="number">0</literal><operator>,</operator> <name><name>request</name><operator>.</operator><name>environmentName</name></name>)</expr><argument_list>()</argument_list></call></expr></init></decl></property>,
 }</object></expr></init></decl></decl_stmt>
 </unit>
 

@@ -39,7 +39,7 @@
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<ts:typedef><specifier>export</specifier> type <name>LocalInterface</name> = <ts:type><call><name>import</name><argument_list>(<argument><expr><literal type="string">"pkg"</literal></expr></argument>, <argument><expr><object>{ <property><expr><name>with</name></expr>: <expr><object>{ <property><expr><literal type="string">"resolution-mode"</literal></expr>: <expr><literal type="string">"require"</literal></expr></property> }</object></expr></property> }</object></expr></argument>)</argument_list></call><operator>.</operator><name>RequireInterface</name></ts:type></ts:typedef>
+<ts:typedef><specifier>export</specifier> type <name>LocalInterface</name> = <ts:type><call><name>import</name><argument_list>(<argument><expr><literal type="string">"pkg"</literal></expr></argument>, <argument><expr><object>{ <property><decl><name>with</name><init>: <expr><object>{ <property><decl><name type="computed"><expr><literal type="string">"resolution-mode"</literal></expr></name><init>: <expr><literal type="string">"require"</literal></expr></init></decl></property> }</object></expr></init></decl></property> }</object></expr></argument>)</argument_list></call><operator>.</operator><name>RequireInterface</name></ts:type></ts:typedef>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

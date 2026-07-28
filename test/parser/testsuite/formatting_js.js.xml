@@ -132,7 +132,7 @@
 <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
 <block>{<block_content>
   <block>{<block_content>
-    <expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><literal type="string">"b"</literal></expr></property>}</object></expr></expr_stmt>
+    <expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><literal type="string">"b"</literal></expr></init></decl></property>}</object></expr></expr_stmt>
   </block_content>}</block>
 </block_content>}</block></if></if_stmt>
 </unit>
@@ -147,18 +147,18 @@
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
 <block>{<block_content>
-  <expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></property>}</object></expr></expr_stmt>
+  <expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></init></decl></property>}</object></expr></expr_stmt>
 </block_content>}</block></if></if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
-<expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><literal type="string">"b"</literal></expr></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
+<expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><literal type="string">"b"</literal></expr></init></decl></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
-<expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
+<expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><ternary><condition><expr><name>grade</name> <operator>&gt;=</operator> <literal type="number">90</literal></expr> ?</condition><then> <expr><literal type="string">"A"</literal></expr> </then><else>: <expr><literal type="string">"Not an A"</literal></expr></else></ternary></expr></init></decl></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -170,20 +170,20 @@
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
   <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
-    <expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><literal type="string">"b"</literal></expr></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt></block_content></block></if></if_stmt>
+    <expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><literal type="string">"b"</literal></expr></init></decl></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt></block_content></block></if></if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition>
 <block>{<block_content>
   <if_stmt><if>if <condition>(<expr><name>cond</name></expr>)</condition><block type="pseudo"><block_content>
-  <expr_stmt><expr><object>{<property><expr><name>a</name></expr>: <expr><literal type="string">"b"</literal></expr></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
+  <expr_stmt><expr><object>{<property><decl><name>a</name><init>: <expr><literal type="string">"b"</literal></expr></init></decl></property>}</object></expr></expr_stmt></block_content></block></if></if_stmt>
 </block_content>}</block></if></if_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>obj</name> <init>= <expr><object>{
-  <property><expr><function><name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></property>
+  <property><function><name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -208,7 +208,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<decl_stmt><decl type="var">var <name>var20</name> <init>= <expr><object>{ <property><expr><name>a</name></expr>: <expr><name>b</name></expr></property> }</object></expr></init></decl></decl_stmt>
+<decl_stmt><decl type="var">var <name>var20</name> <init>= <expr><object>{ <property><decl><name>a</name><init>: <expr><name>b</name></expr></init></decl></property> }</object></expr></init></decl></decl_stmt>
 <block>{<block_content>
     <decl_stmt><decl type="let">let <name>var20</name> <init>= <expr><literal type="number">0</literal></expr></init></decl></decl_stmt>
 </block_content>}</block>

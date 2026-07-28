@@ -22900,21 +22900,98 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
             lparen_types_size = lparen_types_js.size();
         }
 
-        (options { greedy = true; } :
-            // do not consume non-call comma or ending RCURLY for an object
+        (
+            /*
+              special case: property is a function
+            */
+
+            // looking for "[...](){}" to start a computed property function
             {
-                LA(1) == TERMINATE
-                || (LA(1) == COMMA && lparen_types_js.back() != 'c' && lparen_types_size == lparen_types_js.size() )
-                || (
-                    LA(1) == COMMA
-                    && lcurly_types_js.back() == 'o'
-                    && lcurly_types_size == lcurly_types_js.size()
-                    && next_token() == RCURLY
+                (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
+                && perform_computed_property_as_function_check_js()
+            }?
+            computed_property_as_function_js |
+
+            // looking for "function" to start a function in an expression in JavaScript
+            // Note that "function:" is a property name in an object
+            { 
+                !inTransparentMode(MODE_NAME_LIST_JS)
+                && next_token() != COLON
+                && (
+                    (LA(1) != JS_GET && LA(1) != JS_SET)
+                    || (
+                        (LA(1) == JS_GET || LA(1) == JS_SET)
+                        && perform_accessor_is_name_check_js()
+                    )
                 )
+                && perform_function_expression_check_js()
+            }?
+            function_expression_js[true] |
+
+            /*
+              special case: property is a keywordless function
+            */
+
+            // looking for "*(){...}" to start a nameless, keywordless generator function in JavaScript
+            { perform_nameless_keywordless_generator_function_check_js() }?
+            nameless_keywordless_generator_function_expression_js |
+
+            // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+            { last_consumed != QMARK && perform_keywordless_function_check_js() }?
+            {
+                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+                // generator keywordless function
+                if (perform_generator_function_check_js())
+                    startElement(SFUNCTION_GENERATOR_STATEMENT);
+                // regular keywordless function
+                else
+                    startElement(SFUNCTION_DEFINITION);
+            }
+            ((attribute_ts)+ keywordless_function_expression_js[false]) |
+
+            // looking for "NAME(){...}" to start a keywordless function in JavaScript
+            // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+            {
+                (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+                && last_consumed != JS_ARROW
+                && last_consumed != QMARK
+                && perform_keywordless_function_check_js()
+            }?
+            keywordless_function_expression_js[true] |
+
+            /*
+              special case: property is a TypeScript index signature
+            */
+            { last_consumed != COLON && perform_constraint_check_ts() }?
+            constraint_ts |
+
+            /*
+              special case: property is an expression starting with "..."
+            */
+            { LA(1) == DOTDOTDOT }?
+            property_expression_js |
+
+            /*
+              property is a declaration
+            */
+            property_declaration_js
+        )
+;
+
+/*
+  property_expression_js
+
+  Handles an expression in an object property that starts with "..." in JavaScript/TypeScript.
+*/
+property_expression_js[] { size_t bracket_types_size = bracket_types_js.size(); ENTRY_DEBUG } :
+        (options { greedy = true; } :
+            {
+                (LA(1) == COMMA && bracket_types_size == bracket_types_js.size())
                 || (
                     LA(1) == RCURLY
-                    && lcurly_types_js.back() == 'o'
-                    && lcurly_types_size == lcurly_types_js.size()
+                    && bracket_types_size == bracket_types_js.size()
+                    && bracket_types_js.back() == "oLCURLY"
                 )
                 || LA(1) == 1 /* EOF */
             }?
@@ -22922,129 +22999,150 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
                 break;
             } |
 
-            // special case: index signatures in TypeScript
-            { last_consumed != COLON && perform_constraint_check_ts() }?
-            constraint_ts |
-
-            // special case: shorthand computed property with a string
-            {
-                (
-                    LA(1) == STRING_START
-                    || LA(1) == CHAR_START
-                    || (
-                        LA(1) == JS_ASYNC
-                        && (
-                            next_token() == STRING_START
-                            || next_token() == CHAR_START
-                        )
-                    )
-                )
-                && perform_shorthand_computed_property_check_js()
-            }?
-            (
-                (specifier_js)*
-
-                {
-                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-                    startElement(SEXPRESSION);
-                }
-
-                (string_literal | char_literal)
-
-                {
-                    if (inMode(MODE_EXPRESSION))
-                        endMode(MODE_EXPRESSION);
-
-                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-                    startElement(SEXPRESSION);
-                }
-
-                lambda_js[true]
-
-                {
-                    if (inMode(MODE_EXPRESSION))
-                        endMode(MODE_EXPRESSION);
-                }
-            ) |
-
-            // special case: "default:" and "enum:" are property names, not a statements
-            { inMode(MODE_PROPERTY_JS) && next_token() == COLON }?
-            keyword_as_property_name_js |
-
             { inMode(MODE_ARGUMENT) }?
             argument |
 
-            // allow JavaScript ternaries to use existing "else" logic (but do not confuse with a property COLON)
-            {
-                inTransparentMode(MODE_TERNARY)
-                && (
-                    !inTransparentMode(MODE_OBJECT_JS)
-                    || bracket_types_js.back() == "cLPAREN"
-                    || last_consumed == RCURLY
-                    || (
-                        is_ternary_colon
-                        && (inPrevMode(MODE_THEN) || bracket_types_js.back() == "oLPAREN")
-                    )
-                )
-            }?
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
             colon_marked_js |
 
-            // allow TypeScript types in properties if enclosed in operator parentheses (e.g., "(NAME: TYPE)")
-            { !inTransparentMode(MODE_TERNARY) && bracket_types_js.back() == "oLPAREN" }?
+            // consume TypeScript types
+            { !inTransparentMode(MODE_TERNARY | MODE_THEN) }?
             colon_type_ts |
 
-            // allow colon separators for properties
-            { inTransparentMode(MODE_PROPERTY_JS) }?
-            colon_property_js |
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
 
-            // "SPECIFIER []" does not denote an expression
-            {
-                !(
-                    (
-                        declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-                        || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-                    )
-                    && next_token() == LBRACKET
-                )
-            }?
+            // the starting "..." will be consumed here
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
             }
             expression |
 
-            // consume commas only if directly inside a call or operator parens
-            { bracket_types_js.back() == "cLPAREN" || bracket_types_js.back() == "oLPAREN" }?
-            comma |
+            comma
+        )*
+;
 
-            // if at this point, likely in a statement in an object
-            { 
-                table_keywords_js_token_set.member((unsigned int) LA(1))
-                || decl_start_js_token_set.member((unsigned int) LA(1))
-                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-                || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
-            }?
-            {
-                // mimic behavior as if starting a statement for the first time
-                startNewMode(MODE_TOP | MODE_STATEMENT | MODE_NEST);
+/*
+  property_declaration_js
 
-                while (
-                    (LA(1) != RCURLY || lcurly_types_js.back() != 'o' || lcurly_types_size != lcurly_types_js.size())
-                    && LA(1) != 1 /* EOF */
-                ) {
-                    // check for potential statement-start tokens before anything else
-                    javascript_statements();
+  Handles a declaration in an object property JavaScript/TypeScript.
+*/
+property_declaration_js[] { ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_JS);
+            startElement(SDECLARATION);
+        }
 
-                    // if javascript_statements explicitly returns, do not run
-                    // javascript_rules; applicable for 2+ declaration statements in a row
-                    if (processed_statement) {
-                        processed_statement = false;
-                    }
-                    else {
-                        javascript_rules();
-                    }
-                }
+        (
+            (options { greedy = true; } :
+                { LA(1) == JS_AWAIT }?
+                situational_specifiers_js |
+
+                { check_valid_specifier_js() }?
+                (
+                    {declaration_specifiers_ts_token_set.member((unsigned int) LA(1))}?
+                    declaration_specifiers_ts |
+
+                    specifier_js
+                ) |
+
+                {
+                    LA(1) == QMARK
+                    || (
+                        LA(1) == OPERATORS
+                        && (
+                            LT(1)->getText() == "!"
+                            || LT(1)->getText() == "+?"
+                            || LT(1)->getText() == "-?"
+                        )
+                    )
+                }?
+                declaration_modifiers_ts |
+
+                {
+                    (LA(1) == OPERATORS && (LT(1)->getText() == "+" || LT(1)->getText() == "-"))
+                    || LA(1) == DESTOP
+                    || LA(1) == JS_TYPEOF
+                    || LA(1) == JS_VOID
+                }?
+                general_operators |
+
+                // special case: "default:" and "enum:" are property names, not a statements
+                keyword_as_property_name_js |
+
+                compound_name | bracketless_computed_property_js | computed_property_js |
+
+                JS_LET | JS_VAR | JS_STATIC | JS_CONST | JS_USING
+            )+
+        )
+
+        // consume optional declaration initialization (using ":"), if it exists
+        ({ LA(1) == COLON }? property_declaration_init_js)?
+
+        // consume optional declaration initialization (using "="), if it exists
+        ({ LA(1) == EQUAL }? declaration_init_js)?
+
+        {
+            // if didn't break on a correct break token, consume any garbage after
+            while (LA(1) != antlr::Token::EOF_TYPE) {
+                if (LA(1) == TERMINATE || LA(1) == COMMA || LA(1) == RPAREN) break;
+                consume();
             }
+
+            if (inTransparentMode(MODE_DECL_JS)) {
+                endDownToMode(MODE_DECL_JS);
+                endMode(MODE_DECL_JS);
+            }
+        }
+;
+
+/*
+  property_declaration_init_js
+
+  Handles an initialization expression that can appear after a property declaration in JavaScript/TypeScript.
+*/
+property_declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
+        {
+            startNewMode(MODE_DECL_INIT_JS);
+            startElement(SINIT);
+        }
+
+        COLON
+
+        (options { greedy = true; } :
+            { inMode(MODE_ARGUMENT) }?
+            argument |
+
+            // consume TypeScript types
+            {
+                !inTransparentMode(MODE_TERNARY)
+                || (inTransparentMode(MODE_TERNARY) && !is_ternary_colon)
+            }?
+            colon_type_ts |
+
+            // allow JavaScript ternaries to use existing "else" logic
+            { inTransparentMode(MODE_TERNARY) }?
+            colon_marked_js |
+
+            // handle all other instances of a colon
+            { LA(1) == COLON }?
+            colon_marked |
+
+            {
+                if (!inMode(MODE_EXPRESSION))
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+            }
+            expression |
+
+            // consume commas for calls and operator parentheses, but not for parameters
+            {
+                bracket_types_js.back() == "cLPAREN"
+                || (bracket_types_js.back() == "oLPAREN" && lparen_types_js.back() == 'o')
+            }?
+            comma
         )*
 ;
 
@@ -23053,21 +23151,13 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
 
   Handles the special case "default:" and "enum:" in a JavaScript/TypeScript property.
 */
-keyword_as_property_name_js[] { ENTRY_DEBUG } :
+keyword_as_property_name_js[] { SingleElement element(this); ENTRY_DEBUG } :
         {
-            startNewMode(MODE_EXPRESSION);
-            startElement(SEXPRESSION);
-
             startNewMode(MODE_VARIABLE_NAME);
             startElement(SNAME);
         }
 
         (JS_DEFAULT | TS_ENUM)
-
-        {
-            endMode(MODE_VARIABLE_NAME);
-            endMode(MODE_EXPRESSION);
-        }
 ;
 
 /*
@@ -27133,55 +27223,6 @@ generic_function_call_ts[] { CompleteElement element(this); size_t lparen_types_
 ;
 
 /*
-  perform_shorthand_computed_property_check_js
-
-  Checks to find a shorthand computed property lambda in JavaScript/TypeScript.
-  Typically of the form "'STRING'(){}".
-*/
-perform_shorthand_computed_property_check_js[] returns [bool islambda] {
-        ENTRY_DEBUG
-
-        islambda = false;
-        int paren_count = 0;  // for parameter list
-        last_consumed_guessing_mode = -1;
-        int start = mark();
-        inputState->guessing++;
-
-        try {
-            // consume optional "async" before checking
-            if (LA(1) == JS_ASYNC)
-                consume();
-
-            // consume either "..." or '...'
-            while (LA(1) == STRING_START || LA(1) == STRING_END || LA(1) == CHAR_START || LA(1) == CHAR_END)
-                consume();
-
-            // match parameter list
-            if (LA(1) == LPAREN) {
-                while (LA(1) != antlr::Token::EOF_TYPE) {
-                    if (LA(1) == LPAREN)
-                        ++paren_count;
-
-                    if (LA(1) == RPAREN)
-                        --paren_count;
-
-                    consume();
-
-                    if (paren_count < 1)
-                        break;
-                }
-
-                if (paren_count == 0 && LA(1) == LCURLY)
-                    islambda = true;
-            }
-        }
-        catch (...) {}
-
-        inputState->guessing--;
-        rewind(start);
-} :;
-
-/*
   perform_colon_differentiator_check_ts
 
   Checks to see if a ":" belongs to a ternary or a TypeScript type.
@@ -27674,28 +27715,11 @@ perform_dynamic_module_import_check_ts[] returns [bool isimport] {
 
             // consume "NAME"
             if (LA(1) == NAME) {
-                compound_name();
+                consume();  // "NAME"
 
                 // match parameter list
                 if (LA(1) == LPAREN) {
-                    while (LA(1) != antlr::Token::EOF_TYPE) {
-                        if (LA(1) == LPAREN)
-                            ++paren_count;
-
-                        if (LA(1) == RPAREN) {
-                            --paren_count;
-
-                            if (paren_count == 0) {
-                                consume();  // ")"
-                                break;
-                            }
-                        }
-
-                        consume();
-
-                        if (paren_count < 1)
-                            break;
-                    }
+                    paren_pair();
 
                     // match generic argument list
                     if (LA(1) == TEMPOPS) {
@@ -28795,7 +28819,6 @@ cmake_expression[] { ENTRY_DEBUG
             else if (LA(1) == CMAKE_RCURLY) {
                 --expansion_expr_depth;
             }
-
             if (expansion_expr_depth == 0 && LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
                 only_name_tokens = false;
             }

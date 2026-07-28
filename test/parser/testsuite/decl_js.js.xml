@@ -496,7 +496,7 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><array>[
   <expr><object>{
-    <property><expr><name>bar</name></expr>: <expr><class>class <name>baz</name> <block>{
+    <property><decl><name>bar</name><init>: <expr><class>class <name>baz</name> <block>{
       <expr_stmt><expr><call><name>call</name><argument_list>(
         <argument><expr><lambda><parameter><decl><name>r</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
           <decl_stmt><decl type="const">const <name>a</name> <init>= <expr><function>function <parameter_list>(<parameter><decl><name>u</name></decl></parameter>)</parameter_list> <block>{<block_content>
@@ -504,7 +504,7 @@
           </block_content>}</block></function></expr></init></decl></decl_stmt>
         </block_content>}</block></lambda></expr></argument>
       )</argument_list></call></expr></expr_stmt>
-    }</block></class></expr></property>
+    }</block></class></expr></init></decl></property>
   }</object></expr>
 ]</array></expr></init></decl></decl_stmt>
 </unit>

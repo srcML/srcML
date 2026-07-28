@@ -53,7 +53,7 @@
 <class><specifier>export</specifier> class <name>C7</name> <block>{
     <constructor>constructor<parameter_list>(
         <parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><array>[<expr><name>e</name></expr>]</array></expr>]</array><ts:type>: <name><name>any</name><index>[]</index></name></ts:type></decl></parameter>,
-        <parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><object>{<property><expr><name>f</name></expr></property>}</object></expr>]</array><ts:type>: <name><name>any</name><index>[]</index></name></ts:type></decl></parameter>
+        <parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><object>{<property><decl><name>f</name></decl></property>}</object></expr>]</array><ts:type>: <name><name>any</name><index>[]</index></name></ts:type></decl></parameter>
     )</parameter_list> <block>{<block_content/>}</block></constructor>
 }</block></class>
 </unit>
@@ -66,7 +66,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <name>C9</name> <block>{
-    <constructor>constructor<parameter_list>(<parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><array>[<expr><name>h</name></expr>, <expr><name>i</name></expr>]</array></expr>, <expr><object>{<property><expr><name>j</name></expr></property>, <property><expr><name>k</name></expr>: <expr><array>[<expr><name>l</name></expr>]</array></expr></property>}</object></expr>]</array><ts:type>: <name>any</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></constructor>
+    <constructor>constructor<parameter_list>(<parameter><decl><ts:specifier>public</ts:specifier> <array>[<expr><array>[<expr><name>h</name></expr>, <expr><name>i</name></expr>]</array></expr>, <expr><object>{<property><decl><name>j</name></decl></property>, <property><decl><name>k</name><init>: <expr><array>[<expr><name>l</name></expr>]</array></expr></init></decl></property>}</object></expr>]</array><ts:type>: <name>any</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></constructor>
 }</block></class>
 </unit>
 
