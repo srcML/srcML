@@ -22126,6 +22126,10 @@ function_expression_js[bool markup] { ENTRY_DEBUG } :
         )*
 
         {
+            // if the current token does not start a parameter list, return
+            if (LA(1) != LPAREN)
+                return;
+
             startNewMode(MODE_PARAMETER_LIST_JS);
         }
 
