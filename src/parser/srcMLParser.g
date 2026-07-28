@@ -23038,6 +23038,17 @@ property_declaration_js[] { ENTRY_DEBUG } :
                 return;
             }
 
+            // invalid code handler: get/set before keywordless functions
+            if (
+                LA(1) == NAME
+                && (LT(1)->getText() == "get" || LT(1)->getText() == "set")
+                && next_token() == MULTOPS
+            ) {
+                compound_name();
+                keywordless_function_expression_js(true);
+                return;
+            }
+
             // invalid code handler: keyword function expressions
             if (LA(1) == JS_FUNCTION || LA(1) == JS_GET || LA(1) == JS_SET) {
                 function_expression_js(true);
