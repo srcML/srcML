@@ -307,6 +307,12 @@
 </block_content>}</block></function></property>}</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><object>{
+    <property><function><name>bar</name><ts:modifier>?</ts:modifier><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Keywordless Functions -->
 
 <unit revision="1.0.0" language="JavaScript">

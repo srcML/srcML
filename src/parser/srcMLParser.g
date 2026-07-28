@@ -22312,6 +22312,9 @@ keywordless_function_expression_js[bool markup] { ENTRY_DEBUG } :
             (MULTOPS)*
 
             (compound_name | bracketless_computed_property_js | computed_property_js)+
+
+            // optional "?" or "!" after a name
+            ({ LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!") }? declaration_modifiers_ts)*
         )
 
         {
@@ -22428,6 +22431,13 @@ perform_keywordless_function_check_js[] returns [bool isfunction] {
                     break;
                 }
             }
+
+            // match optional "?" or "!" after a name
+            if (
+                last_consumed_guessing_mode == NAME
+                && (LA(1) == QMARK || (LA(1) == OPERATORS && LT(1)->getText() == "!"))
+            )
+                consume();
 
             // match optional TypeScript generic argument list
             if (LA(1) == TEMPOPS) {
