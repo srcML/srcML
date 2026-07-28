@@ -196,6 +196,20 @@
 }</block></ts:interface>
 </unit>
 
+<!-- Function Declarations in Objects -->
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>sample</name> <init>= <expr><operator>&lt;</operator><object>{
+    <property><ts:function_decl><name>foo</name><parameter_list>(<parameter><decl><name>bar</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>baz</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>number</name></ts:type></ts:function_decl>;</property>
+}</object><operator>&gt;</operator> <function>function<parameter_list>(<parameter><decl><name>quux</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><operator>&lt;</operator><object>{
+    <property><ts:function_decl><parameter_list>(<parameter><decl><name>bar</name><ts:type>: <name>number</name></ts:type></decl></parameter>, <parameter><decl><name>baz</name><ts:type>: <name>string</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>number</name></ts:type></ts:function_decl>;</property>
+}</object><operator>&gt;</operator> <function>function<parameter_list>(<parameter><decl><name>quux</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr></return> </block_content>}</block></function></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Function Declarations without Ending Type -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">

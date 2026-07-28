@@ -22902,6 +22902,32 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
 
         (
             /*
+              special case: property is a TypeScript function declaration
+            */
+            {
+                (
+                    LA(1) == NAME
+                    || LA(1) == LBRACKET
+                    || LA(1) == TS_DATSIGN
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
+                && perform_function_declaration_check_ts()
+            }?
+            (function_declaration_ts ({ LA(1) == TERMINATE && LT(1)->getText() == ";" }? TERMINATE)?) |
+
+            {
+                (
+                    LA(1) == LPAREN
+                    || LA(1) == TEMPOPS
+                    || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                    || function_declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                )
+                && perform_nameless_function_declaration_check_ts()
+            }?
+            (nameless_function_declaration_ts ({ LA(1) == TERMINATE && LT(1)->getText() == ";" }? TERMINATE)?) |
+
+            /*
               special case: property is a function
             */
 
