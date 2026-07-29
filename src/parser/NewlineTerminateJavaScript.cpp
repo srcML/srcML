@@ -180,8 +180,11 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                 && nextNonSkipToken->getType() == srcMLParser::LCURLY
             )
 
-            // token is JS_DEBUGGER (always insert a terminate after a JS_DEBUGGER token)
-            || (token->getType() == srcMLParser::JS_DEBUGGER)
+            // token is JS_DEBUGGER and the next token is not a same-line LPAREN
+            || (
+                token->getType() == srcMLParser::JS_DEBUGGER
+                && (containsEOL || nextNonSkipToken->getType() != srcMLParser::LPAREN)
+            )
 
             // an EOL separates the token and the next non-skip token, which are any combination of:
             // - names
@@ -263,10 +266,11 @@ bool NewlineTerminateJavaScript::isTerminateCase(antlr::RefToken token, antlr::R
                 && nextNonSkipToken->getType() == srcMLParser::NAME
             )
 
-            // a non-NAME token separates BREAK/CONTINUE
+            // a non-NAME, non-LPAREN token separates BREAK/CONTINUE
             || (
                 (token->getType() == srcMLParser::BREAK || token->getType() == srcMLParser::CONTINUE)
                 && nextNonSkipToken->getType() != srcMLParser::NAME
+                && (containsEOL || nextNonSkipToken->getType() != srcMLParser::LPAREN)
             )
 
             // an EOL separates RETURN/THROW/YIELD and any non-skip token

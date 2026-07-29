@@ -259,6 +259,12 @@
 <decl_stmt><decl type="const">const <name>break</name> <init>= <expr><name>break</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>break</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "case" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -283,6 +289,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>case</name> <init>= <expr><name>case</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>case</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "catch" -->
@@ -336,6 +348,12 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>contextual</name> <init>= <expr><object>{
     <property><function type="get">get <name>catch</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr></return> </block_content>}</block></function></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>catch</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -465,6 +483,12 @@
 </block_content>}</block></function><argument_list>()</argument_list><operator>)</operator></call></expr>;</expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>constructor</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "continue" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -491,6 +515,12 @@
 <decl_stmt><decl type="const">const <name>continue</name> <init>= <expr><name>continue</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>continue</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "debugger" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -515,6 +545,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>debugger</name> <init>= <expr><name>debugger</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>debugger</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "declare" -->
@@ -559,6 +595,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const { <expr><name>default</name></expr>: <decl><name>foo</name></decl> } <init>= <expr><operator>await</operator> <call><name>import</name><argument_list>(<argument><expr><literal type="string">"foo"</literal></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>default</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -649,6 +691,12 @@
 <decl_stmt><decl type="const">const <name>do</name> <init>= <expr><name>do</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>do</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "each" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -701,6 +749,12 @@
 <decl_stmt><decl type="const">const <name>else</name> <init>= <expr><name>else</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>else</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "enum" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -724,6 +778,12 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>contextual</name> <init>= <expr><object>{
     <property><function type="get">get <name>enum</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr></return> </block_content>}</block></function></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>enum</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -757,6 +817,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>export</name> <init>= <expr><name>export</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>export</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "extends" -->
@@ -849,6 +915,12 @@
 <decl_stmt><decl type="const">const <name>finally</name> <init>= <expr><name>finally</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>finally</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "for" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -890,6 +962,12 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>contextual</name> <init>= <expr><object>{
     <property><function type="get">get <name>for</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr></return> </block_content>}</block></function></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>for</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -1142,6 +1220,12 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>if</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "implements" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1212,6 +1296,12 @@
 </block_content>}</block></function>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>import</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "in" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1270,6 +1360,14 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>instanceof</name> <init>= <expr><name>instanceof</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<!-- "interface" -->
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>interface</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "is" -->
@@ -1356,12 +1454,24 @@
 </block_content>}</block></if></if_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>module</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "namespace" -->
 
 <unit revision="1.0.0" language="JavaScript">
 <if_stmt><if>if <condition>(<expr><operator>!</operator><name>namespace</name> <operator>||</operator> <call><name>nodeIsMissing</name><argument_list>(<argument><expr><name>right</name></expr></argument>)</argument_list></call></expr>)</condition> <block>{<block_content>
     <return>return <expr><literal type="undefined">undefined</literal></expr></return>
 </block_content>}</block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>namespace</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "new"; can appear within expressions -->
@@ -1618,6 +1728,12 @@
 <decl_stmt><decl type="const">const <name>return</name> <init>= <expr><name>return</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>return</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "satisfies" -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -1740,6 +1856,12 @@
 <decl_stmt><decl type="const"><specifier>export</specifier> const <name>foo</name> <init>= <expr><operator>(</operator><name>static</name> <operator>as</operator> <name>number</name><operator>)</operator></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>static</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><ts:specifier>declare</ts:specifier> class <name>Sign</name> <super_list><extends>extends <super><expr><name>Board</name></expr></super></extends></super_list> <block>{
   <ts:function_decl><name>static</name> <parameter_list>(<parameter><decl><name>text</name><ts:type>: <name>string</name></ts:type></decl></parameter>, <parameter><decl><name>options</name><ts:modifier>?</ts:modifier><ts:type>: <name>writableStreamOptions</name></ts:type></decl></parameter>)</parameter_list><ts:type>: <name>content</name></ts:type></ts:function_decl>
@@ -1800,6 +1922,12 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>switch</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "throw" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -1824,6 +1952,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>throw</name> <init>= <expr><name>throw</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>throw</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "true" -->
@@ -1876,6 +2010,12 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>try</name> <init>= <expr><name>try</name> <operator>+</operator> <literal type="number">1</literal></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>try</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
@@ -1982,6 +2122,12 @@
         <return>return <expr><literal type="boolean">false</literal></expr></return>
     </block_content>}</block></if></if_stmt>
 </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>type</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!-- "typeof"; can appear within expressions -->
@@ -2154,6 +2300,12 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>while</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- "with" -->
 
 <unit revision="1.0.0" language="JavaScript">
@@ -2203,6 +2355,12 @@
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>contextual</name> <init>= <expr><object>{
     <property><function type="get">get <name>with</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>bar</name></expr></return> </block_content>}</block></function></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>with</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
@@ -2257,6 +2415,12 @@
 <block>{<block_content>
   <return>return <expr><yield>yield <expr><operator>+</operator> <name>bar</name></expr></yield></expr></return>
 </block_content>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="let">let <name>foo</name> <init>= <expr><object>{
+    <property><function><name>yield</name> <parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></property>
+}</object></expr></init></decl></decl_stmt>
 </unit>
 
 <!--

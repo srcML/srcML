@@ -22910,6 +22910,17 @@ property_js[] { CompleteElement element(this); size_t lcurly_types_size = 0; siz
             startNewMode(MODE_PROPERTY_JS);
             startElement(SPROPERTY);
 
+            // non-class/function keywords at the top-level of a property should be a name
+            if (
+                table_keywords_js_token_set.member((unsigned int) LA(1))
+                && LA(1) != CLASS
+                && LA(1) != JS_FUNCTION
+                && LA(1) != JS_GET
+                && LA(1) != JS_SET
+            ) {
+                LT(1)->setType(NAME);
+            }
+
             lcurly_types_size = lcurly_types_js.size();
             lparen_types_size = lparen_types_js.size();
         }
