@@ -336,6 +336,14 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>foo</name> <init>= <expr><object>{
+    <property><function><name>bar</name><parameter_list>()</parameter_list><ts:type>: <name>this</name> <ts:operator>is</ts:operator> <block>{<block_content> <decl_stmt><decl><name>b</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt> </block_content>}</block></ts:type> <block>{<block_content>
+        <return>return <expr><literal type="boolean">true</literal></expr></return>
+    </block_content>}</block></function></property>,
+}</object></expr></init></decl></decl_stmt>
+</unit>
+
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>itemData</name> <init>= <expr><object>{
   <property><decl><name>scaleX</name><init>: <expr><call><name>scale</name><argument_list>(<argument><expr><ternary><condition><expr><name>foo</name> <operator>!==</operator> <literal type="null">null</literal></expr> ?</condition><then> <expr><name>bar</name></expr> </then><else>: <expr><name>baz</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></init></decl></property>

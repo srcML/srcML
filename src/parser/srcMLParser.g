@@ -25356,6 +25356,7 @@ type_ts[bool markup = true] { CompleteElement element(this); size_t lparen_types
                 || last_consumed == OPERATORS
                 || last_consumed == LPAREN
                 || last_consumed == LBRACKET
+                || last_consumed == TS_IS
                 || last_consumed == TS_KEYOF
                 || last_consumed == TS_READONLY
                 || inTransparentMode(MODE_TEMPLATE_ARGUMENT_TS)
