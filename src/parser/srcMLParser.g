@@ -24004,7 +24004,7 @@ tagged_template_js[int call_count = 1] { ENTRY_DEBUG } :
         {
             do {
                 // start a new mode that will end after the argument list
-                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL);
+                startNewMode(MODE_ARGUMENT | MODE_LIST | MODE_ARGUMENT_LIST | MODE_FUNCTION_CALL | MODE_INTERNAL_END_PAREN);
 
                 // start the function call element
                 startElement(SFUNCTION_CALL);

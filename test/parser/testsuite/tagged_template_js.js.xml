@@ -25,6 +25,10 @@
 <expr_stmt><expr><call><call><name>example</name><argument><expr><literal type="string">`Hello`</literal></expr></argument></call><argument_list>(<argument><expr><name>arg1</name></expr></argument>, <argument><expr><name>arg2</name></expr></argument>)</argument_list></call></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<decl_stmt><decl type="const">const <name>str</name> <init>= <expr><call><call><name>foo</name><argument_list>(</argument_list></call><argument><expr><operator>(</operator><name>bar</name><operator>)</operator></expr></argument>)</call><literal type="string">`str`</literal></expr></init></decl></decl_stmt>
+</unit>
+
 <!-- Do not mark the following as tagged templates -->
 
 <unit revision="1.0.0" language="JavaScript">
