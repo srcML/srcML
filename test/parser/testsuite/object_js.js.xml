@@ -363,4 +363,12 @@
 }</object></expr></init></decl></decl_stmt>
 </unit>
 
+<unit revision="1.0.0" language="JavaScript">
+<return>return <expr><operator>(</operator><name>foo</name> <operator>=</operator> <object>{
+    <property><decl><name>bar</name><init>: <expr><call><name>reduce</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>reuse</name><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call>
+        <operator>.</operator><call><name>recycle</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr></init></decl></property>
+}</object><operator>)</operator></expr></return>
+</unit>
+
 </unit>

@@ -23312,6 +23312,10 @@ property_declaration_init_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         COLON
 
         (options { greedy = true; } :
+            // allow calls on separate lines that start with "."
+            { LA(1) == TERMINATE && next_token() == PERIOD }?
+            TERMINATE |
+
             { inMode(MODE_ARGUMENT) }?
             argument |
 
