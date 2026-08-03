@@ -10056,6 +10056,7 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
                             && (
                                 literal_tokens_set.member((unsigned int) LA(1))
                                 || general_operator_tokens_set.member((unsigned int) LA(1))
+                                || LA(1) == COMMA
                                 || LA(1) == TERMINATE
                             )
                         ) {
