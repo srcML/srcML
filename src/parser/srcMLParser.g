@@ -21475,7 +21475,7 @@ complete_javascript_parameter[] { CompleteElement element(this); ENTRY_DEBUG } :
                 ) |
 
                 // decorator parameter (TypeScript)
-                (attribute_ts compound_name colon_type_ts) |
+                ((attribute_ts)+ compound_name colon_type_ts) |
 
                 // typed parameter (TypeScript)
                 colon_type_ts |

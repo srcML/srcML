@@ -313,6 +313,17 @@ enum <name>E</name> <block>{
 }</block></class>
 </unit>
 
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>foo</name> <block>{
+    <function><name>bar</name><parameter_list>(
+      <parameter><decl><ts:attribute>@<expr><name>dec1</name></expr></ts:attribute>
+      <ts:attribute>@<expr><call><name>dec2</name><argument_list>(<argument><expr><literal type="number">2</literal></expr></argument>)</argument_list></call></expr></ts:attribute>
+      <name>baz</name><ts:type>: <name>number</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+        <return>return <expr><name>baz</name></expr></return>
+    </block_content>}</block></function>
+}</block></class>
+</unit>
+
 <!-- Attributes on TypeScript declaration statements -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
