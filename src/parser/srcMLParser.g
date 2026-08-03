@@ -10055,7 +10055,7 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
                             && (last_consumed == QMARK_PERIOD || last_consumed == PERIOD)
                             && (
                                 literal_tokens_set.member((unsigned int) LA(1))
-                                || LA(1) == EQUAL
+                                || general_operator_tokens_set.member((unsigned int) LA(1))
                                 || LA(1) == TERMINATE
                             )
                         ) {
