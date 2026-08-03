@@ -10052,13 +10052,19 @@ compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
                         // end the name early if the compound name is malformed
                         if (
                             inLanguage(LANGUAGE_JAVASCRIPT)
-                            && (last_consumed == QMARK_PERIOD || last_consumed == PERIOD)
                             && (
-                                literal_tokens_set.member((unsigned int) LA(1))
-                                || general_operator_tokens_set.member((unsigned int) LA(1))
-                                || LA(1) == COMMA
-                                || LA(1) == RPAREN
-                                || LA(1) == TERMINATE
+                                (
+                                    last_consumed == PERIOD
+                                    && LA(1) != NAME
+                                    && !table_keywords_js_token_set.member((unsigned int) LA(1))
+                                )
+                                || (
+                                    last_consumed == QMARK_PERIOD
+                                    && LA(1) != LBRACKET
+                                    && LA(1) != LPAREN
+                                    && LA(1) != NAME
+                                    && !table_keywords_js_token_set.member((unsigned int) LA(1))
+                                )
                             )
                         ) {
                             break;
