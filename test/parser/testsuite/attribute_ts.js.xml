@@ -285,6 +285,12 @@ enum <name>E</name> <block>{
 <!-- Attributes on function parameters -->
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
+<class>class <name>Foo</name> <block>{
+  <function><name>bar</name><parameter_list>(<parameter><decl><ts:attribute>@<expr><name>dec</name></expr></ts:attribute> <name>bar</name></decl></parameter>, <parameter><decl><name>baz</name><ts:type>: <name>any</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+}</block></class>
+</unit>
+
+<unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class>class <name>BugReport</name> <block>{
   <decl_stmt><decl><name>type</name> <init>= <expr><literal type="string">"report"</literal></expr></init></decl></decl_stmt>
   <decl_stmt><decl><name>title</name><ts:type>: <name>string</name></ts:type></decl></decl_stmt>

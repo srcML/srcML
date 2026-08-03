@@ -21478,7 +21478,7 @@ complete_javascript_parameter[] { CompleteElement element(this); bool found_attr
                 ) |
 
                 // decorator parameter (TypeScript)
-                { found_attribute }?
+                { found_attribute && next_token() == COLON }?
                 (compound_name colon_type_ts) |
 
                 // typed parameter (TypeScript)
