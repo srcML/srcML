@@ -189,7 +189,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>Car</name> <block>{
-  <expr_stmt><expr><function><name>c</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+  <function><name>c</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class>
 </unit>
 
@@ -227,17 +227,17 @@
 <unit revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <name>A</name>
 <block>{
-    <expr_stmt><expr><function><ts:specifier>public</ts:specifier> <name>B</name><parameter_list>()</parameter_list>
+    <function><ts:specifier>public</ts:specifier> <name>B</name><parameter_list>()</parameter_list>
     <block>{<block_content>
         <return>return <expr><literal type="number">42</literal></expr></return>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 }</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <super_list><extends>extends <super><expr><lambda><parameter_list>(<parameter><decl><name>bar</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><array>[<expr><name><name>bar</name><operator>.</operator><name>#baz</name></name></expr>]</array></expr></lambda></expr></super></extends></super_list>
 <block>{
-  <expr_stmt><expr><name>#baz</name></expr></expr_stmt>
+  <name>#baz</name>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
@@ -267,13 +267,13 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <block>{
-    <expr_stmt><expr><function type="generator">*<name>bar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>baz</name></expr></return> </block_content>}</block></function></expr></expr_stmt> <decl_stmt><decl type="static">static <name>#$</name></decl></decl_stmt>
+    <function type="generator">*<name>bar</name><parameter_list>()</parameter_list> <block>{<block_content> <return>return <expr><name>baz</name></expr></return> </block_content>}</block></function> <decl_stmt><decl type="static">static <name>#$</name></decl></decl_stmt>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="var">var <name>foo</name> <init>= <expr><class>class <block>{
-    <expr_stmt><expr><function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt> <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>baz</name> <operator>=</operator> <literal type="boolean">true</literal></expr></expr_stmt> </block_content>}</block></constructor>
+    <function><name>bar</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function> <constructor>constructor<parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>baz</name> <operator>=</operator> <literal type="boolean">true</literal></expr></expr_stmt> </block_content>}</block></constructor>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 

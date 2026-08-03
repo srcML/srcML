@@ -330,7 +330,7 @@
 </unit>
 
 <unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+<function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
   <return>return <expr><operator>(</operator>
     <jsx:literal type="jsx">&lt;FixtureSet
       title="Suspense"
@@ -524,7 +524,7 @@
       &lt;/TestCase&gt;
     &lt;/FixtureSet&gt;</jsx:literal>
   <operator>)</operator></expr></return>
-</block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></function>
 </unit>
 
 <unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
@@ -546,9 +546,9 @@
 
 <unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="let">let <name>Component</name> <init>= <expr><class>class <name>Component</name> <super_list><extends>extends <super><expr><name><name>React</name><operator>.</operator><name>Component</name></name></expr></super></extends></super_list> <block>{
-  <expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><jsx:literal type="jsx">&lt;div /&gt;</jsx:literal></expr></return>
-  </block_content>}</block></function></expr></expr_stmt>
+  </block_content>}</block></function>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
@@ -617,7 +617,7 @@
 <!-- JSX literals (multiple instances of the same starting tag) -->
 
 <unit xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
-  <expr_stmt><expr><function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
+  <function><name>render</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><operator>(</operator>
       <jsx:literal type="jsx">&lt;&gt;
         &lt;div ref={this.parentContainer}&gt;
@@ -636,7 +636,7 @@
         &lt;/div&gt;
       &lt;/&gt;</jsx:literal>
     <operator>)</operator></expr></return>
-  </block_content>}</block></function></expr></expr_stmt>
+  </block_content>}</block></function>
 </unit>
 
 <!-- JSX literals (edge cases) -->
@@ -828,7 +828,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" xmlns:jsx="http://www.srcML.org/srcML/JSX" revision="1.0.0" language="JavaScript">
 <class>class <name><name>C</name><argument_list type="generic">&lt;<comment type="block">/**docComment for type parameter*/</comment> <argument><expr><name>T</name></expr></argument>&gt;</argument_list></name> <block>{
-    <expr_stmt><expr><function><name><name>method</name><argument_list type="generic">&lt;<comment type="block">/**docComment of method type parameter */</comment> <argument><expr><name>U</name> <ts:extends>extends <ts:type><name>T</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>U</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+    <function><name><name>method</name><argument_list type="generic">&lt;<comment type="block">/**docComment of method type parameter */</comment> <argument><expr><name>U</name> <ts:extends>extends <ts:type><name>T</name></ts:type></ts:extends></expr></argument>&gt;</argument_list></name><parameter_list>(<parameter><decl><name>a</name><ts:type>: <name>U</name></ts:type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class>
 </unit>
 

@@ -108,7 +108,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>C1</name> <block>{
-    <expr_stmt><expr><function type="generator"><specifier>async</specifier> * <name>ag</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+    <function type="generator"><specifier>async</specifier> * <name>ag</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class>
 </unit>
 
@@ -265,7 +265,7 @@
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><function><name>setBoundingClientRect</name><parameter_list>(<parameter><decl><object>{<property><decl><name>x</name></decl></property>, <property><decl><name>y</name></decl></property>, <property><decl><name>width</name></decl></property>, <property><decl><name>height</name></decl></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content>
+<function><name>setBoundingClientRect</name><parameter_list>(<parameter><decl><object>{<property><decl><name>x</name></decl></property>, <property><decl><name>y</name></decl></property>, <property><decl><name>width</name></decl></property>, <property><decl><name>height</name></decl></property>}</object></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><name><name>node</name><operator>.</operator><name>getBoundingClientRect</name></name> <operator>=</operator> <function>function <parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><object>{
       <property><decl><name>width</name></decl></property>,
@@ -276,7 +276,7 @@
       <property><decl><name>bottom</name><init>: <expr><name>y</name> <operator>+</operator> <name>height</name></expr></init></decl></property>,
     }</object></expr></return>
   </block_content>}</block></function></expr></expr_stmt>
-</block_content>}</block></function></expr></expr_stmt>
+</block_content>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
@@ -317,16 +317,16 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
-    <expr_stmt><expr><function><specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <function><specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <function>function <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content>
     <return>return <expr><name>_a</name> <operator>=</operator> <class>class <name>C</name> <block>{
-        <expr_stmt><expr><function><name>method1</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+        <function><name>method1</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
         <function><name type="computed">[<expr><literal type="string">"method2"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
     }</block></class></expr></return>
 </block_content>}</block></function>
@@ -334,51 +334,51 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
-    <expr_stmt><expr><function><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
+    <function><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
     <specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
-    <expr_stmt><expr><function><ts:attribute>@<expr><call><name>logged</name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></ts:attribute>
+    <function><ts:attribute>@<expr><call><name>logged</name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></ts:attribute>
     <specifier>static</specifier> <specifier>async</specifier> <name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
-    <expr_stmt><expr><function type="generator"><specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
+    <function type="generator"><specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
-    <expr_stmt><expr><function type="generator"><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
+    <function type="generator"><ts:attribute>@<expr><name>logged</name></expr></ts:attribute>
     <specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <decl_stmt><decl type="const">const <name>C</name> <init>= <expr><class>class <block>{
-    <expr_stmt><expr><function type="generator"><ts:attribute>@<expr><call><name>logged</name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></ts:attribute>
+    <function type="generator"><ts:attribute>@<expr><call><name>logged</name><argument_list>(<argument><expr><name>foo</name></expr></argument>)</argument_list></call></expr></ts:attribute>
     <specifier>static</specifier> <specifier>async</specifier> *<name>#qux</name><parameter_list>()</parameter_list> <block>{<block_content>
         <yield>yield <expr><operator>(</operator><operator>await</operator> <call><name><name>Promise</name><operator>.</operator><name>resolve</name></name><argument_list>(<argument><expr><literal type="number">42</literal></expr></argument>)</argument_list></call><operator>)</operator></expr></yield>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 }</block></class></expr></init></decl></decl_stmt>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class>class <name>Foo</name> <block>{
-    <expr_stmt><expr><function><ts:specifier>public</ts:specifier> <name>baselineSmartSelection</name><parameter_list>()</parameter_list><ts:type>: <name>void</name></ts:type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+    <function><ts:specifier>public</ts:specifier> <name>baselineSmartSelection</name><parameter_list>()</parameter_list><ts:type>: <name>void</name></ts:type> <block>{<block_content/>}</block></function>
 }</block></class>
 </unit>
 
@@ -398,25 +398,25 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class>class <name>Foo</name> <block>{
-    <expr_stmt><expr><function type="generator"><ts:specifier>private</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+    <function type="generator"><ts:specifier>private</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
 }</block></class>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class>class <name>Foo</name> <block>{
-    <expr_stmt><expr><function type="generator"><ts:specifier>protected</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+    <function type="generator"><ts:specifier>protected</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
 }</block></class>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class>class <name>Foo</name> <block>{
-    <expr_stmt><expr><function type="generator"><ts:specifier>public</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+    <function type="generator"><ts:specifier>public</ts:specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
 }</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>Foo</name> <block>{
-    <expr_stmt><expr><function type="generator"><specifier>static</specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+    <function type="generator"><specifier>static</specifier> *<parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
 }</block></class>
 </unit>
 
@@ -430,7 +430,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>C4</name> <block>{
-  <expr_stmt><expr><function type="generator"><specifier>static</specifier> *<name type="computed">[<expr><literal type="string">"prototype"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+  <function type="generator"><specifier>static</specifier> *<name type="computed">[<expr><literal type="string">"prototype"</literal></expr>]</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class>
 </unit>
 
@@ -450,19 +450,19 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>A</name> <block>{
-    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="string">"\""</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function></expr></expr_stmt>
+    <function><specifier>static</specifier> <name type="computed"><expr><literal type="string">"\""</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content> </block_content>}</block></function>
 }</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>A</name> <block>{
-    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="string">'foo'</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+    <function><specifier>static</specifier> <name type="computed"><expr><literal type="string">'foo'</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class>
 </unit>
 
 <unit revision="1.0.0" language="JavaScript">
 <class>class <name>A</name> <block>{
-    <expr_stmt><expr><function><specifier>static</specifier> <name type="computed"><expr><literal type="number">1</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt>
+    <function><specifier>static</specifier> <name type="computed"><expr><literal type="number">1</literal></expr></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 }</block></class>
 </unit>
 

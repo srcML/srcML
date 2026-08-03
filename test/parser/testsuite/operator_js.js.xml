@@ -468,11 +468,11 @@
 
 <!-- "asserts" -->
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list><ts:type>: <ts:operator>asserts</ts:operator> <name>condition</name></ts:type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+<function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list><ts:type>: <ts:operator>asserts</ts:operator> <name>condition</name></ts:type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
-<expr_stmt><expr><function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list><ts:type>: <ts:operator>asserts</ts:operator> <name>condition</name> <ts:operator>is</ts:operator> <name>string</name></ts:type> <block>{<block_content/>}</block></function></expr></expr_stmt>
+<function><specifier>static</specifier> <name>simpleInvariant</name><parameter_list>(<parameter><decl><name>a</name></decl></parameter>)</parameter_list><ts:type>: <ts:operator>asserts</ts:operator> <name>condition</name> <ts:operator>is</ts:operator> <name>string</name></ts:type> <block>{<block_content/>}</block></function>
 </unit>
 
 <!-- "await" -->

@@ -914,6 +914,7 @@ public:
     bool processed_statement = false;
     bool is_pseudo_terminate = false;
     bool skip_pseudoblock_terminate = false;
+    bool skip_expression_markup_js = false;
     bool skip_lone_lambda_js = false;
     bool is_ternary_colon = true;
     int lambda_depth = 0;
@@ -1812,12 +1813,70 @@ javascript_statements[] {
             && perform_nameless_keywordless_generator_function_check_js()
         ) {
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
-            startElement(SEXPRESSION_STATEMENT);
+
+            if (perform_top_level_class_check_js()) {
+                startElement(SNOP);
+            }
+            else {
+                startElement(SEXPRESSION_STATEMENT);
+            }
 
             startNewMode(MODE_EXPRESSION | MODE_EXPECT);
-            startElement(SEXPRESSION);
+
+            if (perform_top_level_class_check_js()) {
+                startElement(SNOP);
+            }
+            else {
+                startElement(SEXPRESSION);
+            }
 
             nameless_keywordless_generator_function_expression_js();
+            processed_statement = true;
+            return;
+        }
+
+        // looking for "@decorator NAME(){...}" to start a keywordless function (with a decorator) in TypeScript
+        if (
+            inMode(MODE_STATEMENT)
+            && LA(1) == TS_ATSIGN
+            && last_consumed != QMARK
+            && perform_keywordless_function_check_js()
+        ) {
+            startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
+
+            // generator keywordless function
+            if (perform_generator_function_check_js())
+                startElement(SFUNCTION_GENERATOR_STATEMENT);
+            // regular keywordless function
+            else
+                startElement(SFUNCTION_DEFINITION);
+
+            while (LA(1) == TS_ATSIGN)
+                attribute_ts();
+
+            keywordless_function_expression_js(false);
+            processed_statement = true;
+            return;
+        }
+
+        // looking for "NAME(){...}" to start a keywordless function in JavaScript
+        // Note: do not confuse a call in a class super list (or after a lambda arrow) for a keywordless function
+        if (
+            inMode(MODE_STATEMENT)
+            && (
+                specifier_js_token_set.member((unsigned int) LA(1))
+                || declaration_specifiers_ts_token_set.member((unsigned int) LA(1))
+                || literal_tokens_set.member((unsigned int) LA(1))
+                || LA(1) == LBRACKET
+                || LA(1) == MULTOPS
+                || LA(1) == NAME
+            )
+            && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
+            && last_consumed != JS_ARROW
+            && last_consumed != QMARK
+            && perform_keywordless_function_check_js()
+        ) {
+            keywordless_function_expression_js(true);
             processed_statement = true;
             return;
         }
@@ -12673,13 +12732,20 @@ generic_selection_association_default[] { SingleElement element(this); ENTRY_DEB
 expression_statement_process[] { ENTRY_DEBUG } :
         {
             bool inenumclass = (inLanguage(LANGUAGE_JAVA_FAMILY) && inTransparentMode(MODE_ENUM) && inMode(MODE_CLASS));
+            bool injsclass = (inLanguage(LANGUAGE_JAVASCRIPT) && perform_top_level_class_check_js());
 
             // statement with an embedded expression
             startNewMode(MODE_STATEMENT | MODE_EXPRESSION | MODE_EXPECT);
 
+            // JavaScript classes should not start expression statement + expression tags
+            if (injsclass) {
+                skip_expression_markup_js = true;
+                startElement(SNOP);
+            }
             // start the element that will end after the terminate
-            if (!inenumclass)
+            else if (!inenumclass) {
                 startElement(SEXPRESSION_STATEMENT);
+            }
         }
 ;
 
@@ -13745,8 +13811,15 @@ expression_process[] { ENTRY_DEBUG } :
                 if (inPrevMode(MODE_TERNARY_CONDITION))
                     setMode(MODE_TERNARY_CONDITION);
 
+                // JavaScript classes should not start expression statement + expression tags
+                if (skip_expression_markup_js) {
+                    skip_expression_markup_js = false;
+                    startElement(SNOP);
+                }
                 // start the expression
-                startElement(SEXPRESSION);
+                else {
+                    startElement(SEXPRESSION);
+                }
             }
         }
 ;
@@ -14011,6 +14084,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
+            && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
             && perform_generator_function_computed_property_check_js()
         }?
         generator_function_computed_property_js |
@@ -14019,6 +14093,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
         {
             inLanguage(LANGUAGE_JAVASCRIPT)
             && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
+            && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
             && perform_computed_property_as_function_check_js()
         }?
         computed_property_as_function_js |
@@ -14100,6 +14175,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             && (!inTransparentMode(MODE_SUPER_LIST_JS) || super_list_curly_types_size_js < lcurly_types_js.size())
             && last_consumed != JS_ARROW
             && last_consumed != QMARK
+            && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
             && perform_keywordless_function_check_js()
         }?
         keywordless_function_expression_js[true] |
@@ -14125,6 +14201,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             (inLanguage(LANGUAGE_PYTHON) || inLanguage(LANGUAGE_JAVASCRIPT))
             && LA(1) == NAME
             && (next_token() == LBRACKET || (next_token() == PERIOD && perform_member_access_function_call_check_py()))
+            && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
             && perform_subscriptable_function_call_check_py()
         }?
         call[call_count]
@@ -22267,9 +22344,21 @@ expression_block_js[] {
         rcurly
 
         {
-            // @TODO: this is a bug that must exist for the time being;
+            // @TODO: these are bugs that must exist for the time being;
             // eventually, fix MODE_PARAMETER_LIST_JS to end properly
             if (
+                LA(1) != TERMINATE
+                && inMode(MODE_PARAMETER_LIST_JS)
+                && inTransparentMode(MODE_STATEMENT | MODE_EXPRESSION)
+                && look_back_two_modes(MODE_STATEMENT | MODE_TOP | MODE_NEST)
+                && (
+                    decl_start_js_token_set.member((unsigned int) LA(1))
+                    || table_keywords_js_token_set.member((unsigned int) LA(1))
+                )
+            ) {
+                endDownToMode(MODE_STATEMENT | MODE_TOP | MODE_NEST);
+            }
+            else if (
                 LA(1) != TERMINATE
                 && inMode(MODE_PARAMETER_LIST_JS)
                 && inTransparentMode(MODE_STATEMENT | MODE_EXPRESSION)
@@ -22277,8 +22366,9 @@ expression_block_js[] {
                     decl_start_js_token_set.member((unsigned int) LA(1))
                     || table_keywords_js_token_set.member((unsigned int) LA(1))
                 )
-            )
+            ) {
                 endDownOverMode(MODE_STATEMENT | MODE_EXPRESSION);
+            }
         }
 ;
 
@@ -26557,6 +26647,23 @@ attribute_ts[] { size_t bracket_types_size = 0; ENTRY_DEBUG } :
             { LA(1) == COLON }?
             colon_marked |
 
+            // do not envoke compound_name logic for decorators
+            {
+                LA(1) == NAME
+                && (
+                    (next_token() == NAME && next_token_two() != LPAREN)          // call
+                    || (next_token() == MULTOPS && next_token_two() == LBRACKET)  // generator computed property function
+                    || next_token() == LBRACKET                                   // computed property function
+                )
+            }?
+            {
+                if (!inMode(MODE_EXPRESSION)) {
+                    startNewMode(MODE_EXPRESSION | MODE_EXPECT);
+                    startElement(SEXPRESSION);
+                }
+            }
+            identifier |
+
             {
                 if (!inMode(MODE_EXPRESSION))
                     startNewMode(MODE_EXPRESSION | MODE_EXPECT);
@@ -27732,6 +27839,18 @@ perform_mode_before_mode_statement_check[srcMLState::MODE_TYPE m] returns [bool 
 perform_top_level_class_check_js[] returns [bool istop] {
         ENTRY_DEBUG
 
+        // must be in a class, otherwise the check is pointless
+        if (
+            !inLanguage(LANGUAGE_JAVASCRIPT)
+            || (
+                !inTransparentMode(MODE_CLASS)
+                && !inTransparentMode(MODE_CLASS_EXPRESSION_JS)
+                && !inTransparentMode(MODE_BLOCK)
+            )
+        ) {
+            return false;
+        }
+
         istop = false;
         last_consumed_guessing_mode = -1;
         std::list<srcMLState> temp_st = st;
@@ -27739,20 +27858,17 @@ perform_top_level_class_check_js[] returns [bool istop] {
         inputState->guessing++;
 
         try {
-            // must be in a class, otherwise the check is pointless
-            if (inTransparentMode(MODE_CLASS) || inTransparentMode(MODE_CLASS_EXPRESSION_JS)) {
-                // end the current block down to its associated statement
-                if (inTransparentMode(MODE_BLOCK)) {
-                    endDownOverMode(MODE_BLOCK);
+            // end the current block down to its associated statement
+            if (inTransparentMode(MODE_BLOCK)) {
+                endDownOverMode(MODE_BLOCK);
 
-                    if (inMode(MODE_LCURLY_BLOCK_JS))
-                        endMode(MODE_LCURLY_BLOCK_JS);
-                }
-
-                // found the class
-                if (inMode(MODE_CLASS) || inMode(MODE_CLASS_EXPRESSION_JS))
-                    istop = true;
+                if (inMode(MODE_LCURLY_BLOCK_JS))
+                    endMode(MODE_LCURLY_BLOCK_JS);
             }
+
+            // found the class
+            if (inMode(MODE_CLASS) || inMode(MODE_CLASS_EXPRESSION_JS))
+                istop = true;
         }
         catch (...) {}
 

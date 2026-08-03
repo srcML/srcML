@@ -188,7 +188,7 @@
 
 <unit xmlns:ts="http://www.srcML.org/srcML/TypeScript" revision="1.0.0" language="JavaScript">
 <class><specifier>export</specifier> class <name>TestState</name> <block>{
-    <expr_stmt><expr><function><ts:specifier>public</ts:specifier> <name>baselineSmartSelection</name><parameter_list>()</parameter_list><ts:type>: <name>void</name></ts:type> <block>{<block_content>
+    <function><ts:specifier>public</ts:specifier> <name>baselineSmartSelection</name><parameter_list>()</parameter_list><ts:type>: <name>void</name></ts:type> <block>{<block_content>
         <decl_stmt><decl type="const">const <name>text</name> <init>= <expr><call><name><name>markers</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><lambda><parameter><decl><name>marker</name></decl></parameter> <operator>=&gt;</operator> <block>{<block_content>
             <while>while <condition>(<expr><name>selectionRange</name></expr>)</condition> <block>{<block_content>
                 <decl_stmt><decl type="let">let <name>masked</name> <init>= <expr><call><name><name>ts</name><operator>.</operator><name>arrayFrom</name></name><argument_list>(<argument><expr><name>fileContent</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>map</name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>char</name></decl></parameter>, <parameter><decl><name>index</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <block>{<block_content>
@@ -200,11 +200,11 @@
                 </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
             </block_content>}</block></while>
         </block_content>}</block></lambda></expr></argument>)</argument_list></call></expr></init></decl></decl_stmt>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 
-    <expr_stmt><expr><function><ts:specifier>private</ts:specifier> <name>printMembersOrCompletions</name><parameter_list>(<parameter><decl><name>info</name><ts:type>: <name><name>ts</name><operator>.</operator><name>CompletionInfo</name></name> <operator>|</operator> <literal type="undefined">undefined</literal></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
+    <function><ts:specifier>private</ts:specifier> <name>printMembersOrCompletions</name><parameter_list>(<parameter><decl><name>info</name><ts:type>: <name><name>ts</name><operator>.</operator><name>CompletionInfo</name></name> <operator>|</operator> <literal type="undefined">undefined</literal></ts:type></decl></parameter>)</parameter_list> <block>{<block_content>
         <expr_stmt><expr><call><name><name>entries</name><operator>.</operator><name>sort</name></name><argument_list>(<argument><expr><lambda><parameter_list>(<parameter><decl><name>m</name></decl></parameter>, <parameter><decl><name>n</name></decl></parameter>)</parameter_list> <operator>=&gt;</operator> <expr><ternary><condition><expr><name><name>m</name><operator>.</operator><name>sortText</name></name> <operator>&gt;</operator> <name><name>n</name><operator>.</operator><name>sortText</name></name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><ternary><condition><expr><name><name>m</name><operator>.</operator><name>sortText</name></name> <operator>&lt;</operator> <name><name>n</name><operator>.</operator><name>sortText</name></name></expr> ?</condition><then> <expr><operator>-</operator><literal type="number">1</literal></expr> </then><else>: <expr><ternary><condition><expr><name><name>m</name><operator>.</operator><name>name</name></name> <operator>&gt;</operator> <name><name>n</name><operator>.</operator><name>name</name></name></expr> ?</condition><then> <expr><literal type="number">1</literal></expr> </then><else>: <expr><name><name>m</name><operator>.</operator><name>name</name></name> <operator>&lt;</operator> <ternary><condition><expr><name><name>n</name><operator>.</operator><name>name</name></name></expr> ?</condition><then> <expr><operator>-</operator><literal type="number">1</literal></expr> </then><else>: <expr><literal type="number">0</literal></expr></else></ternary></expr></else></ternary></expr></else></ternary></expr></else></ternary></expr></lambda></expr></argument>)</argument_list></call></expr></expr_stmt>
-    </block_content>}</block></function></expr></expr_stmt>
+    </block_content>}</block></function>
 }</block></class>
 </unit>
 
@@ -253,7 +253,7 @@
 
 <unit revision="1.0.0" language="JavaScript">
 <expr_stmt><expr><name>foo</name> <operator>=</operator> <ternary><condition><expr><name><name>bar</name><index>[<expr><literal type="string">'baz'</literal></expr>]</index></name></expr> ?</condition><then>
-<expr><class>class <block>{ <expr_stmt><expr><function><name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function></expr></expr_stmt> }</block></class></expr>
+<expr><class>class <block>{ <function><name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function> }</block></class></expr>
 </then><else>: <expr><literal type="null">null</literal></expr></else></ternary></expr></expr_stmt>
 </unit>
 
