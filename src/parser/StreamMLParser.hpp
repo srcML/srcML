@@ -146,6 +146,15 @@ public:
         srcMLParser::currentState().push(id);
     }
 
+    /**
+     * getOutputBuffer
+     *
+     * Returns the current token buffer for elements.
+     */
+    std::deque<antlr::RefToken>* getOutputBuffer() {
+        return pouttb;
+    }
+
 private:
 
     /**
@@ -213,6 +222,9 @@ private:
 
             // when an error occurs just insert an error element
             emptyElement(srcMLParser::SERROR_PARSE);
+        } catch (...) {
+            srcMLParser::endAllModes();
+            throw;
         }
     }
 

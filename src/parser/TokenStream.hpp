@@ -25,6 +25,7 @@
 #define INCLUDED_SRCMLTOKENSTREAM_HPP
 
 #include <antlr/TokenStream.hpp>
+#include <queue>
 
 /**
  * TokenStream
@@ -37,6 +38,9 @@ public:
 
     /** abstract method for getting next token */
     virtual const antlr::RefToken& nextToken() = 0;
+
+    /** abstract method for getting the current token buffer for elements */
+    virtual std::deque<antlr::RefToken>* getOutputBuffer() = 0;
 
     /**
      * ~TokenStream
