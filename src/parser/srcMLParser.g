@@ -1995,7 +1995,7 @@ javascript_statements[] {
             && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
             && perform_generator_function_computed_property_check_js()
         ) {
-            generator_function_computed_property_js();
+            keywordless_function_expression_js(true);
             processed_statement = true;
             return;
         }
@@ -2006,7 +2006,7 @@ javascript_statements[] {
             && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
             && perform_computed_property_as_function_check_js()
         ) {
-            computed_property_as_function_js();
+            keywordless_function_expression_js(true);
             processed_statement = true;
             return;
         }
@@ -11229,7 +11229,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
             && (LA(1) == MULTOPS || (LA(1) == JS_ASYNC && next_token() == MULTOPS))
             && perform_generator_function_computed_property_check_js()
         }?
-        generator_function_computed_property_js |
+        keywordless_function_expression_js[true] |
 
         // looking for "[...](){}" to start a computed property function
         {
@@ -11237,7 +11237,7 @@ expression_part_no_ternary[CALL_TYPE type = NOCALL, int call_count = 1] {
             && (LA(1) == LBRACKET || ((LA(1) == JS_ASYNC || LA(1) == JS_STATIC) && next_token() == LBRACKET))
             && perform_computed_property_as_function_check_js()
         }?
-        computed_property_as_function_js |
+        keywordless_function_expression_js[true] |
 
         // looking for "[...]:" to start a computed property in an object in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
@@ -14095,7 +14095,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
             && perform_generator_function_computed_property_check_js()
         }?
-        generator_function_computed_property_js |
+        keywordless_function_expression_js[true] |
 
         // looking for "[...](){}" to start a computed property function
         {
@@ -14104,7 +14104,7 @@ expression_part[CALL_TYPE type = NOCALL, int call_count = 1] {
             && !perform_in_mode_before_expression_check_js(MODE_DECORATOR_TS)
             && perform_computed_property_as_function_check_js()
         }?
-        computed_property_as_function_js |
+        keywordless_function_expression_js[true] |
 
         // looking for "[...]:" to start a computed property in an object in JavaScript
         { inLanguage(LANGUAGE_JAVASCRIPT) && inTransparentMode(MODE_OBJECT_JS) && perform_computed_property_check_js() }?
@@ -23449,8 +23449,8 @@ computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
         )*
 
         {
-            if (inTransparentMode(MODE_LOCAL))
-                endDownToMode(MODE_LOCAL);
+            if (inTransparentMode(MODE_TOP | MODE_LIST | MODE_LOCAL))
+                endDownToMode(MODE_TOP | MODE_LIST | MODE_LOCAL);
         }
         // consume property-ending bracket, if it exists
         ({ LA(1) == RBRACKET }? RBRACKET)?
@@ -23499,45 +23499,6 @@ perform_computed_property_check_js[] returns [bool iscomputed] {
         inputState->guessing--;
         rewind(start);
 } :;
-
-/*
-  generator_function_computed_property_js
-
-  Handles a generator function computed property in JavaScript.
-  Specifically, these appear in the form "*[...](){}".
-*/
-generator_function_computed_property_js[] { CompleteElement element(this); ENTRY_DEBUG } :
-        {
-            // statement-level
-            if (inMode(MODE_STATEMENT))
-                startNewMode(MODE_STATEMENT | MODE_NEST | MODE_COMPUTED_FUNCTION_JS);
-            // expression-level
-            else
-                startNewMode(MODE_NEST | MODE_BLOCK | MODE_FUNCTION_EXPRESSION_JS);
-
-            startElement(SFUNCTION_GENERATOR_STATEMENT);
-        }
-
-        ((specifier_js)* MULTOPS)
-        computed_property_js
-
-        {
-            startNewMode(MODE_PARAMETER_LIST_JS);
-        }
-
-        javascript_parameter_list
-
-        // consume TypeScript types, if applicable
-        ({ LA(1) == COLON }? colon_type_ts)?
-
-        // start the block, if it exists
-        (options { greedy = true; } :
-            { LA(1) == LCURLY && inputState->guessing == 0 }?
-            expression_block_js |
-
-            curly_pair
-        )?
-;
 
 /*
   perform_generator_function_computed_property_check_js
