@@ -42,4 +42,22 @@
 }</block></enum>
 </unit>
 
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <decl><name>Variant</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <decl><name>Variant</name><struct type="tuple"><tuple>()</tuple></struct> <init>= <expr><literal type="number">0</literal></expr></init></decl>
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <block>{
+  <decl><name>Variant</name> <struct><block>{}</block></struct> <init>= <expr><literal type="number">0</literal></expr></init></decl>
+}</block></enum>
+</unit>
+
 </unit>

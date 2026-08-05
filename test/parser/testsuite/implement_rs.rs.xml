@@ -2,87 +2,87 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="implement_rs">
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <name>A</name> <block>{}</block></impl>
+<implement>impl <name>A</name> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></impl>
+<implement>impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>A</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></impl>
+<implement>impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>A</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></impl>
+<implement>impl <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></impl>
+<implement>impl <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <name>B</name> for <name>A</name> <block>{}</block></impl>
+<implement>impl <name>B</name> for <name>A</name> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></impl>
+<implement>impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></impl>
+<implement>impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></impl>
+<implement>impl <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></impl>
+<implement>impl <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <name>A</name> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <name>A</name> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>A</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>A</name> <argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <name>B</name> for <name>A</name> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <name>B</name> for <name>A</name> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl><specifier>unsafe</specifier> impl <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></impl>
+<implement><specifier>unsafe</specifier> impl <name>B</name> for <name>A</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list> <where>where <name>T</name> <constraint>: <name>Trait</name></constraint></where> <block>{}</block></implement>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<impl>impl <name>A</name> <block>{
+<implement>impl <name>A</name> <block>{
   <function>fn <name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 
   <function>fn <name>a</name><parameter_list>(<parameter><decl><modifier>&amp;</modifier><name>self</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
@@ -92,7 +92,7 @@
   <decl_stmt><decl type="const"><specifier>pub</specifier> const <name>NULL</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</decl_stmt>
 
   <typedef>type <name>Int</name> = <type><name>i32</name></type>;</typedef>
-}</block></impl>
+}</block></implement>
 </unit>
 
 </unit>
