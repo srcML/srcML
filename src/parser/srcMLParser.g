@@ -10039,7 +10039,7 @@ multops_star[] { ENTRY_DEBUG } :
   Handles a compound name for keyword-based languages (e.g., Python and JavaScript).
 */
 compound_name_keyword[bool& iscompound] { ENTRY_DEBUG } :
-        generic_argument_list |
+        { !inLanguage(LANGUAGE_PYTHON) }? generic_argument_list |
 
         (
             simple_name_optional_template_keyword
