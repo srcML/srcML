@@ -80,6 +80,11 @@ static void update_ctx(void* ctx) {
         state->base += ctxt->input->base - state->prevbase;
     }
     state->prevbase = ctxt->input->base;
+
+    // update the base if it is behind
+    if (state->base < ctxt->input->base) {
+        state->base = ctxt->input->cur;
+    }
 }
 
 // unit and root delayed-start processing
@@ -782,7 +787,7 @@ void characters_unit(void* ctx, const xmlChar* ch, int len) {
     update_ctx(ctx);
 
     // end previous start element
-    if (state->base[0] == '>') {
+    if (state->base < ctxt->input->cur && state->base[0] == '>') {
         state->unitsrcml += '>';
         state->base += 1;
     }
