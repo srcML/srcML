@@ -41,9 +41,10 @@ public:
         set_help_flag("-h,--help", "Output this help message and exit")->group("GENERAL OPTIONS");
         footer_ = SRCML_FOOTER;
 
-        // custom error message
+        // custom error message, where CLI11 already prefixes the app name for extra arguments
         failure_message_ = [](const CLI::App *, const CLI::Error &e) {
-            return std::string("srcml: ") + e.what() + "\n";
+            std::string message = e.what();
+            return message.rfind("srcml: ", 0) == 0 ? message + "\n" : "srcml: " + message + "\n";
         };
     }
 };
