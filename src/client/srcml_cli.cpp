@@ -120,26 +120,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // CLI11 requires the vector to be in reverse
     std::reverse(commandline.begin(), commandline.end());
 
-    int xpathCounter = 0;
-    for (auto& p : commandline) {
-
-        if (p == "--xpath"sv || p.rfind("--xpath=", 0) == 0) {
-
-            p.insert("--xpath"sv.size(), std::to_string(xpathCounter));
-            ++xpathCounter;
-        }
-    }
-
-    int srcqlCounter = 0;
-    for (auto& p : commandline) {
-
-        if (p == "--srcql"sv || p.rfind("--srcql=", 0) == 0) {
-
-            p.insert("--srcql"sv.size(), std::to_string(srcqlCounter));
-            ++srcqlCounter;
-        }
-    }
-
     srcMLClI app{SRCML_HEADER, "srcml"};
     app.formatter(std::make_shared<srcMLFormatter>());
     app.get_formatter()->column_width(32);
@@ -512,39 +492,31 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("EXTRACTING SOURCE CODE");
 
     // query/transform
+    // Enforce a single argument, but allow multiple --xpath options, where
+    // trigger_on_parse() runs the callback on each option as it is parsed
     app.add_option("--xpath",
         "Apply XPATH expression to each individual srcML unit")
         ->type_name("XPATH")
-        ->group("QUERY & TRANSFORMATION");
+        ->group("QUERY & TRANSFORMATION")
+        ->expected(1)
+        ->trigger_on_parse()
+        ->each([&](std::string value) {
+            srcml_request.transformations.emplace_back(src_prefix_add_uri("xpath", value));
+            srcml_request.xpath_query_support.emplace_back(std::nullopt, std::nullopt);
+        });
 
-    // Enforce single argument, but allow multiple --xpath options
-    // --xpath0 .. --xpath${xpathCounter}
-    for (int i = 0; i < xpathCounter; ++i) {
-        app.add_option("--xpath" + std::to_string(i), "")
-            ->group("")
-            ->expected(1)
-            ->each([&](std::string value) {
-                srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("xpath", value));
-                srcml_request.xpath_query_support.insert(srcml_request.xpath_query_support.begin(), std::make_pair(std::nullopt,std::nullopt));
-            });
-    }
-
+    // Enforce a single argument, but allow multiple --srcql options, where
+    // trigger_on_parse() runs the callback on each option as it is parsed
     app.add_option("--srcql",
         "Apply SRCQL query to each individual srcML unit. Query must be in single quotes, e.g., 'FIND int $V;', to prevent shell variable expansion")
         ->type_name("SRCQL")
-        ->group("QUERY & TRANSFORMATION");
-
-    // Enforce single argument, but allow multiple --srcql options
-    // --srcql0 .. --srcql${srcqlCounter}
-    for (int i = 0; i < srcqlCounter; ++i) {
-        app.add_option("--srcql" + std::to_string(i), "")
-            ->group("")
-            ->expected(1)
-            ->each([&](std::string value) {
-                srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("srcql", value));
-                srcml_request.xpath_query_support.insert(srcml_request.xpath_query_support.begin(), std::make_pair(std::nullopt,std::nullopt));
-            });
-    }
+        ->group("QUERY & TRANSFORMATION")
+        ->expected(1)
+        ->trigger_on_parse()
+        ->each([&](std::string value) {
+            srcml_request.transformations.emplace_back(src_prefix_add_uri("srcql", value));
+            srcml_request.xpath_query_support.emplace_back(std::nullopt, std::nullopt);
+        });
 
     app.add_flag_callback("--srcql-warning-off,-F", [&]() { srcml_request.command |= SRCML_COMMAND_SRCQL_WARNING_OFF; },
         "Turn off warning for srcql queries that have no logical variables")
