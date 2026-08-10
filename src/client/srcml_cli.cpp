@@ -88,12 +88,17 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     // Cleanup the arguments for special cases:
     //      xmlns prefix: --xmlns:pre="URL" -> --xmlns=pre="URL"
+    //      short options with an equals, e.g., -t="a;" -> --text="a;"
     //      empty strings on long options, e.g., --text="" -> --text ""
     //      grabbing filenames as option parameters, e.g., --text "a;" a.cpp, --xmlns="https://foo.com" a.cpp
     std::vector<std::string> commandline;
     int xmlnsCounter = 0;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
+
+        // CLI11 does not remove the equals from a short option, so use the long option
+        if (arg.rfind("-t=", 0) == 0)
+            arg = "--text" + arg.substr(2);
 
         if (arg.substr(0, 8) == "--xmlns:"sv) {
             arg = "--xmlns" + std::to_string(xmlnsCounter) + "=" + arg.substr(8);
@@ -115,42 +120,12 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // CLI11 requires the vector to be in reverse
     std::reverse(commandline.begin(), commandline.end());
 
-    int textCounter = 0;
-    for (auto& p : commandline) {
-
-        if (p == "--text"sv || p.rfind("--text=", 0) == 0) {
-
-            p.insert("--text"sv.size(), std::to_string(textCounter));
-            ++textCounter;
-
-        } else if (p == "-t"sv) {
-
-            p = "--text" + std::to_string(textCounter);
-            ++textCounter;
-
-        } else if (p.rfind("-t=", 0) == 0) {
-
-            p = "--text" + std::to_string(textCounter) + p.substr(2);
-            ++textCounter;
-        }
-    }
-
     int xpathCounter = 0;
     for (auto& p : commandline) {
 
         if (p == "--xpath"sv || p.rfind("--xpath=", 0) == 0) {
 
             p.insert("--xpath"sv.size(), std::to_string(xpathCounter));
-            ++xpathCounter;
-
-        } else if (p == "-t"sv) {
-
-            p = "--xpath" + std::to_string(xpathCounter);
-            ++xpathCounter;
-
-        } else if (p.rfind("-t=", 0) == 0) {
-
-            p = "--xpath" + std::to_string(xpathCounter) + p.substr(2);
             ++xpathCounter;
         }
     }
@@ -162,16 +137,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
             p.insert("--srcql"sv.size(), std::to_string(srcqlCounter));
             ++srcqlCounter;
-
-        } else if (p == "-t"sv) {
-
-            p = "--srcql" + std::to_string(srcqlCounter);
-            ++srcqlCounter;
-
-        } else if (p.rfind("-t=", 0) == 0) {
-
-            p = "--srcql" + std::to_string(xpathCounter) + p.substr(2);
-            ++xpathCounter;
         }
     }
 
@@ -270,31 +235,27 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->group("GENERAL OPTIONS");
 
     // src2srcml_options "CREATING SRCML"
+    // Enforce a single argument, but allow multiple --text options, where
+    // trigger_on_parse() runs the callback on each option as it is parsed
+    bool isText = false;
     app.add_option("--text,-t",
         "Input source code from STRING, e.g., --text=\"int a;\"")
         ->type_name("STRING")
-        ->group("CREATING SRCML");
+        ->group("CREATING SRCML")
+        ->expected(1)
+        ->trigger_on_parse()
+        ->check([&](std::string value) {
 
-    // Enforce single argument, but allow multiple --text options
-    // --text0 .. --text${textCounter}
-    bool isText = false;
-    for (int i = 0; i < textCounter; ++i) {
-        app.add_option("--text" + std::to_string(i), "")
-            ->group("")
-            ->expected(1)
-            ->check([&](std::string value) {
-
-                if (!value.empty() && value[0] == '-') {
-                    SRCMLstatus(ERROR_MSG, "srcml: --text: 1 required STRING missing");
-                    exit(CLI_STATUS_ERROR);
-                }
-                return "";
-            })
-            ->each([&](std::string text) {
-                isText = true;
-                srcml_request.input_sources.insert(srcml_request.input_sources.begin(), srcml_input_src(src_prefix_add_uri("text", text)));
-            });
-    }
+            if (!value.empty() && value[0] == '-') {
+                SRCMLstatus(ERROR_MSG, "srcml: --text: 1 required STRING missing");
+                exit(CLI_STATUS_ERROR);
+            }
+            return "";
+        })
+        ->each([&](std::string text) {
+            isText = true;
+            srcml_request.input_sources.emplace_back(src_prefix_add_uri("text", text));
+        });
 
     auto language =
     app.add_option("--language,-l", srcml_request.att_language,
