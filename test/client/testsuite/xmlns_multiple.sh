@@ -75,6 +75,19 @@ check "$foosrcml"
 srcml --xmlns="http://www.foo.com" sub/a.cpp --xmlns:bar="http://www.srcML.org/srcML/src" sub/b.cpp -o sub/a.xml
 check sub/a.xml "$foosrcml"
 
+# the URI as a separate argument, instead of after an '='
+srcml --xmlns "http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp
+check "$foosrcml"
+
+srcml --xmlns "http://www.foo.com" --xmlns "bar=http://www.srcML.org/srcML/src" sub/a.cpp sub/b.cpp
+check "$foosrcml"
+
+srcml --xmlns "http://www.foo.com" sub/a.cpp --xmlns "bar=http://www.srcML.org/srcML/src" sub/b.cpp
+check "$foosrcml"
+
+srcml sub/a.cpp sub/b.cpp --xmlns "http://www.foo.com" --xmlns "bar=http://www.srcML.org/srcML/src"
+check "$foosrcml"
+
 # more than two declarations
 srcml --xmlns="http://www.foo.com" --xmlns:bar="http://www.srcML.org/srcML/src" --xmlns:cpp="http://www.srcML.org/srcML/cpp" sub/a.cpp sub/b.cpp
 check "$foocppsrcml"

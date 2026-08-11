@@ -92,7 +92,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     //      empty strings on long options, e.g., --text="" -> --text ""
     //      grabbing filenames as option parameters, e.g., --text "a;" a.cpp, --xmlns="https://foo.com" a.cpp
     std::vector<std::string> commandline;
-    int xmlnsCounter = 0;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
 
@@ -100,13 +99,9 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         if (arg.rfind("-t=", 0) == 0)
             arg = "--text" + arg.substr(2);
 
-        if (arg.substr(0, 8) == "--xmlns:"sv) {
-            arg = "--xmlns" + std::to_string(xmlnsCounter) + "=" + arg.substr(8);
-            ++xmlnsCounter;
-        } else if (arg.rfind("--xmlns=", 0) == 0) {
-            arg = "--xmlns" + std::to_string(xmlnsCounter) + "=" + arg.substr(7);
-            ++xmlnsCounter;
-        }
+        // CLI11 option names cannot contain a colon
+        if (arg.substr(0, 8) == "--xmlns:"sv)
+            arg = "--xmlns=" + arg.substr(8);
 
         // empty string after equals is not shown, i.e., --xmlns="", so replace with two arguments
         if (arg == "--xmlns="sv || arg == "--text="sv) {
@@ -350,27 +345,23 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("XML")
         ->group("ENCODING");
 
+    // Enforce a single argument, but allow multiple --xmlns options, where
+    // trigger_on_parse() runs the callback on each option as it is parsed
     app.add_option("--xmlns", "Set the default namespace URI, or declare the PRE for namespace URI")
         ->type_name("URI, PRE=URI")
-        ->group("ENCODING");
-
-    // Enforce single argument, but allow multiple --xmlns options
-    // --xmlns0 .. --xmlns${xmlnsCounter}
-    for (int i = 0; i < xmlnsCounter; ++i) {
-        app.add_option("--xmlns" + std::to_string(i), "")
-            ->group("")
-            ->expected(1)
-            ->each([&](const std::string& value) {
-                auto delim = value.find("=");
-                if (delim == std::string::npos) {
-                    srcml_request.xmlns_namespaces[""] = value;
-                    srcml_request.xmlns_namespace_uris[value] = "";
-                } else {
-                    srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
-                    srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
-                }
-            });
-    }
+        ->group("ENCODING")
+        ->expected(1)
+        ->trigger_on_parse()
+        ->each([&](const std::string& value) {
+            auto delim = value.find("=");
+            if (delim == std::string::npos) {
+                srcml_request.xmlns_namespaces[""] = value;
+                srcml_request.xmlns_namespace_uris[value] = "";
+            } else {
+                srcml_request.xmlns_namespaces[value.substr(0, delim)] = value.substr(delim + 1);
+                srcml_request.xmlns_namespace_uris[value.substr(delim + 1)] = value.substr(0, delim);
+            }
+        });
 
     // metadata
     app.add_flag_callback("--list,-L",        [&]() { srcml_request.command |= SRCML_COMMAND_LIST; },
