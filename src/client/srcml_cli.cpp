@@ -90,7 +90,6 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     //      xmlns prefix: --xmlns:pre="URL" -> --xmlns=pre="URL"
     //      short options with an equals, e.g., -t="a;" -> --text="a;"
     //      empty strings on long options, e.g., --text="" -> --text ""
-    //      grabbing filenames as option parameters, e.g., --text "a;" a.cpp, --xmlns="https://foo.com" a.cpp
     std::vector<std::string> commandline;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
