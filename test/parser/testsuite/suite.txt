@@ -341,7 +341,7 @@ LANGUAGE_TRANSFORM throw_m.m.xml throw.cpp.xml throw keyword2mkeyword.xsl
 LANGUAGE_TRANSFORM throw_base_m.m.xml throw_base.cpp.xml throw keyword2mkeyword.xsl
 LANGUAGE_TRANSFORM dynamic_m.m.xml synthesize_m.m.xml dynamic synthesize2dynamic.xsl
 
-LANGUAGE_TRANSFORM return.cpp.xml return_base.cpp.xml return insertexpr.xsl expr_filename=\"${CMAKE_CURRENT_BINARY_DIR}/expression.cpp.xml\"
+LANGUAGE_TRANSFORM return.cpp.xml return_base.cpp.xml return insertexpr.xsl
 
 # Invalid syntax, but can appear in srcQL
 LANGUAGE_CXX keyword_call_cpp

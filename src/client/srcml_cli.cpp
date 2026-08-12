@@ -102,8 +102,10 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         if (arg.substr(0, 8) == "--xmlns:"sv)
             arg = "--xmlns=" + arg.substr(8);
 
-        // empty string after equals is not shown, i.e., --xmlns="", so replace with two arguments
-        if (arg == "--xmlns="sv || arg == "--text="sv) {
+        // CLI11 drops an empty string after the equals, i.e., --text="", and then takes the
+        // next argument as the value, so replace with two arguments. Only applies when the
+        // equals is the last character, as in --xmlns=pre= the value is "pre=".
+        if (arg.compare(0, 2, "--") == 0 && arg.size() > 3 && arg.find('=') == arg.size() - 1) {
             commandline.emplace_back(arg.substr(0, arg.size() - 1));
             commandline.emplace_back("");
         } else {
@@ -124,6 +126,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         * All error handling is through CLI11, or explicit in the lambda (no error messages in called functions)
         * Options/flags are added, and can be searched, by name on command line, e.g., --language
     */
+
+    // an empty value, e.g., --unit=, is not a value
+    auto requireValue = [](const std::string& value) -> std::string {
+        return value.empty() ? "requires a value" : "";
+    };
 
     // might get the xslt parameter before the xslt filename
     std::optional<std::string> xsltParamCache;
@@ -206,7 +213,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     jobsMsg += " on this system]";
     app.add_option("--jobs,-j", srcml_request.max_threads, jobsMsg)
         ->type_name("NUM")
-        ->group("GENERAL OPTIONS");
+        ->group("GENERAL OPTIONS")
+        ->check(requireValue);
 
     // src2srcml_options "CREATING SRCML"
     // Enforce a single argument, but allow multiple --text options, where
@@ -250,6 +258,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("FILE")
         ->group("CREATING SRCML")
         ->type_size(-1)
+        ->check(requireValue)
         ->each([&](const std::string& value) {
             srcml_request.files_from.emplace_back(value);
             srcml_request.input_sources.emplace_back(src_prefix_add_uri("filelist", value));
@@ -266,7 +275,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     app.add_option("--src-encoding", srcml_request.src_encoding,
         "Set the input source-code encoding")->type_name("ENCODING")
-        ->group("CREATING SRCML");
+        ->group("CREATING SRCML")
+        ->check(requireValue);
 
     app.add_flag_callback("--archive,-r",      [&]() { *srcml_request.markup_options |= SRCML_ARCHIVE; },
         "Create a srcML archive, default for multiple input files")
@@ -440,7 +450,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     app.add_option("--unit,-U", srcml_request.unit,
         "Extract the source code for an individual unit at position NUM in a srcML archive")
         ->type_name("NUM")
-        ->group("EXTRACTING SOURCE CODE");
+        ->group("EXTRACTING SOURCE CODE")
+        ->check(requireValue);
 
     app.add_option_function<std::string>("--eol", [&](std::string value) {
 
@@ -479,7 +490,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     },
         "Extract source-code files to a DIRECTORY")
         ->type_name("DIRECTORY")
-        ->group("EXTRACTING SOURCE CODE");
+        ->group("EXTRACTING SOURCE CODE")
+        ->check(requireValue);
 
     // query/transform
     // Enforce a single argument, but allow multiple --xpath options, where
@@ -608,6 +620,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION")
         // ->needs(xslt)
+        ->check(requireValue)
         ->each([&](std::string value) {
             isXSLTParam = true;
 

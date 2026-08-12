@@ -49,3 +49,15 @@ check "$srcml"
 
 echo -n "" | srcml -l C++ --src-version=1.0
 check "$srcml"
+
+# an empty value after the equals is rejected as a value, so the option is not
+# set and the input filename is still an input file
+defineXML emptyvalue <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="sub/a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+STDOUT
+
+createfile sub/a.cpp "a;"
+
+echo "a;" | srcml -l C++ --src-version= sub/a.cpp
+check "$emptyvalue"

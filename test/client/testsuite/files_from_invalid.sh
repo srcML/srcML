@@ -169,3 +169,10 @@ check "$empty_srcml_with_url" "srcml: filelist requires a non-archived file form
 
 srcml --files-from https://raw.githubusercontent.com/srcML/test-data/1.0.0/empty/empty.txt.zip.gz --url="test"
 check "$empty_srcml_with_url" "srcml: filelist requires a non-archived file format\n"
+
+# an empty value after the equals is dropped, so the following input filename
+# becomes the option value
+createfile sub/a.cpp "a;"
+
+echo "a;" | srcml -l C++ --files-from= sub/a.cpp
+check_exit 1
