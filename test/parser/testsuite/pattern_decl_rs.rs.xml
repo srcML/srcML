@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="pattern_decl_rs">
+
+<!-- binding -->
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <condition>@ <expr><literal type="number">0</literal><operator>..</operator><literal type="number">8</literal></expr></condition> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <condition>@ <expr><literal type="number">1</literal><operator>..=</operator><literal type="number">8</literal></expr></condition> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <name>a</name> <condition>@ <expr><operator>(</operator><literal type="number">0</literal> <operator>|</operator> <literal type="number">8</literal><operator>)</operator></expr></condition> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- destructuring -->
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <call><name>Foo</name><argument_list>(<argument><decl><name>a</name></decl></argument>)</argument_list></call> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <call><name>Foo</name><argument_list>(<argument><decl><name>a</name></decl></argument>, <argument><decl><name>b</name></decl></argument>)</argument_list></call> <init>= <expr><name>c</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <call><name>Foo</name><argument_list>(<argument><decl><name>a</name></decl></argument>, <argument><decl><name>b</name></decl></argument>, <argument><operator>..</operator></argument>)</argument_list></call> <init>= <expr><name>c</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <struct><name>Foo</name> { <decl><name>a</name></decl> }</struct> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <struct><name>Foo</name> { <decl><name>a</name></decl>, <decl><name>b</name></decl> }</struct> <init>= <expr><name>c</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <struct><name>Foo</name> { <decl><name>a</name></decl>, <decl><name>b</name></decl>, <operator>..</operator> }</struct> <init>= <expr><name>c</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- with sub-patterns -->
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <struct><name>Foo</name> { <decl><name>a</name>: <literal type="number">0</literal></decl> }</struct> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <struct><name>Foo</name> { <decl><name>a</name>: <name>b</name> <condition>@ <expr><literal type="number">0</literal><operator>..</operator><literal type="number">8</literal></expr></condition></decl> }</struct> <init>= <expr><name>c</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <struct><name>Foo</name> { <decl><name>a</name>: <operator>ref</operator> <name>b</name></decl> }</struct> <init>= <expr><name>c</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let <struct><name>Foo</name> { <decl><name>a</name>: <call><name>Some</name><argument_list>(<argument><name>_</name></argument>)</argument_list></call></decl> }</struct> <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- 'tuple' style declaration -->
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><name>a</name></decl>)</decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><name>a</name></decl>,)</decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><name>r</name></decl>, <decl><name>g</name></decl>, <decl><name>b</name></decl>)</decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><name>a</name></decl>) <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><name>a</name></decl>,) <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><name>a</name></decl>, <decl><name>b</name></decl>) <init>= <expr><tuple>(<expr><name>c</name></expr>, <expr><name>d</name></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><name>a</name></decl>, <decl><name>b</name></decl>): <type><tuple>(<type><name>char</name></type>, <type><name>i32</name></type>)</tuple></type> <init>= <expr><tuple>(<expr><name>c</name></expr>, <expr><name>d</name></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><modifier>mut</modifier> <name>a</name></decl>, <decl><modifier>mut</modifier> <name>b</name></decl>): <type><tuple>(<type><name>char</name></type>, <type><name>i32</name></type>)</tuple></type> <init>= <expr><tuple>(<expr><name>c</name></expr>, <expr><name>d</name></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><name>a</name></decl>, <decl><name>b</name></decl>): <type><tuple>(<type><modifier>&amp;</modifier><name>char</name></type>, <type><modifier>&amp;</modifier><name>i32</name></type>)</tuple></type> <init>= <expr><tuple>(<expr><name>c</name></expr>, <expr><name>d</name></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let (<decl><modifier>mut</modifier> <name>a</name></decl>, <decl><modifier>mut</modifier> <name>b</name></decl>): <type><tuple>(<type><modifier>&amp;</modifier><name>char</name></type>, <type><modifier>&amp;</modifier><name>i32</name></type>)</tuple></type> <init>= <expr><tuple>(<expr><name>c</name></expr>, <expr><name>d</name></expr>)</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<!-- 'array' style declaration -->
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><name>a</name></decl>] <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><name>a</name></decl>,] <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><name>a</name></decl>, <decl><name>b</name></decl>] <init>= <expr><tuple>[<expr><name>c</name></expr>, <expr><name>d</name></expr>]</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><name>a</name></decl>, <decl><name>b</name></decl>]: <type><tuple>[<type><name>char</name></type>, <type><name>i32</name></type>]</tuple></type> <init>= <expr><tuple>[<expr><name>c</name></expr>, <expr><name>d</name></expr>]</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><modifier>mut</modifier> <name>a</name></decl>, <decl><modifier>mut</modifier> <name>b</name></decl>]: <type><tuple>[<type><name>char</name></type>, <type><name>i32</name></type>]</tuple></type> <init>= <expr><tuple>[<expr><name>c</name></expr>, <expr><name>d</name></expr>]</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><name>a</name></decl>, <decl><name>b</name></decl>]: <type><tuple>[<type><modifier>&amp;</modifier><name>char</name></type>, <type><modifier>&amp;</modifier><name>i32</name></type>]</tuple></type> <init>= <expr><tuple>[<expr><name>c</name></expr>, <expr><name>d</name></expr>]</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><modifier>mut</modifier> <name>a</name></decl>, <decl><modifier>mut</modifier> <name>b</name></decl>]: <type><tuple>[<type><modifier>&amp;</modifier><name>char</name></type>, <type><modifier>&amp;</modifier><name>i32</name></type>]</tuple></type> <init>= <expr><tuple>[<expr><name>c</name></expr>, <expr><name>d</name></expr>]</tuple></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><name>a</name></decl>, <operator>..</operator>] <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<decl_stmt><decl type="let">let [<decl><name>a</name></decl>, <decl><name>b</name></decl>, <operator>..</operator>] <init>= <expr><name>b</name></expr></init></decl>;</decl_stmt>
+</unit>
+
+</unit>
