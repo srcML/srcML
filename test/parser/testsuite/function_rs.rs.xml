@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="function_rs">
 
+<unit revision="1.0.0" language="rust">
+<function>fn <name>foo</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
 <unit revision="1.0.0" language="Rust">
 <function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>b</name>: <type><name>i32</name></type></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
@@ -72,12 +76,46 @@
 <function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type>impl <name>FirstTrait</name> + <name>SecondTrait</name></type> <block>{<block_content/>}</block></function>
 </unit>
 
-<unit revision="1.0.0" language="Rust">
+<unit revision="1.0.0" language="rust">
 <function><specifier>async</specifier> fn <name>a</name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
 <function><specifier>extern <literal type="string">"Rust"</literal></specifier> fn <name>a</name> <parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<!-- parameter patterns -->
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>a</name><parameter_list>(<parameter><call><name>A</name><argument_list>(<argument><decl><name>a</name></decl></argument>)</argument_list></call>: <type><name>A</name></type></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>a</name><parameter_list>(<parameter><call><name>A</name><argument_list>(<argument><decl><name>a</name></decl></argument>, <operator>..</operator>)</argument_list></call>: <type><name>A</name></type></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>a</name><parameter_list>(<parameter><struct><name>A</name> { <decl><name>a</name></decl> }</struct>: <type><name>Foo</name></type></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>a</name><parameter_list>(<parameter><struct><name>A</name> { <decl><name>a</name></decl>, <operator>..</operator> }</struct>: <type><name>Foo</name></type></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>a</name><parameter_list>(<parameter>(<decl><name>a</name></decl>, <decl><name>b</name></decl>): <type><tuple>(<type><name>u8</name></type>, <type><name>u8</name></type>)</tuple></type></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>a</name><parameter_list>(<parameter><modifier>&amp;</modifier>(<decl><name>a</name></decl>, <decl><name>b</name></decl>): <type><tuple>(<type><name>u8</name></type>, <type><name>u8</name></type>)</tuple></type></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>a</name><parameter_list>(<parameter>[<decl><name>a</name></decl>, <decl><name>b</name></decl>, <operator>..</operator>]: <type><array>[<type>i32</type>; <expr><literal type="number">8</literal></expr>]</array></type></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="rust">
+<function>fn <name>a</name><parameter_list>(<parameter><modifier>&amp;</modifier>[<decl><name>a</name></decl>, <decl><name>b</name></decl>, <operator>..</operator>]: <type><modifier>&amp;</modifier><array>[<type>i32</type>; <expr><literal type="number">8</literal></expr>]</array></type></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 </unit>

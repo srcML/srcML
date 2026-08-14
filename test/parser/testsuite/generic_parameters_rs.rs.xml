@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="generic_parameters_rs">
+
+<!-- lifetime parameters -->
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier><constraint>:</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier><constraint>: <modifier>'<name>b</name></modifier></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier><constraint>: <modifier>'<name>b</name></modifier> +</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier><constraint>: <modifier>'<name>b</name></modifier> + <modifier>'<name>c</name></modifier></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<!-- type parameters -->
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name> <init>= <expr><name>i32</name></expr></init></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name> <init>= <expr><macro><name>foo</name>!<argument_list>()</argument_list></macro></expr></init></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>:</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: <modifier>'<name>a</name></modifier></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: <modifier>'<name>a</name></modifier> +</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: <modifier>'<name>a</name></modifier> + <modifier>'<name>b</name></modifier></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: <name>Copy</name> +</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: <name>Copy</name> + <name>Clone</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: <modifier>?</modifier><name>Sized</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: (<name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: (<name>Copy</name>) +</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: (<name>Copy</name>) + (<name>Clone</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: (<modifier>?</modifier><name>Sized</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<!-- constant parameters -->
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl type="const">const <name>X</name>: <type><name>i32</name></type></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl type="const">const <name>X</name>: <type><name>i32</name></type> <init>= <expr><literal type="number">0</literal></expr></init></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl type="const">const <name>X</name>: <type><name>i32</name></type> <init>= <expr><block>{<block_content> <literal type="number">0</literal> </block_content>}</block></expr></init></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl type="const">const <name>X</name>: <type><name>i32</name></type> <init>= <expr><name>Y</name></expr></init></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+</unit>
+
+</unit>
