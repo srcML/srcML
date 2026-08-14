@@ -77,6 +77,29 @@ block()
     FetchContent_MakeAvailable(clip)
 endblock()
 
+# On Linux, clip links libxcb, which adds a runtime dependency on libxcb.so.1.
+# When SRCML_CLIENT_STATIC_LIBXCB is ON, link libxcb statically so srcml has no
+# runtime libxcb dependency. The static archives ship in the Debian/Ubuntu -dev
+# packages but not on Fedora/openSUSE, so this is enabled per-platform via the
+# presets rather than autodetected.
+option(SRCML_CLIENT_STATIC_LIBXCB "Statically link libxcb into the srcml client (Linux)" OFF)
+
+if(UNIX AND NOT APPLE AND SRCML_CLIENT_STATIC_LIBXCB)
+    find_library(XCB_STATIC_LIB   NAMES libxcb.a)
+    find_library(XAU_STATIC_LIB   NAMES libXau.a)
+    find_library(XDMCP_STATIC_LIB NAMES libXdmcp.a)
+    if(NOT (XCB_STATIC_LIB AND XAU_STATIC_LIB AND XDMCP_STATIC_LIB))
+        message(FATAL_ERROR "SRCML_CLIENT_STATIC_LIBXCB=ON but the static libxcb/libXau/libXdmcp archives were not found")
+    endif()
+    message(STATUS "clip: linking libxcb statically")
+    # clip is a static library, so it propagates its xcb dependency to srcml
+    # through INTERFACE_LINK_LIBRARIES. Replace the dynamic xcb there with the
+    # static archives (xcb before Xau/Xdmcp, which provide its symbols).
+    set_target_properties(clip PROPERTIES
+        LINK_LIBRARIES "${XCB_STATIC_LIB};${XAU_STATIC_LIB};${XDMCP_STATIC_LIB};Threads::Threads"
+        INTERFACE_LINK_LIBRARIES "${XCB_STATIC_LIB};${XAU_STATIC_LIB};${XDMCP_STATIC_LIB};Threads::Threads")
+endif()
+
 # srcml executable
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
