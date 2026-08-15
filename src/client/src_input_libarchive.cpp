@@ -22,20 +22,47 @@
 #include <string_view>
 #include <optional>
 #include <memory>
+#include <algorithm>
 
 using namespace ::std::literals::string_view_literals;
 
 /*
     Parse a YAML header. Assume the entire header is passed, including the '---' demarcations
 */
-std::unordered_map<std::string_view, std::string_view> parseYAMLHeader(std::string_view header) {
+namespace {
+    std::optional<size_t> yamlHeaderSize(std::string_view buffer) {
+        size_t start_marker_size = 0;
+        std::string_view end_marker;
 
+        if (buffer.rfind("---\r\n"sv, 0) == 0) {
+            start_marker_size = 5;
+            end_marker = "\r\n---\r\n"sv;
+        } else if (buffer.rfind("---\n"sv, 0) == 0) {
+            start_marker_size = 4;
+            end_marker = "\n---\n"sv;
+        } else {
+            return std::nullopt;
+        }
+
+        const auto endpos = buffer.find(end_marker, start_marker_size);
+        if (endpos == std::string_view::npos)
+            return std::nullopt;
+
+        return endpos + end_marker.size();
+    }
+}
+
+std::unordered_map<std::string, std::string> parseYAMLHeader(std::string_view header) {
+
+    std::string normalized(header);
+    normalized.erase(std::remove(normalized.begin(), normalized.end(), '\r'), normalized.end());
+    header = normalized;
     // remove start and end blocks of header
     header.remove_prefix(4);
     header.remove_suffix(4);
 
     // process each key-value pair
-    std::unordered_map<std::string_view, std::string_view> keyValuePairs;
+    std::unordered_map<std::string, std::string> keyValuePairs;
     int lineSize = 0;
     while (!header.empty()) {
 
@@ -86,7 +113,7 @@ std::unordered_map<std::string_view, std::string_view> parseYAMLHeader(std::stri
             }
 
             // insert polished key-value
-            keyValuePairs[key] = value;
+            keyValuePairs[std::string(key)] = std::string(value);
         }
 
         // completed this line
@@ -143,16 +170,12 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
         if (!input_curl(uninput)) {
             return 0;
         }
-
-#if WIN32
-        // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
-        // or cut short. 
-        // So for Windwos, convert to a FILE*. Note sure when to close the FILE*
-        FILE* f = fdopen(*(uninput.fd), "r");
-        status = archive_read_open_FILE(arch.get(), f);
-#else
+        
+        if (contains<FILE*>(uninput)) {
+            status = archive_read_open_FILE(arch.get(), uninput);
+        } else {
         status = archive_read_open_fd(arch.get(), *(uninput.fd), buffer_size);
-#endif
+        }
 
     } else {
 
@@ -338,7 +361,11 @@ int src_input_libarchive(ParseQueue& queue,
             }
 
             // fill up the parse request buffer
-            if (svBuffer || (!status && !prequest->status)) {
+            const bool hasReadableEntryData =
+                status == ARCHIVE_OK ||
+                (status == ARCHIVE_EOF && count == 0 && archive_format(arch.get()) == ARCHIVE_FORMAT_RAW);
+
+            if (svBuffer || (hasReadableEntryData && !prequest->status)) {
 
                 // when there are saved buffer contents
                 if (svBuffer) {
@@ -412,71 +439,66 @@ schedule:
 
             // process a YAML header
             auto& buffer = prequest->buffer;
-            if (buffer.size() > 7 && buffer[0] == '-' && buffer[1] == '-' && buffer[2] == '-' && buffer[3] == '\n') {
+            if (const auto headerSize = yamlHeaderSize(std::string_view(buffer.data(), buffer.size()))) {
 
-                auto endpos = std::search(buffer.begin() + 3, buffer.end(), "---"sv.begin(), "---"sv.end());
-                if (endpos != buffer.end()) {
+                auto parsedData = parseYAMLHeader(std::string_view(buffer.data(), *headerSize));
 
-                    std::string header(buffer.begin(), endpos + 3 + 1);
-                    auto parsedData = parseYAMLHeader(header);
+                bool isHeader = false;
+                for (const auto& [key, value] : parsedData) {
+                    if (value == "http://www.srcML.org/srcML/src") {
+                        isHeader = true;
+                        break;
+                    }
+                }
 
-                    bool isHeader = false;
-                    for (const auto& [key, value] : parsedData) {
-                        if (value == "http://www.srcML.org/srcML/src") {
-                            isHeader = true;
-                            break;
+                if (isHeader) {
+                    buffer.erase(buffer.begin(), buffer.begin() + (std::vector<char>::difference_type)*headerSize);
+
+                    // filename
+                    auto search = parsedData.find("filename");
+                    if (search != parsedData.end()) {
+                        prequest->filename = search->second;
+                    }
+
+                    // language
+                    search = parsedData.find("language");
+                    if (search != parsedData.end()) {
+                        prequest->language = search->second;
+                    }
+
+                    // src-version
+                    search = parsedData.find("src-version");
+                    if (search != parsedData.end()) {
+                        prequest->version = search->second;
+                    }
+
+                    // url on the archive
+                    search = parsedData.find("url");
+                    if (search != parsedData.end()) {
+                        srcml_archive_set_url(prequest->srcml_arch, search->second.data());
+                    }
+
+                    // register namespaces
+                    for (const auto &kv : parsedData) {
+
+                        if (kv.first.substr(0, "xmlns:"sv.size()) == "xmlns:"sv) {
+
+                            const std::string prefix(kv.first.substr("xmlns:"sv.size()));
+                            const std::string url(kv.second);
+                            srcml_unit_register_namespace(prequest->unit.get(), prefix.data(), url.data());
                         }
                     }
 
-                    if (isHeader) {
-                        buffer.erase(buffer.begin(), buffer.begin() + (std::vector<char>::difference_type)header.size());
+                    // register attributes
+                    for (const auto &kv : parsedData) {
+                        if (kv.first.substr(0, "xmlns:"sv.size()) != "xmlns:"sv) {
+                            const auto separator = kv.first.find(':');
+                            if (separator != kv.first.npos) {
 
-                        // filename
-                        auto search = parsedData.find("filename");
-                        if (search != parsedData.end()) {
-                            prequest->filename = search->second;
-                        }
-
-                        // language
-                        search = parsedData.find("language");
-                        if (search != parsedData.end()) {
-                            prequest->language = search->second;
-                        }
-
-                        // src-version
-                        search = parsedData.find("src-version");
-                        if (search != parsedData.end()) {
-                            prequest->version = search->second;
-                        }
-
-                        // url on the archive
-                        search = parsedData.find("url");
-                        if (search != parsedData.end()) {
-                            srcml_archive_set_url(prequest->srcml_arch, std::string(search->second).data());
-                        }
-
-                        // register namespaces
-                        for (const auto &kv : parsedData) {
-
-                            if (kv.first.substr(0, "xmlns:"sv.size()) == "xmlns:"sv) {
-
-                                const std::string prefix(kv.first.substr("xmlns:"sv.size()));
-                                const std::string url(kv.second);
-                                srcml_unit_register_namespace(prequest->unit.get(), prefix.data(), url.data());
-                            }
-                        }
-
-                        // register attributes
-                        for (const auto &kv : parsedData) {
-                            if (kv.first.substr(0, "xmlns:"sv.size()) != "xmlns:"sv) {
-                                const auto separator = kv.first.find(':');
-                                if (separator != kv.first.npos) {
-
-                                    const std::string prefix(kv.first.substr(0, separator));
-                                    const std::string name(kv.first.substr(separator + 1));
-                                    std::string value(kv.second);
-                                    srcml_unit_add_attribute(prequest->unit.get(), prefix.c_str(), name.c_str(), value.c_str());
-                                }
+                                const std::string prefix(kv.first.substr(0, separator));
+                                const std::string name(kv.first.substr(separator + 1));
+                                std::string value(kv.second);
+                                srcml_unit_add_attribute(prequest->unit.get(), prefix.c_str(), name.c_str(), value.c_str());
                             }
                         }
                     }

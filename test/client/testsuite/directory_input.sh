@@ -172,7 +172,7 @@ srcml dir2 --quiet
 check "$output2"
 
 # Ensure proper behavior with symbolic links (ignore them)
-if [[ "$OSTYPE" == 'msys' ]]; then
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
     exit 0
 fi
 

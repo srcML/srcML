@@ -8,6 +8,11 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+windows_shell=false
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    windows_shell=true
+fi
+
 define srca <<- 'STDOUT'
 	a;
 STDOUT
@@ -39,14 +44,14 @@ STDOUT
 createfile sub/a.cpp.xml "$srcml"
 
 # have to get null byte into test case result
-if [[ "$OSTYPE" == 'msys' ]]; then
+if $windows_shell; then
 	printf "a;\r\n\0b;\r\n" > expected_output
 else
 	printf "a;\n\0b;\n" > expected_output
 fi
 
 # have to get null byte into test case result
-if [[ "$OSTYPE" == 'msys' ]]; then
+if $windows_shell; then
 	printf "a;\r\nb;\r\n" > expected_output_newline
 else
 	printf "a;\nb;\n" > expected_output_newline

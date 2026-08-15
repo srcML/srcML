@@ -9,7 +9,7 @@
 source $(dirname "$0")/framework_test.sh
 
 # have to get null byte into test case result
-if [[ "$OSTYPE" == 'msys' ]]; then
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
     printf "a;\r\n\0return b;\r\n" > tfilenull
     printf "a;\r\nreturn b;\r\n" > tfile
 else

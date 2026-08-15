@@ -14,16 +14,17 @@ file(GLOB LOCAL_CLIENT_TESTS "${CMAKE_CURRENT_SOURCE_DIR}/*.sh")
 list(FILTER LOCAL_CLIENT_TESTS EXCLUDE REGEX "/remote_|framework_test.sh")
 
 # use Git Bash to run tests on Windows
-set(BASH bash)
 if (WIN32)
-    find_program(GIT_BASH "git-bash" PATHS
-        "C:/Program Files/Git"
-        "C:/Program Files/Git/usr"
-        "C:/Program Files (x86)/Git/usr"
-        "C:/Program Files (x86)/Git"
+    find_program(GIT_BASH "bash" PATHS
+        "C:/msys64/usr/bin"
+        "C:/msys64/bin"
+        "C:/Program Files/Git/bin"
+        "C:/Program Files/Git/usr/bin"
+        "C:/Program Files (x86)/Git/bin"
+        "C:/Program Files (x86)/Git/usr/bin"
     NO_DEFAULT_PATH)
     if (GIT_BASH)
-        set(BASH ${GIT_BASH} --hide)
+        set(BASH ${GIT_BASH})
     endif()
 endif()
 
@@ -33,8 +34,10 @@ foreach(LOCAL_CLIENT_TEST IN ITEMS ${LOCAL_CLIENT_TESTS})
     add_test(NAME srcml.${TEST_NAME} COMMAND ${BASH} ${LOCAL_CLIENT_TEST})
     # Command line --timeout does NOT override this value
     #set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 10)
-
-    set_tests_properties(srcml.${TEST_NAME} PROPERTIES WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+    set_tests_properties(srcml.${TEST_NAME} PROPERTIES 
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        ENVIRONMENT "SRCML_EXE=$<TARGET_FILE:srcml>"
+    )
 endforeach()
 
 if(RUN_REMOTE_CLIENT_TESTS)

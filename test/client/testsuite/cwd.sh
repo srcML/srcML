@@ -9,6 +9,10 @@
 source $(dirname "$0")/framework_test.sh
 
 directory=$(pwd)
+
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    directory=$(pwd -W)
+fi
 # test
 ##
 # check missingfile

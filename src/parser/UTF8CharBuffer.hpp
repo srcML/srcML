@@ -30,7 +30,7 @@ namespace sha1 {
 
 #include <sys/types.h> /* ssize_t */
 
-#if defined(WIN32) && !defined(__MINGW32__)
+#if (defined(_WIN32) || defined(WIN32)) && !defined(__MINGW32__)
 #include <BaseTsd.h>
 typedef SSIZE_T ssize_t;
 #endif

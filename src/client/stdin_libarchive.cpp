@@ -74,7 +74,7 @@ void open_stdin_libarchive(srcml_input_src& input_source) {
         status = archive_read_open_FILE(stdinArchive.get(), input_source);
     } else if (contains<int>(input_source)) {
 
-#if WIN32
+#if (defined(_WIN32) || defined(WIN32))
         // In Windows, the archive_read_open_fd() does not seem to work. The input is read as an empty archive,
         // or cut short.
         // So for Windwos, convert to a FILE*. Note sure when to close the FILE*

@@ -8,6 +8,35 @@
 # test framework
 source $(dirname "$0")/framework_test.sh
 
+write_header_archive() {
+    local output_file=$1
+    shift
+
+    : > "$output_file"
+
+    local first_unit=true
+    local unit
+    for unit in "$@"; do
+        if [ "$first_unit" = true ]; then
+            first_unit=false
+        else
+            printf '\0' >> "$output_file"
+        fi
+
+        printf '%b' "${unit//$'\n'/$EOL}" >> "$output_file"
+    done
+}
+
+normalize_windows_hashes() {
+    local var_name=$1
+    local value=${!var_name}
+
+    value=${value//2b22284231f33eb19e66388951726a07ccbec135/f4344df8b5c0b54554a29c64f631984f0d11fd36}
+    value=${value//4e505f4b4ab0455bc5357bfe34ddd8430a71d66a/b01f85862956f59fe53b0bca9472d976ec1dddf6}
+
+    printf -v "$var_name" '%s' "$value"
+}
+
 defineXML headerXML <<- 'OUTPUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
@@ -20,6 +49,10 @@ defineXML headerXML <<- 'OUTPUT'
 
 	</unit>
 OUTPUT
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    normalize_windows_hashes headerXML
+fi
+
 createfile project.xml "$headerXML"
 
 define file1 <<-'EOF'
@@ -40,9 +73,7 @@ define file2 <<-'EOF'
 	int m = 0;
 EOF
 
-echo -n "$file1" > project.txt
-printf '\0' >> project.txt
-echo -n "$file2" >> project.txt
+write_header_archive project.txt "$file1" "$file2"
 
 srcml project.xml --header
 check project.txt
@@ -68,6 +99,10 @@ defineXML headerCustomXML <<- 'OUTPUT'
 
 	</unit>
 OUTPUT
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    normalize_windows_hashes headerCustomXML
+fi
+
 createfile projectCustom.xml "$headerCustomXML"
 
 define file1Custom <<-'EOF'
@@ -89,9 +124,7 @@ define file2Custom <<-'EOF'
 	int m = 0;
 EOF
 
-echo -n "$file1Custom" > projectCustom.txt
-printf '\0' >> projectCustom.txt
-echo -n "$file2Custom" >> projectCustom.txt
+write_header_archive projectCustom.txt "$file1Custom" "$file2Custom"
 
 srcml projectCustom.xml --header
 check projectCustom.txt
@@ -117,6 +150,10 @@ defineXML headerCustomAttributeXML <<- 'OUTPUT'
 
 	</unit>
 OUTPUT
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    normalize_windows_hashes headerCustomAttributeXML
+fi
+
 createfile projectCustomAttribute.xml "$headerCustomAttributeXML"
 
 define file1CustomAttribute <<-'EOF'
@@ -139,9 +176,7 @@ define file2CustomAttribute <<-'EOF'
 	int m = 0;
 EOF
 
-echo -n "$file1CustomAttribute" > projectCustomAttribute.txt
-printf '\0' >> projectCustomAttribute.txt
-echo -n "$file2CustomAttribute" >> projectCustomAttribute.txt
+write_header_archive projectCustomAttribute.txt "$file1CustomAttribute" "$file2CustomAttribute"
 
 srcml projectCustomAttribute.xml --header
 check projectCustomAttribute.txt
@@ -167,6 +202,10 @@ defineXML headerCustomAttributeAttributeXML <<- 'OUTPUT'
 
 	</unit>
 OUTPUT
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    normalize_windows_hashes headerCustomAttributeAttributeXML
+fi
+
 createfile projectCustomAttributeAttribute.xml "$headerCustomAttributeAttributeXML"
 
 define file1CustomAttributeAttribute <<-'EOF'
@@ -191,9 +230,7 @@ define file2CustomAttributeAttribute <<-'EOF'
 	int m = 0;
 EOF
 
-echo -n "$file1CustomAttributeAttribute" > projectCustomAttributeAttribute.txt
-printf '\0' >> projectCustomAttributeAttribute.txt
-echo -n "$file2CustomAttributeAttribute" >> projectCustomAttributeAttribute.txt
+write_header_archive projectCustomAttributeAttribute.txt "$file1CustomAttributeAttribute" "$file2CustomAttributeAttribute"
 
 srcml projectCustomAttributeAttribute.xml --header
 check projectCustomAttributeAttribute.txt
@@ -219,6 +256,10 @@ defineXML headerURLXML <<- 'OUTPUT'
 
 	</unit>
 OUTPUT
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    normalize_windows_hashes headerURLXML
+fi
+
 createfile projectURL.xml "$headerURLXML"
 
 define file1URL <<-'EOF'
@@ -240,9 +281,7 @@ define file2URL <<-'EOF'
 	int m = 0;
 EOF
 
-echo -n "$file1URL" > projectURL.txt
-printf '\0' >> projectURL.txt
-echo -n "$file2URL" >> projectURL.txt
+write_header_archive projectURL.txt "$file1URL" "$file2URL"
 
 srcml projectURL.xml --header
 check projectURL.txt
@@ -282,6 +321,10 @@ defineXML headerRootOutputXML <<- 'OUTPUT'
 
 	</unit>
 OUTPUT
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    normalize_windows_hashes headerRootOutputXML
+fi
+
 createfile projectRootOutput.xml "$headerRootOutputXML"
 
 define file1Root <<-'EOF'
@@ -307,9 +350,7 @@ define file2Root <<-'EOF'
 	int m = 0;
 EOF
 
-echo -n "$file1Root" > projectRoot.txt
-printf '\0' >> projectRoot.txt
-echo -n "$file2Root" >> projectRoot.txt
+write_header_archive projectRoot.txt "$file1Root" "$file2Root"
 
 srcml projectRoot.xml --header
 check projectRoot.txt

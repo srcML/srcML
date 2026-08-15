@@ -21,6 +21,11 @@ STDOUT
 
 createfile sub/a.cpp "a;"
 
+windows_shell=false
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
+    windows_shell=true
+fi
+
 # output to scrML
 srcml sub/a.cpp --output sub/a.cpp.xml
 check sub/a.cpp.xml "$sxmlfile"
@@ -69,11 +74,13 @@ check sub/a.cpp "$fstuff"
 srcml -o sub/a.cpp <<< "$foutput"
 check sub/a.cpp "$fstuff"
 
-srcml - --output /dev/stdout <<< "$foutput" || [[ "$OSTYPE" == 'msys' ]]
-check "$fstuff" || [[ "$OSTYPE" == 'msys' ]]
+if ! $windows_shell; then
+    srcml - --output /dev/stdout <<< "$foutput"
+    check "$fstuff"
 
-srcml - --output=/dev/stdout <<< "$foutput" || [[ "$OSTYPE" == 'msys' ]]
-check "$fstuff" || [[ "$OSTYPE" == 'msys' ]]
+    srcml - --output=/dev/stdout <<< "$foutput"
+    check "$fstuff"
 
-srcml - -o /dev/stdout <<< "$foutput" || [[ "$OSTYPE" == 'msys' ]]
-check "$fstuff" || [[ "$OSTYPE" == 'msys' ]]
+    srcml - -o /dev/stdout <<< "$foutput"
+    check "$fstuff"
+fi

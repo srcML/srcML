@@ -204,7 +204,7 @@ srcml --src-encoding "UTF-16" sub/chinese_characters_utf16.cpp --output-src -o s
 check_file sub/chinese_characters_utf16-srcml.cpp sub/chinese_characters_utf16.cpp
 
 # Not supported on all platforms
-if [[ "$OSTYPE" == 'msys' ]]; then
+if [[ "$OSTYPE" == 'msys' || "$OSTYPE" == 'cygwin' ]]; then
     exit 0
 fi
 
