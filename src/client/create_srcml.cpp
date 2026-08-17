@@ -371,7 +371,17 @@ void create_srcml(const srcml_request_t& srcml_request,
     // frees the libsrcml-allocated buffer
     std::unique_ptr<char, decltype(&free)> clipboard_owner(clipboard_buffer, free);
     if (destination.protocol == "clipboard"sv && clipboard_buffer) {
-        clip::set_text(std::string(clipboard_buffer, clipboard_size));
+        // clip uses X11 on Linux; with no display server it cannot place data on
+        // a clipboard, yet clip::set_text() still reports success, so detect the
+        // headless case up front (clip connects via xcb, which needs DISPLAY)
+        if (
+#if !defined(_WIN32) && !defined(__APPLE__)
+            !getenv("DISPLAY") ||
+#endif
+            !clip::set_text(std::string(clipboard_buffer, clipboard_size))) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to write text to the clipboard");
+            exit(1);
+        }
     }
 
     // don't close stdout

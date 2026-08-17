@@ -259,7 +259,17 @@ void create_src(const srcml_request_t& srcml_request,
             }
         }
 
-        clip::set_text(text);
+        // clip uses X11 on Linux; with no display server it cannot place data on
+        // a clipboard, yet clip::set_text() still reports success, so detect the
+        // headless case up front (clip connects via xcb, which needs DISPLAY)
+        if (
+#if !defined(_WIN32) && !defined(__APPLE__)
+            !getenv("DISPLAY") ||
+#endif
+            !clip::set_text(text)) {
+            SRCMLstatus(ERROR_MSG, "srcml: unable to write text to the clipboard");
+            exit(1);
+        }
 
         return;
     }
