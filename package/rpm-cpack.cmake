@@ -60,6 +60,13 @@ set(CPACK_RPM_MAIN_COMPONENT SRCML)
 # srcml-devel package requires srcml package
 set(CPACK_RPM_DEVLIBS_PACKAGE_REQUIRES "${CPACK_PACKAGE_NAME} >= ${PROJECT_VERSION}")
 
+# On openSUSE the ISO-8859-1 gconv converter that libxml2 uses to decode source
+# is in glibc-locale-base, which is absent on minimal installs (Fedora/Ubuntu
+# ship it in the base glibc). Require it so source encoding conversion works.
+if(DISTRO MATCHES "openSUSE")
+    set(CPACK_RPM_SRCML_PACKAGE_REQUIRES "glibc-locale-base")
+endif()
+
 # Homepage URLs
 # Note: Default should be CMAKE_PROJECT_HOMEPAGE_URL, but isn't due to components
 set(CPACK_RPM_SRCML_PACKAGE_URL ${CMAKE_PROJECT_HOMEPAGE_URL})
