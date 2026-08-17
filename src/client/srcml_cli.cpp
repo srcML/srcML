@@ -23,9 +23,9 @@ const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_
 Translates C, C++, C#, and Java source code to and from the XML
 source-code representation srcML. Also supports querying and transformation of srcML.
 
-Source-code input can be from text, standard input, a file,
-a directory, or an archive file, i.e., tar, cpio, and zip. Multiple files
-are stored in a srcML archive.
+Source-code input can be from text, the system clipboard, standard input,
+a file, a directory, or an archive file, i.e., tar, cpio, and zip. Multiple
+files are stored in a srcML archive.
 )";
 
 const char* SRCML_FOOTER = R"(
@@ -242,13 +242,24 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->each([&](std::string value) {
             srcml_request.output_filename = srcml_output_dest(value);
 
-            if (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension.empty()
-                && srcml_request.output_filename.filename.back() == '/')) {
+            if (srcml_request.output_filename.protocol == "file"sv
+                && (srcml_request.output_filename.isdirectory || (srcml_request.output_filename.extension.empty()
+                && srcml_request.output_filename.filename.back() == '/'))) {
 
                 srcml_request.command |= SRCML_COMMAND_TO_DIRECTORY;
                 srcml_request.command |= SRCML_COMMAND_NOARCHIVE;
             }
         });
+
+    app.add_flag_callback("--from-clipboard,-p", [&]() {
+        srcml_request.input_sources.emplace_back(src_prefix_add_uri("clipboard", ""));
+    }, "Read input from the system clipboard. Equivalent to using clipboard:// as an input filename.")
+        ->group("GENERAL OPTIONS");
+
+    app.add_flag_callback("--to-clipboard,-c", [&]() {
+        srcml_request.output_filename = srcml_output_dest(src_prefix_add_uri("clipboard", ""));
+    }, "Write output to the system clipboard. Equivalent to using clipboard:// as the output filename.")
+        ->group("GENERAL OPTIONS");
 
     // determine default max threads
     int processorCount = CPUCount();

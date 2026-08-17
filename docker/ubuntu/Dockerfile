@@ -40,6 +40,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     git \
     libarchive-dev \
     libcurl4-openssl-dev \
+    libxcb1-dev \
     libxml2-dev \
     libxml2-utils \
     libxslt1-dev \
