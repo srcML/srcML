@@ -57,8 +57,8 @@ check "$multiple3srcml"
 createfile sub/f1.cpp "a;"
 createfile sub/f2.cpp "b;"
 
-# every --text unit comes before every input filename, whatever the order used
-defineXML textfilesrcml <<- 'STDOUT'
+# input is in the order given on the command line, whether from --text or a filename
+defineXML textthenfilesrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
 
@@ -73,11 +73,41 @@ defineXML textfilesrcml <<- 'STDOUT'
 	</unit>
 STDOUT
 
+defineXML interleavedsrcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+	<unit revision="1.0.0" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit revision="1.0.0" language="C++" filename="sub/f1.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit revision="1.0.0" language="C++" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+
+	<unit revision="1.0.0" language="C++" filename="sub/f2.cpp" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+
+	</unit>
+STDOUT
+
+defineXML filethentextsrcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+	<unit revision="1.0.0" language="C++" filename="sub/f1.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit revision="1.0.0" language="C++" filename="sub/f2.cpp" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+
+	<unit revision="1.0.0" language="C++" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	<unit revision="1.0.0" language="C++" hash="9a1e1d3d0e27715d29bcfbf72b891b3ece985b36"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></unit>
+
+	</unit>
+STDOUT
+
 srcml -l C++ --text="a;" sub/f1.cpp --text="b;" sub/f2.cpp
-check "$textfilesrcml"
+check "$interleavedsrcml"
 
 srcml -l C++ --text="a;" --text="b;" sub/f1.cpp sub/f2.cpp
-check "$textfilesrcml"
+check "$textthenfilesrcml"
 
 srcml -l C++ sub/f1.cpp sub/f2.cpp --text="a;" --text="b;"
-check "$textfilesrcml"
+check "$filethentextsrcml"

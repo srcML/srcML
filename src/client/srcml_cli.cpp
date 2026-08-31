@@ -132,14 +132,24 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         return value.empty() ? "requires a value" : "";
     };
 
-    // might get the xslt parameter before the xslt filename
-    std::optional<std::string> xsltParamCache;
+    // might get the xslt parameters before the xslt program
+    std::vector<std::string> xsltParamCache;
+
+    // an xslt program, given as an option or as a filename, takes any parameters cached before it
+    auto addXSLT = [&](std::string_view value) {
+        srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt", value));
+        for (const auto& param : xsltParamCache)
+            srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt-param", param));
+        xsltParamCache.clear();
+    };
 
     // positional arguments, i.e., input files
+    // Transformations are applied in the order given on the command line, so trigger_on_parse()
+    // appends each xslt or relaxng filename as it is parsed, interleaved with the options
     bool isXSLTFilename = false;
-    auto xsltEntry = srcml_request.transformations.begin();
     app.add_option_function<std::vector<std::string>>("InputFiles", [&](const std::vector<std::string>&) {}, "")
         ->group("")
+        ->trigger_on_parse()
         ->each([&](std::string filename) {
 
             // record the position of stdin
@@ -151,17 +161,13 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
             // xslt transformation file
             if (input.extension == ".xsl"sv) {
                 isXSLTFilename = true;
-                xsltEntry = srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("xslt", src_prefix_resource(input.filename)));
-                if (xsltParamCache) {
-                    srcml_request.transformations.insert(std::next(xsltEntry), src_prefix_add_uri("xslt-param", *xsltParamCache));
-                    xsltParamCache = std::nullopt;
-                }
+                addXSLT(src_prefix_resource(input.filename));
                 return;
             }
 
             // relaxng transformation file
             if (input.extension == ".rng"sv) {
-                srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("relaxng", input.filename));
+                srcml_request.transformations.emplace_back(src_prefix_add_uri("relaxng", input.filename));
                 return;
             }
 
@@ -620,9 +626,11 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         "Apply the XSLT program FILE to each unit, where FILE can be a url")
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
+        ->expected(1)
+        ->trigger_on_parse()
         ->each([&](std::string value) {
             isXSLTOption = true;
-            xsltEntry = srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("xslt", value));
+            addXSLT(value);
         });
 
     bool isXSLTParam = false;
@@ -631,25 +639,27 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         ->type_name("NAME=\"VALUE\"")
         ->group("QUERY & TRANSFORMATION")
         // ->needs(xslt)
+        ->expected(1)
+        ->trigger_on_parse()
         ->check(requireValue)
         ->each([&](std::string value) {
             isXSLTParam = true;
 
-            // insert after the xslt entry
-            auto entry = src_prefix_add_uri("xslt-param", value);
-            if (srcml_request.transformations.empty()) {
-                xsltParamCache = entry;
-            } else {
-                srcml_request.transformations.insert(std::next(xsltEntry), entry);
-            }
+            // the xslt program it applies to may not have been given yet
+            if (isXSLTOption || isXSLTFilename)
+                srcml_request.transformations.emplace_back(src_prefix_add_uri("xslt-param", value));
+            else
+                xsltParamCache.emplace_back(value);
         });
 
     app.add_option("--relaxng",
         "Output individual units that match the RelaxNG pattern FILE, where FILE can be a url")
         ->type_name("FILE")
         ->group("QUERY & TRANSFORMATION")
+        ->expected(1)
+        ->trigger_on_parse()
         ->each([&](std::string value) {
-            srcml_request.transformations.insert(srcml_request.transformations.begin(), src_prefix_add_uri("relaxng", value));
+            srcml_request.transformations.emplace_back(src_prefix_add_uri("relaxng", value));
         });
 
     // separate output with nulls
