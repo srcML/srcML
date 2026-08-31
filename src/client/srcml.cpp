@@ -23,6 +23,7 @@
 #include <cmath>
 #include <TraceLog.hpp>
 #include <stdin_libarchive.hpp>
+#include <src_input_clipboard.hpp>
 #include <input_archive.hpp>
 #include <string_view>
 
@@ -139,6 +140,15 @@ See `srcml --help` for more information.
         if (stdInput.issrcML) {
             stdInput.fd = input_archive(stdInput);
         }
+    }
+
+    // read any clipboard input, determining if it is source code or srcML
+    for (auto& input : srcml_request.input_sources) {
+        if (input.protocol != "clipboard"sv)
+            continue;
+
+        open_clipboard(input);
+        input.state = input.issrcML ? SRCML : SRC;
     }
 
     /*

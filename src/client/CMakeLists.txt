@@ -59,11 +59,52 @@ endif()
 add_library(ctpl_stl INTERFACE IMPORTED)
 target_include_directories(ctpl_stl SYSTEM INTERFACE ${ctpl_stl_src_SOURCE_DIR})
 
+# clip cross-platform clipboard library
+include(FetchContent)
+FetchContent_Declare(clip
+    GIT_REPOSITORY https://github.com/dacap/clip.git
+    GIT_TAG        v1.15
+    GIT_SHALLOW    TRUE
+)
+# only text support
+set(CLIP_ENABLE_IMAGE OFF CACHE BOOL "" FORCE)
+set(CLIP_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(CLIP_TESTS OFF CACHE BOOL "" FORCE)
+set(CLIP_INSTALL OFF CACHE BOOL "" FORCE)
+# Scope BUILD_SHARED_LIBS to clip only so it builds statically
+block()
+    set(BUILD_SHARED_LIBS OFF)
+    FetchContent_MakeAvailable(clip)
+endblock()
+
+# On Linux, clip links libxcb, which adds a runtime dependency on libxcb.so.1.
+# When SRCML_CLIENT_STATIC_LIBXCB is ON, link libxcb statically so srcml has no
+# runtime libxcb dependency. The static archives ship in the Debian/Ubuntu -dev
+# packages but not on Fedora/openSUSE, so this is enabled per-platform via the
+# presets rather than autodetected.
+option(SRCML_CLIENT_STATIC_LIBXCB "Statically link libxcb into the srcml client (Linux)" OFF)
+
+if(UNIX AND NOT APPLE AND SRCML_CLIENT_STATIC_LIBXCB)
+    find_library(XCB_STATIC_LIB   NAMES libxcb.a)
+    find_library(XAU_STATIC_LIB   NAMES libXau.a)
+    find_library(XDMCP_STATIC_LIB NAMES libXdmcp.a)
+    if(NOT (XCB_STATIC_LIB AND XAU_STATIC_LIB AND XDMCP_STATIC_LIB))
+        message(FATAL_ERROR "SRCML_CLIENT_STATIC_LIBXCB=ON but the static libxcb/libXau/libXdmcp archives were not found")
+    endif()
+    message(STATUS "clip: linking libxcb statically")
+    # clip is a static library, so it propagates its xcb dependency to srcml
+    # through INTERFACE_LINK_LIBRARIES. Replace the dynamic xcb there with the
+    # static archives (xcb before Xau/Xdmcp, which provide its symbols).
+    set_target_properties(clip PROPERTIES
+        LINK_LIBRARIES "${XCB_STATIC_LIB};${XAU_STATIC_LIB};${XDMCP_STATIC_LIB};Threads::Threads"
+        INTERFACE_LINK_LIBRARIES "${XCB_STATIC_LIB};${XAU_STATIC_LIB};${XDMCP_STATIC_LIB};Threads::Threads")
+endif()
+
 # srcml executable
 file(GLOB CLIENT_SOURCE *.hpp *.cpp)
 add_executable(srcml ${CLIENT_SOURCE})
 target_include_directories(srcml BEFORE PRIVATE .)
-target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl Threads::Threads cli11 ctpl_stl)
+target_link_libraries(srcml PRIVATE srcML::LibsrcML LibArchive::LibArchive CURL::libcurl Threads::Threads cli11 ctpl_stl clip)
 
 # Put executable in bin directory
 set_target_properties(srcml PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
