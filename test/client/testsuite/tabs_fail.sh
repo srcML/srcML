@@ -29,3 +29,10 @@ check_exit 1
 
 srcml --tabs sub/a.cpp -o sub/a.cpp.xml
 check_exit 1
+
+# an empty value after the equals is dropped, so the following input filename
+# becomes the option value
+createfile sub/a.cpp "a;"
+
+echo "a;" | srcml -l C++ --tabs= sub/a.cpp
+check_exit 1

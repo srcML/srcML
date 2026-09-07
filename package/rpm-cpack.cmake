@@ -60,6 +60,13 @@ set(CPACK_RPM_MAIN_COMPONENT SRCML)
 # srcml-devel package requires srcml package
 set(CPACK_RPM_DEVLIBS_PACKAGE_REQUIRES "${CPACK_PACKAGE_NAME} >= ${PROJECT_VERSION}")
 
+# On openSUSE the ISO-8859-1 gconv converter that libxml2 uses to decode source
+# is in glibc-locale-base, which is absent on minimal installs (Fedora/Ubuntu
+# ship it in the base glibc). Require it so source encoding conversion works.
+if(DISTRO MATCHES "openSUSE")
+    set(CPACK_RPM_SRCML_PACKAGE_REQUIRES "glibc-locale-base")
+endif()
+
 # Homepage URLs
 # Note: Default should be CMAKE_PROJECT_HOMEPAGE_URL, but isn't due to components
 set(CPACK_RPM_SRCML_PACKAGE_URL ${CMAKE_PROJECT_HOMEPAGE_URL})
@@ -80,9 +87,9 @@ set(CPACK_RPM_PACKAGE_LICENSE "GPL-3.0-only")
 
 # post install script for ldconfig
 # Note: Believe that newline is required
-file(WRITE ${CPACK_BINARY_DIR}/post.sh "/sbin/ldconfig\n")
-set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE   ${CPACK_BINARY_DIR}/post.sh)
-set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE ${CPACK_BINARY_DIR}/post.sh)
+file(WRITE ${CMAKE_BINARY_DIR}/post.sh "/sbin/ldconfig\n")
+set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE   ${CMAKE_BINARY_DIR}/post.sh)
+set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE ${CMAKE_BINARY_DIR}/post.sh)
 
 # CPack puts directories of installed files into the RPM
 # Since they already exist, this is a conflict with other packages

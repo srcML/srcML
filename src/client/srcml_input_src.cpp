@@ -64,7 +64,7 @@ srcml_input_src::srcml_input_src(std::string_view other) {
         isdirectory = exists && S_ISDIR(s.st_mode);
     }
 
-    isdirectoryform = resource.back() == '/';
+    isdirectoryform = !resource.empty() && resource.back() == '/';
 
     if (!isdirectory && protocol != "text"sv) {
 
@@ -138,7 +138,9 @@ extern "C" {
 int srcml_archive_read_open(srcml_archive* arch, const srcml_input_src& input_source) {
 
     int status;
-    if (input_source.arch)
+    if (input_source.memory)
+        status = srcml_archive_read_open_memory(arch, input_source.memory->data(), input_source.memory->size());
+    else if (input_source.arch)
         status = srcml_archive_read_open_io(arch, input_source.arch, srcml_read_callback, srcml_close_callback);
     else if (contains<int>(input_source))
         status = srcml_archive_read_open_fd(arch, input_source);

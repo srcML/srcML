@@ -62,6 +62,10 @@ check_exit 1
 srcml -l C++ --text -o sub/a.cpp.xml
 check_exit 1
 
+srcml --text "a;"
+check_exit 1 "srcml: --text requires --language or --filename to determine source language
+"
+
 # simple input
 defineXML asrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -116,7 +120,7 @@ check sub/a.cpp.xml "$asrcml"
 srcml -l C++ --text="a;" -o sub/a.cpp.xml
 check sub/a.cpp.xml "$asrcml"
 
-# multiple applications
+# NUL separates a single --text into multiple units
 defineXML multiplesrcml <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
@@ -127,9 +131,6 @@ defineXML multiplesrcml <<- 'STDOUT'
 
 	</unit>
 STDOUT
-
-srcml --text="a;" --text="b;" -l C++
-check "$multiplesrcml"
 
 srcml --text="a;\0b;" -l C++
 check "$multiplesrcml"
@@ -222,3 +223,24 @@ check "\nr;"
 # ends in '='
 srcml -l C++ --text="PDF =" | srcml
 check "PDF ="
+
+# short form with an '='
+srcml -l C++ -t="a;"
+check "$asrcml"
+
+# an empty --text= does not take the following input filename as its value
+createfile sub/f1.cpp "a;"
+
+defineXML emptytextfilesrcml <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0">
+
+	<unit revision="1.0.0" language="C++" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
+
+	<unit revision="1.0.0" language="C++" filename="sub/f1.cpp" hash="a301d91aac4aa1ab4e69cbc59cde4b4fff32f2b8"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></unit>
+
+	</unit>
+STDOUT
+
+srcml -l C++ --text= sub/f1.cpp
+check "$emptytextfilesrcml"

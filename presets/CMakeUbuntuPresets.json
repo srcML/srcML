@@ -21,7 +21,10 @@
       "name": "ci-ubuntu",
       "displayName": "Ubuntu Release",
       "description": "Default build options for Ubuntu release",
-      "inherits": ["ci-base", "ci-ubuntu-only", "ci-gcc", "ci-sibling-build"]
+      "inherits": ["ci-base", "ci-ubuntu-only", "ci-gcc", "ci-sibling-build"],
+      "cacheVariables": {
+        "SRCML_CLIENT_STATIC_LIBXCB": "ON"
+      }
     },
     {
       "name": "ci-ubuntu-wasm",

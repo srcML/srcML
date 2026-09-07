@@ -35,6 +35,18 @@ createfile sub/a.cpp "#define"
 srcml --xmlns="http://www.srcML.org/srcML/src" sub/a.cpp
 check "$foutputnocpp"
 
+# the URI as a separate argument, instead of after an '='
+defineXML fbaroutput <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:bar="http://www.foo.com" revision="REVISION" language="C++" filename="sub/a.cpp"><cpp:define>#<cpp:directive>define</cpp:directive></cpp:define></unit>
+STDOUT
+
+srcml --xmlns:bar="http://www.foo.com" sub/a.cpp
+check "$fbaroutput"
+
+srcml --xmlns "bar=http://www.foo.com" sub/a.cpp
+check "$fbaroutput"
+
 echo -n "#define" | srcml -l C++ --xmlns="http://www.srcML.org/srcML/src"
 check "$outputnocpp"
 
