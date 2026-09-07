@@ -42,11 +42,18 @@ RUN apt-get update \
 # --from-clipboard reads it back (autodetected as srcML) and the recovered
 # source must match the original (needs an X server and a clipboard manager)
 RUN Xvfb :99 -screen 0 1024x768x24 >/dev/null 2>&1 & \
-    sleep 2; export DISPLAY=:99; parcellite >/dev/null 2>&1 & \
+    export DISPLAY=:99; \
+    sleep 3; \
+    parcellite >/dev/null 2>&1 & \
     sleep 2; \
-    srcml --text='int n;' -l C++ --to-clipboard; \
-    sleep 1; \
-    out="$(srcml --from-clipboard)"; \
+    out=''; \
+    end=$(( $(date +%s) + 15 )); \
+    while [ "$(date +%s)" -lt "$end" ]; do \
+        srcml --text='int n;' -l C++ --to-clipboard; \
+        out="$(srcml --from-clipboard)"; \
+        [ "$out" = 'int n;' ] && break; \
+        sleep 0.5; \
+    done; \
     { echo '=== clipboard round-trip (--to-clipboard then --from-clipboard) ==='; printf '%s\n' "$out"; } >> "$INSTALLCHECK_LOG"; \
     [ "$out" = 'int n;' ] \
     || { printf 'clipboard round-trip failed: %s\n' "$out"; exit 1; }
