@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="class">
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <call><name>A</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <call><name>A</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>a</name><block>:<block_content>
+    <function>def <name>b</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>a</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>, <parameter><name>i</name><init>=<expr><literal type="number">0</literal></expr></init></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>a</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>, <parameter><name>_</name><init>=<expr><literal type="number">0</literal></expr></init></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>a</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>, <parameter><name>i</name><init>=<expr><call><name>b</name><argument_list>()</argument_list></call></expr></init></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>a</name><block>:<block_content>
+    <function>def <name>__init__</name><parameter_list>(<parameter><name>self</name></parameter>, <parameter><name>_</name><init>=<expr><call><name>b</name><argument_list>()</argument_list></call></expr></init></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>a</name><block>:<block_content>
+    <function>def <name>main</name><parameter_list>(<parameter><name>self</name></parameter>, <parameter><name>argc</name></parameter>, <parameter><name>argv</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>a</name><block>:<block_content>
+    <function>def <name>main</name><parameter_list>(<parameter><name>self</name></parameter>, <parameter><name>argc</name></parameter>, <parameter><name>argv</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>D</name><super_list>(<super><expr><name><name>A</name><operator>.</operator><name>B</name><operator>.</operator><name>C</name></name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>foobar</name><super_list>(<super><expr><name>foo</name></expr></super>, <super><expr><name>bar</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>foo</name><super_list>(<super><expr><name>bar</name></expr></super>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class>
+</unit>
+
+</unit>

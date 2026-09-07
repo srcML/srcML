@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="decltype">
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><call><name>type</name><argument_list>(<argument><expr><name>int</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>x1</name> <operator>=</operator> <call><name>type</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>x1</name> <operator>=</operator> <call><name>type</name><argument_list>(<argument><expr><name>A</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>x1</name> <operator>=</operator> <call><name>type</name><argument_list>(<argument><expr><call><name>foo</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>x1</name> <operator>=</operator> <call><name>type</name><argument_list>(<argument><expr><operator>(</operator><name>A</name><operator>)</operator></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <operator>=</operator> <call><name>type</name><argument_list>(<argument><expr><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <operator>=</operator> <call><name>type</name><argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<function>def <name>A</name><parameter_list>()</parameter_list> <annotation>-&gt; <expr><call><name>type</name><argument_list>(<argument><expr><operator>(</operator><call><name>A</name><argument_list>(<argument><expr><name>B</name></expr></argument>,<argument><expr><name>C</name></expr></argument>)</argument_list></call><operator>)</operator></expr></argument>)</argument_list></call></expr></annotation><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>y</name> <operator>=</operator> <call><name>type</name><argument_list>(<argument><expr><name>X</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+</unit>

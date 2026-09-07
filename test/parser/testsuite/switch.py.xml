@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="switch">
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><name>_</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><name>_</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><name>foo</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><name>_</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><literal type="number">1</literal></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><literal type="number">1</literal></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><name>b</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><name>b</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><literal type="number">1</literal></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case>    <case>case <expr><literal type="number">2</literal></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><name>b</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case>    <case>case <expr><name>c</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><literal type="number">1</literal></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case>    <case>case <expr><literal type="number">2</literal></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case>    <case>case <expr><name>_</name></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><literal type="number">1</literal></expr><block>:<block_content>
+        <expr_stmt><expr><name>b</name></expr></expr_stmt>
+</block_content></block></case>    <case>case <expr><literal type="number">2</literal></expr><block>:<block_content>
+        <expr_stmt><expr><name>c</name></expr></expr_stmt>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><literal type="number">1</literal></expr><block>:<block_content>
+        <expr_stmt><expr><name>b</name></expr></expr_stmt>
+</block_content></block></case>    <case>case <expr><literal type="number">2</literal></expr><block>:<block_content>
+        <expr_stmt><expr><name>c</name></expr></expr_stmt>
+</block_content></block></case>    <case>case <expr><name>_</name></expr><block>:<block_content>
+        <expr_stmt><expr><name>d</name></expr></expr_stmt>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<switch>match <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <case>case <expr><call><name>b</name><argument_list>(<argument><expr><name>c</name></expr></argument>)</argument_list></call></expr><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></case></block_content></block></switch>
+</unit>
+
+</unit>

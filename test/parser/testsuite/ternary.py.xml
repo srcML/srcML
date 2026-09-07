@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="ternary">
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <ternary>if <condition><expr><operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator> <ternary>if <condition><expr><operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator></expr></condition> <else>else <expr><operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <ternary>if <condition><expr><literal type="number">0</literal> <operator>+</operator> <name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <operator>+</operator> <literal type="number">0</literal> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name> <operator>+</operator> <literal type="number">0</literal></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <operator>+</operator> <literal type="number">0</literal> <ternary>if <condition><expr><literal type="number">0</literal> <operator>+</operator> <name>a</name></expr></condition> <else>else <expr><name>c</name> <operator>+</operator> <literal type="number">0</literal></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <operator>*</operator> <literal type="number">0</literal> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <operator>&amp;</operator> <literal type="number">0</literal> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>is_true</name> <operator>=</operator> <name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name><name>a</name><index>[<expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><call><name>a</name><argument_list>(<argument><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<if_stmt><if>if <condition><expr><operator>(</operator><name>i</name> <operator>:=</operator> <operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator><operator>)</operator></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></if></if_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<while>while <condition><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></while>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<while>while <condition><expr><operator>(</operator><name>i</name> <operator>:=</operator> <operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator><operator>)</operator></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></while>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<while>while <condition><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></while>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<while>while <condition><expr><operator>(</operator><name>i</name> <operator>:=</operator> <operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator><operator>)</operator></expr></condition><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></while>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>+=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>-=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>*=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>/=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>%=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&lt;&lt;=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&gt;&gt;=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>&amp;=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>^=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>a</name> <operator>|=</operator> <name>b</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <ternary>if <condition><expr><name>i</name> <operator>+</operator> <operator>(</operator><name>a</name> <operator>+</operator> <name>c</name><operator>)</operator></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <ternary>if <condition><expr><name>i</name> <operator>+</operator> <operator>(</operator><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary><operator>)</operator></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><name>b</name> <ternary>if <condition><expr><call><name>a</name><argument_list>(<argument><expr><name>b</name> <ternary>if <condition><expr><name>a</name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></argument>)</argument_list></call></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+</unit>
