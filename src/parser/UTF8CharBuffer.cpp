@@ -369,7 +369,11 @@ size_t UTF8CharBuffer::readChars() {
 
         // convert from raw characters to cooked, encoded in UTF-8 characters
         size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
-        if (binsize == (size_t) -1) {
+
+        // an incomplete multibyte sequence at the end of the data is not an error,
+        // as the rest of it is in the data read next, and the bytes of it are kept
+        // in inbytesleft and moved to the start of the buffer below
+        if (binsize == (size_t) -1 && errno != EINVAL) {
             fprintf(stderr, "%s\n", strerror(errno));
             return 0;
         }
@@ -382,6 +386,14 @@ size_t UTF8CharBuffer::readChars() {
         // so just move all of them to the start of the buffer
         if (inbytesleft)
             std::move(linbuf, linbuf + inbytesleft, raw.begin());
+
+        // the data read was only part of a multibyte sequence, so nothing could be
+        // converted from it, and more data is needed before there is a character
+        // to return, as a count of zero here would be taken for the end of the input
+        if (cooked.empty() && inbytesleft) {
+            insize = 0;
+            return readChars();
+        }
     }
 
     return trivial ? raw.size() : cooked.size();
