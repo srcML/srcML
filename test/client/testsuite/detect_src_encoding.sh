@@ -139,6 +139,61 @@ createfile sub/bom.cpp '\xef\xbb\xbf// caf\xc3\xa9 na\xc3\xafve\na;\n'
 srcml sub/bom.cpp --filename "sub/a.cpp"
 check "$foutput"
 
+# UTF-16 and UTF-32 with no BOM, where the NUL bytes of the ASCII characters
+# give both the width of a character and the byte order
+# the bytes are given directly, as the point of these is where the NUL bytes fall
+defineXML fwide <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="sub/a.cpp"><comment type="line">// é</comment>
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+STDOUT
+
+createfile sub/utf16le.cpp '\x2f\x00\x2f\x00\x20\x00\xe9\x00\x0a\x00\x61\x00\x3b\x00\x0a\x00'
+
+srcml sub/utf16le.cpp --filename "sub/a.cpp"
+check "$fwide"
+
+createfile sub/utf16be.cpp '\x00\x2f\x00\x2f\x00\x20\x00\xe9\x00\x0a\x00\x61\x00\x3b\x00\x0a'
+
+srcml sub/utf16be.cpp --filename "sub/a.cpp"
+check "$fwide"
+
+createfile sub/utf32le.cpp '\x2f\x00\x00\x00\x2f\x00\x00\x00\x20\x00\x00\x00\xe9\x00\x00\x00\x0a\x00\x00\x00\x61\x00\x00\x00\x3b\x00\x00\x00\x0a\x00\x00\x00'
+
+srcml sub/utf32le.cpp --filename "sub/a.cpp"
+check "$fwide"
+
+createfile sub/utf32be.cpp '\x00\x00\x00\x2f\x00\x00\x00\x2f\x00\x00\x00\x20\x00\x00\x00\xe9\x00\x00\x00\x0a\x00\x00\x00\x61\x00\x00\x00\x3b\x00\x00\x00\x0a'
+
+srcml sub/utf32be.cpp --filename "sub/a.cpp"
+check "$fwide"
+
+# a stray NUL byte in data that is otherwise ASCII is not enough of them to be
+# a wide encoding, which would take one for every character
+createfile sub/nul.cpp '// a\x00b\na;\n'
+
+comment '// a<escape char="0x00"/>b'
+
+srcml sub/nul.cpp --filename "sub/a.cpp"
+check "$fcomment"
+
+# a character outside the BMP is a surrogate pair, whose low-order byte is NUL and
+# so falls where the data bytes of the other characters are, which is why nearly all
+# of a position being NUL, rather than all of it, is what makes a wide encoding
+# the bytes are given directly, as the point of this is where that NUL byte falls
+defineXML fwidepair <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="sub/a.cpp"><comment type="line">// 😀 x</comment>
+	<expr_stmt><expr><name>a</name></expr>;</expr_stmt>
+	</unit>
+STDOUT
+
+createfile sub/utf16pair.cpp '\x2f\x00\x2f\x00\x20\x00\x3d\xd8\x00\xde\x20\x00\x78\x00\x0a\x00\x61\x00\x3b\x00\x0a\x00'
+
+srcml sub/utf16pair.cpp --filename "sub/a.cpp"
+check "$fwidepair"
+
 # a multibyte character split across the end of the first read of the input, so that
 # the data read after it starts partway through that character
 # "// " and 1020 more characters put the first byte of the é at 1023, and the second
@@ -150,6 +205,17 @@ createfile sub/split.cpp "// $padding\xc3\xa9\xc3\xa9 tail\na;\n"
 srcml sub/split.cpp -o sub/split.xml
 srcml sub/split.xml --output-src --src-encoding "UTF-8" -o sub/split_src.cpp
 check_file sub/split_src.cpp sub/split.cpp
+
+# the same for a conversion that is not a pass through, where a surrogate pair takes
+# four bytes and so can be split even though every other character is two bytes
+padding=$(printf 'x%.0s' {1..508})
+
+createfile sub/splitwide.cpp "// $padding\xf0\x9f\x98\x80 tail\na;\n"
+iconv -f UTF-8 -t UTF-16LE sub/splitwide.cpp > sub/splitwide16.cpp
+
+srcml sub/splitwide16.cpp -o sub/splitwide16.xml
+srcml sub/splitwide16.xml --output-src --src-encoding "UTF-16LE" -o sub/splitwide16_src.cpp
+check_file sub/splitwide16_src.cpp sub/splitwide16.cpp
 
 # the encoding is detected from the first read of the input, which is longer than
 # this, so that the data only stops being valid UTF-8 well after where it is detected

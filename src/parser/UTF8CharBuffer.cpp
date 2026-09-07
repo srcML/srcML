@@ -49,6 +49,50 @@ namespace {
 
         return trivial != 0;
     }
+    // the UTF-16 or UTF-32 encoding of data that has no BOM, or empty if it is neither
+    // ASCII characters, which is nearly all of any source code, are stored with NUL bytes
+    // for their high-order bytes, so which positions those NUL bytes fall in gives
+    // both the width of a character and the byte order
+    std::string_view wideEncoding(const std::vector<char>& buffer) {
+
+        // there has to be at least a full group of four bytes for the positions
+        // of the NUL bytes within it to mean anything
+        if (buffer.size() < 4)
+            return ""sv;
+
+        // NUL bytes counted by their position within a group of four
+        size_t nul[4] = { 0, 0, 0, 0 };
+        for (size_t i = 0; i < buffer.size(); ++i)
+            if (buffer[i] == '\0')
+                ++nul[i % 4];
+
+        // each position occurs once in every group, so this is how many bytes are
+        // in each of the four counts above
+        const size_t groups = buffer.size() / 4;
+
+        // nearly all of the high-order byte positions are NUL, and nearly none of the
+        // low-order ones, rather than all and none, as a character outside the BMP is
+        // a surrogate pair whose low-order byte is NUL, and one such as U+4E00 has a
+        // NUL low-order byte of its own, neither being common enough in source code
+        // to change which encoding the data looks like
+        const size_t few = groups / 4;
+        const size_t most = groups - few;
+
+        // three NUL bytes per character, with the data byte first or last
+        if (nul[0] <= few && nul[1] >= most && nul[2] >= most && nul[3] >= most)
+            return "UTF-32LE"sv;
+        if (nul[3] <= few && nul[0] >= most && nul[1] >= most && nul[2] >= most)
+            return "UTF-32BE"sv;
+
+        // one NUL byte per character, in either the odd or the even positions
+        if (nul[0] <= few && nul[2] <= few && nul[1] >= most && nul[3] >= most)
+            return "UTF-16LE"sv;
+        if (nul[1] <= few && nul[3] <= few && nul[0] >= most && nul[2] >= most)
+            return "UTF-16BE"sv;
+
+        return ""sv;
+    }
+
     // indicates whether the buffer is valid UTF-8, which includes plain ASCII
     // note that the fallback encoding cannot be detected this way, as every byte
     // sequence is valid ISO-8859-1, so it is only ever a fallback for what is not UTF-8
@@ -422,13 +466,19 @@ size_t UTF8CharBuffer::readChars() {
         }
 
         // no encoding specified and no BOM, so detect it from the data itself
-        // only UTF-8 can be identified from the data, so it is a guess that later data
-        // may correct, while the ISO-8859-1 fallback is never corrected, as it accepts
-        // any byte sequence at all
         // this is a detection over the first read only, so it may be corrected below
         if (encoding.empty()) {
-            detected = validUTF8(raw);
-            encoding = detected ? "UTF-8"sv : "ISO-8859-1"sv;
+
+            // UTF-16 and UTF-32 are only missing a BOM, and are found from the data layout
+            encoding = wideEncoding(raw);
+
+            // of the rest, only UTF-8 can be identified from the data, so it is a guess
+            // that later data may correct, while the ISO-8859-1 fallback is never
+            // corrected, as it accepts any byte sequence at all
+            if (encoding.empty()) {
+                detected = validUTF8(raw);
+                encoding = detected ? "UTF-8"sv : "ISO-8859-1"sv;
+            }
         }
 
         // setup encoder from encoding to UTF-8
