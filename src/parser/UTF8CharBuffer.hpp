@@ -99,6 +99,10 @@ private:
 
     size_t readChars();
 
+    bool setEncoding(std::string_view name);
+
+    bool setFallbackEncoding();
+
     /* position currently at in input buffer */
     size_t pos = 0;
 
@@ -139,6 +143,9 @@ private:
 
     /** whether the encoding conversion is trivial (i.e., not needed) */
     int trivial = false;
+
+    /** whether the encoding was detected from the data, and so may still be corrected */
+    bool detected = false;
 
     /** contacts and callbacks for read and close */
     srcMLIO sio;

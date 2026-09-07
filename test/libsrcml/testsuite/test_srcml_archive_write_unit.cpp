@@ -27,6 +27,12 @@ int main(int, char* argv[]) {
     const std::string latin_srcml_no_xmldecl = R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><comment type="block">/* Ã¾Ã¿ */</comment>
 </unit>)";
 
+    // the same source bytes as latin_srcml_no_xmldecl, which are UTF-8 as this file is UTF-8,
+    // but with the source encoding detected instead of specified as ISO-8859-1,
+    // so the characters are passed through rather than converted a second time
+    const std::string thorn_srcml_no_xmldecl = R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><comment type="block">/* þÿ */</comment>
+</unit>)";
+
     const std::string srcml_old_uri_a = R"(<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="a.cpp"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>)";
 
@@ -57,10 +63,12 @@ int main(int, char* argv[]) {
 </unit>
 )";
 
-    const std::string latin_srcml_latin = R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+    // written out in ISO-8859-1, so the detected UTF-8 source characters U+00FE and U+00FF
+    // are single bytes here, and cannot be written as text in this UTF-8 file
+    const std::string thorn_srcml_latin = R"(<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" revision=")" SRCML_VERSION_STRING R"(" url="test" version="1">
 
-<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><comment type="block">/* þÿ */</comment>
+<unit revision=")" SRCML_VERSION_STRING R"(" language="C++" filename="project" version="1"><comment type="block">/* )" "\xfe\xff" R"( */</comment>
 </unit>
 
 </unit>
@@ -424,14 +432,14 @@ int main(int, char* argv[]) {
         const char* code = "/* þÿ */\n";
         srcml_unit_parse_memory(unit, code, strlen(code));
 
-        dassert(srcml_unit_get_srcml_outer(unit), latin_srcml_no_xmldecl);
+        dassert(srcml_unit_get_srcml_outer(unit), thorn_srcml_no_xmldecl);
 
         dassert(srcml_archive_write_unit(archive, unit), SRCML_STATUS_OK);
         srcml_unit_free(unit);
         srcml_archive_close(archive);
         srcml_archive_free(archive);
 
-        dassert(std::string(s, size), latin_srcml_latin);
+        dassert(std::string(s, size), thorn_srcml_latin);
 
         free(s);
     }
