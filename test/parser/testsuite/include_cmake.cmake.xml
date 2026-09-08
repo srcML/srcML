@@ -2,15 +2,15 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="include">
 
 <unit revision="1.0.0" language="CMake">
-<include>include(<expr><literal type="string">"cmake/platform.cmake"</literal></expr>)</include>
+<command><name>include</name><argument_list>(<argument><expr><literal type="string">"cmake/platform.cmake"</literal></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<include>include(<expr><name>ExternalProject</name></expr>)</include>
+<command><name>include</name><argument_list>(<argument><expr><name>ExternalProject</name></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<include>include(<expr><name>${CMAKE_SOURCE_DIR}/all.cmake</name></expr> <option><name>NO_POLICY_SCOPE</name></option>)</include>
+<command><name>include</name><argument_list>(<argument><expr><literal type="string"><expr type="name">${<name>CMAKE_SOURCE_DIR</name>}</expr>/all.cmake</literal></expr></argument> <option><name>NO_POLICY_SCOPE</name></option>)</argument_list></command>
 </unit>
 
 </unit>
