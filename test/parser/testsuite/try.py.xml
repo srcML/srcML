@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="try">
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block><catch>except<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block><catch>except<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block><catch>except<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <try>try<block>:<block_content>
+        <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block>    <catch>except<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></catch></try></block_content></block>
+<catch>except<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <pass>pass</pass>
+</block_content></block><catch>except<block>:<block_content>
+    <try>try<block>:<block_content>
+        <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block>    <catch>except<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></catch></try></block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<try>try<block>:<block_content>
+    <try>try<block>:<block_content>
+        <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block>    <catch>except<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></catch></try></block_content></block>
+<catch>except<block>:<block_content>
+    <try>try<block>:<block_content>
+        <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block>    <catch>except<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></catch></try></block_content></block></catch></try>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <try>try<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block>    <catch>except<block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></catch></try></block_content></block></for>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<for>for <control><expr><name>i</name></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr></range></control><block>:<block_content>
+    <try>try<block>:<block_content>
+        <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block>    <catch>except<block>:<block_content>
+        <expr_stmt><expr><name>a</name></expr></expr_stmt>
+</block_content></block></catch></try></block_content></block></for>
+</unit>
+
+</unit>

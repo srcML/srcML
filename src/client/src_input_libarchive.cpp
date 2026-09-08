@@ -128,7 +128,11 @@ archive* libarchive_input_file(const srcml_input_src& input_file) {
     int status;
     const int buffer_size = 16384;
 
-    if (contains<int>(input_file)) {
+    if (input_file.memory) {
+
+        status = archive_read_open_memory(arch.get(), input_file.memory->data(), input_file.memory->size());
+
+    } else if (contains<int>(input_file)) {
 
         status = archive_read_open_fd(arch.get(), input_file, buffer_size);
 
@@ -179,7 +183,7 @@ int src_input_libarchive(ParseQueue& queue,
     // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
     // which then hangs
     // Note: may need to fix in libsrcml
-    if ((!contains<int>(input_file) && !option(SRCML_COMMAND_HEADER) && !contains<FILE*>(input_file) && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.data())) | input_file.skip) {
+    if ((!contains<int>(input_file) && !option(SRCML_COMMAND_HEADER) && !contains<FILE*>(input_file) && !input_file.memory && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.data())) | input_file.skip) {
 
 
         // if we are not verbose, then just end this attemp
@@ -290,7 +294,7 @@ int src_input_libarchive(ParseQueue& queue,
 
         // user specified a language, and is a file, text, or stdin
         // user specified a language, and is not part of a solitary unit, and the file has a source-code extension
-        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin"sv)
+        if (srcml_request.att_language && ((input_file.protocol == "text" || input_file.protocol == "stdin"sv || input_file.protocol == "clipboard"sv)
              || srcml_archive_check_extension(srcml_arch, filename.data())))
             language = *srcml_request.att_language;
 

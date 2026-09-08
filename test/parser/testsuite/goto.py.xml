@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="goto">
+
+<unit revision="1.0.0" language="Python">
+<throw>raise</throw>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<throw>raise <expr><name>label</name></expr></throw>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<throw>raise <expr><name>case_1</name></expr></throw>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<throw>raise <expr><name>case_a</name></expr></throw>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<throw>raise <expr><name>case_b</name></expr></throw>
+</unit>
+
+</unit>

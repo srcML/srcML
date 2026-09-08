@@ -41,3 +41,8 @@ check
 
 srcml --register-ext="xml=Java" sub/a.xml
 check
+
+# an empty value after the equals is dropped, so the following input filename
+# becomes the option value
+echo "a;" | srcml -l C++ --register-ext= sub/a.cpp
+check_exit 2
