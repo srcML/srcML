@@ -114,15 +114,15 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument>)</argument_list></command>
+<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <option><name>ON</name></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument> <option><name>EXPAND</name></option>)</argument_list></command>
+<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <option><name>ON</name></option> <option><name>EXPAND</name></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument>)</argument_list></command>
+<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <option><name>OFF</name></option>)</argument_list></command>
 </unit>
 
 </unit>

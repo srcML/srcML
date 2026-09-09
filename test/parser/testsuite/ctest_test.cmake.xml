@@ -46,11 +46,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>EXCLUDE_FROM_FILE</name> <argument><expr><name>main.cpp</name></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>EXCLUDE_FROM_FILE</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>INCLUDE_FROM_FILE</name> <argument><expr><name>main.cpp</name></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>INCLUDE_FROM_FILE</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -70,7 +70,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>RESOURCE_SPEC_FILE</name> <argument><expr><name>main.cpp</name></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>RESOURCE_SPEC_FILE</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -78,11 +78,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>SCHEDULE_RANDOM</name> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>SCHEDULE_RANDOM</name> <argument><expr><name>ON</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>SCHEDULE_RANDOM</name> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>SCHEDULE_RANDOM</name> <argument><expr><name>OFF</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -102,19 +102,19 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>REPEAT</name> <argument><expr><name>UNTIL_FAIL:5</name></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>REPEAT</name> <argument><expr><literal type="string">UNTIL_FAIL:5</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>REPEAT</name> <argument><expr><name>UNTIL_PASS:5</name></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>REPEAT</name> <argument><expr><literal type="string">UNTIL_PASS:5</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>REPEAT</name> <argument><expr><name>AFTER_TIMEOUT:5</name></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>REPEAT</name> <argument><expr><literal type="string">AFTER_TIMEOUT:5</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>OUTPUT_JUNIT</name> <argument><expr><name>results.xml</name></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>OUTPUT_JUNIT</name> <argument><expr><literal type="string">results.xml</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -122,7 +122,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>PRESETS_FILE</name> <argument><expr><name>presets.cpp</name></expr></argument></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>PRESETS_FILE</name> <argument><expr><literal type="string">presets.cpp</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -130,7 +130,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>ctest_test</name><argument_list>(<option><name>BUILD</name> <argument><expr><name>src</name></expr></argument></option> <option><name>APPEND</name></option> <option><name>START</name> <argument><expr><literal type="number">1</literal></expr></argument></option> <option><name>END</name> <argument><expr><literal type="number">10</literal></expr></argument></option> <option><name>STRIDE</name> <argument><expr><literal type="number">1</literal></expr></argument></option> <option><name>EXCLUDE</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>INCLUDE</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>EXCLUDE_LABEL</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>INCLUDE_LABEL</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>EXCLUDE_FROM_FILE</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>INCLUDE_FROM_FILE</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>EXCLUDE_FIXTURE</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>EXCLUDE_FIXTURE_SETUP</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>EXCLUDE_FIXTURE_CLEANUP</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>PARALLEL_LEVEL</name> <argument><expr><literal type="number">1</literal></expr></argument></option> <option><name>RESOURCE_SPEC_FILE</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>TEST_LOAD</name> <argument><expr><literal type="number">1</literal></expr></argument></option> <option><name>SCHEDULE_RANDOM</name> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument></option> <option><name>STOP_ON_FAILURE</name></option> <option><name>STOP_TIME</name> <argument><expr><literal type="string">"23:59:59"</literal></expr></argument></option> <option><name>RETURN_VALUE</name> <argument><expr><name>result</name></expr></argument></option> <option><name>CAPTURE_CMAKE_ERROR</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REPEAT</name> <argument><expr><name>UNTIL_FAIL:5</name></expr></argument></option> <option><name>OUTPUT_JUNIT</name> <argument><expr><name>results.xml</name></expr></argument></option> <option><name>PRESET</name> <argument><expr><name>default</name></expr></argument></option> <option><name>PRESETS_FILE</name> <argument><expr><name>presets.cpp</name></expr></argument></option> <option><name>QUIET</name></option>)</argument_list></command>
+<command><name>ctest_test</name><argument_list>(<option><name>BUILD</name> <argument><expr><name>src</name></expr></argument></option> <option><name>APPEND</name></option> <option><name>START</name> <argument><expr><literal type="number">1</literal></expr></argument></option> <option><name>END</name> <argument><expr><literal type="number">10</literal></expr></argument></option> <option><name>STRIDE</name> <argument><expr><literal type="number">1</literal></expr></argument></option> <option><name>EXCLUDE</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>INCLUDE</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>EXCLUDE_LABEL</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>INCLUDE_LABEL</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>EXCLUDE_FROM_FILE</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument></option> <option><name>INCLUDE_FROM_FILE</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument></option> <option><name>EXCLUDE_FIXTURE</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>EXCLUDE_FIXTURE_SETUP</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>EXCLUDE_FIXTURE_CLEANUP</name> <argument><expr><literal type="string">"Unit.*"</literal></expr></argument></option> <option><name>PARALLEL_LEVEL</name> <argument><expr><literal type="number">1</literal></expr></argument></option> <option><name>RESOURCE_SPEC_FILE</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument></option> <option><name>TEST_LOAD</name> <argument><expr><literal type="number">1</literal></expr></argument></option> <option><name>SCHEDULE_RANDOM</name> <argument><expr><name>ON</name></expr></argument></option> <option><name>STOP_ON_FAILURE</name></option> <option><name>STOP_TIME</name> <argument><expr><literal type="string">"23:59:59"</literal></expr></argument></option> <option><name>RETURN_VALUE</name> <argument><expr><name>result</name></expr></argument></option> <option><name>CAPTURE_CMAKE_ERROR</name> <argument><expr><name>error</name></expr></argument></option> <option><name>REPEAT</name> <argument><expr><literal type="string">UNTIL_FAIL:5</literal></expr></argument></option> <option><name>OUTPUT_JUNIT</name> <argument><expr><literal type="string">results.xml</literal></expr></argument></option> <option><name>PRESET</name> <argument><expr><name>default</name></expr></argument></option> <option><name>PRESETS_FILE</name> <argument><expr><literal type="string">presets.cpp</literal></expr></argument></option> <option><name>QUIET</name></option>)</argument_list></command>
 </unit>
 
 </unit>

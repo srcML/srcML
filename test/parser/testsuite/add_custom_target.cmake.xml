@@ -42,11 +42,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_custom_target</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>DEPENDS</name> <argument><expr><name>header.hpp</name></expr></argument></option>)</argument_list></command>
+<command><name>add_custom_target</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>DEPENDS</name> <argument><expr><literal type="string">header.hpp</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_custom_target</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>DEPENDS</name> <argument><expr><name>header.hpp</name></expr></argument> <argument><expr><name>header2.hpp</name></expr></argument></option>)</argument_list></command>
+<command><name>add_custom_target</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>DEPENDS</name> <argument><expr><literal type="string">header.hpp</literal></expr></argument> <argument><expr><literal type="string">header2.hpp</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -70,7 +70,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_custom_target</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>JOB_SERVER_AWARE</name> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument></option>)</argument_list></command>
+<command><name>add_custom_target</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>JOB_SERVER_AWARE</name> <argument><expr><name>ON</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -94,7 +94,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>add_custom_target</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>DEPENDS</name> <argument><expr><name>header.hpp</name></expr></argument></option> <option><name>BYPRODUCTS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option> <option><name>COMMENT</name> <argument><expr><literal type="string">"Hello world!"</literal></expr></argument></option> <option><name>JOB_POOL</name> <argument><expr><name>pool</name></expr></argument></option> <option><name>JOB_SERVER_AWARE</name> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument></option> <option><name>VERBATIM</name></option> <option><name>USES_TERMINAL</name></option> <option><name>COMMAND_EXPAND_LISTS</name></option> <option><name>SOURCES</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
+<command><name>add_custom_target</name><argument_list>(<argument><expr><name>client</name></expr></argument> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>DEPENDS</name> <argument><expr><literal type="string">header.hpp</literal></expr></argument></option> <option><name>BYPRODUCTS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option> <option><name>COMMENT</name> <argument><expr><literal type="string">"Hello world!"</literal></expr></argument></option> <option><name>JOB_POOL</name> <argument><expr><name>pool</name></expr></argument></option> <option><name>JOB_SERVER_AWARE</name> <argument><expr><name>ON</name></expr></argument></option> <option><name>VERBATIM</name></option> <option><name>USES_TERMINAL</name></option> <option><name>COMMAND_EXPAND_LISTS</name></option> <option><name>SOURCES</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 </unit>

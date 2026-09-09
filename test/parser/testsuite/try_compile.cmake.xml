@@ -90,99 +90,99 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_CONTENT</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><literal type="string" format="bracket">[[int main() { return 0; }]]</literal></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_CONTENT</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><literal type="string">[[int main() { return 0; }]]</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_CONTENT</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><literal type="string">"int main() { return 0; }"</literal></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_CONTENT</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><literal type="string">"int main() { return 0; }"</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_FILE</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_FILE</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main2.cpp</name></expr></argument> <argument><expr><name>otherCode</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main2.cpp</literal></expr></argument> <argument><expr><name>otherCode</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_CONTENT</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><literal type="string" format="bracket">[[int main() { return 0; }]]</literal></expr></argument></option> <option><name>SOURCE_FROM_FILE</name> <argument><expr><name>main2.cpp</name></expr></argument> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_CONTENT</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><literal type="string">[[int main() { return 0; }]]</literal></expr></argument></option> <option><name>SOURCE_FROM_FILE</name> <argument><expr><literal type="string">main2.cpp</literal></expr></argument> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LOG_DESCRIPTION</name> <argument><expr><literal type="string">""</literal></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LOG_DESCRIPTION</name> <argument><expr><literal type="string">""</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>NO_CACHE</name></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>NO_CACHE</name></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>NO_LOG</name></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>NO_LOG</name></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CMAKE_FLAGS</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CMAKE_FLAGS</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CMAKE_FLAGS</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument> <argument><expr><flag>-DQUIET</flag></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CMAKE_FLAGS</name> <argument><expr><flag>-DVERBOSE=1</flag></expr></argument> <argument><expr><flag>-DQUIET</flag></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>COMPILE_DEFINITIONS</name> <argument><expr><flag>-DVERSION</flag></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>COMPILE_DEFINITIONS</name> <argument><expr><flag>-DVERSION</flag></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>COMPILE_DEFINITIONS</name> <argument><expr><flag>-DVERSION</flag></expr></argument> <argument><expr><flag>-DACTIVE</flag></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>COMPILE_DEFINITIONS</name> <argument><expr><flag>-DVERSION</flag></expr></argument> <argument><expr><flag>-DACTIVE</flag></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINK_OPTIONS</name> <argument><expr><flag>-s</flag></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINK_OPTIONS</name> <argument><expr><flag>-s</flag></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINK_OPTIONS</name> <argument><expr><flag>-s</flag></expr></argument> <argument><expr><flag>-Wl</flag></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINK_OPTIONS</name> <argument><expr><flag>-s</flag></expr></argument> <argument><expr><flag>-Wl</flag></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINK_LIBRARIES</name> <argument><expr><name>lib</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINK_LIBRARIES</name> <argument><expr><name>lib</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINK_LIBRARIES</name> <argument><expr><name>lib</name></expr></argument> <argument><expr><name>lib2</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINK_LIBRARIES</name> <argument><expr><name>lib</name></expr></argument> <argument><expr><name>lib2</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINKER_LANGUAGE</name> <argument><expr><name>C</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>LINKER_LANGUAGE</name> <argument><expr><name>C</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>OUTPUT_VARIABLE</name> <argument><expr><name>myVar</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>OUTPUT_VARIABLE</name> <argument><expr><name>myVar</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>COPY_FILE</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>COPY_FILE</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>COPY_FILE</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>COPY_FILE_ERROR</name> <argument><expr><name>error</name></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>COPY_FILE</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>COPY_FILE_ERROR</name> <argument><expr><name>error</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CXX_STANDARD</name> <argument><expr><literal type="number">17</literal></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CXX_STANDARD</name> <argument><expr><literal type="number">17</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CXX_STANDARD_REQUIRED</name> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CXX_STANDARD_REQUIRED</name> <argument><expr><name>ON</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CXX_EXTENSIONS</name> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <option><name>SOURCE_FROM_VAR</name> <argument><expr><literal type="string">main.cpp</literal></expr></argument> <argument><expr><name>myCode</name></expr></argument></option> <option><name>CXX_EXTENSIONS</name> <argument><expr><name>OFF</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -242,11 +242,11 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <argument><expr><name>bin</name></expr></argument> <argument><expr><name>file</name></expr></argument> <option><name>CXX_STANDARD_REQUIRED</name> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <argument><expr><name>bin</name></expr></argument> <argument><expr><name>file</name></expr></argument> <option><name>CXX_STANDARD_REQUIRED</name> <argument><expr><name>ON</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <argument><expr><name>bin</name></expr></argument> <argument><expr><name>file</name></expr></argument> <option><name>CXX_EXTENSIONS</name> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument></option>)</argument_list></command>
+<command><name>try_compile</name><argument_list>(<argument><expr><name>result</name></expr></argument> <argument><expr><name>bin</name></expr></argument> <argument><expr><name>file</name></expr></argument> <option><name>CXX_EXTENSIONS</name> <argument><expr><name>OFF</name></expr></argument></option>)</argument_list></command>
 </unit>
 
 </unit>

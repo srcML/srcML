@@ -643,7 +643,7 @@ KeywordLexer(UTF8CharBuffer* pinput, int language, OPTION_TYPE & options,
 
         { "switch"       , SWITCH        , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
         { "case"         , CASE          , LANGUAGE_ALL },
-        { "default"      , DEFAULT       , LANGUAGE_ALL & ~LANGUAGE_PYTHON },
+        { "default"      , DEFAULT       , LANGUAGE_ALL & ~LANGUAGE_PYTHON & ~LANGUAGE_CMAKE },
 
         { "return"       , RETURN        , LANGUAGE_ALL },
 

@@ -432,7 +432,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option> <option><name>FILE</name> <argument><expr><name>file.cmake</name></expr></argument></option>)</argument_list></command>
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option> <option><name>FILE</name> <argument><expr><literal type="string">file.cmake</literal></expr></argument></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
@@ -472,7 +472,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option> <option><name>NAMESPACE</name> <argument><expr><name>namespace</name></expr></argument></option> <option><name>FILE</name> <argument><expr><name>file.cmake</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>CXX_MODULES_DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>EXPORT_LINK_INTERFACE_LIBRARIES</name></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option> <option><name>EXPORT_PACKAGE_DEPENDENCIES</name></option>)</argument_list></command>
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option> <option><name>NAMESPACE</name> <argument><expr><name>namespace</name></expr></argument></option> <option><name>FILE</name> <argument><expr><literal type="string">file.cmake</literal></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>CXX_MODULES_DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>EXPORT_LINK_INTERFACE_LIBRARIES</name></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option> <option><name>EXPORT_PACKAGE_DEPENDENCIES</name></option>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
