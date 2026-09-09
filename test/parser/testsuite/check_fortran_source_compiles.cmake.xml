@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="check_fortran_source_compiles">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string">"int main(void){ return 0; }"</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string">"int main(void){ return 0; }"</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>SRC_EXT</name> <argument><expr><name>f90</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string">"int main(void){ return 0; }"</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>FAIL_REGEX</name> <argument><expr><literal type="string">"warning"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string">"int main(void){ return 0; }"</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>FAIL_REGEX</name> <argument><expr><literal type="string">"warning"</literal></expr></argument></option> <option><name>SRC_EXT</name> <argument><expr><name>f90</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string">"int main(void){ return 0; }"</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>FAIL_REGEX</name> <argument><expr><literal type="string">"warning"</literal></expr></argument> <argument><expr><literal type="string">"error"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string">"int main(void){ return 0; }"</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>FAIL_REGEX</name> <argument><expr><literal type="string">"warning"</literal></expr></argument> <argument><expr><literal type="string">"error"</literal></expr></argument></option> <option><name>SRC_EXT</name> <argument><expr><name>f90</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string" format="bracket">[[int main(void){ return 0; }]]</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string" format="bracket">[[int main(void){ return 0; }]]</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>SRC_EXT</name> <argument><expr><name>f90</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string" format="bracket">[[int main(void){ return 0; }]]</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>FAIL_REGEX</name> <argument><expr><literal type="string">"warning"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string" format="bracket">[[int main(void){ return 0; }]]</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>FAIL_REGEX</name> <argument><expr><literal type="string">"warning"</literal></expr></argument></option> <option><name>SRC_EXT</name> <argument><expr><name>f90</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string" format="bracket">[[int main(void){ return 0; }]]</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>FAIL_REGEX</name> <argument><expr><literal type="string">"warning"</literal></expr></argument> <argument><expr><literal type="string">"error"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_fortran_source_compiles</name><argument_list>(<argument><expr><literal type="string" format="bracket">[[int main(void){ return 0; }]]</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument> <option><name>FAIL_REGEX</name> <argument><expr><literal type="string">"warning"</literal></expr></argument> <argument><expr><literal type="string">"error"</literal></expr></argument></option> <option><name>SRC_EXT</name> <argument><expr><name>f90</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+</unit>

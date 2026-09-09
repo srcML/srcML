@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="add_custom_command">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>main.hpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument> <argument><expr><name>main.hpp</name></expr></argument> <argument><expr><name>helper.hpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>ARGS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>ARGS</name> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>ARGS</name> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool3</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool3</name></expr></argument> <argument><expr><name>tool4</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool3</name></expr></argument></option> <option><name>ARGS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>MAIN_DEPENDENCY</name> <argument><expr><name>header.hpp</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>DEPENDS</name> <argument><expr><name>header.hpp</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>DEPENDS</name> <argument><expr><name>header.hpp</name></expr></argument> <argument><expr><name>header2.hpp</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>BYPRODUCTS</name> <argument><expr><name>file</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>BYPRODUCTS</name> <argument><expr><name>file</name></expr></argument> <argument><expr><name>file2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>IMPLICIT_DEPENDS</name> <argument><expr><name>C</name></expr></argument> <argument><expr><name>header.c</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>IMPLICIT_DEPENDS</name> <argument><expr><name>C</name></expr></argument> <argument><expr><name>header.c</name></expr></argument> <argument><expr><name>CXX</name></expr></argument> <argument><expr><name>header.cpp</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>COMMENT</name> <argument><expr><literal type="string">"Hello world!"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>DEPFILE</name> <argument><expr><name>deps.d</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>JOB_POOL</name> <argument><expr><name>pool</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>JOB_SERVER_AWARE</name> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>VERBATIM</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>APPEND</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>USES_TERMINAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>CODEGEN</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>COMMAND_EXPAND_LISTS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>DEPENDS_EXPLICIT_ONLY</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>add_custom_command</name><argument_list>(<option><name>OUTPUT</name> <argument><expr><name>main.cpp</name></expr></argument></option> <option><name>COMMAND</name> <argument><expr><name>tool</name></expr></argument></option> <option><name>ARGS</name></option> <option><name>MAIN_DEPENDENCY</name> <argument><expr><name>header.hpp</name></expr></argument></option> <option><name>DEPENDS</name> <argument><expr><name>header.hpp</name></expr></argument></option> <option><name>BYPRODUCTS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>IMPLICIT_DEPENDS</name> <argument><expr><name>C</name></expr></argument> <argument><expr><name>header.c</name></expr></argument></option> <option><name>WORKING_DIRECTORY</name> <argument><expr><name>src</name></expr></argument></option> <option><name>COMMENT</name> <argument><expr><literal type="string">"Hello world!"</literal></expr></argument></option> <option><name>DEPFILE</name> <argument><expr><name>deps.d</name></expr></argument></option> <option><name>JOB_POOL</name> <argument><expr><name>pool</name></expr></argument></option> <option><name>JOB_SERVER_AWARE</name> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument></option> <option><name>VERBATIM</name></option> <option><name>APPEND</name></option> <option><name>USES_TERMINAL</name></option> <option><name>CODEGEN</name></option> <option><name>COMMAND_EXPAND_LISTS</name></option> <option><name>DEPENDS_EXPLICIT_ONLY</name></option>)</argument_list></command>
+</unit>
+
+</unit>

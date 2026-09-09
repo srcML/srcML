@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="install">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument> <argument><expr><name>client2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>myTargets</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>RUNTIME_DEPENDENCIES</name> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>RUNTIME_DEPENDENCIES</name> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>dependencies</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<!--Artifact Options-->
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>NAMELINK_COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>NAMELINK_ONLY</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>NAMELINK_SKIP</name></option>)</argument_list></command>
+</unit>
+
+<!--Artifact Kinds-->
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>ARCHIVE</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>ARCHIVE</name></option> <option><name>OPTIONAL</name></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>ARCHIVE</name></option> <option><name>OPTIONAL</name></option> <option><name>LIBRARY</name></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>LIBRARY</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>RUNTIME</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>OBJECTS</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>FRAMEWORK</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>BUNDLE</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>PUBLIC_HEADER</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>PRIVATE_HEADER</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>RESOURCE</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>FILE_SET</name> <argument><expr><name>headers</name></expr></argument></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>CXX_MODULES_BMI</name></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>INCLUDES</name></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>INCLUDES</name></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument> <argument><expr><name>dir2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>myTargets</name></expr></argument></option> <option><name>RUNTIME_DEPENDENCIES</name> <argument><expr><name>arg</name></expr></argument></option> <option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>dependencies</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option> <option><name>ARCHIVE</name></option> <option><name>OPTIONAL</name></option> <option><name>INCLUDES</name></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>dependencies</name></expr></argument> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>dependencies</name></expr></argument> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument> <argument><expr><name>client2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>dependencies</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>LIBRARY</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>RUNTIME</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>FRAMEWORK</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>BUNDLE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>IMPORTED_RUNTIME_ARTIFACTS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>dependencies</name></expr></argument></option> <option><name>LIBRARY</name></option> <option><name>RUNTIME</name></option> <option><name>FRAMEWORK</name></option> <option><name>BUNDLE</name></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>OPTIONAL</name></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>RENAME</name> <argument><expr><name>name</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>RENAME</name> <argument><expr><name>name</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PROGRAMS</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>PROGRAMS</name> <argument><expr><name>file2</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>RENAME</name> <argument><expr><name>name</name></expr></argument></option> <option><name>OPTIONAL</name></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>FILE_PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>FILE_PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>DIRECTORY_PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>DIRECTORY_PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>USE_SOURCE_PERMISSIONS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>MESSAGE_NEVER</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>FILES_MATCHING</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>PATTERN</name> <argument><expr><literal type="string">"CVS"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>PATTERN</name> <argument><expr><literal type="string">"CVS"</literal></expr></argument></option> <option><name>EXCLUDE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>PATTERN</name> <argument><expr><literal type="string">"CVS"</literal></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>OWNER_EXECUTE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>REGEX</name> <argument><expr><literal type="string">"CVS"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>REGEX</name> <argument><expr><literal type="string">"CVS"</literal></expr></argument></option> <option><name>EXCLUDE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>REGEX</name> <argument><expr><literal type="string">"CVS"</literal></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>OWNER_EXECUTE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>TYPE</name> <argument><expr><name>BIN</name></expr></argument></option> <option><name>FILE_PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>DIRECTORY_PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>USE_SOURCE_PERMISSIONS</name></option> <option><name>OPTIONAL</name></option> <option><name>MESSAGE_NEVER</name></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option> <option><name>FILES_MATCHING</name></option> <option><name>PATTERN</name> <argument><expr><literal type="string">"CVS"</literal></expr></argument></option> <option><name>EXCLUDE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SCRIPT</name> <argument><expr><name>file</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>CODE</name> <argument><expr><literal type="string">"int main() { return 0; }"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SCRIPT</name> <argument><expr><name>file</name></expr></argument></option> <option><name>ALL_COMPONENTS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>CODE</name> <argument><expr><literal type="string">"int main() { return 0; }"</literal></expr></argument></option> <option><name>ALL_COMPONENTS</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SCRIPT</name> <argument><expr><name>file</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>CODE</name> <argument><expr><literal type="string">"int main() { return 0; }"</literal></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SCRIPT</name> <argument><expr><name>file</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>CODE</name> <argument><expr><literal type="string">"int main() { return 0; }"</literal></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SCRIPT</name> <argument><expr><name>file</name></expr></argument></option> <option><name>ALL_COMPONENTS</name></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>CODE</name> <argument><expr><literal type="string">"int main() { return 0; }"</literal></expr></argument></option> <option><name>ALL_COMPONENTS</name></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option> <option><name>NAMESPACE</name> <argument><expr><name>namespace</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option> <option><name>FILE</name> <argument><expr><name>file.cmake</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CXX_MODULES_DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>EXPORT_LINK_INTERFACE_LIBRARIES</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>EXPORT_PACKAGE_DEPENDENCIES</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option> <option><name>NAMESPACE</name> <argument><expr><name>namespace</name></expr></argument></option> <option><name>FILE</name> <argument><expr><name>file.cmake</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>CXX_MODULES_DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>EXPORT_LINK_INTERFACE_LIBRARIES</name></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option> <option><name>EXPORT_PACKAGE_DEPENDENCIES</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>EXPORT_ANDROID_MK</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>bin</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PROJECT</name> <argument><expr><name>project</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>NO_PROJECT_METADATA</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>APPENDIX</name> <argument><expr><name>appendix</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>LOWER_CASE_FILE</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>VERSION</name> <argument><expr><literal type="number">4.3.0</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>VERSION</name> <argument><expr><literal type="number">4.3.0</literal></expr></argument></option> <option><name>COMPAT_VERSION</name> <argument><expr><literal type="number">4.0</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>VERSION</name> <argument><expr><literal type="number">4.3.0</literal></expr></argument></option> <option><name>VERSION_SCHEMA</name> <argument><expr><literal type="string">"semver"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>VERSION</name> <argument><expr><literal type="number">4.3.0</literal></expr></argument></option> <option><name>COMPAT_VERSION</name> <argument><expr><literal type="number">4.0</literal></expr></argument></option> <option><name>VERSION_SCHEMA</name> <argument><expr><literal type="string">"semver"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DEFAULT_TARGETS</name> <argument><expr><name>client</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DEFAULT_TARGETS</name> <argument><expr><name>client</name></expr></argument> <argument><expr><name>client2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DEFAULT_CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DEFAULT_CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>LICENSE</name> <argument><expr><literal type="string">"license"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DEFAULT_LICENSE</name> <argument><expr><literal type="string">"license"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESCRIPTION</name> <argument><expr><literal type="string">"details"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>HOMEPAGE_URL</name> <argument><expr><literal type="string">"url"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>CXX_MODULES_DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>PACKAGE_INFO</name> <argument><expr><name>package</name></expr></argument></option> <option><name>EXPORT</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PROJECT</name> <argument><expr><name>project</name></expr></argument></option> <option><name>APPENDIX</name> <argument><expr><name>appendix</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>LOWER_CASE_FILE</name></option> <option><name>VERSION</name> <argument><expr><literal type="number">4.3.0</literal></expr></argument></option> <option><name>COMPAT_VERSION</name> <argument><expr><literal type="number">4.0</literal></expr></argument></option> <option><name>VERSION_SCHEMA</name> <argument><expr><literal type="string">"semver"</literal></expr></argument></option> <option><name>DEFAULT_TARGETS</name> <argument><expr><name>client</name></expr></argument></option> <option><name>DEFAULT_CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>LICENSE</name> <argument><expr><literal type="string">"license"</literal></expr></argument></option> <option><name>DEFAULT_LICENSE</name> <argument><expr><literal type="string">"license"</literal></expr></argument></option> <option><name>DESCRIPTION</name> <argument><expr><literal type="string">"details"</literal></expr></argument></option> <option><name>HOMEPAGE_URL</name> <argument><expr><literal type="string">"url"</literal></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>CXX_MODULES_DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>LIBRARY</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>RUNTIME</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>FRAMEWORK</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument> <argument><expr><name>WRITE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument> <argument><expr><name>Release</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>NAMELINK_COMPONENT</name> <argument><expr><name>component</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>OPTIONAL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXCLUDE_FROM_ALL</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PRE_INCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PRE_INCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument> <argument><expr><literal type="string">"regex2"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PRE_EXCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>PRE_EXCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument> <argument><expr><literal type="string">"regex2"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>POST_INCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>POST_INCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument> <argument><expr><literal type="string">"regex2"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>POST_EXCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>POST_EXCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument> <argument><expr><literal type="string">"regex2"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>POST_INCLUDE_FILES</name> <argument><expr><name>file</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>POST_INCLUDE_FILES</name> <argument><expr><name>file</name></expr></argument> <argument><expr><name>file2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>POST_EXCLUDE_FILES</name> <argument><expr><name>file</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>POST_EXCLUDE_FILES</name> <argument><expr><name>file</name></expr></argument> <argument><expr><name>file2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DIRECTORIES</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>DIRECTORIES</name> <argument><expr><name>dir</name></expr></argument> <argument><expr><name>dir2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>RUNTIME_DEPENDENCY_SET</name> <argument><expr><name>name</name></expr></argument></option> <option><name>LIBRARY</name></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>PERMISSIONS</name> <argument><expr><name>READ</name></expr></argument></option> <option><name>CONFIGURATIONS</name> <argument><expr><name>Debug</name></expr></argument></option> <option><name>COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>NAMELINK_COMPONENT</name> <argument><expr><name>component</name></expr></argument></option> <option><name>OPTIONAL</name></option> <option><name>EXCLUDE_FROM_ALL</name></option> <option><name>PRE_INCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument></option> <option><name>PRE_EXCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument></option> <option><name>POST_INCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument></option> <option><name>POST_EXCLUDE_REGEXES</name> <argument><expr><literal type="string">"regex"</literal></expr></argument></option> <option><name>POST_INCLUDE_FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>POST_EXCLUDE_FILES</name> <argument><expr><name>file</name></expr></argument></option> <option><name>DIRECTORIES</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument> <argument><expr><name>exports2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>PROJECT</name> <argument><expr><name>project</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>NO_PROJECT_METADATA</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>VERSION</name> <argument><expr><literal type="number">4.4.3.0</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>LICENSE</name> <argument><expr><literal type="string">"license"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>DESCRIPTION</name> <argument><expr><literal type="string">"details"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>HOMEPAGE_URL</name> <argument><expr><literal type="string">"url"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>PACKAGE_URL</name> <argument><expr><literal type="string">"url"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>FORMAT</name> <argument><expr><literal type="string">"format"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>install</name><argument_list>(<option><name>SBOM</name> <argument><expr><name>name</name></expr></argument></option> <option><name>EXPORTS</name> <argument><expr><name>exports</name></expr></argument></option> <option><name>PROJECT</name> <argument><expr><name>project</name></expr></argument></option> <option><name>DESTINATION</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>VERSION</name> <argument><expr><literal type="number">4.4.3.0</literal></expr></argument></option> <option><name>LICENSE</name> <argument><expr><literal type="string">"license"</literal></expr></argument></option> <option><name>DESCRIPTION</name> <argument><expr><literal type="string">"details"</literal></expr></argument></option> <option><name>HOMEPAGE_URL</name> <argument><expr><literal type="string">"url"</literal></expr></argument></option> <option><name>PACKAGE_URL</name> <argument><expr><literal type="string">"url"</literal></expr></argument></option> <option><name>FORMAT</name> <argument><expr><literal type="string">"format"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+</unit>

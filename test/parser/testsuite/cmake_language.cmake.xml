@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="cmake_language">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>CALL</name> <argument><expr><name>command</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>EVAL</name></option> <option><name>CODE</name> <argument><expr><literal type="string">"int main() { return 0; }"</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>ID_VAR</name> <argument><expr><name>myVar</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>ID_VAR</name> <argument><expr><name>myVar</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>ID_VAR</name> <argument><expr><name>myVar</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>ID_VAR</name> <argument><expr><name>myVar</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>ID_VAR</name> <argument><expr><name>myVar</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>ID</name> <argument><expr><name>id</name></expr></argument></option> <option><name>ID_VAR</name> <argument><expr><name>myVar</name></expr></argument></option> <option><name>CALL</name> <argument><expr><name>command</name></expr></argument> <argument><expr><name>arg</name></expr></argument> <argument><expr><name>arg2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>GET_CALL_IDS</name> <argument><expr><name>myVar</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>GET_CALL</name> <argument><expr><name>id</name></expr></argument> <argument><expr><name>myVar</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CANCEL_CALL</name> <argument><expr><name>id</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>DEFER</name></option> <option><name>DIRECTORY</name> <argument><expr><name>dir</name></expr></argument></option> <option><name>CANCEL_CALL</name> <argument><expr><name>id</name></expr></argument> <argument><expr><name>id2</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>SET_DEPENDENCY_PROVIDER</name> <argument><expr><name>command</name></expr></argument></option> <option><name>SUPPORTED_METHODS</name> <argument><expr><name>FIND_PACKAGE</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>SET_DEPENDENCY_PROVIDER</name> <argument><expr><name>command</name></expr></argument></option> <option><name>SUPPORTED_METHODS</name> <argument><expr><name>FIND_PACKAGE</name></expr></argument> <argument><expr><name>FETCHCONTENT_MAKEAVAILABLE_SERIAL</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>GET_MESSAGE_LOG_LEVEL</name> <argument><expr><name>myVar</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>EXIT</name> <argument><expr><literal type="number">0</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <argument><expr><literal type="boolean" value="true">ON</literal></expr></argument> <option><name>EXPAND</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>cmake_language</name><argument_list>(<option><name>TRACE</name></option> <argument><expr><literal type="boolean" value="false">OFF</literal></expr></argument>)</argument_list></command>
+</unit>
+
+</unit>

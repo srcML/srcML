@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="CMake" url="check_type_size">
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_type_size</name><argument_list>()</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_type_size</name><argument_list>(<argument><expr><name>int</name></expr></argument> <argument><expr><name>SIZEOF_INT</name></expr></argument>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_type_size</name><argument_list>(<argument><expr><name>int</name></expr></argument> <argument><expr><name>SIZEOF_INT</name></expr></argument> <option><name>RESULT_VARIABLE</name> <argument><expr><name>result</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_type_size</name><argument_list>(<argument><expr><name>int</name></expr></argument> <argument><expr><name>SIZEOF_INT</name></expr></argument> <option><name>BUILTIN_TYPES_ONLY</name></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_type_size</name><argument_list>(<argument><expr><name>int</name></expr></argument> <argument><expr><name>SIZEOF_INT</name></expr></argument> <option><name>LANGUAGE</name> <argument><expr><name>CXX</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
+<command><name>check_type_size</name><argument_list>(<argument><expr><name>int</name></expr></argument> <argument><expr><name>SIZEOF_INT</name></expr></argument> <option><name>RESULT_VARIABLE</name> <argument><expr><name>result</name></expr></argument></option> <option><name>BUILTIN_TYPES_ONLY</name></option> <option><name>LANGUAGE</name> <argument><expr><name>CXX</name></expr></argument></option>)</argument_list></command>
+</unit>
+
+</unit>
