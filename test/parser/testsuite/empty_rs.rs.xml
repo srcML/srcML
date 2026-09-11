@@ -9,4 +9,8 @@
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt><empty_stmt>;</empty_stmt>
 </unit>
 
+<unit revision="1.0.0" language="Rust">
+<empty_stmt>;</empty_stmt><expr><name>a</name></expr>
+</unit>
+
 </unit>
