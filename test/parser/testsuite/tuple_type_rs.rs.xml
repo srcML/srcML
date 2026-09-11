@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="array_type_rs">
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><tuple>(<type><name>i32</name></type>,)</tuple></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><tuple>(<type><name>i32</name></type>, <type><name>char</name></type>)</tuple></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><tuple>(<type><name>i32</name></type>, <type><name>char</name></type>, <type><name>bool</name></type>)</tuple></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><tuple>(<type><modifier>&amp;</modifier> <name>i32</name></type>,)</tuple></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><tuple>(<type><modifier>&amp;</modifier> <name>i32</name></type>, <type><modifier>&amp;</modifier> <name>char</name></type>, <type><modifier>mut</modifier> <name>bool</name></type>)</tuple></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><tuple>(<type><modifier>&amp;</modifier><specifier>mut</specifier> <name>i32</name></type>,)</tuple></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><tuple>(<type><modifier>&amp;</modifier><specifier>mut</specifier> <name>i32</name></type>, <type><modifier>&amp;</modifier><specifier>mut</specifier> <name>char</name></type>, <type><modifier>&amp;</modifier><specifier>mut</specifier> <name>bool</name></type>)</tuple></type>;</typedef>
+</unit>
+
+</unit>

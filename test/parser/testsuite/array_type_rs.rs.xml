@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="array_type_rs">
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array>[<type>i32</type>; <expr><literal type="number">0</literal></expr>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array><modifier>&amp;</modifier>[<type>i32</type>; <expr><literal type="number">0</literal></expr>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array><modifier>&amp;</modifier><modifier>mut</modifier>[<type>i32</type>; <expr><literal type="number">0</literal></expr>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array>[<type>i32</type>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array><modifier>&amp;</modifier>[<type>i32</type>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array><modifier>&amp;</modifier><modifier>mut</modifier>[<type>i32</type>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array>[<type>i32</type>; <expr><literal type="number">8</literal></expr>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array><modifier>&amp;</modifier>[<type>i32</type>; <expr><literal type="number">8</literal></expr>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array><modifier>&amp;</modifier><modifier>mut</modifier>[<type>i32</type>; <expr><literal type="number">8</literal></expr>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array><modifier>&amp;</modifier>[<type>i32</type>; <expr><literal type="number">0</literal></expr>]</array></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> = <type><array>[<type><array>[<type><name>i32</name></type>; <expr><literal type="number">0</literal></expr>]</array></type>; <expr><literal type="number">0</literal></expr>]</array></type>;</typedef>
+</unit>
+
+</unit>
