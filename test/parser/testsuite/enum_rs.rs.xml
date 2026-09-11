@@ -36,6 +36,22 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <block>{
+  <struct type="tuple"><name>Variant</name><tuple>(<type><name>T</name></type>)</tuple></struct>,
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name> <where>where</where> <block>{}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<enum>enum <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <where>where <name>T</name><constraint>: <name>Copy</name></constraint></where> <block>{
+  <struct type="tuple"><name>Variant</name><tuple>(<type><name>T</name></type>)</tuple></struct>,
+}</block></enum>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
 <enum><specifier>pub</specifier> enum <name>Result</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>E</name></decl></parameter>&gt;</parameter_list> <block>{
   <struct type="tuple"><name>Ok</name><tuple>(<type><name>T</name></type>)</tuple></struct>,
   <struct type="tuple"><name>Error</name><tuple>(<type><name>E</name></type>)</tuple></struct>,
