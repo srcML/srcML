@@ -106,6 +106,10 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
+<command><name>ctest_test</name><argument_list>(<option><name>REPEAT</name> <argument><expr><literal type="string">UNTIL_FAIL:5</literal></expr></argument></option> <option><name>OUTPUT_JUNIT</name> <argument><expr><literal type="string">results.xml</literal></expr></argument></option>)</argument_list></command>
+</unit>
+
+<unit revision="1.0.0" language="CMake">
 <command><name>ctest_test</name><argument_list>(<option><name>REPEAT</name> <argument><expr><literal type="string">UNTIL_PASS:5</literal></expr></argument></option>)</argument_list></command>
 </unit>
 

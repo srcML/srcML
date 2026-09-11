@@ -6,7 +6,7 @@
 </unit>
 
 <unit revision="1.0.0" language="CMake">
-<command><name>check_cxx_source_runs</name><argument_list>(<argument><expr><literal type="string" format="bracket">[[int main(){return 0;}]]</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument>)</argument_list></command>
+<command><name>check_cxx_source_runs</name><argument_list>(<argument><expr><literal type="string">[[int main(){return 0;}]]</literal></expr></argument> <argument><expr><name>myVar</name></expr></argument>)</argument_list></command>
 </unit>
 
 <unit revision="1.0.0" language="CMake">
