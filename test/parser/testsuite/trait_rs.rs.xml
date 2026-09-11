@@ -10,63 +10,71 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name><super_list>: <super><name>B</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><parameter_list type="generic">&lt;<paramter><decl><modifier>'<name>a</name></modifier></decl></paramter>&gt;</parameter_list><super_list>: <super><constraint><modifier>'<name>a</name></modifier></constraint></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name><super_list>: <super><name>B</name></super> + <super><name>C</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><parameter_list type="generic">&lt;<paramter><decl><modifier>'<name>a</name></modifier></decl></paramter>&gt;</parameter_list><super_list>: <super><constraint><modifier>'<name>a</name></modifier> +</constraint></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name><super_list>: <super><name>B</name></super> + <super><name>C</name></super> + <super><name>D</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><parameter_list type="generic">&lt;<paramter><decl><modifier>'<name>a</name></modifier></decl></paramter>, <paramter><decl><modifier>'<name>b</name></modifier></decl></paramter>&gt;</parameter_list><super_list>: <super><constraint><modifier>'<name>a</name></modifier> + <modifier>'<name>b</name></modifier></constraint></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name> <super_list type="where">where Self: <super><name>B</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>:</super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name> <super_list type="where">where Self: <super><name>B</name></super> + <super><name>C</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super><name>Copy</name></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name> <super_list type="where">where Self: <super><name>B</name></super> + <super><name>C</name></super> + <super><name>D</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super><name>Copy</name></super> +</super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name> <super_list type="where">where Self: <super><name>B</name></super>, Self: <super><name>C</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super><name>Copy</name></super> + <super><name>Clone</name></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name> <super_list type="where">where Self: <super><name>B</name></super>, Self: <super><name>C</name></super>, Self: <super><name>D</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super><constraint>for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name><parameter_list type="generic">&lt;&gt;</parameter_list><block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super><constraint>for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name></constraint></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super><constraint>for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait>trait <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>, <parameter><decl><name>U</name></decl></parameter>&gt;</parameter_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super>(<name>Copy</name>)</super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait><specifier>pub</specifier> trait <name>A</name><parameter_list type="generic">&lt;&gt;</parameter_list><super_list>: <super><name>B</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super>(<name>Copy</name>)</super> +</super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait><specifier>pub</specifier> trait <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>, <parameter><decl><name>U</name></decl></parameter>&gt;</parameter_list><super_list>: <super><name>B</name></super> + <super><name>C</name></super> + <super><name>D</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super>(<name>Copy</name>)</super> + <super>(<name>Clone</name>)</super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait><specifier>pub</specifier> trait <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>, <parameter><decl><name>U</name></decl></parameter>&gt;</parameter_list> <super_list type="where">where Self: <super><name>B</name></super> + <super><name>C</name></super> + <super><name>D</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super><constraint>(for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<trait><specifier>pub</specifier> trait <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>, <parameter><decl><name>U</name></decl></parameter>&gt;</parameter_list> <super_list type="where">where Self: <super><name>B</name></super>, Self: <super><name>C</name></super>, Self: <super><name>D</name></super></super_list> <block>{}</block></trait>
+<trait>trait <name>A</name><super_list>: <super><constraint>(for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name>)</constraint></super></super_list> <block>{}</block></trait>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<trait>trait <name>A</name><super_list>: <super><constraint>(for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></super></super_list> <block>{}</block></trait>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<trait>trait <name>A</name><super_list>: <super><where>where</where></super></super_list> <block>{}</block></trait>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
