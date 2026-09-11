@@ -2,119 +2,168 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="generic_types_rs">
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: impl <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: impl <name>Copy</name> +</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl <name>Copy</name> +</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: impl <name>Copy</name> + <name>Clone</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl <name>Copy</name> + <name>Clone</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: impl <name>Copy</name> + <modifier>'<name>a</name></modifier></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name><constraint>: impl <name>Copy</name> + <modifier>'<name>a</name></modifier></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: <modifier>&amp;</modifier>impl <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>impl <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: <modifier>&amp;</modifier>(impl <name>Copy</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(impl <name>Copy</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: <modifier>&amp;</modifier>(impl <name>Copy</name> +)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(impl <name>Copy</name> +)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: <modifier>&amp;</modifier>(impl <name>Copy</name> + <name>Clone</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(impl <name>Copy</name> + <name>Clone</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: impl <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl for">: impl for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl for">: impl for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl for">: impl for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl">: impl (<name>Copy</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl (<name>Copy</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl for">: impl (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint type="impl for">: impl (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: impl (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>()</parameter_list> -&gt; <type><constraint type="impl use">impl <name>Copy</name> + use<parameter_list type="generic">&lt;&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <name>Copy</name> + use<parameter_list type="generic">&lt;&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint type="impl use">impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint type="impl use">impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint type="impl use">impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint type="impl use">impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint type="impl use">impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>,&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>,&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint type="impl use">impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint type="impl use">impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <name>Copy</name> + use<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier><specifier>dyn</specifier> <name>Trait</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier><specifier>dyn</specifier> <name>Trait</name></constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(<specifier>dyn</specifier> <name>Trait</name> + <name>Send</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(<specifier>dyn</specifier> <name>Trait</name> + <name>Send</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(<specifier>dyn</specifier> <name>Trait</name> + <modifier>'<name>a</name></modifier>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(<specifier>dyn</specifier> <name>Trait</name> + <modifier>'<name>a</name></modifier>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier><specifier>dyn</specifier> (<name>Trait</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier><specifier>dyn</specifier> (<name>Trait</name>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(<specifier>dyn</specifier> (<name>Trait</name>) + (<name>Send</name>))</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(<specifier>dyn</specifier> (<name>Trait</name>) + (<name>Send</name>))</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<function>fn <name>foo</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(<specifier>dyn</specifier> (<name>Trait</name>) + <modifier>'<name>a</name></modifier>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>(<parameter><decl><name>a</name><constraint>: <modifier>&amp;</modifier>(<specifier>dyn</specifier> (<name>Trait</name>) + <modifier>'<name>a</name></modifier>)</constraint></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<!-- Fn traits -->
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>Fn</name><parameter_list>()</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>FnMut</name><parameter_list>()</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>FnOnce</name><parameter_list>()</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>Fn</name><parameter_list>(<parameter><decl><name>i32</name></decl></parameter>)</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>FnMut</name><parameter_list>(<parameter><decl><name>i32</name></decl></parameter>)</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>FnOnce</name><parameter_list>(<parameter><decl><name>i32</name></decl></parameter>)</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>Fn</name><parameter_list>(<parameter><decl><name>i32</name></decl></parameter>, <parameter><decl><name>i32</name></decl></parameter>)</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>FnMut</name><parameter_list>(<parameter><decl><name>i32</name></decl></parameter>, <parameter><decl><name>i32</name></decl></parameter>)</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>FnOnce</name><parameter_list>(<parameter><decl><name>i32</name></decl></parameter>, <parameter><decl><name>i32</name></decl></parameter>)</parameter_list></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>Fn</name><parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>FnMut</name><parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type></function_decl></constraint></type> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> -&gt; <type><constraint>impl <function_decl><name>FnOnce</name><parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type></function_decl></constraint></type> <block>{<block_content/>}</block></function>
 </unit>
 
 </unit>

@@ -70,15 +70,15 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
@@ -98,15 +98,15 @@
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint type="for">: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
+<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name><constraint>: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></decl></parameter>&gt;</parameter_list> <block>{}</block></struct>
 </unit>
 
 <!-- constant parameters -->

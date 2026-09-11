@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="while_clause_rs">
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list>()</parameter_list> <where>where</where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <modifier>'<name>a</name></modifier><constraint>:</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <modifier>'<name>a</name></modifier><constraint>: <modifier>'<name>b</name></modifier></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <modifier>'<name>a</name></modifier><constraint>: <modifier>'<name>b</name></modifier> +</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <modifier>'<name>a</name></modifier><constraint>:</constraint>, <modifier>'<name>b</name></modifier><constraint>:</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>:</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <modifier>'<name>a</name></modifier></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <modifier>'<name>a</name></modifier> +</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>, <parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <modifier>'<name>a</name></modifier> + <modifier>'<name>b</name></modifier></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <name>Copy</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <name>Copy</name> +</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <name>Copy</name> + <name>Clone</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: <modifier>?</modifier><name>Sized</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: for<parameter_list type="generic">&lt;&gt;</parameter_list> <name>Copy</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name></constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: (<name>Copy</name>)</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: (<name>Copy</name>) +</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: (<name>Copy</name>) + (<name>Clone</name>)</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: (<modifier>?</modifier><name>Sized</name>)</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: (for<parameter_list type="generic">&lt;&gt;</parameter_list> <name>Copy</name>)</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>Copy</name>)</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>: (for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>Copy</name>)</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where for<parameter_list type="generic">&lt;&gt;</parameter_list> <name>T</name><constraint>:</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>&gt;</parameter_list> <name>T</name><constraint>:</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>,&gt;</parameter_list> <name>T</name><constraint>:</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where for<parameter_list type="generic">&lt;<parameter><decl><modifier>'<name>a</name></modifier></decl></parameter>, <parameter><decl><modifier>'<name>b</name></modifier></decl></parameter>&gt;</parameter_list> <name>T</name><constraint>:</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<function>fn <name>a</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>&gt;</parameter_list><parameter_list>()</parameter_list> <where>where <name>T</name><constraint>:</constraint>, <name>S</name><constraint>:</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+</unit>
