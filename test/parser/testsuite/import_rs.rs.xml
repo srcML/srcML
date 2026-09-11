@@ -17,4 +17,12 @@
 <import><specifier>pub</specifier> extern crate <name>foo</name>;</import>
 </unit>
 
+<unit revision="1.0.0" language="Rust">
+<import>extern crate <name>foo</name> <alias>as <name>bar</name></alias>;</import>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<import><specifier>pub</specifier> extern crate <name>math_crate</name> <alias>as <name>bar</name></alias>;</import>
+</unit>
+
 </unit>
