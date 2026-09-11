@@ -57,4 +57,22 @@
 <typedef>type <name>A</name> = <type><name><argument_list type="generic">&lt;<name>B</name> <operator>as</operator> <name>C</name>&gt;</argument_list><operator>::</operator><name>D</name></name></type>;</typedef>
 </unit>
 
+<!-- bounds & where clauses (not fully supported in rust as of August 31, 2026) -->
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name><constraint>:</constraint> = <type><name>B</name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> <where>where</where> = <type><name>B</name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name><constraint>:</constraint> <where>where</where> = <type><name>B</name></type>;</typedef>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<typedef>type <name>A</name> <where>where <name>A</name><constraint>:</constraint></where> = <type><name>B</name></type>;</typedef>
+</unit>
+
 </unit>
