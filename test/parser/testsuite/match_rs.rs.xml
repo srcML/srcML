@@ -32,6 +32,13 @@
 </block_content>}</block></switch>
 </unit>
 
+<!-- some basic patterns -->
+<unit revision="1.0.0" language="Rust">
+<switch>match <expr><name>a</name></expr> <block>{<block_content>
+  <case><expr>(<literal type="number">0</literal>, <decl>_</decl>)</expr> =&gt; <block type="pseudo"><block_content><expr_stmt><expr><tuple>()</tuple></expr></expr_stmt></block_content></block></case>
+</block_content>}</block></switch>
+</unit>
+
 <unit revision="1.0.0" language="Rust">
 <switch>match <expr><name>a</name></expr> <block>{<block_content>
   <case><expr><decl><name>b</name></decl> <operator>@</operator> <literal type="number">0</literal><operator>..</operator><literal type="number">8</literal></expr> =&gt; <block type="pseudo"><block_content><expr_stmt><expr><tuple>()</tuple></expr></expr_stmt></block_content></block></case>
@@ -40,13 +47,13 @@
 
 <unit revision="1.0.0" language="Rust">
 <switch>match <expr><name>a</name></expr> <block>{<block_content>
-  <case><expr><call><name>Foo</name><argument_list>(<argument><expr><name>_</name></expr></argument>)</argument_list></call></expr> =&gt; <block type="pseudo"><block_content><expr_stmt><expr><tuple>()</tuple></expr></expr_stmt></block_content></block></case>
+  <case><expr><call><name>Foo</name><argument_list>(<argument><decl><name>_</name></decl></argument>)</argument_list></call></expr> =&gt; <block type="pseudo"><block_content><expr_stmt><expr><tuple>()</tuple></expr></expr_stmt></block_content></block></case>
 </block_content>}</block></switch>
 </unit>
 
 <unit revision="1.0.0" language="Rust">
 <switch>match <expr><name>a</name></expr> <block>{<block_content>
-  <case><expr><call><name>Foo</name> <argument_list>{ <argument><expr><name>a</name><operator>:</operator> <name>_</name></expr></argument> }</argument_list></call></expr> =&gt; <block type="pseudo"><block_content><expr_stmt><expr><tuple>()</tuple></expr></expr_stmt></block_content></block></case>
+  <case><expr><call><name>Foo</name> <argument_list>{ <argument><expr><name>a</name><operator>:</operator> <decl>_</decl></expr></argument> }</argument_list></call></expr> =&gt; <block type="pseudo"><block_content><expr_stmt><expr><tuple>()</tuple></expr></expr_stmt></block_content></block></case>
 </block_content>}</block></switch>
 </unit>
 

@@ -19,8 +19,9 @@
 <expr><name>a</name> <operator>=</operator> <for>for <control><decl><name>_</name></decl> <range>in <expr><name>iterator</name></expr></range></control> <block>{<block_content/>}</block></for></expr>
 </unit>
 
+<!-- basic pattern -->
 <unit revision="1.0.0" language="Rust">
-<for>for <control><decl><tuple>(<decl><name>index</name></decl>, <decl><name>value</name></decl>)</tuple></decl> <range>in <expr><name>enumerated</name></expr></range></control> <block>{<block_content/>}</block></for>
+<for>for <control>(<decl><name>index</name></decl>, <decl><name>value</name></decl>) <range>in <expr><name>enumerated</name></expr></range></control> <block>{<block_content/>}</block></for>
 </unit>
 
 </unit>

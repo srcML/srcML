@@ -19,4 +19,9 @@
 <expr><name>a</name> <operator>=</operator> <while>while <condition><expr><name>a</name></expr></condition> <block>{<block_content/>}</block></while></expr>
 </unit>
 
+<!-- same as if let patterns -->
+<unit revision="1.0.0" language="Rust">
+<while>while <condition><decl type="let">let <name>a</name> <init>= <expr><name>b</name></expr></init></decl></condition> <block>{<block_content/>}</block></while>
+</unit>
+
 </unit>
