@@ -36,7 +36,7 @@
 <unit revision="1.0.0" language="CMake">
 <foreach>foreach<control>(<expr><name>arg</name></expr>
     <range><expr><name>NoSpace</name></expr>
-    <expr><name>Argument-Name-With-Dashes</name></expr>
+    <expr><literal type="string">Argument-Name-With-Dashes</literal></expr>
     <expr><literal type="string">Escaped\ Space</literal></expr>
     <expr><name>This</name></expr>;<expr><name>Divides</name></expr>;<expr><name>Into</name></expr>;<expr><name>Five</name></expr>;<expr><name>Arguments</name></expr>
     <expr><literal type="string">Escaped\;Semicolon</literal></expr></range>
