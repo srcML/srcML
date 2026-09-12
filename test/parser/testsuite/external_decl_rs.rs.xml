@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Rust" url="external_decl_rs">
+
+<unit revision="1.0.0" language="Rust">
+<block><specifier>unsafe</specifier> <specifier>extern <literal type="string">"C"</literal></specifier> {<block_content>
+  <function_decl>fn <name>a</name><parameter_list>()</parameter_list>;</function_decl>
+  <function_decl><specifier>safe</specifier> fn <name>b</name><parameter_list>()</parameter_list> -&gt; <type><name>i32</name></type>;</function_decl>
+  <function_decl><specifier>unsafe</specifier> fn <name>c</name><parameter_list>()</parameter_list> -&gt; <type><tuple>()</tuple></type>;</function_decl>
+</block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<block><specifier>unsafe</specifier> <specifier>extern <literal type="string">"C"</literal></specifier> {<block_content>
+  <function_decl>fn <name>a</name><parameter_list>(<parameter><decl><modifier>...</modifier></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl>fn <name>b</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><modifier>...</modifier></decl></parameter>)</parameter_list>;</function_decl>
+  <function_decl>fn <name>c</name><parameter_list>(<parameter><decl><name>x</name>: <type><name>i32</name></type></decl></parameter>, <parameter><decl><name>args</name>: <type><modifier>...</modifier></type></decl></parameter>)</parameter_list>;</function_decl>
+</block_content>}</block>
+</unit>
+
+<unit revision="1.0.0" language="Rust">
+<block><specifier>unsafe</specifier> <specifier>extern <literal type="string">"C"</literal></specifier> {<block_content>
+  <decl_stmt><decl type="static">static <name>a</name>: <type><name>i32</name></type></decl>;</decl_stmt>
+</block_content>}</block>
+</unit>
+
+</unit>
