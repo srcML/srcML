@@ -139,6 +139,14 @@ createfile sub/bom.cpp '\xef\xbb\xbf// caf\xc3\xa9 na\xc3\xafve\na;\n'
 srcml sub/bom.cpp --filename "sub/a.cpp"
 check "$foutput"
 
+# an encoding is identified by a single name, so a specified encoding spelled as an
+# alias of the one the BOM indicates is that same encoding, and not a mismatch to warn about
+srcml sub/bom.cpp --src-encoding "UTF8" --filename "sub/a.cpp"
+check "$foutput"
+
+srcml sub/bom.cpp --src-encoding "utf-8" --filename "sub/a.cpp"
+check "$foutput"
+
 # UTF-16 and UTF-32 with no BOM, where the NUL bytes of the ASCII characters
 # give both the width of a character and the byte order
 # the bytes are given directly, as the point of these is where the NUL bytes fall

@@ -31,24 +31,6 @@ using namespace ::std::literals::string_view_literals;
 
 namespace {
 
-    // indicates if the two given encodings are basically the same,
-    // with a trivial encoding process
-    bool compatibleEncodings(const char* encoding1, const char* encoding2) {
-
-        // setup encoder between the two encodings
-        iconv_t ce = iconv_open(encoding1, encoding2);
-        if (ce == (iconv_t) -1)
-            return false;
-
-        // see if encoding is trivial
-        int trivial = false;
-#if _LIBICONV_VERSION >= 0x0108
-        iconvctl(ce, ICONV_TRIVIALP, &trivial);
-#endif
-        iconv_close(ce);
-
-        return trivial != 0;
-    }
     // the UTF-16 or UTF-32 encoding of data that has no BOM, or empty if it is neither
     // ASCII characters, which is nearly all of any source code, are stored with NUL bytes
     // for their high-order bytes, so which positions those NUL bytes fall in gives
@@ -151,9 +133,22 @@ namespace {
         return true;
     }
 
-    // some common aliases that libiconv does not accept
+    // some common aliases that need mappings for libiconv
     std::map<std::string_view, std::string_view> encodingAliases = {
+        { "UTF8", "UTF-8"},
+        { "CSUTF8", "UTF-8"},
         { "UTF16", "UTF-16"},
+        { "CSUTF16", "UTF-16"},
+        { "UTF16LE", "UTF-16LE"},
+        { "CSUTF16LE", "UTF-16LE"},
+        { "UTF16BE", "UTF-16BE"},
+        { "CSUTF16BE", "UTF-16BE"},
+        { "UTF32", "UTF-32"},
+        { "CSUTF32", "UTF-32"},
+        { "UTF32LE", "UTF-32LE"},
+        { "CSUTF32LE", "UTF-32LE"},
+        { "UTF32BE", "UTF-32BE"},
+        { "CSUTF32BE", "UTF-32BE"},
         { "UCS2", "UCS-2"},
         { "UCS4", "UCS-4"},
     };
@@ -350,11 +345,7 @@ bool UTF8CharBuffer::setEncoding(std::string_view name) {
     encoding = std::move(next);
 
     // see if this encoding to UTF-8 is trivial, if so we can use raw characters directly
-#if _LIBICONV_VERSION >= 0x0108
-    iconvctl(ic, ICONV_TRIVIALP, &trivial);
-#else
-    trivial = false;
-#endif
+    trivial = encoding == "UTF-8"sv;
 
     return true;
 }
@@ -434,7 +425,7 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
             if (encoding.empty()) {
                 encoding = "UTF-8";
-            } else if (encoding != "UTF-8"sv && !compatibleEncodings(encoding.data(), "UTF-8")) {
+            } else if (encoding != "UTF-8"sv) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.data());
             }
         }
@@ -447,7 +438,7 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
             if (encoding.empty()) {
                 encoding = "UTF-16";
-            } else if (encoding != "UTF-16"sv && !compatibleEncodings(encoding.data(), "UTF-16")) {
+            } else if (encoding != "UTF-16"sv) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.data());
             }
         }
@@ -460,7 +451,7 @@ size_t UTF8CharBuffer::readChars() {
             // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
             if (encoding.empty()) {
                 encoding = "UTF-32";
-            } else if (encoding != "UTF-32"sv && !compatibleEncodings(encoding.data(), "UTF-32")) {
+            } else if (encoding != "UTF-32"sv) {
                 fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.data());
             }
         }
@@ -541,6 +532,13 @@ size_t UTF8CharBuffer::readChars() {
             outbytesleft = cooked.size();
 
             binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
+        }
+
+        // an invalid sequence is an error, as only a detected encoding is a guess that
+        // the fallback above corrects, while a specified one is not
+        if (binsize == (size_t) -1 && errno == EILSEQ) {
+            fprintf(stderr, "srcml: Input is not valid '%s'\n\n", encoding.data());
+            return 0;
         }
 
         // an incomplete multibyte sequence at the end of the data is not an error,
