@@ -73,23 +73,9 @@
 
 <unit revision="1.0.0" language="Rust">
 <struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>&gt;</parameter_list> 
-  <where>where
-    <name>T</name><constraint>: <name>B</name></constraint></where>
+<where>where <name>T</name><constraint>: <name>Copy</name></constraint></where>
 <block>{
   <decl><name>a</name>: <type><name>T</name></type></decl>,
-}</block></struct>
-</unit>
-
-<unit revision="1.0.0" language="Rust">
-<struct>struct <name>A</name><parameter_list type="generic">&lt;<parameter><decl><name>T</name></decl></parameter>, <parameter><decl><name>S</name></decl></parameter>, <parameter><decl><name>U</name></decl></parameter>&gt;</parameter_list> 
-  <where>where
-    <name>T</name><constraint>: <name>B</name></constraint>,
-    <name>S</name><constraint>: <name>C</name></constraint>,
-    <name>U</name><constraint>: <name>D</name></constraint></where>
-<block>{
-  <decl><name>a</name>: <type><name>T</name></type></decl>,
-  <decl><name>b</name>: <type><name>S</name></type></decl>,
-  <decl><name>c</name>: <type><name>U</name></type></decl>,
 }</block></struct>
 </unit>
 
