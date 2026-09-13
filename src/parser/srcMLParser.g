@@ -29027,7 +29027,6 @@ cmake_expression[] { ENTRY_DEBUG
             }
             if (expansion_expr_depth == 0 && LA(1) != NAME && !cmake_keywords.member(LA(1)) && !cmake_expansion_expr_tokens.member(LA(1)) && LA(1) != CMAKE_RCURLY && LA(1) != TEMPOPE && LA(1) != COLON) {
                 only_name_tokens = false;
-                std::cout << "\tFound a non-name!" << std::endl;
             }
             consume();
         }
