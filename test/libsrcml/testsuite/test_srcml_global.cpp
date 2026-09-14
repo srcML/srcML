@@ -52,6 +52,48 @@ int main(int, char* argv[]) {
     }
 
     /*
+      srcml_markup_version_string
+    */
+
+    {
+        dassert(srcml_markup_version_string("C++"), std::string(SRCML_VERSION_STRING));
+    }
+
+    {
+        dassert(srcml_markup_version_string("Bogus"), std::string(""));
+    }
+
+    {
+        dassert(srcml_markup_version_string(""), std::string(""));
+    }
+
+    {
+        dassert(srcml_markup_version_string(0), std::string(""));
+    }
+
+    // srcdiff languages, i.e., a language per revision, have a markup version per revision
+
+    {
+        dassert(srcml_markup_version_string("C++|C++"), std::string(SRCML_VERSION_STRING) + "|" + SRCML_VERSION_STRING);
+    }
+
+    {
+        dassert(srcml_markup_version_string("C++|Java"), std::string(SRCML_VERSION_STRING) + "|" + SRCML_VERSION_STRING);
+    }
+
+    {
+        dassert(srcml_markup_version_string("C++|Bogus"), std::string(SRCML_VERSION_STRING) + "|");
+    }
+
+    {
+        dassert(srcml_markup_version_string("|Java"), std::string("|") + SRCML_VERSION_STRING);
+    }
+
+    {
+        dassert(srcml_markup_version_string("Bogus|Bad"), std::string("|"));
+    }
+
+    /*
       srcml_get_language_list_size
     */
 
