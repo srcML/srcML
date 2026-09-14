@@ -31,6 +31,47 @@ using namespace ::std::literals::string_view_literals;
 
 namespace {
 
+    // indicates if the two given encodings are basically the same,
+    // with a trivial encoding process
+    bool compatibleEncodings(const char* encoding1, const char* encoding2) {
+
+#if _LIBICONV_VERSION >= 0x0108
+        // setup encoder between the two encodings
+        iconv_t ce = iconv_open(encoding1, encoding2);
+        if (ce == (iconv_t) -1)
+            return false;
+
+        // see if encoding is trivial
+        int trivial = false;
+        iconvctl(ce, ICONV_TRIVIALP, &trivial);
+        iconv_close(ce);
+
+        return trivial != 0;
+#else
+        // no iconvctl(), e.g., glibc, so compare the normalized encoding names instead
+        return std::string_view(encoding1) == std::string_view(encoding2);
+#endif
+    }
+
+    // the encodings indicated by a BOM (Byte Order Mark), matched on the first four bytes
+    // of the data with any missing ones as NUL
+    // the UTF-32 ones are before the UTF-16 ones, as the UTF-32LE BOM starts with the UTF-16LE one
+    struct BOM {
+        uint32_t mask;
+        uint32_t value;
+        size_t size;
+        std::string_view encoding;
+        // the encoding without the byte order, which the BOM also indicates
+        std::string_view generic;
+    };
+    const BOM boms[] = {
+        { 0x00FFFFFF, 0x00BFBBEF, 3, "UTF-8"sv,    "UTF-8"sv  },
+        { 0xFFFFFFFF, 0x0000FEFF, 4, "UTF-32LE"sv, "UTF-32"sv },
+        { 0xFFFFFFFF, 0xFFFE0000, 4, "UTF-32BE"sv, "UTF-32"sv },
+        { 0x0000FFFF, 0x0000FEFF, 2, "UTF-16LE"sv, "UTF-16"sv },
+        { 0x0000FFFF, 0x0000FFFE, 2, "UTF-16BE"sv, "UTF-16"sv },
+    };
+
     // the UTF-16 or UTF-32 encoding of data that has no BOM, or empty if it is neither
     // ASCII characters, which is nearly all of any source code, are stored with NUL bytes
     // for their high-order bytes, so which positions those NUL bytes fall in gives
@@ -345,7 +386,14 @@ bool UTF8CharBuffer::setEncoding(std::string_view name) {
     encoding = std::move(next);
 
     // see if this encoding to UTF-8 is trivial, if so we can use raw characters directly
+#if _LIBICONV_VERSION >= 0x0108
+    int result = false;
+    iconvctl(ic, ICONV_TRIVIALP, &result);
+    trivial = result != 0;
+#else
+    // no iconvctl(), e.g., glibc, so compare the normalized encoding name instead
     trivial = encoding == "UTF-8"sv;
+#endif
 
     return true;
 }
@@ -416,44 +464,22 @@ size_t UTF8CharBuffer::readChars() {
         for (size_t i = 0; i < 4 && i < raw.size(); ++i)
             data.d[i] = static_cast<unsigned char>(raw[i]);
 
-        // check for UTF-8 BOM
-        if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
+        // check for a BOM
+        for (const auto& bom : boms) {
+            if (raw.size() < bom.size || (data.i & bom.mask) != bom.value)
+                continue;
 
-            // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually skipped
-            pos += 3;
+            // the BOM is not part of the source, so it is skipped
+            pos += bom.size;
 
-            // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
-            if (encoding.empty()) {
-                encoding = "UTF-8";
-            } else if (encoding != "UTF-8"sv) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.data());
+            // no encoding specified (by user), or the one of the BOM without its byte order,
+            // then the encoding of the BOM, otherwise check if it is compatible with it
+            if (encoding.empty() || compatibleEncodings(encoding.data(), bom.generic.data())) {
+                encoding = bom.encoding;
+            } else if (!compatibleEncodings(encoding.data(), bom.encoding.data())) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a %s BOM\n", encoding.data(), bom.generic.data());
             }
-        }
-
-        // auto-detect UTF-16 based on BOM
-        // both UTF-16LE and UTF-16BE are determined automatically from BOM
-        // and processed as UTF-16
-        if ((data.i & 0x0000FFFF) == 0x0000FFFE || (data.i & 0x0000FFFF) == 0x0000FEFF) {
-
-            // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
-            if (encoding.empty()) {
-                encoding = "UTF-16";
-            } else if (encoding != "UTF-16"sv) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.data());
-            }
-        }
-
-        // auto-detect UTF-32 based on BOM
-        // both UTF-32LE and UTF-32BE are determined automatically from BOM
-        // and processed as UTF-32
-        if (data.i == 0xFFFE0000 || data.i == 0xFEFF0000) {
-
-            // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
-            if (encoding.empty()) {
-                encoding = "UTF-32";
-            } else if (encoding != "UTF-32"sv) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.data());
-            }
+            break;
         }
 
         // no encoding specified and no BOM, so detect it from the data itself
@@ -475,6 +501,13 @@ size_t UTF8CharBuffer::readChars() {
         // setup encoder from encoding to UTF-8
         if (!setEncoding(encoding))
             return 0;
+
+        // a trivial conversion skips over a BOM in the raw data, but any other converts
+        // all of the raw data, so the BOM has to be removed from it
+        if (!trivial && pos) {
+            raw.erase(raw.begin(), raw.begin() + static_cast<std::ptrdiff_t>(pos));
+            pos = 0;
+        }
     }
     bool firstData = firstRead;
     firstRead = false;
