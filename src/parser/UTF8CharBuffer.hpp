@@ -142,7 +142,7 @@ private:
     iconv_t ic = nullptr;
 
     /** whether the encoding conversion is trivial (i.e., not needed) */
-    int trivial = false;
+    bool trivial = false;
 
     /** whether the encoding was detected from the data, and so may still be corrected */
     bool detected = false;
