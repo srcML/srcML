@@ -28741,6 +28741,11 @@ generic_command_cmake[] { ENTRY_DEBUG
 
     endMode(MODE_VARIABLE_NAME);
 
+    if (LA(1) != LPAREN) {
+        endDownOverMode(MODE_COMMAND_CMAKE);
+        return;
+    }
+
     startNewMode(MODE_ARGUMENT_LIST);
     startElement(SARGUMENT_LIST);
 
