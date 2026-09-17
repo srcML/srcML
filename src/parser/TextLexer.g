@@ -251,7 +251,7 @@ NAME options { testLiterals = true; } :
     { startline = false; this->updateNonWhitespaceCharacters(); }
     
 
-    ({ inLanguage(LANGUAGE_CMAKE)}?
+    ({ inLanguage(LANGUAGE_CMAKE) }?
     (
         (
             ('$')
@@ -281,17 +281,31 @@ NAME options { testLiterals = true; } :
 
     |
 
-    ( // In ANY other language
+    { inLanguage(LANGUAGE_JAVASCRIPT) }?
+    (
         ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
         (
             (options { greedy = true; } :
                 { this->updateNonWhitespaceCharacters(); }
                 (
-                    '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$' |
-
-                    { inLanguage(LANGUAGE_JAVASCRIPT) }?
-                    ('\\' 'u') => '\\' 'u'
+                    '0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$' | ('\\' 'u') => '\\' 'u'
                 )
+            )*
+        )
+        (
+            { text == "L"sv || text == "U"sv || text == "u"sv || text == "u8"sv }?
+            { $setType(STRING_START); } STRING_START
+        )?
+    )
+
+    |
+
+    ( // In ANY other language
+        ('a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
+        (
+            (options { greedy = true; } :
+                { this->updateNonWhitespaceCharacters(); }
+                ('0'..'9' | 'a'..'z' | 'A'..'Z' | '_' | '\200'..'\377' | '$')
             )*
         )
         (
@@ -318,9 +332,6 @@ NAME options { testLiterals = true; } :
                 { $setType(CHAR_START); } CHAR_START
             )
         )?
-
-
-
     ))
 ;
 
