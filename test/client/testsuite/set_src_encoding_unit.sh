@@ -156,9 +156,6 @@ capture_output
 uncapture_output
 ( printf "\xff\xfe" ; iconv -f utf-8 -t utf-16le sub/special_characters_utf8.cpp) > sub/special_characters_utf16.cpp
 ( printf "\xff\xfe" ; iconv -f utf-8 -t utf-16le sub/chinese_characters_utf8.cpp) > sub/chinese_characters_utf16.cpp
-
-special_characters_utf16_actual=$(< sub/special_characters_utf16.cpp)
-chinese_characters_utf16_actual=$(< sub/chinese_characters_utf16.cpp)
 capture_output
 
 # create input srcML files from UTF16 encoding. use srcML files to output UTF16 files
