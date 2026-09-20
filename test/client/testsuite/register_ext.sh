@@ -46,3 +46,21 @@ check
 # becomes the option value
 echo "a;" | srcml -l C++ --register-ext= sub/a.cpp
 check_exit 2
+
+# registered extensions apply to directories
+defineXML fxmldir <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" url="dir">
+
+	<unit revision="REVISION" language="C++" filename="dir/a.foo" hash="da39a3ee5e6b4b0d3255bfef95601890afd80709"/>
+
+	</unit>
+STDOUT
+
+createfile dir/a.foo ""
+
+srcml --register-ext foo=C++ dir
+check "$fxmldir"
+
+srcml --register-ext="foo=C++" dir
+check "$fxmldir"
