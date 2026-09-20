@@ -7133,9 +7133,9 @@ lead_type_identifier[] { ENTRY_DEBUG } :
   type_identifier
 */
 type_identifier[] { ENTRY_DEBUG } :
-        // any identifier that can appear first and can appear later as true suppresses the warning
-        // antlr forms rules as LA(1) && (true), so this does nothing
-        { true }?
+        // any identifier that can appear first and can appear later
+        // a Java array subscript, e.g., int @A [] foo, is only a non-lead type identifier
+        { !(inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LBRACKET) }?
         lead_type_identifier |
 
         non_lead_type_identifier

@@ -99,4 +99,16 @@ class <name>Person</name> <super_list><implements>implements <super><name>Serial
 <function><type><specifier>public</specifier> <name><name>Set</name><argument_list type="generic">&lt;<argument><name><name>Feature</name><argument_list type="generic">&lt;<argument><name>?</name> <super>super <annotation>@<name>Nullable</name></annotation> <name>Void</name></super></argument>&gt;</argument_list></name></argument>&gt;</argument_list></name></type> <name>getImpliedFeatures</name><parameter_list>()</parameter_list> <block>{<block_content>
 </block_content>}</block></function></unit>
 
+<unit revision="1.0.0" language="Java">
+<function><type><name>int</name> <annotation>@<name>A</name></annotation> <index>[]</index></type> <name>foo</name><parameter_list>(<parameter><decl><type><name>int</name> <annotation>@<name>A</name></annotation> <index>[]</index></type> <name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Java">
+<function><type><name>int</name> <annotation>@<name>A</name></annotation> <index>[]</index></type> <name>foo</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>x</name></decl></parameter>, <parameter><decl><type><name>int</name> <annotation>@<name>A</name></annotation> <index>[]</index></type> <name>bar</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="Java">
+<decl_stmt><decl><type><name>int</name> <annotation>@<name>A</name></annotation> <index>[]</index></type> <name>x</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
