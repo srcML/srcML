@@ -2136,7 +2136,7 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
                 startElement(SNAME);
             }
 
-            (options { greedy = true; } : ~(LPAREN))*
+            (options { greedy = true; } : ~(LPAREN | TERMINATE))*
         )
 ;
 
