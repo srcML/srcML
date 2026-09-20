@@ -282,7 +282,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         });
 
     app.add_option("--register-ext",
-        "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
+        "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++. "
+        "The language NONE disables EXT, e.g., --register-ext py=NONE")
         ->type_name("EXT=LANG")
         ->group("CREATING SRCML")
         ->type_size(-1)
