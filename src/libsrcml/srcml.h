@@ -424,6 +424,7 @@ LIBSRCML_DECL int srcml_set_tabstop(size_t tabstop);
 
 /**
  * Associate an extension with a supported source-code language on the srcML
+ * The language NONE disables the extension.
  * @param extension A source file extension
  * @param language A supported source code language
  * @return SRCML_STATUS_OK on success
@@ -923,6 +924,7 @@ LIBSRCML_DECL int srcml_archive_set_tabstop(struct srcml_archive* archive, size_
 
 /**
  * Set an extension to be associated with a given source-code language
+ * The language NONE disables the extension.
  * @param archive A srcml_archive that associates the given extension with a language
  * @param extension A file extension
  * @param language A supported source-code language

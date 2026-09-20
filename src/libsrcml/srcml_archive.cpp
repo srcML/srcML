@@ -437,6 +437,7 @@ int srcml_archive_set_tabstop(struct srcml_archive* archive, size_t tabstop) {
  * @param language a language
  *
  * Set the given extension to be associate with the given language.
+ * The language NONE disables the extension.
  *
  * @returns SRCML_STATUS_OK on success and a status error code on failure.
  */
