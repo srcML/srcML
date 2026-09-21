@@ -2,15 +2,15 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="C#" url="generics" filename="generics_cs">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
-<interface>interface <name><name>I</name><argument_list type="generic">&lt;<argument><specifier>in</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
+<interface>interface <name><name>I</name><parameter_list type="generic">&lt;<parameter><specifier>in</specifier> <name>A</name></parameter>&gt;</parameter_list></name> <block>{}</block></interface>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
-<interface>interface <name><name>I</name><argument_list type="generic">&lt;<argument><specifier>out</specifier> <name>A</name></argument>&gt;</argument_list></name> <block>{}</block></interface>
+<interface>interface <name><name>I</name><parameter_list type="generic">&lt;<parameter><specifier>out</specifier> <name>A</name></parameter>&gt;</parameter_list></name> <block>{}</block></interface>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
-<class>class <name><name>C</name><argument_list type="generic">&lt;<argument><name>A</name></argument>&gt;</argument_list></name> <where>where <name>A</name> : <constraint>class</constraint></where> <block>{}</block></class>
+<class>class <name><name>C</name><parameter_list type="generic">&lt;<parameter><name>A</name></parameter>&gt;</parameter_list></name> <where>where <name>A</name> : <constraint>class</constraint></where> <block>{}</block></class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
@@ -18,7 +18,28 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
-<class>class <name><name>Foo</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name> <where>where <name>T</name> : <constraint><name>new</name>()</constraint></where> <block>{}</block></class>
+<class>class <name><name>Foo</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <where>where <name>T</name> : <constraint><name>new</name>()</constraint></where> <block>{}</block></class>
+</unit>
+
+
+<unit revision="1.0.0" language="C#">
+<function><type><name>void</name></type> <name><name>foo</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name><parameter_list>()</parameter_list> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="C#">
+<function><type><name><name>List</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></type> <name><name>foo</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name><parameter_list>(<parameter><decl><type><name>T</name></type> <name>x</name></decl></parameter>)</parameter_list> <where>where <name>T</name> : <constraint><name>new</name>()</constraint></where> <block>{<block_content/>}</block></function>
+</unit>
+
+<unit revision="1.0.0" language="C#">
+<expr_stmt><expr><name>x</name> <operator>=</operator> <call><name><name>foo</name><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list></name><argument_list>(<argument><expr><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="C#">
+<delegate>delegate <type><name>void</name></type> <name><name>D</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name><parameter_list>(<parameter><decl><type><name>T</name></type> <name>x</name></decl></parameter>)</parameter_list>;</delegate>
+</unit>
+
+<unit revision="1.0.0" language="C#">
+<class>class <name>C</name> <super_list>: <super><name><name>Base</name><argument_list type="generic">&lt;<argument><name>T</name></argument>&gt;</argument_list></name></super></super_list> <block>{}</block></class>
 </unit>
 
 </unit>

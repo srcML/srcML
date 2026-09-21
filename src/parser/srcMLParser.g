@@ -13599,7 +13599,7 @@ generic_argument_list_check[] returns [bool is_generic_argument_list] {
 generic_argument_list[] {
         CompleteElement element(this);
         decltype(namestack) namestack_save;
-        bool in_function_type = false;
+        bool is_parameter = false;
 
         ENTRY_DEBUG
 } :
@@ -13607,17 +13607,15 @@ generic_argument_list[] {
             // local mode
             startNewMode(MODE_LOCAL);
 
-            in_function_type = inPrevMode(MODE_FUNCTION_TYPE);
+            // generic parameters are declared on a Java or C# class name, before the return type of a Java method,
+            // or on the name of a C# method; otherwise they are generic arguments
+            is_parameter = (inLanguage(LANGUAGE_JAVA) && (inTransparentMode(MODE_CLASS_NAME) || inPrevMode(MODE_FUNCTION_TYPE)))
+                || (inLanguage(LANGUAGE_CSHARP) && (inTransparentMode(MODE_CLASS_NAME) || inTransparentMode(MODE_FUNCTION_NAME)));
 
-            if (
-                !inLanguage(LANGUAGE_JAVA)
-                || (
-                    !inTransparentMode(MODE_CLASS_NAME)
-                    && !in_function_type)
-            )
-                startElement(SGENERIC_ARGUMENT_LIST);
-            else
+            if (is_parameter)
                 startElement(SGENERIC_PARAMETER_LIST);
+            else
+                startElement(SGENERIC_ARGUMENT_LIST);
         }
 
         savenamestack[namestack_save]
@@ -13625,8 +13623,8 @@ generic_argument_list[] {
         tempops
         (options { generateAmbigWarnings = false; } :
             COMMA |
-            
-            template_argument[in_function_type]
+
+            template_argument[is_parameter]
         )*
         tempope
 
@@ -13873,21 +13871,15 @@ clearnamestack[] {
 /*
   template_argument
 */
-template_argument[bool in_function_type = false] { CompleteElement element(this); ENTRY_DEBUG } :
+template_argument[bool is_parameter = false] { CompleteElement element(this); ENTRY_DEBUG } :
         {
             // local mode
             startNewMode(MODE_LOCAL);
 
-            if (
-                !inLanguage(LANGUAGE_JAVA)
-                || (
-                    !inTransparentMode(MODE_CLASS_NAME)
-                    && !in_function_type
-                )
-            )
-               startElement(SGENERIC_ARGUMENT);
-            else
+            if (is_parameter)
                startElement(STEMPLATE_PARAMETER);
+            else
+               startElement(SGENERIC_ARGUMENT);
 
             if (inLanguage(LANGUAGE_CXX) || inLanguage(LANGUAGE_C))
                startElement(SEXPRESSION);
