@@ -87,7 +87,7 @@ class <name>Person</name> <super_list><implements>implements <super><name>Serial
 </unit>
 
 <unit revision="1.0.0" language="Java">
-<class>class <name><name>Abstract</name><parameter_list>&lt;<parameter><name>E</name> <extends>extends <annotation>@<name>Nullable</name></annotation> <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{
+<class>class <name><name>Abstract</name><parameter_list type="generic">&lt;<parameter><name>E</name> <extends>extends <annotation>@<name>Nullable</name></annotation> <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{
 }</block></class>
 </unit>
 
