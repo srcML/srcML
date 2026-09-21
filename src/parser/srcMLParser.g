@@ -13612,7 +13612,7 @@ generic_argument_list[] {
             )
                 startElement(SGENERIC_ARGUMENT_LIST);
             else
-                startElement(STEMPLATE_PARAMETER_LIST);
+                startElement(SGENERIC_PARAMETER_LIST);
         }
 
         savenamestack[namestack_save]
