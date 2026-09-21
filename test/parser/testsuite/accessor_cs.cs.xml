@@ -75,18 +75,52 @@
 }</block></property>
 </unit>
 
+<!-- ///////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
-
-<unit revision="1.0.0" language="C#">
-<property><type><specifier>public</specifier> <name>int</name></type> <name>Bar</name> <block>{ <function_decl><name>get</name>;</function_decl> <function_decl><name>set</name>;</function_decl> }</block> <init>= <expr><literal type="number">0</literal></expr></init>;</property>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<property><type><specifier>public</specifier> <name>double</name></type> <name>Area</name> 
+  <block>{
+     <function_decl><name>get</name>;</function_decl>
+     <function_decl><name>set</name>;</function_decl>
+  }</block> <init>= <expr><literal type="number">0.0</literal></expr></init>;</property>
 </unit>
 
-<unit revision="1.0.0" language="C#">
-<property><type><specifier>public</specifier> <name><name>List</name><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list></name></type> <name>L</name> <block>{ <function_decl><name>get</name>;</function_decl> }</block> <init>= <expr><operator>new</operator> <call><name><name>List</name><argument_list type="generic">&lt;<argument><name>int</name></argument>&gt;</argument_list></name><argument_list>()</argument_list></call></expr></init>;</property>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<property><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
+  <block>{
+     <function_decl><name>get</name>;</function_decl>
+     <function_decl><name>set</name>;</function_decl>
+  }</block> <init>= <expr><literal type="number">0.0</literal></expr></init>;</property>
 </unit>
 
-<unit revision="1.0.0" language="C#">
-<property><type><specifier>public</specifier> <name>int</name></type> <name>Bar</name> <block>{ <function><name>get</name> <block>{<block_content> <return>return <expr><name>x</name></expr>;</return> </block_content>}</block></function> <function><name>set</name> <block>{<block_content> <expr_stmt><expr><name>x</name> <operator>=</operator> <name>value</name></expr>;</expr_stmt> </block_content>}</block></function> }</block> <init>= <expr><literal type="number">5</literal></expr></init>;</property>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<property><type><specifier>public</specifier> <name>double</name></type> <name>Area</name> 
+  <block>{
+     <function_decl><name>get</name>;</function_decl>
+     <function_decl><name>set</name>;</function_decl>
+  }</block> <init>= <expr><call><name>getArea</name><argument_list>()</argument_list></call></expr></init>;</property>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<property><type><specifier>public</specifier> <specifier>abstract</specifier> <name>double</name></type> <name>Area</name> 
+  <block>{
+     <function_decl><specifier>protected</specifier> <name>get</name>;</function_decl>
+     <function_decl><specifier>private</specifier> <name>set</name>;</function_decl>
+  }</block> <init>= <expr><literal type="number">0.0</literal></expr></init>;</property>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<property><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function><specifier>private</specifier> <name>get</name> <block>{<block_content/>}</block></function>
+    <function><specifier>private</specifier> <name>set</name> <block>{<block_content/>}</block></function>
+}</block><init>= <expr><literal type="number">0.0</literal></expr></init>;</property>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C#">
+<property><type><specifier>private</specifier> <name>E</name></type> <name>e</name> <block>{
+    <function><specifier>private</specifier> <name>get</name> <block>{<block_content/>}</block></function>
+    <function><specifier>private</specifier> <name>set</name> <block>{<block_content/>}</block></function>
+}</block><init>= <expr><call><name>getArea</name><argument_list>()</argument_list></call></expr></init>;</property>
 </unit>
 
 </unit>
