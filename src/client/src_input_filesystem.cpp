@@ -100,7 +100,6 @@ int src_input_filesystem(ParseQueue& queue,
         // time because srcml is reading the entire file
         if (!srcml_archive_check_extension(srcml_arch, input_file.extension.data()))
             input_file.skip = true;
-        }
 
         // If a directory contains archives skip them
         if (!(srcml_request.command & SRCML_COMMAND_PARSER_TEST) && !(input_file.archives.empty())) {
