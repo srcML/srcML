@@ -15542,9 +15542,12 @@ offside_dedent[] { ENTRY_DEBUG } :
             )
                 consume();
 
+            // the innermost of these statements owns a following "elif"/"except"/"else"/"finally"
+            const srcMLState::MODE_TYPE owner = getFirstMode(MODE_IF_STATEMENT | MODE_TRY | MODE_FOR_LOOP_PY | MODE_WHILE_LOOP_PY);
+
             // special case to ensure "if" encloses the entire "if..elif..else" block
             if (inLanguage(LANGUAGE_PYTHON)
-                && inTransparentMode(MODE_IF_STATEMENT)
+                && (owner & MODE_IF_STATEMENT) != 0
                 && (LA(1) == PY_ELIF || LA(1) == ELSE)
             ) {
                 endDownToMode(MODE_IF_STATEMENT);
@@ -15553,7 +15556,7 @@ offside_dedent[] { ENTRY_DEBUG } :
 
             // special case to ensure "try" encloses the entire "try..except..else..finally" block
             if (inLanguage(LANGUAGE_PYTHON)
-                && inTransparentMode(MODE_TRY)
+                && (owner & MODE_TRY) != 0
                 && (LA(1) == PY_EXCEPT || LA(1) == ELSE || LA(1) == FINALLY)
             ) {
                 endDownToMode(MODE_TRY);
@@ -15561,13 +15564,13 @@ offside_dedent[] { ENTRY_DEBUG } :
             }
 
             // special case to ensure "for" encloses the entire "for..else" block
-            if (inLanguage(LANGUAGE_PYTHON) && LA(1) == ELSE && inTransparentMode(MODE_FOR_LOOP_PY)) {
+            if (inLanguage(LANGUAGE_PYTHON) && LA(1) == ELSE && (owner & MODE_FOR_LOOP_PY) != 0) {
                 endDownToMode(MODE_FOR_LOOP_PY);
                 return;
             }
 
             // special case to ensure "while" encloses the entire "while..else" block
-            if (inLanguage(LANGUAGE_PYTHON) && LA(1) == ELSE && inTransparentMode(MODE_WHILE_LOOP_PY)) {
+            if (inLanguage(LANGUAGE_PYTHON) && LA(1) == ELSE && (owner & MODE_WHILE_LOOP_PY) != 0) {
                 endDownToMode(MODE_WHILE_LOOP_PY);
                 return;
             }
