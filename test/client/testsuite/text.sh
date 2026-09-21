@@ -224,6 +224,27 @@ check "\nr;"
 srcml -l C++ --text="PDF =" | srcml
 check "PDF ="
 
+##
+# Series of tests for a protocol separator, '://', in the text itself.
+# The text is carried internally as "text://<source>", so a '://' in the
+# source must not be mistaken for that prefix and truncate the input.
+
+# url in a comment
+srcml -l C++ --text="int a; // http://example.com" | srcml
+check "int a; // http://example.com"
+
+# starts with a protocol separator
+srcml -l C++ --text="://a;" | srcml
+check "://a;"
+
+# more than one protocol separator
+srcml -l C++ --text="int a; // http://example.com https://example.org" | srcml
+check "int a; // http://example.com https://example.org"
+
+# url in a string literal, short form
+srcml -l Python -t="p.add_argument('-u', help='visit: http://example.com')" | srcml
+check "p.add_argument('-u', help='visit: http://example.com')"
+
 # short form with an '='
 srcml -l C++ -t="a;"
 check "$asrcml"
