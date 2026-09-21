@@ -2209,9 +2209,17 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
             LPAREN
             RPAREN |
 
-            // for form operator type
+            // for form operator type, including cv-qualifiers and modifiers, e.g., operator const int*, operator int const&
             { LA(1) != DESTOP }?
-            (compound_name) => compound_name |
+            ((options { greedy = true; } : { LA(1) == CONST || LA(1) == VOLATILE }? single_keyword_specifier)* compound_name) =>
+            (options { greedy = true; } : { LA(1) == CONST || LA(1) == VOLATILE }? single_keyword_specifier)*
+            compound_name
+            (options { greedy = true; } :
+                { LA(1) == CONST || LA(1) == VOLATILE }?
+                single_keyword_specifier |
+
+                multops
+            )* |
 
             // general operator name case is anything else
             {
