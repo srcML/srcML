@@ -5099,6 +5099,11 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
                 return;
             }
 
+            // C# property initializer, e.g., public int Bar { get; set; } = 0;
+            // the property declaration continues with the initialization and ends at the terminate
+            if (inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_PROPERTY) && inMode(MODE_INIT | MODE_EXPECT) && LA(1) == EQUAL)
+                return;
+
             // end all the statements this statement is nested in
             // special case when ending then of if statement: end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
@@ -11437,7 +11442,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev 
 property_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_NO_BLOCK_CONTENT);
+            startNewMode(MODE_STATEMENT | MODE_NO_BLOCK_CONTENT | MODE_PROPERTY);
 
             startElement(SPROPERTY);
 
