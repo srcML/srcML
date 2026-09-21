@@ -202,4 +202,12 @@
 <expr_stmt><expr><name>result</name> <operator>=</operator> <array>[<expr><name>a</name></expr> <comprehension><for>for <control><expr><operator>(</operator><name>b</name> <ternary>if <condition><expr><name>c</name></expr></condition> <else>else <expr><name>d</name></expr></else></ternary><operator>)</operator><index>[<expr><literal type="number">0</literal></expr>]</index></expr> <range>in <expr><call><name>range</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>)</argument_list></call></expr></range></control></for></comprehension>]</array></expr></expr_stmt>
 </unit>
 
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><array>[<expr><name>d</name></expr> <comprehension><for>for <control><expr><tuple/></expr></control></for></comprehension></array>with</expr>,]</expr_stmt>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<expr_stmt><expr><array>[<expr><name>d</name></expr> <comprehension><for>for <control><expr><tuple/></expr></control></for></comprehension></array>-&gt;</expr>,]</expr_stmt>
+</unit>
+
 </unit>

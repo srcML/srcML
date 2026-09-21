@@ -17727,7 +17727,7 @@ type_alias_annotation_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
   Handles Python expressions in the control portion of a for-loop or comprehension.
 */
-control_initialization_py[] { ENTRY_DEBUG } :
+control_initialization_py[] { const antlr::Token* tuple_start = nullptr; ENTRY_DEBUG } :
         {
             assertMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT);
 
@@ -17758,7 +17758,12 @@ control_initialization_py[] { ENTRY_DEBUG } :
 
             // special non-parenthesized tuple logic outside of 'expression'
             { perform_tuple_check_no_paren_py() }?
-            control_tuple_no_paren_py |
+            { tuple_start = LT(1).get(); }
+            control_tuple_no_paren_py
+            {
+                if (LT(1).get() == tuple_start)
+                    break;
+            } |
 
             {
                 if (!inMode(MODE_EXPRESSION))
