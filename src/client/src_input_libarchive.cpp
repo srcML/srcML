@@ -183,7 +183,7 @@ int src_input_libarchive(ParseQueue& queue,
     // this is to prevent trying to open, with srcml_archive_open_filename(), a non-srcml file,
     // which then hangs
     // Note: may need to fix in libsrcml
-    if ((!contains<int>(input_file) && !option(SRCML_COMMAND_HEADER) && !contains<FILE*>(input_file) && !input_file.memory && input_file.compressions.empty() && input_file.archives.empty() && !srcml_check_extension(input_file.plainfile.data())) | input_file.skip) {
+    if ((!contains<int>(input_file) && !option(SRCML_COMMAND_HEADER) && !contains<FILE*>(input_file) && !input_file.memory && input_file.compressions.empty() && input_file.archives.empty() && !srcml_archive_check_extension(srcml_arch, input_file.plainfile.data())) | input_file.skip) {
 
 
         // if we are not verbose, then just end this attemp

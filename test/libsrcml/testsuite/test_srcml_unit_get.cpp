@@ -64,6 +64,17 @@ int main(int, char* argv[]) {
         srcml_unit_free(unit);
     }
 
+    // srcdiff languages, i.e., a language per revision, have a markup version per revision
+
+    {
+        srcml_unit* unit = srcml_unit_create(archive);
+        srcml_unit_set_language(unit, "C++|Java");
+
+        dassert(srcml_unit_get_revision(unit), std::string(SRCML_VERSION_STRING) + "|" + SRCML_VERSION_STRING);
+
+        srcml_unit_free(unit);
+    }
+
     {
         dassert(srcml_unit_get_revision(0), 0);
     }

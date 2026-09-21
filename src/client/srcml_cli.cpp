@@ -17,16 +17,34 @@
 
 using namespace ::std::literals::string_view_literals;
 
-const char* SRCML_HEADER = R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
+// list of supported languages from libsrcml, e.g., "C, C++, C#, or Java"
+static std::string languageList() {
+
+    std::string list;
+    const auto size = srcml_get_language_list_size();
+    for (size_t i = 0; i < size; ++i) {
+        if (i > 0)
+            list += size > 2 ? ", " : " ";
+        if (i == size - 1)
+            list += "or ";
+        list += srcml_get_language_list(i);
+    }
+
+    return list;
+}
+
+static std::string srcmlHeader() {
+
+    return R"(Usage: srcml [options] <src_infile>... [-o <srcML_outfile>]
        srcml [options] <srcML_infile>... [-o <src_outfile>]
 
-Translates C, C++, C#, and Java source code to and from the XML
-source-code representation srcML. Also supports querying and transformation of srcML.
+Translates )" + languageList() + R"( source code to and from the XML source-code representation srcML. Also supports querying and transformation of srcML.
 
 Source-code input can be from text, the system clipboard, standard input,
 a file, a directory, or an archive file, i.e., tar, cpio, and zip. Multiple
 files are stored in a srcML archive.
 )";
+}
 
 const char* SRCML_FOOTER = R"(
 Have a question or need to report a bug?
@@ -116,7 +134,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
     // CLI11 requires the vector to be in reverse
     std::reverse(commandline.begin(), commandline.end());
 
-    srcMLClI app{SRCML_HEADER, "srcml"};
+    srcMLClI app{srcmlHeader(), "srcml"};
     app.formatter(std::make_shared<srcMLFormatter>());
     app.get_formatter()->column_width(32);
 
@@ -258,7 +276,7 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
 
     auto language =
     app.add_option("--language,-l", srcml_request.att_language,
-        "Set the source-code language to C, C++, C#, or Java. Required for --text option")
+        "Set the source-code language to " + languageList() + ". Required for --text option")
         ->type_name("LANG")
         ->group("CREATING SRCML")
         ->expected(1)
@@ -282,7 +300,8 @@ srcml_request_t parseCLI11(int argc, char* argv[]) {
         });
 
     app.add_option("--register-ext",
-        "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++")
+        "Register file extension EXT for source-code language LANG, e.g., --register-ext h=C++. "
+        "The language NONE disables EXT, e.g., --register-ext py=NONE")
         ->type_name("EXT=LANG")
         ->group("CREATING SRCML")
         ->type_size(-1)

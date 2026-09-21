@@ -5,4 +5,16 @@
   <using>using <namespace>namespace <name>std</name>  ;</namespace></using>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+  <using>using <name><name>std</name><operator>::</operator><name>operator<name>+</name></name></name>;</using>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+  <using>using <name><name>std</name><operator>::</operator><name>literals</name><operator>::</operator><name>string_view_literals</name><operator>::</operator><name>operator<name>""sv</name></name></name>;</using> <decl_stmt><decl><type><name>int</name></type> <name>n</name></decl>;</decl_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
+  <using>using <name><name>std</name><operator>::</operator><name>literals</name><operator>::</operator><name>string_view_literals</name><operator>::</operator><name>operator<name>""sv</name></name></name>;</using>
+</unit>
+
 </unit>

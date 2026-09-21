@@ -98,13 +98,7 @@ int src_input_filesystem(ParseQueue& queue,
         // Skip any files that have a non-source-code extension that we support
         // Prevents large non-source-code files from being processed, which takes a long
         // time because srcml is reading the entire file
-
-        std::string filename_to_check = input_file.extension;
-        if (filename_to_check == ".txt") {
-            filename_to_check = input_file.filename;
-        }
-
-        if (!srcml_check_extension(filename_to_check.data())) {
+        if (!srcml_archive_check_extension(srcml_arch, input_file.extension.data()))
             input_file.skip = true;
         }
 

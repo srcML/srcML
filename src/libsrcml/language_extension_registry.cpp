@@ -101,9 +101,6 @@ bool get_language_extension(const char * const inpath, std::string & extension)
  */
 bool language_extension_registry::register_user_ext(const char* ext, int language) {
 
-    if (!language)
-        return false;
-
     language_extension apair = language_extension(ext, language);
     registered_languages.push_back(apair);
 
@@ -115,15 +112,19 @@ bool language_extension_registry::register_user_ext(const char* ext, int languag
  * @param ext the file extension
  * @param language string representation of language to associated with extention
  *
- * Register a user extension overriding defaults.
+ * Register a user extension overriding defaults. The language NONE
+ * disables the extension.
  *
  * @returns a bool indicating success.
  */
 bool language_extension_registry::register_user_ext(const char* ext, const char* language) {
 
-    int nlanguage = Language::getLanguage(language);
-    if (!nlanguage)
-        return false;
+    int nlanguage = Language::LANGUAGE_NONE;
+    if (language != "NONE"sv) {
+        nlanguage = Language::getLanguage(language);
+        if (!nlanguage)
+            return false;
+    }
 
     register_user_ext(ext, nlanguage);
 
