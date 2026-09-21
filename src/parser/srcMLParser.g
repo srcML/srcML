@@ -996,6 +996,14 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START |
 
+        // next function declarator in a declaration, e.g., void foo(), bar();
+        {
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && inMode(MODE_FUNCTION_TAIL)
+            && !inMode(MODE_ANONYMOUS)
+        }?
+        function_declaration_next |
+
         comma |
 
         { inLanguage(LANGUAGE_JAVA) }?
@@ -1936,12 +1944,86 @@ trailing_return[] { int type_count = 0; int secondtoken = 0; int after_token = 0
 
   Process the rest of the function and get to the end.
 */
-function_rest[int& fla] { ENTRY_DEBUG } :
+function_rest[int& fla, bool inparam = false] { ENTRY_DEBUG } :
         eat_optional_macro_call
 
         parameter_list
         function_tail
         check_end[fla]
+        function_declarator_list[fla, inparam]
+;
+
+/*
+  function_declarator_list
+
+  Checks for multiple function declarators in one declaration, e.g., void foo(), bar();
+  Only when all of the remaining declarators are functions. Works in guessing mode.
+*/
+function_declarator_list[int& fla, bool inparam] {
+        if (fla == COMMA && !inparam && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
+
+            int start = mark();
+            ++inputState->guessing;
+
+            try {
+                function_declarator_list_check();
+                fla = TERMINATE;
+            } catch (...) {}
+
+            --inputState->guessing;
+            rewind(start);
+        }
+} :;
+
+/*
+  function_declarator_list_check
+
+  Checks the remaining function declarators in a declaration, e.g., bar(), baz(); in void foo(), bar(), baz();
+*/
+function_declarator_list_check[] { ENTRY_DEBUG } :
+        function_identifier
+        eat_optional_macro_call
+        parameter_list
+        function_tail
+
+        (options { greedy = true; } :
+            COMMA
+            function_identifier
+            eat_optional_macro_call
+            parameter_list
+            function_tail
+        )*
+
+        TERMINATE
+;
+
+/*
+  function_declaration_next
+
+  Handles the next function declarator in a declaration, e.g., bar() in void foo(), bar();
+*/
+function_declaration_next[] { ENTRY_DEBUG } :
+        {
+            // end the current function declaration
+            endMode(MODE_STATEMENT);
+        }
+
+        comma_marked[false]
+
+        {
+            // next function declaration uses the type of the previous
+            startNewMode(MODE_STATEMENT | MODE_FUNCTION_NAME);
+
+            startElement(SFUNCTION_DECLARATION);
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(STYPEPREV);
+
+            endMode(MODE_LOCAL);
+        }
+
+        function_header[0]
 ;
 
 /*
@@ -6790,7 +6872,7 @@ pattern_check_core[
                     // this is not a constructor
                     set_bool[isconstructor, false]
 
-                    function_rest[fla] |
+                    function_rest[fla, inparam] |
 
                     // POF (Plain Old Function)
                     // need at least one non-specifier in the type (not including the name)
@@ -6801,7 +6883,7 @@ pattern_check_core[
                         || saveisdestructor
                         || isconstructor
                     }?
-                    function_rest[fla]
+                    function_rest[fla, inparam]
                 ) |
 
                 {

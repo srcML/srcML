@@ -13,7 +13,7 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
 <class>class <name>A</name> <block>{<private type="default"> 
-    <friend>friend <decl_stmt><decl><type><name>int</name></type> <name>f</name><argument_list>()</argument_list></decl>, <decl><type ref="prev"/><name>g</name><argument_list>()</argument_list></decl>;</decl_stmt></friend> </private>}</block>;</class>
+    <friend>friend <function_decl><type><name>int</name></type> <name>f</name><parameter_list>()</parameter_list></function_decl>, <function_decl><type ref="prev"/><name>g</name><parameter_list>()</parameter_list>;</function_decl></friend> </private>}</block>;</class>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C++">
