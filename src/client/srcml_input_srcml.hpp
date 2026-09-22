@@ -22,7 +22,6 @@ struct srcml_archive;
 int srcml_input_srcml(ParseQueue& queue,
                        srcml_archive* srcml_output_archive,
                        const srcml_request_t& srcml_request,
-                       const srcml_input_src& srcml_input_source,
-                       const std::optional<size_t> & revision);
+                       const srcml_input_src& srcml_input_source);
 
 #endif

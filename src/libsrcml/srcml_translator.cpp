@@ -242,14 +242,6 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
         mergedns += *unit->namespaces;
     }
 
-    // if a srcdiff revision, remove the srcdiff namespace
-    if (unit->archive->revision_number) {
-        auto it = findNSURI(mergedns, SRCML_DIFF_NS_URI);
-        if (it != mergedns.end()) {
-            mergedns.erase(it);
-        }
-    }
-
     std::string derivedLanguage = unit->language ? *unit->language : Language(unit->derived_language).getLanguageString();
 
     // create a new unit start tag with all new info (hash value, namespaces actually used, etc.)
@@ -259,25 +251,19 @@ bool srcml_translator::add_unit(const srcml_unit* unit) {
 
     out.startUnit(derivedLanguage.data(),
             (options & SRCML_OPTION_ARCHIVE) && unit->revision ? unit->revision->data() : languageRevision,
-            (options & SRCML_OPTION_ARCHIVE) || !unit->url       ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->url, (int) *unit->archive->revision_number).data() : unit->url->data()),
-            !unit->filename  ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->filename, (int) *unit->archive->revision_number).data() : unit->filename->data()),
-            !unit->version   ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->version, (int) *unit->archive->revision_number).data() : unit->version->data()),
-            !unit->timestamp ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->timestamp, (int) *unit->archive->revision_number).data() : unit->timestamp->data()),
-            !unit->hash      ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->hash, (int) *unit->archive->revision_number).data() : unit->hash->data()),
-            !unit->encoding  ? 0 : (unit->archive->revision_number ? attribute_revision(*unit->encoding, (int) *unit->archive->revision_number).data() : unit->encoding->data()),
+            (options & SRCML_OPTION_ARCHIVE) || !unit->url       ? 0 : unit->url->data(),
+            !unit->filename  ? 0 : unit->filename->data(),
+            !unit->version   ? 0 : unit->version->data(),
+            !unit->timestamp ? 0 : unit->timestamp->data(),
+            !unit->hash      ? 0 : unit->hash->data(),
+            !unit->encoding  ? 0 : unit->encoding->data(),
             unit->attributes,
             false);
 
     // write out the contents, excluding the start and end unit tags
     int size = unit->content_end - unit->content_begin - 1;
 
-    if (unit->archive->revision_number && issrcdiff(unit->archive->namespaces)) {
-
-        std::string s = extract_revision(unit->srcml.data() + unit->content_begin, size, (int) *unit->archive->revision_number);
-
-        xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST s.data(), (int) s.size());
-
-    } else if (size > 0) {
+    if (size > 0) {
         xmlTextWriterWriteRawLen(out.getWriter(), BAD_CAST (unit->srcml.data() + unit->content_begin), size);
     }
 
