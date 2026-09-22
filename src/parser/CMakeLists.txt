@@ -111,16 +111,16 @@ target_compile_options(parser PRIVATE ${SRCML_PARSER_DISABLED_WARNINGS})
 #    1 optional parameter INCLUDE_GRAMMAR
 # Use with named arguments.
 #
-macro(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
+function(RunAntlr OUTPUT_FILES INPUT_FILES DEPENDENCIES INCLUDE_GRAMMAR)
 
     add_custom_command(OUTPUT  ${OUTPUT_FILES}
         DEPENDS ${INPUT_FILES} ${DEPENDENCIES}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-        COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib \"${INCLUDE_GRAMMAR}\" ${INPUT_FILES}
+        COMMAND ${ANTLR_EXE} -o \"${CMAKE_GENERATED_SOURCE_DIR}\" -glib "\"${INCLUDE_GRAMMAR}\"" ${INPUT_FILES}
         COMMAND ${CMAKE_COMMAND} -E touch ${OUTPUT_FILES}
     )
 
-endmacro(RunAntlr)
+endfunction(RunAntlr)
 
 macro(lexerFiles LEXER)
     set(${LEXER}LexerOutputFiles
@@ -161,7 +161,7 @@ lexerFiles(Keyword)
 RunAntlr("${KeywordLexerOutputFiles}"
     KeywordLexer.g
     ${CMAKE_GENERATED_SOURCE_DIR}/OperatorLexer.cpp
-    "OperatorLexer.g\;TextLexer.g"
+    "OperatorLexer.g;TextLexer.g"
 )
 
 # Running ANTLR on srcMLParser.g
@@ -174,5 +174,5 @@ set(srcMLParserOutputFiles
 RunAntlr("${srcMLParserOutputFiles}"
     srcMLParser.g
     "srcMLParser.g;${CMAKE_GENERATED_SOURCE_DIR}/KeywordLexer.cpp"
-    "OperatorLexer.g\;KeywordLexer.g\;TextLexer.g"
+    "OperatorLexer.g;KeywordLexer.g;TextLexer.g"
 )

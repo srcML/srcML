@@ -245,6 +245,31 @@ int main(int, char* argv[]) {
     {
         srcml_archive* archive = srcml_archive_create();
 
+        dassert(srcml_archive_register_file_extension(archive, "py", "NONE"), SRCML_STATUS_OK);
+        dassert(srcml_archive_check_extension(archive, "main.py"), 0);
+        dassert(srcml_archive_check_extension(archive, "main.pyi"), std::string("Python"));
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_archive_register_file_extension(archive, "py", "NONE"), SRCML_STATUS_OK);
+        dassert(srcml_archive_register_file_extension(archive, "py", "Python"), SRCML_STATUS_OK);
+        dassert(srcml_archive_check_extension(archive, "main.py"), std::string("Python"));
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
+        dassert(srcml_archive_register_file_extension(archive, "py", ""), SRCML_STATUS_INVALID_INPUT);
+        srcml_archive_free(archive);
+    }
+
+    {
+        srcml_archive* archive = srcml_archive_create();
+
         dassert(srcml_archive_register_file_extension(archive, "foo", 0), SRCML_STATUS_INVALID_ARGUMENT);
         srcml_archive_free(archive);
     }

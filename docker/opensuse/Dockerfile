@@ -43,6 +43,7 @@ RUN zypper --non-interactive refresh \
     libarchive-devel \
     libcurl-devel \
     libopenssl-devel \
+    libxcb-devel \
     libxml2-devel \
     libxslt-devel \
     make \

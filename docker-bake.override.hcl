@@ -43,7 +43,7 @@ variable "distributions" {
     { id = "opensuse", version_id = "15.2",   java_version_id="15.6",  name = "OpenSUSE 15.2", workflow = "rpm",    opensuse="leap" },
     { id = "opensuse", version_id = "15.1",   java_version_id="15.6",  name = "OpenSUSE 15.1", workflow = "rpm",    opensuse="leap", tag = "earliest" },
     { id = "opensuse", version_id = "15",     java_version_id="15.6",  name = "OpenSUSE 15", workflow = "rpm",    opensuse="leap" },
-    { id = "opensuse", version_id = "latest", java_version_id="latest",  name = "OpenSUSE Tumbleweed", workflow = "rpm",    opensuse="tumbleweed", tag = "tumbleweed" }
+    { id = "opensuse", version_id = "tumbleweed", java_version_id="latest",  name = "OpenSUSE Tumbleweed", workflow = "rpm",    opensuse="tumbleweed", base_tag = "latest" }
   ]
 }
 

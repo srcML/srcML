@@ -77,3 +77,12 @@ check "$fstuff" || [[ "$OSTYPE" == 'msys' ]]
 
 srcml - -o /dev/stdout <<< "$foutput" || [[ "$OSTYPE" == 'msys' ]]
 check "$fstuff" || [[ "$OSTYPE" == 'msys' ]]
+
+# an empty value after the equals is not an output filename, so the output is
+# discarded and the input file is left alone
+createfile sub/a.cpp "a;"
+
+echo "b;" | srcml -l C++ --output= sub/a.cpp
+check ""
+
+check sub/a.cpp "a;"

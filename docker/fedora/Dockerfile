@@ -40,6 +40,7 @@ RUN dnf upgrade -y \
     git \
     libarchive-devel \
     libcurl-devel \
+    libxcb-devel \
     libxml2-devel \
     libxslt-devel \
     make \

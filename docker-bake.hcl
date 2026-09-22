@@ -25,6 +25,7 @@
 # * `package` - Download the installer files to a host directory
 # * `log`  - Download the test logs to a host directory
 # * `image` - Create an image with only the installer files (no o.s.)
+# * `installcheck` - Install the package on a clean distribution base image and smoke-test it
 
 # Override using the environment variable SRCML_BAKE_SRC. E.g.,
 #   SRCML_BAKE_SRC="."
@@ -151,7 +152,7 @@ EOF
   }
   context = context(dist.id)
   args = {
-    TAG          = dist.version_id
+    TAG          = try(dist.base_tag, dist.version_id)
     JAVA_TAG     = dist.java_version_id
     CMAKE_VERSION = SRCML_BAKE_CMAKE_VERSION
     CMAKE_BINARY = try(dist.cmake, "")
@@ -363,6 +364,32 @@ COPY --from="build" \
 EOF
   tags     = [categoryTagName(dist, "image")]
   # output   = ["type=registry"]
+  inherits = ["base"]
+}
+
+# Install check for all distributions
+# Installs the generated package into a stock distribution base image (with no
+# build dependencies) to verify that the package's declared runtime dependencies
+# resolve from the standard repositories, then smoke-tests the installed srcml.
+# The per-distribution Dockerfiles are in docker/installcheck/${dist.id}.
+target "installcheck" {
+  name = categoryTarget(dist, "installcheck")
+  description = "srcML install check for ${dist.name}"
+  matrix = {
+    dist = distributions
+  }
+  context = "${SRCML_BAKE_CONTEXT_DIR}/installcheck/${dist.id}"
+  contexts = {
+    build = "target:${categoryTarget(dist, "build")}"
+  }
+  depends-on = [
+    categoryTarget(dist, "build"),
+  ]
+  args = {
+    TAG      = try(dist.base_tag, dist.version_id)
+    OPENSUSE = try(dist.opensuse, "")
+  }
+  tags     = [categoryTagName(dist, "installcheck")]
   inherits = ["base"]
 }
 

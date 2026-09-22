@@ -35,6 +35,7 @@ namespace {
     // with a trivial encoding process
     bool compatibleEncodings(const char* encoding1, const char* encoding2) {
 
+#if _LIBICONV_VERSION >= 0x0108
         // setup encoder between the two encodings
         iconv_t ce = iconv_open(encoding1, encoding2);
         if (ce == (iconv_t) -1)
@@ -42,36 +43,153 @@ namespace {
 
         // see if encoding is trivial
         int trivial = false;
-#if _LIBICONV_VERSION >= 0x0108
         iconvctl(ce, ICONV_TRIVIALP, &trivial);
-#endif
         iconv_close(ce);
 
         return trivial != 0;
+#else
+        // no iconvctl(), e.g., glibc, so compare the normalized encoding names instead
+        return std::string_view(encoding1) == std::string_view(encoding2);
+#endif
     }
-#if 0
-    std::string estimateEncoding(const std::vector<char>& buffer) {
 
-        bool ascii = true;
-        for (const unsigned char& c : buffer) {
-            // no ISO-8859-1 numbers in this range
-            if (c > 0x7E && c < 0xA0)
-                return "UTF-8";
+    // the encodings indicated by a BOM (Byte Order Mark), matched on the first four bytes
+    // of the data with any missing ones as NUL
+    // the UTF-32 ones are before the UTF-16 ones, as the UTF-32LE BOM starts with the UTF-16LE one
+    struct BOM {
+        uint32_t mask;
+        uint32_t value;
+        size_t size;
+        std::string_view encoding;
+        // the encoding without the byte order, which the BOM also indicates
+        std::string_view generic;
+    };
+    const BOM boms[] = {
+        { 0x00FFFFFF, 0x00BFBBEF, 3, "UTF-8"sv,    "UTF-8"sv  },
+        { 0xFFFFFFFF, 0x0000FEFF, 4, "UTF-32LE"sv, "UTF-32"sv },
+        { 0xFFFFFFFF, 0xFFFE0000, 4, "UTF-32BE"sv, "UTF-32"sv },
+        { 0x0000FFFF, 0x0000FEFF, 2, "UTF-16LE"sv, "UTF-16"sv },
+        { 0x0000FFFF, 0x0000FFFE, 2, "UTF-16BE"sv, "UTF-16"sv },
+    };
 
-            if (c > 0x7E)
-                ascii = false;
+    // the UTF-16 or UTF-32 encoding of data that has no BOM, or empty if it is neither
+    // ASCII characters, which is nearly all of any source code, are stored with NUL bytes
+    // for their high-order bytes, so which positions those NUL bytes fall in gives
+    // both the width of a character and the byte order
+    std::string_view wideEncoding(const std::vector<char>& buffer) {
+
+        // there has to be at least a full group of four bytes for the positions
+        // of the NUL bytes within it to mean anything
+        if (buffer.size() < 4)
+            return ""sv;
+
+        // NUL bytes counted by their position within a group of four
+        size_t nul[4] = { 0, 0, 0, 0 };
+        for (size_t i = 0; i < buffer.size(); ++i)
+            if (buffer[i] == '\0')
+                ++nul[i % 4];
+
+        // each position occurs once in every group, so this is how many bytes are
+        // in each of the four counts above
+        const size_t groups = buffer.size() / 4;
+
+        // nearly all of the high-order byte positions are NUL, and nearly none of the
+        // low-order ones, rather than all and none, as a character outside the BMP is
+        // a surrogate pair whose low-order byte is NUL, and one such as U+4E00 has a
+        // NUL low-order byte of its own, neither being common enough in source code
+        // to change which encoding the data looks like
+        const size_t few = groups / 4;
+        const size_t most = groups - few;
+
+        // three NUL bytes per character, with the data byte first or last
+        if (nul[0] <= few && nul[1] >= most && nul[2] >= most && nul[3] >= most)
+            return "UTF-32LE"sv;
+        if (nul[3] <= few && nul[0] >= most && nul[1] >= most && nul[2] >= most)
+            return "UTF-32BE"sv;
+
+        // one NUL byte per character, in either the odd or the even positions
+        if (nul[0] <= few && nul[2] <= few && nul[1] >= most && nul[3] >= most)
+            return "UTF-16LE"sv;
+        if (nul[1] <= few && nul[3] <= few && nul[0] >= most && nul[2] >= most)
+            return "UTF-16BE"sv;
+
+        return ""sv;
+    }
+
+    // indicates whether the buffer is valid UTF-8, which includes plain ASCII
+    // note that the fallback encoding cannot be detected this way, as every byte
+    // sequence is valid ISO-8859-1, so it is only ever a fallback for what is not UTF-8
+    // continued indicates that the data may start inside a multibyte sequence whose
+    // lead byte was in the data read before it
+    bool validUTF8(const std::vector<char>& buffer, bool continued = false) {
+
+        const unsigned char* pc = reinterpret_cast<const unsigned char*>(buffer.data());
+        const unsigned char* last = pc + buffer.size();
+
+        // at most three continuation bytes can belong to a sequence that started earlier
+        if (continued)
+            for (int i = 0; i < 3 && pc < last && (*pc & 0xC0) == 0x80; ++i)
+                ++pc;
+
+        while (pc < last) {
+
+            // ASCII, i.e., a single-byte sequence
+            if (*pc < 0x80) {
+                ++pc;
+                continue;
+            }
+
+            // number of continuation bytes required by this lead byte
+            // 0xC0 and 0xC1 are overlong, 0xF5 and above are past U+10FFFF,
+            // and 0x80 - 0xBF is a continuation byte without a lead byte
+            int following = 0;
+            if (*pc >= 0xC2 && *pc <= 0xDF)
+                following = 1;
+            else if ((*pc & 0xF0) == 0xE0)
+                following = 2;
+            else if (*pc >= 0xF0 && *pc <= 0xF4)
+                following = 3;
+            else
+                return false;
+
+            // a sequence cut off by the end of the buffer is not an error,
+            // as the rest of it is in the data read next
+            if (last - pc <= following)
+                return true;
+
+            for (int i = 1; i <= following; ++i)
+                if ((pc[i] & 0xC0) != 0x80)
+                    return false;
+
+            // overlong encodings, UTF-16 surrogates, and values past U+10FFFF
+            // that the lead byte alone does not rule out
+            if (following == 2 && ((pc[0] == 0xE0 && pc[1] < 0xA0) || (pc[0] == 0xED && pc[1] >= 0xA0)))
+                return false;
+            if (following == 3 && ((pc[0] == 0xF0 && pc[1] < 0x90) || (pc[0] == 0xF4 && pc[1] >= 0x90)))
+                return false;
+
+            pc += following + 1;
         }
 
-        if (ascii)
-            return "ASCII";
-
-        return "ISO-8859-1";
+        return true;
     }
-#endif
 
-    // some common aliases that libiconv does not accept
+    // some common aliases that need mappings for libiconv
     std::map<std::string_view, std::string_view> encodingAliases = {
+        { "UTF8", "UTF-8"},
+        { "CSUTF8", "UTF-8"},
         { "UTF16", "UTF-16"},
+        { "CSUTF16", "UTF-16"},
+        { "UTF16LE", "UTF-16LE"},
+        { "CSUTF16LE", "UTF-16LE"},
+        { "UTF16BE", "UTF-16BE"},
+        { "CSUTF16BE", "UTF-16BE"},
+        { "UTF32", "UTF-32"},
+        { "CSUTF32", "UTF-32"},
+        { "UTF32LE", "UTF-32LE"},
+        { "CSUTF32LE", "UTF-32LE"},
+        { "UTF32BE", "UTF-32BE"},
+        { "CSUTF32BE", "UTF-32BE"},
         { "UCS2", "UCS-2"},
         { "UCS4", "UCS-4"},
     };
@@ -243,6 +361,62 @@ UTF8CharBuffer::UTF8CharBuffer(void* context, srcml_read_callback read_callback,
 }
 
 /**
+ * setEncoding
+ * @param name the encoding to convert from
+ *
+ * Setup the converter from the given encoding to UTF-8, replacing any current one.
+ *
+ * @returns whether the conversion is supported
+ */
+bool UTF8CharBuffer::setEncoding(std::string_view name) {
+
+    // a copy, as the name may be a view of the current encoding
+    std::string next(name);
+
+    // keep any current converter until the new one is known to work
+    iconv_t nic = iconv_open("UTF-8", next.data());
+    if (nic == (iconv_t) -1) {
+        fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", next.data());
+        return false;
+    }
+
+    if (ic)
+        iconv_close(ic);
+    ic = nic;
+    encoding = std::move(next);
+
+    // see if this encoding to UTF-8 is trivial, if so we can use raw characters directly
+#if _LIBICONV_VERSION >= 0x0108
+    int result = false;
+    iconvctl(ic, ICONV_TRIVIALP, &result);
+    trivial = result != 0;
+#else
+    // no iconvctl(), e.g., glibc, so compare the normalized encoding name instead
+    trivial = encoding == "UTF-8"sv;
+#endif
+
+    return true;
+}
+
+/**
+ * setFallbackEncoding
+ *
+ * Switch a detected encoding to the one to use for data that turned out not to be UTF-8.
+ *
+ * @returns whether the conversion is supported
+ */
+bool UTF8CharBuffer::setFallbackEncoding() {
+
+    if (!setEncoding("ISO-8859-1"sv))
+        return false;
+
+    // every byte sequence is valid ISO-8859-1, so there is nothing left to correct
+    detected = false;
+
+    return true;
+}
+
+/**
  * readChars
  *
  * Read and process the next sequence of data.
@@ -290,67 +464,74 @@ size_t UTF8CharBuffer::readChars() {
         for (size_t i = 0; i < 4 && i < raw.size(); ++i)
             data.d[i] = static_cast<unsigned char>(raw[i]);
 
-        // check for UTF-8 BOM
-        if ((data.i & 0x00FFFFFF) == 0x00BFBBEF) {
+        // check for a BOM
+        for (const auto& bom : boms) {
+            if (raw.size() < bom.size || (data.i & bom.mask) != bom.value)
+                continue;
 
-            // a trivial conversion, so BOM (Byte Order Mark) for UTF-8 has to be manually skipped
-            pos += 3;
+            // the BOM is not part of the source, so it is skipped
+            pos += bom.size;
 
-            // no encoding specified (by user) then UTF-8, otherwise check if it is compatible with UTF-8
-            if (encoding.empty()) {
-                encoding = "UTF-8";
-            } else if (encoding != "UTF-8"sv && !compatibleEncodings(encoding.data(), "UTF-8")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-8 BOM\n", encoding.data());
+            // no encoding specified (by user), or the one of the BOM without its byte order,
+            // then the encoding of the BOM, otherwise check if it is compatible with it
+            if (encoding.empty() || compatibleEncodings(encoding.data(), bom.generic.data())) {
+                encoding = bom.encoding;
+            } else if (!compatibleEncodings(encoding.data(), bom.encoding.data())) {
+                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a %s BOM\n", encoding.data(), bom.generic.data());
             }
+            break;
         }
 
-        // auto-detect UTF-16 based on BOM
-        // both UTF-16LE and UTF-16BE are determined automatically from BOM
-        // and processed as UTF-16
-        if ((data.i & 0x0000FFFF) == 0x0000FFFE || (data.i & 0x0000FFFF) == 0x0000FEFF) {
+        // no encoding specified and no BOM, so detect it from the data itself
+        // this is a detection over the first read only, so it may be corrected below
+        if (encoding.empty()) {
 
-            // no encoding specified (by user) then UTF-16, otherwise check if it is compatible with UTF-16
+            // UTF-16 and UTF-32 are only missing a BOM, and are found from the data layout
+            encoding = wideEncoding(raw);
+
+            // of the rest, only UTF-8 can be identified from the data, so it is a guess
+            // that later data may correct, while the ISO-8859-1 fallback is never
+            // corrected, as it accepts any byte sequence at all
             if (encoding.empty()) {
-                encoding = "UTF-16";
-            } else if (encoding != "UTF-16"sv && !compatibleEncodings(encoding.data(), "UTF-16")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-16 BOM\n", encoding.data());
+                detected = validUTF8(raw);
+                encoding = detected ? "UTF-8"sv : "ISO-8859-1"sv;
             }
         }
-
-        // auto-detect UTF-32 based on BOM
-        // both UTF-32LE and UTF-32BE are determined automatically from BOM
-        // and processed as UTF-32
-        if (data.i == 0xFFFE0000 || data.i == 0xFEFF0000) {
-
-            // no encoding specified (by user) then UTF-32, otherwise check if it is compatible with UTF-32
-            if (encoding.empty()) {
-                encoding = "UTF-32";
-            } else if (encoding != "UTF-32"sv && !compatibleEncodings(encoding.data(), "UTF-32")) {
-                fprintf(stderr, "Warning: the encoding %s was specified, but the source code has a UTF-32 BOM\n", encoding.data());
-            }
-        }
-
-        // if no encoding found or specified, assume ISO-8859-1
-        if (encoding.empty())
-            encoding = "ISO-8859-1";
 
         // setup encoder from encoding to UTF-8
-        ic = iconv_open("UTF-8", encoding.data());
-        if (ic == (iconv_t) -1) {
-            if (errno == EINVAL) {
-                fprintf(stderr, "srcml: Conversion from encoding '%s' not supported\n\n", encoding.data());
-                return 0;
-            }
-        }
+        if (!setEncoding(encoding))
+            return 0;
 
-        // see if this encoding to UTF-8 is trivial, if so we can use raw characters directly
-#if _LIBICONV_VERSION >= 0x0108
-        iconvctl(ic, ICONV_TRIVIALP, &trivial);
-#else
-        trivial = false;
-#endif
+        // a trivial conversion skips over a BOM in the raw data, but any other converts
+        // all of the raw data, so the BOM has to be removed from it
+        if (!trivial && pos) {
+            raw.erase(raw.begin(), raw.begin() + static_cast<std::ptrdiff_t>(pos));
+            pos = 0;
+        }
     }
+    bool firstData = firstRead;
     firstRead = false;
+
+    // a trivial conversion passes the raw characters straight through, so they are
+    // checked here instead of relying on the conversion to reject them
+    // the first data read of a detected encoding was already checked by the detection
+    // above, and any data after the first may start inside a multibyte sequence that
+    // the data before it started
+    if (trivial && !(firstData && detected) && !validUTF8(raw, !firstData)) {
+
+        // a detected encoding is only a guess based on the data read so far,
+        // so data that is not valid means the guess was wrong
+        if (detected) {
+            if (!setFallbackEncoding())
+                return 0;
+
+        // a specified encoding is not a guess, so data that is not valid in it
+        // is an error, as passing it through would produce srcML that is not valid XML
+        } else {
+            fprintf(stderr, "srcml: Input is not valid '%s'\n\n", encoding.data());
+            return 0;
+        }
+    }
 
     // for non-trivial conversions, convert from raw to cooked
     if (!trivial) {
@@ -369,7 +550,34 @@ size_t UTF8CharBuffer::readChars() {
 
         // convert from raw characters to cooked, encoded in UTF-8 characters
         size_t binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
-        if (binsize == (size_t) -1) {
+
+        // a detected encoding is only a guess based on the data read so far,
+        // so an invalid sequence in later data means the guess was wrong
+        // fall back and convert this data again
+        if (binsize == (size_t) -1 && errno == EILSEQ && detected) {
+
+            if (!setFallbackEncoding())
+                return 0;
+
+            linbuf = raw.data();
+            inbytesleft = raw.size();
+            loutbuf = cooked.data();
+            outbytesleft = cooked.size();
+
+            binsize = iconv(ic, &linbuf, &inbytesleft, &loutbuf, &outbytesleft);
+        }
+
+        // an invalid sequence is an error, as only a detected encoding is a guess that
+        // the fallback above corrects, while a specified one is not
+        if (binsize == (size_t) -1 && errno == EILSEQ) {
+            fprintf(stderr, "srcml: Input is not valid '%s'\n\n", encoding.data());
+            return 0;
+        }
+
+        // an incomplete multibyte sequence at the end of the data is not an error,
+        // as the rest of it is in the data read next, and the bytes of it are kept
+        // in inbytesleft and moved to the start of the buffer below
+        if (binsize == (size_t) -1 && errno != EINVAL) {
             fprintf(stderr, "%s\n", strerror(errno));
             return 0;
         }
@@ -382,6 +590,14 @@ size_t UTF8CharBuffer::readChars() {
         // so just move all of them to the start of the buffer
         if (inbytesleft)
             std::move(linbuf, linbuf + inbytesleft, raw.begin());
+
+        // the data read was only part of a multibyte sequence, so nothing could be
+        // converted from it, and more data is needed before there is a character
+        // to return, as a count of zero here would be taken for the end of the input
+        if (cooked.empty() && inbytesleft) {
+            insize = 0;
+            return readChars();
+        }
     }
 
     return trivial ? raw.size() : cooked.size();

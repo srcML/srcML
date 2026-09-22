@@ -40,3 +40,8 @@ check "\r\na;\r\n"
 
 srcml --text="\na;\n" -l C++ | srcml --unit=1 --eol=Windows
 check "\r\na;\r\n"
+
+# an empty value after the equals is dropped, so the following input filename
+# becomes the option value
+echo "a;" | srcml -l C++ --eol= sub/a.cpp --output-src
+check_exit 2

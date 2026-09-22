@@ -996,6 +996,14 @@ start[] { ++start_count; ENTRY_DEBUG_START ENTRY_DEBUG } :
         // end of line
         line_continuation | EOL | LINE_COMMENT_START | LINE_DOXYGEN_COMMENT_START |
 
+        // next function declarator in a declaration, e.g., void foo(), bar();
+        {
+            (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))
+            && inMode(MODE_FUNCTION_TAIL)
+            && !inMode(MODE_ANONYMOUS)
+        }?
+        function_declaration_next |
+
         comma |
 
         { inLanguage(LANGUAGE_JAVA) }?
@@ -1936,12 +1944,86 @@ trailing_return[] { int type_count = 0; int secondtoken = 0; int after_token = 0
 
   Process the rest of the function and get to the end.
 */
-function_rest[int& fla] { ENTRY_DEBUG } :
+function_rest[int& fla, bool inparam = false] { ENTRY_DEBUG } :
         eat_optional_macro_call
 
         parameter_list
         function_tail
         check_end[fla]
+        function_declarator_list[fla, inparam]
+;
+
+/*
+  function_declarator_list
+
+  Checks for multiple function declarators in one declaration, e.g., void foo(), bar();
+  Only when all of the remaining declarators are functions. Works in guessing mode.
+*/
+function_declarator_list[int& fla, bool inparam] {
+        if (fla == COMMA && !inparam && (inLanguage(LANGUAGE_C) || inLanguage(LANGUAGE_CXX))) {
+
+            int start = mark();
+            ++inputState->guessing;
+
+            try {
+                function_declarator_list_check();
+                fla = TERMINATE;
+            } catch (...) {}
+
+            --inputState->guessing;
+            rewind(start);
+        }
+} :;
+
+/*
+  function_declarator_list_check
+
+  Checks the remaining function declarators in a declaration, e.g., bar(), baz(); in void foo(), bar(), baz();
+*/
+function_declarator_list_check[] { ENTRY_DEBUG } :
+        function_identifier
+        eat_optional_macro_call
+        parameter_list
+        function_tail
+
+        (options { greedy = true; } :
+            COMMA
+            function_identifier
+            eat_optional_macro_call
+            parameter_list
+            function_tail
+        )*
+
+        TERMINATE
+;
+
+/*
+  function_declaration_next
+
+  Handles the next function declarator in a declaration, e.g., bar() in void foo(), bar();
+*/
+function_declaration_next[] { ENTRY_DEBUG } :
+        {
+            // end the current function declaration
+            endMode(MODE_STATEMENT);
+        }
+
+        comma_marked[false]
+
+        {
+            // next function declaration uses the type of the previous
+            startNewMode(MODE_STATEMENT | MODE_FUNCTION_NAME);
+
+            startElement(SFUNCTION_DECLARATION);
+
+            startNewMode(MODE_LOCAL);
+
+            startElement(STYPEPREV);
+
+            endMode(MODE_LOCAL);
+        }
+
+        function_header[0]
 ;
 
 /*
@@ -2127,16 +2209,24 @@ overloaded_operator[] { CompleteElement element(this); ENTRY_DEBUG } :
             LPAREN
             RPAREN |
 
-            // for form operator type
+            // for form operator type, including cv-qualifiers and modifiers, e.g., operator const int*, operator int const&
             { LA(1) != DESTOP }?
-            (compound_name) => compound_name |
+            ((options { greedy = true; } : { LA(1) == CONST || LA(1) == VOLATILE }? single_keyword_specifier)* compound_name) =>
+            (options { greedy = true; } : { LA(1) == CONST || LA(1) == VOLATILE }? single_keyword_specifier)*
+            compound_name
+            (options { greedy = true; } :
+                { LA(1) == CONST || LA(1) == VOLATILE }?
+                single_keyword_specifier |
+
+                multops
+            )* |
 
             // general operator name case is anything else
             {
                 startElement(SNAME);
             }
 
-            (options { greedy = true; } : ~(LPAREN))*
+            (options { greedy = true; } : ~(LPAREN | TERMINATE))*
         )
 ;
 
@@ -5017,6 +5107,11 @@ block_end[] { bool in_issue_empty = inTransparentMode(MODE_ISSUE_EMPTY_AT_POP); 
                 return;
             }
 
+            // C# property initializer, e.g., public int Bar { get; set; } = 0;
+            // the property declaration continues with the initialization and ends at the terminate
+            if (inLanguage(LANGUAGE_CSHARP) && inTransparentMode(MODE_PROPERTY) && inMode(MODE_INIT | MODE_EXPECT) && LA(1) == EQUAL)
+                return;
+
             // end all the statements this statement is nested in
             // special case when ending then of if statement: end down to either a block or top section, or to an if, whichever is reached first
             endDownToModeSet(MODE_BLOCK | MODE_TOP | MODE_IF | MODE_ELSE | MODE_TRY | MODE_ANONYMOUS);
@@ -6790,7 +6885,7 @@ pattern_check_core[
                     // this is not a constructor
                     set_bool[isconstructor, false]
 
-                    function_rest[fla] |
+                    function_rest[fla, inparam] |
 
                     // POF (Plain Old Function)
                     // need at least one non-specifier in the type (not including the name)
@@ -6801,7 +6896,7 @@ pattern_check_core[
                         || saveisdestructor
                         || isconstructor
                     }?
-                    function_rest[fla]
+                    function_rest[fla, inparam]
                 ) |
 
                 {
@@ -7133,9 +7228,9 @@ lead_type_identifier[] { ENTRY_DEBUG } :
   type_identifier
 */
 type_identifier[] { ENTRY_DEBUG } :
-        // any identifier that can appear first and can appear later as true suppresses the warning
-        // antlr forms rules as LA(1) && (true), so this does nothing
-        { true }?
+        // any identifier that can appear first and can appear later
+        // a Java array subscript, e.g., int @A [] foo, is only a non-lead type identifier
+        { !(inLanguage(LANGUAGE_JAVA_FAMILY) && LA(1) == LBRACKET) }?
         lead_type_identifier |
 
         non_lead_type_identifier
@@ -11355,7 +11450,7 @@ variable_declaration_nameinit[] { bool isthis = LA(1) == THIS; bool instypeprev 
 property_statement[int type_count] { ENTRY_DEBUG } :
         {
             // statement
-            startNewMode(MODE_STATEMENT | MODE_NO_BLOCK_CONTENT);
+            startNewMode(MODE_STATEMENT | MODE_NO_BLOCK_CONTENT | MODE_PROPERTY);
 
             startElement(SPROPERTY);
 
@@ -13530,7 +13625,7 @@ generic_argument_list[] {
             )
                 startElement(SGENERIC_ARGUMENT_LIST);
             else
-                startElement(STEMPLATE_PARAMETER_LIST);
+                startElement(SGENERIC_PARAMETER_LIST);
         }
 
         savenamestack[namestack_save]
@@ -15455,9 +15550,12 @@ offside_dedent[] { ENTRY_DEBUG } :
             )
                 consume();
 
+            // the innermost of these statements owns a following "elif"/"except"/"else"/"finally"
+            const srcMLState::MODE_TYPE owner = getFirstMode(MODE_IF_STATEMENT | MODE_TRY | MODE_FOR_LOOP_PY | MODE_WHILE_LOOP_PY);
+
             // special case to ensure "if" encloses the entire "if..elif..else" block
             if (inLanguage(LANGUAGE_PYTHON)
-                && inTransparentMode(MODE_IF_STATEMENT)
+                && (owner & MODE_IF_STATEMENT) != 0
                 && (LA(1) == PY_ELIF || LA(1) == ELSE)
             ) {
                 endDownToMode(MODE_IF_STATEMENT);
@@ -15466,7 +15564,7 @@ offside_dedent[] { ENTRY_DEBUG } :
 
             // special case to ensure "try" encloses the entire "try..except..else..finally" block
             if (inLanguage(LANGUAGE_PYTHON)
-                && inTransparentMode(MODE_TRY)
+                && (owner & MODE_TRY) != 0
                 && (LA(1) == PY_EXCEPT || LA(1) == ELSE || LA(1) == FINALLY)
             ) {
                 endDownToMode(MODE_TRY);
@@ -15474,13 +15572,13 @@ offside_dedent[] { ENTRY_DEBUG } :
             }
 
             // special case to ensure "for" encloses the entire "for..else" block
-            if (inLanguage(LANGUAGE_PYTHON) && LA(1) == ELSE && inTransparentMode(MODE_FOR_LOOP_PY)) {
+            if (inLanguage(LANGUAGE_PYTHON) && LA(1) == ELSE && (owner & MODE_FOR_LOOP_PY) != 0) {
                 endDownToMode(MODE_FOR_LOOP_PY);
                 return;
             }
 
             // special case to ensure "while" encloses the entire "while..else" block
-            if (inLanguage(LANGUAGE_PYTHON) && LA(1) == ELSE && inTransparentMode(MODE_WHILE_LOOP_PY)) {
+            if (inLanguage(LANGUAGE_PYTHON) && LA(1) == ELSE && (owner & MODE_WHILE_LOOP_PY) != 0) {
                 endDownToMode(MODE_WHILE_LOOP_PY);
                 return;
             }
@@ -17640,7 +17738,7 @@ type_alias_annotation_py[] { size_t lparen_types_size = 0; ENTRY_DEBUG } :
 
   Handles Python expressions in the control portion of a for-loop or comprehension.
 */
-control_initialization_py[] { ENTRY_DEBUG } :
+control_initialization_py[] { const antlr::Token* tuple_start = nullptr; ENTRY_DEBUG } :
         {
             assertMode(MODE_CONTROL_INITIALIZATION | MODE_EXPECT);
 
@@ -17671,7 +17769,12 @@ control_initialization_py[] { ENTRY_DEBUG } :
 
             // special non-parenthesized tuple logic outside of 'expression'
             { perform_tuple_check_no_paren_py() }?
-            control_tuple_no_paren_py |
+            { tuple_start = LT(1).get(); }
+            control_tuple_no_paren_py
+            {
+                if (LT(1).get() == tuple_start)
+                    break;
+            } |
 
             {
                 if (!inMode(MODE_EXPRESSION))

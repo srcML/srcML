@@ -77,3 +77,8 @@ check_exit 1
 
 echo "a;" | srcml -l C++ --element="pre:element" --srcql='FIND $N' -o result.xml
 check_exit 1
+
+# an empty value after the equals is dropped, so the following input filename
+# becomes the option value
+echo "a;" | srcml -l C++ --xpath="//src:name" --element= sub/a.cpp
+check_exit 2

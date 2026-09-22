@@ -52,7 +52,7 @@ if [[ "$OSTYPE" == 'msys' ]]; then
 else
     EOL="\n"
 	diff='diff '
-	if [ -z "$SRCML"]; then
+	if [ -z "$SRCML" ]; then
 
 	    if [ -e "/usr/bin/srcml" ]; then
 	        SRCML='/usr/bin/srcml'

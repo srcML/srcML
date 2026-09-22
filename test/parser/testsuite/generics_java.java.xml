@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Java" url="generics" filename="generics_java">
 
 <unit revision="1.0.0" language="Java">
-<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list type="generic">&lt;<parameter><name>T</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="Java">
@@ -38,31 +38,31 @@
 </unit>
 
 <unit revision="1.0.0" language="Java">
-<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name> <extends>extends <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list type="generic">&lt;<parameter><name>T</name> <extends>extends <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="Java">
-<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name> <extends>extends <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list type="generic">&lt;<parameter><name>?</name> <extends>extends <name>Object</name></extends></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="Java">
-<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list type="generic">&lt;<parameter><name>?</name></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="Java">
-<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>T</name> <super>super <name>Object</name></super></parameter>&gt;</parameter_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list type="generic">&lt;<parameter><name>T</name> <super>super <name>Object</name></super></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="Java">
-<class><specifier>public</specifier> class <name><name>Class</name><parameter_list>&lt;<parameter><name>?</name> <super>super <name>Object</name></super></parameter>&gt;</parameter_list></name> <block>{}</block></class>
+<class><specifier>public</specifier> class <name><name>Class</name><parameter_list type="generic">&lt;<parameter><name>?</name> <super>super <name>Object</name></super></parameter>&gt;</parameter_list></name> <block>{}</block></class>
 </unit>
 
 <unit revision="1.0.0" language="Java">
-<interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <block>{}</block></interface>
+<interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list type="generic">&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <block>{}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="Java">
-<interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list>&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <super_list><extends>extends <super><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></super></extends></super_list> <block>{}</block></interface>
+<interface><specifier>public</specifier> interface <name><name>Cage</name><parameter_list type="generic">&lt;<parameter><name>E</name></parameter>&gt;</parameter_list></name> <super_list><extends>extends <super><name><name>Collection</name><argument_list type="generic">&lt;<argument><name>E</name></argument>&gt;</argument_list></name></super></extends></super_list> <block>{}</block></interface>
 </unit>
 
 <unit revision="1.0.0" language="Java">

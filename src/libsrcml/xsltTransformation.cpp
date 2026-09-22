@@ -18,6 +18,7 @@
 #include <libxslt/xsltInternals.h>
 #include <libxslt/xsltutils.h>
 #include <libxslt/transform.h>
+#include <libxslt/extensions.h>
 #include <libexslt/exslt.h>
 
 #ifdef _MSC_VER
@@ -42,6 +43,11 @@ xsltTransformation::xsltTransformation(/* OPTION_TYPE& options, */ xmlDocPtr xsl
     stylesheet = xsltParseStylesheetDoc(xslt);
     if (!stylesheet)
         throw;
+
+    // initialize the EXSLT functions module data for this stylesheet now, as it is otherwise
+    // created lazily by the first xsltApplyStylesheetUser(), which races when units are
+    // transformed in parallel threads
+    xsltStyleGetExtData(stylesheet, BAD_CAST "http://exslt.org/functions");
 }
 
 /**

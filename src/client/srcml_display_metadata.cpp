@@ -140,7 +140,10 @@ void srcml_display_metadata(const srcml_request_t& srcml_request, const srcml_in
         std::unique_ptr<srcml_archive> srcml_arch(srcml_archive_create());
 
         int status = SRCML_STATUS_OK;
-        if (contains<int>(input)) {
+        if (input.memory) {
+            status = srcml_archive_read_open_memory(srcml_arch.get(), input.memory->data(), input.memory->size());
+        }
+        else if (contains<int>(input)) {
             status = srcml_archive_read_open_fd(srcml_arch.get(), input);
         }
         else if (contains<FILE*>(input)){

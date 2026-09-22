@@ -17,6 +17,7 @@
 
 #include <vector>
 #include <string>
+#include <string_view>
 #include <fstream>
 
 #include <memory>
@@ -132,6 +133,34 @@ int srcml_markup_version_number(const char* language) {
  * @return Version of the srcml markup as a string
  */
 const char* srcml_markup_version_string(const char* language) {
+
+    if (language == nullptr)
+        return "";
+
+    // srcdiff has a language per revision, e.g., "C++|Java", so the markup version
+    // is the markup version of each of those languages, in the same order
+    std::string_view languages(language);
+    if (languages.find('|') != std::string_view::npos) {
+
+        thread_local std::string versions;
+        versions.clear();
+
+        while (true) {
+
+            auto pos = languages.find('|');
+
+            // an unregistered language, or none, leaves that revision with no markup version
+            versions += srcml_markup_version_string(std::string(languages.substr(0, pos)).c_str());
+
+            if (pos == std::string_view::npos)
+                break;
+
+            versions += '|';
+            languages.remove_prefix(pos + 1);
+        }
+
+        return versions.data();
+    }
 
     // if the language is not registered
     if (srcml_markup_version_number(language) == 0)

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" revision="1.0.0" language="Python" url="destructor">
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>foo</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+<unit revision="1.0.0" language="Python">
+<class>class <name>A</name><block>:<block_content>
+    <function>def <name>__del__</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class>
+</unit>
+
+</unit>

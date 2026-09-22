@@ -98,3 +98,25 @@ check_exit 1
 # invalid combinations
 srcml -X --src-encoding "UTF-8" "foobar"
 check_exit 1
+
+# an empty value after the equals is dropped, so the following input filename
+# becomes the option value, e.g., --language= sub/a.cpp is --language "sub/a.cpp"
+createfile sub/a.cpp "a;"
+
+echo "a;" | srcml --language= sub/a.cpp
+check_exit 1
+
+echo "a;" | srcml -l C++ --src-encoding= sub/a.cpp
+check_exit 1
+
+echo "a;" | srcml -l C++ --xml-encoding= sub/a.cpp
+check_exit 1
+
+echo "a;" | srcml -l C++ --jobs= sub/a.cpp
+check_exit 1
+
+echo "a;" | srcml --unit= sub/a.cpp
+check_exit 1
+
+echo "a;" | srcml --xslt-param= sub/a.cpp
+check_exit 1

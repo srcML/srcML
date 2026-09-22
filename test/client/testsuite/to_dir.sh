@@ -59,3 +59,8 @@ srcml --verbose --to-dir '.' a.cpp.xml
 
 check sub/a.cpp "a;\n" "$output"
 check sub/b.cpp "b;\n"
+
+# an empty value after the equals is dropped, so the following input filename
+# becomes the option value
+echo "a;" | srcml -l C++ --to-dir= sub/a.cpp
+check_exit 1
