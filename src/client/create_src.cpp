@@ -218,7 +218,7 @@ void create_src(const srcml_request_t& srcml_request,
         std::string text;
         for (auto& input_source : input_sources) {
 
-            auto arch(srcml_read_open_internal(input_source, srcml_request.revision));
+            auto arch(srcml_read_open_internal(input_source));
 
             // move to the requested unit
             for (int i = 1; i < srcml_request.unit; ++i)
