@@ -180,11 +180,15 @@ void start_document(void* ctx) {
     state->ESCAPE_ENTRY     = xmlDictLookup(ctxt->dict, (const xmlChar*) "escape", (int)"escape"sv.size());
 
     // save the encoding from the input
+    // input->encoding is deprecated in libxml2 2.12+, but is still where older versions store a declared encoding
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     state->context->encoding = "UTF-8";
     if (ctxt->encoding && ctxt->encoding[0] != '\0')
         state->context->encoding = (const char *)ctxt->encoding;
     else if (ctxt->input)
         state->context->encoding = (const char *)ctxt->input->encoding;
+#pragma GCC diagnostic pop
 
     // process any upper layer start document handling
     state->context->handler->start_document(state->context);
@@ -700,6 +704,9 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
     // At this point, we have the end of a unit
 
+    // nameNr is deprecated in libxml2 2.14+, but there is no public replacement for the element depth
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     if (ctxt->nameNr == 2 || !state->context->is_archive) {
 
         end_unit(ctx, localname, prefix, URI);
@@ -711,6 +718,7 @@ void end_element(void* ctx, const xmlChar* localname, const xmlChar* prefix, con
 
         end_root(ctx, localname, prefix, URI);
     }
+#pragma GCC diagnostic pop
 }
 
 #pragma GCC diagnostic push

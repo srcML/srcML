@@ -17,4 +17,20 @@
 <function_decl><type><name>void</name></type> <name>f</name><parameter_list>(<parameter><decl><type><name><name>struct</name> <name>s</name></name></type></decl></parameter>, <parameter><decl><type><name>int</name></type> <name>i</name></decl></parameter>)</parameter_list>;</function_decl>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<function_decl><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list></function_decl>, <function_decl><type ref="prev"/><name>bar</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<function_decl><type><name>void</name></type> <name>foo</name><parameter_list>()</parameter_list></function_decl>, <function_decl><type ref="prev"/><name>bar</name><parameter_list>()</parameter_list></function_decl>, <function_decl><type ref="prev"/><name>foobar</name><parameter_list>()</parameter_list>;</function_decl>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<function_decl><type><name>void</name></type> <name>foo</name><parameter_list>(<parameter><decl><type><name>int</name></type></decl></parameter>)</parameter_list></function_decl>, <function_decl><type ref="prev"/><name>bar</name><parameter_list>(<parameter><decl><type><name>double</name></type></decl></parameter>)</parameter_list>;</function_decl>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" revision="1.0.0" language="C">
+<decl_stmt><decl><type><name>int</name></type> <name>foo</name><argument_list>()</argument_list></decl>, <decl><type ref="prev"/><name>x</name></decl>;</decl_stmt>
+</unit>
+
 </unit>
