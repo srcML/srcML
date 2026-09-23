@@ -182,6 +182,26 @@ tar czf t.tar.gz t1.cpp t2.cpp
 srcml t.tar.gz:2 --output-src
 check_exit 1
 
+# a suffix on each file of a --files-from list
+defineXML fileslist <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION">
+
+	<unit revision="REVISION" language="C++" filename="n.cpp" hash="4c867350266d08ee9d4d96a58e4069797812f83c"><expr_stmt><expr><name>n2</name></expr>;</expr_stmt>
+	</unit>
+
+	<unit revision="REVISION" language="C++" filename="m.cpp" hash="423081c3c514edbf9ffebd8690c18dfcd3d60923"><expr_stmt><expr><name>a1</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>a2</name></expr>;</expr_stmt>
+	</unit>
+
+	</unit>
+STDOUT
+
+createfile suffixlist "n.cpp:2\nm.cpp:1-2"
+
+srcml --files-from suffixlist
+check "$fileslist"
+
 # a suffix on each input file of an archive
 defineXML archive <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
