@@ -127,7 +127,13 @@ header "post_include_hpp" {
 #include <srcml_options.hpp>
 #include <cstdlib>
 #include <fstream>
-#include <filesystem>
+#if defined(__GNUC__) && (__GNUC__ == 7) && (__GNUC_MINOR__ == 5) && (__GNUC_PATCHLEVEL__ == 0)
+    #include <experimental/filesystem>
+    namespace fs = std::experimental::filesystem;
+#else
+    #include <filesystem>
+    namespace fs = std::filesystem;
+#endif
 #include <unordered_map>
 #undef CONST
 #undef VOID
@@ -263,7 +269,7 @@ private:
     CMakeOptionsSet() {
         std::ifstream in;
 
-        if (std::filesystem::exists(CMAKE_OPTIONS_FILE_INSTALL))
+        if (fs::exists(CMAKE_OPTIONS_FILE_INSTALL))
             in.open(CMAKE_OPTIONS_FILE_INSTALL);
         else
             in.open(CMAKE_OPTIONS_FILE_BUILD);
