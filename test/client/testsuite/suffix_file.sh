@@ -163,6 +163,15 @@ if [[ "$OSTYPE" != 'msys' ]]; then
 	check "z1;\nz2;\n"
 fi
 
+# a line and column is a position in source, not in srcML
+srcml n.cpp -o n.cpp.xml
+
+srcml n.cpp.xml:2 --output-src
+check_exit 1
+
+srcml n.cpp.xml --output-src
+check "$src"
+
 # a line and column is a position in a file, not in a directory
 createfile sub/n.cpp "$src"
 

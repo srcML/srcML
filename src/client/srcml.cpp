@@ -167,6 +167,11 @@ See `srcml --help` for more information.
         if (input.line == 0)
             continue;
 
+        if (input.state == SRCML) {
+            SRCMLstatus(ERROR_MSG, "srcml: Line suffix not allowed on the srcML input %s", src_prefix_resource(input.filename));
+            exit(1);
+        }
+
         if (input.isdirectory) {
             SRCMLstatus(ERROR_MSG, "srcml: Line suffix not allowed on the directory %s", src_prefix_resource(input.filename));
             exit(1);
