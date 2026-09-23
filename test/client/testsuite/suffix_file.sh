@@ -90,18 +90,70 @@ check "$blankline"
 srcml n.cpp:2:9 --output-src
 check "\n"
 
+# a range of lines, where the end line is included
+srcml n.cpp:1-2 --output-src
+check "n1;\nn2;\n"
+
+srcml n.cpp:2-3 --output-src
+check "n2;\nn3;\n"
+
+srcml n.cpp:2-2 --output-src
+check "n2;\n"
+
+defineXML firsttwolines <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" revision="REVISION" language="C++" filename="n.cpp"><expr_stmt><expr><name>n1</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>n2</name></expr>;</expr_stmt>
+	</unit>
+STDOUT
+
+srcml n.cpp:1-2
+check "$firsttwolines"
+
+# an open range ends at the end of the file
+srcml n.cpp:2- --output-src
+check "n2;\nn3;\n"
+
+# an open range starts at the first line
+srcml n.cpp:-2 --output-src
+check "n1;\nn2;\n"
+
+# a column on either end of a range
+srcml n.cpp:1:2-2 --output-src
+check "1;\nn2;\n"
+
+srcml n.cpp:1-2:2 --output-src
+check "n1;\nn2\n"
+
+srcml n.cpp:1:2-2:2 --output-src
+check "1;\nn2\n"
+
+# a range end past the end of the file stops at the end of the file
+srcml n.cpp:2-9 --output-src
+check "n2;\nn3;\n"
+
+srcml n.cpp:-9 --output-src
+check "$src"
+
+# a range start past the end of the file has no source
+srcml n.cpp:9- --output-src
+check ""
+
 # the last line of a file with no line terminator
 createfile m.cpp "a1;\na2;"
 
 srcml m.cpp:2 --output-src
 check "a2;\n"
 
-# a suffix on a compressed file
+# a suffix on a compressed file, which is a single file
 createfile g.cpp "$src"
 gzip -f g.cpp
 
 srcml g.cpp.gz:2 --output-src
 check "n2;\n"
+
+srcml g.cpp.gz:2-3 --output-src
+check "n2;\nn3;\n"
 
 # a suffix on each input file of an archive
 defineXML archive <<- 'STDOUT'
@@ -181,8 +233,34 @@ check_exit 1
 srcml sub --output-src
 check "$src"
 
-# a non-numeric suffix is part of the filename
+# the end of a range is at, or after, the start
+srcml n.cpp:2-1 --output-src
+check_exit 1
+
+srcml n.cpp:2:3-2:1 --output-src
+check_exit 1
+
+# a zero anywhere in a range is an error
+srcml n.cpp:2-0 --output-src
+check_exit 1
+
+srcml n.cpp:2-3:0 --output-src
+check_exit 1
+
+# a malformed suffix is part of the filename
 srcml n.cpp:abc --output-src
+check_exit 1
+
+srcml n.cpp:2-abc --output-src
+check_exit 1
+
+srcml n.cpp:- --output-src
+check_exit 1
+
+srcml n.cpp:1-2-3 --output-src
+check_exit 1
+
+srcml n.cpp:1-99999999999999 --output-src
 check_exit 1
 
 # a suffix too large for a line number is part of the filename

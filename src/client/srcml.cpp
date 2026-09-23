@@ -154,18 +154,26 @@ See `srcml --help` for more information.
     // a line and column suffix is a position in a source file, and they start at one
     for (const auto& input : srcml_request.input_sources) {
 
-        if (input.line == srcml_input_src::INVALID_POSITION) {
+        if (input.line == srcml_input_src::INVALID_POSITION || input.end_line == srcml_input_src::INVALID_POSITION) {
             SRCMLstatus(ERROR_MSG, "srcml: Invalid line number 0 in %s", src_prefix_resource(input.filename));
             exit(1);
         }
 
-        if (input.column == srcml_input_src::INVALID_POSITION) {
+        if (input.column == srcml_input_src::INVALID_POSITION || input.end_column == srcml_input_src::INVALID_POSITION) {
             SRCMLstatus(ERROR_MSG, "srcml: Invalid column number 0 in %s", src_prefix_resource(input.filename));
             exit(1);
         }
 
         if (input.line == 0)
             continue;
+
+        // the end of a range is at, or after, the start
+        if (input.end_line != srcml_input_src::END_OF_FILE &&
+            (input.end_line < input.line ||
+                (input.end_line == input.line && input.end_column != 0 && input.end_column < std::max(input.column, 1)))) {
+            SRCMLstatus(ERROR_MSG, "srcml: Invalid range with the end before the start in %s", src_prefix_resource(input.filename));
+            exit(1);
+        }
 
         if (input.state == SRCML) {
             SRCMLstatus(ERROR_MSG, "srcml: Line suffix not allowed on the srcML input %s", src_prefix_resource(input.filename));
