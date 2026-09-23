@@ -92,6 +92,10 @@ check_exit 1
 srcml n.cpp:abc --output-src
 check_exit 1
 
+# a suffix too large for a line number is part of the filename
+srcml n.cpp:99999999999999 --output-src
+check_exit 1
+
 # a suffix on a file that does not exist
 srcml nonexistent.cpp:1 --output-src
 check_exit 1

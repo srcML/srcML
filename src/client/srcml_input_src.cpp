@@ -61,9 +61,14 @@ srcml_input_src::srcml_input_src(std::string_view other) {
         size_t colon_pos = resource.rfind(':');
         if (colon_pos != std::string::npos && colon_pos + 1 < resource.size() &&
             resource.find_first_not_of("0123456789", colon_pos + 1) == std::string::npos) {
-            line = std::stoi(resource.substr(colon_pos + 1));
-            resource = resource.substr(0, colon_pos);
-            filename = src_prefix_add_uri(protocol, resource);
+            try {
+                line = std::stoi(resource.substr(colon_pos + 1));
+                resource = resource.substr(0, colon_pos);
+                filename = src_prefix_add_uri(protocol, resource);
+
+            } catch (const std::out_of_range&) {
+                // a number too large for a line is part of the filename
+            }
         }
     }
 
