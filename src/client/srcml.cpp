@@ -42,8 +42,8 @@ namespace {
     bool request_create_src        (const srcml_request_t&);
 }
 
-const char* SRCML_CLIENT_VERSION_STRING = "1.1.0";
-const int SRCML_CLIENT_VERSION_NUMBER = 10100;
+const char* SRCML_CLIENT_VERSION_STRING = "1.2.0";
+const int SRCML_CLIENT_VERSION_NUMBER = 10200;
 
 int main(int argc, char* argv[]) {
 

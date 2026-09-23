@@ -62,13 +62,13 @@ typedef SSIZE_T ssize_t;
 
 /**@{ @name Current Version */
 /** Number representing markup version */
-#define SRCML_VERSION_NUMBER 100000
+#define SRCML_VERSION_NUMBER 10000
 /** String containing markup version */
 #define SRCML_VERSION_STRING "1.0.0"
 /** Number representing libsrcml version */
-#define SRCML_LIBSRCML_VERSION_NUMBER 100100
+#define SRCML_LIBSRCML_VERSION_NUMBER 10200
 /** String containing libsrcml version */
-#define SRCML_LIBSRCML_VERSION_STRING "1.1.0"
+#define SRCML_LIBSRCML_VERSION_STRING "1.2.0"
 /**@}*/
 
 /**@{ @name Status */
@@ -458,14 +458,6 @@ LIBSRCML_DECL int srcml_set_processing_instruction(const char* target, const cha
  * @retval SRCML_STATUS_INVALID_ARGUMENT
  */
 LIBSRCML_DECL int srcml_set_eol(size_t eol);
-
-/**
- * Set what revision in a srcDiff document to operate with
- * @param revision_number The revision to operate with
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_set_srcdiff_revision(size_t revision_number);
 
 /**
  * @return The source encoding on success
@@ -1892,37 +1884,6 @@ LIBSRCML_DECL int srcml_write_attribute(struct srcml_unit* unit, const char* pre
  */
 LIBSRCML_DECL int srcml_write_string(struct srcml_unit* unit, const char* content);
 /**@}*/
-/**@}*/
-
-/** @defgroup srcDiff srcDiff
-    @{
-*/
-/** Constant for original srcDiff revision number */
-#define SRCDIFF_REVISION_ORIGINAL 0
-/** Constant for modified srcDiff revision number */
-#define SRCDIFF_REVISION_MODIFIED 1
-/** Constant for an invalid srcDiff revision number */
-#define SRCDIFF_REVISION_INVALID  2
-
-/**
- * @return The current srcDiff revision number used for processing
- */
-LIBSRCML_DECL size_t srcml_get_srcdiff_revision();
-
-/**
- * @param archive A srcml_archive
- * @return The srcdiff revision number the archive is using for processing
- */
-LIBSRCML_DECL size_t srcml_archive_get_srcdiff_revision(const struct srcml_archive* archive);
-
-/**
- * Set what revision in a srcDiff archive to operate with
- * @param archive A srcml_archive
- * @param revision_number The operational srcdff revision
- * @return SRCML_STATUS_OK on success
- * @return Status error code on failure
- */
-LIBSRCML_DECL int srcml_archive_set_srcdiff_revision(struct srcml_archive* archive, size_t revision_number);
 /**@}*/
 
 #ifdef __cplusplus
