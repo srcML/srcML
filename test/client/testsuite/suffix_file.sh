@@ -148,6 +148,21 @@ check_exit 1
 srcml n.cpp:0:0 --output-src
 check_exit 1
 
+# a file that exists with the suffix in its name is a filename, not a suffix
+# note: a colon is not allowed in a Windows filename
+if [[ "$OSTYPE" != 'msys' ]]; then
+
+	define literal <<- 'STDOUT'
+		z1;
+		z2;
+	STDOUT
+
+	createfile "n.cpp:2" "$literal"
+
+	srcml --register-ext cpp:2=C++ n.cpp:2 --output-src
+	check "z1;\nz2;\n"
+fi
+
 # a non-numeric suffix is part of the filename
 srcml n.cpp:abc --output-src
 check_exit 1

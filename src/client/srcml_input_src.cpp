@@ -80,6 +80,8 @@ srcml_input_src::srcml_input_src(std::string_view other) {
             return position;
         };
 
+        std::string suffixed = resource;
+
         if (int last = pop_position(resource); last != -1) {
 
             // two positions are ":line:column", a single position is ":line"
@@ -91,7 +93,16 @@ srcml_input_src::srcml_input_src(std::string_view other) {
                 line = last != 0 ? last : INVALID_POSITION;
             }
 
-            filename = src_prefix_add_uri(protocol, resource);
+            // a file of that exact name, suffix and all, is a filename, not a suffix
+            struct stat s;
+            if (stat(suffixed.data(), &s) == 0) {
+                resource = suffixed;
+                line = 0;
+                column = 0;
+
+            } else {
+                filename = src_prefix_add_uri(protocol, resource);
+            }
         }
     }
 
